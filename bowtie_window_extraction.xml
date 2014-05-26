@@ -1,0 +1,38 @@
+<tool id="bowtie_window_extraction" name="Extract a region">
+	<description>from a bowtie output</description>
+	<command interpreter="python">bowtie_window_extraction.py $input $geneID $Upstream_Coordinate $Downstream_Coordinate $output $minsize $maxsize $output_format</command>
+	<inputs>
+       		<param name="input" type="data" format="tabular" label="Extract features from this bowtie standard output"/>
+                <param name="geneID" type="text" size="40" value="item" label="GeneID or chromosome"/>
+                <param name="Upstream_Coordinate" type="text" value="0" size="40"  label="Upstream Coordinate"/>
+                <param name="Downstream_Coordinate" type="text" size="40" value="200000000" label="Downstream Coordinate"/>
+
+                <param name="minsize" type="text" size="15" value="0" label="Minimal size (nt)"/>
+                <param name="maxsize" type="text" size="0"  value="0" label="Maximal size (nt)" help="Leave at 0 for no size-filtering"/>
+               <param name="output_format" type="select" label="output format">
+                  <option value="bowtie">bowtie</option>
+                  <option value="fasta">fasta</option>
+               </param>
+
+	</inputs>
+
+        <outputs>
+                <data name="output" format="tabular">
+                   <change_format>
+                   <when input="output_format" value="fasta" format="fasta"/>
+                   </change_format>
+                 </data>
+	</outputs>
+	<help>
+
+**What it does**
+
+This tool collects lines from a bowtie output for reads matching a particular genome region or gene,
+and outputs a tabular file with the same format as the bowtie input file, or a fasta file on demand
+It is possible to filter, in addition, the size of the reads (for no size-filtering, leave at 0)
+
+For size-filtering *only*, leave the "GeneID or chromosome" field filled with "item" (if your favorite gene is named "item", then you've got a problem... Contact the administrator and we'll fix this easily)
+
+
+	</help>
+</tool>

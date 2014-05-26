@@ -1,0 +1,87 @@
+
+<tool id="multi_lattice_comp" name="Plot multiple Lattices">
+	<description>for comparison</description>
+	<command interpreter="bash">r_wrapper.sh $Rplotter</command>
+
+    <inputs>
+        <param name="title" type="text" label="Graph Title"/>
+    <param name="Normalization" type="select" label="Normalization">
+      <option value="YES">YES</option>
+      <option value="NO">NO</option>
+    </param>
+        <repeat name="queries" title="Additional Lattice dataframe">
+            <param name="input" type="data" label="Select" />
+        </repeat>
+    </inputs>
+
+  <configfiles>
+    <configfile name="Rplotter">
+      ## Setup R error handling to go to stderr
+      options( show.error.messages=F, 
+               error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+      library(lattice)
+
+      ##cheetahtemplate data frame implementation
+      #set $T = 0
+      #for $i, $q in enumerate ($queries)
+        dataframe${i} = read.delim("${q.input}", header = T)
+      #set $T += 1
+      #end for
+      ## dataframe0 dataframe1 dataframeN implemented and number of items at $T
+
+      #for $i, $q in enumerate ($queries)
+        dataframe${i}\$barcol = factor(ifelse((dataframe${i}[,6] %in% 15:18), "green", ifelse( (dataframe${i}[,6] %in% 19:22), "blue", ifelse( (dataframe${i}[,6] %in% 23:26), "red", "black" ) ) ), levels = c("green", "blue", "red", "black") )
+      #end for
+
+      intergene = factor (dataframe0\$gene)
+      #for $i, $q in enumerate ($queries)
+        intergene = intersect(factor(intergene), factor(dataframe${i}\$gene))
+      #end for
+
+      #for $i, $q in enumerate ($queries)
+        dataframe${i}=dataframe${i}[dataframe${i}\$gene %in% intergene,]
+      #end for
+
+      #for $i, $q in enumerate ($queries)
+        dataframe${i}[,1]=paste(dataframe${i}[,1], "S${i}")
+      #end for
+
+      bigframe= data.frame(matrix(ncol = 7, nrow = 0))
+      #for $i, $q in enumerate ($queries)
+        bigframe =rbind(bigframe, dataframe${i})
+      #end for
+
+      bigframe=bigframe[order(bigframe\$gene),]
+      bigframe\$miRtag = do.call ("paste", c( c(bigframe["gene"], " n", bigframe["total_count"]), sep="" ) )
+
+      pdf(file="${output}", paper="special", height=11.69, width=8.2677)
+      normalization_decision = "${Normalization}"
+      if (normalization_decision =="YES") {
+        graph = xyplot(normCount~normOffset | miRtag, data=bigframe, type="h", groups = barcol, col=c("green", "blue", "red", "black"), lwd=1.5, par.strip.text=list(cex=.5), strip=strip.custom(which.given=1, bg="lightblue"), layout=c(${T},25), as.table=TRUE, main="${title}")
+        } else {
+        graph = xyplot(count~offset | miRtag, data=bigframe, type="h", groups = barcol, col=c("green", "blue", "red", "black"), lwd=1.5, par.strip.text=list(cex=.5), strip=strip.custom(which.given=1, bg="lightblue"), layout=c(${T},25), as.table=TRUE, main="${title}")
+        }
+
+      plot(graph, newpage = T)
+       
+     dev.off()
+
+
+    </configfile>
+  </configfiles>
+
+
+
+
+	<outputs>
+		<data name="output" format="pdf"/>
+	</outputs>
+	<help>
+
+**What it does**
+
+temptative R plotter
+
+
+	</help>
+</tool>

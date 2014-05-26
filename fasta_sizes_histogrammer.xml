@@ -1,0 +1,68 @@
+<tool id="fasta_sizes_histogrammer" name="Size Histogram">
+    <description> fasta files</description>
+    <command interpreter="python">
+        fasta_sizes_histogrammer.py
+        $input1 "$label1"
+        #for $q in $queries
+            ${q.input2} "${q.label2}"
+        #end for
+        $output
+        ; bash /home/galaxy/galaxy-dist/tools/chrisTools/r_wrapper.sh $Rplotter
+    </command>
+    <inputs>
+       <param name="title" type="text" label="Main Title" />
+       <param name="input1" type="data" label="fasta file to annotate"/>
+       <param name="label1" type="text" label="category label"/>
+        <repeat name="queries" title="Additional fasta file and label">
+            <param name="input2" type="data" label="Select" />
+            <param name="label2" type="text" label="Label" />
+        </repeat>
+       <param name="scale" type="select" label="Autoscaling">
+         <option value="same" selected="true">Global Autoscaling</option>
+         <option value="free">Panel Autoscaling</option>
+       </param>
+    </inputs>
+
+  <configfiles>
+    <configfile name="Rplotter">
+      ## Setup R error handling to go to stderr
+      options( show.error.messages=F,
+               error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+      data = read.delim("${output}", header=TRUE)
+      data = data[data\$size &lt; 102,]
+      data = data[data\$size &gt; 0,] ## post sizing
+      library(lattice)
+      ## Open output PDF file
+      pdf( "${finaloutput}" )
+      barchart(reads~as.factor(size)|sample, data=data,
+        origin = 0, ylab="Number of reads", xlab="Size (nt)", main="$title",
+        scales=list(relation="$scale", cex=0.5, rot=0, y=list(cex=0.5), x=list(at=seq(0, max(data\$size), by=10), cex=0.5) ), ##x=list(at=c(0,5,10,15,20,25,30), cex=0.5)
+        horizontal = FALSE, as.table=T,
+        strip=strip.custom(which.given=1, bg="lightblue"),
+        par.strip.text=list(cex=.6)
+        )
+      ## Close the PDF file
+      devname = dev.off()
+    </configfile>
+  </configfiles>
+
+
+    <outputs>
+        <data name="output" format="tabular" metadata_source="input1" label="Histograms of Fasta files"/>
+        <data name="finaloutput" format="pdf" label="Lattice size histograms"/>
+    </outputs>
+    <help>
+
+.. class:: warningmark
+
+**WARNING:** Be careful not to agregate datasets of different kinds (e.g., datasets must be matched fasta files). This tool does not check if the datasets being annotated are in the same format. 
+
+-----
+
+**What it does**
+
+Generates histogram Table from fasta files, compatible with latter lattice use
+
+   </help>
+</tool>
+

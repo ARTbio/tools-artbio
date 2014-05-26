@@ -1,0 +1,15 @@
+<tool id="pbsdebug" name="PBS DEBUG">
+  <command>                                                                                                               
+    echo \$GALAXY_SLOTS > $out1;                                                                                          
+    env > $out3;                                                                                                          
+    echo "No PBS_NODEFILE defined." > $out2;                                                                              
+    if [ -f "\$PBS_NODEFILE" ]; then cp \$PBS_NODEFILE $out2; fi                                                          
+  </command>
+  <inputs>
+  </inputs>
+  <outputs>
+    <data format="txt" name="out1" label="Galaxy slots" />
+    <data format="txt" name="out2" label="PBS_NODEFILE contents" />
+    <data format="txt" name="out3" label="Cluster worker environment." />
+  </outputs>
+</tool>

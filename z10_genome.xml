@@ -1,0 +1,31 @@
+<tool id="12_WIG_z10_signature" name="WIG output piRNA signature">
+	<description></description>
+	<command interpreter="python">z10_genome.py $input $windowsize $outputpipi $outputpisi $outputsisi $index</command>
+	<inputs>
+            <param name="index" type="select" label="Select the reference genome used for the bowtie output" help="if your genome of interest is not listed - contact Christophe Antoniewski at drosofff@gmail.com">
+                <options from_data_table="ged_bowtie_indexes"></options>
+            </param>
+       		<param name="input" type="data" format="tabular" label="Compute piRNA Z-score from this bowtie standard output"/>
+                <param name="windowsize" type="integer" size="6" value="1000" label="Size of window to compute" help="1000nt defaultss"/>
+	</inputs>
+	<outputs>
+		<data name="outputpipi" format="tabular"/>
+                <data name="outputpisi" format="tabular"/>
+                <data name="outputsisi" format="tabular"/>
+	</outputs>
+	<help>
+
+**What it does**
+
+This tool computes the piRNA signature (Z-score of 10nt overlap. The output file has the WIG format for genome browser display.
+The numerical option sets the size of the window for which the Z-score is calculated 
+
+-----	
+
+**Warning**
+
+.. class:: warningmark
+
+
+	</help>
+</tool>

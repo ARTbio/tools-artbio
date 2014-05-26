@@ -1,0 +1,91 @@
+<tool id="99_compute_plot_table" name="Read count map">
+	<description></description>
+<!--	<command interpreter="bash">plotter_wrapper.sh $input $minsize $maxsize $factor $output $Rplotter</command> -->
+        <command >python /home/galaxy/galaxy-dist/tools/chrisTools/plotter.py $input $minsize $maxsize $factor $output ;bash /home/galaxy/galaxy-dist/tools/chrisTools/r_wrapper.sh $Rplotter</command>
+	<inputs>
+		<param name="input" type="data" format="tabular" label="Compute Plot table from this bowtie standard output"/>
+		<param name="minsize" type="integer" size="3" value="20" label="Min size of small RNA to plot" help="'20' = 20 nucleotides"/>
+		<param name="maxsize" type="integer" size="3" value="22" label="Max size of small RNA to plot" help="'22' = 22 nucleotides"/>
+		<param name="factor" type="float" size="6" value="1.00" label="Normalization factort" help="leave at 1.00 for no normalization"/>
+                <param name="title" type="text" size="15" value="Main Title" label="Main Titles"/>
+                <param name="xlabel" type="text" size="15" value="Coordinates (nt)" label="x axis label"/>
+                <param name="ylabel" type="text" size="15" value="Normalized number of reads" label="y axis label"/>
+                <param name="yrange" type="integer" size="6" value="0" label="y axis range" help="leave at 0 for autoscaling"/>
+                <param name="minxrange" type="integer" size="6" value="0" label="min value of x axis" help="leave at 0 for autoscaling"/>
+                <param name="maxxrange" type="integer" size="6" value="0" label="max value of x axis." help="leave at 0 for autoscaling"/>
+
+	</inputs>
+  <configfiles>
+    <configfile name="Rplotter">
+      ## Setup R error handling to go to stderr
+      options( show.error.messages=F,
+               error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+      tab = read.delim("${output}", header=TRUE)
+      ## Open output PDF file
+      pdf( "${outputFinal}" )
+
+      #determining x and y axis ranges
+      Ymax = max(tab[,2])
+      Ymin = min(tab[,3])
+      #MMAX = max(MAX, -MIN)
+      if ( ${minxrange} &#124; ${maxxrange} ) {
+         MINcoord = ${minxrange}
+         MAXcoord = ${maxxrange}
+      } else {
+         MINcoord = min(tab[,1])
+         MAXcoord =  max(tab[,1])
+      }
+
+      if ( ${yrange} ) {
+         MMAX = ${yrange}
+      } else {
+         MMAX = max(tab[,2], abs(tab[,3]))
+      }
+
+      plot(tab[,1], tab[,2], type="h", xaxt="n", xlim=c(MINcoord , MAXcoord), ylim=c(-MMAX , MMAX), frame.plot=FALSE, lwd=2,
+           las=2, xlab= "${xlabel}", ylab="${ylabel}", main = "${title}", col="darkred")
+      lines(tab[,1], tab[,3], type="h", lwd=2, col="darkblue")
+      axis(1)
+
+      ## Close the PDF file
+      devname = dev.off()
+    </configfile>
+  </configfiles>
+
+	<outputs>
+		<data name="output" format="tabular" label= "Mapping Data Frame"/>
+                <data name="outputFinal" format="pdf" label= "PDF Read Map"/>
+	</outputs>
+	<help>
+
+**What it does**
+
+This tool computes the plot table of small RNA (in the indicated size range) matches  from a bowtie output.
+The tabulated data frame output has three columns per line: coordinate, number or reads on the plus strand and number of reads on the minus strand.
+The numerical options set the min and max size of RNA reads that will be parsed and plotted in the PDF output.
+
+-----	
+
+**Input formats**
+
+.. class:: warningmark
+
+*The only accepted format for the script is a bowtie tabular format*
+
+------
+
+
+**Outputs**
+
+The output is tabular and has the following columns::
+
+    Column    Description
+  --------    --------------------------------------------------------
+   1 coord    coordinates
+   2 plus     number of reads on the + strand
+   3 minus    number of reads on the - strand
+
+
+
+	</help>
+</tool>

@@ -1,0 +1,33 @@
+<tool id="10_fasta_sorter" name="Filter out fasta reads" version="1.0.0">
+  <description>From a bowtie output, generate 21 and 25nt, forward and reverse fasta reads for subsequent weblogo analysis</description>
+  <parallelism method="basic"></parallelism>
+  <command interpreter="python">fasta_sorter.py $input $F21 $R21 $F25 $R25</command>
+  <inputs>
+     <param name="input" type="data" format="tabular" label="Bowtie standard output" help="2nd column in bowtie output must not be suppressed"/>
+   </inputs>
+   <outputs>
+   <data format="fasta" name="F21" label="Forward 21nt reads"/>
+   <data format="fasta" name="R21" label="Reverse 21nt reads"/>
+   <data format="fasta" name="F25" label="Forward 25nt reads"/>
+   <data format="fasta" name="R25" label="Reverse 25nt reads"/>
+   </outputs>
+  <help>
+
+**What it does**
+
+Parses a Bowtie standard output (not SAM) and outputs 4 fasta files (RNA) with 21 and 25nt, forward and reverse reads, respectively
+------
+
+**Input formats**
+
+.. class:: warningmark
+
+*Bowtie standard format - MUST include column 2 (strand polarity) and column 4 (read sequence)*
+
+------
+
+
+**Outputs**
+  4 RNA fasta files with 21, 25nt, reverse and forward reads, respectively
+  </help>
+</tool>

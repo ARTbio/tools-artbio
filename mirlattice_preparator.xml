@@ -1,0 +1,70 @@
+<tool id="lattice_preparator" name="Parse miRNA bowtie matching for lattice" version="1.0.0">
+  <description></description>
+  <requirements><requirement type='package'>bowtie-inspect</requirement></requirements>
+  <parallelism method="basic"></parallelism>
+  <command interpreter="python">mirlattice_preparator.py $input $output $normalization ## index treatment at the end of the command line now
+                                                         #if $refGenomeSource.genomeSource == "history":
+                                                             $refGenomeSource.ownFile
+                                                             --do_not_extract_index
+                                                         #else:
+                                                             $refGenomeSource.index
+                                                             --extract_index
+                                                         #end if
+  </command>
+  <inputs>
+      <conditional name="refGenomeSource">
+          <param name="genomeSource" type="select" label="Will you select a reference genome from your history or a PREVIOUSLY used built-in index?" help="Built-ins were indexed using default options">
+             <option value="indexed">Use a built-in index</option>
+             <option value="history">Use one from the history</option>
+          </param>
+          <when value="indexed">
+             <param name="index" type="select" label="Select the reference genome used for the bowtie output" help="if your genome of interest is not listed - contact Christophe Antoniewski at drosofff@gmail.com">
+                 <options from_data_table="ged_bowtie_ssRNA_indexes"></options>
+             </param>
+          </when>
+          <when value="history">
+              <param name="ownFile" type="data" format="fasta"  label="Select the fasta reference" />
+           </when>
+       </conditional>  <!-- refGenomeSource -->
+
+     <param name="input" type="data" format="tabular" label="Bowtie tabular output" help="Bowtie output from a sense bowtie matching (--norc option, no polarity information)"/>
+     <param name="normalization" type="text" value="1.0" label="Normalization factor to apply to the data"/>
+   </inputs>
+   <outputs>
+   <data format="tabular" name="output" label= "Table for lattice representation of mir read coverage"/>
+   </outputs>
+  <help>
+
+**What it does**
+
+Bowtie_ is a short read aligner designed to be ultrafast and memory-efficient. It is developed by Ben Langmead and Cole Trapnell. Please cite: Langmead B, Trapnell C, Pop M, Salzberg SL. Ultrafast and memory-efficient alignment of short DNA sequences to the human genome. Genome Biology 10:R25.
+The tool prepare a table for lattice plotting.
+.. _Bowtie: http://bowtie-bio.sourceforge.net/index.shtml
+
+------
+
+**Inportant restriction**
+
+.. class:: warningmark
+
+
+.. _Bowtie: http://bowtie-bio.sourceforge.net/index.shtml
+
+------
+
+**Input formats**
+
+.. class:: warningmark
+
+*For simplicity, the only accepted format for this script is a raw fasta list of reads, after adapter clipping*
+
+------
+
+
+**Outputs**
+
+The output is a dataframe to R lattice package::
+
+
+  </help>
+</tool>

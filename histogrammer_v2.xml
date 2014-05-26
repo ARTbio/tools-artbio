@@ -1,0 +1,91 @@
+<tool id="X2_histogrammer_F_and_R_strands" name="Small RNA size distributions" version="2.0.0">
+  <description>in Lattice graph</description>
+  <command>python /home/galaxy/galaxy-dist/tools/chrisTools/histogrammer_v2.py $input $output $Nfact $minrange $maxrange; bash /home/galaxy/galaxy-dist/tools/chrisTools/r_wrapper.sh $Rplotter</command>
+  <inputs>
+     <param name="input" type="data" format="tabular" label="Bowtie standard output" help="2nd column in bowtie output must not be suppressed"/>
+     <param name="Nfact" type="float" size="6" value="1" label="Normalization factor" help="enter a normalization factor for distribution comparison, if neededd"/>
+     <param name="minrange" type="text" size="3" value="15" label="Min Size Range"/>
+     <param name="maxrange" type="text" size="3" value="30" label="Max Size Range"/>
+     <param name="title" type="text" size="15" value="Main Title" label="Main Titles"/>
+     <param name="xlabel" type="text" size="15" value="Coordinates" label="x axis label"/>
+     <param name="ylabel" type="text" size="15" value="number of reads" label="y axis label"/>
+     <param name="zoom" type="text" size="5" value="0" label="zoom in to the item:"/>
+
+   </inputs>
+
+  <configfiles>
+    <configfile name="Rplotter">
+      ## Setup R error handling to go to stderr
+      options( show.error.messages=F,
+               error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+      data = read.delim("${output}", header=TRUE)
+      data = transform(data, strand=as.character(strand))
+#      data = transform(data, count= ifelse(count&gt;=0, +1, -1) * log(1+abs(count),base=2)  )
+      yscale = max(abs(data\$count))
+      zoom = "${zoom}"
+      if (zoom &#33;= "0" ) { yscale = max(abs(data[data\$item=="${zoom}",3]))  }
+#     data\$miRtag =  do.call  ("paste", c( c(data["gene"], " #", data["total_count"]) , sep="") )
+      library(lattice)
+      ## Open output PDF file
+      pdf( "${Final_output}", paper="special", height=11.69, width=8.2677 )
+      if (length(levels(data\$item)) &lt; 49) {
+                barchart(count~as.factor(size)|item, data = data, origin = 0, horizontal=FALSE, col=data\$strand, cex=.5,
+        par.strip.text=list(cex=.5), strip=strip.custom(which.given=1, bg="lightblue"), scales=list(relation="free", cex=0.5),
+        xlab ="${xlabel}", ylab = "${ylabel}", main = "${title}", as.table=TRUE)
+        } else {
+      barchart(count~as.factor(size)|item, data = data, origin = 0, horizontal=FALSE, col=data\$strand, cex=.5,
+        par.strip.text=list(cex=.5), strip=strip.custom(which.given=1, bg="lightblue"), scales=list(relation="free", cex=0.5),
+        xlab ="${xlabel}", ylab = "${ylabel}", layout=c(4,12), main = "${title}", as.table=TRUE, newpage = T)
+        }
+      ## put back , ylim=c(-yscale, yscale) if needed
+      ## Close the PDF file
+      devname = dev.off()
+    </configfile>
+  </configfiles>
+
+   <outputs>
+       <data name="output" format="tabular" label="Data frame of sizes for Lattice"/>
+       <data name="Final_output" format="pdf" label="Size Histogram(s)"/>
+   </outputs>
+
+  <help>
+
+**What it does**
+
+Parse a Bowtie standard output (not SAM) and compute size distributions of reads matched on + and - reference strands
+------
+
+**Restriction**
+
+.. class:: warningmark
+
+The bowtie call must include the -M 1 option in case of repeated sequence to generate normalisation through random reporting (see Bowtie documentation)
+In case of -k option use (instead of -M), there will be a strong strand bias for those repeated sequences.
+------
+
+**Input formats**
+
+.. class:: warningmark
+
+*Bowtie standard format - MUST include column 2 (strand polarity) and column 4 (read sequence)*
+
+------
+
+
+**Outputs**
+
+1. A data frame with the following format:
+
+    Size (nt)    all    +    -
+  ----------------------
+   1 Size
+   2 Both strands
+   3 + Strand Polarity
+   4 - Strand Polarity
+
+2. A pdf file with the histogram
+
+  </help>
+
+</tool>
+

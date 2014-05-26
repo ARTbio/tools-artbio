@@ -1,0 +1,51 @@
+<tool id="id_to_fasta_in_bowtie" name="Recover Fasta read list">
+    <description> from a bowtie output WHITHOUT polarity information</description>
+    <command interpreter="python">
+        id_to_fasta_in_bowtie.py $bowtieout $fasta_ref $fasta_out $output_format $filter_string
+    </command>
+
+    <inputs>
+       <param name="bowtieout" type="data" label="bowtie output" help="tabular bowtie to parse. Warning: ONLY bowtie outputs without information polarity (RNA match) are currently accepted"/>
+       <param name="fasta_ref" type="data" label="fasta reference read library" help="Tip: use the initial fasta input for bowtie"/>
+       <param name="filter_string" type="text" label="3' end filter" help="Keep only original reads with this 3' end sequence (leave empty for no filtering)"/>
+       <param name="output_format" type="select" label="output format" help="select your output format; yes if you did not filter on last nucleotides, bowtie format is a stupid option that do virtually nothing">
+          <option value="bowtie">bowtie</option>
+          <option value="fasta" select="yes">fasta</option>
+       </param>
+
+
+
+    </inputs>
+
+    <outputs>
+        <data name="fasta_out" format="fasta" metadata_source="bowtieout" label="Parsed fasta OR bowtie output">
+          <change_format>
+          <when input="output_format" value="bowtie" format="tabular" />
+          </change_format>
+        </data>
+    </outputs>
+
+    <help>
+
+.. class:: warningmark
+
+**WARNING:** Be careful
+to use a fasta reference read library that contains all the reads reported in the bowtie output
+otherwise, there will be a key error during the id matching process. 
+
+.. class:: warningmark
+
+**WARNING:**
+ONLY bowtie outputs without information polarity (RNA match) are currently accepted
+If you need to convert a bowtie output with polarity information, use instead the **Recover Fasta read list from a bowtie output** tool, allowing any read size.
+
+-----
+
+**What it does**
+
+Extract and print original sequences from a bowtie output, when bowtie usage has degraded
+the sequence information. Typically when trimming option -5 or -3 have been invoked for bowtie matching
+Note that the output format may be a fasta format, or the original bowtie format but with the complete untrimmed sequence
+   </help>
+</tool>
+

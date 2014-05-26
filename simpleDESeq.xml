@@ -1,0 +1,41 @@
+<tool id="simpleDESeq" name="DESeq Profilng">
+	<description>2 samples / no replicates</description>
+	<command interpreter="bash">r_wrapper.sh $simpleDESeq </command>
+	<inputs>
+		<param name="input" type="data" format="tabular" label="miR hit lists, 2 samples"/>
+	</inputs>
+
+
+  <configfiles>
+    <configfile name="simpleDESeq">
+      ## Setup R error handling to go to stderr
+      options( show.error.messages=F,  error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+      suppressMessages(require(DESeq))
+      countsTable = read.delim("${input}", header=TRUE)
+      rownames( countsTable )= countsTable[,1]
+      countsTable= countsTable[ , -1 ]
+      conds = c("C","T")
+      cds = newCountDataSet( countsTable, conds )
+      cds = estimateSizeFactors( cds )
+      cds = estimateDispersions( cds, method="blind", sharingMode="fit-only" ) #fitType="local" when dispersion fucks the test. Otherwise DESeq performs a parametric fit using a gamma-family GLM
+      res = nbinomTest( cds, "C", "T" )
+      resNA = res[-which(is.na(res[,8])),] ## omit the NA lignes
+      write.table ( resNA[order(resNA[,8]), ], file = "${output}", row.names=FALSE, col.names=TRUE, quote= FALSE, dec = ".", sep = "\t", eol = "\n")
+    </configfile>
+  </configfiles>
+
+
+
+
+	<outputs>
+		<data name="output" format="tabular" label="DESeq differential calling" />
+	</outputs>
+	<help>
+
+**What it does**
+
+DESeq differential calling (order by padj, ascending), on two samples, no replicate
+
+
+	</help>
+</tool>

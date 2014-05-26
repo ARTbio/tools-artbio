@@ -1,0 +1,31 @@
+<tool id="MDS_wrapper" name="MirDeep*">
+<description></description>
+<command interpreter="perl">MDS_wrapper.pl $input $genome $output $output2 $output3</command>
+
+<inputs>
+	<param name="input" type="data" format="fasta" label="input fasta file"/>
+	<param name="genome" type="select" label="MirDeep* reference genome">
+		<option value="AgamF">Masked Anopheles Gambiae</option>
+		<option value="hg19">Human (hg19)</option>
+                <option value="mm9">Mouse (mm9)</option>
+                <option value="Dmel">Dmel (5.49)</option>
+	</param>
+</inputs>
+
+<outputs>
+	<data name="output" format="gff3" label="mirdeep* GFF output"/>
+        <data name="output2" format="tabular" label="mirdeep* raw output"/>
+        <data name="output3" format="tabular" label="mirdeep* clusters"/>
+</outputs>
+
+<help>
+
+**What it does**
+
+MirDeep* wrapper
+
+
+</help>
+
+</tool>
+

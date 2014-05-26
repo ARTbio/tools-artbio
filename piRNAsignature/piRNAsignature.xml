@@ -1,0 +1,85 @@
+<tool id="piRNAsignature" name="piRNA Signatures" version="1.0.0">
+	<description></description>
+	<command>python piRNAsignature.py $input $minquery $maxquery $mintarget $maxtarget $minscope $maxscope $output
+                                      #if $refGenomeSource.genomeSource == "history":
+                                        $refGenomeSource.ownFile
+                                        --do_not_extract_index
+                                      #else:
+                                        $refGenomeSource.index
+                                        --extract_index
+                                      #end if
+                ;  bash /home/galaxy/galaxy-dist/tools/chrisTools/r_wrapper.sh $sigplotter
+       </command>
+
+	<inputs>
+          <conditional name="refGenomeSource">
+             <param name="genomeSource" type="select" label="Will you select a reference genome from your history or use a built-in index?" help="Built-ins were indexed using default options">
+               <option value="indexed">Use a built-in index</option>
+               <option value="history">Use one from the history</option>
+             </param>
+             <when value="indexed">
+               <param name="index" type="select" label="Select the reference genome used for the bowtie output" help="if your genome of interest is not listed - contact Christophe Antoniewski at drosofff@gmail.com">
+                 <options from_data_table="ged_bowtie_indexes"></options>
+               </param>
+             </when>
+             <when value="history">
+                <param name="ownFile" type="data" format="fasta"  label="Select the fasta reference" />
+             </when>
+          </conditional>  <!-- refGenomeSource -->
+       		<param name="input" type="data" format="tabular" label="Compute signature from this bowtie standard output"/>
+		<param name="minquery" type="integer" size="3" value="23" label="Min size of query small RNAs" help="'23' = 23 nucleotides"/>
+		<param name="maxquery" type="integer" size="3" value="29" label="Max size of query small RNAs" help="'29' = 29 nucleotides"/>
+                <param name="mintarget" type="integer" size="3" value="23" label="Min size of target small RNAs" help="'23' = 23 nucleotides"/>
+                <param name="maxtarget" type="integer" size="3" value="29" label="Max size of target small RNAs" help="'29' = 29 nucleotides"/>
+                <param name="minscope" type="integer" size="3" value="1" label="Minimal relative overlap analyzed" help="'1' = 1 nucleotide overlap"/>
+                <param name="maxscope" type="integer" size="3" value="26" label="Maximal relative overlap analyzed" help="'1' = 1 nucleotide overlap"/>
+	</inputs>
+
+  <configfiles>
+    <configfile name="sigplotter">
+      ## Setup R error handling to go to stderr
+      options( show.error.messages=F,
+               error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+      signature = read.delim("${output}", header=TRUE)
+      ## Open output1 PDF file
+      pdf( "${output1}" )
+      signaturez=(signature[,2] -mean(signature[,2]))/sd(signature[,2])
+      plot(signaturez, type = "b", main="signature", cex.main=2, xlab="overlap (nt)", ylab="z-score", pch=19, cex=0.8, col="darkslateblue", lwd=3, cex.lab=1.5, cex.axis=1.4, xaxt="n")
+      axis(1, at=seq(from=1, to=length(signature[,1]), by=3) )
+      ## Close the PDF file
+      devname = dev.off()
+
+      ## Open output2 PDF file
+      pdf( "${output2}" )
+      YLIM=max(signature[,2])
+      plot(signature[,1:2], type = "h", xlab="overlap (nt)", ylim=c(0,YLIM), ylab="number of pairs", col="darkslateblue", lwd=7)
+      ## Close the PDF file
+      devname = dev.off()
+
+      ## Open output3 PDF file
+      pdf( "${output3}" )
+      plot(signature[,1], signature[,3]*100, type = "l", main="ping-pong Signature of ${minquery}-${maxquery} against ${mintarget}-${maxtarget}nt small RNAs",
+             cex.main=1, xlab="overlap (nt)", ylab="ping-pong signal [%]", ylim=c(0,50),
+             pch=19, col="darkslateblue", lwd =4, cex.lab=1.2, cex.axis=1, xaxt="n")
+      axis(1, at=seq(from=1, to=length(signature[,1]), by=3) )
+      devname = dev.off()
+    </configfile>
+  </configfiles>
+
+        <outputs>
+                <data name="output" format="tabular" label = "signature data frame"/>
+                <data name="output2" format="pdf" label="number of pairs signature"/>
+                <data name="output1" format="pdf" label="z-score signature"/>
+                <data name="output3" format="pdf" label="ping-pong signal (hannon algo.)"/>
+        </outputs>
+
+        <help>
+
+**What it does**
+
+This tool computes the number of pairs by overlap classes (in nt) from a bowtie output file, the z-score calculated from these numbers of pairs, and the ping-pong signal as described in Brennecke et al (2009) Science.
+The numerical options set the min and max size of both the query small rna class and the target small rna class
+Three type of signals are plotted in separate pdf files, the number of pairs founds, the z-score calculated from these numbers of pairs, and the ping-pong signal as described in Brennecke et al (2009) Science.
+
+        </help>
+</tool>

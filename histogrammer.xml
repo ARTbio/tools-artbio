@@ -1,0 +1,107 @@
+<tool id="X_histogrammer_F_and_R_strands" name="Small RNA size distribution" version="1.0.0">
+  <description>(all targets pooled)</description>
+  <parallelism method="basic"></parallelism>
+  <command>python /home/galaxy/galaxy-dist/tools/chrisTools/histogrammer.py $input $output $Nfact; bash /home/galaxy/galaxy-dist/tools/chrisTools/r_wrapper.sh $distributionDrawer </command>
+  <inputs>
+     <param name="input" type="data" format="tabular" label="Bowtie standard output" help="2nd column in bowtie output must not be suppressed"/>
+     <param name="Nfact" type="float" size="6" value="1" label="Normalization factor" help="enter a normalization factor for distribution comparison, if neededd"/>
+
+     <param name="title" type="text" value="Graph Title" size="20" label="Main Title of the Graph"/>
+     <param name="Yup" type="integer" value="1000" size="7" label="Y upper range"/>
+     <param name="Ydown" type="integer" value="1000" size="7" label="Y lower range" help="for Y autoscale, put both upper and lower ranges to 0"/>
+     <param name="Xdown" type="integer" value="19" size="2" label="size lower range"/>
+     <param name="Xup" type="integer" value="30" size="2" label="size upper range"/>
+     <param name="collapsestrands" type="select" label="Whether + and - reads should be collapsed or not">
+          <option value="0">Do not collapse + and - reads</option>
+          <option value="1">Collapse + and - reads</option>
+     </param>
+   </inputs>
+
+  <configfiles>
+    <configfile name="distributionDrawer">
+      ## Setup R error handling to go to stderr
+      options( show.error.messages=F, 
+               error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+      data = read.delim("${output}", header=TRUE)
+      
+      if (${collapsestrands}==1) {
+         data\$forward = data\$all
+         data\$reverse = data\$reverse * 0
+         }
+      data = data[data\$size&gt;=${Xdown}&amp;data\$size&lt;=${Xup},]
+
+      # new data structure
+      newdata = data.frame (
+        group=rep(c("Above","Below"), each=length(data\$size)),
+        x=rep(data\$size,2),
+        y=c(data\$forward, data\$reverse)
+        )
+       color = rep(c("red","darkblue"), each=length(newdata\$x)/2)
+
+      # new use of lattice package for stacked histograms
+      library(lattice)
+
+
+      ## Open output PDF file
+      pdf( "${Final_output}" )
+      if (${Yup}== 0 &amp; ${Ydown}==0) {
+      barchart(y~as.factor(x),data = newdata, origin = 0, horizontal = FALSE,
+                   main="${title}",
+                   col=color, xlab = "Size (nt)", ylab = "Number of reads")
+      } else {
+      barchart(y~as.factor(x),data = newdata, origin = 0, horizontal = FALSE,
+                   ylim=c(-${Ydown}, ${Yup}),
+                   main="${title}",
+                   col=color, xlab = "Size (nt)", ylab = "Number of reads")}
+      ## Close the PDF file
+      devname = dev.off()
+    </configfile>
+  </configfiles>
+
+<outputs>
+    <data format="tabular" name="output" label="Size Distribution"/>
+    <data name="Final_output" format="pdf" label="Size Histogram"/>
+</outputs>
+
+<help>
+
+**What it does**
+
+Parses a Bowtie standard output (not SAM), computes size distributions of reads matched on + and - reference strands, and draws the resulting data frame as an distribution histogram
+
+-----
+
+**Restriction**
+
+.. class:: warningmark
+
+The bowtie call must include the -M 1 option in case of repeated sequence to generate normalisation through random reporting (see Bowtie documentation)
+In case of -k option use (instead of -M), there will be a strong strand bias for those repeated sequences.
+
+-----
+
+**Input formats**
+
+.. class:: warningmark
+
+*Bowtie standard format - MUST include column 2 (strand polarity) and column 4 (read sequence)*
+
+------
+
+
+**Outputs**
+
+The output is a tabular format with a header::
+
+    Size (nt)    all    +    -
+  ----------------------
+   1 Size
+   2 Both strands
+   3 + Strand Polarity
+   4 - Strand Polarity
+
+This data frame is used in turn to generate a histogram usin R
+
+</help>
+
+</tool>

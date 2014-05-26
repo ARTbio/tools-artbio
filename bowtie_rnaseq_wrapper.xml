@@ -1,0 +1,63 @@
+<tool id="bowtie_rnaseq_wrapper" name="match fasta reads for RNAseq" version="1.0.0">
+  <description></description>
+  <requirements><requirement type='package'>bowtie</requirement></requirements>
+  <parallelism method="basic"></parallelism>
+  <command interpreter="python">bowtie_rnaseq_wrapper.py $input $index $output</command>
+  <inputs>
+        <param name="index" type="select" label="Select a reference genome" help="if your genome of interest is not listed - contact Christophe Antoniewski at drosofff@gmail.com">
+		<options from_data_table="ged_bowtie_indexes"></options>
+        </param>
+     <param name="input" type="data" format="fasta" label="Trimmed fasta file" help="Only with trimmed, raw fasta files"/>
+   </inputs>
+   <outputs>
+   <data format="tabular" name="output" />
+   </outputs>
+  <help>
+
+**What it does**
+
+Bowtie_ is a short read aligner designed to be ultrafast and memory-efficient. It is developed by Ben Langmead and Cole Trapnell. Please cite: Langmead B, Trapnell C, Pop M, Salzberg SL. Ultrafast and memory-efficient alignment of short DNA sequences to the human genome. Genome Biology 10:R25.
+
+.. _Bowtie: http://bowtie-bio.sourceforge.net/index.shtml
+
+------
+
+**Restriction**
+
+.. class:: warningmark
+
+This script uses Bowtie to match small RNA reads (*fasta format*) a *DNA* reference index (both strand polarity tested).
+
+.. _Bowtie: http://bowtie-bio.sourceforge.net/index.shtml
+
+Presets, which cannot be modified, are -n 2 (allowing two mismatchs in the 28nt seed alignment). In this Galaxy instance, the script is set up to recruit 12 core processors for the job (-p 12).
+More documentation available at Bowtie webpages
+
+.. _Bowtie: http://bowtie-bio.sourceforge.net/index.shtml
+
+------
+
+**Input formats**
+
+.. class:: warningmark
+
+*The only accepted format for the script is a raw fasta list of reads, clipped from their adapter*
+
+------
+
+
+**Outputs**
+
+The output is in standard bowtie output format, and has the following columns::
+
+    Column    Description
+  --------    --------------------------------------------------------   
+   1 FastaID  fasta identifier
+   2 polarity + or - depending whether the match was reported on the forward or reverse strand
+   3 miR      name of the miR
+   4 Offset   O-based coordinate of the miR on the miRBase pre-miR sequence
+   5 Seq      sequence of the matched Read
+
+
+  </help>
+</tool>

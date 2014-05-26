@@ -1,0 +1,69 @@
+<tool id="Lattice_signatures" name="Lattice of Overlap Signatures">
+	<description></description>
+	<command>python /home/galaxy/galaxy-dist/tools/chrisTools/lattice_signature.py $input $minquery $maxquery $mintarget $maxtarget $output
+                                      #if $refGenomeSource.genomeSource == "history":
+                                        $refGenomeSource.ownFile
+                                        --do_not_extract_index
+                                      #else:
+                                        $refGenomeSource.index
+                                        --extract_index
+                                      #end if
+                ;  bash /home/galaxy/galaxy-dist/tools/chrisTools/r_wrapper.sh $sigplotter
+       </command>
+
+	<inputs>
+          <conditional name="refGenomeSource">
+             <param name="genomeSource" type="select" label="Will you select a reference genome from your history or use a built-in index?" help="Built-ins were indexed using default options">
+               <option value="indexed">Use a built-in index</option>
+               <option value="history">Use one from the history</option>
+             </param>
+             <when value="indexed">
+               <param name="index" type="select" label="Select the reference genome used for the bowtie output" help="if your genome of interest is not listed - contact Christophe Antoniewski at drosofff@gmail.com">
+                 <options from_data_table="ged_bowtie_indexes"></options>
+               </param>
+             </when>
+             <when value="history">
+                <param name="ownFile" type="data" format="fasta"  label="Select the fasta reference" />
+             </when>
+          </conditional>  <!-- refGenomeSource -->
+       		<param name="input" type="data" format="tabular" label="Compute signature from this bowtie standard output"/>
+		<param name="minquery" type="integer" size="3" value="23" label="Min size of query small RNAs" help="'23' = 23 nucleotides"/>
+		<param name="maxquery" type="integer" size="3" value="29" label="Max size of query small RNAs" help="'29' = 29 nucleotides"/>
+                <param name="mintarget" type="integer" size="3" value="23" label="Min size of target small RNAs" help="'23' = 23 nucleotides"/>
+                <param name="maxtarget" type="integer" size="3" value="29" label="Max size of target small RNAs" help="'29' = 29 nucleotides"/>
+	</inputs>
+
+  <configfiles>
+    <configfile name="sigplotter">
+      ## Setup R error handling to go to stderr
+      options( show.error.messages=F,
+               error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+      signature = read.delim("${output}", header=TRUE)
+      library(lattice)
+
+      ## Open output3 PDF file
+      pdf( "${output3}", paper="special", height=11.69, width=8.2677 )
+      xyplot(signature[,3]*100~signature[,1]|signature[,4], type = "l", xlim=c(1,26), main="ping-pong Signature of ${minquery}-${maxquery} against ${mintarget}-${maxtarget}nt small RNAs",
+             par.strip.text=list(cex=.5), strip=strip.custom(which.given=1, bg="lightblue"), scales=list(cex=0.5),
+             cex.main=1, cex=.5, xlab="overlap (nt)", ylab="ping-pong signal [%]",
+             pch=19, col="darkslateblue", lwd =1.5, cex.lab=1.2, cex.axis=1.2,
+             layout=c(4,12), as.table=TRUE, newpage = T)
+      devname = dev.off()
+    </configfile>
+  </configfiles>
+
+        <outputs>
+                <data name="output" format="tabular" label = "signature data frame"/>
+                <data name="output3" format="pdf" label="ping-pong signal (hannon algo.)"/>
+        </outputs>
+
+        <help>
+
+**What it does**
+
+This tool computes the number of pairs by overlap classes (in nt) from a bowtie output file, the z-score calculated from these numbers of pairs, and the ping-pong signal as described in Brennecke et al (2009) Science.
+The numerical options set the min and max size of both the query small rna class and the target small rna class
+Three type of signals are plotted in separate pdf files, the number of pairs founds, the z-score calculated from these numbers of pairs, and the ping-pong signal as described in Brennecke et al (2009) Science.
+
+        </help>
+</tool>

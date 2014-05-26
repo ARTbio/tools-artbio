@@ -1,0 +1,29 @@
+<tool id="signature_sampling" name="signature sampling">
+	<description>analysis</description>
+	<command interpreter="python">signature_sampling.py $input $output $index</command>
+	<inputs>
+            <param name="index" type="select" label="Select the reference genome used for the bowtie output" help="if your genome of interest is not listed - contact Christophe Antoniewski at drosofff@gmail.com">
+                <options from_data_table="ged_bowtie_indexes"></options>
+            </param>
+       		<param name="input" type="data" format="tabular" label="Diagnostic small RNA from this bowtie standard output"/>
+	</inputs>
+	<outputs>
+                <data name="output" format="tabular"/>
+	</outputs>
+	<help>
+
+**What it does**
+
+This tool is a basic wrapper for signature modelization.
+To change methods, modify directily the signature_sampling.py code
+-----	
+
+**Warning**
+
+.. class:: warningmark
+
+Development tool
+
+
+	</help>
+</tool>

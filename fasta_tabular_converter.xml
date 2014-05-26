@@ -1,0 +1,61 @@
+<tool id="fasta_tabular_converter" name="fasta - tabular" version="1.0.0">
+  <description>conversions</description>
+  <command interpreter="python">fasta_tabular_converter.py $input $output $switch.conversionType</command>
+  <inputs>
+    <conditional name="switch">
+       <param name="conversionType" type="select" label="conversion option">
+          <option value="fasta2tabular" select="true">fasta to tabular</option>
+          <option value="tabular2fasta">tabular to fasta</option>
+          <option value="tabular2fastaweight">tabular to fasta weighted</option>
+          <option value="fastaweight2fastaweight">recompile fasta weighted in catenated fasta weighted</option>
+          <option value="fastaweight2fasta">fasta weighted to fasta</option>
+       </param>
+    <when value="fasta2tabular">
+       <param name="input" type="data" format="fasta" label="fasta file to convert to tabular"/>
+    </when>
+    <when value="tabular2fasta">
+       <param name="input" type="data" format="tabular" label="tabular file to convert to fasta"/>
+    </when>
+    <when value="tabular2fastaweight">
+       <param name="input" type="data" format="tabular" label="tabular file to convert to fasta weighted"/>
+    </when>
+    <when value="fastaweight2fastaweight">
+       <param name="input" type="data" format="fasta" label="catenated fasta weighted to recompile" help="Use this option only if you known what you're doing"/>
+    </when>
+    <when value="fastaweight2fasta">
+       <param name="input" type="data" format="fasta" label="fasta weighted file to convert to fasta"/>
+    </when>
+   </conditional>
+
+   </inputs>
+
+ <outputs>
+   <data format="fasta" name="output" label="${switch.conversionType} conversion">
+     <change_format>
+        <when input="switch.conversionType" value="fasta2tabular" format="tabular"/>
+        <when input="switch.conversionType" value="fastaweight2fastaweight" format="fasta"/>
+        <when input="switch.conversionType" value="fastaweight2fasta" format="fasta"/>
+     </change_format>
+   </data>
+</outputs>
+
+<help>
+
+**What it does**
+
+Converts fasta files to tabular files with sequence on first column and occurence of the sequence in the second column; and reciprocally.
+
+This format is suitable for storage of sequence datasets in the data library, and will be used in the future.
+
+Regeneration of the original fasta file from the tabular format is ensured by the same tool
+
+This tool also handle a fasta "weigthed" format with headers as:
+>id_numberofreads
+ATGCATGACCAGATAGGAC
+etc...
+
+with generation of the "weigthed" format from a tabular format, and recompilation of catenated weighted fasta files
+
+</help>
+
+</tool>

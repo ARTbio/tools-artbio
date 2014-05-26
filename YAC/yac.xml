@@ -1,0 +1,58 @@
+ <tool id="yac" name="Clip adapter">
+  <description></description>
+  <command interpreter="python">yac.py $input $output $clip_source.clip_sequence $min $max $Nmode</command>
+  <inputs>
+    <param format="fastq" name="input" type="data" label="Source file"/>
+    <param name="min" type="integer" size="4" value="15" label="min size"/>
+    <param name="max" type="integer" size="4" value="36" label="max size"/>
+    <param name="Nmode" type="select" label="Reads containing Nst">
+        <option value="accepted" selected="True">Accepted</option>
+        <option value="rejected">Rejected</option>
+    </param>
+    <conditional name="clip_source">
+   	 <param name="clip_source_list" type="select" label="Source" help="Built-in adapters or User-provided">
+         	<option value="prebuilt" selected="True">Use a built-in adapter (select from the list below)</option>
+         	<option value="user">Use custom sequence</option>
+         </param>
+         <when value="prebuilt">
+         	<param name="clip_sequence" type="select" label="Select Adapter to clip" help="if your adapter is not listed, input your own sequence">
+                	<option value="TCGTATGCCGTCTTCTGCTTG">Solexa TCGTATGCCGTCTTCTGCTTG</option>
+                        <option value="ATCTCGTATGCCGTCTTCTGCTT">Illumina ATCTCGTATGCCGTCTTCTGCTT</option>
+                        <option value="TGGAATTCTCGGGTGCCAAG" selected="True">Illumina TruSeq  TGGAATTCTCGGGTGCCAAG</option>
+                        <option value="CTGTAGGCACCATCAATCGT">IdT CTGTAGGCACCATCAATCGT</option>
+		</param>
+	</when>
+        <when value="user">
+		 <param name="clip_sequence" type="text" size="35"  label="Enter your Sequence" value="GAATCC"/>
+	</when>
+    </conditional>
+  </inputs>
+  <outputs>
+    <data format="fasta" name="output"  metadata="input" />
+  </outputs>
+
+  <help>
+<!-- write a decent doc ! -->
+This tool clips adapter sequences from a fastq file and fasta file of clipped reads with renumbered fasta headers.
+
+Clipped sequences with Ns can be discarded.
+
+Min size and max size filter clipped reads on their size.
+
+Note that unclipped reads that satisfy the min and max size conditions are kept.
+  </help>
+
+<!-- write a <test> section -->
+	<tests>
+                <test>
+                        <param name="input" value="yac.fastq" ftype="fastqsanger"/>
+                        <param name="min" value="18" />
+                        <param name="max" value="29" />
+                        <param name="clip_source_list" value="prebuilt" />
+                        <param name="clip_sequence" value="ATCTCGTATGCCGTCTTCTGCTT" />
+                        <param name="Nmode" value="accepted" />
+                        <output name="output" file="yac.out" />
+                </test>
+        </tests>
+
+</tool>

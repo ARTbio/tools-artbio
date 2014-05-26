@@ -1,0 +1,51 @@
+<tool id="DESeq2" name="DESeq2 Profiling">
+	<description></description>
+	<command interpreter="bash">r_wrapper.sh $DESeq2 </command>
+	<inputs>
+		<param name="input" type="data" format="tabular" label="miR hit lists, more thant 2 samples"/>
+                <param name="expPlan" type="text" label="experimental plan"/>
+	</inputs>
+
+
+  <configfiles>
+    <configfile name="DESeq2">
+      ## Setup R error handling to go to stderr
+      options( show.error.messages=F,  error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+      suppressMessages(require(DESeq2))
+      ## suppressMessages(require(ReportingTools))
+      countData = read.delim("${input}", header=TRUE)
+      rownames( countData )= countData[,1]
+      countData= countData[ , -1 ]
+      stringconds = "${expPlan}"
+      conds = unlist(strsplit(stringconds, split=""))
+      colData=data.frame(row.names=colnames(countData), condition=conds)
+      dds =  DESeqDataSetFromMatrix(countData = countData, colData = colData, design = ~ condition)
+      colData(dds)\$condition = factor(colData(dds)\$condition, levels=c("C","T"))
+      dds = DESeq(dds, quiet=TRUE)
+      res = results(dds)
+      res = res[order(res\$padj),]
+      baseMeanA =  rowMeans(counts(dds, normalized=TRUE)[rownames(res),colData(dds)\$condition== "C"])
+      baseMeanB =  rowMeans(counts(dds, normalized=TRUE)[rownames(res),colData(dds)\$condition== "T"])
+      res2 = data.frame (gene=rownames(res), baseMeanA=baseMeanA, baseMeanB=baseMeanB, res)
+      ## resNA = res[-which(is.na(res[,8])),] ## omit the NA lignes
+      write.table ( res2, file = "${output}", row.names=FALSE, col.names=TRUE, quote= FALSE, dec = ".", sep = "\t", eol = "\n")
+      ## write.csv(as.data.frame(res), file="${output}")
+    </configfile>
+  </configfiles>
+
+
+
+
+	<outputs>
+		<data name="output" format="tabular" label="DESeq2 differential calling" />
+	</outputs>
+	<help>
+
+**What it does**
+
+DESeq2 differential calling (order by padj, ascending).
+Still in development and testing for replicates/no replicates
+
+
+	</help>
+</tool>

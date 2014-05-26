@@ -1,0 +1,31 @@
+<tool id="11_trunc_pi23" name="Truncate and fasta outputs 23-28nt reads" version="1.0.0">
+  <description>From a bowtie output, generate 23nt truncated sequences from 23-28nt reads, forward and reverse,for subsequent weblogo analysis</description>
+  <parallelism method="basic"></parallelism>
+  <command interpreter="python">trunc_pi23.py $input $F23 $R23</command>
+  <inputs>
+     <param name="input" type="data" format="tabular" label="Bowtie standard output" help="2nd column in bowtie output must not be suppressed"/>
+   </inputs>
+   <outputs>
+   <data format="fasta" name="F23" label="Forward Truncated 23nt sequences"/>
+   <data format="fasta" name="R23" label="Reverse Truncated 23nt sequences"/>
+   </outputs>
+  <help>
+
+**What it does**
+
+Parses a Bowtie standard output (not SAM) and outputs 2 fasta files (RNA) with 23nt-truncated sequences (from 23 to 28nt), forward and reverse reads, respectively
+------
+
+**Input formats**
+
+.. class:: warningmark
+
+*Bowtie standard format - MUST include column 2 (strand polarity) and column 4 (read sequence)*
+
+------
+
+
+**Outputs**
+  2 RNA fasta files with 23nt-trucated, reverse and forward reads, respectively
+  </help>
+</tool>

@@ -1,0 +1,36 @@
+<tool id="search_and_replace" name="Text Search and Replace">
+    <description> for annotation manipulation</description>
+    <command interpreter="python">
+        searchReplace.py $dictionary $input_text_file $replaced_text_file
+    </command>
+
+    <inputs>
+       <param name="dictionary" type="data" label="Table of correspondence" help="Upload your two-columns dataframe"/>
+       <param name="input_text_file" type="data" label="The file to search and replace" help="Any text file"/>
+    </inputs>
+
+    <outputs>
+        <data name="replaced_text_file" format="tabular" metadata_source="input_text_file" label="Edited Text File"/>
+    </outputs>
+
+    <help>
+
+.. class:: warningmark
+
+**WARNING:** Be careful when you locally create your correspondence table file before uploading it.
+You must use a unix compatible format.
+Don't put space in words to find or replacement words, it will not work.
+ 
+
+-----
+
+**What it does**
+
+Performs mutiple and global text replacements in an input file, using a tabulated, two column correspondences table for words to be searched and replaced
+word1_to_find TAB replacement1
+word2_to_find TAB replacement2
+word3_to_find TAB replacement3
+... etc ...
+   </help>
+</tool>
+

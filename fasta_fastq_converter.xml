@@ -1,0 +1,23 @@
+<tool id="fasta_fastq_converter" name="Fasta to FASTQ" version="1.0.0">
+  <description>conversions</description>
+  <command interpreter="python">fasta_fastq_converter.py $input $output</command>
+
+  <inputs>
+       <param name="input" type="data" format="fasta" label="fasta file to convert to fastq sanger" help="assuming a sanger quality of 72 (ascii coding H)"/>
+   </inputs>
+
+ <outputs>
+   <data format="fastqsanger" name="output">
+   </data>
+</outputs>
+
+<help>
+
+**What it does**
+
+Converts fasta files to fastqsanger files, assuming a quality of 72 (ascii coding "H") for all nucleotides 
+
+
+</help>
+
+</tool>

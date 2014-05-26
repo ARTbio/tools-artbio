@@ -1,0 +1,34 @@
+<tool id="hit_list_aggregater2" name="Agregate">
+    <description> miR hit list</description>
+    <command interpreter="python">
+        hit_list_aggregater.py
+        $out_file1
+        $input1
+        #for $q in $queries
+            ${q.input2}
+        #end for
+    </command>
+    <inputs>
+       <param name="input1" type="data" label="Agregate miR hit lists"/>
+        <repeat name="queries" title="Additional Label/Dataset">
+            <param name="input2" type="data" label="Select" />
+        </repeat>
+    </inputs>
+    <outputs>
+        <data name="out_file1" format="input" metadata_source="input1" label="miR hit list agregation"/>
+    </outputs>
+    <help>
+
+.. class:: warningmark
+
+**WARNING:** Be careful not to agregate datasets of different kinds (e.g., datasets must be mir profiles with hit lists at the end of the dataset). This tool does not check if the datasets being agregated are in the same format. 
+
+-----
+
+**What it does**
+
+Agregate miR profiles (experimental version 20-2-2012)
+
+   </help>
+</tool>
+

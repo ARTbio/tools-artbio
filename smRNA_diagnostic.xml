@@ -1,0 +1,27 @@
+<tool id="smRNA_diagnostic" name="smRNA_diagnostic">
+	<description></description>
+	<command interpreter="python">smRNA_diagnostic.py $input $output $index</command>
+	<inputs>
+            <param name="index" type="select" label="Select the reference genome used for the bowtie output" help="if your genome of interest is not listed - contact Christophe Antoniewski at drosofff@gmail.com">
+                <options from_data_table="ged_bowtie_indexes"></options>
+            </param>
+       		<param name="input" type="data" format="tabular" label="Diagnostic small RNA from this bowtie standard output"/>
+	</inputs>
+	<outputs>
+                <data name="output" format="tabular"/>
+	</outputs>
+	<help>
+
+**What it does**
+
+This tool is a basic wrapper for smRtools methods.
+To change methods, modify directily the smRNA_diagnostic.py code
+-----	
+
+**Warning**
+
+.. class:: warningmark
+
+
+	</help>
+</tool>

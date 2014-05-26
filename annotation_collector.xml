@@ -1,0 +1,38 @@
+<tool id="annotation_collector" name="Collect Annotation counts">
+    <description> from matched fasta files</description>
+    <command interpreter="python">
+        annotation_collector.py
+        $out_file
+        $input1 $label1
+        #for $q in $queries
+            ${q.input2} ${q.label2}
+        #end for
+        $title
+    </command>
+    <inputs>
+       <param name="title" type="text" label="Annotation Title"/>
+       <param name="input1" type="data" label="fasta file to annotate"/>
+       <param name="label1" type="text" label="category label"/>
+        <repeat name="queries" title="Additional fasta file and label">
+            <param name="input2" type="data" label="Select" />
+            <param name="label2" type="text" label="Label" />
+        </repeat>
+    </inputs>
+    <outputs>
+        <data name="out_file" format="tabular" metadata_source="input1" label="Annotations"/>
+    </outputs>
+    <help>
+
+.. class:: warningmark
+
+**WARNING:** Be careful not to agregate datasets of different kinds (e.g., datasets must be matched fasta files). This tool does not check if the datasets being annotated are in the same format. 
+
+-----
+
+**What it does**
+
+Generates Annotation Table from fasta files
+
+   </help>
+</tool>
+

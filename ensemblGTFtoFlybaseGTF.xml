@@ -1,0 +1,25 @@
+<tool id="ensemblGTFtoFlybaseGTF" name="ensemblGTF to FlybaseGTF)">
+    <description></description>
+    <command interpreter="python">
+        ensemblGTFtoFlybaseGTF.py
+        $input
+        $output
+    </command>
+    <inputs>
+       <param name="input" type="data" format="gtf" label="Ensemble GTF file to convert to Flybase GTF"/>
+    </inputs>
+
+    <outputs>
+        <data name="output" format="gtf" metadata_source="input" label="Flybase GTF converted file"/>
+    </outputs>
+    <help>
+
+
+
+**What it does**
+
+In house script to convert GTF files from Ensembl so that transcript names (with gene in plain text) show up in trackster
+
+   </help>
+</tool>
+

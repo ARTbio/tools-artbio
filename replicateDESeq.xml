@@ -1,0 +1,44 @@
+<tool id="replicateDESeq" name="DESeq Profiling (replicates)">
+	<description>with sample replicates</description>
+	<command interpreter="bash">r_wrapper.sh $replicateDESeq </command>
+	<inputs>
+		<param name="input" type="data" format="tabular" label="miR hit lists, more thant 2 samples"/>
+                <param name="expPlan" type="text" label="experimental plan"/>
+	</inputs>
+
+
+  <configfiles>
+    <configfile name="replicateDESeq">
+      ## Setup R error handling to go to stderr
+      options( show.error.messages=F,  error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+      suppressMessages(require(DESeq))
+      countsTable = read.delim("${input}", header=TRUE)
+      rownames( countsTable )= countsTable[,1]
+      countsTable= countsTable[ , -1 ]
+      stringconds = "${expPlan}"
+      conds = unlist(strsplit(stringconds, split=""))
+      cds = newCountDataSet( countsTable, conds )
+      cds = estimateSizeFactors( cds )
+      cds = estimateDispersions( cds, method="per-condition", sharingMode="maximum") ## was fit-only before 9-12-2013 !! tried for RNAseq - Actually does not change anything !
+      ## Attention: fitType="local" is added when parametricDispersionFit fails. remove after use !
+      res = nbinomTest( cds, "C", "T" )
+      resNA = res[-which(is.na(res[,8])),] ## omit the NA lignes
+      write.table ( resNA[order(resNA[,8]), ], file = "${output}", row.names=FALSE, col.names=TRUE, quote= FALSE, dec = ".", sep = "\t", eol = "\n")
+    </configfile>
+  </configfiles>
+
+
+
+
+	<outputs>
+		<data name="output" format="tabular" label="DESeq differential calling" />
+	</outputs>
+	<help>
+
+**What it does**
+
+DESeq differential calling (order by padj, ascending), on two samples, no replicate
+
+
+	</help>
+</tool>

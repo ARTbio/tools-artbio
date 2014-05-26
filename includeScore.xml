@@ -1,0 +1,29 @@
+<tool id="includeScore" name="includeScore">
+<description>of a DESeq list in a GFF file</description>
+<command interpreter="python">includeScore.py $DESeq_input $GFF_input $output $id_column $score_column $filter_limit</command>
+
+<inputs>
+	<param name="DESeq_input" type="data" format="tabular" label="DESeq result table"/>
+        <param name="GFF_input" type="data" format="gff3" label="GFF file to enrich with scores"/>
+        <param name="id_column" type="text" size="2" value="1" label="value of the identifier column"/>
+        <param name="score_column" type="text" size="2" value="5" label="value of the log2 fold-change column"/>
+        <param name="filter_limit" type="text" size="10" value="0.00001" label="filter for lower p-adj values"/>
+</inputs>
+
+<outputs>
+	<data name="output" format="gff3" label="score-enriched GFF3 file"/>
+</outputs>
+
+<help>
+
+**What it does**
+
+takes a tabular DESeq2 result and a GFF file in inputs
+and returns the GFF lines corresponding to genes with p-adj under the indicated limit
+and enriched with the fold-changes observed for those genes in the GFF score column 
+
+
+</help>
+
+</tool>
+

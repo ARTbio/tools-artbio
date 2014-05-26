@@ -1,0 +1,13 @@
+<tool id="bamgenerator" name="Bam_from_bowtie_v1">
+  <description>generate SAM then indexed sorted BAM</description>
+  <command>bowtie -v 1 -M 1 --best /Users/deepseq/bin/bowtie/indexes/5.37_Dmel -p 12 -f GKG-13_clip-pipe.fasta -S | samtools view -bS -o GKG-13_clip-pipe.fasta.bam - ; samtools sort GKG-13_clip-pipe.fasta.bam GKG-13_clip-pipe.fasta.bam.sorted ; samtools index GKG-13_clip-pipe.fasta.bam.sorted.bam </command>
+  <inputs>
+    <param name="input1" label="Combine dataset" format="tabular" type="data" />
+    <param name="col1" label="using column" type="data_column" data_ref="input1" />
+    <param name="input2" label="with dataset"	format="tabular" type="data"/>
+    <param name="col2" label="and column" type="data_column" data_ref="input2" />
+  </inputs>
+  <outputs>
+    <data format="input" name="out_file1" metadata_source="input1" />
+  </outputs>
+</tool>

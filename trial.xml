@@ -1,0 +1,28 @@
+<tool id="trial" name="class trial">
+	<description></description>
+	<command interpreter="python">classextract_test.py $input $index $output</command>
+	<inputs>
+            <param name="index" type="select" label="Select the reference genome used for the bowtie output" help="if your genome of interest is not listed - contact Christophe Antoniewski at drosofff@gmail.com">
+                <options from_data_table="ged_bowtie_indexes"></options>
+            </param>
+       		<param name="input" type="data" format="tabular" label="Bowtie standard genomic output"/>
+	</inputs>
+	<outputs>
+		<data name="output" format="tabular"/>
+	</outputs>
+	<help>
+
+**What it does**
+
+This tool computes the piRNA signature (Z-score of 10nt overlap. The output file has the WIG format for genome browser display.
+The numerical option sets the size of the window for which the Z-score is calculated 
+
+-----	
+
+**Warning**
+
+.. class:: warningmark
+
+
+	</help>
+</tool>
