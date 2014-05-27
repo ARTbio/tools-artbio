@@ -6,7 +6,9 @@ from collections import defaultdict
 from numpy import mean, median, std
 from scipy import stats
 
-def get_fasta (index="/home/galaxy/galaxy-dist/bowtie/5.37_Dmel/5.37_Dmel"): # here one must supply the exact base path for the library in galaxy environment
+def get_fasta (index="/home/galaxy/galaxy-dist/bowtie/5.37_Dmel/5.37_Dmel"):
+  '''This function will return a dictionary containing fasta identifiers as keys and the
+  sequence as values. Index must be the path to a fasta file.'''
   p = subprocess.Popen(args=["bowtie-inspect","-a", "0", index], stdout=subprocess.PIPE, stderr=subprocess.STDOUT) # bowtie-inspect outputs sequences on single lines
   outputlines = p.stdout.readlines()
   p.wait()
@@ -132,14 +134,30 @@ class HandleSmRNAwindows:
       F = open (self.alignmentFile, "r")
       dict = {"0":"+", "16":"-"}
       for line in F:
+        if line[0]=='@':
+            continue
         fields = line.split()
         if fields[2] == "*": continue
         polarity = dict[fields[1]]
         gene = fields[2]
         offset = int(fields[3])
-        size = len (fields[8])
+        size = len (fields[9])
         self.instanceDict[gene].addread (polarity, offset, size) # sam format is already 1-based coordinates
       F.close()
+    elif self.alignmentFileFormat == "bam":
+      import pysam
+      samfile = pysam.Samfile(self.alignmentFile)
+      for read in samfile:
+        if read.tid == -1:
+          continue # filter out unaligned reads
+        if read.is_reverse:
+          polarity="-"
+        else:
+          polarity="+"
+        gene = samfile.getrname(read.tid)
+        offset = read.pos
+        size = read.qlen
+        self.instanceDict[gene].addread (polarity, offset+1, size) # pysam converts coordinates to 0-based (https://media.readthedocs.org/pdf/pysam/latest/pysam.pdf)
       return self.instanceDict
 
 class SmRNAwindow:
@@ -153,8 +171,7 @@ class SmRNAwindow:
     
   def addread (self, polarity, offset, size):
     '''ATTENTION ATTENTION ATTENTION'''
-    ''' HERE WERE ARE SWITCHING FROM THE 0-BASED COORDINATE OF BOWTIE TO 1_BASED COORDINATES OTHERWISE THERE IS UNDETERMINATION FOR READ AT OFFSET 0'''
-    offset += 1 # change by christophe on 3-12-2012 test test test
+    ''' We removed the conversion from 0 to 1 based offset, as we do this now during readparsing.'''
     if polarity == "+":
       self.readDict[offset].append(size)
     else:

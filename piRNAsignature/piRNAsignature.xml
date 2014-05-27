@@ -1,6 +1,6 @@
 <tool id="piRNAsignature" name="piRNA Signatures" version="1.0.0">
 	<description></description>
-	<command>python piRNAsignature.py $input $minquery $maxquery $mintarget $maxtarget $minscope $maxscope $output
+	<command>python /home/galaxy/galaxy-dist/tools/GEDtools/piRNAsignature/piRNAsignature.py $input $inputformat $minquery $maxquery $mintarget $maxtarget $minscope $maxscope $output
                                       #if $refGenomeSource.genomeSource == "history":
                                         $refGenomeSource.ownFile
                                         --do_not_extract_index
@@ -12,6 +12,11 @@
        </command>
 
 	<inputs>
+	     <param name="inputformat" type="select" label="format of input file to analyze" help="input files can be tabular bowtie, SAM or BAM">
+		<option value="tabular" selected="True">Tabular</option>
+		<option value="sam">SAM</option>
+		<option value="bam">BAM</option>
+	     </param>
           <conditional name="refGenomeSource">
              <param name="genomeSource" type="select" label="Will you select a reference genome from your history or use a built-in index?" help="Built-ins were indexed using default options">
                <option value="indexed">Use a built-in index</option>
@@ -26,7 +31,7 @@
                 <param name="ownFile" type="data" format="fasta"  label="Select the fasta reference" />
              </when>
           </conditional>  <!-- refGenomeSource -->
-       		<param name="input" type="data" format="tabular" label="Compute signature from this bowtie standard output"/>
+       		<param name="input" type="data" format="tabular,sam,bam" label="Compute signature from this bowtie standard output"/>
 		<param name="minquery" type="integer" size="3" value="23" label="Min size of query small RNAs" help="'23' = 23 nucleotides"/>
 		<param name="maxquery" type="integer" size="3" value="29" label="Max size of query small RNAs" help="'29' = 29 nucleotides"/>
                 <param name="mintarget" type="integer" size="3" value="23" label="Min size of target small RNAs" help="'23' = 23 nucleotides"/>
