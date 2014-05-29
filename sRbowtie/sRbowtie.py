@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # small RNA oriented bowtie wrapper
-# version 1 19-5-2014
+# version 1.01 29-5-2014
 # Usage sRbowtie.py <1 input_fasta_file> <2 alignment method> <3 -v mismatches> <4 out_type> <5 buildIndexIfHistory> <6 fasta/bowtie index> <7 bowtie output> <8 ali_fasta> <9 unali_fasta> <10 --num-threads \${GALAXY_SLOTS:-4}>
+# current rev: for bowtie __norc, move from --supress 2,6,7,8 to --supress 6,7,8. Future Parser must be updated to take into account this standardisation
 # To Do:
-# implement number of bowtie processes as a Galaxy env variable
 # implement an arg parser
 # Christophe Antoniewski <drosofff@gmail.com>
 
@@ -15,7 +15,7 @@ def stop_err( msg ):
 
 def bowtieCommandLiner (alignment_method, v_mis, out_type, aligned, unaligned, input, index, output, pslots="12"):
     if alignment_method=="RNA":
-        x = "-v %s -M 1 --best --strata -p %s --norc --suppress 2,6,7,8" % (v_mis, pslots)
+        x = "-v %s -M 1 --best --strata -p %s --norc --suppress 6,7,8" % (v_mis, pslots)
     elif alignment_method=="unique":
         x =  "-v %s -m 1 -p %s --suppress 6,7,8" % (v_mis, pslots)
     elif  alignment_method=="multiple":
