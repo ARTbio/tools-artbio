@@ -1,15 +1,16 @@
 <tool id="piRNAsignature" name="piRNA Signatures" version="1.0.0">
 	<description></description>
-	<command>python /home/galaxy/galaxy-dist/tools/GEDtools/piRNAsignature/piRNAsignature.py $input $input.ext $minquery $maxquery $mintarget $maxtarget $minscope $maxscope $output
-                                      #if $refGenomeSource.genomeSource == "history":
-                                        $refGenomeSource.ownFile
-                                        --do_not_extract_index
-                                      #else:
-                                        $refGenomeSource.index
-                                        --extract_index
-                                      #end if
-				      $graph_type ;
-                                      bash /home/galaxy/galaxy-dist/tools/GEDtools/piRNAsignature/r_wrapper.sh $sigplotter
+	<command interpreter="python">
+          piRNAsignature.py $input $input.ext $minquery $maxquery $mintarget $maxtarget $minscope $maxscope $output
+          #if $refGenomeSource.genomeSource == "history":
+            $refGenomeSource.ownFile
+            --do_not_extract_index
+          #else:
+            $refGenomeSource.index
+            --extract_index
+          #end if
+	  $graph_type 
+          $sigplotter
        </command>
 
 	<inputs>
