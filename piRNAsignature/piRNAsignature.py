@@ -71,3 +71,7 @@ else:
       print >> OUT, "%i\t%i\t%f\t%s" % (classe, local_frequency_table[classe], local_percent_table[classe], x)
 
 OUT.close()
+
+## Run the R script that is defined in the xml using the Rscript binary provided with R.
+R_command="Rscript "+ sys.argv[13]
+process = subprocess.Popen(R_command.split())
