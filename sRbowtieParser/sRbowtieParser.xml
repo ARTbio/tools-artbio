@@ -1,0 +1,59 @@
+<tool id="sRbowtieParser" name="Parse items in sRbowtie alignment" version="0.9.0">
+  <description></description>
+  <requirements><requirement type='package'>bowtie-inspect</requirement></requirements>
+  <parallelism method="basic"></parallelism>
+<command interpreter="python">
+        itemparser.py 
+	          #if $refGenomeSource.genomeSource == "history":
+                  $refGenomeSource.ownFile ## index source
+           	   --do_not_extract_index
+          	  #else:
+            	  $refGenomeSource.index   ## index source
+            	  --extract_index
+          	  #end if
+		  $output
+		  #for $i in $input_list
+    		    $i $i.ext "$i.name"
+		  #end for
+
+</command>
+  <inputs>
+       <conditional name="refGenomeSource">
+           <param name="genomeSource" type="select" label="Will you select a reference genome from your history or use a built-in index?" help="Built-ins were indexed using default options">
+               <option value="indexed">Use a built-in index</option>
+               <option value="history">Use one from the history</option>
+           </param>
+           <when value="indexed">
+               <param name="index" type="select" label="Select the reference genome used for the bowtie output" help="if your genome of interest is not listed contact the administrator">
+                  <options from_data_table="ged_bowtie_indexes"></options>
+               </param>
+           </when>
+           <when value="history">
+                <param name="ownFile" type="data" format="fasta"  label="Select the fasta reference" />
+           </when>
+       </conditional>  <!-- refGenomeSource -->
+       <param name="input_list" type="data" label="Select multiple alignments to parsem" multiple="true"/>
+   </inputs>
+   <outputs>
+   <data format="tabular" name="output" label="Read Count  Lists"/>
+   </outputs>
+  <help>
+
+**What it does**
+
+Parses read counts from a Bowtie standard tabular output.
+Here a bowtie match done against an index composed of a set of items is parsed and expressed as a hit list of the corresponding items
+In this new version, the bowtie match may have been done either against both DNA strands or only against the "sense" strands (RNA type) of the reference index
+Use the manual option to enter a library label, or use the automatic option to infer the library label from the input file name (very useful for batch workflows)
+
+If you use the manual option, **do not put spaces in the labels you choose**, otherwise it will mislead the parser script
+
+If you use automatic option to infer the library label from the input file name,
+**it is mandatory that you do not put any space in this input file name**
+otherwise, it will mislead the parser script
+
+
+
+  </help>
+</tool>
+
