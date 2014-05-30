@@ -4,7 +4,7 @@
 # Usage itemparser.py <bowtie_out> <bowtie index> <LABEL> <output file>
 
 import sys, subprocess
-from smRtools import get_fasta_headers
+#from smRtools import get_fasta_headers
 
 def SelectFilterFunction(input_file):
   F=open(input_file)
@@ -36,16 +36,23 @@ def print_hitlist (outfile, item_dic, label):
     print >> F, "%s\t%i" % (item, item_dic[item])
   return
 
-bowtie_out = sys.argv[1]
-bowtie_index = sys.argv[2]
-label = sys.argv[3]
-out = sys.argv[4]
-filter = SelectFilterFunction(bowtie_out)
+#bowtie_out = sys.argv[1]
+#bowtie_index = sys.argv[2]
+#label = sys.argv[3]
+#out = sys.argv[4]
+#filter = SelectFilterFunction(bowtie_out)
 
-hit_list = get_fasta_headers (bowtie_index)
-for item in hit_list:
-  hit_list[item] = 0
+#hit_list = get_fasta_headers (bowtie_index)
+#for item in hit_list:
+#  hit_list[item] = 0
 
-hit_list = produce_hitlist (bowtie_out, hit_list)
-print_hitlist (out, hit_list, label)
+#hit_list = produce_hitlist (bowtie_out, hit_list)
+#print_hitlist (out, hit_list, label)
 
+F = open (sys.argv[3], "w")
+for i in sys.argv:
+  print >> F, i
+print >> F, "______________________"
+for i in sys.argv[4:]:
+  print >> F, i
+F.close()
