@@ -24,6 +24,7 @@ class Clip:
     self.adaptmotifs= motives(self.adapter)
 
   def scanadapt(self, adaptmotives=[], sequence=""):
+    '''scans sequence for adapter motives'''
     if sequence.rfind(adaptmotives[0]) != -1:
       return sequence[:sequence.rfind(adaptmotives[0])]
     for motif in adaptmotives[1:]:
@@ -32,6 +33,8 @@ class Clip:
     return sequence
 
   def clip_with_N (self):
+    '''clips adapter sequences from inputfile. 
+    Reads containing N are retained.'''
     iterator = 0
     id = 0
     F = open (self.inputfile, "r")
@@ -46,6 +49,8 @@ class Clip:
     F.close()
     O.close()
   def clip_without_N (self):
+    '''clips adapter sequences from inputfile. 
+    Reads containing N are rejected.'''
     iterator = 0
     id = 0
     F = open (self.inputfile, "r")
@@ -63,7 +68,7 @@ class Clip:
 
 def __main__ (inputfile, outputfile, adapter, minsize, maxsize, Nmode):
   instanceClip = Clip (inputfile, outputfile, adapter, minsize, maxsize)
-  if Nmode == "accepted":
+  if Nmode == "accept":
     instanceClip.clip_with_N()
   else:
     instanceClip.clip_without_N()
