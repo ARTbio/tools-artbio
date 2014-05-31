@@ -1,58 +1,43 @@
 #!/usr/bin/python
-# python parser module to analyse bowtie match whatever option nrcs or rcs has been selected
-# version 2 (the previous version was only taking in charge bowtie output with +/- strand information
-# Usage itemparser.py <bowtie_out> <bowtie index> <LABEL> <output file>
+# python parser module to analyse sRbowtie alignments
+# version 0.9
+# Usage sRbowtieParser.py  <1:index source> <2:extraction directive> <3:outputL> <4:polarity> <5:6:7 filePath:FileExt:FileLabel> <.. ad  lib>
 
-import sys, subprocess
-#from smRtools import get_fasta_headers
+import sys
+from smRtools import *
 
-def SelectFilterFunction(input_file):
-  F=open(input_file)
-  sampleline = F.readline()
-  F.close()
-  samplefields=sampleline.split("\t") # bug correction for "\t" instead of any white space
-  if samplefields[1] not in ["+", "-"]:
-    def filter (line):
-      fields = line.split("\t") # bug correction for "\t" instead of any white space
-      return fields[1]
-    return filter
-  else:
-    def filter (line):
-      fields = line.split("\t") # bug correction for "\t" instead of any white space
-      return fields[2]
-    return filter
+IndexSource = sys.argv[1]
+ExtractionDirective = sys.argv[2]
+if ExtractionDirective == "--do_not_extract_index":
+  genomeRefFormat = "fastaSource"
+elif  ExtractionDirective == "--extract_index":
+  genomeRefFormat = "bowtieIndex"
+Output = sys.argv[3]
+Polarity = sys.argv[4] # maybe "both", "sense", "antisense"
+Triplets = [sys.argv[5:][i:i+3] for i in xrange(0, len(sys.argv[5:]), 3)]
+MasterListOfGenomes = {}
 
-def produce_hitlist (bowtie_out, item_dic):
-  F = open (bowtie_out, "r")
-  for line in F:
-    item_dic[filter(line)] += 1
-  F.close()
-  return item_dic
+for [filePath, FileExt, FileLabel] in Triplets:
+  MasterListOfGenomes[FileLabel] = HandleSmRNAwindows (filePath, FileExt, IndexSource, genomeRefFormat) 
 
-def print_hitlist (outfile, item_dic, label):
-  F = open (outfile, "w")
-  print >> F, "gene\t%s" % label
-  for item in sorted(item_dic) :
-    print >> F, "%s\t%i" % (item, item_dic[item])
-  return
+header = ["gene"]
+for [filePath, FileExt, FileLabel] in Triplets:
+  header.append(FileLabel)
 
-#bowtie_out = sys.argv[1]
-#bowtie_index = sys.argv[2]
-#label = sys.argv[3]
-#out = sys.argv[4]
-#filter = SelectFilterFunction(bowtie_out)
+label1 = MasterListOfGenomes.keys()[0]
 
-#hit_list = get_fasta_headers (bowtie_index)
-#for item in hit_list:
-#  hit_list[item] = 0
-
-#hit_list = produce_hitlist (bowtie_out, hit_list)
-#print_hitlist (out, hit_list, label)
 
 F = open (sys.argv[3], "w")
-for i in sys.argv:
-  print >> F, i
-print >> F, "______________________"
-for i in sys.argv[4:]:
-  print >> F, i
+print >> F, "\t".join(header)
+for item in sorted (MasterListOfGenomes[header[1]].instanceDict.keys() ):
+  line=[item]
+  for sample in header[1:]:
+    if Polarity == "both":
+      count = str (MasterListOfGenomes[sample].instanceDict[item].readcount())
+    elif Polarity == "sense":
+      count = str (MasterListOfGenomes[sample].instanceDict[item].forwardreadcount())
+    elif Polarity == "antisense":
+      count = str (MasterListOfGenomes[sample].instanceDict[item].reversereadcount())
+    line.append(count)
+  print >> F,  "\t".join(line )
 F.close()

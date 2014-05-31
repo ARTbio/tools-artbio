@@ -3,6 +3,7 @@
 # Christophe Antoniewski <drosofff@gmail.com>
 # Usage piRNAsignature.py <1:input> <2:format of input> <3:minsize query> <4:maxsize query> <5:minsize target> <6:maxsize target>
 #			  <7:minscope> <8:maxscope> <9:output> <10:bowtie index> <11:procedure option> <12: graph (global or lattice)>
+#			  <13: R code>
 
 import sys, subprocess
 from smRtools import *
