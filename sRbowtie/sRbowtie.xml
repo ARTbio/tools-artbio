@@ -1,4 +1,4 @@
-<tool id="bowtieForSmallRNA" name="sRbowtie" version="1.0.0">
+<tool id="bowtieForSmallRNA" name="sRbowtie" version="1.0.1">
   <description>for FASTA small reads</description>
   <requirements>
 	<requirement type='package'>bowtie</requirement>
@@ -75,6 +75,24 @@
             <when input="output_type" value="sam" format="sam" />
             <when input="output_type" value="bam" format="bam" />
         </change_format>
+<!-- Set metadata based on reference genome -->
+      <actions>
+        <conditional name="refGenomeSource.genomeSource">
+          <when value="indexed">
+            <action type="metadata" name="dbkey">
+              <option type="from_data_table" name="bowtie_indexes" column="1" offset="0">
+                <filter type="param_value" column="0" value="#" compare="startswith" keep="False"/>
+                <filter type="param_value" ref="refGenomeSource.index" column="0"/>
+              </option>
+            </action>
+          </when>
+          <when value="history">
+            <action type="metadata" name="dbkey">
+              <option type="from_param" name="refGenomeSource.ownFile" param_attribute="dbkey" />
+            </action>
+          </when>
+        </conditional>
+      </actions>
    </data>
    <data format="fasta" name="aligned" label="Matched reads">
 	<filter>additional_fasta == "al" or additional_fasta == "al_and_unal"</filter>
