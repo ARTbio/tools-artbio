@@ -104,7 +104,8 @@ def extractsubinstance (start, end, instance):
   return subinstance
 
 class HandleSmRNAwindows:
-  def __init__(self, alignmentFile="~", alignmentFileFormat="tabular", genomeRefFile="~", genomeRefFormat="bowtieIndex"):
+  def __init__(self, alignmentFile="~", alignmentFileFormat="tabular", genomeRefFile="~", genomeRefFormat="bowtieIndex", biosample="Undetermined"):
+    self.biosample = biosample
     self.alignmentFile = alignmentFile
     self.alignmentFileFormat = alignmentFileFormat # can be "tabular" or "sam"
     self.genomeRefFile = genomeRefFile
@@ -115,7 +116,7 @@ class HandleSmRNAwindows:
     elif genomeRefFormat == "fastaSource":
       self.itemDict = get_fasta_from_history (genomeRefFile)
     for item in self.itemDict:
-      self.instanceDict[item] = SmRNAwindow(item, self.itemDict[item]) # create as many instances as there is items
+      self.instanceDict[item] = SmRNAwindow(item, sequence=self.itemDict[item], windowoffset=1, biosample=biosample) # create as many instances as there is items
     self.readfile()
 
   def readfile (self) :
@@ -162,7 +163,8 @@ class HandleSmRNAwindows:
 
 class SmRNAwindow:
 
-  def __init__(self, gene, sequence="ATGC", windowoffset=1):
+  def __init__(self, gene, sequence="ATGC", windowoffset=1, biosample="Undetermined"):
+    self.biosample = biosample
     self.sequence = sequence
     self.gene = gene
     self.windowoffset = windowoffset
