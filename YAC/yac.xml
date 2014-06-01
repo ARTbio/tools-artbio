@@ -1,4 +1,4 @@
- <tool id="yac" name="Clip adapter">
+ <tool id="yac" name="Clip adapter" version="1.0.0">
   <description></description>
   <command interpreter="python">yac.py $input $output $clip_source.clip_sequence $min $max $Nmode</command>
   <inputs>
