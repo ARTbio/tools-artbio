@@ -1,4 +1,4 @@
-<tool id="sRbowtieParser" name="Parse items in sRbowtie alignment" version="0.9.0">
+<tool id="sRbowtieParser" name="Parse items in sRbowtie alignment" version="0.9.1">
   <description></description>
   <requirements><requirement type='package'>bowtie-inspect</requirement></requirements>
   <parallelism method="basic"></parallelism>
@@ -8,12 +8,13 @@
                     $refGenomeSource.ownFile ## index source
          	    --do_not_extract_index
           	  #else:
-            	    $refGenomeSource.index.fields.path   ## index source
+		    #silent reference= filter( lambda x: str( x[0] ) == str( $input_list.dbkey ), $__app__.tool_data_tables[ 'bowtie_indexes' ].get_fields() )[0][-1]
+            	    $reference   ## index source
             	    --extract_index
           	  #end if
 		  $output
 		  $polarity
-		  #for $i in $input_list
+		  #for $i in $refGenomeSource.input_list
     		    $i $i.ext "$i.name"
 		  #end for
 
@@ -25,15 +26,15 @@
                <option value="history">Use one from the history</option>
            </param>
            <when value="indexed">
-               <param name="index" type="select" label="Select the reference genome used for the bowtie output" help="if your genome of interest is not listed contact the administrator">
-                  <options from_data_table="bowtie_indexes"></options>
+               <param name="input_list" type="data" label="Select multiple alignments to parse" multiple="true">
+                  <validator type="dataset_metadata_in_data_table" table_name="bowtie_indexes" metadata_name="dbkey" metadata_column="0" message="database not set for this bowtie output. Select the database(=genome used for matching) manually, or select a reference fasta from your history."/>
                </param>
            </when>
            <when value="history">
                 <param name="ownFile" type="data" format="fasta"  label="Select the fasta reference" />
+	        <param name="input_list" type="data" label="Select multiple alignments to parse" multiple="true"/>
            </when>
        </conditional>  <!-- refGenomeSource -->
-       <param name="input_list" type="data" label="Select multiple alignments to parse" multiple="true"/>
        <param name="polarity" type="select" label="how to count sense and antisense reads">
          <option value="both">count both sense and antisense reads</option>
          <option value="sense">count only sense reads</option>
