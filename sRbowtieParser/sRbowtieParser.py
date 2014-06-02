@@ -24,9 +24,6 @@ header = ["gene"]
 for [filePath, FileExt, FileLabel] in Triplets:
   header.append(FileLabel)
 
-label1 = MasterListOfGenomes.keys()[0]
-
-
 F = open (sys.argv[3], "w")
 print >> F, "\t".join(header)
 for item in sorted (MasterListOfGenomes[header[1]].instanceDict.keys() ):

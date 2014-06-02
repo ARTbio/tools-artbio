@@ -33,7 +33,7 @@
                 <param name="ownFile" type="data" format="fasta"  label="Select the fasta reference" />
            </when>
        </conditional>  <!-- refGenomeSource -->
-       <param name="input_list" type="data" label="Select multiple alignments to parsem" multiple="true"/>
+       <param name="input_list" type="data" label="Select multiple alignments to parse" multiple="true"/>
        <param name="polarity" type="select" label="how to count sense and antisense reads">
          <option value="both">count both sense and antisense reads</option>
          <option value="sense">count only sense reads</option>

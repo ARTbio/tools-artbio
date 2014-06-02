@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # yac = yet another clipper
-# v 0.9.1
+# v 1.0.0
 # Usage yac.py  $input $output $adapter_to_clip $min $max $Nmode
 # Christophe Antoniewski <drosofff@gmail.com>
 

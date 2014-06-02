@@ -104,7 +104,8 @@ def extractsubinstance (start, end, instance):
   return subinstance
 
 class HandleSmRNAwindows:
-  def __init__(self, alignmentFile="~", alignmentFileFormat="tabular", genomeRefFile="~", genomeRefFormat="bowtieIndex"):
+  def __init__(self, alignmentFile="~", alignmentFileFormat="tabular", genomeRefFile="~", genomeRefFormat="bowtieIndex", biosample="Undetermined"):
+    self.biosample = biosample
     self.alignmentFile = alignmentFile
     self.alignmentFileFormat = alignmentFileFormat # can be "tabular" or "sam"
     self.genomeRefFile = genomeRefFile
@@ -115,7 +116,7 @@ class HandleSmRNAwindows:
     elif genomeRefFormat == "fastaSource":
       self.itemDict = get_fasta_from_history (genomeRefFile)
     for item in self.itemDict:
-      self.instanceDict[item] = SmRNAwindow(item, self.itemDict[item]) # create as many instances as there is items
+      self.instanceDict[item] = SmRNAwindow(item, sequence=self.itemDict[item], windowoffset=1, biosample=biosample) # create as many instances as there is items
     self.readfile()
 
   def readfile (self) :
@@ -162,7 +163,8 @@ class HandleSmRNAwindows:
 
 class SmRNAwindow:
 
-  def __init__(self, gene, sequence="ATGC", windowoffset=1):
+  def __init__(self, gene, sequence="ATGC", windowoffset=1, biosample="Undetermined"):
+    self.biosample = biosample
     self.sequence = sequence
     self.gene = gene
     self.windowoffset = windowoffset
@@ -370,18 +372,21 @@ class SmRNAwindow:
         mylist.append("%s\t%s\t%s\t%s" % (self.gene, offset, -readmap[offset][0], "R") )
     return mylist
 
-  def readcoverage (self):
+  def readcoverage (self, upstream_coord=None, downstream_coord=None):
     '''This method has not been tested yet 15-11-2013'''
+    upstream_coord = upstream_coord or 1
+    downstream_coord = downstream_coord or self.size
     forward_coverage = defaultdict(int)
     reverse_coverage = defaultdict(int)
     for offset in self.readDict.keys():
       for read in self.readDict[offset]:
-        if offset > 0:
+        if upstream_coord >= offset >= downstream_coord:
           for i in range(read):
             forward_coverage[offset+i] += 1
-        elif offset < 0:
+        elif -downstream_coord <= offset <= -upstream_coord:
           for i in range(read):
             reverse_coverage[-offset-i] -= 1 ## positive coordinates in the instance, with + for forward coverage and - for reverse coverage
+    #in dev
     return forward_coverage, reverse_coverage
 
           

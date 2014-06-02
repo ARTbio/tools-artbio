@@ -1,0 +1,89 @@
+<tool id="MirParser" name="Parse miRNAs" version="0.9.1">
+  <description>from sRbowtie aligment</description>
+  <requirements><requirement type='package'>bowtie-inspect</requirement></requirements>
+  <parallelism method="basic"></parallelism>
+<command interpreter="python">
+        MirParser.py 
+	          #if $refGenomeSource.genomeSource == "history":
+                    $refGenomeSource.ownFile ## index source
+         	    --do_not_extract_index
+          	  #else:
+		    #silent reference= filter( lambda x: str( x[0] ) == str( $input_list.dbkey ), $__app__.tool_data_tables[ 'bowtie_indexes' ].get_fields() )[0][-1]
+		    $reference
+		    --extract_index
+          	  #end if
+		  $output1 ## for pre-mirs
+		  $output2 ## for mature mirs
+		  $GFF3
+		  #for $i in $refGenomeSource.input_list
+    		    $i $i.ext "$i.name"
+		  #end for
+
+</command>
+  <inputs>
+       <conditional name="refGenomeSource">
+           <param name="genomeSource" type="select" label="Will you select a reference genome from your history or use a built-in index?" help="Built-ins were indexed using default options">
+               <option value="indexed">Use a built-in index</option>
+               <option value="history">Use one from the history</option>
+           </param>
+           <when value="indexed">
+	       <param name="input_list" type="data" label="Select multiple alignments to parse" multiple="true">
+                  <validator type="dataset_metadata_in_data_table" table_name="bowtie_indexes" metadata_name="dbkey" metadata_column="0" message="database not set for this bowtie output. Select the database(=genome used for matching) manually, or select a reference fasta from your history."/>
+               </param>
+           </when>
+           <when value="history">
+	       <param name="input_list" type="data" label="Select multiple alignments to parse" multiple="true"/>
+               <param name="ownFile" type="data" format="fasta"  label="Select the fasta reference" />
+           </when>
+       </conditional>  <!-- refGenomeSource -->
+       <param name="GFF3" type="data" label="miRbase GFF3 guide" />
+   </inputs>
+   <outputs>
+   <data format="tabular" name="output1" label="Premirs Count  Lists"/>
+   <data format="tabular" name="output2" label="Mature Mirs Count  Lists"/>
+   </outputs>
+  <help>
+
+**What it does**
+
+Bowtie_ is a short read aligner designed to be ultrafast and memory-efficient. It is developed by Ben Langmead and Cole Trapnell. Please cite: Langmead B, Trapnell C, Pop M, Salzberg SL. Ultrafast and memory-efficient alignment of short DNA sequences to the human genome. Genome Biology 10:R25.
+
+.. _Bowtie: http://bowtie-bio.sourceforge.net/index.shtml
+
+------
+
+**Inportant restriction**
+
+.. class:: warningmark
+
+This is a very restricted usage of bowtie intented to match miRNA reads on a miRbase reference pre-indexed for bowtie.
+The main option presets are -v 1 (allowing only one mismatch for alignments), -M 1 accompanied with --best and --strata, to match randomly the reads that may match to more that pre-miR sequence ("isomirs"), and --norc to match only on forward strands of pre-miRs. In addition the script is currently set up to run with to core processors (-p 2).
+More documentation available at Bowtie webpages
+
+.. _Bowtie: http://bowtie-bio.sourceforge.net/index.shtml
+
+------
+
+**Input formats**
+
+.. class:: warningmark
+
+*For simplicity, the only accepted format for this script is a raw fasta list of reads, after adapter clipping*
+
+------
+
+
+**Outputs**
+
+The output is in standard bowtie output format, and has the following columns::
+
+    Column    Description
+  --------    --------------------------------------------------------   
+   1 FastaID  fasta identifier
+   2 miR      name of the miR
+   3 Offset   O-based coordinate of the miR on the miRBase pre-miR sequence
+   4 Seq      sequence of the matched Read
+
+
+  </help>
+</tool>
