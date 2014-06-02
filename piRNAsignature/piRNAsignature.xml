@@ -1,12 +1,13 @@
-<tool id="piRNAsignature" name="piRNA Signatures" version="1.0.0">
+<tool id="piRNAsignature" name="piRNA Signatures" version="1.0.1">
 	<description></description>
 	<command interpreter="python">
-          piRNAsignature.py $input $input.ext $minquery $maxquery $mintarget $maxtarget $minscope $maxscope $output
+          piRNAsignature.py $refGenomeSource.input $refGenomeSource.input.ext $minquery $maxquery $mintarget $maxtarget $minscope $maxscope $output
           #if $refGenomeSource.genomeSource == "history":
             $refGenomeSource.ownFile
             --do_not_extract_index
           #else:
-            $refGenomeSource.index
+            #silent reference= filter( lambda x: str( x[0] ) == str( $input.dbkey ), $__app__.tool_data_tables[ 'bowtie_indexes' ].get_fields() )[0][-1]
+            $reference
             --extract_index
           #end if
 	  $graph_type 
@@ -19,16 +20,16 @@
                <option value="indexed">Use a built-in index</option>
                <option value="history">Use one from the history</option>
              </param>
-             <when value="indexed">
-               <param name="index" type="select" label="Select the reference genome used for the bowtie output" help="if your genome of interest is not listed - contact Christophe Antoniewski at drosofff@gmail.com">
-                 <options from_data_table="ged_bowtie_indexes"></options>
-               </param>
-             </when>
+	     <when value="indexed">
+  	        <param name="input" type="data" format="tabular,sam,bam" label="Compute signature from this bowtie standard output">
+		  <validator type="dataset_metadata_in_data_table" table_name="bowtie_indexes" metadata_name="dbkey" metadata_column="0" message="database not set for this bowtie output. Select the database(=genome used for matching) manually, or select a reference fasta from your history."/>
+	        </param>
+	     </when>
              <when value="history">
                 <param name="ownFile" type="data" format="fasta"  label="Select the fasta reference" />
+  	        <param name="input" type="data" format="tabular,sam,bam" label="Compute signature from this bowtie standard output"/>
              </when>
           </conditional>  <!-- refGenomeSource -->
-       		<param name="input" type="data" format="tabular,sam,bam" label="Compute signature from this bowtie standard output"/>
 		<param name="minquery" type="integer" size="3" value="23" label="Min size of query small RNAs" help="'23' = 23 nucleotides"/>
 		<param name="maxquery" type="integer" size="3" value="29" label="Max size of query small RNAs" help="'29' = 29 nucleotides"/>
                 <param name="mintarget" type="integer" size="3" value="23" label="Min size of target small RNAs" help="'23' = 23 nucleotides"/>
@@ -65,7 +66,7 @@
         ## Close the PDF file
         ## Open output3 PDF file
         pdf( "${output3}" )
-        plot(signature[,1], signature[,3]*100, type = "l", main="ping-pong Signature of 23-29 against 23-29nt small RNAs",
+        plot(signature[,1], signature[,3]*100, type = "l", main="ping-pong Signature of ${minquery}-${maxquery} against ${mintarget}-${maxtarget}nt small RNAs",
              cex.main=1, xlab="overlap (nt)", ylab="ping-pong signal [%]", ylim=c(0,50),
              pch=19, col="darkslateblue", lwd =4, cex.lab=1.2, cex.axis=1, xaxt="n")
         axis(1, at=seq(from=1, to=length(signature[,1]), by=3) )
@@ -80,7 +81,7 @@
         options( show.error.messages=F,
                error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
         library(lattice)
-        print (xyplot(signature[,3]*100~signature[,1]|signature[,4], type = "l", xlim=c(1,26), main="ping-pong Signature of 23-29 against 23-29nt small RNAs",
+        print (xyplot(signature[,3]*100~signature[,1]|signature[,4], type = "l", xlim=c(1,26), main="ping-pong Signature of ${minquery}-${maxquery} against ${mintarget}-${maxtarget}nt small RNAs",
              par.strip.text=list(cex=.5), strip=strip.custom(which.given=1, bg="lightblue"), scales=list(cex=0.5),
              cex.main=1, cex=.5, xlab="overlap (nt)", ylab="ping-pong signal [%]",
              pch=19, col="darkslateblue", lwd =1.5, cex.lab=1.2, cex.axis=1.2,
