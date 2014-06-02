@@ -376,17 +376,18 @@ class SmRNAwindow:
     '''This method has not been tested yet 15-11-2013'''
     upstream_coord = upstream_coord or 1
     downstream_coord = downstream_coord or self.size
-    forward_coverage = defaultdict(int)
-    reverse_coverage = defaultdict(int)
+    forward_coverage = dict ([(i,0) for i in xrange(1, downstream_coord-upstream_coord+1)])
+    reverse_coverage = dict ([(i,0) for i in xrange(1, downstream_coord-upstream_coord+1)])
     for offset in self.readDict.keys():
-      for read in self.readDict[offset]:
-        if upstream_coord >= offset >= downstream_coord:
-          for i in range(read):
-            forward_coverage[offset+i] += 1
-        elif -downstream_coord <= offset <= -upstream_coord:
-          for i in range(read):
-            reverse_coverage[-offset-i] -= 1 ## positive coordinates in the instance, with + for forward coverage and - for reverse coverage
-    #in dev
+      if (offset > 0) and ((offset-upstream_coord+1) in forward_coverage.keys() ):
+        for read in self.readDict[offset]:
+          for i in xrange(read):
+            forward_coverage[offset-upstream_coord+1+i] += 1
+      elif -offset-upstream_coord+1 in reverse_coverage.keys():
+        for i in xrange(read):
+          reverse_coverage[-offset-upstream_coord-i] += 1 ## positive coordinates in the instance, with + for forward coverage and - for reverse coverage
+    output_list = []
+    
     return forward_coverage, reverse_coverage
 
           
