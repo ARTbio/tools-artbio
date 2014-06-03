@@ -401,8 +401,9 @@ class SmRNAwindow:
               except KeyError:
                 continue # an antisense read may span over the upstream limit
     output_list = []
+    maximum = max (forORrev_coverage.values()) or 1
     for n in sorted (forORrev_coverage):
-      output_list.append("%s\t%s\t%s\t%s\t%s" % (self.biosample, windowName, n, forORrev_coverage[n], majorcoverage))
+      output_list.append("%s\t%s\t%s\t%s\t%s\t%s" % (self.biosample, windowName, n, forORrev_coverage[n], float(forORrev_coverage[n])/maximum, majorcoverage))
     return "\n".join(output_list)
 
           

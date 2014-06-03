@@ -67,6 +67,6 @@ print >> Fmaturemires, "\n".join(finalMatureList )
 Fmaturemires.close()
 
 Flattice = open(lattice, "w")
-print >> Flattice, "%s\t%s\t%s\t%s\t%s" % ("sample", "mir", "offset", "counts", "polarity")
+print >> Flattice, "%s\t%s\t%s\t%s\t%s\t%s" % ("sample", "mir", "offset", "counts","countsNorm",  "polarity")
 print >> Flattice, "\n".join(lattice_dataframe)
 Flattice.close()
