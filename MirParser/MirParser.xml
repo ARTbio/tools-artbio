@@ -15,6 +15,7 @@
 		  $output1 ## for pre-mirs
 		  $output2 ## for mature mirs
 		  $GFF3
+		  $lattice
 		  #for $i in $refGenomeSource.input_list
     		    $i $i.ext "$i.name"
 		  #end for
@@ -41,6 +42,7 @@
    <outputs>
    <data format="tabular" name="output1" label="Premirs Count  Lists"/>
    <data format="tabular" name="output2" label="Mature Mirs Count  Lists"/>
+   <data format="tabular" name="lattice" label="Lattice Dataframe"/>
    </outputs>
   <help>
 

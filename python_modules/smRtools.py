@@ -104,7 +104,7 @@ def extractsubinstance (start, end, instance):
   return subinstance
 
 class HandleSmRNAwindows:
-  def __init__(self, alignmentFile="~", alignmentFileFormat="tabular", genomeRefFile="~", genomeRefFormat="bowtieIndex", biosample="Undetermined"):
+  def __init__(self, alignmentFile="~", alignmentFileFormat="tabular", genomeRefFile="~", genomeRefFormat="bowtieIndex", biosample="undetermined"):
     self.biosample = biosample
     self.alignmentFile = alignmentFile
     self.alignmentFileFormat = alignmentFileFormat # can be "tabular" or "sam"
@@ -116,7 +116,7 @@ class HandleSmRNAwindows:
     elif genomeRefFormat == "fastaSource":
       self.itemDict = get_fasta_from_history (genomeRefFile)
     for item in self.itemDict:
-      self.instanceDict[item] = SmRNAwindow(item, sequence=self.itemDict[item], windowoffset=1, biosample=biosample) # create as many instances as there is items
+      self.instanceDict[item] = SmRNAwindow(item, sequence=self.itemDict[item], windowoffset=1, biosample=self.biosample) # create as many instances as there is items
     self.readfile()
 
   def readfile (self) :
@@ -372,23 +372,34 @@ class SmRNAwindow:
         mylist.append("%s\t%s\t%s\t%s" % (self.gene, offset, -readmap[offset][0], "R") )
     return mylist
 
-  def readcoverage (self, upstream_coord=None, downstream_coord=None):
+  def readcoverage (self, upstream_coord=None, downstream_coord=None, windowName=None):
     '''This method has not been tested yet 15-11-2013'''
     upstream_coord = upstream_coord or 1
     downstream_coord = downstream_coord or self.size
+    windowName = windowName or "%s_%s_%s" % (self.gene, upstream_coord, downstream_coord)
     forward_coverage = dict ([(i,0) for i in xrange(1, downstream_coord-upstream_coord+1)])
     reverse_coverage = dict ([(i,0) for i in xrange(1, downstream_coord-upstream_coord+1)])
     for offset in self.readDict.keys():
       if (offset > 0) and ((offset-upstream_coord+1) in forward_coverage.keys() ):
         for read in self.readDict[offset]:
           for i in xrange(read):
-            forward_coverage[offset-upstream_coord+1+i] += 1
+            try:
+              forward_coverage[offset-upstream_coord+1+i] += 1
+            except KeyError:
+              continue # a sense read may span over the downstream limit
       elif -offset-upstream_coord+1 in reverse_coverage.keys():
-        for i in xrange(read):
-          reverse_coverage[-offset-upstream_coord-i] += 1 ## positive coordinates in the instance, with + for forward coverage and - for reverse coverage
+        for read in self.readDict[offset]:
+          for i in xrange(read):
+            try:
+              reverse_coverage[-offset-upstream_coord-i] += 1 ## positive coordinates in the instance, with + for forward coverage and - for reverse coverage
+            except KeyError:
+              continue # an antisense read may span over the upstream limit
     output_list = []
-    
-    return forward_coverage, reverse_coverage
+    for n in sorted (forward_coverage):
+      output_list.append("%s\t%s\t%s\t%s\t%s" % (self.biosample, windowName, n, forward_coverage[n], "forward"))
+    for n in sorted (forward_coverage):
+      output_list.append("%s\t%s\t%s\t%s\t%s" % (self.biosample, windowName, n, reverse_coverage[n], "reverse")) 
+    return "\n".join(output_list)
 
           
   def signature (self, minquery, maxquery, mintarget, maxtarget, scope, zscore="no", upstream_coord=None, downstream_coord=None):
