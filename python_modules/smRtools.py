@@ -377,28 +377,32 @@ class SmRNAwindow:
     upstream_coord = upstream_coord or 1
     downstream_coord = downstream_coord or self.size
     windowName = windowName or "%s_%s_%s" % (self.gene, upstream_coord, downstream_coord)
-    forward_coverage = dict ([(i,0) for i in xrange(1, downstream_coord-upstream_coord+1)])
-    reverse_coverage = dict ([(i,0) for i in xrange(1, downstream_coord-upstream_coord+1)])
-    for offset in self.readDict.keys():
-      if (offset > 0) and ((offset-upstream_coord+1) in forward_coverage.keys() ):
-        for read in self.readDict[offset]:
-          for i in xrange(read):
-            try:
-              forward_coverage[offset-upstream_coord+1+i] += 1
-            except KeyError:
-              continue # a sense read may span over the downstream limit
-      elif -offset-upstream_coord+1 in reverse_coverage.keys():
-        for read in self.readDict[offset]:
-          for i in xrange(read):
-            try:
-              reverse_coverage[-offset-upstream_coord-i] += 1 ## positive coordinates in the instance, with + for forward coverage and - for reverse coverage
-            except KeyError:
-              continue # an antisense read may span over the upstream limit
+    forORrev_coverage = dict ([(i,0) for i in xrange(1, downstream_coord-upstream_coord+1)])
+    totalforward = self.forwardreadcount(upstream_coord=upstream_coord, downstream_coord=downstream_coord)
+    totalreverse = self.reversereadcount(upstream_coord=upstream_coord, downstream_coord=downstream_coord)
+    if totalforward > totalreverse:
+      majorcoverage = "forward"
+      for offset in self.readDict.keys():
+        if (offset > 0) and ((offset-upstream_coord+1) in forORrev_coverage.keys() ):
+          for read in self.readDict[offset]:
+            for i in xrange(read):
+              try:
+                forORrev_coverage[offset-upstream_coord+1+i] += 1
+              except KeyError:
+                continue # a sense read may span over the downstream limit
+    else:
+      majorcoverage = "reverse"
+      for offset in self.readDict.keys():
+        if (offset < 0) and (-offset-upstream_coord+1 in forORrev_coverage.keys() ):
+          for read in self.readDict[offset]:
+            for i in xrange(read):
+              try:
+                forORrev_coverage[-offset-upstream_coord-i] += 1 ## positive coordinates in the instance, with + for forward coverage and - for reverse coverage
+              except KeyError:
+                continue # an antisense read may span over the upstream limit
     output_list = []
-    for n in sorted (forward_coverage):
-      output_list.append("%s\t%s\t%s\t%s\t%s" % (self.biosample, windowName, n, forward_coverage[n], "forward"))
-    for n in sorted (forward_coverage):
-      output_list.append("%s\t%s\t%s\t%s\t%s" % (self.biosample, windowName, n, reverse_coverage[n], "reverse")) 
+    for n in sorted (forORrev_coverage):
+      output_list.append("%s\t%s\t%s\t%s\t%s" % (self.biosample, windowName, n, forORrev_coverage[n], majorcoverage))
     return "\n".join(output_list)
 
           
