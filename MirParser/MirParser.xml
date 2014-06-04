@@ -5,19 +5,27 @@
 <command interpreter="python">
         MirParser.py 
 	          #if $refGenomeSource.genomeSource == "history":
-                    $refGenomeSource.ownFile ## index source
-         	    --do_not_extract_index
+                    $refGenomeSource.ownFile ## index source sys.arg[1]
+         	    --do_not_extract_index  ## sys.argv[2]
           	  #else:
 		    #silent reference= filter( lambda x: str( x[0] ) == str( $input_list.dbkey ), $__app__.tool_data_tables[ 'bowtie_indexes' ].get_fields() )[0][-1]
-		    $reference
-		    --extract_index
+		    $reference   ## sys.argv[1]
+		    --extract_index  ## sys.argv[2]
           	  #end if
-		  $output1 ## for pre-mirs
-		  $output2 ## for mature mirs
-		  $GFF3
-		  $lattice
+		  $output1 ## for pre-mirs  ## sys.argv[3]
+		  $output2 ## for mature mirs  ## sys.argv[4]
+		  $GFF3    ## sys.argv[5]
+		  #if $plotting.plottingOption == "yes":
+		    $lattice_dataframe   ## sys.argv[6]
+		    $plotCode   ## sys.argv[7]
+		    $latticePDF ## sys.argv[8]
+		  #else:
+		    "dummy_dataframe_path"   ## sys.argv[6]
+                    "dummy_plotCode"   ## sys.argv[7]
+		    "dummy_latticePDF" ## sys.argv[8]
+		  #end if
 		  #for $i in $refGenomeSource.input_list
-    		    $i $i.ext "$i.name"
+    		    $i $i.ext "$i.name" ## sys.argv[9,10,11] modulo 3
 		  #end for
 
 </command>
@@ -38,11 +46,51 @@
            </when>
        </conditional>  <!-- refGenomeSource -->
        <param name="GFF3" type="data" label="miRbase GFF3 guide" />
+       <conditional name="plotting">
+           <param name="plottingOption" type="select" label="Additional mir coverage graphs">
+               <option value="no" selected="True">No</option>
+               <option value="yes">YES</option>
+           </param>
+           <when value="yes">
+               <param name="display" type="select" label="Display Coverage with absolute number of reads or relatively to the total number of read matching the gene or mir">
+                 <option value="relative" selected="True">Relative Coverage</option>
+                 <option value="absolute">Absolute Coverage</option>
+               </param>
+           </when>
+       </conditional>
    </inputs>
+   <configfiles>
+     <configfile name="plotCode">
+        graph_type = "${plotting.display}" ## "relative" or "absolute"
+        ## Setup R error handling to go to stderr
+        options( show.error.messages=F,
+                 error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+        library(lattice)
+        coverage = read.delim("${lattice_dataframe}", header=T)
+        Numb_of_biosamples = length(levels(coverage\$sample))
+        if (graph_type=="relative") {
+          graph = xyplot(countsNorm~offset | mir, data=coverage, groups=polarity, col=c("red", "blue"), type="l", lwd=1,
+                        par.strip.text=list(cex=.5), strip=strip.custom(which.given=1, bg="lightblue"), layout=c(Numb_of_biosamples,15), as.table=TRUE, main="my first try")
+        } else {
+          graph = xyplot(counts~offset | mir, data=coverage, groups=polarity, col=c("red", "blue"), type="l", lwd=1,
+                        par.strip.text=list(cex=.5), strip=strip.custom(which.given=1, bg="lightblue"), layout=c(Numb_of_biosamples,15), as.table=TRUE, main="my first try")
+        }
+        ## pdf output
+        pdf(file="${latticePDF}", paper="special", height=11.69, width=8.2677)
+        plot(graph, newpage = T)
+        dev.off()
+     </configfile>
+   </configfiles>
+
    <outputs>
    <data format="tabular" name="output1" label="Premirs Count  Lists"/>
    <data format="tabular" name="output2" label="Mature Mirs Count  Lists"/>
-   <data format="tabular" name="lattice" label="Lattice Dataframe"/>
+   <data format="tabular" name="lattice_dataframe" label="Lattice Dataframe">
+        <filter>plottingOption == "yes"</filter>
+   </data>
+   <data format="pdf" name="latticePDF" label="Mir coverage">
+        <filter>plottingOption == "yes"</filter>
+   </data>
    </outputs>
   <help>
 
