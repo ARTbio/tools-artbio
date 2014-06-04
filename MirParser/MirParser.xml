@@ -27,7 +27,7 @@
 		  #for $i in $refGenomeSource.input_list
     		    $i $i.ext "$i.name" ## sys.argv[9,10,11] modulo 3
 		  #end for
-
+                  #silent plottingoption = $plotting.plottingOption
 </command>
   <inputs>
        <conditional name="refGenomeSource">
@@ -61,24 +61,26 @@
    </inputs>
    <configfiles>
      <configfile name="plotCode">
-        graph_type = "${plotting.display}" ## "relative" or "absolute"
-        ## Setup R error handling to go to stderr
-        options( show.error.messages=F,
+	#if  $plotting.plottingOption == "yes":
+          graph_type = "${plotting.display}" ## "relative" or "absolute"
+          ## Setup R error handling to go to stderr
+          options( show.error.messages=F,
                  error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
-        library(lattice)
-        coverage = read.delim("${lattice_dataframe}", header=T)
-        Numb_of_biosamples = length(levels(coverage\$sample))
-        if (graph_type=="relative") {
-          graph = xyplot(countsNorm~offset | mir, data=coverage, groups=polarity, col=c("red", "blue"), type="l", lwd=1,
-                        par.strip.text=list(cex=.5), strip=strip.custom(which.given=1, bg="lightblue"), layout=c(Numb_of_biosamples,15), as.table=TRUE, main="my first try")
-        } else {
+          library(lattice)
+          coverage = read.delim("${lattice_dataframe}", header=T)
+          Numb_of_biosamples = length(levels(coverage\$sample))
+          if (graph_type=="relative") {
+          graph = xyplot(countsNorm~offsetNorm | mir, data=coverage, groups=polarity, col=c("red", "blue"), type="l", lwd=1,
+                        par.strip.text=list(cex=.5), strip=strip.custom(which.given=1, bg="lightblue"), layout=c(Numb_of_biosamples,15), as.table=TRUE, main="miRNA coverage maps")
+          } else {
           graph = xyplot(counts~offset | mir, data=coverage, groups=polarity, col=c("red", "blue"), type="l", lwd=1,
-                        par.strip.text=list(cex=.5), strip=strip.custom(which.given=1, bg="lightblue"), layout=c(Numb_of_biosamples,15), as.table=TRUE, main="my first try")
-        }
-        ## pdf output
-        pdf(file="${latticePDF}", paper="special", height=11.69, width=8.2677)
-        plot(graph, newpage = T)
-        dev.off()
+                        par.strip.text=list(cex=.5), strip=strip.custom(which.given=1, bg="lightblue"), layout=c(Numb_of_biosamples,15), as.table=TRUE, main="miRNA coverage maps")
+          }
+          ## pdf output
+          pdf(file="${latticePDF}", paper="special", height=11.69, width=8.2677)
+          plot(graph, newpage = T)
+          dev.off()
+        #end if
      </configfile>
    </configfiles>
 
@@ -86,10 +88,10 @@
    <data format="tabular" name="output1" label="Premirs Count  Lists"/>
    <data format="tabular" name="output2" label="Mature Mirs Count  Lists"/>
    <data format="tabular" name="lattice_dataframe" label="Lattice Dataframe">
-        <filter>plottingOption == "yes"</filter>
+        <filter>plotting['plottingOption'] == "yes"</filter>
    </data>
    <data format="pdf" name="latticePDF" label="Mir coverage">
-        <filter>plottingOption == "yes"</filter>
+        <filter>plotting['plottingOption'] == "yes"</filter>
    </data>
    </outputs>
   <help>

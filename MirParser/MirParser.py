@@ -73,8 +73,9 @@ Fmaturemires.close()
 
 if lattice != "dummy_dataframe_path":
   Flattice = open(lattice, "w")
-  print >> Flattice, "%s\t%s\t%s\t%s\t%s\t%s" % ("sample", "mir", "offset", "counts","countsNorm",  "polarity")
+  print >> Flattice, "%s\t%s\t%s\t%s\t%s\t%s\t%s" % ("sample", "mir", "offset", "offsetNorm", "counts","countsNorm",  "polarity")
   print >> Flattice, "\n".join(lattice_dataframe)
   Flattice.close()
   R_command="Rscript "+ Rcode
   process = subprocess.Popen(R_command.split())
+  process.wait()

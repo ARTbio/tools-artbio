@@ -403,7 +403,7 @@ class SmRNAwindow:
     output_list = []
     maximum = max (forORrev_coverage.values()) or 1
     for n in sorted (forORrev_coverage):
-      output_list.append("%s\t%s\t%s\t%s\t%s\t%s" % (self.biosample, windowName, n, forORrev_coverage[n], float(forORrev_coverage[n])/maximum, majorcoverage))
+      output_list.append("%s\t%s\t%s\t%s\t%s\t%s\t%s" % (self.biosample, windowName, n, float(n)/(downstream_coord-upstream_coord+1), forORrev_coverage[n], float(forORrev_coverage[n])/maximum, majorcoverage))
     return "\n".join(output_list)
 
           
