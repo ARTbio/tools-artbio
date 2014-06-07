@@ -37,8 +37,8 @@
        </conditional>  <!-- refGenomeSource -->
        <param name="polarity" type="select" label="how to count sense and antisense reads">
          <option value="both">count both sense and antisense reads</option>
-         <option value="sense">count only sense reads</option>
-         <option value="antisense">count only antisense reads</option>
+         <option value="forward">count only sense reads</option>
+         <option value="reverse">count only antisense reads</option>
        </param>
    </inputs>
    <outputs>
@@ -49,9 +49,15 @@
 **What it does**
 
 Parses read counts from one or several sRBowtie alignments (in tabular, Sam or Bam format).
+
 Here a bowtie match done against an index composed of a set of items is parsed and expressed as a hit list of the corresponding items
+
 Sense, antisense or both sense and antisense alignments can be counted
+
 The library labels are infered from the input dataset names in the galaxy history.
+
+**It is thus essential that input datasets are appropriately renamed**
+
 **it is preferable that you do not put any space in this input dataset names. You may edit these names in the history**
 
 

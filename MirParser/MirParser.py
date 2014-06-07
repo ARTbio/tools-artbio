@@ -43,13 +43,13 @@ for line in gff3:
   gff_name = gff_fields[-1].split("Name=")[-1].split(";")[0] # to isolate the GFF Name
   item_upstream_coordinate = int(gff_fields[3])
   item_downstream_coordinate = int(gff_fields[4])
-  item_polarity = gff_fields[6]
+  if gff_fields[6] == "+":
+    item_polarity = "forward"
+  else:
+    item_polarity = "reverse"
   item_line = [gff_name]
   for sample in header[1:]:
-    if item_polarity == "+":
-      count = MasterListOfGenomes[sample].instanceDict[chrom].forwardreadcount(upstream_coord=item_upstream_coordinate, downstream_coord=item_downstream_coordinate)
-    else:
-      count = MasterListOfGenomes[sample].instanceDict[chrom].reversereadcount(upstream_coord=item_upstream_coordinate, downstream_coord=item_downstream_coordinate)
+    count = MasterListOfGenomes[sample].instanceDict[chrom].readcount(upstream_coord=item_upstream_coordinate, downstream_coord=item_downstream_coordinate, polarity=item_polarity)
     item_line.append(str(count))
     ## subtreatement for lattice
     if lattice != "dummy_dataframe_path":
