@@ -1,0 +1,61 @@
+<tool id="FeaturesParser" name="Parse GFF3 features" version="0.9.1">
+  <description>in sRbowtie alignment</description>
+  <requirements><requirement type='package'>bowtie-inspect</requirement></requirements>
+  <parallelism method="basic"></parallelism>
+<command interpreter="python">
+        FeaturesParser.py 
+	          #if $refGenomeSource.genomeSource == "history":
+                    $refGenomeSource.ownFile ## index source  ## 1
+         	    --do_not_extract_index  ## 2
+          	  #else:
+		    #silent reference= filter( lambda x: str( x[0] ) == str( $input_list.dbkey ), $__app__.tool_data_tables[ 'bowtie_indexes' ].get_fields() )[0][-1]
+            	    $reference   ## index source ## 1
+            	    --extract_index  ## 2
+          	  #end if
+		  $output ## 3
+		  $gff3 ## 4
+		  #for $i in $refGenomeSource.input_list
+    		    $i $i.ext "$i.name"
+		  #end for
+
+</command>
+  <inputs>
+       <conditional name="refGenomeSource">
+           <param name="genomeSource" type="select" label="Will you select a reference genome from your history or use a built-in index?" help="Built-ins were indexed using default options">
+               <option value="indexed">Use a built-in index</option>
+               <option value="history">Use one from the history</option>
+           </param>
+           <when value="indexed">
+               <param name="input_list" type="data" label="Select multiple alignments to parse" multiple="true">
+                  <validator type="dataset_metadata_in_data_table" table_name="bowtie_indexes" metadata_name="dbkey" metadata_column="0" message="database not set for this bowtie output. Select the database(=genome used for matching) manually, or select a reference fasta from your history."/>
+               </param>
+           </when>
+           <when value="history">
+                <param name="ownFile" type="data" format="fasta"  label="Select the fasta reference" />
+	        <param name="input_list" type="data" label="Select multiple alignments to parse" multiple="true"/>
+           </when>
+       </conditional>  <!-- refGenomeSource -->
+       <param name="gff3" type="data" format="gff3" label="A GFF3 with features' coordinates"/>
+   </inputs>
+   <outputs>
+   <data format="tabular" name="output" label="Feature Counts  Lists"/>
+   </outputs>
+  <help>
+
+**What it does**
+
+Parses Features Counts from one or several sRBowtie alignments (in tabular, Sam or Bam format).
+
+Both sense and antisense alignments are counted
+
+The library labels are infered from the input dataset names in the galaxy history.
+
+**It is thus essential that input datasets are appropriately renamed**
+
+**it is preferable that you do not put any space in this input dataset names. You may edit these names in the history**
+
+
+
+  </help>
+</tool>
+
