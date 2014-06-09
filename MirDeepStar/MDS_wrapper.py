@@ -25,16 +25,39 @@ os.symlink(MDS_path+"/targetScan", tmp_MDS_work_dir+"/targetScan")
 os.symlink(MDS_path+"/targetScan_files", tmp_MDS_work_dir+"/targetScan_files")
 
 # execute MirDeep*
-command_line = "java -jar -Xmx6g MDS_command_line.jar -r 5 -g " + "MDS_genome " + "data.fa"
-tmp = tempfile.NamedTemporaryFile( dir=tmp_MDS_work_dir ).name
-tmp_stderr = open( tmp, 'wb' )
+command_line = "java -Xmx4g -jar " + MDS_path + "/MDS_command_line.jar -r 5 -g " + MDS_genome + " data.fa" # -Xmx12g
+print command_line
+#tmp = tempfile.NamedTemporaryFile( dir=tmp_MDS_work_dir ).name
+#tmp_stderr = open( tmp, 'wb' )
+
 try:
-  p = subprocess.Popen(args=command_line, cwd=tmp_MDS_work_dir, stderr=tmp_stderr.fileno())
+  os.chdir(tmp_MDS_work_dir)
+  p = subprocess.Popen(args=command_line, cwd=tmp_MDS_work_dir, shell=True, stderr=sys.stderr)
   returncode = p.wait()
+  shutil.copy2 ("data.result", dataresult)
+  shutil.copy2 ("data.cluster", datacluster)
+  dataFILE = open("data.result", "r")
+  datafile = dataFILE.readlines()
+  dataFILE.close()
+  GFF3OUT = open(gff3_output, "w")
+  print >> GFF3OUT,"##gff-version 3"
+  print >> GFF3OUT, "##Seqid	Source	Type	Start	End	Score	Strand	Phase	Attributes"
+  print >> GFF3OUT, "##"
+  for line in datafile[1:]:
+    fields = line.split("\t")
+    Seqid, Source, Type, Start, End, Score, Strand, Phase = fields[2], "MirDeep*", "hairPin_loci", fields[4].split("-")[0], fields[4].split("-")[1], fields[1], fields[3], "."
+    ID = "ID=%s;%s_reads;%s;%s;mature_seq:%s" % (fields[0],fields[5],fields[7],fields[8],fields[9])
+    print >> GFF3OUT, "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s" % (Seqid, Source, Type, Start, End, Score, Strand, Phase, ID)
+  GFF3OUT.close()
+  if os.path.exists( tmp_MDS_work_dir ):
+    shutil.rmtree( tmp_MDS_work_dir )
+  else:
+    print "Error in cleaning tmp working directory"
+
 except Exception, e:
-  pass
   # clean up temp dir
-  #if os.path.exists( tmp_MDS_work_dir ):
-    #shutil.rmtree( tmp_MDS_work_dir )
-    #stop_err( 'Error running MDS_command_line.jar\n' + str( e ) )
+  if os.path.exists( tmp_MDS_work_dir ):
+    shutil.rmtree( tmp_MDS_work_dir )
+    stop_err( 'Error running MDS_command_line.jar\n' + str( e ) )
+
 
