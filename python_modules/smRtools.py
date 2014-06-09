@@ -161,6 +161,17 @@ class HandleSmRNAwindows:
         self.instanceDict[gene].addread (polarity, offset+1, size) # pysam converts coordinates to 0-based (https://media.readthedocs.org/pdf/pysam/latest/pysam.pdf)
       return self.instanceDict
 
+  def CountFeatures (self, GFF3="path/to/file"):
+    featureDict = defaultdict(int)
+    F  = open (GFF3, "r")
+    for line in F:
+      if line[0] ==  "#": continue
+      fields = line[:-1].split()
+      chrom, feature, leftcoord, rightcoord, polarity = fields[0], fields[2], fields[3], fields[4], fields[6]
+      featureDict[feature] += self.instanceDict[chrom].readcount(upstream_coord=leftcoord, downstream_coord=rightcoord, polarity="both")
+    F.close()
+    return featureDict
+
 class SmRNAwindow:
 
   def __init__(self, gene, sequence="ATGC", windowoffset=1, biosample="Undetermined"):
