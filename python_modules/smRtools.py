@@ -2,7 +2,7 @@
 # version 1 7-5-2012 unification of the SmRNAwindow class
 
 import sys, subprocess
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 from numpy import mean, median, std
 from scipy import stats
 

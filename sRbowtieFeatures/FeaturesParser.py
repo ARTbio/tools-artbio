@@ -23,6 +23,7 @@ for [filePath, FileExt, FileLabel] in Triplets:
   MasterListOfGenomes[FileLabel] = HandleSmRNAwindows (filePath, FileExt, IndexSource, genomeRefFormat) 
   FeatureDict[FileLabel] = MasterListOfGenomes[FileLabel].CountFeatures(GFF3=GFF3_file)
 
+# add some code to pick up the GFF3 features in their order of appearence.
 
 header = ["Feature"]
 for [filePath, FileExt, FileLabel] in Triplets:
@@ -36,8 +37,18 @@ for feature in  FeatureDict[header[1]]:
   line=[feature]
   for sample in header[1:]:
     count = str (FeatureDict[sample][feature])
-    line.append(count)
+    percent = float(FeatureDict[sample][feature]) / MasterListOfGenomes[sample].alignedReads
+    value = "%s | %0.2f" % (count, percent)
+    line.append(value)
   print >> F,  "\t".join(line )
-print >>F, "_______________"
-print >>F, MasterListOfGenomes[header[1]].alignedReads
+line = ["Unfeatured"]
+for sample in header[1:]:
+  matched = 0
+  for feature in FeatureDict[sample]:
+    matched += FeatureDict[sample][feature]
+  unmatched = MasterListOfGenomes[sample].alignedReads - matched
+  percent = float (unmatched) / (matched + unmatched)
+  value = "%s | %0.2f" % (unmatched, percent)
+  line.append(value)
+print >> F,  "\t".join(line)
 F.close()
