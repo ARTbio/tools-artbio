@@ -24,22 +24,30 @@ for [filePath, FileExt, FileLabel] in Triplets:
   FeatureDict[FileLabel] = MasterListOfGenomes[FileLabel].CountFeatures(GFF3=GFF3_file)
 
 # add some code to pick up the GFF3 features in their order of appearence.
+F = open(GFF3_file, "r")
+featureList = []
+for line in F:
+  if line[0] == "#": continue
+  feature = line.split()[2]
+  if feature not in featureList:
+    featureList.append(feature)
+F.close()
 
-header = ["Feature"]
+header = ["#Feature"]
 for [filePath, FileExt, FileLabel] in Triplets:
   header.append(FileLabel)
 
-
-
 F = open (sys.argv[3], "w")
 print >> F, "\t".join(header)
-for feature in  FeatureDict[header[1]]:
+for feature in  featureList:
   line=[feature]
   for sample in header[1:]:
     count = str (FeatureDict[sample][feature])
-    percent = float(FeatureDict[sample][feature]) / MasterListOfGenomes[sample].alignedReads
-    value = "%s | %0.2f" % (count, percent)
-    line.append(value)
+# uncomment to get percentage in addition to counts
+#    percent = float(FeatureDict[sample][feature]) / MasterListOfGenomes[sample].alignedReads
+#    value = "%s | %0.2f" % (count, percent)
+#    line.append(value)
+    line.append(count)
   print >> F,  "\t".join(line )
 line = ["Unfeatured"]
 for sample in header[1:]:
@@ -47,8 +55,10 @@ for sample in header[1:]:
   for feature in FeatureDict[sample]:
     matched += FeatureDict[sample][feature]
   unmatched = MasterListOfGenomes[sample].alignedReads - matched
-  percent = float (unmatched) / (matched + unmatched)
-  value = "%s | %0.2f" % (unmatched, percent)
-  line.append(value)
+# uncomment to get percentage in addition to counts
+#  percent = float (unmatched) / (matched + unmatched)
+#  value = "%s | %0.2f" % (unmatched, percent)
+#  line.append(value)
+  line.append("%s" % unmatched)
 print >> F,  "\t".join(line)
 F.close()
