@@ -110,6 +110,7 @@ class HandleSmRNAwindows:
     self.alignmentFileFormat = alignmentFileFormat # can be "tabular" or "sam"
     self.genomeRefFile = genomeRefFile
     self.genomeRefFormat = genomeRefFormat # can be "bowtieIndex" or "fastaSource"
+    self.alignedReads = 0
     self.instanceDict = {}
     if genomeRefFormat == "bowtieIndex":
       self.itemDict = get_fasta (genomeRefFile)
@@ -129,8 +130,8 @@ class HandleSmRNAwindows:
         offset = int(fields[3])
         size = len (fields[4])
         self.instanceDict[gene].addread (polarity, offset+1, size) # to correct to 1-based coordinates of SmRNAwindow
+        self.alignedReads += 1
       F.close()
-      return self.instanceDict
     elif self.alignmentFileFormat == "sam":
       F = open (self.alignmentFile, "r")
       dict = {"0":"+", "16":"-"}
@@ -144,6 +145,7 @@ class HandleSmRNAwindows:
         offset = int(fields[3])
         size = len (fields[9])
         self.instanceDict[gene].addread (polarity, offset, size) # sam format is already 1-based coordinates
+        self.alignedReads += 1
       F.close()
     elif self.alignmentFileFormat == "bam":
       import pysam
@@ -159,7 +161,8 @@ class HandleSmRNAwindows:
         offset = read.pos
         size = read.qlen
         self.instanceDict[gene].addread (polarity, offset+1, size) # pysam converts coordinates to 0-based (https://media.readthedocs.org/pdf/pysam/latest/pysam.pdf)
-      return self.instanceDict
+        self.alignedReads += 1
+      return
 
   def CountFeatures (self, GFF3="path/to/file"):
     featureDict = defaultdict(int)
@@ -168,7 +171,7 @@ class HandleSmRNAwindows:
       if line[0] ==  "#": continue
       fields = line[:-1].split()
       chrom, feature, leftcoord, rightcoord, polarity = fields[0], fields[2], fields[3], fields[4], fields[6]
-      featureDict[feature] += self.instanceDict[chrom].readcount(upstream_coord=leftcoord, downstream_coord=rightcoord, polarity="both")
+      featureDict[feature] += self.instanceDict[chrom].readcount(upstream_coord=int(leftcoord), downstream_coord=int(rightcoord), polarity="both", method="destructive")
     F.close()
     return featureDict
 
@@ -247,7 +250,7 @@ class SmRNAwindow:
         pass
     return results
 
-  def readcount (self, size_inf=0, size_sup=1000, upstream_coord=None, downstream_coord=None, polarity="both"):
+  def readcount (self, size_inf=0, size_sup=1000, upstream_coord=None, downstream_coord=None, polarity="both", method="conservative"):
     '''refactored 24-12-2013 to save memory and introduce offset filtering
     take a look at the defaut parameters that cannot be defined relatively to the instance are they are defined before instanciation
     the trick is to pass None and then test
@@ -261,6 +264,8 @@ class SmRNAwindow:
         for i in self.readDict[offset]:
           if (i>=size_inf and i<= size_sup):
             n += 1
+        if method != "conservative":
+          self.readDict[offset]=[] ## Carefull ! precludes re-use on the self.readDict dictionary !!!!!! TEST
       return n
     elif polarity == "forward":
       for offset in self.readDict:

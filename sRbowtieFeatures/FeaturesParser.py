@@ -38,4 +38,6 @@ for feature in  FeatureDict[header[1]]:
     count = str (FeatureDict[sample][feature])
     line.append(count)
   print >> F,  "\t".join(line )
+print >>F, "_______________"
+print >>F, MasterListOfGenomes[header[1]].alignedReads
 F.close()
