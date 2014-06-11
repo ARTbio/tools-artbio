@@ -184,14 +184,18 @@ class SmRNAwindow:
     self.windowoffset = windowoffset
     self.size = len(sequence)
     self.readDict = defaultdict(list) # with a {+/-offset:[size1, size2, ...], ...}
+    self.matchedreadsUp = 0
+    self.matchedreadsDown = 0
     
   def addread (self, polarity, offset, size):
     '''ATTENTION ATTENTION ATTENTION'''
     ''' We removed the conversion from 0 to 1 based offset, as we do this now during readparsing.'''
     if polarity == "+":
       self.readDict[offset].append(size)
+      self.matchedreadsUp += 1
     else:
       self.readDict[-(offset + size -1)].append(size)
+      self.matchedreadsDown += 1
     return
 
   def barycenter (self, upstream_coord=None, downstream_coord=None):
@@ -257,29 +261,41 @@ class SmRNAwindow:
     polarity parameter can take "both", "forward" or "reverse" as value'''
     upstream_coord = upstream_coord or self.windowoffset
     downstream_coord = downstream_coord or self.windowoffset+self.size-1
+    if upstream_coord == 1 and downstream_coord == self.windowoffset+self.size-1 and polarity == "both":
+      return self.matchedreadsUp +  self.matchedreadsDown
+    if upstream_coord == 1 and downstream_coord == self.windowoffset+self.size-1 and polarity == "forward":
+      return self.matchedreadsUp    
+    if upstream_coord == 1 and downstream_coord == self.windowoffset+self.size-1 and polarity == "reverse":
+      return self.matchedreadsDown    
     n=0
     if polarity == "both":
-      for offset in self.readDict:
-        if (abs(offset) < upstream_coord or abs(offset) > downstream_coord): continue
-        for i in self.readDict[offset]:
-          if (i>=size_inf and i<= size_sup):
-            n += 1
-        if method != "conservative":
-          self.readDict[offset]=[] ## Carefull ! precludes re-use on the self.readDict dictionary !!!!!! TEST
+      for offset in xrange(upstream_coord, downstream_coord+1):
+        if self.readDict.has_key(offset):
+          for read in self.readDict[offset]:
+            if (read>=size_inf and read<= size_sup):
+              n += 1
+          if method != "conservative":
+            del self.readDict[offset] ## Carefull ! precludes re-use on the self.readDict dictionary !!!!!! TEST
+        if self.readDict.has_key(-offset):
+          for read in self.readDict[-offset]:
+            if (read>=size_inf and read<= size_sup):
+              n += 1
+          if method != "conservative":
+            del self.readDict[-offset]
       return n
     elif polarity == "forward":
-      for offset in self.readDict:
-        if ((abs(offset) < upstream_coord or abs(offset) > downstream_coord) or offset < 0): continue
-        for i in self.readDict[offset]:
-          if (i>=size_inf and i<= size_sup):
-            n += 1
+      for offset in xrange(upstream_coord, downstream_coord+1):
+        if self.readDict.has_key(offset):
+          for read in self.readDict[offset]:
+            if (read>=size_inf and read<= size_sup):
+              n += 1
       return n
     elif polarity == "reverse":
-      for offset in self.readDict:
-        if ((abs(offset) < upstream_coord or abs(offset) > downstream_coord) or offset > 0): continue
-        for i in self.readDict[offset]:
-          if (i>=size_inf and i<= size_sup):
-            n += 1
+      for offset in xrange(upstream_coord, downstream_coord+1):
+        if self.readDict.has_key(-offset):
+          for read in self.readDict[-offset]:
+            if (read>=size_inf and read<= size_sup):
+              n += 1
       return n
 
   def readsizes (self):
