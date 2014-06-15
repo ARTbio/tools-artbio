@@ -65,9 +65,14 @@ def bowtie_alignment(command_line="None", working_dir = ""):
   returncode = p.wait()
   sys.stdout.write("%s\n" % command_line + str(returncode))
   FNULL.close()
-  p = subprocess.Popen(["wc", "-l", "%s/al.fasta"%working_dir], cwd=working_dir, stdout=subprocess.PIPE)
-  aligned =  p.communicate()[0].split()[0]
-  return int(aligned)/2
+  #p = subprocess.Popen(["wc", "-l", "%s/al.fasta"%working_dir], cwd=working_dir, stdout=subprocess.PIPE)
+  #aligned =  p.communicate()[0].split()[0]
+  aligned = 0
+  F = open ("%s/al.fasta" % working_dir, "r")
+  for line in F:
+    aligned += 1
+  F.close()
+  return aligned/2
 
 def CommandLiner (v_mis="1", pslots="12", index="dum/my", input="dum/my", working_dir=""):
   return "bowtie -v %s -k 1 --best -p %s --al %s/al.fasta --un %s/unal.fasta --suppress 1,2,3,4,5,6,7,8 %s -f %s" % (v_mis, pslots, working_dir, working_dir, index, input)
@@ -96,7 +101,7 @@ def __main__():
     if len(BowtieIndexList) > 4:
       for BowtieIndexPath in BowtieIndexList[4::2]:
         cmd = CommandLiner (v_mis=args.mismatch, pslots=args.num_threads, index=BowtieIndexPath, input="%s/unal.fasta"%workingDir, working_dir=workingDir)
-        ResultDict[label].append( bowtie_alignment(command_line="None", working_dir = "") )
+        ResultDict[label].append( bowtie_alignment(command_line=cmd, working_dir = workingDir) )
   ## cleaning
   for IndexPath, IndexFlag in zip(BowtieIndexList[::2], BowtieIndexList[1::2]):
     if IndexFlag == "toClear":
