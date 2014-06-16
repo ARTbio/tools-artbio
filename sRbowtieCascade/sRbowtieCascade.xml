@@ -13,7 +13,7 @@
 						    #end for
                                                    --label
                                                     #for $i in $input:
-                                                      $i.name
+                                                      "$i.name"
                                                     #end for
                                                    --index
                                                     #if $refGenomeSource1.genomeSource == "history":

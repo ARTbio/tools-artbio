@@ -63,7 +63,7 @@ def bowtie_alignment(command_line="None", working_dir = ""):
   FNULL = open(os.devnull, 'w')
   p = subprocess.Popen(args=command_line, cwd=working_dir, shell=True, stderr=FNULL, stdout=FNULL)
   returncode = p.wait()
-  sys.stdout.write("%s\n" % command_line + str(returncode))
+  sys.stdout.write("%s\n" % command_line)
   FNULL.close()
   #p = subprocess.Popen(["wc", "-l", "%s/al.fasta"%working_dir], cwd=working_dir, stdout=subprocess.PIPE)
   #aligned =  p.communicate()[0].split()[0]
@@ -72,6 +72,7 @@ def bowtie_alignment(command_line="None", working_dir = ""):
   for line in F:
     aligned += 1
   F.close()
+  sys.stdout.write("Aligned: %s\n" % aligned)
   return aligned/2
 
 def CommandLiner (v_mis="1", pslots="12", index="dum/my", input="dum/my", working_dir=""):
@@ -90,29 +91,50 @@ def __main__():
       BowtieIndexList.append ( bowtiePath )
       BowtieIndexList.append ( "DoNotDelete") 
   ###### temporary Indexes are generated. They must be deleted at the end (after removing file name in the temp path) 
-  workingDir = make_working_dir()
   ResultDict = defaultdict(list)
-  F = open (args.output, "w")
   for label, input in zip(args.label, args.input): ## the main cascade, iterating over samples and bowtie indexes
+    workingDir = make_working_dir()
     cmd = CommandLiner (v_mis=args.mismatch, pslots=args.num_threads, index=BowtieIndexList[0], input=input, working_dir=workingDir)
     ResultDict[label].append( bowtie_alignment(command_line=cmd, working_dir = workingDir) )
-    cmd = CommandLiner (v_mis=args.mismatch, pslots=args.num_threads, index=BowtieIndexList[2], input="%s/al.fasta"%workingDir, working_dir=workingDir)
-    ResultDict[label].append( bowtie_alignment(command_line=cmd, working_dir = workingDir) )
-    if len(BowtieIndexList) > 4:
+    os.rename("%s/al.fasta"%workingDir, "%s/toAlign.fasta"%workingDir) ## end of first step. the aligned reads are the input of the next step
+    cmd = CommandLiner (v_mis=args.mismatch, pslots=args.num_threads, index=BowtieIndexList[2], input="%s/toAlign.fasta"%workingDir, working_dir=workingDir)
+    ResultDict[label].append( bowtie_alignment(command_line=cmd, working_dir = workingDir) )## second step of the cascade
+    if len(BowtieIndexList) > 4:  ## remaining steps
       for BowtieIndexPath in BowtieIndexList[4::2]:
-        cmd = CommandLiner (v_mis=args.mismatch, pslots=args.num_threads, index=BowtieIndexPath, input="%s/unal.fasta"%workingDir, working_dir=workingDir)
+        os.rename("%s/unal.fasta"%workingDir, "%s/toAlign.fasta"%workingDir)
+        cmd = CommandLiner (v_mis=args.mismatch, pslots=args.num_threads, index=BowtieIndexPath, input="%s/toAlign.fasta"%workingDir, working_dir=workingDir)
         ResultDict[label].append( bowtie_alignment(command_line=cmd, working_dir = workingDir) )
+    Fun = open("%s/unal.fasta"%workingDir, "r") ## to finish, compute the number of unmatched reads
+    n = 0
+    for line in Fun:
+      n += 1
+    ResultDict[label].append(n/2)
+    Fun.close()
+    Clean_TempDir (workingDir) # clean the sample working directory
   ## cleaning
   for IndexPath, IndexFlag in zip(BowtieIndexList[::2], BowtieIndexList[1::2]):
     if IndexFlag == "toClear":
       Clean_TempDir ("/".join(IndexPath.split("/")[:-1]))
-  Clean_TempDir (workingDir)
   ## end of cleaning
   
   
     
   F = open (args.output, "w")
-  print >> F, ResultDict
+  print >> F, "alignment reference\t%s" % "\t".join(args.label)
+  for i, reference in enumerate(args.indexName):
+    F.write ("%s" % reference)
+    for sample in args.label:
+      F.write ("\t%s" % ResultDict[sample][i])
+    print >> F
+  F.write ("Remaining Unmatched")
+  for sample in args.label:
+    F.write ("\t%s" % ResultDict[sample][-1]) 
+  print >> F
+
+#  for sample in ResultDict:
+#    print >> F, "#%s" % sample
+#    for count in ResultDict[sample]:
+#      print >> F, count
   F.close()
 
 if __name__=="__main__": __main__()
