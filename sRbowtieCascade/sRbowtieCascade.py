@@ -95,10 +95,11 @@ def __main__():
   for label, input in zip(args.label, args.input): ## the main cascade, iterating over samples and bowtie indexes
     workingDir = make_working_dir()
     cmd = CommandLiner (v_mis=args.mismatch, pslots=args.num_threads, index=BowtieIndexList[0], input=input, working_dir=workingDir)
-    ResultDict[label].append( bowtie_alignment(command_line=cmd, working_dir = workingDir) )
-    os.rename("%s/al.fasta"%workingDir, "%s/toAlign.fasta"%workingDir) ## end of first step. the aligned reads are the input of the next step
-    cmd = CommandLiner (v_mis=args.mismatch, pslots=args.num_threads, index=BowtieIndexList[2], input="%s/toAlign.fasta"%workingDir, working_dir=workingDir)
-    ResultDict[label].append( bowtie_alignment(command_line=cmd, working_dir = workingDir) )## second step of the cascade
+    ResultDict[label].append( bowtie_alignment(command_line=cmd, working_dir = workingDir) ) # first step of the cascade
+    if len(BowtieIndexList) > 2: # is there a second step to perform ?
+      os.rename("%s/al.fasta"%workingDir, "%s/toAlign.fasta"%workingDir) ## end of first step. the aligned reads are the input of the next step
+      cmd = CommandLiner (v_mis=args.mismatch, pslots=args.num_threads, index=BowtieIndexList[2], input="%s/toAlign.fasta"%workingDir, working_dir=workingDir)
+      ResultDict[label].append( bowtie_alignment(command_line=cmd, working_dir = workingDir) )## second step of the cascade
     if len(BowtieIndexList) > 4:  ## remaining steps
       for BowtieIndexPath in BowtieIndexList[4::2]:
         os.rename("%s/unal.fasta"%workingDir, "%s/toAlign.fasta"%workingDir)
@@ -131,10 +132,6 @@ def __main__():
     F.write ("\t%s" % ResultDict[sample][-1]) 
   print >> F
 
-#  for sample in ResultDict:
-#    print >> F, "#%s" % sample
-#    for count in ResultDict[sample]:
-#      print >> F, count
   F.close()
 
 if __name__=="__main__": __main__()

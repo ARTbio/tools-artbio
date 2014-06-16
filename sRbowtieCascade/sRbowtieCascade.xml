@@ -99,30 +99,30 @@
 
   <help>
 
-**What it does**
+**Intro**
 
-Bowtie_ is a short read aligner designed to be ultrafast and memory-efficient. It is developed by Ben Langmead and Cole Trapnell. Please cite: Langmead B, Trapnell C, Pop M, Salzberg SL. Ultrafast and memory-efficient alignment of short DNA sequences to the human genome. Genome Biology 10:R25.
-
-.. _Bowtie: http://bowtie-bio.sourceforge.net/index.shtml
-
+Bowtie_ is a short read aligner designed to be ultrafast and memory-efficient.
 A generic "Map with Bowtie for Illumina" Galaxy tool is available in the main Galaxy distribution.
-
 However, this Bowtie wrapper tool only takes FASTQ files as inputs.
 
 Here The sRbowtie wrapper specifically works with short reads FASTA inputs (-v bowtie mode, with -k 1)
 
+.. _Bowtie: http://bowtie-bio.sourceforge.net/index.shtml
+
+
 ------
 
-**OPTIONS**
+**What it does**
 
 .. class:: infomark
 
-This script uses Bowtie to iteratively match reads on a reference indexes.
+This script uses the sRbowtie wrapper to iteratively match reads on a reference indexes.
 
-Reads are Matched on DNA references  as fast as possible, without taking care of mapping issues
+Reads are Matched on DNA references as fast as possible, without taking care of mapping issues
 
 *-v [0,1,2,3] -k 1 --best -p 12 --suppress 6,7,8*
 
+unaligned reads at step N are used input for sRbowtie at step N+1
 
 -----
 
