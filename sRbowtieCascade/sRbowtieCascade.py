@@ -125,11 +125,11 @@ def __main__():
   for i, reference in enumerate(args.indexName):
     F.write ("%s" % reference)
     for sample in args.label:
-      F.write ("\t%s" % ResultDict[sample][i])
+      F.write ("\t%s" % "{:,}".format(ResultDict[sample][i]) )
     print >> F
   F.write ("Remaining Unmatched")
   for sample in args.label:
-    F.write ("\t%s" % ResultDict[sample][-1]) 
+    F.write ("\t%s" % "{:,}".format(ResultDict[sample][-1]) ) 
   print >> F
 
   F.close()
