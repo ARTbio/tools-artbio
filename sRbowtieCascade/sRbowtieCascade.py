@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # small RNA oriented bowtie wrapper in cascade for small RNA data set genome annotation
 # version 0.9 13-6-2014
-# Usage sRbowtie_cascade.py <1 analysis_output> <2 --num-threads \${GALAXY_SLOTS:-4}> <3 -v mismatches>
-#                           <4 fastaInputs,,,> <5 buildIndexIfHistory,fasta/bowtieIndex,ad lib...>
+# Usage sRbowtie_cascade.py see Parser() for valid arguments
 # Christophe Antoniewski <drosofff@gmail.com>
 
 import sys, os, subprocess, tempfile, shutil, argparse
