@@ -71,10 +71,10 @@
           Numb_of_biosamples = length(levels(coverage\$sample))
           if (graph_type=="relative") {
           graph = xyplot(countsNorm~offsetNorm | mir, data=coverage, groups=polarity, col=c("red", "blue"), type="l", lwd=1,
-                        par.strip.text=list(cex=.5), strip=strip.custom(which.given=1, bg="lightblue"), layout=c(Numb_of_biosamples,15), as.table=TRUE, main="miRNA coverage maps")
+                        scales=list(x=list(cex=.5), y=list(cex=.5)), par.strip.text=list(cex=.5), strip=strip.custom(which.given=1, bg="lightblue"), layout=c(Numb_of_biosamples,15), as.table=TRUE, main="miRNA coverage maps")
           } else {
           graph = xyplot(counts~offset | mir, data=coverage, groups=polarity, col=c("red", "blue"), type="l", lwd=1,
-                        par.strip.text=list(cex=.5), strip=strip.custom(which.given=1, bg="lightblue"), layout=c(Numb_of_biosamples,15), as.table=TRUE, main="miRNA coverage maps")
+                        scales=list(x=list(cex=.5), y=list(cex=.5)), par.strip.text=list(cex=.5), strip=strip.custom(which.given=1, bg="lightblue"), layout=c(Numb_of_biosamples,15), as.table=TRUE, main="miRNA coverage maps")
           }
           ## pdf output
           pdf(file="${latticePDF}", paper="special", height=11.69, width=8.2677)
