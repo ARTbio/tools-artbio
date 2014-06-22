@@ -95,8 +95,8 @@ def extractsubinstance (start, end, instance):
   ''' Testing whether this can be an function external to the class to save memory'''
   subinstance = SmRNAwindow (instance.gene, instance.sequence[start-1:end], start)
   subinstance.gene = "%s %s %s" % (subinstance.gene, subinstance.windowoffset, subinstance.windowoffset + subinstance.size - 1)
-  upcoordinate = [i for i in range(start,end+1) if instance.readDict[i] ]
-  downcoordinate = [-i for i in range(start,end+1) if instance.readDict[-i] ]
+  upcoordinate = [i for i in range(start,end+1) if instance.readDict.has_key(i) ]
+  downcoordinate = [-i for i in range(start,end+1) if instance.readDict.has_key(-i) ]
   for i in upcoordinate:
     subinstance.readDict[i]=instance.readDict[i]
   for i in downcoordinate:
@@ -104,19 +104,22 @@ def extractsubinstance (start, end, instance):
   return subinstance
 
 class HandleSmRNAwindows:
-  def __init__(self, alignmentFile="~", alignmentFileFormat="tabular", genomeRefFile="~", genomeRefFormat="bowtieIndex", biosample="Undetermined"):
+  def __init__(self, alignmentFile="~", alignmentFileFormat="tabular", genomeRefFile="~", genomeRefFormat="bowtieIndex", biosample="undetermined", size_inf=None, size_sup=1000, norm=1.0):
     self.biosample = biosample
     self.alignmentFile = alignmentFile
     self.alignmentFileFormat = alignmentFileFormat # can be "tabular" or "sam"
     self.genomeRefFile = genomeRefFile
     self.genomeRefFormat = genomeRefFormat # can be "bowtieIndex" or "fastaSource"
     self.instanceDict = {}
+    self.size_inf=size_inf
+    self.size_sup=size_sup
+    self.norm=norm
     if genomeRefFormat == "bowtieIndex":
       self.itemDict = get_fasta (genomeRefFile)
     elif genomeRefFormat == "fastaSource":
       self.itemDict = get_fasta_from_history (genomeRefFile)
     for item in self.itemDict:
-      self.instanceDict[item] = SmRNAwindow(item, sequence=self.itemDict[item], windowoffset=1, biosample=biosample) # create as many instances as there is items
+      self.instanceDict[item] = SmRNAwindow(item, sequence=self.itemDict[item], windowoffset=1, biosample=self.biosample, norm=self.norm) # create as many instances as there is items
     self.readfile()
 
   def readfile (self) :
@@ -128,7 +131,11 @@ class HandleSmRNAwindows:
         gene = fields[2]
         offset = int(fields[3])
         size = len (fields[4])
-        self.instanceDict[gene].addread (polarity, offset+1, size) # to correct to 1-based coordinates of SmRNAwindow
+	if self.size_inf:
+          if (size>=self.size_inf and size<= self.size_sup):
+            self.instanceDict[gene].addread (polarity, offset+1, size) # to correct to 1-based coordinates of SmRNAwindow
+	else:
+          self.instanceDict[gene].addread (polarity, offset+1, size) # to correct to 1-based coordinates of SmRNAwindow
       F.close()
       return self.instanceDict
     elif self.alignmentFileFormat == "sam":
@@ -143,7 +150,11 @@ class HandleSmRNAwindows:
         gene = fields[2]
         offset = int(fields[3])
         size = len (fields[9])
-        self.instanceDict[gene].addread (polarity, offset, size) # sam format is already 1-based coordinates
+        if self.size_inf:
+          if (size>=self.size_inf and size<= self.size_sup):
+            self.instanceDict[gene].addread (polarity, offset, size) 
+        else:
+          self.instanceDict[gene].addread (polarity, offset, size)
       F.close()
     elif self.alignmentFileFormat == "bam":
       import pysam
@@ -158,18 +169,23 @@ class HandleSmRNAwindows:
         gene = samfile.getrname(read.tid)
         offset = read.pos
         size = read.qlen
-        self.instanceDict[gene].addread (polarity, offset+1, size) # pysam converts coordinates to 0-based (https://media.readthedocs.org/pdf/pysam/latest/pysam.pdf)
+        if self.size_inf:
+          if (size>=self.size_inf and size<= self.size_sup):
+            self.instanceDict[gene].addread (polarity, offset+1, size) # to correct to 1-based coordinates of SmRNAwindow
+        else:
+          self.instanceDict[gene].addread (polarity, offset+1, size) # to correct to 1-based coordinates of SmRNAwindow
       return self.instanceDict
 
 class SmRNAwindow:
 
-  def __init__(self, gene, sequence="ATGC", windowoffset=1, biosample="Undetermined"):
+  def __init__(self, gene, sequence="ATGC", windowoffset=1, biosample="Undetermined", norm=1.0):
     self.biosample = biosample
     self.sequence = sequence
     self.gene = gene
     self.windowoffset = windowoffset
     self.size = len(sequence)
     self.readDict = defaultdict(list) # with a {+/-offset:[size1, size2, ...], ...}
+    self.norm=norm
     
   def addread (self, polarity, offset, size):
     '''ATTENTION ATTENTION ATTENTION'''
@@ -240,6 +256,7 @@ class SmRNAwindow:
     '''refactored 24-12-2013 to save memory and introduce offset filtering
     take a look at the defaut parameters that cannot be defined relatively to the instance are they are defined before instanciation
     the trick is to pass None and then test'''
+    norm=self.norm
     upstream_coord = upstream_coord or self.windowoffset
     downstream_coord = downstream_coord or self.windowoffset+self.size-1
     n=0
@@ -247,7 +264,7 @@ class SmRNAwindow:
       if (abs(offset) < upstream_coord or abs(offset) > downstream_coord): continue
       for i in self.readDict[offset]:
         if (i>=size_inf and i<= size_sup):
-          n += 1
+          n += norm
     return n
 
   def forwardreadcount(self, size_inf=0, size_sup=1000, upstream_coord=None, downstream_coord=None):
@@ -286,6 +303,19 @@ class SmRNAwindow:
         dicsize[size] = dicsize.get(size, 0) + 1
     return dicsize
     
+  def size_histogram(self):
+    norm=self.norm
+    hist_dict={}
+    hist_dict['F']={}
+    hist_dict['R']={}
+    for offset in self.readDict:
+      for size in self.readDict[offset]:
+        if offset < 0:
+          hist_dict['R'][size] = hist_dict['R'].get(size, 0) - 1*norm
+        else:
+	  hist_dict['F'][size] = hist_dict['F'].get(size, 0) + 1*norm
+    return hist_dict
+
   def statsizes (self, upstream_coord=None, downstream_coord=None):
     ''' migration to memory saving by specifying possible subcoordinates
     see the readcount method for further discussion'''
@@ -361,9 +391,10 @@ class SmRNAwindow:
 
     
   def readplot (self):
+    norm=self.norm
     readmap = {}
     for offset in self.readDict.keys():
-      readmap[abs(offset)] = ( len(self.readDict[-abs(offset)]) , len(self.readDict[abs(offset)]) )
+      readmap[abs(offset)] = ( len(self.readDict.get(-abs(offset),[]))*norm , len(self.readDict.get(abs(offset),[]))*norm )
     mylist = []
     for offset in sorted(readmap):
       if readmap[offset][1] != 0:
@@ -372,22 +403,39 @@ class SmRNAwindow:
         mylist.append("%s\t%s\t%s\t%s" % (self.gene, offset, -readmap[offset][0], "R") )
     return mylist
 
-  def readcoverage (self, upstream_coord=None, downstream_coord=None):
+  def readcoverage (self, upstream_coord=None, downstream_coord=None, windowName=None):
     '''This method has not been tested yet 15-11-2013'''
     upstream_coord = upstream_coord or 1
     downstream_coord = downstream_coord or self.size
-    forward_coverage = defaultdict(int)
-    reverse_coverage = defaultdict(int)
-    for offset in self.readDict.keys():
-      for read in self.readDict[offset]:
-        if upstream_coord >= offset >= downstream_coord:
-          for i in range(read):
-            forward_coverage[offset+i] += 1
-        elif -downstream_coord <= offset <= -upstream_coord:
-          for i in range(read):
-            reverse_coverage[-offset-i] -= 1 ## positive coordinates in the instance, with + for forward coverage and - for reverse coverage
-    #in dev
-    return forward_coverage, reverse_coverage
+    windowName = windowName or "%s_%s_%s" % (self.gene, upstream_coord, downstream_coord)
+    forORrev_coverage = dict ([(i,0) for i in xrange(1, downstream_coord-upstream_coord+1)])
+    totalforward = self.forwardreadcount(upstream_coord=upstream_coord, downstream_coord=downstream_coord)
+    totalreverse = self.reversereadcount(upstream_coord=upstream_coord, downstream_coord=downstream_coord)
+    if totalforward > totalreverse:
+      majorcoverage = "forward"
+      for offset in self.readDict.keys():
+        if (offset > 0) and ((offset-upstream_coord+1) in forORrev_coverage.keys() ):
+          for read in self.readDict[offset]:
+            for i in xrange(read):
+              try:
+                forORrev_coverage[offset-upstream_coord+1+i] += 1
+              except KeyError:
+                continue # a sense read may span over the downstream limit
+    else:
+      majorcoverage = "reverse"
+      for offset in self.readDict.keys():
+        if (offset < 0) and (-offset-upstream_coord+1 in forORrev_coverage.keys() ):
+          for read in self.readDict[offset]:
+            for i in xrange(read):
+              try:
+                forORrev_coverage[-offset-upstream_coord-i] += 1 ## positive coordinates in the instance, with + for forward coverage and - for reverse coverage
+              except KeyError:
+                continue # an antisense read may span over the upstream limit
+    output_list = []
+    maximum = max (forORrev_coverage.values()) or 1
+    for n in sorted (forORrev_coverage):
+      output_list.append("%s\t%s\t%s\t%s\t%s\t%s\t%s" % (self.biosample, windowName, n, float(n)/(downstream_coord-upstream_coord+1), forORrev_coverage[n], float(forORrev_coverage[n])/maximum, majorcoverage))
+    return "\n".join(output_list)
 
           
   def signature (self, minquery, maxquery, mintarget, maxtarget, scope, zscore="no", upstream_coord=None, downstream_coord=None):
