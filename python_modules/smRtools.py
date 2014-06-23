@@ -304,6 +304,8 @@ class SmRNAwindow:
     for offset in self.readDict:
       for size in self.readDict[offset]:
         dicsize[size] = dicsize.get(size, 0) + 1
+    for offset in range (min(dicsize.keys(), max(dicsize.keys()+1):
+      dicsize[size] = dicsize.get(size, 0) # to fill offsets with null values
     return dicsize
     
   def statsizes (self, upstream_coord=None, downstream_coord=None):
@@ -393,7 +395,7 @@ class SmRNAwindow:
     return mylist
 
   def readcoverage (self, upstream_coord=None, downstream_coord=None, windowName=None):
-    '''This method has not been tested yet 15-11-2013'''
+    '''Use by MirParser tool'''
     upstream_coord = upstream_coord or 1
     downstream_coord = downstream_coord or self.size
     windowName = windowName or "%s_%s_%s" % (self.gene, upstream_coord, downstream_coord)
