@@ -304,7 +304,7 @@ class SmRNAwindow:
     for offset in self.readDict:
       for size in self.readDict[offset]:
         dicsize[size] = dicsize.get(size, 0) + 1
-    for offset in range (min(dicsize.keys(), max(dicsize.keys()+1):
+    for offset in range (min(dicsize.keys()), max(dicsize.keys())+1):
       dicsize[size] = dicsize.get(size, 0) # to fill offsets with null values
     return dicsize
     
