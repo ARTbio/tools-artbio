@@ -182,7 +182,6 @@ class HandleSmRNAwindows:
           self.instanceDict[gene].addread (polarity, offset+1, size) # to correct to 1-based coordinates of SmRNAwindow
           self.alignedReads += 1
       return self.instanceDict
-     return
 
   def CountFeatures (self, GFF3="path/to/file"):
     featureDict = defaultdict(int)
