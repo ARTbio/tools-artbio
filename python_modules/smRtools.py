@@ -197,7 +197,7 @@ class HandleSmRNAwindows:
         size_dict['R'][size] -= buffer_dict_R[size]
     allSizeKeys = list (set (size_dict['F'].keys() + size_dict['R'].keys() ) )
     for size in allSizeKeys:
-      size_dict['both'][size] = size_dict['F'][size] - size_dict['R'][size]
+      size_dict['both'][size] = size_dict['F'][size] + size_dict['R'][size]
     return size_dict
 
   def CountFeatures (self, GFF3="path/to/file"):
