@@ -110,6 +110,7 @@ class HandleSmRNAwindows:
     self.alignmentFileFormat = alignmentFileFormat # can be "tabular" or "sam"
     self.genomeRefFile = genomeRefFile
     self.genomeRefFormat = genomeRefFormat # can be "bowtieIndex" or "fastaSource"
+    self.alignedReads = 0
     self.instanceDict = {}
     self.size_inf=size_inf
     self.size_sup=size_sup
@@ -131,32 +132,36 @@ class HandleSmRNAwindows:
         gene = fields[2]
         offset = int(fields[3])
         size = len (fields[4])
-	if self.size_inf:
+       if self.size_inf:
           if (size>=self.size_inf and size<= self.size_sup):
             self.instanceDict[gene].addread (polarity, offset+1, size) # to correct to 1-based coordinates of SmRNAwindow
-	else:
+            self.alignedReads += 1
+       else:
           self.instanceDict[gene].addread (polarity, offset+1, size) # to correct to 1-based coordinates of SmRNAwindow
+          self.alignedReads += 1
       F.close()
       return self.instanceDict
-    elif self.alignmentFileFormat == "sam":
-      F = open (self.alignmentFile, "r")
-      dict = {"0":"+", "16":"-"}
-      for line in F:
-        if line[0]=='@':
-            continue
-        fields = line.split()
-        if fields[2] == "*": continue
-        polarity = dict[fields[1]]
-        gene = fields[2]
-        offset = int(fields[3])
-        size = len (fields[9])
-        if self.size_inf:
-          if (size>=self.size_inf and size<= self.size_sup):
-            self.instanceDict[gene].addread (polarity, offset, size) 
-        else:
-          self.instanceDict[gene].addread (polarity, offset, size)
-      F.close()
-    elif self.alignmentFileFormat == "bam":
+#    elif self.alignmentFileFormat == "sam":
+#      F = open (self.alignmentFile, "r")
+#      dict = {"0":"+", "16":"-"}
+#      for line in F:
+#        if line[0]=='@':
+#            continue
+#        fields = line.split()
+#        if fields[2] == "*": continue
+#        polarity = dict[fields[1]]
+#        gene = fields[2]
+#        offset = int(fields[3])
+#        size = len (fields[9])
+#        if self.size_inf:
+#          if (size>=self.size_inf and size<= self.size_sup):
+#            self.instanceDict[gene].addread (polarity, offset, size)
+#            self.alignedReads += 1
+#       else:
+#          self.instanceDict[gene].addread (polarity, offset, size)
+#          self.alignedReads += 1
+#      F.close()
+    elif self.alignmentFileFormat == "bam" or self.alignmentFileFormat == "sam":
       import pysam
       samfile = pysam.Samfile(self.alignmentFile)
       for read in samfile:
@@ -172,9 +177,23 @@ class HandleSmRNAwindows:
         if self.size_inf:
           if (size>=self.size_inf and size<= self.size_sup):
             self.instanceDict[gene].addread (polarity, offset+1, size) # to correct to 1-based coordinates of SmRNAwindow
+            self.alignedReads += 1
         else:
           self.instanceDict[gene].addread (polarity, offset+1, size) # to correct to 1-based coordinates of SmRNAwindow
+          self.alignedReads += 1
       return self.instanceDict
+     return
+
+  def CountFeatures (self, GFF3="path/to/file"):
+    featureDict = defaultdict(int)
+    F  = open (GFF3, "r")
+    for line in F:
+      if line[0] ==  "#": continue
+      fields = line[:-1].split()
+      chrom, feature, leftcoord, rightcoord, polarity = fields[0], fields[2], fields[3], fields[4], fields[6]
+      featureDict[feature] += self.instanceDict[chrom].readcount(upstream_coord=int(leftcoord), downstream_coord=int(rightcoord), polarity="both", method="destructive")
+    F.close()
+    return featureDict
 
 class SmRNAwindow:
 
@@ -185,6 +204,8 @@ class SmRNAwindow:
     self.windowoffset = windowoffset
     self.size = len(sequence)
     self.readDict = defaultdict(list) # with a {+/-offset:[size1, size2, ...], ...}
+    self.matchedreadsUp = 0
+    self.matchedreadsDown = 0
     self.norm=norm
     
   def addread (self, polarity, offset, size):
@@ -192,8 +213,10 @@ class SmRNAwindow:
     ''' We removed the conversion from 0 to 1 based offset, as we do this now during readparsing.'''
     if polarity == "+":
       self.readDict[offset].append(size)
+      self.matchedreadsUp += 1
     else:
       self.readDict[-(offset + size -1)].append(size)
+      self.matchedreadsDown += 1
     return
 
   def barycenter (self, upstream_coord=None, downstream_coord=None):
@@ -252,48 +275,49 @@ class SmRNAwindow:
         pass
     return results
 
-  def readcount (self, size_inf=0, size_sup=1000, upstream_coord=None, downstream_coord=None):
+  def readcount (self, size_inf=0, size_sup=1000, upstream_coord=None, downstream_coord=None, polarity="both", method="conservative"):
     '''refactored 24-12-2013 to save memory and introduce offset filtering
     take a look at the defaut parameters that cannot be defined relatively to the instance are they are defined before instanciation
-    the trick is to pass None and then test'''
-    norm=self.norm
+    the trick is to pass None and then test
+    polarity parameter can take "both", "forward" or "reverse" as value'''
     upstream_coord = upstream_coord or self.windowoffset
     downstream_coord = downstream_coord or self.windowoffset+self.size-1
+    if upstream_coord == 1 and downstream_coord == self.windowoffset+self.size-1 and polarity == "both":
+      return self.matchedreadsUp +  self.matchedreadsDown
+    if upstream_coord == 1 and downstream_coord == self.windowoffset+self.size-1 and polarity == "forward":
+      return self.matchedreadsUp    
+    if upstream_coord == 1 and downstream_coord == self.windowoffset+self.size-1 and polarity == "reverse":
+      return self.matchedreadsDown    
     n=0
-    for offset in self.readDict:
-      if (abs(offset) < upstream_coord or abs(offset) > downstream_coord): continue
-      for i in self.readDict[offset]:
-        if (i>=size_inf and i<= size_sup):
-          n += norm
-    return n
-
-  def forwardreadcount(self, size_inf=0, size_sup=1000, upstream_coord=None, downstream_coord=None):
-    '''refactored 24-12-2013 to save memory and introduce offset filtering
-    take a look at the defaut parameters that cannot be defined relatively to the instance are they are defined before instanciation
-    the trick is to pass None and then test'''
-    upstream_coord = upstream_coord or self.windowoffset
-    downstream_coord = downstream_coord or self.windowoffset+self.size-1
-    n=0
-    for offset in self.readDict:
-      if ((abs(offset) < upstream_coord or abs(offset) > downstream_coord) or offset < 0): continue
-      for i in self.readDict[offset]:
-        if (i>=size_inf and i<= size_sup):
-          n += 1
-    return n
-
-  def reversereadcount(self, size_inf=0, size_sup=1000, upstream_coord=None, downstream_coord=None):
-    '''refactored 24-12-2013 to save memory and introduce offset filtering
-    take a look at the defaut parameters that cannot be defined relatively to the instance are they are defined before instanciation
-    the trick is to pass None and then test'''
-    upstream_coord = upstream_coord or self.windowoffset
-    downstream_coord = downstream_coord or self.windowoffset+self.size-1
-    n=0
-    for offset in self.readDict:
-      if ((abs(offset) < upstream_coord or abs(offset) > downstream_coord) or offset > 0): continue
-      for i in self.readDict[offset]:
-        if (i>=size_inf and i<= size_sup):
-          n += 1
-    return n
+    if polarity == "both":
+      for offset in xrange(upstream_coord, downstream_coord+1):
+        if self.readDict.has_key(offset):
+          for read in self.readDict[offset]:
+            if (read>=size_inf and read<= size_sup):
+              n += 1
+          if method != "conservative":
+            del self.readDict[offset] ## Carefull ! precludes re-use on the self.readDict dictionary !!!!!! TEST
+        if self.readDict.has_key(-offset):
+          for read in self.readDict[-offset]:
+            if (read>=size_inf and read<= size_sup):
+              n += 1
+          if method != "conservative":
+            del self.readDict[-offset]
+      return n
+    elif polarity == "forward":
+      for offset in xrange(upstream_coord, downstream_coord+1):
+        if self.readDict.has_key(offset):
+          for read in self.readDict[offset]:
+            if (read>=size_inf and read<= size_sup):
+              n += 1
+      return n
+    elif polarity == "reverse":
+      for offset in xrange(upstream_coord, downstream_coord+1):
+        if self.readDict.has_key(-offset):
+          for read in self.readDict[-offset]:
+            if (read>=size_inf and read<= size_sup):
+              n += 1
+      return n
 
   def readsizes (self):
     '''return a dictionary of number of reads by size (the keys)'''
@@ -301,6 +325,8 @@ class SmRNAwindow:
     for offset in self.readDict:
       for size in self.readDict[offset]:
         dicsize[size] = dicsize.get(size, 0) + 1
+    for offset in range (min(dicsize.keys()), max(dicsize.keys())+1):
+      dicsize[size] = dicsize.get(size, 0) # to fill offsets with null values
     return dicsize
     
   def size_histogram(self):
@@ -313,7 +339,7 @@ class SmRNAwindow:
         if offset < 0:
           hist_dict['R'][size] = hist_dict['R'].get(size, 0) - 1*norm
         else:
-	  hist_dict['F'][size] = hist_dict['F'].get(size, 0) + 1*norm
+         hist_dict['F'][size] = hist_dict['F'].get(size, 0) + 1*norm
     return hist_dict
 
   def statsizes (self, upstream_coord=None, downstream_coord=None):
@@ -404,13 +430,13 @@ class SmRNAwindow:
     return mylist
 
   def readcoverage (self, upstream_coord=None, downstream_coord=None, windowName=None):
-    '''This method has not been tested yet 15-11-2013'''
+    '''Use by MirParser tool'''
     upstream_coord = upstream_coord or 1
     downstream_coord = downstream_coord or self.size
     windowName = windowName or "%s_%s_%s" % (self.gene, upstream_coord, downstream_coord)
     forORrev_coverage = dict ([(i,0) for i in xrange(1, downstream_coord-upstream_coord+1)])
-    totalforward = self.forwardreadcount(upstream_coord=upstream_coord, downstream_coord=downstream_coord)
-    totalreverse = self.reversereadcount(upstream_coord=upstream_coord, downstream_coord=downstream_coord)
+    totalforward = self.readcount(upstream_coord=upstream_coord, downstream_coord=downstream_coord, polarity="forward")
+    totalreverse = self.readcount(upstream_coord=upstream_coord, downstream_coord=downstream_coord, polarity="reverse")
     if totalforward > totalreverse:
       majorcoverage = "forward"
       for offset in self.readDict.keys():
