@@ -13,7 +13,7 @@ if ExtractionDirective == "--do_not_extract_index":
 elif  ExtractionDirective == "--extract_index":
   genomeRefFormat = "bowtieIndex"
 Output = sys.argv[3]
-Polarity = sys.argv[4] # maybe "both", "sense", "antisense"
+Polarity = sys.argv[4] # maybe "both", "forward", "reverse"
 Triplets = [sys.argv[5:][i:i+3] for i in xrange(0, len(sys.argv[5:]), 3)]
 MasterListOfGenomes = {}
 
@@ -29,12 +29,7 @@ print >> F, "\t".join(header)
 for item in sorted (MasterListOfGenomes[header[1]].instanceDict.keys() ):
   line=[item]
   for sample in header[1:]:
-    if Polarity == "both":
-      count = str (MasterListOfGenomes[sample].instanceDict[item].readcount())
-    elif Polarity == "sense":
-      count = str (MasterListOfGenomes[sample].instanceDict[item].forwardreadcount())
-    elif Polarity == "antisense":
-      count = str (MasterListOfGenomes[sample].instanceDict[item].reversereadcount())
+    count = str (MasterListOfGenomes[sample].instanceDict[item].readcount(polarity=Polarity))
     line.append(count)
   print >> F,  "\t".join(line )
 F.close()

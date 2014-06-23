@@ -1,0 +1,32 @@
+<tool id="MirDeepStar" name="MirDeepStar">
+<description></description>
+<command interpreter="python">MDS_wrapper.py $input $genome $output $output2 $output3</command>
+
+<inputs>
+        <param name="input" type="data" format="fasta" label="input fasta file"/>
+        <param name="genome" type="select" label="MirDeep* reference genome">
+                <option value="AgamP4">SoftMasked Anopheles Gambiae P4</option>
+                <option value="AgamF">SoftMasked Anopheles Gambiae P3</option>
+                <option value="hg19">Human (hg19)</option>
+                <option value="mm9">Mouse (mm9)</option>
+                <option value="Dmel">Dmel (5.49)</option>
+        </param>
+</inputs>
+
+<outputs>
+        <data name="output3" format="tabular" label="mirdeep* clusters"/>
+        <data name="output2" format="tabular" label="mirdeep* raw output"/>
+	<data name="output" format="gff3" label="mirdeep* GFF output"/>
+</outputs>
+
+<help>
+
+**What it does**
+
+MirDeep* wrapper
+
+
+</help>
+
+</tool>
+

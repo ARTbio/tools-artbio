@@ -5,20 +5,29 @@
 <command interpreter="python">
         MirParser.py 
 	          #if $refGenomeSource.genomeSource == "history":
-                    $refGenomeSource.ownFile ## index source
-         	    --do_not_extract_index
+                    $refGenomeSource.ownFile ## index source sys.arg[1]
+         	    --do_not_extract_index  ## sys.argv[2]
           	  #else:
 		    #silent reference= filter( lambda x: str( x[0] ) == str( $input_list.dbkey ), $__app__.tool_data_tables[ 'bowtie_indexes' ].get_fields() )[0][-1]
-		    $reference
-		    --extract_index
+		    $reference   ## sys.argv[1]
+		    --extract_index  ## sys.argv[2]
           	  #end if
-		  $output1 ## for pre-mirs
-		  $output2 ## for mature mirs
-		  $GFF3
+		  $output1 ## for pre-mirs  ## sys.argv[3]
+		  $output2 ## for mature mirs  ## sys.argv[4]
+		  $GFF3    ## sys.argv[5]
+		  #if $plotting.plottingOption == "yes":
+		    $lattice_dataframe   ## sys.argv[6]
+		    $plotCode   ## sys.argv[7]
+		    $latticePDF ## sys.argv[8]
+		  #else:
+		    "dummy_dataframe_path"   ## sys.argv[6]
+                    "dummy_plotCode"   ## sys.argv[7]
+		    "dummy_latticePDF" ## sys.argv[8]
+		  #end if
 		  #for $i in $refGenomeSource.input_list
-    		    $i $i.ext "$i.name"
+    		    $i $i.ext "$i.name" ## sys.argv[9,10,11] modulo 3
 		  #end for
-
+                  #silent plottingoption = $plotting.plottingOption
 </command>
   <inputs>
        <conditional name="refGenomeSource">
@@ -37,53 +46,103 @@
            </when>
        </conditional>  <!-- refGenomeSource -->
        <param name="GFF3" type="data" label="miRbase GFF3 guide" />
+       <conditional name="plotting">
+           <param name="plottingOption" type="select" label="Additional mir coverage graphs">
+               <option value="no" selected="True">No</option>
+               <option value="yes">YES</option>
+           </param>
+           <when value="yes">
+               <param name="display" type="select" label="Display Coverage with absolute number of reads or relatively to the total number of read matching the gene or mir">
+                 <option value="relative" selected="True">Relative Coverage</option>
+                 <option value="absolute">Absolute Coverage</option>
+               </param>
+           </when>
+       </conditional>
    </inputs>
+   <configfiles>
+     <configfile name="plotCode">
+	#if  $plotting.plottingOption == "yes":
+          graph_type = "${plotting.display}" ## "relative" or "absolute"
+          ## Setup R error handling to go to stderr
+          options( show.error.messages=F,
+                 error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+          library(lattice)
+          coverage = read.delim("${lattice_dataframe}", header=T)
+          Numb_of_biosamples = length(levels(coverage\$sample))
+          if (graph_type=="relative") {
+          graph = xyplot(countsNorm~offsetNorm | mir, data=coverage, groups=polarity, col=c("red", "blue"), type="l", lwd=1,
+                        scales=list(x=list(cex=.5), y=list(cex=.5)), par.strip.text=list(cex=.5), strip=strip.custom(which.given=1, bg="lightblue"), layout=c(Numb_of_biosamples,15), as.table=TRUE, main="miRNA coverage maps")
+          } else {
+          graph = xyplot(counts~offset | mir, data=coverage, groups=polarity, col=c("red", "blue"), type="l", lwd=1,
+                        scales=list(x=list(cex=.5), y=list(cex=.5)), par.strip.text=list(cex=.5), strip=strip.custom(which.given=1, bg="lightblue"), layout=c(Numb_of_biosamples,15), as.table=TRUE, main="miRNA coverage maps")
+          }
+          ## pdf output
+          pdf(file="${latticePDF}", paper="special", height=11.69, width=8.2677)
+          plot(graph, newpage = T)
+          dev.off()
+        #end if
+     </configfile>
+   </configfiles>
+
    <outputs>
    <data format="tabular" name="output1" label="Premirs Count  Lists"/>
    <data format="tabular" name="output2" label="Mature Mirs Count  Lists"/>
+   <data format="tabular" name="lattice_dataframe" label="Lattice Dataframe">
+        <filter>plotting['plottingOption'] == "yes"</filter>
+   </data>
+   <data format="pdf" name="latticePDF" label="Mir coverage">
+        <filter>plotting['plottingOption'] == "yes"</filter>
+   </data>
    </outputs>
   <help>
 
 **What it does**
 
-Bowtie_ is a short read aligner designed to be ultrafast and memory-efficient. It is developed by Ben Langmead and Cole Trapnell. Please cite: Langmead B, Trapnell C, Pop M, Salzberg SL. Ultrafast and memory-efficient alignment of short DNA sequences to the human genome. Genome Biology 10:R25.
+This tool uses a specie-specific GFF3 file from mirBase_ to guide the parsing of an alignment file produced with the sRbowtie tool.
 
-.. _Bowtie: http://bowtie-bio.sourceforge.net/index.shtml
+.. _mirBase: ftp://mirbase.org/pub/mirbase/CURRENT/genomes/
 
 ------
 
-**Inportant restriction**
-
 .. class:: warningmark
 
-This is a very restricted usage of bowtie intented to match miRNA reads on a miRbase reference pre-indexed for bowtie.
-The main option presets are -v 1 (allowing only one mismatch for alignments), -M 1 accompanied with --best and --strata, to match randomly the reads that may match to more that pre-miR sequence ("isomirs"), and --norc to match only on forward strands of pre-miRs. In addition the script is currently set up to run with to core processors (-p 2).
-More documentation available at Bowtie webpages
+the Guide GFF3 file must be in the following format:
 
-.. _Bowtie: http://bowtie-bio.sourceforge.net/index.shtml
+2L	.	miRNA_primary_transcript	243035	243141	.	-	.	ID=MI0005821;Alias=MI0005821;Name=dme-mir-965
+
+2L	.	miRNA	243055	243076	.	-	.	ID=MIMAT0005480;Alias=MIMAT0005480;Name=dme-miR-965-3p;Derives_from=MI0005821
+
+2L	.	miRNA	243096	243118	.	-	.	ID=MIMAT0020861;Alias=MIMAT0020861;Name=dme-miR-965-5p;Derives_from=MI0005821
+
+2L	.	miRNA_primary_transcript	857542	857632	.	+	.	ID=MI0005813;Alias=MI0005813;Name=dme-mir-375
+
+2L	.	miRNA	857596	857617	.	+	.	ID=MIMAT0005472;Alias=MIMAT0005472;Name=dme-miR-375-3p;Derives_from=MI0005813
+
+2L	.	miRNA	857556	857579	.	+	.	ID=MIMAT0020853;Alias=MIMAT0020853;Name=dme-miR-375-5p;Derives_from=MI0005813
+
+2L	.	miRNA_primary_transcript	1831685	1831799	.	-	.	ID=MI0011290;Alias=MI0011290;Name=dme-mir-2280
+
+With name for mature miRNA (3rd column = miRNA) containing either the -3p or -5p string in the attribute Name (Name=dme-miR-965-3p, for instance)
 
 ------
 
 **Input formats**
 
+1. One or sereral alignment files generated with sRbowtie tool and **renamed** according to the name of the biosample (avoid spaces in biosample labels)
+
 .. class:: warningmark
 
-*For simplicity, the only accepted format for this script is a raw fasta list of reads, after adapter clipping*
+Alignment datasets generated with sRbowtie must be renamed according to a biosample name
+
+2. A GFF3 file retrieved from mirBase_
 
 ------
 
-
 **Outputs**
 
-The output is in standard bowtie output format, and has the following columns::
+Two count list files for counts of reads aligned to pre-mir or mature miRNA
 
-    Column    Description
-  --------    --------------------------------------------------------   
-   1 FastaID  fasta identifier
-   2 miR      name of the miR
-   3 Offset   O-based coordinate of the miR on the miRBase pre-miR sequence
-   4 Seq      sequence of the matched Read
-
+A pdf of pre-mir coverages. Red coverages indicate that the mir gene is in the genomic up strand, blue coverages indicate that the mir gene is in the genomic down strand.
 
   </help>
 </tool>
