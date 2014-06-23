@@ -132,11 +132,11 @@ class HandleSmRNAwindows:
         gene = fields[2]
         offset = int(fields[3])
         size = len (fields[4])
-       if self.size_inf:
+        if self.size_inf:
           if (size>=self.size_inf and size<= self.size_sup):
             self.instanceDict[gene].addread (polarity, offset+1, size) # to correct to 1-based coordinates of SmRNAwindow
             self.alignedReads += 1
-       else:
+        else:
           self.instanceDict[gene].addread (polarity, offset+1, size) # to correct to 1-based coordinates of SmRNAwindow
           self.alignedReads += 1
       F.close()
