@@ -2,7 +2,7 @@
 # version 1 7-5-2012 unification of the SmRNAwindow class
 
 import sys, subprocess
-from collections import defaultdict, OrderedDict
+from collections import defaultdict
 from numpy import mean, median, std
 from scipy import stats
 
@@ -95,8 +95,8 @@ def extractsubinstance (start, end, instance):
   ''' Testing whether this can be an function external to the class to save memory'''
   subinstance = SmRNAwindow (instance.gene, instance.sequence[start-1:end], start)
   subinstance.gene = "%s %s %s" % (subinstance.gene, subinstance.windowoffset, subinstance.windowoffset + subinstance.size - 1)
-  upcoordinate = [i for i in range(start,end+1) if instance.readDict[i] ]
-  downcoordinate = [-i for i in range(start,end+1) if instance.readDict[-i] ]
+  upcoordinate = [i for i in range(start,end+1) if instance.readDict.has_key(i) ]
+  downcoordinate = [-i for i in range(start,end+1) if instance.readDict.has_key(-i) ]
   for i in upcoordinate:
     subinstance.readDict[i]=instance.readDict[i]
   for i in downcoordinate:
@@ -104,7 +104,7 @@ def extractsubinstance (start, end, instance):
   return subinstance
 
 class HandleSmRNAwindows:
-  def __init__(self, alignmentFile="~", alignmentFileFormat="tabular", genomeRefFile="~", genomeRefFormat="bowtieIndex", biosample="undetermined"):
+  def __init__(self, alignmentFile="~", alignmentFileFormat="tabular", genomeRefFile="~", genomeRefFormat="bowtieIndex", biosample="undetermined", size_inf=None, size_sup=1000, norm=1.0):
     self.biosample = biosample
     self.alignmentFile = alignmentFile
     self.alignmentFileFormat = alignmentFileFormat # can be "tabular" or "sam"
@@ -112,12 +112,15 @@ class HandleSmRNAwindows:
     self.genomeRefFormat = genomeRefFormat # can be "bowtieIndex" or "fastaSource"
     self.alignedReads = 0
     self.instanceDict = {}
+    self.size_inf=size_inf
+    self.size_sup=size_sup
+    self.norm=norm
     if genomeRefFormat == "bowtieIndex":
       self.itemDict = get_fasta (genomeRefFile)
     elif genomeRefFormat == "fastaSource":
       self.itemDict = get_fasta_from_history (genomeRefFile)
     for item in self.itemDict:
-      self.instanceDict[item] = SmRNAwindow(item, sequence=self.itemDict[item], windowoffset=1, biosample=self.biosample) # create as many instances as there is items
+      self.instanceDict[item] = SmRNAwindow(item, sequence=self.itemDict[item], windowoffset=1, biosample=self.biosample, norm=self.norm) # create as many instances as there is items
     self.readfile()
 
   def readfile (self) :
@@ -129,25 +132,36 @@ class HandleSmRNAwindows:
         gene = fields[2]
         offset = int(fields[3])
         size = len (fields[4])
-        self.instanceDict[gene].addread (polarity, offset+1, size) # to correct to 1-based coordinates of SmRNAwindow
-        self.alignedReads += 1
+       if self.size_inf:
+          if (size>=self.size_inf and size<= self.size_sup):
+            self.instanceDict[gene].addread (polarity, offset+1, size) # to correct to 1-based coordinates of SmRNAwindow
+            self.alignedReads += 1
+       else:
+          self.instanceDict[gene].addread (polarity, offset+1, size) # to correct to 1-based coordinates of SmRNAwindow
+          self.alignedReads += 1
       F.close()
-    elif self.alignmentFileFormat == "sam":
-      F = open (self.alignmentFile, "r")
-      dict = {"0":"+", "16":"-"}
-      for line in F:
-        if line[0]=='@':
-            continue
-        fields = line.split()
-        if fields[2] == "*": continue
-        polarity = dict[fields[1]]
-        gene = fields[2]
-        offset = int(fields[3])
-        size = len (fields[9])
-        self.instanceDict[gene].addread (polarity, offset, size) # sam format is already 1-based coordinates
-        self.alignedReads += 1
-      F.close()
-    elif self.alignmentFileFormat == "bam":
+      return self.instanceDict
+#    elif self.alignmentFileFormat == "sam":
+#      F = open (self.alignmentFile, "r")
+#      dict = {"0":"+", "16":"-"}
+#      for line in F:
+#        if line[0]=='@':
+#            continue
+#        fields = line.split()
+#        if fields[2] == "*": continue
+#        polarity = dict[fields[1]]
+#        gene = fields[2]
+#        offset = int(fields[3])
+#        size = len (fields[9])
+#        if self.size_inf:
+#          if (size>=self.size_inf and size<= self.size_sup):
+#            self.instanceDict[gene].addread (polarity, offset, size)
+#            self.alignedReads += 1
+#       else:
+#          self.instanceDict[gene].addread (polarity, offset, size)
+#          self.alignedReads += 1
+#      F.close()
+    elif self.alignmentFileFormat == "bam" or self.alignmentFileFormat == "sam":
       import pysam
       samfile = pysam.Samfile(self.alignmentFile)
       for read in samfile:
@@ -160,9 +174,15 @@ class HandleSmRNAwindows:
         gene = samfile.getrname(read.tid)
         offset = read.pos
         size = read.qlen
-        self.instanceDict[gene].addread (polarity, offset+1, size) # pysam converts coordinates to 0-based (https://media.readthedocs.org/pdf/pysam/latest/pysam.pdf)
-        self.alignedReads += 1
-      return
+        if self.size_inf:
+          if (size>=self.size_inf and size<= self.size_sup):
+            self.instanceDict[gene].addread (polarity, offset+1, size) # to correct to 1-based coordinates of SmRNAwindow
+            self.alignedReads += 1
+        else:
+          self.instanceDict[gene].addread (polarity, offset+1, size) # to correct to 1-based coordinates of SmRNAwindow
+          self.alignedReads += 1
+      return self.instanceDict
+     return
 
   def CountFeatures (self, GFF3="path/to/file"):
     featureDict = defaultdict(int)
@@ -177,7 +197,7 @@ class HandleSmRNAwindows:
 
 class SmRNAwindow:
 
-  def __init__(self, gene, sequence="ATGC", windowoffset=1, biosample="Undetermined"):
+  def __init__(self, gene, sequence="ATGC", windowoffset=1, biosample="Undetermined", norm=1.0):
     self.biosample = biosample
     self.sequence = sequence
     self.gene = gene
@@ -186,6 +206,7 @@ class SmRNAwindow:
     self.readDict = defaultdict(list) # with a {+/-offset:[size1, size2, ...], ...}
     self.matchedreadsUp = 0
     self.matchedreadsDown = 0
+    self.norm=norm
     
   def addread (self, polarity, offset, size):
     '''ATTENTION ATTENTION ATTENTION'''
@@ -308,6 +329,19 @@ class SmRNAwindow:
       dicsize[size] = dicsize.get(size, 0) # to fill offsets with null values
     return dicsize
     
+  def size_histogram(self):
+    norm=self.norm
+    hist_dict={}
+    hist_dict['F']={}
+    hist_dict['R']={}
+    for offset in self.readDict:
+      for size in self.readDict[offset]:
+        if offset < 0:
+          hist_dict['R'][size] = hist_dict['R'].get(size, 0) - 1*norm
+        else:
+         hist_dict['F'][size] = hist_dict['F'].get(size, 0) + 1*norm
+    return hist_dict
+
   def statsizes (self, upstream_coord=None, downstream_coord=None):
     ''' migration to memory saving by specifying possible subcoordinates
     see the readcount method for further discussion'''
@@ -383,9 +417,10 @@ class SmRNAwindow:
 
     
   def readplot (self):
+    norm=self.norm
     readmap = {}
     for offset in self.readDict.keys():
-      readmap[abs(offset)] = ( len(self.readDict[-abs(offset)]) , len(self.readDict[abs(offset)]) )
+      readmap[abs(offset)] = ( len(self.readDict.get(-abs(offset),[]))*norm , len(self.readDict.get(abs(offset),[]))*norm )
     mylist = []
     for offset in sorted(readmap):
       if readmap[offset][1] != 0:
