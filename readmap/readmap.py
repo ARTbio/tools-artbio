@@ -56,7 +56,7 @@ def process_samples(filePath):
 
 def write_readplot_dataframe(readDict, readmap_file):
   with open(readmap_file, 'w') as readmap:
-    print >>readmap, "gene\tcoord\tcount\tpolarity\titemcount\tsample"
+    print >>readmap, "gene\tcoord\tcount\tpolarity\tsample"
     for sample in readDict.keys():
       if args.gff:
         dict=readDict[sample]
@@ -64,9 +64,8 @@ def write_readplot_dataframe(readDict, readmap_file):
         dict=readDict[sample].instanceDict
       for gene in dict.keys():
         plottable = dict[gene].readplot()
-        itemcount = dict[gene].readcount()
         for line in plottable:
-          print >>readmap, "%s\t%s\t%s" % (line, itemcount, sample)
+          print >>readmap, "%s\t%s" % (line, sample)
 
 def write_size_distribution_dataframe(readDict, size_distribution_file):
   with open(size_distribution_file, 'w') as size_distrib:
