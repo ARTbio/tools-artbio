@@ -98,7 +98,6 @@ def gff_item_subinstances(readDict, gff3):
         subinstance=extractsubinstance(item_upstream_coordinate, item_downstream_coordinate, readDict[sample].instanceDict[chrom])
         if item_polarity == '-':
           subinstance.readDict={key*-1:value for key, value in subinstance.readDict.iteritems()}
-#          subinstance.readDict.setdefault(key, [])
         subinstance.gene=gff_name
         GFFinstanceDict[sample][gff_name]=subinstance
   return GFFinstanceDict

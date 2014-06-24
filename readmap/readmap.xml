@@ -67,12 +67,14 @@
        </conditional>
                 <param name="gff" type="data" optional="true" label="Optional: select a GFF to investigate regions of interest" help="GFF must match genome build"/>
                  <!-- <validator type="dataset_metadata_in_data_table" table_name="bowtie_indexes" metadata_name="dbkey" metadata_column="0" message="GFF database and alignment file databse do not match!"/> -->
-                <param name="minquery" type="integer" size="3" value="15" label="Min size of query small RNAs" help="'15' = 15 nucleotides"/>
-                <param name="maxquery" type="integer" size="3" value="30" label="Max size of query small RNAs" help="'30' = 30 nucleotides"/>
-                <param name="title" type="text" size="15" value="Lattice Read Maps" label="Main Titles"/>
-                <param name="xlabel" type="text" size="15" value="Coordinates" label="x axis label"/>
+                <param name="minquery" type="integer" size="3" value="18" label="Min size of query small RNAs" help="'18' = 18 nucleotides"/>
+                <param name="maxquery" type="integer" size="3" value="28" label="Max size of query small RNAs" help="'28' = 28 nucleotides"/>
+                <param name="title" type="text" size="15" value= "Readmaps and size distributions" label="Main Titles"/>
+                <param name="xlabel" type="text" size="15" value="Coordinates/read size" label="x axis label"/>
                 <param name="ylabel" type="text" size="15" value="Number of reads" label="y axis label"/>
-                <param name="rows_per_page" type="text" size="9" value="8" label="How many rows to display per page?"/>
+                <param name="rows_per_page" type="text" size="9" value="8" label="How many items to display per page?">
+		  <validator type="in_range" min="6" max="20" message="Select between 6 and 20 rows, as the readability will suffer otherwise."/>
+                </param>
   </inputs>
    <configfiles>
      <configfile name="plotCode">
@@ -137,7 +139,7 @@
         end=i+${rows_per_page}-1
         if (end>n_genes) {end=n_genes}
 	readmap_plot.list=lapply(per_gene_readmap[start:end], function(x) plot_readmap(x, par.settings=par.settings.readmap))
-	args.list=c(readmap_plot.list, list(nrow=${rows_per_page}, ncol=1, main="${title}", left="${ylabel}", sub="${xlabel}"))
+	args.list=c(readmap_plot.list, list(nrow=${rows_per_page}, ncol=1, main="${title}", left="${ylabel}", sub="readmap coordinate"))
         do.call(grid.arrange, args.list)
       }
 
@@ -168,7 +170,7 @@
 	read_plot.list=lapply(per_gene_readmap[start:end], function(x) plot_readmap(x, par.settings=par.settings.combination.readmap))
         size_plot.list=lapply(per_gene_size[start:end], function(x) plot_size_distribution(x, strip=FALSE, par.settings=par.settings.combination.size))
 	plot.list=rbind(read_plot.list, size_plot.list )
-        args.list=c(plot.list, list(nrow=${rows_per_page}, ncol=1, main="${title}", left="${ylabel}", sub=""))
+        args.list=c(plot.list, list(nrow=${rows_per_page}, ncol=1, main="${title}", left="${ylabel}", sub="${xlabel}"))
         do.call(grid.arrange, args.list)
       }
 
