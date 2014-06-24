@@ -5,7 +5,7 @@
     <param format="fastq" name="input" type="data" label="Source file"/>
     <param name="min" type="integer" size="4" value="15" label="min size"/>
     <param name="max" type="integer" size="4" value="36" label="max size"/>
-    <param name="Nmode" type="select" label="Reads containing Nst">
+    <param name="Nmode" type="select" label="Accept reads containing N?">
         <option value="accept" selected="True">accept</option>
         <option value="reject">reject</option>
     </param>
