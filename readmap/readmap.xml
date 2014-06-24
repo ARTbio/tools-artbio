@@ -139,7 +139,7 @@
         end=i+${rows_per_page}-1
         if (end>n_genes) {end=n_genes}
 	readmap_plot.list=lapply(per_gene_readmap[start:end], function(x) plot_readmap(x, par.settings=par.settings.readmap))
-	args.list=c(readmap_plot.list, list(nrow=${rows_per_page}, ncol=1, main="${title}", left="${ylabel}", sub="readmap coordinate"))
+	args.list=c(readmap_plot.list, list(nrow=${rows_per_page}, ncol=1, main="readmaps", left="${ylabel}", sub="readmap coordinate"))
         do.call(grid.arrange, args.list)
       }
 
@@ -155,7 +155,7 @@
         end=i+${rows_per_page}-1
         if (end>n_genes) {end=n_genes}
         plot.list=lapply(per_gene_size[start:end], function(x) plot_size_distribution(x, par.settings=par.settings.size))
-        args.list=c(plot.list, list(nrow=${rows_per_page}, ncol=1, main="${title}", left="${ylabel}", sub="readsize in nucleotides"))
+        args.list=c(plot.list, list(nrow=${rows_per_page}, ncol=1, main="size distribution", left="${ylabel}", sub="readsize in nucleotides"))
         do.call(grid.arrange, args.list)
       }
 
@@ -182,10 +182,10 @@
 
    <outputs>
    <data format="tabular" name="readmap_dataframe" label="Readmap dataframe"/>
-   <data format="tabular" name="size_distribution_dataframe" label="Size distributionn dataframe"/>
+   <data format="tabular" name="size_distribution_dataframe" label="Size distribution dataframe"/>
    <data format="pdf" name="readmap_PDF" label="Readmaps"/>
    <data format="pdf" name="size_PDF" label="Size distribution"/>
-   <data format="pdf" name="combi_PDF" label="Size distributiona and Readmaps"/>
+   <data format="pdf" name="combi_PDF" label="Size distribution and Readmaps"/>
    </outputs>
 <help>
 
