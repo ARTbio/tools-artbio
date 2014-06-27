@@ -98,7 +98,7 @@
 
 **What it does**
 
-This tool uses a specie-specific GFF3 file from mirBase_ to guide the parsing of an alignment file produced with the sRbowtie tool.
+This tool uses a species-specific GFF3 file from mirBase_ to guide the parsing of an alignment file produced with the sRbowtie tool.
 
 .. _mirBase: ftp://mirbase.org/pub/mirbase/CURRENT/genomes/
 
