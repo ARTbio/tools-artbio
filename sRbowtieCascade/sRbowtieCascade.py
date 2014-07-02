@@ -67,10 +67,12 @@ def bowtie_alignment(command_line="None", working_dir = ""):
   #p = subprocess.Popen(["wc", "-l", "%s/al.fasta"%working_dir], cwd=working_dir, stdout=subprocess.PIPE)
   #aligned =  p.communicate()[0].split()[0]
   aligned = 0
-  F = open ("%s/al.fasta" % working_dir, "r")
-  for line in F:
-    aligned += 1
-  F.close()
+  try: # hacked at gcc2014 in case of no alignment, no al.fasta file generated (?)
+    F = open ("%s/al.fasta" % working_dir, "r")
+    for line in F:
+      aligned += 1
+    F.close()
+  except: pass
   sys.stdout.write("Aligned: %s\n" % aligned)
   return aligned/2
 
@@ -101,6 +103,9 @@ def __main__():
       ResultDict[label].append( bowtie_alignment(command_line=cmd, working_dir = workingDir) )## second step of the cascade
     if len(BowtieIndexList) > 4:  ## remaining steps
       for BowtieIndexPath in BowtieIndexList[4::2]:
+        try:
+          os.unlink("%s/al.fasta" % workingDir) # hacked at gcc 2014, to remove previous al.fasta file that may interfere with counting if new al.fasta is empty
+        except: pass
         os.rename("%s/unal.fasta"%workingDir, "%s/toAlign.fasta"%workingDir)
         cmd = CommandLiner (v_mis=args.mismatch, pslots=args.num_threads, index=BowtieIndexPath, input="%s/toAlign.fasta"%workingDir, working_dir=workingDir)
         ResultDict[label].append( bowtie_alignment(command_line=cmd, working_dir = workingDir) )
