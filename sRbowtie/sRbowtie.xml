@@ -1,7 +1,8 @@
 <tool id="bowtieForSmallRNA" name="sRbowtie" version="1.0.1">
   <description>for FASTA small reads</description>
   <requirements>
-	<requirement type='package'>bowtie</requirement>
+	<requirement type="package" version="0.12.7">bowtie</requirement>
+        <requirement type="package" version="0.1.18">samtools</requirement>
   </requirements>
   <parallelism method="basic"></parallelism>
   <command interpreter="python"> sRbowtie.py $input
