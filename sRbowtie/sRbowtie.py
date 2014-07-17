@@ -1,19 +1,32 @@
 #!/usr/bin/env python
 # small RNA oriented bowtie wrapper
-# version 1.01 29-5-2014
+# version 1.5 17-7-2014: arg parser implementation
 # Usage sRbowtie.py <1 input_fasta_file> <2 alignment method> <3 -v mismatches> <4 out_type> <5 buildIndexIfHistory> <6 fasta/bowtie index> <7 bowtie output> <8 ali_fasta> <9 unali_fasta> <10 --num-threads \${GALAXY_SLOTS:-4}>
 # current rev: for bowtie __norc, move from --supress 2,6,7,8 to --supress 6,7,8. Future Parser must be updated to take into account this standardisation
-# To Do:
-# implement an arg parser
 # Christophe Antoniewski <drosofff@gmail.com>
 
-import sys, os, subprocess, tempfile, shutil
+import sys, os, subprocess, tempfile, shutil, argparse
+
+def Parser():
+  the_parser = argparse.ArgumentParser(description="bowtie wrapper for small fasta reads")
+  the_parser.add_argument('--input', action="store", type=str, help="input fasta file")
+  the_parser.add_argument('--method', action="store", type=str, help="RNA, unique, multiple, k_option, n_option, a_option")
+  the_parser.add_argument('--v-mismatches', dest="v_mismatches", action="store", type=str, help="number of mismatches allowed for the alignments")
+  the_parser.add_argument('--output-format', dest="output_format", action="store", type=str, help="tabular, sam, bam")
+  the_parser.add_argument('--output',  action="store", type=str, help="output file path")
+  the_parser.add_argument('--index-from', dest="index_from", action="store", type=str, help="indexed or history")
+  the_parser.add_argument('--index-source', dest="index_source", action="store", type=str, help="file path to the index source")
+  the_parser.add_argument('--aligned', action="store", type=str, help="aligned read file path, maybe None")
+  the_parser.add_argument('--unaligned', action="store", type=str, help="unaligned read file path, maybe None")
+  the_parser.add_argument('--num-threads', dest="num_threads", action="store", type=str, help="number of bowtie threads")
+  args = the_parser.parse_args()
+  return args
 
 def stop_err( msg ):
     sys.stderr.write( '%s\n' % msg )
     sys.exit()
 
-def bowtieCommandLiner (alignment_method, v_mis, out_type, aligned, unaligned, input, index, output, pslots="12"):
+def bowtieCommandLiner (alignment_method="RNA", v_mis="1", out_type="tabular", aligned="None", unaligned="None", input="path", index="path", output="path", pslots="4"):
     if alignment_method=="RNA":
         x = "-v %s -M 1 --best --strata -p %s --norc --suppress 6,7,8" % (v_mis, pslots)
     elif alignment_method=="unique":
@@ -98,12 +111,13 @@ def bowtie_alignment(command_line, flyPreIndexed=''):
   return
 
 def __main__():
-  F = open (sys.argv[7], "w")
-  if sys.argv[5] == "history":
-    tmp_dir, index_path = bowtie_squash(sys.argv[6])
+  args = Parser()
+  F = open (args.output, "w")
+  if args.index_from == "history":
+    tmp_dir, index_path = bowtie_squash(args.index_source)
   else:
-    tmp_dir, index_path = "dummy/dymmy", sys.argv[6]
-  command_line = bowtieCommandLiner(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[8], sys.argv[9], sys.argv[1], index_path, sys.argv[7], sys.argv[10])
+    tmp_dir, index_path = "dummy/dymmy", args.index_source
+  command_line = bowtieCommandLiner(args.method, args.v_mismatches, args.output_format, args.aligned, args.unaligned, args.input, index_path, args.output, args.num_threads)
   bowtie_alignment(command_line, flyPreIndexed=tmp_dir)
   F.close()
 if __name__=="__main__": __main__()

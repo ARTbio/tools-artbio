@@ -1,25 +1,26 @@
-<tool id="bowtieForSmallRNA" name="sRbowtie" version="1.0.1">
+<tool id="bowtieForSmallRNA" name="sRbowtie" version="1.1.0">
   <description>for FASTA small reads</description>
   <requirements>
 	<requirement type="package" version="0.12.7">bowtie</requirement>
         <requirement type="package" version="0.1.18">samtools</requirement>
   </requirements>
   <parallelism method="basic"></parallelism>
-  <command interpreter="python"> sRbowtie.py $input
-                                                    $method
-                                                    $v_mismatches
-                                                    $output_type
-                                                    $refGenomeSource.genomeSource
-                                                    ## the very source of the index (indexed or fasta file)
-                                                    #if $refGenomeSource.genomeSource == "history":
-                                                        $refGenomeSource.ownFile
-                                                    #else:
-                                                        $refGenomeSource.index.fields.path
-                                                    #end if
-                                                    $output
-                                                    $aligned
-                                                    $unaligned
-						    \${GALAXY_SLOTS:-4} ## number of processors to be handled by bowtie
+  <command interpreter="python"> sRbowtie.py --input $input
+                                             --method $method
+                                             --v-mismatches $v_mismatches
+                                             --output-format $output_format
+                                             --output $output
+                                             --index-from $refGenomeSource.genomeSource
+                                             ## the very source of the index (indexed or fasta file)
+                                             --index-source
+                                             #if $refGenomeSource.genomeSource == "history":
+                                                 $refGenomeSource.ownFile
+                                             #else:
+                                                 $refGenomeSource.index.fields.path
+                                             #end if
+                                             --aligned $aligned
+                                             --unaligned $unaligned
+                                             --num-threads \${GALAXY_SLOTS:-4} ## number of processors to be handled by bowtie
   </command>
   <inputs>
       <param name="input" type="data" format="fasta" label="Input fasta file: reads clipped from their adapter" help="Only with clipped, raw fasta files"/>
@@ -58,7 +59,7 @@
       </when>
     </conditional>
 <!-- END bowtie index selection -->
-       <param name="output_type" type="select" label="Select output format" help="Note that the BAM will be viewable in trackster only if you choose a full genome referenced for Trackster usage. see the doc below">
+       <param name="output_format" type="select" label="Select output format" help="Note that the BAM will be viewable in trackster only if you choose a full genome referenced for Trackster usage. see the doc below">
           <option value="tabular" select="true">tabular</option>
           <option value="sam">sam</option>
           <option value="bam">bam</option>
@@ -73,8 +74,8 @@
    <outputs>
    <data format="tabular" name="output" label="Bowtie Output">
         <change_format>
-            <when input="output_type" value="sam" format="sam" />
-            <when input="output_type" value="bam" format="bam" />
+            <when input="output_format" value="sam" format="sam" />
+            <when input="output_format" value="bam" format="bam" />
         </change_format>
 <!-- Set metadata based on reference genome -->
       <actions>
@@ -109,7 +110,7 @@
       <param name="method" value="multiple" />
       <param name="input" ftype="fasta" value="sRbowtie.fa" />
       <param name="v_mismatches" value="1" />
-      <param name="output_type" value="tabular" />
+      <param name="output_format" value="tabular" />
       <output name="output" ftype="tabular" value="sRbowtie.out" />
       <output name="aligned" value="None" />
       <output name="unaligned" value="None" />
