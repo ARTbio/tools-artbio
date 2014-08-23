@@ -1,10 +1,23 @@
 #!/usr/bin/python
 # yac = yet another clipper
-# v 1.0.0
+# v 1.1.0 - 23-08-2014 - argparse implementation
 # Usage yac.py  $input $output $adapter_to_clip $min $max $Nmode
 # Christophe Antoniewski <drosofff@gmail.com>
 
-import sys, string
+import sys, string, argparse
+
+def Parser():
+  the_parser = argparse.ArgumentParser()
+  the_parser.add_argument('--input', action="store", type=str, help="input fastq file")
+  the_parser.add_argument('--output', action="store", type=str, help="output, clipped fasta file")
+  the_parser.add_argument('--adapter_to_clip', action="store", type=str, help="adapter sequence to clip")
+  the_parser.add_argument('--min', action="store", type=int, help="minimal size of clipped sequence to keep")
+  the_parser.add_argument('--max', action="store", type=int, help="maximal size of clipped sequence to keep")
+  the_parser.add_argument('--Nmode', action="store", type=str, choices=["accept", "reject"], help="accept or reject sequences with N for clipping")
+  args = the_parser.parse_args()
+  args.adapter_to_clip = args.adapter_to_clip.upper()
+  return args
+
 
 class Clip:
   def __init__(self, inputfile, outputfile, adapter, minsize, maxsize):
@@ -74,10 +87,5 @@ def __main__ (inputfile, outputfile, adapter, minsize, maxsize, Nmode):
     instanceClip.clip_without_N()
 
 if __name__ == "__main__" :
-  input = sys.argv[1]
-  output = sys.argv[2]
-  adapter = sys.argv[3]
-  minsize = sys.argv[4]
-  maxsize = sys.argv[5]
-  Nmode = sys.argv[6]
-  __main__(input, output, adapter, minsize, maxsize, Nmode)
+  args = Parser()
+  __main__(args.input, args.output, args.adapter_to_clip, args.min, args.max, args.Nmode)

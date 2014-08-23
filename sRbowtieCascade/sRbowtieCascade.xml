@@ -1,7 +1,7 @@
 <tool id="sRbowtie_cascade" name="Annotate smRNA datasets" version="0.9.0">
   <description>Using iterative sRbowtie Alignments</description>
   <requirements>
-	<requirement type='package'>bowtie</requirement>
+        <requirement type="package" version="0.12.7">bowtie</requirement>
   </requirements>
   <parallelism method="basic"></parallelism>
   <command interpreter="python"> sRbowtieCascade.py --output $output
@@ -122,7 +122,7 @@ Reads are Matched on DNA references as fast as possible, without taking care of 
 
 *-v [0,1,2,3] -k 1 --best -p 12 --suppress 6,7,8*
 
-unaligned reads at step N are used input for sRbowtie at step N+1
+unaligned reads at step N are used as input for sRbowtie at step N+1
 
 -----
 
