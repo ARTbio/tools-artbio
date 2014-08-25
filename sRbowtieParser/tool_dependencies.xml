@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<tool_dependency>
+  <package name="bowtie" version="0.12.7">
+      <repository changeset_revision="b9c8cd6f4516" name="package_bowtie_0_12_7" owner="devteam" prior_installation_required="False" toolshed="http://lbcd41.snv.jussieu.fr/toolshed" />
+    </package>
+    <package name="samtools" version="0.1.18">
+      <repository changeset_revision="f4a3c6d1e5ad" name="package_samtools_0_1_18" owner="devteam" prior_installation_required="False" toolshed="http://lbcd41.snv.jussieu.fr/toolshed"/>
+    </package>
+</tool_dependency>

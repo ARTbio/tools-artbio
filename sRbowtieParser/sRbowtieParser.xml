@@ -1,6 +1,8 @@
 <tool id="sRbowtieParser" name="Parse items in sRbowtie alignment" version="1.0.0">
   <description></description>
-  <requirements><requirement type='package'>bowtie-inspect</requirement></requirements>
+  <requirements>
+	<requirement type="package" version="0.12.7">bowtie</requirement>
+ </requirements>
   <parallelism method="basic"></parallelism>
 <command interpreter="python">
         sRbowtieParser.py 
@@ -58,7 +60,6 @@
 **What it does**
 
 Parses read counts from one or several sRBowtie alignments (in tabular, Sam or Bam format).
-
 Here a bowtie match done against an index composed of a set of items is parsed and expressed as a hit list of the corresponding items
 
 Sense, antisense or both sense and antisense alignments can be counted
@@ -69,8 +70,14 @@ The library labels are infered from the input dataset names in the galaxy histor
 
 **it is preferable that you do not put any space in this input dataset names. You may edit these names in the history**
 
-
-
   </help>
+  <test>
+      <param name="genomeSource" value="history" />
+      <param name="ownFile" value = "dme-mir-v20", ftype="fasta" />
+      <param name="input_list" value="matchedSample_1, matchedSample_2", ftype="tabular" />
+      <param name="polarity" value="forward" />
+      <output name="output" ftype="tabular" value="Read_Count_Lists.tab" />
+  </test>
+
 </tool>
 
