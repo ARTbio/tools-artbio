@@ -1,22 +1,31 @@
-<tool id="sRbowtieParser" name="Parse items in sRbowtie alignment" version="0.9.1">
+<tool id="sRbowtieParser" name="Parse items in sRbowtie alignment" version="1.0.0">
   <description></description>
   <requirements><requirement type='package'>bowtie-inspect</requirement></requirements>
   <parallelism method="basic"></parallelism>
 <command interpreter="python">
         sRbowtieParser.py 
 	          #if $refGenomeSource.genomeSource == "history":
-                    $refGenomeSource.ownFile ## index source
-         	    --do_not_extract_index
+                    --IndexSource $refGenomeSource.ownFile
+         	    --ExtractDirective fastaSource
           	  #else:
 		    #silent reference= filter( lambda x: str( x[0] ) == str( $input_list.dbkey ), $__app__.tool_data_tables[ 'bowtie_indexes' ].get_fields() )[0][-1]
-            	    $reference   ## index source
-            	    --extract_index
+            	    --IndexSource $reference
+            	    --ExtractDirective bowtieIndex
           	  #end if
-		  $output
-		  $polarity
+		  --output $output
+		  --polarity $polarity
+                  --alignmentSource
 		  #for $i in $refGenomeSource.input_list
-    		    $i $i.ext "$i.name"
+    		    $i
 		  #end for
+                  --alignmentFormat
+                  #for $i in $refGenomeSource.input_list
+                    $i.ext
+                  #end for
+                  --alignmentLabel          
+                  #for $i in $refGenomeSource.input_list
+                    "$i.name"
+                  #end for
 
 </command>
   <inputs>
