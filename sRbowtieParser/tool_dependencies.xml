@@ -6,4 +6,7 @@
     <package name="samtools" version="0.1.18">
       <repository changeset_revision="f4a3c6d1e5ad" name="package_samtools_0_1_18" owner="devteam" prior_installation_required="False" toolshed="http://lbcd41.snv.jussieu.fr/toolshed"/>
     </package>
+    <package name="pysam" version="0.7.7">
+      <repository changeset_revision="fba4ff153522" name="package_pysam_0_7_7" owner="iuc" prior_installation_required="False" toolshed="http://lbcd41.snv.jussieu.fr/toolshed"/>
+    </package>
 </tool_dependency>
