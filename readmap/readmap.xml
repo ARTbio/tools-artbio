@@ -1,4 +1,4 @@
-<tool id="Readmap" name="Generate readmap and histograms from alignment files" version="0.9.2">
+<tool id="Readmap" name="Generate readmap and histograms from alignment files" version="0.9.3">
   <description>from sRbowtie aligment</description>
   <requirements><requirement type='package'>bowtie-inspect</requirement></requirements>
   <parallelism method="basic"></parallelism>
@@ -59,6 +59,7 @@
 	     </repeat>
            </when>
            <when value="history">
+             <param name="ownFile" type="data" format="fasta" label="Select a fasta file, that served as the reference index for the alignments" />
 	     <repeat name="series" title="Add alignment files">
 	       <param name="input" type="data" label="Select multiple alignments to parse"/>
 	       <param name="norm" type="integer" value="1" label="Indicate a normalization factor to compare multiple aligments"/>
