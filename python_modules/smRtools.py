@@ -355,7 +355,12 @@ class SmRNAwindow:
         if offset < 0:
           hist_dict['R'][size] = hist_dict['R'].get(size, 0) - 1*norm
         else:
-         hist_dict['F'][size] = hist_dict['F'].get(size, 0) + 1*norm
+          hist_dict['F'][size] = hist_dict['F'].get(size, 0) + 1*norm
+   ## patch to avoid missing graphs when parsed by R-lattice. 27-08-2014. Test and validate !    
+    if not (hist_dict['F']) and (not hist_dict['R']):
+      hist_dict['F'][21] = 0
+      hist_dict['R'][21] = 0
+   ##
     return hist_dict
 
   def statsizes (self, upstream_coord=None, downstream_coord=None):
@@ -443,6 +448,10 @@ class SmRNAwindow:
         mylist.append("%s\t%s\t%s\t%s" % (self.gene, offset, readmap[offset][1], "F") )
       if readmap[offset][0] != 0:
         mylist.append("%s\t%s\t%s\t%s" % (self.gene, offset, -readmap[offset][0], "R") )
+    ## patch to avoid missing graphs when parsed by R-lattice. 27-08-2014. Test and validate !
+    if not mylist:
+      mylist.append("%s\t%s\t%s\t%s" % (self.gene, 1, 0, "F") )
+    ###
     return mylist
 
   def readcoverage (self, upstream_coord=None, downstream_coord=None, windowName=None):
