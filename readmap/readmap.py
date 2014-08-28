@@ -54,7 +54,20 @@ def process_samples(filePath):
                         biosample=fileLabel[i], size_inf=minquery, size_sup=maxquery, norm=norm)
   return MasterListOfGenomes
 
+def dataframe_sanityzer (listofdatalines):
+  Dict = defaultdict(float) 
+  for line in listofdatalines:
+    fields= line.split("\t")
+    Dict[fields[0]] += float (fields[2])
+  filtered_list = []
+  for line in listofdatalines:
+    fields= line.split("\t")
+    if Dict[fields[0]] != 0:
+      filtered_list.append(line) 
+  return filtered_list
+
 def write_readplot_dataframe(readDict, readmap_file):
+  listoflines = []
   with open(readmap_file, 'w') as readmap:
     print >>readmap, "gene\tcoord\tcount\tpolarity\tsample"
     for sample in readDict.keys():
@@ -65,11 +78,16 @@ def write_readplot_dataframe(readDict, readmap_file):
       for gene in dict.keys():
         plottable = dict[gene].readplot()
         for line in plottable:
-          print >>readmap, "%s\t%s" % (line, sample)
+          #print >>readmap, "%s\t%s" % (line, sample)
+          listoflines.append ("%s\t%s" % (line, sample))
+    listoflines = dataframe_sanityzer(listoflines)
+    for line in listoflines:
+      print >>readmap, line
 
 def write_size_distribution_dataframe(readDict, size_distribution_file):
+  listoflines = []
   with open(size_distribution_file, 'w') as size_distrib:
-    print >>size_distrib, "gene\tpolarity\tsize\tcount\tsample"
+    print >>size_distrib, "gene\tsize\tcount\tpolarity\tsample" # test before was "gene\tpolarity\tsize\tcount\tsample"
     for sample in readDict.keys():
       if args.gff:
         dict=readDict[sample]
@@ -78,11 +96,13 @@ def write_size_distribution_dataframe(readDict, size_distribution_file):
       for gene in dict.keys():
         histogram = dict[gene].size_histogram()
         for polarity in histogram.keys():
-          for item in histogram[polarity].iteritems():
-            print >>size_distrib, "%s\t%s\t%s\t%s\t%s" % (gene, polarity, item[0], item[1], sample)
+          for size, count in histogram[polarity].iteritems():
+            print >>size_distrib, "%s\t%s\t%s\t%s\t%s" % (gene, size, count, polarity, sample) # test, changed the order accordingly
 
 def gff_item_subinstances(readDict, gff3):
   GFFinstanceDict=OrderedDict()
+  for sample in readDict.keys():
+    GFFinstanceDict[sample]={} # to implement the 2nd level of directionary in an OrderedDict Class object (would not be required with defaultdict Class)
   with open(gff3) as gff:
     for line in gff:
       if line[0] == "#": continue
@@ -93,8 +113,10 @@ def gff_item_subinstances(readDict, gff3):
       item_downstream_coordinate = int(gff_fields[4])
       item_polarity = gff_fields[6]
       for sample in readDict.keys():
-	if not GFFinstanceDict.has_key(sample):
-          GFFinstanceDict[sample]={}
+## this is not required anymore but test
+#        if not GFFinstanceDict.has_key(sample):
+#          GFFinstanceDict[sample]={}
+####
         subinstance=extractsubinstance(item_upstream_coordinate, item_downstream_coordinate, readDict[sample].instanceDict[chrom])
         if item_polarity == '-':
           subinstance.readDict={key*-1:value for key, value in subinstance.readDict.iteritems()}
