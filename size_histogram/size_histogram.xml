@@ -105,8 +105,9 @@
       n_samples=length(unique(size\$sample))
       genes=unique(levels(size\$gene))
       n_genes=length(genes)
-
-      par.settings.size=list(layout.heights=list(top.padding=-1, bottom.padding=-3, strip = .75), fontsize = list(text=96/${rows_per_page}, points=8))
+      # par.settings.size=list(layout.heights=list(top.padding=1, bottom.padding=1, strip = .75), fontsize = list(text=96/${rows_per_page}, points=8)) # original line on 29-8-2014
+      par.settings.size=list(layout.heights=list(top.padding=1, bottom.padding=1, strip = .75), fontsize = list(text=72/${rows_per_page}, points=8))
+      par.settings.chris= list(layout.heights=list(top.padding=1, bottom.padding=1, strip = .75), par.strip.text=list(cex=.5), strip=strip.custom(which.given=1, bg="lightblue") ) # internal work ignore
       smR.prepanel=function(x,y,...){; yscale=c(-max(abs(y)), max(abs(y)));list(ylim=yscale);}
 
       plot_size_distribution= function(df, ...) {

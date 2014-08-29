@@ -97,7 +97,11 @@ def write_size_distribution_dataframe(readDict, size_distribution_file):
         histogram = dict[gene].size_histogram()
         for polarity in histogram.keys():
           for size, count in histogram[polarity].iteritems():
-            print >>size_distrib, "%s\t%s\t%s\t%s\t%s" % (gene, size, count, polarity, sample) # test, changed the order accordingly
+            #print >>size_distrib, "%s\t%s\t%s\t%s\t%s" % (gene, size, count, polarity, sample) # test, changed the order accordingly
+            listoflines.append ("%s\t%s\t%s\t%s\t%s" % (gene, size, count, polarity, sample) )
+    listoflines = dataframe_sanityzer(listoflines)
+    for line in listoflines:
+      print >>size_distrib, line  
 
 def gff_item_subinstances(readDict, gff3):
   GFFinstanceDict=OrderedDict()
