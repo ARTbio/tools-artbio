@@ -98,14 +98,15 @@
       library(latticeExtra)
       library(grid)
       library(gridExtra)
+
       ##cheetahtemplate data frame implementation
-
       size=read.delim("${size_distribution_dataframe}", header=T, row.names=NULL)
-
       n_samples = length(unique (size\$sample))
       n_genes = length (unique (levels(size\$gene)))
 
-      par.settings.size=list(layout.heights=list(top.padding=1, bottom.padding=1, strip = .75), fontsize = list(text=72/${rows_per_page}, points=8))
+#      par.settings.size=list(layout.heights=list(top.padding=1, bottom.padding=1, strip = .75), fontsize = list(text=72/${rows_per_page}, points=8))
+      par.settings.size=list(layout.heights=list(top.padding=1, bottom.padding=1, strip = .75) )
+      strip.size = strip.custom(par.strip.text = list(cex = c(0.5,0.5) ) )
 
       smR.prepanel=function(x,y,...){; yscale=c(-max(abs(y)), max(abs(y)));list(ylim=yscale);}
 
@@ -115,7 +116,6 @@
 	  group=polarity,
 	  stack=TRUE,
           col=c('red', 'blue'),
-          strip = strip.custom(par.strip.text = list(cex = 0.5), which.given=1, bg="lightblue"),
           cex=0.75,
           scales=list(y=list(tick.number=4, rot=90, relation="free"), cex=0.75),
           xlab = "readsize in nucleotides",
@@ -136,7 +136,7 @@
 
       options(warn=-1)
       pdf(file="${size_PDF}", paper="special", height=11.69, width=8.2677*n_samples/4)
-      plot_size_distribution(size, par.settings=par.settings.size, prepanel=smR.prepanel)
+      plot_size_distribution(size, par.settings=par.settings.size, prepanel=smR.prepanel, strip=strip.size )
 
       } else {
 
