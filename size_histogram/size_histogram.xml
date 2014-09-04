@@ -105,8 +105,11 @@
       n_genes = length (unique (levels(size\$gene)))
 
 #      par.settings.size=list(layout.heights=list(top.padding=1, bottom.padding=1, strip = .75), fontsize = list(text=72/${rows_per_page}, points=8))
-      par.settings.size=list(layout.heights=list(top.padding=1, bottom.padding=1, strip = .75) )
       strip.size = strip.custom(par.strip.text = list(cex = c(0.5,0.5) ) )
+      par.settings.size=list(layout.heights=list(top.padding=1, bottom.padding=1),
+                             strip.background = list(col = c("lightblue", "lightgreen"))
+                             # par.strip.text = list(cex = c(1,0.5))
+                             )
 
       smR.prepanel=function(x,y,...){; yscale=c(-max(abs(y)), max(abs(y)));list(ylim=yscale);}
 
@@ -121,6 +124,8 @@
           xlab = "readsize in nucleotides",
           ylab = "${ylabel}",
           main="${title}" ,
+          par.strip.text = list(cex=0.5),
+          #strip = strip.custom (par.strip.text=list(cex= 2) ),
           as.table=TRUE, newpage = T, ...)
           combineLimits(update(useOuterStrips(bc), layout=c(n_samples,${rows_per_page})), margin.x=F, margin.y=1)
           }
@@ -136,7 +141,7 @@
 
       options(warn=-1)
       pdf(file="${size_PDF}", paper="special", height=11.69, width=8.2677*n_samples/4)
-      plot_size_distribution(size, par.settings=par.settings.size, prepanel=smR.prepanel, strip=strip.size )
+      plot_size_distribution(size, par.settings=par.settings.size, prepanel=smR.prepanel )
 
       } else {
 
