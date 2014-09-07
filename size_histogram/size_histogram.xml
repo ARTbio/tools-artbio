@@ -143,10 +143,9 @@
 
       options(warn=-1)
       pdf(file="${size_PDF}", paper="special", height=11.69, width=8.2677*n_samples/4)
-      plot_size_distribution(size, par.settings=par.settings.size, prepanel=smR.prepanel  )
+      plot_size_distribution(size, par.settings=par.settings.size) # removed , prepanel=smR.prepanel
 
-      } else {
-
+       } else {
 
       pdf(file="${size_PDF}", paper="special", height=11.69, width=8.2677)
           bc= barchart(count~as.factor(size)|factor(sample, levels=unique(sample)), data = size, origin = 0,

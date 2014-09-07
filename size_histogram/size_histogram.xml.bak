@@ -1,4 +1,4 @@
-<tool id="Size_histogram" name="Generate size histograms from alignment files" version="0.9.0">
+<tool id="Size_histogram" name="Generate size histograms from alignment files" version="0.9.1">
   <description>from sRbowtie aligment</description>
   <requirements><requirement type='package'>bowtie-inspect</requirement></requirements>
   <parallelism method="basic"></parallelism>
@@ -98,35 +98,41 @@
       library(latticeExtra)
       library(grid)
       library(gridExtra)
+
       ##cheetahtemplate data frame implementation
-
       size=read.delim("${size_distribution_dataframe}", header=T, row.names=NULL)
+      n_samples = length(unique (size\$sample))
+      n_genes = length (unique (levels(size\$gene)))
 
-      n_samples=length(unique(size\$sample))
-      genes=unique(levels(size\$gene))
-      n_genes=length(genes)
-      # par.settings.size=list(layout.heights=list(top.padding=1, bottom.padding=1, strip = .75), fontsize = list(text=96/${rows_per_page}, points=8)) # original line on 29-8-2014
-      par.settings.size=list(layout.heights=list(top.padding=1, bottom.padding=1, strip = .75), fontsize = list(text=72/${rows_per_page}, points=8))
-      par.settings.chris= list(layout.heights=list(top.padding=1, bottom.padding=1, strip = .75), par.strip.text=list(cex=.5), strip=strip.custom(which.given=1, bg="lightblue") ) # internal work ignore
+      par.settings.size=list(layout.heights=list(top.padding=1, bottom.padding=1),
+                             strip.background = list(col = c("lightblue", "lightgreen"))
+                             )
+
       smR.prepanel=function(x,y,...){; yscale=c(-max(abs(y)), max(abs(y)));list(ylim=yscale);}
 
       plot_size_distribution= function(df, ...) {
          bc= barchart(count~as.factor(size)|factor(sample, levels=unique(sample))+gene, data = df, origin = 0,
-          horizontal=FALSE,
-	  group=polarity,
-	  stack=TRUE,
-          col=c('red', 'blue'),
-          strip = strip.custom(par.strip.text = list(cex = 0.5)),
-          cex=0.75,
-          scales=list(y=list(tick.number=4, rot=90, relation="free"), cex=0.75),
-          xlab = "readsize in nucleotides",
-          ylab = "${ylabel}",
-          main="${title}" ,
-          as.table=TRUE, newpage = T, ...)
-          combineLimits(update(useOuterStrips(bc), layout=c(n_samples,${rows_per_page})), margin.x=F, margin.y=1)
+                      horizontal=FALSE,
+	              group=polarity,
+	              stack=TRUE,
+                      col=c('red', 'blue'),
+                      cex=0.75,
+                      scales=list(y=list(tick.number=4, rot=90, relation="free", cex=0.5, alternating=T), x=list(cex=.6 ) ),
+                      xlab = "readsize in nucleotides",
+                      ylab = "${ylabel}",
+                      main="${title}" ,
+                      par.strip.text = list(cex=0.75),
+                      as.table=TRUE,
+                      newpage = T,
+                      ...)
+
+          combineLimits(update(useOuterStrips(bc, 
+                                              strip.left = strip.custom(par.strip.text = list(cex=0.5))),
+                        layout=c(n_samples,${rows_per_page})),
+                        margin.x=F, margin.y=1)
           }
 
-      per_gene_size=lapply(genes, function(x) subset(size, gene==x))
+      # per_gene_size=lapply(genes, function(x) subset(size, gene==x)) # no object in this script
 
       global = "no"
       #if $global.value == 'yes':
@@ -134,24 +140,28 @@
       #end if
 
       if (global=="no") {
+
       options(warn=-1)
       pdf(file="${size_PDF}", paper="special", height=11.69, width=8.2677*n_samples/4)
-      plot_size_distribution(size, par.settings=par.settings.size, prepanel=smR.prepanel)
+      plot_size_distribution(size, par.settings=par.settings.size, prepanel=smR.prepanel  )
+
       } else {
+
+
       pdf(file="${size_PDF}", paper="special", height=11.69, width=8.2677)
           bc= barchart(count~as.factor(size)|factor(sample, levels=unique(sample)), data = size, origin = 0,
           horizontal=FALSE,
 	  group=polarity,
 	  stack=TRUE,
           col=c('red', 'blue'),
-          cex=0.75,
-	  par.settings=list(fontsize = list(text=8, points=8)),
-          scales=list(y=list(tick.number=4, rot=90, relation="same"), cex=0.75),
+#	  par.settings=list(fontsize = list(text=8, points=8)),
+          scales=list(y=list(tick.number=4, rot=90, relation="same"), cex=1),
           xlab = "readsize in nucleotides",
           ylab = "${ylabel}",
           main="${title}" , as.table=TRUE, newpage = T,
-          aspect=0.5)
-          #layout=c(n_samples, ${rows_per_page}))
+          aspect=0.5,
+          strip = strip.custom(par.strip.text = list(cex = 1), which.given=1, bg="lightblue")
+          )
           bc
       }
       devname=dev.off()

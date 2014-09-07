@@ -62,7 +62,6 @@ def process_samples(filePath):
   return MasterListOfGenomes
 
 def write_size_distribution_dataframe(readDict, size_distribution_file, pol=["both"] ):
-  '''refactored on 7-9-2014'''
   with open(size_distribution_file, 'w') as size_distrib:
     print >>size_distrib, "gene\tpolarity\tsize\tcount\tsample"
     for sample in readDict.keys():
@@ -72,9 +71,9 @@ def write_size_distribution_dataframe(readDict, size_distribution_file, pol=["bo
         dict=readDict[sample].instanceDict
       for gene in dict.keys():
         histogram = dict[gene].size_histogram()
-        for polarity in pol:
-          for size, count in histogram[polarity].iteritems():
-            print >>size_distrib, "%s\t%s\t%s\t%s\t%s" % (gene, polarity, size, count, sample)
+        for polarity in histogram.keys():
+          for item in histogram[polarity].iteritems():
+            print >>size_distrib, "%s\t%s\t%s\t%s\t%s" % (gene, polarity, item[0], item[1], sample)
 
 def write_size_distribution_dataframe_global(readDict, size_distribution_file, pol=["both"]):
   with open(size_distribution_file, 'w') as size_distrib:
@@ -83,8 +82,11 @@ def write_size_distribution_dataframe_global(readDict, size_distribution_file, p
       histogram = readDict[sample].size_histogram()
       gene="sample"
       for polarity in pol:
-        for size, count in histogram[polarity].iteritems():
-          print >>size_distrib, "%s\t%s\t%s\t%s\t%s" % (gene, polarity, size, count, sample)
+        for item in histogram[polarity].iteritems():
+          if polarity=="R":
+            print >>size_distrib, "%s\t%s\t%s\t%s\t%s" % (gene, polarity, item[0], -item[1], sample)
+          else:
+            print >>size_distrib, "%s\t%s\t%s\t%s\t%s" % (gene, polarity, item[0], item[1], sample)
 
 def gff_item_subinstances(readDict, gff3):
   GFFinstanceDict=OrderedDict()
@@ -116,10 +118,9 @@ if args.gff:
 if global_size:
   write_size_distribution_dataframe_global(MasterListOfGenomes, size_distribution_file, pol)
 else:
-  write_size_distribution_dataframe(MasterListOfGenomes, size_distribution_file, pol)
+  write_size_distribution_dataframe(MasterListOfGenomes, size_distribution_file)
 
 R_command="Rscript "+ Rcode
 process = subprocess.Popen(R_command.split())
 process.wait()
 	
-

@@ -183,35 +183,21 @@ class HandleSmRNAwindows:
           self.alignedReads += 1
       return self.instanceDict
 
-#  def size_histogram (self):
-#    size_dict={}
-#    size_dict['F']= defaultdict (int)
-#    size_dict['R']= defaultdict (int)
-#    size_dict['both'] = defaultdict (int)
-#    for item in self.instanceDict:
-#      buffer_dict_F = self.instanceDict[item].size_histogram()['F']
-#      buffer_dict_R = self.instanceDict[item].size_histogram()['R']
-#      for size in buffer_dict_F:
-#        size_dict['F'][size] += buffer_dict_F[size]
-#      for size in buffer_dict_R:
-#        size_dict['R'][size] -= buffer_dict_R[size]
-#    allSizeKeys = list (set (size_dict['F'].keys() + size_dict['R'].keys() ) )
-#    for size in allSizeKeys:
-#      size_dict['both'][size] = size_dict['F'][size] + size_dict['R'][size]
-#    return size_dict
-  def size_histogram (self): # in HandleSmRNAwindows
-    '''refactored on 7-9-2014 to debug size_histogram tool'''
+  def size_histogram (self):
     size_dict={}
-    size_dict['F']= defaultdict (float)
-    size_dict['R']= defaultdict (float)
-    size_dict['both'] = defaultdict (float)
+    size_dict['F']= defaultdict (int)
+    size_dict['R']= defaultdict (int)
+    size_dict['both'] = defaultdict (int)
     for item in self.instanceDict:
-      buffer_dict = self.instanceDict[item].size_histogram()
-      for polarity in ["F", "R"]:
-        for size in buffer_dict[polarity]:
-          size_dict[polarity][size] += buffer_dict[polarity][size]
-      for size in buffer_dict["both"]:
-        size_dict["both"][size] += buffer_dict["F"][size] - buffer_dict["R"][size]
+      buffer_dict_F = self.instanceDict[item].size_histogram()['F']
+      buffer_dict_R = self.instanceDict[item].size_histogram()['R']
+      for size in buffer_dict_F:
+        size_dict['F'][size] += buffer_dict_F[size]
+      for size in buffer_dict_R:
+        size_dict['R'][size] -= buffer_dict_R[size]
+    allSizeKeys = list (set (size_dict['F'].keys() + size_dict['R'].keys() ) )
+    for size in allSizeKeys:
+      size_dict['both'][size] = size_dict['F'][size] + size_dict['R'][size]
     return size_dict
 
   def CountFeatures (self, GFF3="path/to/file"):
@@ -359,46 +345,23 @@ class SmRNAwindow:
       dicsize[size] = dicsize.get(size, 0) # to fill offsets with null values
     return dicsize
     
-#  def size_histogram(self):
-#    norm=self.norm
-#    hist_dict={}
-#    hist_dict['F']={}
-#    hist_dict['R']={}
-#    for offset in self.readDict:
-#      for size in self.readDict[offset]:
-#        if offset < 0:
-#          hist_dict['R'][size] = hist_dict['R'].get(size, 0) - 1*norm
-#        else:
-#          hist_dict['F'][size] = hist_dict['F'].get(size, 0) + 1*norm
-#   ## patch to avoid missing graphs when parsed by R-lattice. 27-08-2014. Test and validate !    
-#    if not (hist_dict['F']) and (not hist_dict['R']):
-#      hist_dict['F'][21] = 0
-#      hist_dict['R'][21] = 0
-#   ##
-#    return hist_dict
-
-  def size_histogram(self): # in SmRNAwindow
-    '''refactored on 7-9-2014 to debug size_histogram tool'''
+  def size_histogram(self):
     norm=self.norm
-    size_dict={}
-    size_dict['F']= defaultdict (float)
-    size_dict['R']= defaultdict (float)
-    size_dict['both']= defaultdict (float)
+    hist_dict={}
+    hist_dict['F']={}
+    hist_dict['R']={}
     for offset in self.readDict:
       for size in self.readDict[offset]:
         if offset < 0:
-          size_dict['R'][size] = size_dict['R'][size] - 1*norm
+          hist_dict['R'][size] = hist_dict['R'].get(size, 0) - 1*norm
         else:
-          size_dict['F'][size] = size_dict['F'][size] + 1*norm
-    ## patch to avoid missing graphs when parsed by R-lattice. 27-08-2014. Test and validate !    
-    if not (size_dict['F']) and (not size_dict['R']):
-      size_dict['F'][21] = 0
-      size_dict['R'][21] = 0
-    ##
-    allSizeKeys = list (set (size_dict['F'].keys() + size_dict['R'].keys() ) ) 
-    for size in allSizeKeys:
-      size_dict['both'][size] = size_dict['F'][size] - size_dict['R'][size]
-    return size_dict
+          hist_dict['F'][size] = hist_dict['F'].get(size, 0) + 1*norm
+   ## patch to avoid missing graphs when parsed by R-lattice. 27-08-2014. Test and validate !    
+    if not (hist_dict['F']) and (not hist_dict['R']):
+      hist_dict['F'][21] = 0
+      hist_dict['R'][21] = 0
+   ##
+    return hist_dict
 
   def statsizes (self, upstream_coord=None, downstream_coord=None):
     ''' migration to memory saving by specifying possible subcoordinates
