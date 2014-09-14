@@ -108,7 +108,7 @@
                              strip.background = list(col = c("lightblue", "lightgreen"))
                              )
 
-      smR.prepanel=function(x,y,...){; yscale=c(-max(abs(y)), max(abs(y)));list(ylim=yscale);}
+      smR.prepanel=function(x,y,...){; yscale=c(-max(abs(y)), max(abs(y)));list(ylim=yscale);} # use if one want y axis in the middle of the plot
 
       plot_size_distribution= function(df, ...) {
          bc= barchart(count~as.factor(size)|factor(sample, levels=unique(sample))+gene, data = df, origin = 0,
@@ -127,7 +127,8 @@
                       ...)
 
           combineLimits(update(useOuterStrips(bc, 
-                                              strip.left = strip.custom(par.strip.text = list(cex=0.5))),
+                                              strip.left = strip.custom(par.strip.text = list(cex=0.5))
+                                              ),
                         layout=c(n_samples,${rows_per_page})),
                         margin.x=F, margin.y=1)
           }
