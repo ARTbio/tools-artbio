@@ -199,7 +199,7 @@ class HandleSmRNAwindows:
 #    for size in allSizeKeys:
 #      size_dict['both'][size] = size_dict['F'][size] + size_dict['R'][size]
 #    return size_dict
-  def size_histogram (self): # in HandleSmRNAwindows
+  def size_histogram (self, minquery=None, maxquery=None): # in HandleSmRNAwindows
     '''refactored on 7-9-2014 to debug size_histogram tool'''
     size_dict={}
     size_dict['F']= defaultdict (float)
@@ -212,6 +212,11 @@ class HandleSmRNAwindows:
           size_dict[polarity][size] += buffer_dict[polarity][size]
       for size in buffer_dict["both"]:
         size_dict["both"][size] += buffer_dict["F"][size] - buffer_dict["R"][size]
+    if minquery:
+      for polarity in size_dict.keys():
+        for size in xrange(minquery, maxquery+1):
+          if not size in size_dict[polarity].keys():
+            size_dict[polarity]=0
     return size_dict
 
   def CountFeatures (self, GFF3="path/to/file"):
@@ -377,7 +382,7 @@ class SmRNAwindow:
 #   ##
 #    return hist_dict
 
-  def size_histogram(self): # in SmRNAwindow
+  def size_histogram(self, minquery=None, maxquery=None): # in SmRNAwindow
     '''refactored on 7-9-2014 to debug size_histogram tool'''
     norm=self.norm
     size_dict={}
@@ -398,6 +403,11 @@ class SmRNAwindow:
     allSizeKeys = list (set (size_dict['F'].keys() + size_dict['R'].keys() ) ) 
     for size in allSizeKeys:
       size_dict['both'][size] = size_dict['F'][size] - size_dict['R'][size]
+    if minquery:
+      for polarity in size_dict.keys():
+        for size in xrange(minquery, maxquery+1):
+          if not size in size_dict[polarity].keys():
+            size_dict[polarity][size]=0
     return size_dict
 
   def statsizes (self, upstream_coord=None, downstream_coord=None):

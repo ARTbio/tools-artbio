@@ -94,8 +94,13 @@ def write_size_distribution_dataframe(readDict, size_distribution_file):
       else:
         dict=readDict[sample].instanceDict
       for gene in dict.keys():
-        histogram = dict[gene].size_histogram()
+        histogram = dict[gene].size_histogram(minquery=args.minquery, maxquery=args.maxquery)
         for polarity in histogram.keys():
+          if polarity=='both':
+            continue
+          #for size in xrange(args.minquery, args.maxquery):
+          #  if not size in histogram[polarity].keys():
+          #    histogram[size]=0
           for size, count in histogram[polarity].iteritems():
             #print >>size_distrib, "%s\t%s\t%s\t%s\t%s" % (gene, size, count, polarity, sample) # test, changed the order accordingly
             listoflines.append ("%s\t%s\t%s\t%s\t%s" % (gene, size, count, polarity, sample) )
