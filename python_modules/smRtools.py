@@ -403,12 +403,6 @@ class SmRNAwindow:
     allSizeKeys = list (set (size_dict['F'].keys() + size_dict['R'].keys() ) ) 
     for size in allSizeKeys:
       size_dict['both'][size] = size_dict['F'][size] - size_dict['R'][size]
-      if not size_dict['both'].has_key(size):
-        size_dict['both']=0
-      if not size_dict['F'].has_key(size):
-        size_dict['F']=0
-      if not size_dict['R'].has_key(size):
-        size_dict['R']=0
     if minquery:
       for polarity in size_dict.keys():
         for size in xrange(minquery, maxquery+1):
