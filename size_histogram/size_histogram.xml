@@ -1,6 +1,12 @@
-<tool id="Size_histogram" name="Generate size histograms from alignment files" version="0.9.1">
+<tool id="Size_histogram" name="Generate size histograms from alignment files" version="0.9.4">
   <description>from sRbowtie aligment</description>
-  <requirements><requirement type='package'>bowtie-inspect</requirement></requirements>
+  <requirements>
+        <requirement type="package" version="0.12.7">bowtie</requirement>
+        <requirement type="package" version="0.1.18">samtools</requirement>
+        <requirement type="package" version="0.7.7">pysam</requirement>
+        <requirement type="package" version="2.14">biocbasics</requirement>
+        <requirement type="package" version="3.0.3">R</requirement>
+  </requirements>
   <parallelism method="basic"></parallelism>
 <command interpreter="python">
         size_histogram.py 
@@ -208,4 +214,11 @@ produce a plot like this:
     :width: 500
 
 </help>
+  <test>
+      <param name="genomeSource" value="history" />
+      <param name="ownFile" value ="dme-mir-v20" ftype="fasta" />
+      <param name="input_list" value="matchedSample_1, matchedSample_2" ftype="tabular" />
+      <param name="polarity" value="forward" />
+      <output name="output" ftype="tabular" value="Read_Count_Lists.tab" />
+  </test>
 </tool>
