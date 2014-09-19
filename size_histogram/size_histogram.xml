@@ -177,8 +177,8 @@
    </configfiles>
 
    <outputs>
-   <data format="tabular" name="size_distribution_dataframe" label="Size distributionn dataframe"/>
-   <data format="pdf" name="size_PDF" label="Size distribution"/>
+   <data format="tabular" name="size_distribution_dataframe" label="Size_distribution_dataframe.tab"/>
+   <data format="pdf" name="size_PDF" label="Size_distribution.pdf"/>
    </outputs>
 <help>
 
@@ -217,9 +217,19 @@ produce a plot like this:
 </help>
   <test>
       <param name="genomeSource" value="history" />
-      <param name="ownFile" value ="dme-mir-v20" ftype="fasta" />
-      <param name="input_list" value="matchedSample_1, matchedSample_2" ftype="tabular" />
-      <param name="polarity" value="forward" />
-      <output name="output" ftype="tabular" value="Read_Count_Lists.tab" />
+      <param name="ownFile" value ="transposons.fasta" ftype="fasta" />
+      <param name="input" value="sample1.srbowtie_out, sample2.srbowtie_out, sample3.srbowtie_out" ftype="tabular" />
+      <param name="norm" value="1,1,1" />
+      <param name="global" value="no" />
+      <param name="collapsestrands" value="no" />
+      <param name="minquery" value="18"/>
+      <param name="maxquery" value="30"/>
+      <param name="title" value="Size distribution"/>
+      <param name="xlabel" value="Size in nucleotides"/>
+      <param name="ylabel" value="Number of reads"/>
+      <param name="rows_per_page" value="10"/>
+      <output name="size_distribution_dataframe" ftype="tabular" value="Size_distribution_dataframe.tab" />
+      <output name="size_PDF" ftype="pdf" value="Size_distribution.pdf" />
   </test>
 </tool>
+
