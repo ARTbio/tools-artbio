@@ -114,22 +114,27 @@
       horizontal=FALSE, 
       group=polarity,
       col=c("red","blue"),
+      par.strip.text = list(cex=0.75),
       ...))
       }
 
       plot_size_distribution= function(df, ...) {
           smR.prepanel=function(x,y,...){; yscale=c(-max(abs(y)), max(abs(y)));list(ylim=yscale);}
-         bc= barchart(count~as.factor(size)|factor(sample, levels=unique(sample))+gene, data = df, origin = 0,
-          horizontal=FALSE,
-	  group=polarity,
-	  stack=TRUE,
-          col=c('red', 'blue'),
-          cex=0.75,
-          scales=list(y=list(tick.number=4, rot=90, relation="free"), cex=0.75),
-          prepanel=smR.prepanel,
-          xlab = NULL,
-          ylab = NULL,
-          main = NULL , as.table=TRUE, newpage = T, ...)
+          bc= barchart(count~as.factor(size)|factor(sample, levels=unique(sample))+gene, data = df, origin = 0,
+            horizontal=FALSE,
+	    group=polarity,
+	    stack=TRUE,
+            col=c('red', 'blue'),
+            cex=0.75,
+            scales=list(y=list(tick.number=4, rot=90, relation="free"), cex=0.75),
+            prepanel=smR.prepanel,
+            xlab = NULL,
+            ylab = NULL,
+            main = NULL,
+            as.table=TRUE,
+            newpage = T,
+            par.strip.text = list(cex=0.75),
+            ...)
           combineLimits(bc)
           }
           
@@ -137,10 +142,10 @@
       
       ## function parameters'
       
-      par.settings.readmap=list(layout.heights=list(top.padding=0, bottom.padding=-3), fontsize = list(text=96/${rows_per_page}, points=8))
-      par.settings.size=list(layout.heights=list(top.padding=-1, bottom.padding=-3), fontsize = list(text=96/${rows_per_page}, points=8))
-      par.settings.combination.readmap=list(layout.heights=list(top.padding=0, bottom.padding=-3), fontsize = list(text=96/${rows_per_page}, points=8))
-      par.settings.combination.size=list(layout.heights=list(top.padding=-2, bottom.padding=-0.5), fontsize = list(text=96/${rows_per_page}, points=8))
+      par.settings.readmap=list(layout.heights=list(top.padding=0, bottom.padding=-3), fontsize = list(text=96/${rows_per_page}, points=8), strip.background = list(col=c("lightblue","lightgreen")) )
+      par.settings.size=list(layout.heights=list(top.padding=-1, bottom.padding=-3), fontsize = list(text=96/${rows_per_page}, points=8), strip.background = list(col=c("lightblue","lightgreen")) )
+      par.settings.combination.readmap=list(layout.heights=list(top.padding=0, bottom.padding=-3), fontsize = list(text=96/${rows_per_page}, points=8),  strip.background=list(col=c("lightblue","lightgreen")) )
+      par.settings.combination.size=list(layout.heights=list(top.padding=-2, bottom.padding=-0.5), fontsize = list(text=96/${rows_per_page}, points=8), strip.background=list(col=c("lightblue", "lightgreen")) )
 
       ## end of function parameters'
       
