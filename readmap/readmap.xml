@@ -151,8 +151,8 @@
         start=i
         end=i+${rows_per_page}-1
         if (end>n_genes) {end=n_genes}
-	    readmap_plot.list=lapply(per_gene_readmap[start:end], function(x) plot_readmap(x, par.settings=par.settings.readmap))
-	    args.list=c(readmap_plot.list, list(nrow=${rows_per_page}, ncol=1, main="readmaps", left="${ylabel}", sub="readmap coordinate"))
+        readmap_plot.list=lapply(per_gene_readmap[start:end], function(x) plot_readmap(x, par.settings=par.settings.readmap))
+        args.list=c(readmap_plot.list, list(nrow=${rows_per_page}, ncol=1, main="readmaps", left="${ylabel}", sub="readmap coordinate"))
         do.call(grid.arrange, args.list)
       }
       devname=dev.off()
@@ -174,9 +174,9 @@
         start=i
         end=i+${rows_per_page}/2-1
         if (end>n_genes) {end=n_genes}
-		read_plot.list=lapply(per_gene_readmap[start:end], function(x) plot_readmap(x, par.settings=par.settings.combination.readmap))
+	read_plot.list=lapply(per_gene_readmap[start:end], function(x) plot_readmap(x, par.settings=par.settings.combination.readmap))
         size_plot.list=lapply(per_gene_size[start:end], function(x) plot_size_distribution(x, strip=FALSE, par.settings=par.settings.combination.size))
-		plot.list=rbind(read_plot.list, size_plot.list )
+	plot.list=rbind(read_plot.list, size_plot.list )
         args.list=c(plot.list, list(nrow=${rows_per_page}, ncol=1, main="${title}", left="${ylabel}", sub="${xlabel}"))
         do.call(grid.arrange, args.list)
       }
