@@ -87,23 +87,22 @@
       library(latticeExtra)
       library(grid)
       library(gridExtra)
-      ##cheetahtemplate data frame implementation
+      
+      ## data frames implementation
 
       rm=read.delim("${readmap_dataframe}", header=T, row.names=NULL)
-      pdf(file="${readmap_PDF}", paper="special", height=11.69, width=8.2677)
       n_samples=length(unique(rm\$sample))
-
       genes=unique(levels(rm\$gene))
-      per_gene_readmap=lapply(genes, function(x) subset(rm, gene==x))
+      per_gene_readmap=lapply(genes, function(x) subset(rm, gene==x)) ####### ?
       n_genes=length(per_gene_readmap)
       
+      size=read.delim("${size_distribution_dataframe}", header=T, row.names=NULL)
+      per_gene_size=lapply(genes, function(x) subset(size, gene==x)) ###### ?
 
-      par.settings.readmap=list(layout.heights=list(top.padding=0, bottom.padding=-3), fontsize = list(text=96/${rows_per_page}, points=8))
-      par.settings.size=list(layout.heights=list(top.padding=-1, bottom.padding=-3), fontsize = list(text=96/${rows_per_page}, points=8))
-      par.settings.combination.readmap=list(layout.heights=list(top.padding=0, bottom.padding=-3), fontsize = list(text=96/${rows_per_page}, points=8))
-      par.settings.combination.size=list(layout.heights=list(top.padding=-2, bottom.padding=-0.5), fontsize = list(text=96/${rows_per_page}, points=8))
+      ## end of data frames implementation
       
-
+      ## functions
+      
       plot_readmap=function(df, ...) {
       combineLimits(xyplot(count~coord|factor(sample, levels=unique(sample))+reorder(gene, count, function(x) -sum(abs(x))), 
       data=df, 
@@ -130,27 +129,36 @@
           prepanel=smR.prepanel,
           xlab = NULL,
           ylab = NULL,
-#          par.settings=list(layout.heights=list(top.padding=-2, bottom.padding=-3), fontsize = list(text=8, points=8)),
           main = NULL , as.table=TRUE, newpage = T, ...)
           combineLimits(bc)
           }
+          
+      ## end of functions
+      
+      ## function parameters'
+      
+      par.settings.readmap=list(layout.heights=list(top.padding=0, bottom.padding=-3), fontsize = list(text=96/${rows_per_page}, points=8))
+      par.settings.size=list(layout.heights=list(top.padding=-1, bottom.padding=-3), fontsize = list(text=96/${rows_per_page}, points=8))
+      par.settings.combination.readmap=list(layout.heights=list(top.padding=0, bottom.padding=-3), fontsize = list(text=96/${rows_per_page}, points=8))
+      par.settings.combination.size=list(layout.heights=list(top.padding=-2, bottom.padding=-0.5), fontsize = list(text=96/${rows_per_page}, points=8))
 
+      ## end of function parameters'
+      
+      ## GRAPHS
+
+      pdf(file="${readmap_PDF}", paper="special", height=11.69, width=8.2677)
       for (i in seq(1,n_genes,${rows_per_page})) {
         start=i
         end=i+${rows_per_page}-1
         if (end>n_genes) {end=n_genes}
-	readmap_plot.list=lapply(per_gene_readmap[start:end], function(x) plot_readmap(x, par.settings=par.settings.readmap))
-	args.list=c(readmap_plot.list, list(nrow=${rows_per_page}, ncol=1, main="readmaps", left="${ylabel}", sub="readmap coordinate"))
+	    readmap_plot.list=lapply(per_gene_readmap[start:end], function(x) plot_readmap(x, par.settings=par.settings.readmap))
+	    args.list=c(readmap_plot.list, list(nrow=${rows_per_page}, ncol=1, main="readmaps", left="${ylabel}", sub="readmap coordinate"))
         do.call(grid.arrange, args.list)
       }
-
       devname=dev.off()
 
-      size=read.delim("${size_distribution_dataframe}", header=T, row.names=NULL)
-      per_gene_size=lapply(genes, function(x) subset(size, gene==x))
 
       pdf(file="${size_PDF}", paper="special", height=11.69, width=8.2677)
-
       for (i in seq(1,n_genes,${rows_per_page})) {
         start=i
         end=i+${rows_per_page}-1
@@ -159,22 +167,19 @@
         args.list=c(plot.list, list(nrow=${rows_per_page}, ncol=1, main="size distribution", left="${ylabel}", sub="readsize in nucleotides"))
         do.call(grid.arrange, args.list)
       }
-
       devname=dev.off()
 
       pdf(file="${combi_PDF}", paper="special", height=11.69, width=8.2677)
-
       for (i in seq(1,n_genes,${rows_per_page}/2)) {
         start=i
         end=i+${rows_per_page}/2-1
         if (end>n_genes) {end=n_genes}
-	read_plot.list=lapply(per_gene_readmap[start:end], function(x) plot_readmap(x, par.settings=par.settings.combination.readmap))
+		read_plot.list=lapply(per_gene_readmap[start:end], function(x) plot_readmap(x, par.settings=par.settings.combination.readmap))
         size_plot.list=lapply(per_gene_size[start:end], function(x) plot_size_distribution(x, strip=FALSE, par.settings=par.settings.combination.size))
-	plot.list=rbind(read_plot.list, size_plot.list )
+		plot.list=rbind(read_plot.list, size_plot.list )
         args.list=c(plot.list, list(nrow=${rows_per_page}, ncol=1, main="${title}", left="${ylabel}", sub="${xlabel}"))
         do.call(grid.arrange, args.list)
       }
-
       devname=dev.off()
 
 
