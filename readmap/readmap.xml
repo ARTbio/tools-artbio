@@ -107,14 +107,14 @@
       combineLimits(xyplot(count~coord|factor(sample, levels=unique(sample))+reorder(gene, count, function(x) -sum(abs(x))), 
       data=df, 
       type='h', 
-      scales= list(relation="free", x=list(rot=0, cex=0.75, axs="i", tck=0.5), y=list(tick.number=4, rot=90, cex=0.75)),
+      scales= list(relation="free", x=list(rot=0, cex=0.6, axs="i", tck=0.5), y=list(tick.number=4, rot=90, cex=0.6)),
       xlab=NULL, main=NULL, ylab=NULL, 
       as.table=T, 
       origin = 0, 
       horizontal=FALSE, 
       group=polarity,
       col=c("red","blue"),
-      par.strip.text = list(cex=0.75),
+      par.strip.text = list(cex=0.5),
       ...))
       }
 
@@ -126,14 +126,14 @@
 	    stack=TRUE,
             col=c('red', 'blue'),
             cex=0.75,
-            scales=list(y=list(tick.number=4, rot=90, relation="free"), cex=0.75),
+            scales=list(y=list(tick.number=4, rot=90, relation="free", cex=0.6), x=list(cex=0.6) ),
             prepanel=smR.prepanel,
             xlab = NULL,
             ylab = NULL,
             main = NULL,
             as.table=TRUE,
             newpage = T,
-            par.strip.text = list(cex=0.75),
+            par.strip.text = list(cex=0.5),
             ...)
           combineLimits(bc)
           }
@@ -142,16 +142,16 @@
       
       ## function parameters'
       
-      par.settings.readmap=list(layout.heights=list(top.padding=0, bottom.padding=-3), fontsize = list(text=96/${rows_per_page}, points=8), strip.background = list(col=c("lightblue","lightgreen")) )
-      par.settings.size=list(layout.heights=list(top.padding=-1, bottom.padding=-3), fontsize = list(text=96/${rows_per_page}, points=8), strip.background = list(col=c("lightblue","lightgreen")) )
-      par.settings.combination.readmap=list(layout.heights=list(top.padding=0, bottom.padding=-3), fontsize = list(text=96/${rows_per_page}, points=8),  strip.background=list(col=c("lightblue","lightgreen")) )
-      par.settings.combination.size=list(layout.heights=list(top.padding=-2, bottom.padding=-0.5), fontsize = list(text=96/${rows_per_page}, points=8), strip.background=list(col=c("lightblue", "lightgreen")) )
+      par.settings.readmap=list(layout.heights=list(top.padding=0, bottom.padding=-3), strip.background = list(col=c("lightblue","lightgreen")) ) # fontsize = list(text=96/${rows_per_page}, points=8),
+      par.settings.size=list(layout.heights=list(top.padding=-1, bottom.padding=-3), strip.background = list(col=c("lightblue","lightgreen")) ) # fontsize = list(text=96/${rows_per_page}, points=8),
+      par.settings.combination.readmap=list(layout.heights=list(top.padding=0, bottom.padding=-3), strip.background=list(col=c("lightblue","lightgreen")) ) # fontsize = list(text=96/${rows_per_page}, points=8),
+      par.settings.combination.size=list(layout.heights=list(top.padding=-2, bottom.padding=-0.5), strip.background=list(col=c("lightblue", "lightgreen")) ) # fontsize = list(text=96/${rows_per_page}, points=8),
 
       ## end of function parameters'
       
       ## GRAPHS
 
-      pdf(file="${readmap_PDF}", paper="special", height=11.69, width=8.2677)
+      pdf(file="${readmap_PDF}", paper="special", height=11.69, width=8.2677*n_samples/4)
       for (i in seq(1,n_genes,${rows_per_page})) {
         start=i
         end=i+${rows_per_page}-1
@@ -163,7 +163,7 @@
       devname=dev.off()
 
 
-      pdf(file="${size_PDF}", paper="special", height=11.69, width=8.2677)
+      pdf(file="${size_PDF}", paper="special", height=11.69, width=8.2677*n_samples/4)
       for (i in seq(1,n_genes,${rows_per_page})) {
         start=i
         end=i+${rows_per_page}-1
@@ -174,7 +174,7 @@
       }
       devname=dev.off()
 
-      pdf(file="${combi_PDF}", paper="special", height=11.69, width=8.2677)
+      pdf(file="${combi_PDF}", paper="special", height=11.69, width=8.2677*n_samples/4)
       for (i in seq(1,n_genes,${rows_per_page}/2)) {
         start=i
         end=i+${rows_per_page}/2-1
