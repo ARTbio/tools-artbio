@@ -151,7 +151,7 @@
       
       ## GRAPHS
 
-      pdf(file="${readmap_PDF}", paper="special", height=11.69, width=8.2677*n_samples/4)
+      pdf(file="${readmap_PDF}", paper="special", height=11.69, width=8.2677*n_samples/3)
       for (i in seq(1,n_genes,${rows_per_page})) {
         start=i
         end=i+${rows_per_page}-1
@@ -168,7 +168,7 @@
       devname=dev.off()
 
 
-      pdf(file="${size_PDF}", paper="special", height=11.69, width=8.2677*n_samples/4)
+      pdf(file="${size_PDF}", paper="special", height=11.69, width=8.2677*n_samples/3)
       for (i in seq(1,n_genes,${rows_per_page})) {
         start=i
         end=i+${rows_per_page}-1
@@ -184,7 +184,7 @@
       }
       devname=dev.off()
 
-      pdf(file="${combi_PDF}", paper="special", height=11.69, width=8.2677*n_samples/4)
+      pdf(file="${combi_PDF}", paper="special", height=11.69, width=8.2677*n_samples/3)
       for (i in seq(1,n_genes,${rows_per_page}/2)) {
         start=i
         end=i+${rows_per_page}/2-1
