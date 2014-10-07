@@ -72,7 +72,7 @@
               <param name="ownFile" type="data" format="fasta" label="Select a fasta file, to serve as index reference" />
 	     <repeat name="series" title="Add alignment files">
 	       <param name="input" type="data" label="Select multiple alignments to parse"/>
-	       <param name="norm" type="integer" value="1" label="Indicate a normalization factor to compare multiple aligments"/>
+	       <param name="norm" type="float" value="1" label="Indicate a normalization factor to compare multiple aligments"/>
 	     </repeat>
 	   </when>
        </conditional>
