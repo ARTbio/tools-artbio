@@ -107,14 +107,14 @@
       combineLimits(xyplot(count~coord|factor(sample, levels=unique(sample))+reorder(gene, count, function(x) -sum(abs(x))), 
       data=df, 
       type='h', 
-      scales= list(relation="free", x=list(rot=0, cex=0.6, axs="i", tck=0.5), y=list(tick.number=4, rot=90, cex=0.6)),
+      scales= list(relation="free", x=list(rot=0, cex=0.7, axs="i", tck=0.5), y=list(tick.number=4, rot=90, cex=0.7)),
       xlab=NULL, main=NULL, ylab=NULL, 
       as.table=T, 
       origin = 0, 
       horizontal=FALSE, 
       group=polarity,
       col=c("red","blue"),
-      par.strip.text = list(cex=0.6),
+      par.strip.text = list(cex=0.7),
       ...))
       }
 
@@ -126,14 +126,14 @@
 	    stack=TRUE,
             col=c('red', 'blue'),
             cex=0.75,
-            scales=list(y=list(tick.number=4, rot=90, relation="free", cex=0.6), x=list(cex=0.6) ),
+            scales=list(y=list(tick.number=4, rot=90, relation="free", cex=0.7), x=list(cex=0.7) ),
             prepanel=smR.prepanel,
             xlab = NULL,
             ylab = NULL,
             main = NULL,
             as.table=TRUE,
             newpage = T,
-            par.strip.text = list(cex=0.6),
+            par.strip.text = list(cex=0.7),
             ...)
           combineLimits(bc)
           }
@@ -151,13 +151,17 @@
       
       ## GRAPHS
 
-      pdf(file="${readmap_PDF}", paper="special", height=11.69, width=8.2677*n_samples/3)
-      for (i in seq(1,n_genes,${rows_per_page})) {
+      if (n_genes > 7) {page_height_simple = 11.69; page_height_combi=11.69; rows_per_page=${rows_per_page}; extrarow=0 } else {
+                         rows_per_page= n_genes; page_height_simple = 11.69/n_genes/4; page_height_combi=11.69/(n_genes*2); extrarow=1 }
+      if (n_samples > 4) {page_width = 8.2677*n_samples/4} else {page_width = 8.2677*n_samples/3} # to test
+
+      pdf(file="${readmap_PDF}", paper="special", height=page_height_simple, width=page_width)
+      for (i in seq(1,n_genes,rows_per_page)) {
         start=i
-        end=i+${rows_per_page}-1
+        end=i+rows_per_page-1
         if (end>n_genes) {end=n_genes}
         readmap_plot.list=lapply(per_gene_readmap[start:end], function(x) plot_readmap(x, par.settings=par.settings.readmap))
-        args.list=c(readmap_plot.list, list(nrow=${rows_per_page}, ncol=1,
+        args.list=c(readmap_plot.list, list(nrow=rows_per_page, ncol=1,
                                             main=textGrob("Read Maps (nucleotide coordinates)", gp=gpar(cex=1), just="top"),
                                             left=textGrob("${ylabel}", gp=gpar(cex=1), vjust=1, rot=90)
                                             #sub=textGrob("readmap coordinates", gp=gpar(cex=.75), just="bottom")
@@ -168,13 +172,13 @@
       devname=dev.off()
 
 
-      pdf(file="${size_PDF}", paper="special", height=11.69, width=8.2677*n_samples/3)
-      for (i in seq(1,n_genes,${rows_per_page})) {
+      pdf(file="${size_PDF}", paper="special", height=page_height_simple, width=page_width)
+      for (i in seq(1,n_genes,rows_per_page)) {
         start=i
-        end=i+${rows_per_page}-1
+        end=i+rows_per_page-1
         if (end>n_genes) {end=n_genes}
         plot.list=lapply(per_gene_size[start:end], function(x) plot_size_distribution(x, par.settings=par.settings.size) )
-        args.list=c(plot.list, list(nrow=${rows_per_page}, ncol=1,
+        args.list=c(plot.list, list(nrow=rows_per_page, ncol=1,
                                     main=textGrob("Size distributions (in nucleotides)", gp=gpar(cex=1), just="top"),
                                     left=textGrob("${ylabel}", gp=gpar(cex=1), vjust=1, rot=90)
                                     #sub="readsize in nucleotides"
@@ -184,15 +188,15 @@
       }
       devname=dev.off()
 
-      pdf(file="${combi_PDF}", paper="special", height=11.69, width=8.2677*n_samples/3)
-      for (i in seq(1,n_genes,${rows_per_page}/2)) {
+      pdf(file="${combi_PDF}", paper="special", height=page_height_combi, width=page_width)
+      for (i in seq(1,n_genes,rows_per_page/2)) {
         start=i
-        end=i+${rows_per_page}/2-1
+        end=i+rows_per_page/2-1
         if (end>n_genes) {end=n_genes}
 	read_plot.list=lapply(per_gene_readmap[start:end], function(x) plot_readmap(x, par.settings=par.settings.combination.readmap))
         size_plot.list=lapply(per_gene_size[start:end], function(x) plot_size_distribution(x, strip=FALSE, par.settings=par.settings.combination.size))
 	plot.list=rbind(read_plot.list, size_plot.list )
-        args.list=c(plot.list, list(nrow=${rows_per_page}, ncol=1,
+        args.list=c(plot.list, list(nrow=rows_per_page + extrarow, ncol=1,
                                     main=textGrob("${title}", gp=gpar(cex=1), just="top"),
                                     left=textGrob("${ylabel}", gp=gpar(cex=1), vjust=1, rot=90),
                                     sub=textGrob("${xlabel}", gp=gpar(cex=1), just="bottom")
@@ -248,4 +252,22 @@ produce a plot like this:
     :width: 500
 
 </help>
+
+  <test>
+      <param name="genomeSource" value="history" />
+      <param name="ownFile" value ="transposons.fasta" ftype="fasta" />
+      <param name="input" value="sample1.srbowtie_out, sample2.srbowtie_out, sample3.srbowtie_out" ftype="tabular" />
+      <param name="norm" value="1,1,1" />
+      <param name="global" value="no" />
+      <param name="collapsestrands" value="no" />
+      <param name="minquery" value="18"/>
+      <param name="maxquery" value="30"/>
+      <param name="title" value="Size distribution"/>
+      <param name="xlabel" value="Size in nucleotides"/>
+      <param name="ylabel" value="Number of reads"/>
+      <param name="rows_per_page" value="10"/>
+      <output name="size_distribution_dataframe" ftype="tabular" value="Size_distribution_dataframe.tab" />
+      <output name="size_PDF" ftype="pdf" value="Size_distribution.pdf" />
+  </test>
+
 </tool>
