@@ -62,11 +62,11 @@
              <param name="ownFile" type="data" format="fasta" label="Select a fasta file, that served as the reference index for the alignments" />
 	     <repeat name="series" title="Add alignment files">
 	       <param name="input" type="data" label="Select multiple alignments to parse"/>
-	       <param name="norm" type="integer" value="1" label="Indicate a normalization factor to compare multiple aligments"/>
+	       <param name="norm" type="float" value="1" label="Indicate a normalization factor to compare multiple aligments"/>
 	     </repeat>
 	   </when>
        </conditional>
-                <param name="gff" type="data" optional="true" label="Optional: select a GFF to investigate regions of interest" help="GFF must match genome build"/>
+                <param name="gff" type="data" format="gff3" optional="true" label="Optional: select a GFF to investigate regions of interest" help="GFF must match genome build"/>
                  <!-- <validator type="dataset_metadata_in_data_table" table_name="bowtie_indexes" metadata_name="dbkey" metadata_column="0" message="GFF database and alignment file databse do not match!"/> -->
                 <param name="minquery" type="integer" size="3" value="18" label="Min size of query small RNAs" help="'18' = 18 nucleotides"/>
                 <param name="maxquery" type="integer" size="3" value="28" label="Max size of query small RNAs" help="'28' = 28 nucleotides"/>
@@ -258,16 +258,18 @@ produce a plot like this:
       <param name="ownFile" value ="transposons.fasta" ftype="fasta" />
       <param name="input" value="sample1.srbowtie_out, sample2.srbowtie_out, sample3.srbowtie_out" ftype="tabular" />
       <param name="norm" value="1,1,1" />
-      <param name="global" value="no" />
-      <param name="collapsestrands" value="no" />
-      <param name="minquery" value="18"/>
-      <param name="maxquery" value="30"/>
-      <param name="title" value="Size distribution"/>
-      <param name="xlabel" value="Size in nucleotides"/>
-      <param name="ylabel" value="Number of reads"/>
-      <param name="rows_per_page" value="10"/>
-      <output name="size_distribution_dataframe" ftype="tabular" value="Size_distribution_dataframe.tab" />
-      <output name="size_PDF" ftype="pdf" value="Size_distribution.pdf" />
+      <param name="minquery" value="20" />
+      <param name="maxquery" value="30" />
+      <param name="title" value="Readmaps and size distributions" />
+      <param name="xlabel" value="Coordinates/read size" />
+      <param name="ylabel" value="Number of reads" />
+      <param name="rows_per_page" value="8" />
+      <output name="readmap_dataframe" ftype="tabular" value="" />
+      <output name="size_distribution_dataframe" ftype="tabular" value="" />
+
+      <output name="readmap_PDF" ftype="pdf" value="" />
+      <output name="size_PDF" ftype="pdf" value="" />
+      <output name="combi_PDF" ftype="pdf" value="" />
   </test>
 
 </tool>

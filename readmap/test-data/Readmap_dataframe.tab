@@ -8,7 +8,6 @@ FBti0020401	502	-1.0	R	sample1.srbowtie_out
 FBti0020401	524	-3.0	R	sample1.srbowtie_out
 FBti0020401	600	-1.0	R	sample1.srbowtie_out
 FBti0020401	647	-1.0	R	sample1.srbowtie_out
-FBti0020401	808	1.0	F	sample1.srbowtie_out
 FBti0020401	2307	-1.0	R	sample1.srbowtie_out
 FBti0020401	2308	-1.0	R	sample1.srbowtie_out
 FBti0020401	2309	-1.0	R	sample1.srbowtie_out
@@ -28,7 +27,6 @@ FBti0020401	3470	1.0	F	sample1.srbowtie_out
 FBti0020401	3514	1.0	F	sample1.srbowtie_out
 FBti0020401	3540	1.0	F	sample1.srbowtie_out
 FBti0020401	3573	3.0	F	sample1.srbowtie_out
-FBti0020401	3712	1.0	F	sample1.srbowtie_out
 FBti0020401	3844	-1.0	R	sample1.srbowtie_out
 FBti0020401	3879	-1.0	R	sample1.srbowtie_out
 FBti0020401	3959	-1.0	R	sample1.srbowtie_out
@@ -53,7 +51,7 @@ FBti0020406	174	1.0	F	sample1.srbowtie_out
 FBti0020406	516	-1.0	R	sample1.srbowtie_out
 FBti0020406	542	-1.0	R	sample1.srbowtie_out
 FBti0020406	595	-1.0	R	sample1.srbowtie_out
-FBti0019511	96	1.0	F	sample1.srbowtie_out
+FBti0019511	1	0	F	sample1.srbowtie_out
 FBti0019512	1	0	F	sample1.srbowtie_out
 FBti0019473	62	-1.0	R	sample1.srbowtie_out
 FBti0019473	199	-1.0	R	sample1.srbowtie_out
@@ -94,7 +92,6 @@ FBti0019473	3310	-1.0	R	sample1.srbowtie_out
 FBti0019473	3458	-1.0	R	sample1.srbowtie_out
 FBti0019473	3512	-1.0	R	sample1.srbowtie_out
 FBti0019473	3556	-1.0	R	sample1.srbowtie_out
-FBti0019473	3685	-1.0	R	sample1.srbowtie_out
 FBti0019473	3847	1.0	F	sample1.srbowtie_out
 FBti0019473	3927	1.0	F	sample1.srbowtie_out
 FBti0019473	3934	-1.0	R	sample1.srbowtie_out
@@ -134,10 +131,8 @@ FBti0019519	1900	1.0	F	sample1.srbowtie_out
 FBti0019519	1983	1.0	F	sample1.srbowtie_out
 FBti0019519	1985	2.0	F	sample1.srbowtie_out
 FBti0019519	2059	1.0	F	sample1.srbowtie_out
-FBti0019519	2166	1.0	F	sample1.srbowtie_out
 FBti0019519	2247	1.0	F	sample1.srbowtie_out
 FBti0019514	337	1.0	F	sample1.srbowtie_out
-FBti0019515	338	1.0	F	sample1.srbowtie_out
 FBti0019515	531	-1.0	R	sample1.srbowtie_out
 FBti0019515	1099	-1.0	R	sample1.srbowtie_out
 FBti0019515	1113	1.0	F	sample1.srbowtie_out
@@ -182,7 +177,7 @@ FBti0019517	453	4.0	F	sample1.srbowtie_out
 FBti0019517	460	1.0	F	sample1.srbowtie_out
 FBti0019517	476	-1.0	R	sample1.srbowtie_out
 FBti0019517	485	-1.0	R	sample1.srbowtie_out
-FBti0019517	487	-2.0	R	sample1.srbowtie_out
+FBti0019517	487	-1.0	R	sample1.srbowtie_out
 FBti0019517	495	1.0	F	sample1.srbowtie_out
 FBti0019517	502	2.0	F	sample1.srbowtie_out
 FBti0019517	512	1.0	F	sample1.srbowtie_out
@@ -205,13 +200,11 @@ FBti0020405	404	1.0	F	sample1.srbowtie_out
 FBti0020405	586	2.0	F	sample1.srbowtie_out
 FBti0020405	674	1.0	F	sample1.srbowtie_out
 FBti0019499	18	1.0	F	sample1.srbowtie_out
-FBti0019499	125	-1.0	R	sample1.srbowtie_out
 FBti0019499	271	1.0	F	sample1.srbowtie_out
 FBti0019499	369	-1.0	R	sample1.srbowtie_out
 FBti0019499	406	-1.0	R	sample1.srbowtie_out
 FBti0019499	420	1.0	F	sample1.srbowtie_out
 FBti0019499	444	1.0	F	sample1.srbowtie_out
-FBti0019499	528	-1.0	R	sample1.srbowtie_out
 FBti0019499	581	-1.0	R	sample1.srbowtie_out
 FBti0019499	678	1.0	F	sample1.srbowtie_out
 FBti0019499	682	1.0	F	sample1.srbowtie_out
@@ -260,7 +253,6 @@ FBti0019476	3155	-8.0	R	sample1.srbowtie_out
 FBti0019476	3156	-1.0	R	sample1.srbowtie_out
 FBti0019476	3589	-1.0	R	sample1.srbowtie_out
 FBti0019493	37	1.0	F	sample1.srbowtie_out
-FBti0019493	109	-1.0	R	sample1.srbowtie_out
 FBti0019493	149	-1.0	R	sample1.srbowtie_out
 FBti0019493	153	-1.0	R	sample1.srbowtie_out
 FBti0019493	186	1.0	F	sample1.srbowtie_out
@@ -321,7 +313,7 @@ FBti0019493	983	-1.0	R	sample1.srbowtie_out
 FBti0019493	993	-2.0	R	sample1.srbowtie_out
 FBti0019493	998	-1.0	R	sample1.srbowtie_out
 FBti0019493	1024	1.0	F	sample1.srbowtie_out
-FBti0019493	1117	-4.0	R	sample1.srbowtie_out
+FBti0019493	1117	-3.0	R	sample1.srbowtie_out
 FBti0019493	1124	1.0	F	sample1.srbowtie_out
 FBti0019493	1129	1.0	F	sample1.srbowtie_out
 FBti0019493	1134	1.0	F	sample1.srbowtie_out
@@ -392,10 +384,9 @@ FBti0019493	1842	-6.0	R	sample1.srbowtie_out
 FBti0019493	1885	-1.0	R	sample1.srbowtie_out
 FBti0019493	1889	1.0	F	sample1.srbowtie_out
 FBti0019493	1891	-1.0	R	sample1.srbowtie_out
-FBti0019493	1907	20.0	F	sample1.srbowtie_out
+FBti0019493	1907	19.0	F	sample1.srbowtie_out
 FBti0019493	1908	1.0	F	sample1.srbowtie_out
 FBti0019493	1939	-1.0	R	sample1.srbowtie_out
-FBti0019493	1961	1.0	F	sample1.srbowtie_out
 FBti0019493	1963	2.0	F	sample1.srbowtie_out
 FBti0019493	1970	1.0	F	sample1.srbowtie_out
 FBti0019493	1970	-1.0	R	sample1.srbowtie_out
@@ -411,7 +402,6 @@ FBti0019493	2151	2.0	F	sample1.srbowtie_out
 FBti0019493	2152	1.0	F	sample1.srbowtie_out
 FBti0019493	2156	-2.0	R	sample1.srbowtie_out
 FBti0019493	2181	1.0	F	sample1.srbowtie_out
-FBti0019493	2292	-1.0	R	sample1.srbowtie_out
 FBti0019493	2296	1.0	F	sample1.srbowtie_out
 FBti0019493	2297	2.0	F	sample1.srbowtie_out
 FBti0019493	2302	1.0	F	sample1.srbowtie_out
@@ -419,6 +409,7 @@ FBti0019493	2306	1.0	F	sample1.srbowtie_out
 FBti0019493	2318	2.0	F	sample1.srbowtie_out
 FBti0019493	2320	1.0	F	sample1.srbowtie_out
 FBti0019493	2327	-1.0	R	sample1.srbowtie_out
+FBti0019493	2366	-1.0	R	sample1.srbowtie_out
 FBti0019493	2391	-1.0	R	sample1.srbowtie_out
 FBti0019493	2409	5.0	F	sample1.srbowtie_out
 FBti0019493	2421	1.0	F	sample1.srbowtie_out
@@ -441,14 +432,13 @@ FBti0019493	2671	-3.0	R	sample1.srbowtie_out
 FBti0019493	2676	-1.0	R	sample1.srbowtie_out
 FBti0019493	2680	-1.0	R	sample1.srbowtie_out
 FBti0019493	2690	1.0	F	sample1.srbowtie_out
-FBti0019493	2692	1.0	F	sample1.srbowtie_out
 FBti0019493	2733	-1.0	R	sample1.srbowtie_out
 FBti0019493	2738	1.0	F	sample1.srbowtie_out
 FBti0019493	2799	-1.0	R	sample1.srbowtie_out
 FBti0019493	2808	1.0	F	sample1.srbowtie_out
 FBti0019493	2823	-1.0	R	sample1.srbowtie_out
 FBti0019493	2870	2.0	F	sample1.srbowtie_out
-FBti0019493	2878	8.0	F	sample1.srbowtie_out
+FBti0019493	2878	7.0	F	sample1.srbowtie_out
 FBti0019493	2887	-9.0	R	sample1.srbowtie_out
 FBti0019493	2929	3.0	F	sample1.srbowtie_out
 FBti0019493	2933	1.0	F	sample1.srbowtie_out
@@ -495,7 +485,7 @@ FBti0019493	3511	6.0	F	sample1.srbowtie_out
 FBti0019493	3513	1.0	F	sample1.srbowtie_out
 FBti0019493	3522	-1.0	R	sample1.srbowtie_out
 FBti0019493	3550	1.0	F	sample1.srbowtie_out
-FBti0019493	3577	2.0	F	sample1.srbowtie_out
+FBti0019493	3577	1.0	F	sample1.srbowtie_out
 FBti0019493	3582	1.0	F	sample1.srbowtie_out
 FBti0019493	3604	1.0	F	sample1.srbowtie_out
 FBti0019493	3616	-1.0	R	sample1.srbowtie_out
@@ -506,13 +496,12 @@ FBti0019493	3669	-1.0	R	sample1.srbowtie_out
 FBti0019493	3670	1.0	F	sample1.srbowtie_out
 FBti0019493	3682	1.0	F	sample1.srbowtie_out
 FBti0019493	3686	1.0	F	sample1.srbowtie_out
-FBti0019493	3692	1.0	F	sample1.srbowtie_out
+FBti0019493	3692	2.0	F	sample1.srbowtie_out
 FBti0019493	3693	24.0	F	sample1.srbowtie_out
 FBti0019493	3694	10.0	F	sample1.srbowtie_out
 FBti0019493	3695	2.0	F	sample1.srbowtie_out
 FBti0019493	3697	2.0	F	sample1.srbowtie_out
-FBti0019493	3756	4.0	F	sample1.srbowtie_out
-FBti0019493	3791	1.0	F	sample1.srbowtie_out
+FBti0019493	3756	3.0	F	sample1.srbowtie_out
 FBti0019493	3810	8.0	F	sample1.srbowtie_out
 FBti0019493	3824	1.0	F	sample1.srbowtie_out
 FBti0019493	3836	1.0	F	sample1.srbowtie_out
@@ -523,7 +512,7 @@ FBti0019493	3996	-1.0	R	sample1.srbowtie_out
 FBti0019493	4041	-1.0	R	sample1.srbowtie_out
 FBti0019493	4045	3.0	F	sample1.srbowtie_out
 FBti0019493	4052	-1.0	R	sample1.srbowtie_out
-FBti0019493	4054	-7.0	R	sample1.srbowtie_out
+FBti0019493	4054	-8.0	R	sample1.srbowtie_out
 FBti0019493	4068	1.0	F	sample1.srbowtie_out
 FBti0019493	4099	1.0	F	sample1.srbowtie_out
 FBti0019493	4151	-1.0	R	sample1.srbowtie_out
@@ -546,7 +535,7 @@ FBti0019493	4398	-1.0	R	sample1.srbowtie_out
 FBti0019492	14	1.0	F	sample1.srbowtie_out
 FBti0019492	31	-1.0	R	sample1.srbowtie_out
 FBti0019492	40	-1.0	R	sample1.srbowtie_out
-FBti0019492	267	-2.0	R	sample1.srbowtie_out
+FBti0019492	267	-1.0	R	sample1.srbowtie_out
 FBti0019492	425	-2.0	R	sample1.srbowtie_out
 FBti0019492	549	-1.0	R	sample1.srbowtie_out
 FBti0019492	554	-1.0	R	sample1.srbowtie_out
@@ -615,7 +604,6 @@ FBti0020395	639	2.0	F	sample1.srbowtie_out
 FBti0020395	725	1.0	F	sample1.srbowtie_out
 FBti0020395	726	-1.0	R	sample1.srbowtie_out
 FBti0020395	731	1.0	F	sample1.srbowtie_out
-FBti0020395	751	1.0	F	sample1.srbowtie_out
 FBti0020395	792	1.0	F	sample1.srbowtie_out
 FBti0020395	801	-1.0	R	sample1.srbowtie_out
 FBti0020395	802	-1.0	R	sample1.srbowtie_out
@@ -636,7 +624,6 @@ FBti0019483	164	-1.0	R	sample1.srbowtie_out
 FBti0019483	237	-1.0	R	sample1.srbowtie_out
 FBti0019483	248	-1.0	R	sample1.srbowtie_out
 FBti0019483	440	-1.0	R	sample1.srbowtie_out
-FBti0019483	473	-1.0	R	sample1.srbowtie_out
 FBti0019483	542	1.0	F	sample1.srbowtie_out
 FBti0019483	589	1.0	F	sample1.srbowtie_out
 FBti0020398	74	1.0	F	sample1.srbowtie_out
@@ -715,7 +702,6 @@ FBti0019504	3027	-1.0	R	sample1.srbowtie_out
 FBti0019503	40	1.0	F	sample1.srbowtie_out
 FBti0019503	75	1.0	F	sample1.srbowtie_out
 FBti0019503	78	-1.0	R	sample1.srbowtie_out
-FBti0019503	122	1.0	F	sample1.srbowtie_out
 FBti0019503	151	8.0	F	sample1.srbowtie_out
 FBti0019503	200	6.0	F	sample1.srbowtie_out
 FBti0019503	205	1.0	F	sample1.srbowtie_out
@@ -731,7 +717,6 @@ FBti0019503	313	1.0	F	sample1.srbowtie_out
 FBti0019503	327	-1.0	R	sample1.srbowtie_out
 FBti0019503	333	2.0	F	sample1.srbowtie_out
 FBti0019503	342	-1.0	R	sample1.srbowtie_out
-FBti0019503	374	1.0	F	sample1.srbowtie_out
 FBti0019502	42	1.0	F	sample1.srbowtie_out
 FBti0019502	306	1.0	F	sample1.srbowtie_out
 FBti0019502	380	1.0	F	sample1.srbowtie_out
@@ -798,6 +783,7 @@ FBti0020402	5576	-1.0	R	sample1.srbowtie_out
 FBti0020402	5577	-1.0	R	sample1.srbowtie_out
 FBti0020402	5634	-1.0	R	sample1.srbowtie_out
 FBti0020402	5635	-2.0	R	sample1.srbowtie_out
+FBti0020402	5893	1.0	F	sample1.srbowtie_out
 FBti0020402	5916	-1.0	R	sample1.srbowtie_out
 FBti0020402	5918	-3.0	R	sample1.srbowtie_out
 FBti0020402	5920	-1.0	R	sample1.srbowtie_out
@@ -813,7 +799,6 @@ FBti0020410	1497	-1.0	R	sample1.srbowtie_out
 FBti0020410	1562	-1.0	R	sample1.srbowtie_out
 FBti0020410	1578	-1.0	R	sample1.srbowtie_out
 FBti0020410	1581	-1.0	R	sample1.srbowtie_out
-FBti0020410	1863	-1.0	R	sample1.srbowtie_out
 FBti0020410	1877	-3.0	R	sample1.srbowtie_out
 FBti0020410	1880	-1.0	R	sample1.srbowtie_out
 FBti0020410	1895	-1.0	R	sample1.srbowtie_out
@@ -976,6 +961,7 @@ FBti0020400	3008	1.0	F	sample1.srbowtie_out
 FBti0020400	3037	1.0	F	sample1.srbowtie_out
 FBti0020400	3061	1.0	F	sample1.srbowtie_out
 FBti0020400	3070	-2.0	R	sample1.srbowtie_out
+FBti0020400	3074	-1.0	R	sample1.srbowtie_out
 FBti0020400	3113	1.0	F	sample1.srbowtie_out
 FBti0020400	3120	1.0	F	sample1.srbowtie_out
 FBti0020400	3125	-1.0	R	sample1.srbowtie_out
@@ -1025,6 +1011,7 @@ FBti0020400	4512	2.0	F	sample1.srbowtie_out
 FBti0020400	4519	1.0	F	sample1.srbowtie_out
 FBti0020400	4540	1.0	F	sample1.srbowtie_out
 FBti0020400	4565	1.0	F	sample1.srbowtie_out
+FBti0020400	4583	-1.0	R	sample1.srbowtie_out
 FBti0020400	4603	1.0	F	sample1.srbowtie_out
 FBti0020400	4608	-1.0	R	sample1.srbowtie_out
 FBti0020400	4663	1.0	F	sample1.srbowtie_out
@@ -1048,7 +1035,7 @@ FBti0020400	4990	1.0	F	sample1.srbowtie_out
 FBti0020400	5010	-1.0	R	sample1.srbowtie_out
 FBti0020400	5028	2.0	F	sample1.srbowtie_out
 FBti0020400	5092	1.0	F	sample1.srbowtie_out
-FBti0020400	5096	5.0	F	sample1.srbowtie_out
+FBti0020400	5096	4.0	F	sample1.srbowtie_out
 FBti0020400	5121	6.0	F	sample1.srbowtie_out
 FBti0020400	5125	2.0	F	sample1.srbowtie_out
 FBti0020400	5130	1.0	F	sample1.srbowtie_out
@@ -1118,7 +1105,7 @@ FBti0020400	6362	2.0	F	sample1.srbowtie_out
 FBti0020400	6371	-1.0	R	sample1.srbowtie_out
 FBti0020400	6391	1.0	F	sample1.srbowtie_out
 FBti0020400	6588	1.0	F	sample1.srbowtie_out
-FBti0020400	6603	5.0	F	sample1.srbowtie_out
+FBti0020400	6603	4.0	F	sample1.srbowtie_out
 FBti0020400	6628	2.0	F	sample1.srbowtie_out
 FBti0020400	6631	1.0	F	sample1.srbowtie_out
 FBti0020400	6632	1.0	F	sample1.srbowtie_out
@@ -1160,7 +1147,7 @@ FBti0020400	7397	1.0	F	sample1.srbowtie_out
 FBti0020400	7432	-1.0	R	sample1.srbowtie_out
 FBti0020400	7448	1.0	F	sample1.srbowtie_out
 FBti0020400	7560	1.0	F	sample1.srbowtie_out
-FBti0020400	7690	8.0	F	sample1.srbowtie_out
+FBti0020400	7690	7.0	F	sample1.srbowtie_out
 FBti0020400	7778	2.0	F	sample1.srbowtie_out
 FBti0020400	7779	3.0	F	sample1.srbowtie_out
 FBti0020400	7788	1.0	F	sample1.srbowtie_out
@@ -1168,7 +1155,6 @@ FBti0020400	7863	1.0	F	sample1.srbowtie_out
 FBti0020400	7897	1.0	F	sample1.srbowtie_out
 FBti0020400	7924	3.0	F	sample1.srbowtie_out
 FBti0020400	7955	-1.0	R	sample1.srbowtie_out
-FBti0020400	8050	-1.0	R	sample1.srbowtie_out
 FBti0020400	8096	1.0	F	sample1.srbowtie_out
 FBti0020400	8169	1.0	F	sample1.srbowtie_out
 FBti0020400	8170	1.0	F	sample1.srbowtie_out
@@ -1178,7 +1164,6 @@ FBti0020400	8182	1.0	F	sample1.srbowtie_out
 FBti0020400	8208	1.0	F	sample1.srbowtie_out
 FBti0020400	8235	1.0	F	sample1.srbowtie_out
 FBti0020400	8275	2.0	F	sample1.srbowtie_out
-FBti0020400	8285	-1.0	R	sample1.srbowtie_out
 FBti0020400	8287	-1.0	R	sample1.srbowtie_out
 FBti0020400	8294	-1.0	R	sample1.srbowtie_out
 FBti0020400	8308	1.0	F	sample1.srbowtie_out
@@ -1202,10 +1187,6 @@ FBti0020400	8671	-1.0	R	sample1.srbowtie_out
 FBti0020400	8704	15.0	F	sample1.srbowtie_out
 FBti0020400	8755	1.0	F	sample1.srbowtie_out
 FBti0020400	8849	3.0	F	sample1.srbowtie_out
-FBti0019480	417	2.0	F	sample1.srbowtie_out
-FBti0019480	503	-3.0	R	sample1.srbowtie_out
-FBti0019480	619	1.0	F	sample1.srbowtie_out
-FBti0019480	634	-1.0	R	sample1.srbowtie_out
 FBti0020401	142	-1.0	R	sample2.srbowtie_out
 FBti0020401	160	1.0	F	sample2.srbowtie_out
 FBti0020401	250	1.0	F	sample2.srbowtie_out
@@ -1218,7 +1199,7 @@ FBti0020401	2175	-1.0	R	sample2.srbowtie_out
 FBti0020401	2308	-1.0	R	sample2.srbowtie_out
 FBti0020401	2317	-1.0	R	sample2.srbowtie_out
 FBti0020401	2363	-1.0	R	sample2.srbowtie_out
-FBti0020401	2533	3.0	F	sample2.srbowtie_out
+FBti0020401	2533	2.0	F	sample2.srbowtie_out
 FBti0020401	2535	1.0	F	sample2.srbowtie_out
 FBti0020401	2633	-1.0	R	sample2.srbowtie_out
 FBti0020401	2695	-2.0	R	sample2.srbowtie_out
@@ -1256,7 +1237,6 @@ FBti0020401	6184	-3.0	R	sample2.srbowtie_out
 FBti0020401	6189	-1.0	R	sample2.srbowtie_out
 FBti0020401	6218	2.0	F	sample2.srbowtie_out
 FBti0020406	123	-1.0	R	sample2.srbowtie_out
-FBti0020406	313	-1.0	R	sample2.srbowtie_out
 FBti0020406	497	1.0	F	sample2.srbowtie_out
 FBti0020406	542	-1.0	R	sample2.srbowtie_out
 FBti0020406	543	-2.0	R	sample2.srbowtie_out
@@ -1276,7 +1256,6 @@ FBti0019473	759	-1.0	R	sample2.srbowtie_out
 FBti0019473	917	-1.0	R	sample2.srbowtie_out
 FBti0019473	942	-2.0	R	sample2.srbowtie_out
 FBti0019473	1009	1.0	F	sample2.srbowtie_out
-FBti0019473	1169	-1.0	R	sample2.srbowtie_out
 FBti0019473	1394	-1.0	R	sample2.srbowtie_out
 FBti0019473	1564	1.0	F	sample2.srbowtie_out
 FBti0019473	1624	1.0	F	sample2.srbowtie_out
@@ -1285,10 +1264,8 @@ FBti0019473	1711	1.0	F	sample2.srbowtie_out
 FBti0019473	1712	1.0	F	sample2.srbowtie_out
 FBti0019473	1968	-1.0	R	sample2.srbowtie_out
 FBti0019473	2064	-1.0	R	sample2.srbowtie_out
-FBti0019473	2122	1.0	F	sample2.srbowtie_out
 FBti0019473	2211	1.0	F	sample2.srbowtie_out
 FBti0019473	2212	1.0	F	sample2.srbowtie_out
-FBti0019473	2296	-1.0	R	sample2.srbowtie_out
 FBti0019473	2397	-1.0	R	sample2.srbowtie_out
 FBti0019473	2479	1.0	F	sample2.srbowtie_out
 FBti0019473	2515	-1.0	R	sample2.srbowtie_out
@@ -1300,7 +1277,7 @@ FBti0019473	2767	-4.0	R	sample2.srbowtie_out
 FBti0019473	2814	-1.0	R	sample2.srbowtie_out
 FBti0019473	2902	-3.0	R	sample2.srbowtie_out
 FBti0019473	2946	-1.0	R	sample2.srbowtie_out
-FBti0019473	2999	-6.0	R	sample2.srbowtie_out
+FBti0019473	2999	-5.0	R	sample2.srbowtie_out
 FBti0019473	3159	1.0	F	sample2.srbowtie_out
 FBti0019473	3163	1.0	F	sample2.srbowtie_out
 FBti0019473	3188	2.0	F	sample2.srbowtie_out
@@ -1357,7 +1334,6 @@ FBti0019515	1150	-7.0	R	sample2.srbowtie_out
 FBti0019515	1273	-1.0	R	sample2.srbowtie_out
 FBti0019515	1690	1.0	F	sample2.srbowtie_out
 FBti0019515	1748	1.0	F	sample2.srbowtie_out
-FBti0019515	1960	-1.0	R	sample2.srbowtie_out
 FBti0019515	1972	-1.0	R	sample2.srbowtie_out
 FBti0019515	1979	-1.0	R	sample2.srbowtie_out
 FBti0019515	1980	-3.0	R	sample2.srbowtie_out
@@ -1365,7 +1341,7 @@ FBti0019515	2222	-1.0	R	sample2.srbowtie_out
 FBti0019515	2294	-1.0	R	sample2.srbowtie_out
 FBti0019515	2302	1.0	F	sample2.srbowtie_out
 FBti0019515	2313	-1.0	R	sample2.srbowtie_out
-FBti0019515	2475	-7.0	R	sample2.srbowtie_out
+FBti0019515	2475	-6.0	R	sample2.srbowtie_out
 FBti0019516	57	-1.0	R	sample2.srbowtie_out
 FBti0019516	264	3.0	F	sample2.srbowtie_out
 FBti0019516	713	1.0	F	sample2.srbowtie_out
@@ -1413,7 +1389,6 @@ FBti0020404	856	1.0	F	sample2.srbowtie_out
 FBti0020404	948	1.0	F	sample2.srbowtie_out
 FBti0020404	1039	1.0	F	sample2.srbowtie_out
 FBti0020404	1378	1.0	F	sample2.srbowtie_out
-FBti0020405	58	1.0	F	sample2.srbowtie_out
 FBti0020405	262	-1.0	R	sample2.srbowtie_out
 FBti0019499	137	-1.0	R	sample2.srbowtie_out
 FBti0019499	148	-1.0	R	sample2.srbowtie_out
@@ -1454,6 +1429,7 @@ FBti0019499	1200	1.0	F	sample2.srbowtie_out
 FBti0019499	1245	1.0	F	sample2.srbowtie_out
 FBti0019499	1267	2.0	F	sample2.srbowtie_out
 FBti0019499	1339	1.0	F	sample2.srbowtie_out
+FBti0019499	1366	-1.0	R	sample2.srbowtie_out
 FBti0019499	1535	-1.0	R	sample2.srbowtie_out
 FBti0019499	1564	-1.0	R	sample2.srbowtie_out
 FBti0019499	1605	1.0	F	sample2.srbowtie_out
@@ -1487,10 +1463,9 @@ FBti0019476	3589	-2.0	R	sample2.srbowtie_out
 FBti0019493	37	2.0	F	sample2.srbowtie_out
 FBti0019493	51	1.0	F	sample2.srbowtie_out
 FBti0019493	130	-1.0	R	sample2.srbowtie_out
-FBti0019493	134	-1.0	R	sample2.srbowtie_out
 FBti0019493	188	-1.0	R	sample2.srbowtie_out
-FBti0019493	235	1.0	F	sample2.srbowtie_out
 FBti0019493	236	1.0	F	sample2.srbowtie_out
+FBti0019493	268	-1.0	R	sample2.srbowtie_out
 FBti0019493	288	1.0	F	sample2.srbowtie_out
 FBti0019493	291	-2.0	R	sample2.srbowtie_out
 FBti0019493	295	1.0	F	sample2.srbowtie_out
@@ -1522,7 +1497,6 @@ FBti0019493	615	-1.0	R	sample2.srbowtie_out
 FBti0019493	616	1.0	F	sample2.srbowtie_out
 FBti0019493	616	-1.0	R	sample2.srbowtie_out
 FBti0019493	619	-1.0	R	sample2.srbowtie_out
-FBti0019493	636	1.0	F	sample2.srbowtie_out
 FBti0019493	642	1.0	F	sample2.srbowtie_out
 FBti0019493	645	-1.0	R	sample2.srbowtie_out
 FBti0019493	676	-1.0	R	sample2.srbowtie_out
@@ -1563,8 +1537,8 @@ FBti0019493	1339	-1.0	R	sample2.srbowtie_out
 FBti0019493	1343	-11.0	R	sample2.srbowtie_out
 FBti0019493	1350	-2.0	R	sample2.srbowtie_out
 FBti0019493	1373	-1.0	R	sample2.srbowtie_out
-FBti0019493	1386	16.0	F	sample2.srbowtie_out
-FBti0019493	1395	-7.0	R	sample2.srbowtie_out
+FBti0019493	1386	15.0	F	sample2.srbowtie_out
+FBti0019493	1395	-6.0	R	sample2.srbowtie_out
 FBti0019493	1417	-1.0	R	sample2.srbowtie_out
 FBti0019493	1570	-1.0	R	sample2.srbowtie_out
 FBti0019493	1575	1.0	F	sample2.srbowtie_out
@@ -1610,7 +1584,6 @@ FBti0019493	1907	12.0	F	sample2.srbowtie_out
 FBti0019493	1916	-1.0	R	sample2.srbowtie_out
 FBti0019493	1917	-1.0	R	sample2.srbowtie_out
 FBti0019493	1969	-1.0	R	sample2.srbowtie_out
-FBti0019493	2079	-1.0	R	sample2.srbowtie_out
 FBti0019493	2088	1.0	F	sample2.srbowtie_out
 FBti0019493	2096	-1.0	R	sample2.srbowtie_out
 FBti0019493	2097	-1.0	R	sample2.srbowtie_out
@@ -1647,11 +1620,10 @@ FBti0019493	2825	-1.0	R	sample2.srbowtie_out
 FBti0019493	2832	-1.0	R	sample2.srbowtie_out
 FBti0019493	2859	-1.0	R	sample2.srbowtie_out
 FBti0019493	2860	-1.0	R	sample2.srbowtie_out
-FBti0019493	2878	11.0	F	sample2.srbowtie_out
+FBti0019493	2878	9.0	F	sample2.srbowtie_out
 FBti0019493	2887	-18.0	R	sample2.srbowtie_out
 FBti0019493	2924	-1.0	R	sample2.srbowtie_out
 FBti0019493	2929	3.0	F	sample2.srbowtie_out
-FBti0019493	2932	-1.0	R	sample2.srbowtie_out
 FBti0019493	2938	-6.0	R	sample2.srbowtie_out
 FBti0019493	3015	1.0	F	sample2.srbowtie_out
 FBti0019493	3017	1.0	F	sample2.srbowtie_out
@@ -1707,7 +1679,7 @@ FBti0019493	3694	2.0	F	sample2.srbowtie_out
 FBti0019493	3697	5.0	F	sample2.srbowtie_out
 FBti0019493	3724	1.0	F	sample2.srbowtie_out
 FBti0019493	3754	1.0	F	sample2.srbowtie_out
-FBti0019493	3756	5.0	F	sample2.srbowtie_out
+FBti0019493	3756	4.0	F	sample2.srbowtie_out
 FBti0019493	3776	4.0	F	sample2.srbowtie_out
 FBti0019493	3784	1.0	F	sample2.srbowtie_out
 FBti0019493	3810	5.0	F	sample2.srbowtie_out
@@ -1725,7 +1697,7 @@ FBti0019493	3944	1.0	F	sample2.srbowtie_out
 FBti0019493	3947	-1.0	R	sample2.srbowtie_out
 FBti0019493	3951	-1.0	R	sample2.srbowtie_out
 FBti0019493	3963	-1.0	R	sample2.srbowtie_out
-FBti0019493	3966	-20.0	R	sample2.srbowtie_out
+FBti0019493	3966	-21.0	R	sample2.srbowtie_out
 FBti0019493	3983	1.0	F	sample2.srbowtie_out
 FBti0019493	4042	-1.0	R	sample2.srbowtie_out
 FBti0019493	4043	1.0	F	sample2.srbowtie_out
@@ -1746,7 +1718,6 @@ FBti0019493	4201	-1.0	R	sample2.srbowtie_out
 FBti0019493	4211	1.0	F	sample2.srbowtie_out
 FBti0019493	4243	1.0	F	sample2.srbowtie_out
 FBti0019493	4263	-1.0	R	sample2.srbowtie_out
-FBti0019493	4280	1.0	F	sample2.srbowtie_out
 FBti0019493	4281	2.0	F	sample2.srbowtie_out
 FBti0019493	4309	-1.0	R	sample2.srbowtie_out
 FBti0019493	4339	-2.0	R	sample2.srbowtie_out
@@ -1755,6 +1726,7 @@ FBti0019493	4342	-1.0	R	sample2.srbowtie_out
 FBti0019493	4361	1.0	F	sample2.srbowtie_out
 FBti0019493	4362	11.0	F	sample2.srbowtie_out
 FBti0019493	4366	1.0	F	sample2.srbowtie_out
+FBti0019493	4371	-1.0	R	sample2.srbowtie_out
 FBti0019493	4388	1.0	F	sample2.srbowtie_out
 FBti0019493	4391	1.0	F	sample2.srbowtie_out
 FBti0019493	4400	-1.0	R	sample2.srbowtie_out
@@ -1762,7 +1734,6 @@ FBti0019493	4401	-1.0	R	sample2.srbowtie_out
 FBti0019493	4429	-1.0	R	sample2.srbowtie_out
 FBti0019493	4430	-2.0	R	sample2.srbowtie_out
 FBti0019492	31	-1.0	R	sample2.srbowtie_out
-FBti0019492	164	-1.0	R	sample2.srbowtie_out
 FBti0019492	206	-1.0	R	sample2.srbowtie_out
 FBti0019492	340	1.0	F	sample2.srbowtie_out
 FBti0019492	394	1.0	F	sample2.srbowtie_out
@@ -1796,7 +1767,6 @@ FBti0019495	6812	-1.0	R	sample2.srbowtie_out
 FBti0019495	6961	-1.0	R	sample2.srbowtie_out
 FBti0019495	7387	-1.0	R	sample2.srbowtie_out
 FBti0019495	7706	-1.0	R	sample2.srbowtie_out
-FBti0019495	7929	-1.0	R	sample2.srbowtie_out
 FBti0019495	8173	1.0	F	sample2.srbowtie_out
 FBti0019495	8382	-2.0	R	sample2.srbowtie_out
 FBti0019495	8390	-1.0	R	sample2.srbowtie_out
@@ -1933,7 +1903,6 @@ FBti0019503	14	2.0	F	sample2.srbowtie_out
 FBti0019503	98	1.0	F	sample2.srbowtie_out
 FBti0019503	101	3.0	F	sample2.srbowtie_out
 FBti0019503	106	1.0	F	sample2.srbowtie_out
-FBti0019503	107	-1.0	R	sample2.srbowtie_out
 FBti0019503	151	6.0	F	sample2.srbowtie_out
 FBti0019503	155	1.0	F	sample2.srbowtie_out
 FBti0019503	158	1.0	F	sample2.srbowtie_out
@@ -2058,7 +2027,6 @@ FBti0019486	299	-1.0	R	sample2.srbowtie_out
 FBti0019486	368	-1.0	R	sample2.srbowtie_out
 FBti0019486	384	1.0	F	sample2.srbowtie_out
 FBti0019486	493	1.0	F	sample2.srbowtie_out
-FBti0019486	698	-1.0	R	sample2.srbowtie_out
 FBti0019486	776	-1.0	R	sample2.srbowtie_out
 FBti0019486	806	1.0	F	sample2.srbowtie_out
 FBti0019486	878	1.0	F	sample2.srbowtie_out
@@ -2150,7 +2118,6 @@ FBti0020400	2656	2.0	F	sample2.srbowtie_out
 FBti0020400	2657	1.0	F	sample2.srbowtie_out
 FBti0020400	2662	2.0	F	sample2.srbowtie_out
 FBti0020400	2670	6.0	F	sample2.srbowtie_out
-FBti0020400	2758	1.0	F	sample2.srbowtie_out
 FBti0020400	2767	1.0	F	sample2.srbowtie_out
 FBti0020400	2788	-1.0	R	sample2.srbowtie_out
 FBti0020400	2800	4.0	F	sample2.srbowtie_out
@@ -2182,7 +2149,6 @@ FBti0020400	3718	-1.0	R	sample2.srbowtie_out
 FBti0020400	3739	2.0	F	sample2.srbowtie_out
 FBti0020400	3797	1.0	F	sample2.srbowtie_out
 FBti0020400	3805	2.0	F	sample2.srbowtie_out
-FBti0020400	3853	-1.0	R	sample2.srbowtie_out
 FBti0020400	3862	-1.0	R	sample2.srbowtie_out
 FBti0020400	3944	1.0	F	sample2.srbowtie_out
 FBti0020400	3945	1.0	F	sample2.srbowtie_out
@@ -2214,6 +2180,7 @@ FBti0020400	4506	1.0	F	sample2.srbowtie_out
 FBti0020400	4511	1.0	F	sample2.srbowtie_out
 FBti0020400	4512	1.0	F	sample2.srbowtie_out
 FBti0020400	4516	1.0	F	sample2.srbowtie_out
+FBti0020400	4519	1.0	F	sample2.srbowtie_out
 FBti0020400	4565	1.0	F	sample2.srbowtie_out
 FBti0020400	4582	-1.0	R	sample2.srbowtie_out
 FBti0020400	4603	6.0	F	sample2.srbowtie_out
@@ -2250,7 +2217,7 @@ FBti0020400	5205	-1.0	R	sample2.srbowtie_out
 FBti0020400	5236	1.0	F	sample2.srbowtie_out
 FBti0020400	5284	1.0	F	sample2.srbowtie_out
 FBti0020400	5294	1.0	F	sample2.srbowtie_out
-FBti0020400	5295	24.0	F	sample2.srbowtie_out
+FBti0020400	5295	23.0	F	sample2.srbowtie_out
 FBti0020400	5298	1.0	F	sample2.srbowtie_out
 FBti0020400	5304	-1.0	R	sample2.srbowtie_out
 FBti0020400	5356	1.0	F	sample2.srbowtie_out
@@ -2296,17 +2263,14 @@ FBti0020400	6217	1.0	F	sample2.srbowtie_out
 FBti0020400	6221	1.0	F	sample2.srbowtie_out
 FBti0020400	6254	-1.0	R	sample2.srbowtie_out
 FBti0020400	6274	-1.0	R	sample2.srbowtie_out
-FBti0020400	6339	-1.0	R	sample2.srbowtie_out
 FBti0020400	6344	-1.0	R	sample2.srbowtie_out
 FBti0020400	6362	2.0	F	sample2.srbowtie_out
 FBti0020400	6371	-1.0	R	sample2.srbowtie_out
 FBti0020400	6397	-1.0	R	sample2.srbowtie_out
-FBti0020400	6427	1.0	F	sample2.srbowtie_out
 FBti0020400	6445	1.0	F	sample2.srbowtie_out
 FBti0020400	6462	-1.0	R	sample2.srbowtie_out
 FBti0020400	6485	1.0	F	sample2.srbowtie_out
 FBti0020400	6501	1.0	F	sample2.srbowtie_out
-FBti0020400	6528	-1.0	R	sample2.srbowtie_out
 FBti0020400	6530	1.0	F	sample2.srbowtie_out
 FBti0020400	6531	1.0	F	sample2.srbowtie_out
 FBti0020400	6535	1.0	F	sample2.srbowtie_out
@@ -2319,7 +2283,6 @@ FBti0020400	6603	6.0	F	sample2.srbowtie_out
 FBti0020400	6631	1.0	F	sample2.srbowtie_out
 FBti0020400	6633	1.0	F	sample2.srbowtie_out
 FBti0020400	6648	1.0	F	sample2.srbowtie_out
-FBti0020400	6655	1.0	F	sample2.srbowtie_out
 FBti0020400	6673	1.0	F	sample2.srbowtie_out
 FBti0020400	6715	-1.0	R	sample2.srbowtie_out
 FBti0020400	6721	-1.0	R	sample2.srbowtie_out
@@ -2385,8 +2348,6 @@ FBti0020400	8465	1.0	F	sample2.srbowtie_out
 FBti0020400	8514	3.0	F	sample2.srbowtie_out
 FBti0020400	8515	1.0	F	sample2.srbowtie_out
 FBti0020400	8550	1.0	F	sample2.srbowtie_out
-FBti0020400	8564	1.0	F	sample2.srbowtie_out
-FBti0020400	8565	1.0	F	sample2.srbowtie_out
 FBti0020400	8571	1.0	F	sample2.srbowtie_out
 FBti0020400	8621	1.0	F	sample2.srbowtie_out
 FBti0020400	8654	1.0	F	sample2.srbowtie_out
@@ -2399,12 +2360,6 @@ FBti0020400	8785	1.0	F	sample2.srbowtie_out
 FBti0020400	8849	1.0	F	sample2.srbowtie_out
 FBti0020400	9192	1.0	F	sample2.srbowtie_out
 FBti0020400	9333	-1.0	R	sample2.srbowtie_out
-FBti0019480	327	1.0	F	sample2.srbowtie_out
-FBti0019480	446	1.0	F	sample2.srbowtie_out
-FBti0019480	494	1.0	F	sample2.srbowtie_out
-FBti0019480	503	-3.0	R	sample2.srbowtie_out
-FBti0019480	594	1.0	F	sample2.srbowtie_out
-FBti0019480	619	1.0	F	sample2.srbowtie_out
 FBti0020401	250	1.0	F	sample3.srbowtie_out
 FBti0020401	274	-1.0	R	sample3.srbowtie_out
 FBti0020401	520	-1.0	R	sample3.srbowtie_out
@@ -2420,7 +2375,7 @@ FBti0020401	6183	-1.0	R	sample3.srbowtie_out
 FBti0020401	6218	1.0	F	sample3.srbowtie_out
 FBti0020406	161	1.0	F	sample3.srbowtie_out
 FBti0020406	697	-1.0	R	sample3.srbowtie_out
-FBti0019511	1390	-1.0	R	sample3.srbowtie_out
+FBti0019511	1	0	F	sample3.srbowtie_out
 FBti0019512	20	1.0	F	sample3.srbowtie_out
 FBti0019512	21	-1.0	R	sample3.srbowtie_out
 FBti0019512	22	-1.0	R	sample3.srbowtie_out
@@ -2433,7 +2388,6 @@ FBti0019473	495	1.0	F	sample3.srbowtie_out
 FBti0019473	608	-1.0	R	sample3.srbowtie_out
 FBti0019473	660	2.0	F	sample3.srbowtie_out
 FBti0019473	745	1.0	F	sample3.srbowtie_out
-FBti0019473	745	-1.0	R	sample3.srbowtie_out
 FBti0019473	778	1.0	F	sample3.srbowtie_out
 FBti0019473	787	-2.0	R	sample3.srbowtie_out
 FBti0019473	915	-1.0	R	sample3.srbowtie_out
@@ -2507,7 +2461,7 @@ FBti0019519	1665	3.0	F	sample3.srbowtie_out
 FBti0019519	1668	1.0	F	sample3.srbowtie_out
 FBti0019519	1722	1.0	F	sample3.srbowtie_out
 FBti0019519	1821	1.0	F	sample3.srbowtie_out
-FBti0019519	1983	4.0	F	sample3.srbowtie_out
+FBti0019519	1983	3.0	F	sample3.srbowtie_out
 FBti0019519	2011	1.0	F	sample3.srbowtie_out
 FBti0019519	2037	-1.0	R	sample3.srbowtie_out
 FBti0019519	2114	1.0	F	sample3.srbowtie_out
@@ -2604,7 +2558,6 @@ FBti0019499	407	-1.0	R	sample3.srbowtie_out
 FBti0019499	416	1.0	F	sample3.srbowtie_out
 FBti0019499	499	1.0	F	sample3.srbowtie_out
 FBti0019499	535	-4.0	R	sample3.srbowtie_out
-FBti0019499	589	1.0	F	sample3.srbowtie_out
 FBti0019499	678	4.0	F	sample3.srbowtie_out
 FBti0019499	687	-2.0	R	sample3.srbowtie_out
 FBti0019499	689	-1.0	R	sample3.srbowtie_out
@@ -2715,7 +2668,6 @@ FBti0019493	930	-3.0	R	sample3.srbowtie_out
 FBti0019493	931	-1.0	R	sample3.srbowtie_out
 FBti0019493	957	1.0	F	sample3.srbowtie_out
 FBti0019493	984	3.0	F	sample3.srbowtie_out
-FBti0019493	986	-1.0	R	sample3.srbowtie_out
 FBti0019493	993	-1.0	R	sample3.srbowtie_out
 FBti0019493	1009	1.0	F	sample3.srbowtie_out
 FBti0019493	1039	1.0	F	sample3.srbowtie_out
@@ -2729,7 +2681,6 @@ FBti0019493	1166	7.0	F	sample3.srbowtie_out
 FBti0019493	1175	-1.0	R	sample3.srbowtie_out
 FBti0019493	1220	2.0	F	sample3.srbowtie_out
 FBti0019493	1228	1.0	F	sample3.srbowtie_out
-FBti0019493	1237	-1.0	R	sample3.srbowtie_out
 FBti0019493	1263	-1.0	R	sample3.srbowtie_out
 FBti0019493	1297	-1.0	R	sample3.srbowtie_out
 FBti0019493	1307	-1.0	R	sample3.srbowtie_out
@@ -2782,10 +2733,8 @@ FBti0019493	1908	1.0	F	sample3.srbowtie_out
 FBti0019493	1963	4.0	F	sample3.srbowtie_out
 FBti0019493	1972	-2.0	R	sample3.srbowtie_out
 FBti0019493	1995	-1.0	R	sample3.srbowtie_out
-FBti0019493	2092	-1.0	R	sample3.srbowtie_out
 FBti0019493	2097	-1.0	R	sample3.srbowtie_out
 FBti0019493	2099	-1.0	R	sample3.srbowtie_out
-FBti0019493	2136	-1.0	R	sample3.srbowtie_out
 FBti0019493	2151	1.0	F	sample3.srbowtie_out
 FBti0019493	2181	1.0	F	sample3.srbowtie_out
 FBti0019493	2249	-7.0	R	sample3.srbowtie_out
@@ -2824,19 +2773,16 @@ FBti0019493	2762	-1.0	R	sample3.srbowtie_out
 FBti0019493	2782	1.0	F	sample3.srbowtie_out
 FBti0019493	2805	3.0	F	sample3.srbowtie_out
 FBti0019493	2808	2.0	F	sample3.srbowtie_out
-FBti0019493	2812	1.0	F	sample3.srbowtie_out
 FBti0019493	2884	1.0	F	sample3.srbowtie_out
 FBti0019493	2885	-1.0	R	sample3.srbowtie_out
 FBti0019493	2933	6.0	F	sample3.srbowtie_out
 FBti0019493	2942	-2.0	R	sample3.srbowtie_out
 FBti0019493	2972	2.0	F	sample3.srbowtie_out
 FBti0019493	3001	1.0	F	sample3.srbowtie_out
-FBti0019493	3005	1.0	F	sample3.srbowtie_out
 FBti0019493	3015	3.0	F	sample3.srbowtie_out
 FBti0019493	3061	7.0	F	sample3.srbowtie_out
 FBti0019493	3062	2.0	F	sample3.srbowtie_out
 FBti0019493	3063	1.0	F	sample3.srbowtie_out
-FBti0019493	3073	1.0	F	sample3.srbowtie_out
 FBti0019493	3079	1.0	F	sample3.srbowtie_out
 FBti0019493	3086	1.0	F	sample3.srbowtie_out
 FBti0019493	3094	-1.0	R	sample3.srbowtie_out
@@ -2853,7 +2799,6 @@ FBti0019493	3311	2.0	F	sample3.srbowtie_out
 FBti0019493	3318	-1.0	R	sample3.srbowtie_out
 FBti0019493	3320	1.0	F	sample3.srbowtie_out
 FBti0019493	3333	-1.0	R	sample3.srbowtie_out
-FBti0019493	3354	-1.0	R	sample3.srbowtie_out
 FBti0019493	3358	-1.0	R	sample3.srbowtie_out
 FBti0019493	3359	-3.0	R	sample3.srbowtie_out
 FBti0019493	3376	2.0	F	sample3.srbowtie_out
@@ -2865,10 +2810,9 @@ FBti0019493	3487	1.0	F	sample3.srbowtie_out
 FBti0019493	3489	-11.0	R	sample3.srbowtie_out
 FBti0019493	3505	1.0	F	sample3.srbowtie_out
 FBti0019493	3508	2.0	F	sample3.srbowtie_out
-FBti0019493	3511	3.0	F	sample3.srbowtie_out
+FBti0019493	3511	2.0	F	sample3.srbowtie_out
 FBti0019493	3540	1.0	F	sample3.srbowtie_out
 FBti0019493	3580	1.0	F	sample3.srbowtie_out
-FBti0019493	3582	1.0	F	sample3.srbowtie_out
 FBti0019493	3597	1.0	F	sample3.srbowtie_out
 FBti0019493	3600	-1.0	R	sample3.srbowtie_out
 FBti0019493	3628	1.0	F	sample3.srbowtie_out
@@ -2884,7 +2828,7 @@ FBti0019493	3819	1.0	F	sample3.srbowtie_out
 FBti0019493	3820	-1.0	R	sample3.srbowtie_out
 FBti0019493	3827	-1.0	R	sample3.srbowtie_out
 FBti0019493	3828	-11.0	R	sample3.srbowtie_out
-FBti0019493	3891	2.0	F	sample3.srbowtie_out
+FBti0019493	3891	1.0	F	sample3.srbowtie_out
 FBti0019493	3910	1.0	F	sample3.srbowtie_out
 FBti0019493	3919	-1.0	R	sample3.srbowtie_out
 FBti0019493	3928	1.0	F	sample3.srbowtie_out
@@ -2912,11 +2856,11 @@ FBti0019493	4201	-2.0	R	sample3.srbowtie_out
 FBti0019493	4203	1.0	F	sample3.srbowtie_out
 FBti0019493	4242	2.0	F	sample3.srbowtie_out
 FBti0019493	4255	1.0	F	sample3.srbowtie_out
-FBti0019493	4259	1.0	F	sample3.srbowtie_out
 FBti0019493	4271	-1.0	R	sample3.srbowtie_out
 FBti0019493	4283	-1.0	R	sample3.srbowtie_out
 FBti0019493	4286	2.0	F	sample3.srbowtie_out
 FBti0019493	4291	1.0	F	sample3.srbowtie_out
+FBti0019493	4308	-1.0	R	sample3.srbowtie_out
 FBti0019493	4316	1.0	F	sample3.srbowtie_out
 FBti0019493	4340	-3.0	R	sample3.srbowtie_out
 FBti0019493	4361	10.0	F	sample3.srbowtie_out
@@ -2964,6 +2908,7 @@ FBti0020395	846	-2.0	R	sample3.srbowtie_out
 FBti0020395	888	1.0	F	sample3.srbowtie_out
 FBti0020395	1052	-1.0	R	sample3.srbowtie_out
 FBti0019483	53	-1.0	R	sample3.srbowtie_out
+FBti0019483	91	-1.0	R	sample3.srbowtie_out
 FBti0019483	115	-2.0	R	sample3.srbowtie_out
 FBti0019483	142	-1.0	R	sample3.srbowtie_out
 FBti0019483	233	1.0	F	sample3.srbowtie_out
@@ -2973,7 +2918,7 @@ FBti0019483	381	1.0	F	sample3.srbowtie_out
 FBti0019483	405	-1.0	R	sample3.srbowtie_out
 FBti0019483	473	-2.0	R	sample3.srbowtie_out
 FBti0019483	507	-1.0	R	sample3.srbowtie_out
-FBti0019483	594	3.0	F	sample3.srbowtie_out
+FBti0019483	594	2.0	F	sample3.srbowtie_out
 FBti0020398	114	2.0	F	sample3.srbowtie_out
 FBti0020398	170	1.0	F	sample3.srbowtie_out
 FBti0020398	334	6.0	F	sample3.srbowtie_out
@@ -2989,7 +2934,6 @@ FBti0019509	455	2.0	F	sample3.srbowtie_out
 FBti0019509	461	-1.0	R	sample3.srbowtie_out
 FBti0019509	462	-1.0	R	sample3.srbowtie_out
 FBti0019509	464	-2.0	R	sample3.srbowtie_out
-FBti0019509	641	-1.0	R	sample3.srbowtie_out
 FBti0019509	705	1.0	F	sample3.srbowtie_out
 FBti0019509	764	1.0	F	sample3.srbowtie_out
 FBti0019509	894	1.0	F	sample3.srbowtie_out
@@ -3067,7 +3011,6 @@ FBti0019503	200	18.0	F	sample3.srbowtie_out
 FBti0019503	203	4.0	F	sample3.srbowtie_out
 FBti0019503	205	2.0	F	sample3.srbowtie_out
 FBti0019503	240	1.0	F	sample3.srbowtie_out
-FBti0019503	265	1.0	F	sample3.srbowtie_out
 FBti0019503	268	1.0	F	sample3.srbowtie_out
 FBti0019503	284	33.0	F	sample3.srbowtie_out
 FBti0019503	293	-3.0	R	sample3.srbowtie_out
@@ -3089,7 +3032,6 @@ FBti0019502	389	-1.0	R	sample3.srbowtie_out
 FBti0019502	565	1.0	F	sample3.srbowtie_out
 FBti0019502	695	9.0	F	sample3.srbowtie_out
 FBti0019502	696	1.0	F	sample3.srbowtie_out
-FBti0019502	701	1.0	F	sample3.srbowtie_out
 FBti0019502	870	1.0	F	sample3.srbowtie_out
 FBti0019502	882	-2.0	R	sample3.srbowtie_out
 FBti0019502	1062	-1.0	R	sample3.srbowtie_out
@@ -3186,7 +3128,6 @@ FBti0020410	3809	-3.0	R	sample3.srbowtie_out
 FBti0020410	3840	-1.0	R	sample3.srbowtie_out
 FBti0020410	3846	-2.0	R	sample3.srbowtie_out
 FBti0020410	3942	1.0	F	sample3.srbowtie_out
-FBti0020410	4241	-1.0	R	sample3.srbowtie_out
 FBti0020410	4613	-1.0	R	sample3.srbowtie_out
 FBti0020410	4778	-1.0	R	sample3.srbowtie_out
 FBti0020410	4790	-1.0	R	sample3.srbowtie_out
@@ -3224,7 +3165,6 @@ FBti0019486	682	-1.0	R	sample3.srbowtie_out
 FBti0019486	698	-1.0	R	sample3.srbowtie_out
 FBti0019486	715	1.0	F	sample3.srbowtie_out
 FBti0019486	784	-1.0	R	sample3.srbowtie_out
-FBti0019486	887	1.0	F	sample3.srbowtie_out
 FBti0019486	1008	-1.0	R	sample3.srbowtie_out
 FBti0019489	1	0	F	sample3.srbowtie_out
 FBti0019484	101	1.0	F	sample3.srbowtie_out
@@ -3263,7 +3203,6 @@ FBti0020400	1065	-1.0	R	sample3.srbowtie_out
 FBti0020400	1104	-1.0	R	sample3.srbowtie_out
 FBti0020400	1156	-1.0	R	sample3.srbowtie_out
 FBti0020400	1174	1.0	F	sample3.srbowtie_out
-FBti0020400	1215	1.0	F	sample3.srbowtie_out
 FBti0020400	1242	2.0	F	sample3.srbowtie_out
 FBti0020400	1283	-1.0	R	sample3.srbowtie_out
 FBti0020400	1325	1.0	F	sample3.srbowtie_out
@@ -3271,7 +3210,6 @@ FBti0020400	1382	1.0	F	sample3.srbowtie_out
 FBti0020400	1391	-1.0	R	sample3.srbowtie_out
 FBti0020400	1419	1.0	F	sample3.srbowtie_out
 FBti0020400	1508	1.0	F	sample3.srbowtie_out
-FBti0020400	1519	1.0	F	sample3.srbowtie_out
 FBti0020400	1620	3.0	F	sample3.srbowtie_out
 FBti0020400	1840	4.0	F	sample3.srbowtie_out
 FBti0020400	1844	1.0	F	sample3.srbowtie_out
@@ -3360,7 +3298,6 @@ FBti0020400	4712	6.0	F	sample3.srbowtie_out
 FBti0020400	4715	1.0	F	sample3.srbowtie_out
 FBti0020400	4718	1.0	F	sample3.srbowtie_out
 FBti0020400	4720	1.0	F	sample3.srbowtie_out
-FBti0020400	4744	-1.0	R	sample3.srbowtie_out
 FBti0020400	4770	1.0	F	sample3.srbowtie_out
 FBti0020400	4805	1.0	F	sample3.srbowtie_out
 FBti0020400	4874	-1.0	R	sample3.srbowtie_out
@@ -3405,7 +3342,7 @@ FBti0020400	5708	-2.0	R	sample3.srbowtie_out
 FBti0020400	5722	1.0	F	sample3.srbowtie_out
 FBti0020400	5726	1.0	F	sample3.srbowtie_out
 FBti0020400	5752	1.0	F	sample3.srbowtie_out
-FBti0020400	5753	5.0	F	sample3.srbowtie_out
+FBti0020400	5753	4.0	F	sample3.srbowtie_out
 FBti0020400	5757	1.0	F	sample3.srbowtie_out
 FBti0020400	5818	-1.0	R	sample3.srbowtie_out
 FBti0020400	5819	-1.0	R	sample3.srbowtie_out
@@ -3446,7 +3383,6 @@ FBti0020400	7004	1.0	F	sample3.srbowtie_out
 FBti0020400	7020	3.0	F	sample3.srbowtie_out
 FBti0020400	7042	-1.0	R	sample3.srbowtie_out
 FBti0020400	7072	-3.0	R	sample3.srbowtie_out
-FBti0020400	7102	1.0	F	sample3.srbowtie_out
 FBti0020400	7111	2.0	F	sample3.srbowtie_out
 FBti0020400	7168	11.0	F	sample3.srbowtie_out
 FBti0020400	7169	1.0	F	sample3.srbowtie_out
@@ -3494,11 +3430,3 @@ FBti0020400	9049	1.0	F	sample3.srbowtie_out
 FBti0020400	9275	1.0	F	sample3.srbowtie_out
 FBti0020400	9306	-1.0	R	sample3.srbowtie_out
 FBti0020400	9334	-1.0	R	sample3.srbowtie_out
-FBti0019480	23	1.0	F	sample3.srbowtie_out
-FBti0019480	384	1.0	F	sample3.srbowtie_out
-FBti0019480	493	5.0	F	sample3.srbowtie_out
-FBti0019480	501	-1.0	R	sample3.srbowtie_out
-FBti0019480	502	-7.0	R	sample3.srbowtie_out
-FBti0019480	503	-1.0	R	sample3.srbowtie_out
-FBti0019480	594	1.0	F	sample3.srbowtie_out
-FBti0019480	619	1.0	F	sample3.srbowtie_out
