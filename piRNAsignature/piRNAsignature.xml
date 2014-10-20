@@ -1,17 +1,25 @@
 <tool id="piRNAsignature" name="piRNA Signatures" version="1.0.1">
 	<description></description>
 	<command interpreter="python">
-          piRNAsignature.py $refGenomeSource.input $refGenomeSource.input.ext $minquery $maxquery $mintarget $maxtarget $minscope $maxscope $output
+          piRNAsignature.py
+           --input $refGenomeSource.input
+           --inputFormat $refGenomeSource.input.ext
+           --minquery $minquery
+           --maxquery $maxquery
+           --mintarget $mintarget
+           --maxtarget $maxtarget
+           --minscope $minscope
+           --maxscope $maxscope
+           --outputOverlapDataframe $output
           #if $refGenomeSource.genomeSource == "history":
-            $refGenomeSource.ownFile
-            --do_not_extract_index
+            --referenceGenome $refGenomeSource.ownFile
           #else:
             #silent reference= filter( lambda x: str( x[0] ) == str( $input.dbkey ), $__app__.tool_data_tables[ 'bowtie_indexes' ].get_fields() )[0][-1]
-            $reference
+            --referenceGenome $reference
             --extract_index
           #end if
-	  $graph_type 
-          $sigplotter
+	  --graph $graph_type 
+          --rcode $sigplotter
        </command>
 
 	<inputs>
