@@ -1,10 +1,10 @@
 #!/usr/bin/python
 # script for computing overlap signatures from a bowtie output
 # Christophe Antoniewski <drosofff@gmail.com>
-# Usage piRNAsignature.py <1:input> <2:format of input> <3:minsize query> <4:maxsize query> <5:minsize target> <6:maxsize target>
+# Usage signature.py <1:input> <2:format of input> <3:minsize query> <4:maxsize query> <5:minsize target> <6:maxsize target>
 #			  <7:minscope> <8:maxscope> <9:output> <10:bowtie index> <11:procedure option> <12: graph (global or lattice)>
 # 			  <13: R code>
-# version 1.1 : argparsing
+# version 2.0.0
 
 import sys, subprocess, argparse
 from smRtools import *
@@ -29,7 +29,6 @@ def Parser():
   return args
 
 args = Parser()
-
 
 if args.extract_index:
   GenomeFormat = "bowtieIndex"
