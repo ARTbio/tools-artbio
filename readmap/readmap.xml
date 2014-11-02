@@ -1,6 +1,12 @@
-<tool id="Readmap" name="Generate readmap and histograms from alignment files" version="0.9.4">
+<tool id="Readmap" name="Generate readmap and histograms from alignment files" version="1.0.0"
   <description>from sRbowtie aligment</description>
-  <requirements><requirement type='package'>bowtie-inspect</requirement></requirements>
+  <requirements>
+        <requirement type="package" version="0.12.7">bowtie</requirement>
+        <requirement type="package" version="0.1.18">samtools</requirement>
+        <requirement type="package" version="0.7.7">pysam</requirement>
+        <requirement type="package" version="2.14">biocbasics</requirement>
+        <requirement type="package" version="3.0.3">R</requirement>
+  </requirements>
   <parallelism method="basic"></parallelism>
 <command interpreter="python">
         readmap.py 
@@ -264,11 +270,11 @@ produce a plot like this:
       <param name="xlabel" value="Coordinates/read size" />
       <param name="ylabel" value="Number of reads" />
       <param name="rows_per_page" value="8" />
-      <output name="readmap_dataframe" ftype="tabular" value="" />
-      <output name="size_distribution_dataframe" ftype="tabular" value="" />
-      <output name="readmap_PDF" ftype="pdf" value="" />
-      <output name="size_PDF" ftype="pdf" value="" />
-      <output name="combi_PDF" ftype="pdf" value="" />
+      <output name="readmap_dataframe" ftype="tabular" value="Readmap_dataframe.tab" />
+      <output name="size_distribution_dataframe" ftype="tabular" value="Size_distribution_dataframe.tab" />
+      <output name="readmap_PDF" ftype="pdf" value="Readmaps.pdf" />
+      <output name="size_PDF" ftype="pdf" value="Size_distribution.pdf" />
+      <output name="combi_PDF" ftype="pdf" value="Size_distribution_and_Readmaps.pdf" />
   </test>
 
 </tool>

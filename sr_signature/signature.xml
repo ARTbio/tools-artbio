@@ -1,5 +1,12 @@
 <tool id="signature" name="Small RNA Signatures" version="2.0.0">
 	<description></description>
+	<requirements>
+        	<requirement type="package" version="0.12.7">bowtie</requirement>
+        	<requirement type="package" version="0.1.18">samtools</requirement>
+        	<requirement type="package" version="0.7.7">pysam</requirement>
+        	<requirement type="package" version="2.14">biocbasics</requirement>
+        	<requirement type="package" version="3.0.3">R</requirement>
+	</requirements>
 	<command interpreter="python">
            signature.py
            --input $refGenomeSource.input

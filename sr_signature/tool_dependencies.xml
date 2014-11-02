@@ -1,24 +1,38 @@
 <?xml version="1.0"?>
-    <package name="r303" version="3.0.3">
-        <repository changeset_revision="4c934f6b342e" name="package_r303" owner="fubar" prior_installation_required="True" toolshed="http://testtoolshed.g2.bx.psu.edu/" />
+<tool_dependency>
+  <package name="bowtie" version="0.12.7">
+      <repository changeset_revision="4b4e89ded468" name="package_bowtie_0_12_7" owner="devteam" toolshed="http://lbcd41.snv.jussieu.fr:9009" />
     </package>
-    <package name="lattice" version=" 0.20-29">
-        <install version="1.0"> 
-            <actions>
-                <action type="set_environment_for_install">
-                    <repository changeset_revision="4c934f6b342e" name="package_r303" owner="fubar" toolshed="http://testtoolshed.g2.bx.psu.edu/">
-                        <package name="r303" version="3.0.3" />
+    <package name="samtools" version="0.1.18">
+      <repository changeset_revision="4bd2ca797c42" name="package_samtools_0_1_18" owner="devteam" toolshed="http://lbcd41.snv.jussieu.fr:9009" />
+    </package>
+    <package name="pysam" version="0.7.7">
+      <repository changeset_revision="3d4c7df25a9e" name="package_pysam_0_7_7" owner="iuc" toolshed="http://lbcd41.snv.jussieu.fr:9009" />
+    </package>
+    <package name="R" version="3.0.3">
+      <repository changeset_revision="ebcf298a0500" name="package_r_3_0_3" owner="iuc" prior_installation_required="True" toolshed="http://lbcd41.snv.jussieu.fr:9009" />
+    </package>
+    <package name="biocbasics" version="2.14">
+      <install version="1.0">
+          <actions>
+              <action type="set_environment_for_install">
+                  <repository changeset_revision="ebcf298a0500" name="package_r_3_0_3" owner="iuc" toolshed="http://lbcd41.snv.jussieu.fr:9009">
+                      <package name="R" version="3.0.3" />
                     </repository>
                 </action>
                 <action type="make_directory">$INSTALL_DIR</action>
-                <action type="shell_command">echo "install.packages(\"lattice",dependencies=T,repos=\"http://cran.us.r-project.org\")" &gt;&gt; $INSTALL_DIR/runme.R</action>
-                <action type="shell_command">echo "quit(save=\"no\")" &gt;&gt; $INSTALL_DIR/runme.R</action>                
-                <action type="shell_command">echo "PATH=$PATH 1&gt;&amp;2"</action>                
-                <action type="shell_command">echo "R_PATH=$R_PATH 1&gt;&amp;2"</action>                
-                <action type="shell_command">export PATH=$PATH &amp;&amp; $R_PATH/R CMD BATCH $INSTALL_DIR/runme.R </action>
+                <action type="shell_command">echo "bioclite=\"http://bioconductor.org/biocLite.R\"" &gt; $INSTALL_DIR/runme.R</action>
+                <action type="shell_command">echo "source(bioclite)" &gt;&gt; $INSTALL_DIR/runme.R</action>
+                <action type="shell_command">echo "installme=c(\"lattice\")" &gt;&gt; $INSTALL_DIR/runme.R</action>
+                <action type="shell_command">echo "biocLite()" &gt;&gt; $INSTALL_DIR/runme.R</action>
+                <action type="shell_command">echo "biocLite(installme)" &gt;&gt; $INSTALL_DIR/runme.R</action>
+                <action type="shell_command">echo "quit(save=\"no\")" &gt;&gt; $INSTALL_DIR/runme.R</action>
+                <action type="shell_command">export PATH=$PATH &amp;&amp; R CMD BATCH $INSTALL_DIR/runme.R </action>
             </actions>
         </install>
-        <readme>Installs R and lattice. Method borrowed from the differentialCounts model plugin.
+        <readme>Installs some basic bioc packages for the lattice wrapper for managing lattice panels
+        It's clunky but this is the most convenient way iuc could get anything installed into the package_r3
+        Note we use cran at fred hutch since no fastest mirror thingy
        </readme>
     </package>
 </tool_dependency>
