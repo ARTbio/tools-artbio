@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # python parser module to analyse sRbowtie alignments
-# version 1.0.0 - argparse implementation
+# version 1.0.2 - argparse implementation
 # Usage sRbowtieParser.py  <1:index source> <2:extraction directive> <3:outputL> <4:polarity> <5:6:7 filePath:FileExt:FileLabel> <.. ad  lib>
 
 import sys, argparse
@@ -24,22 +24,20 @@ IndexSource = args.IndexSource
 genomeRefFormat = args.ExtractDirective
 Output = args.output
 Polarity = args.polarity
-MasterListOfGenomes = {}
-
-for filePath, FileExt, FileLabel in zip (args.alignmentSource, args.alignmentFormat, args.alignmentLabel):
-  MasterListOfGenomes[FileLabel] = HandleSmRNAwindows (filePath, FileExt, IndexSource, genomeRefFormat) 
-
+MasterListOfGenomes = []
 header = ["gene"]
-for filePath, FileExt, FileLabel in zip (args.alignmentSource, args.alignmentFormat, args.alignmentLabel):
+
+for i, (filePath, FileExt, FileLabel) in enumerate(zip (args.alignmentSource, args.alignmentFormat, args.alignmentLabel)):
+  MasterListOfGenomes.append(HandleSmRNAwindows (filePath, FileExt, IndexSource, genomeRefFormat))
   header.append(FileLabel)
 
 F = open (args.output, "w")
 # print >>F, args
 print >> F, "\t".join(header)
-for item in sorted (MasterListOfGenomes[header[1]].instanceDict.keys() ):
+for item in sorted (MasterListOfGenomes[1].instanceDict.keys() ):
   line=[item]
-  for sample in header[1:]:
-    count = str (MasterListOfGenomes[sample].instanceDict[item].readcount(polarity=Polarity))
+  for window in MasterListOfGenomes:
+    count = str (window.instanceDict[item].readcount(polarity=Polarity))
     line.append(count)
   print >> F,  "\t".join(line )
 F.close()
