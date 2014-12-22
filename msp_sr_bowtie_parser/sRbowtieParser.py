@@ -25,12 +25,15 @@ genomeRefFormat = args.ExtractDirective
 Output = args.output
 Polarity = args.polarity
 MasterListOfGenomes = []
-header = ["gene"]
 
-for i, (filePath, FileExt, FileLabel) in enumerate(zip (args.alignmentSource, args.alignmentFormat, args.alignmentLabel)):
+FileLabelList=[label for label in args.alignmentLabel]
+assert (len(FileLabelList)==len(set(FileLabelList))),"You have supplied a non-unique label. Please make sure that your input files have unique names"
+
+for filePath, FileExt, FileLabel in zip (args.alignmentSource, args.alignmentFormat, args.alignmentLabel)):
   MasterListOfGenomes.append(HandleSmRNAwindows (filePath, FileExt, IndexSource, genomeRefFormat))
   header.append(FileLabel)
 
+header = ["gene"]
 F = open (args.output, "w")
 # print >>F, args
 print >> F, "\t".join(header)
