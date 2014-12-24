@@ -48,8 +48,8 @@ class Clip:
   def clip_with_N (self):
     '''clips adapter sequences from inputfile. 
     Reads containing N are retained.'''
+    global id
     iterator = 0
-    id = 0
     F = open (self.inputfile, "r")
     O = open (self.outputfile, "a")
     for line in F:
@@ -64,8 +64,8 @@ class Clip:
   def clip_without_N (self):
     '''clips adapter sequences from inputfile. 
     Reads containing N are rejected.'''
+    global id
     iterator = 0
-    id = 0
     F = open (self.inputfile, "r")
     O = open (self.outputfile, "a")
     for line in F:
@@ -88,5 +88,6 @@ def __main__ (inputfile, outputfile, adapter, minsize, maxsize, Nmode):
 
 if __name__ == "__main__" :
   args = Parser()
+  id = 0
   for inputfile in args.input:
     __main__(inputfile, args.output, args.adapter_to_clip, args.min, args.max, args.Nmode)
