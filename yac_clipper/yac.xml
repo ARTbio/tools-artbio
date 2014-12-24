@@ -1,6 +1,9 @@
  <tool id="yac" name="Clip adapter" version="1.1.0">
   <description></description>
-  <command interpreter="python">yac.py --input $input
+  <command interpreter="python">yac.py --input
+                                            #for $i in $input:
+                                            $i
+                                            #end for
                                        --output $output
                                        --adapter_to_clip $clip_source.clip_sequence
                                        --min $min
@@ -8,7 +11,7 @@
                                        --Nmode $Nmode
   </command>
   <inputs>
-    <param format="fastq" name="input" type="data" label="Source file"/>
+    <param format="fastq" name="input" type="data" label="Source file" multiple="true" />
     <param name="min" type="integer" size="4" value="15" label="min size"/>
     <param name="max" type="integer" size="4" value="36" label="max size"/>
     <param name="Nmode" type="select" label="Accept reads containing N?">
