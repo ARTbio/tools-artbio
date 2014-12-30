@@ -8,7 +8,7 @@ import sys, string, argparse
 
 def Parser():
   the_parser = argparse.ArgumentParser()
-  the_parser.add_argument('--input', action="store", type=str, help="input fastq file")
+  the_parser.add_argument('--input', action="store", nargs='+', help="input fastq files")
   the_parser.add_argument('--output', action="store", type=str, help="output, clipped fasta file")
   the_parser.add_argument('--adapter_to_clip', action="store", type=str, help="adapter sequence to clip")
   the_parser.add_argument('--min', action="store", type=int, help="minimal size of clipped sequence to keep")
@@ -48,10 +48,10 @@ class Clip:
   def clip_with_N (self):
     '''clips adapter sequences from inputfile. 
     Reads containing N are retained.'''
+    global id
     iterator = 0
-    id = 0
     F = open (self.inputfile, "r")
-    O = open (self.outputfile, "w")
+    O = open (self.outputfile, "a")
     for line in F:
       iterator += 1
       if iterator % 4 == 2:
@@ -64,10 +64,10 @@ class Clip:
   def clip_without_N (self):
     '''clips adapter sequences from inputfile. 
     Reads containing N are rejected.'''
+    global id
     iterator = 0
-    id = 0
     F = open (self.inputfile, "r")
-    O = open (self.outputfile, "w")
+    O = open (self.outputfile, "a")
     for line in F:
       iterator += 1
       if iterator % 4 == 2:
@@ -88,4 +88,6 @@ def __main__ (inputfile, outputfile, adapter, minsize, maxsize, Nmode):
 
 if __name__ == "__main__" :
   args = Parser()
-  __main__(args.input, args.output, args.adapter_to_clip, args.min, args.max, args.Nmode)
+  id = 0
+  for inputfile in args.input:
+    __main__(inputfile, args.output, args.adapter_to_clip, args.min, args.max, args.Nmode)
