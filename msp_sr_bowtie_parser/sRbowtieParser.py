@@ -6,6 +6,10 @@
 import sys, argparse
 from smRtools import *
 
+def masterListGenerator(data_source):
+  for filePath, FileExt, FileLabel in data_source:
+    yield HandleSmRNAwindows (filePath, FileExt, IndexSource, genomeRefFormat)
+
 def Parser():
   the_parser = argparse.ArgumentParser()
   the_parser.add_argument('--IndexSource', action="store", type=str, help="Path to the index source")
@@ -24,23 +28,30 @@ IndexSource = args.IndexSource
 genomeRefFormat = args.ExtractDirective
 Output = args.output
 Polarity = args.polarity
-MasterListOfGenomes = []
+header = ["gene"]
+
 
 FileLabelList=[label for label in args.alignmentLabel]
+header.extend(FileLabelList)
 assert (len(FileLabelList)==len(set(FileLabelList))),"You have supplied a non-unique label. Please make sure that your input files have unique names"
 
-for filePath, FileExt, FileLabel in zip (args.alignmentSource, args.alignmentFormat, args.alignmentLabel)):
-  MasterListOfGenomes.append(HandleSmRNAwindows (filePath, FileExt, IndexSource, genomeRefFormat))
-  header.append(FileLabel)
+data_source=zip (args.alignmentSource, args.alignmentFormat, args.alignmentLabel)
+master_generator=masterListGenerator(data_source)
 
-header = ["gene"]
+for i,window in enumerate(master_generator):
+  window=window
+  if i==0:
+    gene_count_dict={gene:[str(item.readcount(polarity=Polarity))] for gene,item in window.instanceDict.items()}
+  else:
+    [gene_count_dict[gene].append(str(item.readcount(polarity=Polarity))) for gene,item in window.instanceDict.items()]
+
+
 F = open (args.output, "w")
 # print >>F, args
 print >> F, "\t".join(header)
-for item in sorted (MasterListOfGenomes[1].instanceDict.keys() ):
+
+for item in sorted(gene_count_dict.keys()):
   line=[item]
-  for window in MasterListOfGenomes:
-    count = str (window.instanceDict[item].readcount(polarity=Polarity))
-    line.append(count)
+  line.extend(gene_count_dict[item])
   print >> F,  "\t".join(line )
 F.close()
