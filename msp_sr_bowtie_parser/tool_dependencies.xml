@@ -9,4 +9,7 @@
     <package name="pysam" version="0.7.7">
       <repository changeset_revision="fba4ff153522" name="package_pysam_0_7_7" owner="iuc" prior_installation_required="False" toolshed="http://lbcd41.snv.jussieu.fr/toolshed"/>
     </package>
+    <package name="numpy" version="1.9">
+        <repository name="package_numpy_1_9" owner="iuc" prior_installation_required="True"/>
+    </package>
 </tool_dependency>

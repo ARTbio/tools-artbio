@@ -30,6 +30,9 @@
                 <action type="shell_command">export PATH=$PATH &amp;&amp; R CMD BATCH $INSTALL_DIR/runme.R </action>
             </actions>
         </install>
+    <package name="numpy" version="1.9">
+        <repository name="package_numpy_1_9" owner="iuc" prior_installation_required="True"/>
+    </package>
         <readme>Installs some basic bioc packages for the lattice wrapper for managing lattice panels
         It's clunky but this is the most convenient way iuc could get anything installed into the package_r3
         Note we use cran at fred hutch since no fastest mirror thingy

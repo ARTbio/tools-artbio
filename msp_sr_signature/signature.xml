@@ -6,6 +6,7 @@
         	<requirement type="package" version="0.7.7">pysam</requirement>
         	<requirement type="package" version="2.14">biocbasics</requirement>
         	<requirement type="package" version="3.0.3">R</requirement>
+                <requirement type="package" version="1.9">numpy</requirement>
 	</requirements>
 	<command interpreter="python">
            signature.py
