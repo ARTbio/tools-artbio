@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # python parser module for pre-mir and mature miRNAs, guided by mirbase.org GFF3
 # version 0.0.9 (1-6-2014)
 # Usage MirParser.py  <1:index source> <2:extraction directive> <3:output pre-mir> <4: output mature miRs> <5:mirbase GFF3>

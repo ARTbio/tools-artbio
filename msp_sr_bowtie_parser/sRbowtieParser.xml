@@ -5,6 +5,7 @@
         <requirement type="package" version="0.1.18">samtools</requirement>
         <requirement type="package" version="0.7.7">pysam</requirement>
         <requirement type="package" version="1.9">numpy</requirement>
+        <requirement type="package" version="0.14">scipy</requirement>
  </requirements>
   <parallelism method="basic"></parallelism>
 <command interpreter="python">
