@@ -1,13 +1,15 @@
 <tool id="signature" name="Small RNA Signatures" version="2.0.1">
-	<description></description>
-	<requirements>
-        	<requirement type="package" version="0.12.7">bowtie</requirement>
-        	<requirement type="package" version="0.1.18">samtools</requirement>
-        	<requirement type="package" version="0.7.7">pysam</requirement>
-        	<requirement type="package" version="2.14">biocbasics</requirement>
-        	<requirement type="package" version="3.0.3">R</requirement>
-	</requirements>
-	<command interpreter="python">
+    <description />
+    <requirements>
+        <requirement type="package" version="0.12.7">bowtie</requirement>
+        <requirement type="package" version="0.1.18">samtools</requirement>
+        <requirement type="package" version="0.7.7">pysam</requirement>
+        <requirement type="package" version="2.14">biocbasics</requirement>
+        <requirement type="package" version="3.0.3">R</requirement>
+        <requirement type="package" version="1.9">numpy</requirement>
+        <requirement type="package" version="0.14">scipy</requirement>
+    </requirements>
+    <command interpreter="python">
            signature.py
            --input $refGenomeSource.input
            --inputFormat $refGenomeSource.input.ext
@@ -28,37 +30,67 @@
 	  --graph $graph_type 
           --rcode $sigplotter
        </command>
+    <inputs>
+        <conditional name="refGenomeSource">
+            <param help="Built-ins were indexed using default options" label="Will you select a reference genome from your history or use a built-in index?" name="genomeSource" type="select">
+                <option value="indexed">Use a built-in index</option>
+                <option value="history">Use one from the history</option>
+            </param>
+            <when value="indexed">
+                <param format="tabular,sam,bam" label="Compute signature from this bowtie standard output" name="input" type="data">
+                    <validator message="database not set for this bowtie output. Select the database(=genome used for matching) manually, or select a reference fasta from your history." metadata_column="0" metadata_name="dbkey" table_name="bowtie_indexes" type="dataset_metadata_in_data_table" />
+                </param>
+            </when>
+            <when value="history">
+                <param format="fasta" label="Select the fasta reference" name="ownFile" type="data" />
+                <param format="tabular,sam,bam" label="Compute signature from this bowtie standard output" name="input" type="data" />
+            </when>
+        </conditional>
+        <param help="'23' = 23 nucleotides" label="Min size of query small RNAs" name="minquery" size="3" type="integer" value="23" />
+        <param help="'29' = 29 nucleotides" label="Max size of query small RNAs" name="maxquery" size="3" type="integer" value="29" />
+        <param help="'23' = 23 nucleotides" label="Min size of target small RNAs" name="mintarget" size="3" type="integer" value="23" />
+        <param help="'29' = 29 nucleotides" label="Max size of target small RNAs" name="maxtarget" size="3" type="integer" value="29" />
+        <param help="'1' = 1 nucleotide overlap" label="Minimal relative overlap analyzed" name="minscope" size="3" type="integer" value="1" />
+        <param help="'1' = 1 nucleotide overlap" label="Maximal relative overlap analyzed" name="maxscope" size="3" type="integer" value="26" />
+        <param help="Signature can be computed globally or by item present in the alignment file" label="Graph type" name="graph_type" type="select">
+            <option selected="True" value="global">Global</option>
+            <option value="lattice">Lattice</option>
+        </param>
+    </inputs>
+    <outputs>
+        <data format="tabular" label="signature data frame" name="output" />
+        <data format="pdf" label="Overlap probabilities" name="output2" />
+    </outputs>
+    <tests>
+        <test>
+            <param name="genomeSource" value="history" />
+            <param ftype="fasta" name="ownFile" value="ensembl.fa" />
+            <param ftype="bam" name="input" value="sr_bowtie.bam" />
+            <param name="minquery" value="23" />
+            <param name="maxquery" value="29" />
+            <param name="mintarget" value="23" />
+            <param name="maxtarget" value="29" />
+            <param name="minscope" value="5" />
+            <param name="maxscope" value="15" />
+            <param name="graph_type" value="global" />
+            <output file="signature.tab" ftype="tabular" name="output" />
+            <output file="signature.pdf" ftype="pdf" name="output2" />
+        </test>
+    </tests>
+    <help>
 
-	<inputs>
-          <conditional name="refGenomeSource">
-             <param name="genomeSource" type="select" label="Will you select a reference genome from your history or use a built-in index?" help="Built-ins were indexed using default options">
-               <option value="indexed">Use a built-in index</option>
-               <option value="history">Use one from the history</option>
-             </param>
-	     <when value="indexed">
-  	        <param name="input" type="data" format="tabular,sam,bam" label="Compute signature from this bowtie standard output">
-		  <validator type="dataset_metadata_in_data_table" table_name="bowtie_indexes" metadata_name="dbkey" metadata_column="0" message="database not set for this bowtie output. Select the database(=genome used for matching) manually, or select a reference fasta from your history."/>
-	        </param>
-	     </when>
-             <when value="history">
-                <param name="ownFile" type="data" format="fasta"  label="Select the fasta reference" />
-  	        <param name="input" type="data" format="tabular,sam,bam" label="Compute signature from this bowtie standard output"/>
-             </when>
-          </conditional>  <!-- refGenomeSource -->
-		<param name="minquery" type="integer" size="3" value="23" label="Min size of query small RNAs" help="'23' = 23 nucleotides"/>
-		<param name="maxquery" type="integer" size="3" value="29" label="Max size of query small RNAs" help="'29' = 29 nucleotides"/>
-                <param name="mintarget" type="integer" size="3" value="23" label="Min size of target small RNAs" help="'23' = 23 nucleotides"/>
-                <param name="maxtarget" type="integer" size="3" value="29" label="Max size of target small RNAs" help="'29' = 29 nucleotides"/>
-                <param name="minscope" type="integer" size="3" value="1" label="Minimal relative overlap analyzed" help="'1' = 1 nucleotide overlap"/>
-                <param name="maxscope" type="integer" size="3" value="26" label="Maximal relative overlap analyzed" help="'1' = 1 nucleotide overlap"/>
-		<param name="graph_type" type="select" label="Graph type" help="Signature can be computed globally or by item present in the alignment file">
-		  <option value="global" selected="True">Global</option>
-                  <option value="lattice">Lattice</option>
-		</param>
-	</inputs>
+**What it does**
 
-  <configfiles>
-    <configfile name="sigplotter">
+This tool computes the number of pairs by overlap classes (in nt) from a bowtie output file, the z-score calculated from these numbers of pairs, and the ping-pong signal as described in Brennecke et al (2009) Science.   
+The numerical options set the min and max size of both the query small rna class and the target small rna class.   
+Three type of signals are plotted in separate pdf files, the number of pairs founds, the z-score calculated from these numbers of pairs, and the ping-pong signal as described in Brennecke et al (2009) Science.   
+
+        </help>
+    <citations>
+            <citation type="doi">10.1007/978-1-4939-0931-5_12</citation>
+    </citations>
+    <configfiles>
+        <configfile name="sigplotter">
       graph_type = "${graph_type}"
 
       globalgraph = function () {
@@ -112,40 +144,5 @@
         treillisgraph()
       }
     </configfile>
-  </configfiles>
-
-        <outputs>
-                <data name="output" format="tabular" label = "signature data frame"/>
-                <data name="output2" format="pdf" label="Overlap probabilities"/>
-        </outputs>
-
-        <help>
-
-**What it does**
-
-This tool computes the number of pairs by overlap classes (in nt) from a bowtie output file, the z-score calculated from these numbers of pairs, and the ping-pong signal as described in Brennecke et al (2009) Science.
-The numerical options set the min and max size of both the query small rna class and the target small rna class
-Three type of signals are plotted in separate pdf files, the number of pairs founds, the z-score calculated from these numbers of pairs, and the ping-pong signal as described in Brennecke et al (2009) Science.
-
-        </help>
-
-<tests>
-  <test>
-      <param name="genomeSource" value="history" />
-      <param name="ownFile" value ="ensembl.fa" ftype="fasta" />
-      <param name="input" value="sr_bowtie.bam" ftype="bam" />
-      <param name="minquery" value="23" />
-      <param name="maxquery" value="29" />
-      <param name="mintarget" value="23" />
-      <param name="maxtarget" value="29" />
-      <param name="minscope" value="5" />
-      <param name="maxscope" value="15" />
-      <param name="graph_type" value="global" />
-      <output name="output" ftype="tabular" file="signature.tab"/>
-      <output name="output2" ftype="pdf" file="signature.pdf"/>
-  </test>
-</tests>
-
-
+    </configfiles>
 </tool>
-

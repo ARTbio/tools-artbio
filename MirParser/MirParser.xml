@@ -1,11 +1,12 @@
 <tool id="MirParser" name="Parse miRNAs" version="0.9.1">
-  <description>from sRbowtie aligment</description>
-  <requirements>
-	<requirement type='package'>bowtie-inspect</requirement>
-	<requirement type='package'>numpy</requirement>
-</requirements>
-  <parallelism method="basic"></parallelism>
-<command interpreter="python">
+    <description>from sRbowtie aligment</description>
+    <requirements>
+        <requirement type="package">bowtie-inspect</requirement>
+        <requirement type="package" version="1.9">numpy</requirement>
+        <requirement type="package" version="0.14">scipy</requirement>
+    </requirements>
+    <parallelism method="basic" />
+    <command interpreter="python">
         MirParser.py 
 	          #if $refGenomeSource.genomeSource == "history":
                     $refGenomeSource.ownFile ## index source sys.arg[1]
@@ -32,38 +33,38 @@
 		  #end for
                   #silent plottingoption = $plotting.plottingOption
 </command>
-  <inputs>
-       <conditional name="refGenomeSource">
-           <param name="genomeSource" type="select" label="Will you select a reference genome from your history or use a built-in index?" help="Built-ins were indexed using default options">
-               <option value="indexed">Use a built-in index</option>
-               <option value="history">Use one from the history</option>
-           </param>
-           <when value="indexed">
-	       <param name="input_list" type="data" label="Select multiple alignments to parse" multiple="true">
-                  <validator type="dataset_metadata_in_data_table" table_name="bowtie_indexes" metadata_name="dbkey" metadata_column="0" message="database not set for this bowtie output. Select the database(=genome used for matching) manually, or select a reference fasta from your history."/>
-               </param>
-           </when>
-           <when value="history">
-	       <param name="input_list" type="data" label="Select multiple alignments to parse" multiple="true"/>
-               <param name="ownFile" type="data" format="fasta"  label="Select the fasta reference" />
-           </when>
-       </conditional>  <!-- refGenomeSource -->
-       <param name="GFF3" type="data" label="miRbase GFF3 guide" />
-       <conditional name="plotting">
-           <param name="plottingOption" type="select" label="Additional mir coverage graphs">
-               <option value="no" selected="True">No</option>
-               <option value="yes">YES</option>
-           </param>
-           <when value="yes">
-               <param name="display" type="select" label="Display Coverage with absolute number of reads or relatively to the total number of read matching the gene or mir">
-                 <option value="relative" selected="True">Relative Coverage</option>
-                 <option value="absolute">Absolute Coverage</option>
-               </param>
-           </when>
-       </conditional>
-   </inputs>
-   <configfiles>
-     <configfile name="plotCode">
+    <inputs>
+        <conditional name="refGenomeSource">
+            <param help="Built-ins were indexed using default options" label="Will you select a reference genome from your history or use a built-in index?" name="genomeSource" type="select">
+                <option value="indexed">Use a built-in index</option>
+                <option value="history">Use one from the history</option>
+            </param>
+            <when value="indexed">
+                <param label="Select multiple alignments to parse" multiple="true" name="input_list" type="data">
+                    <validator message="database not set for this bowtie output. Select the database(=genome used for matching) manually, or select a reference fasta from your history." metadata_column="0" metadata_name="dbkey" table_name="bowtie_indexes" type="dataset_metadata_in_data_table" />
+                </param>
+            </when>
+            <when value="history">
+                <param label="Select multiple alignments to parse" multiple="true" name="input_list" type="data" />
+                <param format="fasta" label="Select the fasta reference" name="ownFile" type="data" />
+            </when>
+        </conditional>
+        <param label="miRbase GFF3 guide" name="GFF3" type="data" />
+        <conditional name="plotting">
+            <param label="Additional mir coverage graphs" name="plottingOption" type="select">
+                <option selected="True" value="no">No</option>
+                <option value="yes">YES</option>
+            </param>
+            <when value="yes">
+                <param label="Display Coverage with absolute number of reads or relatively to the total number of read matching the gene or mir" name="display" type="select">
+                    <option selected="True" value="relative">Relative Coverage</option>
+                    <option value="absolute">Absolute Coverage</option>
+                </param>
+            </when>
+        </conditional>
+    </inputs>
+    <configfiles>
+        <configfile name="plotCode">
 	#if  $plotting.plottingOption == "yes":
           graph_type = "${plotting.display}" ## "relative" or "absolute"
           ## Setup R error handling to go to stderr
@@ -85,19 +86,18 @@
           dev.off()
         #end if
      </configfile>
-   </configfiles>
-
-   <outputs>
-   <data format="tabular" name="output1" label="Premirs Count  Lists"/>
-   <data format="tabular" name="output2" label="Mature Mirs Count  Lists"/>
-   <data format="tabular" name="lattice_dataframe" label="Lattice Dataframe">
-        <filter>plotting['plottingOption'] == "yes"</filter>
-   </data>
-   <data format="pdf" name="latticePDF" label="Mir coverage">
-        <filter>plotting['plottingOption'] == "yes"</filter>
-   </data>
-   </outputs>
-  <help>
+    </configfiles>
+    <outputs>
+        <data format="tabular" label="Premirs Count  Lists" name="output1" />
+        <data format="tabular" label="Mature Mirs Count  Lists" name="output2" />
+        <data format="tabular" label="Lattice Dataframe" name="lattice_dataframe">
+            <filter>plotting['plottingOption'] == "yes"</filter>
+        </data>
+        <data format="pdf" label="Mir coverage" name="latticePDF">
+            <filter>plotting['plottingOption'] == "yes"</filter>
+        </data>
+    </outputs>
+    <help>
 
 **What it does**
 

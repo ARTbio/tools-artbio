@@ -1,6 +1,10 @@
 <tool id="FeaturesParser" name="Parse GFF3 features" version="0.9.1">
   <description>in sRbowtie alignment</description>
-  <requirements><requirement type='package'>bowtie-inspect</requirement></requirements>
+  <requirements>
+      <requirement type='package'>bowtie-inspect</requirement>
+      <requirement type="package" version="1.9">numpy</requirement>
+      <requirement type="package" version="0.14">scipy</requirement>
+  </requirements>
   <parallelism method="basic"></parallelism>
 <command interpreter="python">
         FeaturesParser.py 

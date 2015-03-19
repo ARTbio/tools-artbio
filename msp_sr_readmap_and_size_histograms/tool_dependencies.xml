@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <tool_dependency>
-  <package name="bowtie" version="0.12.7">
+    <package name="bowtie" version="0.12.7">
       <repository changeset_revision="4b4e89ded468" name="package_bowtie_0_12_7" owner="devteam" toolshed="http://lbcd41.snv.jussieu.fr:9009" />
     </package>
     <package name="samtools" version="0.1.18">
@@ -31,6 +31,12 @@
                 <action type="shell_command">export PATH=$PATH &amp;&amp; R CMD BATCH $INSTALL_DIR/runme.R </action>
             </actions>
         </install>
+    <package name="numpy" version="1.9">
+        <repository name="package_numpy_1_9" owner="iuc" prior_installation_required="True"/>
+    </package>
+    <package name="scipy" version="0.14">
+        <repository name="package_scipy_0_14" owner="iuc" prior_installation_required="True"/>
+    </package>
         <readme>Installs some basic bioc packages for the lattice wrapper and grid + gridExtra for managing lattice panels
         It's clunky but this is the most convenient way iuc could get anything installed into the package_r3
         Note we use cran at fred hutch since no fastest mirror thingy

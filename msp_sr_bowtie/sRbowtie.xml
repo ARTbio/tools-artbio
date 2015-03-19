@@ -1,11 +1,11 @@
 <tool id="bowtieForSmallRNA" name="sRbowtie" version="1.1.0">
-  <description>for FASTA small reads</description>
-  <requirements>
-	<requirement type="package" version="0.12.7">bowtie</requirement>
+    <description>for FASTA small reads</description>
+    <requirements>
+        <requirement type="package" version="0.12.7">bowtie</requirement>
         <requirement type="package" version="0.1.18">samtools</requirement>
-  </requirements>
-  <parallelism method="basic"></parallelism>
-  <command interpreter="python"> sRbowtie.py --input $input
+    </requirements>
+    <command interpreter="python"> sRbowtie.py --input $input
+                                             --input-format $input.extension
                                              --method $method
                                              --v-mismatches $v_mismatches
                                              --output-format $output_format
@@ -22,101 +22,102 @@
                                              --unaligned $unaligned
                                              --num-threads \${GALAXY_SLOTS:-4} ## number of processors to be handled by bowtie
   </command>
-  <inputs>
-      <param name="input" type="data" format="fasta" label="Input fasta file: reads clipped from their adapter" help="Only with clipped, raw fasta files"/>
-<!-- which method will be used --> 
-      <param name="method" type="select" label="What kind of matching do you want to do?" help="bowtie parameters adjusted to the type of matching. RNA option match to only one strand">
-        <option value="RNA">Match on sense strand RNA reference index, multiple mappers randomly matched at a single position</option>
-        <option value="unique">Match unique mappers on DNA reference index</option>
-        <option value="multiple" selected="true">Match on DNA, multiple mappers randomly matched at a single position</option>
-        <option value="k_option">Match on DNA as fast as possible, without taking care of mapping issues (for raw annotation of reads)</option>
-        <option value="n_option">Match on DNA - RNAseq mode (-n bowtie option)</option>
-        <option value="a_option">Match and report all valid alignments</option>
-      </param>
-<!-- END of which method will be used -->
-    <param name="v_mismatches" type="select" label="Number of mismatches allowed" help="specify the -v bowtie option">
-        <option value="0">0</option>
-        <option value="1" selected="true">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-    </param>
-<!-- bowtie index selection -->
-    <conditional name="refGenomeSource">
-      <param name="genomeSource" type="select" label="Will you select a reference genome from your history or use a built-in index?" help="Built-ins were indexed using default options">
-        <option value="indexed">Use a built-in index</option>
-        <option value="history">Use one from the history</option>
-      </param>
-      <when value="indexed">
-        <param name="index" type="select" label="Select a DNA reference index" help="if your genome of interest is not listed - contact GED team">
-          <options from_data_table="bowtie_indexes">
-      <!--      <filter type="sort_by" column="2" />
-            <validator type="no_options" message="No indexes are available" /> -->
-          </options>
+    <inputs>
+        <param format="fasta, fastq" help="Only with clipped, raw fasta files" label="Input fasta file: reads clipped from their adapter" name="input" type="data" />
+        <param help="bowtie parameters adjusted to the type of matching. RNA option match to only one strand" label="What kind of matching do you want to do?" name="method" type="select">
+            <option value="RNA">Match on sense strand RNA reference index, multiple mappers randomly matched at a single position</option>
+            <option value="unique">Match unique mappers on DNA reference index</option>
+            <option selected="true" value="multiple">Match on DNA, multiple mappers randomly matched at a single position</option>
+            <option value="k_option">Match on DNA as fast as possible, without taking care of mapping issues (for raw annotation of reads)</option>
+            <option value="n_option">Match on DNA - RNAseq mode (-n bowtie option)</option>
+            <option value="a_option">Match and report all valid alignments</option>
         </param>
-      </when>
-      <when value="history">
-        <param name="ownFile" type="data" format="fasta" label="Select a fasta file, to serve as index reference" />
-      </when>
-    </conditional>
-<!-- END bowtie index selection -->
-       <param name="output_format" type="select" label="Select output format" help="Note that the BAM will be viewable in trackster only if you choose a full genome referenced for Trackster usage. see the doc below">
-          <option value="tabular" select="true">tabular</option>
-          <option value="sam">sam</option>
-          <option value="bam">bam</option>
-       </param>
-       <param name="additional_fasta" type="select" label="additional fasta output" help="to get aligned and unaligned reads in fasta format">
-          <option value="No" select="true">No</option>
-          <option value="al">aligned</option>
-          <option value="unal">unaligned</option>
-          <option value="al_and_unal">both aligned and unaligned</option>
-       </param>
-   </inputs>
-   <outputs>
-   <data format="tabular" name="output" label="Bowtie Output">
-        <change_format>
-            <when input="output_format" value="sam" format="sam" />
-            <when input="output_format" value="bam" format="bam" />
-        </change_format>
-<!-- Set metadata based on reference genome -->
-      <actions>
-        <conditional name="refGenomeSource.genomeSource">
-          <when value="indexed">
-            <action type="metadata" name="dbkey">
-              <option type="from_data_table" name="bowtie_indexes" column="1" offset="0">
-                <filter type="param_value" column="0" value="#" compare="startswith" keep="False"/>
-                <filter type="param_value" ref="refGenomeSource.index" column="0"/>
-              </option>
-            </action>
-          </when>
-          <when value="history">
-            <action type="metadata" name="dbkey">
-              <option type="from_param" name="refGenomeSource.ownFile" param_attribute="dbkey" />
-            </action>
-          </when>
+        <param help="specify the -v bowtie option" label="Number of mismatches allowed" name="v_mismatches" type="select">
+            <option value="0">0</option>
+            <option selected="true" value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </param>
+        <conditional name="refGenomeSource">
+            <param help="Built-ins were indexed using default options" label="Will you select a reference genome from your history or use a built-in index?" name="genomeSource" type="select">
+                <option value="indexed">Use a built-in index</option>
+                <option value="history">Use one from the history</option>
+            </param>
+            <when value="indexed">
+                <param help="if your genome of interest is not listed - contact GED team" label="Select a DNA reference index" name="index" type="select">
+                    <options from_data_table="bowtie_indexes">
+      
+          </options>
+                </param>
+            </when>
+            <when value="history">
+                <param format="fasta" label="Select a fasta file, to serve as index reference" name="ownFile" type="data" />
+            </when>
         </conditional>
-      </actions>
-   </data>
-   <data format="fasta" name="aligned" label="Matched reads">
-	<filter>additional_fasta == "al" or additional_fasta == "al_and_unal"</filter>
-   </data>
-   <data format="fasta" name="unaligned" label ="Unmatched reads">
-        <filter>additional_fasta == "unal" or additional_fasta == "al_and_unal"</filter>
-   </data>
-   </outputs>
-
-    <test>
-      <param name="genomeSource" value="indexed" />
-      <param name="index" value="/home/galaxy/galaxy-dist/bowtie/Dmel/dmel-all-chromosome-r5.49" />
-      <param name="method" value="multiple" />
-      <param name="input" ftype="fasta" value="sRbowtie.fa" />
-      <param name="v_mismatches" value="1" />
-      <param name="output_format" value="tabular" />
-      <output name="output" ftype="tabular" value="sRbowtie.out" />
-      <output name="aligned" value="None" />
-      <output name="unaligned" value="None" />
-    </test>
-
-  <help>
+        <param help="Note that the BAM will be viewable in trackster only if you choose a full genome referenced for Trackster usage. see the doc below" label="Select output format" name="output_format" type="select">
+            <option select="true" value="tabular">tabular</option>
+            <option value="sam">sam</option>
+            <option value="bam">bam</option>
+        </param>
+        <param help="to get aligned and unaligned reads in fasta format" label="additional fasta output" name="additional_fasta" type="select">
+            <option select="true" value="No">No</option>
+            <option value="al">aligned</option>
+            <option value="unal">unaligned</option>
+            <option value="al_and_unal">both aligned and unaligned</option>
+        </param>
+    </inputs>
+    <outputs>
+        <data format="tabular" label="Bowtie Output" name="output">
+            <change_format>
+                <when format="sam" input="output_format" value="sam" />
+                <when format="bam" input="output_format" value="bam" />
+            </change_format>
+            <actions>
+                <conditional name="refGenomeSource.genomeSource">
+                    <when value="indexed">
+                        <action name="dbkey" type="metadata">
+                            <option column="1" name="bowtie_indexes" offset="0" type="from_data_table">
+                                <filter column="0" compare="startswith" keep="False" type="param_value" value="#" />
+                                <filter column="0" ref="refGenomeSource.index" type="param_value" />
+                            </option>
+                        </action>
+                    </when>
+                    <when value="history">
+                        <action name="dbkey" type="metadata">
+                            <option name="refGenomeSource.ownFile" param_attribute="dbkey" type="from_param" />
+                        </action>
+                    </when>
+                </conditional>
+            </actions>
+        </data>
+        <data format="fasta" label="Matched reads" name="aligned">
+            <filter>additional_fasta == "al" or additional_fasta == "al_and_unal"</filter>
+        </data>
+        <data format="fasta" label="Unmatched reads" name="unaligned">
+            <filter>additional_fasta == "unal" or additional_fasta == "al_and_unal"</filter>
+        </data>
+    </outputs>
+    <tests>
+        <test>
+            <param name="genomeSource" value="history" />
+            <param ftype="fasta" name="ownFile" value="297_reference.fa" />
+            <param name="method" value="unique" />
+            <param ftype="fasta" name="input" value="input.fa" />
+            <param name="v_mismatches" value="1" />
+            <param name="output_format" value="bam" />
+            <output file="output.bam" ftype="bam" lines_diff="4" name="output" />
+        </test>
+        <test>
+            <param name="genomeSource" value="history" />
+            <param ftype="fasta" name="ownFile" value="297_reference.fa" />
+            <param name="method" value="unique" />
+            <param ftype="fastq" name="input" value="input.fastq" />
+            <param name="v_mismatches" value="1" />
+            <param name="output_format" value="bam" />
+            <output file="output2.bam" ftype="bam" lines_diff="4" name="output" />
+        </test>
+    </tests>
+    <help>
 
 **What it does**
 
@@ -209,4 +210,7 @@ Please contact the Galaxy instance administrator if your genome is not reference
 **Matched and unmatched fasta reads can be retrieved, for further analyses**
 
   </help>
+    <citations>
+        <citation type="doi">10.1186/gb-2009-10-3-r25</citation>
+    </citations>
 </tool>

@@ -10,16 +10,16 @@
         $title
     </command>
     <inputs>
-       <param name="title" type="text" label="Annotation Title"/>
-       <param name="input1" type="data" label="fasta file to annotate"/>
-       <param name="label1" type="text" label="category label"/>
+        <param label="Annotation Title" name="title" type="text" />
+        <param label="fasta file to annotate" name="input1" type="data" />
+        <param label="category label" name="label1" type="text" />
         <repeat name="queries" title="Additional fasta file and label">
-            <param name="input2" type="data" label="Select" />
-            <param name="label2" type="text" label="Label" />
+            <param label="Select" name="input2" type="data" />
+            <param label="Label" name="label2" type="text" />
         </repeat>
     </inputs>
     <outputs>
-        <data name="out_file" format="tabular" metadata_source="input1" label="Annotations"/>
+        <data format="tabular" label="Annotations" metadata_source="input1" name="out_file" />
     </outputs>
     <help>
 
@@ -35,4 +35,3 @@ Generates Annotation Table from fasta files
 
    </help>
 </tool>
-
