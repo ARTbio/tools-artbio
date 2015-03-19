@@ -17,7 +17,9 @@ def Parser():
     the_parser = argparse.ArgumentParser(
         description="bowtie wrapper for small fasta reads")
     the_parser.add_argument(
-        '--input', action="store", type=str, help="input fasta file")
+        '--input', action="store", type=str, help="input file")
+    the_parser.add_argument(
+        '--input-format', dest="input_format", action="store", type=str, help="fasta or fastq")
     the_parser.add_argument('--method', action="store", type=str,
                             help="RNA, unique, multiple, k_option, n_option, a_option")
     the_parser.add_argument('--v-mismatches', dest="v_mismatches", action="store",
@@ -46,7 +48,14 @@ def stop_err(msg):
 
 
 def bowtieCommandLiner(alignment_method="RNA", v_mis="1", out_type="tabular",
-                       aligned="None", unaligned="None", input="path", index="path", output="path", pslots="4"):
+                       aligned="None", unaligned="None", input_format="fasta", input="path",
+                       index="path", output="path", pslots="4"):
+    if input_format == "fasta":
+        input_format = "-f"
+    elif input_format == "fastq":
+        input_format = "-q"
+    else:
+        raise Exception('input format must be one of fasta or fastq')
     if alignment_method == "RNA":
         x = "-v %s -M 1 --best --strata -p %s --norc --suppress 6,7,8" % (
             v_mis, pslots)
@@ -71,12 +80,12 @@ def bowtieCommandLiner(alignment_method="RNA", v_mis="1", out_type="tabular",
         fasta_command = " --al %s --un %s" % (aligned, unaligned)
     x = x + fasta_command
     if out_type == "tabular":
-        return "bowtie %s %s -f %s > %s" % (x, index, input, output)
+        return "bowtie %s %s %s %s > %s" % (x, index, input_format, input, output)
     elif out_type == "sam":
-        return "bowtie %s -S %s -f %s > %s" % (x, index, input, output)
+        return "bowtie %s -S %s %s %s > %s" % (x, index, input_format, input, output)
     elif out_type == "bam":
-        return "bowtie %s -S %s -f %s |samtools view -bS - > %s" % (
-            x, index, input, output)
+        return "bowtie %s -S %s %s %s |samtools view -bS - > %s" % (
+            x, index, input_format, input, output)
 
 
 def bowtie_squash(fasta):
@@ -172,7 +181,8 @@ def __main__():
     else:
         tmp_dir, index_path = "dummy/dymmy", args.index_source
     command_line = bowtieCommandLiner(args.method, args.v_mismatches, args.output_format,
-                                      args.aligned, args.unaligned, args.input, index_path, args.output, args.num_threads)
+                                      args.aligned, args.unaligned, args.input_format, args.input, 
+                                      index_path, args.output, args.num_threads)
     bowtie_alignment(command_line, flyPreIndexed=tmp_dir)
     F.close()
 if __name__ == "__main__":

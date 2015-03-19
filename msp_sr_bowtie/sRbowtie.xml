@@ -5,6 +5,7 @@
         <requirement type="package" version="0.1.18">samtools</requirement>
     </requirements>
     <command interpreter="python"> sRbowtie.py --input $input
+                                             --input-format $input.extension
                                              --method $method
                                              --v-mismatches $v_mismatches
                                              --output-format $output_format
@@ -22,7 +23,7 @@
                                              --num-threads \${GALAXY_SLOTS:-4} ## number of processors to be handled by bowtie
   </command>
     <inputs>
-        <param format="fasta" help="Only with clipped, raw fasta files" label="Input fasta file: reads clipped from their adapter" name="input" type="data" />
+        <param format="fasta, fastq" help="Only with clipped, raw fasta files" label="Input fasta file: reads clipped from their adapter" name="input" type="data" />
         <param help="bowtie parameters adjusted to the type of matching. RNA option match to only one strand" label="What kind of matching do you want to do?" name="method" type="select">
             <option value="RNA">Match on sense strand RNA reference index, multiple mappers randomly matched at a single position</option>
             <option value="unique">Match unique mappers on DNA reference index</option>
@@ -105,6 +106,15 @@
             <param name="v_mismatches" value="1" />
             <param name="output_format" value="bam" />
             <output file="output.bam" ftype="bam" lines_diff="4" name="output" />
+        </test>
+        <test>
+            <param name="genomeSource" value="history" />
+            <param ftype="fasta" name="ownFile" value="297_reference.fa" />
+            <param name="method" value="unique" />
+            <param ftype="fastq" name="input" value="input.fastq" />
+            <param name="v_mismatches" value="1" />
+            <param name="output_format" value="bam" />
+            <output file="output2.bam" ftype="bam" lines_diff="4" name="output" />
         </test>
     </tests>
     <help>
