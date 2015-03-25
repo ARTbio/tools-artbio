@@ -1,15 +1,20 @@
 #!/usr/bin/python
 # yac = yet another clipper
+# v 1.2.1 - 23-08-2014 - Support FastQ output
 # v 1.1.0 - 23-08-2014 - argparse implementation
 # Usage yac.py  $input $output $adapter_to_clip $min $max $Nmode
 # Christophe Antoniewski <drosofff@gmail.com>
 
-import sys, string, argparse
+import sys
+import string
+import argparse
+from itertools import islice
 
 def Parser():
   the_parser = argparse.ArgumentParser()
   the_parser.add_argument('--input', action="store", nargs='+', help="input fastq files")
   the_parser.add_argument('--output', action="store", type=str, help="output, clipped fasta file")
+  the_parser.add_argument('--output_format', action="store", type=str, help="output format, fasta or fastq")
   the_parser.add_argument('--adapter_to_clip', action="store", type=str, help="adapter sequence to clip")
   the_parser.add_argument('--min', action="store", type=int, help="minimal size of clipped sequence to keep")
   the_parser.add_argument('--max', action="store", type=int, help="maximal size of clipped sequence to keep")
@@ -20,12 +25,14 @@ def Parser():
 
 
 class Clip:
-  def __init__(self, inputfile, outputfile, adapter, minsize, maxsize):
+  def __init__(self, inputfile, outputfile, output_format, adapter, minsize, maxsize, Nmode):
     self.inputfile = inputfile
     self.outputfile = outputfile
+    self.output_format = output_format
     self.adapter = adapter
     self.minsize = int(minsize)
     self.maxsize = int(maxsize)
+    self.Nmode = Nmode
     def motives (sequence):
       '''return a list of motives for perfect (6nt) or imperfect (7nt with one mismatch) search on import string module'''
       sequencevariants = [sequence[0:6]] # initializes the list with the 6mer perfect match
@@ -36,58 +43,51 @@ class Clip:
       return sequencevariants
     self.adaptmotifs= motives(self.adapter)
 
-  def scanadapt(self, adaptmotives=[], sequence=""):
+  def scanadapt(self, adaptmotives=[], sequence="", qscore=""):
     '''scans sequence for adapter motives'''
-    if sequence.rfind(adaptmotives[0]) != -1:
-      return sequence[:sequence.rfind(adaptmotives[0])]
+    match_position = sequence.rfind(adaptmotives[0])
+    if match_position != -1:
+      return sequence[:match_position], qscore[:match_position]
     for motif in adaptmotives[1:]:
-      if sequence.rfind(motif) != -1:
-        return sequence[:sequence.rfind(motif)]
-    return sequence
+      match_position = sequence.rfind(motif)
+      if match_position != -1:
+        return sequence[:match_position], qscore[:match_position]
+    return sequence, qscore
 
-  def clip_with_N (self):
-    '''clips adapter sequences from inputfile. 
-    Reads containing N are retained.'''
-    global id
-    iterator = 0
-    F = open (self.inputfile, "r")
-    O = open (self.outputfile, "a")
-    for line in F:
-      iterator += 1
-      if iterator % 4 == 2:
-        trim = self.scanadapt (self.adaptmotifs, line.rstrip() )
-        if self.minsize <= len(trim) <= self.maxsize:
-          id += 1
-          print >> O, ">%i\n%s" % (id, trim)
-    F.close()
-    O.close()
-  def clip_without_N (self):
-    '''clips adapter sequences from inputfile. 
-    Reads containing N are rejected.'''
-    global id
-    iterator = 0
-    F = open (self.inputfile, "r")
-    O = open (self.outputfile, "a")
-    for line in F:
-      iterator += 1
-      if iterator % 4 == 2:
-        trim = self.scanadapt (self.adaptmotifs, line.rstrip() )
-        if "N" in trim: continue
-        if self.minsize <= len(trim) <= self.maxsize:
-          id += 1
-          print >> O, ">%i\n%s" % (id, trim)
-    F.close()
-    O.close()
+  def write_output(self, id, read, qscore, output):
+    if self.output_format == "fasta":
+      block = ">{0}\n{1}\n".format (id, read)
+    else:
+      block = "@HWI-{0}\n{1}\n+\n{2}\n".format (id, read, qscore )
+    output.write(block)
 
-def __main__ (inputfile, outputfile, adapter, minsize, maxsize, Nmode):
-  instanceClip = Clip (inputfile, outputfile, adapter, minsize, maxsize)
-  if Nmode == "accept":
-    instanceClip.clip_with_N()
-  else:
-    instanceClip.clip_without_N()
+  def handle_io(self):
+    '''Open input file, pass read sequence and read qscore to clipping function.
+    Pass clipped read and qscore to output function.'''
+    id = 0
+    output = open (self.outputfile, "w")
+    with open (self.inputfile, "r") as input:
+       block_gen = islice(input, 1, None, 2)
+       for i, line in enumerate(block_gen):
+         if i % 2:
+           qscore = line.rstrip()
+         else:
+           read = line.rstrip()
+           continue
+         trimmed_read, trimmed_qscore = self.scanadapt (self.adaptmotifs, read, qscore )
+         if self.minsize <= len(trimmed_read) <= self.maxsize:
+           if (self.Nmode == "reject") and ("N" in trimmed_read): 
+               continue
+           id += 1
+           self.write_output(id, trimmed_read, trimmed_qscore, output)
+       output.close()
+
+def main (*argv):
+  instanceClip = Clip (*argv)
+  instanceClip.handle_io()
 
 if __name__ == "__main__" :
   args = Parser()
   id = 0
   for inputfile in args.input:
-    __main__(inputfile, args.output, args.adapter_to_clip, args.min, args.max, args.Nmode)
+    main(inputfile, args.output, args.output_format, args.adapter_to_clip, args.min, args.max, args.Nmode)

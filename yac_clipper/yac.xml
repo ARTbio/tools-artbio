@@ -1,10 +1,11 @@
- <tool id="yac" name="Clip adapter" version="1.2.0">
+ <tool id="yac" name="Clip adapter" version="1.2.1">
   <description></description>
   <command interpreter="python">yac.py --input
                                             #for $i in $input:
                                             $i
                                             #end for
                                        --output $output
+                                       --output_format "$out_format"
                                        --adapter_to_clip $clip_source.clip_sequence
                                        --min $min
                                        --max $max
@@ -14,6 +15,10 @@
     <param format="fastq" name="input" type="data" label="Source file" multiple="true" />
     <param name="min" type="integer" size="4" value="15" label="min size"/>
     <param name="max" type="integer" size="4" value="36" label="max size"/>
+    <param name="out_format" type="select" label="Select output format">
+        <option value="fasta" selected="true">Fasta format</option>
+        <option value="fastq">Fastq format</option>
+    </param>
     <param name="Nmode" type="select" label="Accept reads containing N?">
         <option value="accept" selected="True">accept</option>
         <option value="reject">reject</option>
@@ -38,6 +43,9 @@
   </inputs>
   <outputs>
     <data format="fasta" name="output"  metadata="input" />
+        <change_format>
+            <when input="out_format" value="fastq" format="fastq" />
+        </change_format>
   </outputs>
 
   <help>
@@ -61,6 +69,16 @@ Note that unclipped reads that satisfy the min and max size conditions are kept.
                         <param name="clip_sequence" value="ATCTCGTATGCCGTCTTCTGCTT" />
                         <param name="Nmode" value="accept" />
                         <output name="output" file="yac.out" />
+                </test>
+                <test>
+                        <param name="input" value="yac.fastq" ftype="fastqsanger"/>
+                        <param name="min" value="18" />
+                        <param name="max" value="29" />
+                        <param name="clip_source_list" value="prebuilt" />
+                        <param name="clip_sequence" value="ATCTCGTATGCCGTCTTCTGCTT" />
+                        <param name="Nmode" value="accept" />
+                        <param name="out_format" value="fastq" />
+                        <output name="output" file="yac_fastq.out" />
                 </test>
         </tests>
 
