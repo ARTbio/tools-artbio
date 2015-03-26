@@ -77,7 +77,7 @@ class Clip:
         '''Open input file, pass read sequence and read qscore to clipping function.
         Pass clipped read and qscore to output function.'''
         id = 0
-        output = open(self.outputfile, "w")
+        output = open(self.outputfile, "a")
         with open(self.inputfile, "r") as input:
             block_gen = islice(input, 1, None, 2)
             for i, line in enumerate(block_gen):
