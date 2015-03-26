@@ -1,9 +1,6 @@
  <tool id="yac" name="Clip adapter" version="1.2.1">
   <description></description>
-  <command interpreter="python">yac.py --input
-                                            #for $i in $input:
-                                            $i
-                                            #end for
+  <command interpreter="python">yac.py --input $input
                                        --output $output
                                        --output_format "$out_format"
                                        --adapter_to_clip $clip_source.clip_sequence
