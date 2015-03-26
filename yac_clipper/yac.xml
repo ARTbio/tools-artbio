@@ -12,7 +12,7 @@
                                        --Nmode $Nmode
   </command>
   <inputs>
-    <param format="fastq" name="input" type="data" label="Source file" multiple="true" />
+    <param format="fastq" name="input" type="data" label="Source file" />
     <param name="min" type="integer" size="4" value="15" label="min size"/>
     <param name="max" type="integer" size="4" value="36" label="max size"/>
     <param name="out_format" type="select" label="Select output format">
