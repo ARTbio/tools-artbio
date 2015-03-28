@@ -3,7 +3,6 @@
   <requirements>
         <requirement type="package" version="0.12.7">bowtie</requirement>
   </requirements>
-  <parallelism method="basic"></parallelism>
   <command interpreter="python"> sRbowtieCascade.py --output $output
                                                     --num-threads \${GALAXY_SLOTS:-4} ## number of processors to be handled by bowtie
                                                     --mismatch $mismatches
