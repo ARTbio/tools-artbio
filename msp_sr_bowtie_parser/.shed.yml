@@ -1,0 +1,11 @@
+# .shed.yml supporting automatic pushes.
+owner: drosofff
+name: msp_sr_bowtie_parser
+description: Generates hit count lists from bowtie sequence read alignments.
+long_description: |
+  Generates hit count lists from bowtie sequence read alignments.
+categories:
+  - RNA
+  - Transcriptomics
+homepage_url: http://drosophile.org/
+remote_repository_url: https://bitbucket.org/drosofff/gedtools/
