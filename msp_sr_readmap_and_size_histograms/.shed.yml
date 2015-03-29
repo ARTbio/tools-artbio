@@ -1,0 +1,12 @@
+# .shed.yml supporting automatic pushes.
+owner: drosofff
+name: msp_sr_readmap_and_size_histograms
+description: generates readmaps and size histograms from small RNA bowtie alignments
+long_description: |
+  generates readmaps and size histograms from small RNA bowtie alignments. This tool belongs to the mississippi tool suite.
+categories:
+  - RNA
+  - Graphics
+  - Visualization
+homepage_url: http://drosophile.org/
+remote_repository_url: https://bitbucket.org/drosofff/gedtools/
