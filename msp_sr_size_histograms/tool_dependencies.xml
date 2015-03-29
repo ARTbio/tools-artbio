@@ -1,22 +1,22 @@
 <?xml version="1.0"?>
 <tool_dependency>
   <package name="bowtie" version="0.12.7">
-      <repository changeset_revision="4b4e89ded468" name="package_bowtie_0_12_7" owner="devteam" toolshed="http://lbcd41.snv.jussieu.fr:9009" />
+      <repository name="package_bowtie_0_12_7" owner="devteam"/>
     </package>
     <package name="samtools" version="0.1.18">
-      <repository changeset_revision="4bd2ca797c42" name="package_samtools_0_1_18" owner="devteam" toolshed="http://lbcd41.snv.jussieu.fr:9009" />
+      <repository name="package_samtools_0_1_18" owner="devteam"/>
     </package>
     <package name="pysam" version="0.7.7">
-      <repository changeset_revision="3d4c7df25a9e" name="package_pysam_0_7_7" owner="iuc" toolshed="http://lbcd41.snv.jussieu.fr:9009" />
+      <repository name="package_pysam_0_7_7" owner="iuc"/>
     </package>
     <package name="R" version="3.0.3">
-      <repository changeset_revision="ebcf298a0500" name="package_r_3_0_3" owner="iuc" prior_installation_required="True" toolshed="http://lbcd41.snv.jussieu.fr:9009" />
+      <repository name="package_r_3_0_3" owner="iuc" prior_installation_required="True"/>
     </package>
     <package name="biocbasics" version="2.14">
       <install version="1.0">
           <actions>
               <action type="set_environment_for_install">
-                  <repository changeset_revision="ebcf298a0500" name="package_r_3_0_3" owner="iuc" toolshed="http://lbcd41.snv.jussieu.fr:9009">
+                  <repository name="package_r_3_0_3" owner="iuc" >
                       <package name="R" version="3.0.3" />
                     </repository>
                 </action>

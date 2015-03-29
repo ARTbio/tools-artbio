@@ -16,7 +16,7 @@
       <install version="1.0">
           <actions>
               <action type="set_environment_for_install">
-                  <repository changeset_revision="9ff23e0b280b" name="package_r_3_0_3" owner="iuc" >
+                  <repository name="package_r_3_0_3" owner="iuc" >
                       <package name="R" version="3.0.3" />
                     </repository>
                 </action>
