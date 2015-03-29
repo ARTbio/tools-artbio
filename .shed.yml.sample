@@ -1,0 +1,11 @@
+# .shed.yml supporting automatic pushes.
+owner: drosofff
+name: 
+description: 
+long_description: |
+
+categories:
+  - RNA
+  - Fastq Manipulation
+homepage_url: http://drosophile.org/
+remote_repository_url: https://bitbucket.org/drosofff/gedtools/
