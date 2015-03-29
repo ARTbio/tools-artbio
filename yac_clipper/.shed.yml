@@ -1,6 +1,6 @@
 # .shed.yml supporting automatic pushes.
 owner: mvdbeek
-name: yac_clipperplanemotest7
+name: yac_clipper
 description: Clips 3' adapters for small RNA sequencing reads.
 long_description: |
   Clips 3' adapters for small RNA sequencing reads. Supports
