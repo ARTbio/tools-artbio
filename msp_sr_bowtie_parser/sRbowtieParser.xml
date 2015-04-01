@@ -7,7 +7,6 @@
         <requirement type="package" version="1.9">numpy</requirement>
         <requirement type="package" version="0.14">scipy</requirement>
  </requirements>
-  <parallelism method="basic"></parallelism>
 <command interpreter="python">
         sRbowtieParser.py 
 	          #if $refGenomeSource.genomeSource == "history":
@@ -75,13 +74,14 @@ The library labels are infered from the input dataset names in the galaxy histor
 **it is preferable that you do not put any space in this input dataset names. You may edit these names in the history**
 
   </help>
-  <test>
+  <tests>
+    <test>
       <param name="genomeSource" value="history" />
       <param name="ownFile" value ="dme-mir-v20" ftype="fasta" />
-      <param name="input_list" value="matchedSample_1, matchedSample_2" ftype="tabular" />
+      <param name="input_list" value="matchedSample_1,matchedSample_2" ftype="tabular" />
       <param name="polarity" value="forward" />
-      <output name="output" ftype="tabular" value="Read_Count_Lists.tab" />
-  </test>
-
+      <output name="output" ftype="tabular" file="Read_Count_Lists.tab" />
+    </test>
+  </tests>
 </tool>
 

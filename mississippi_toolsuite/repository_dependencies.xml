@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<repositories>
+  <repository name="yac_clipper" owner="drosofff" />
+    <repository name="msp_sr_bowtie" owner="drosofff" />
+    <repository name="msp_sr_bowtie_parser" owner="drosofff" />
+    <repository name="msp_sr_bowtie_cascade" owner="drosofff" />
+    <repository name="msp_sr_size_histograms" owner="drosofff" />
+    <repository name="msp_sr_readmap_and_size_histograms" owner="drosofff" />
+    <repository name="msp_sr_signature" owner="drosofff" />
+</repositories>

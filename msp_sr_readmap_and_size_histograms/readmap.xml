@@ -9,7 +9,6 @@
         <requirement type="package" version="1.9">numpy</requirement>
         <requirement type="package" version="0.14">scipy</requirement>
   </requirements>
-  <parallelism method="basic"></parallelism>
 <command interpreter="python">
         readmap.py 
 	          #if $refGenomeSource.genomeSource == "history":
@@ -260,23 +259,27 @@ produce a plot like this:
     :width: 500
 
 </help>
-
+  <tests>
   <test>
       <param name="genomeSource" value="history" />
       <param name="ownFile" value ="transposons.fasta" ftype="fasta" />
-      <param name="input" value="sample1.srbowtie_out, sample2.srbowtie_out, sample3.srbowtie_out" ftype="tabular" />
-      <param name="norm" value="1,1,1" />
+      <param name="series_0|input" value="sample1.srbowtie_out" ftype="tabular"/>
+      <param name="series_0|norm" value="1" />
+      <param name="series_1|input" value="sample2.srbowtie_out" ftype="tabular"/>
+      <param name="series_1|norm" value="1" />
+      <param name="series_2|input" value="sample3.srbowtie_out" ftype="tabular"/>
+      <param name="series_2|norm" value="1" />
       <param name="minquery" value="20" />
       <param name="maxquery" value="30" />
       <param name="title" value="Readmaps and size distributions" />
       <param name="xlabel" value="Coordinates/read size" />
       <param name="ylabel" value="Number of reads" />
       <param name="rows_per_page" value="8" />
-      <output name="readmap_dataframe" ftype="tabular" value="Readmap_dataframe.tab" />
-      <output name="size_distribution_dataframe" ftype="tabular" value="Size_distribution_dataframe.tab" />
-      <output name="readmap_PDF" ftype="pdf" value="Readmaps.pdf" />
-      <output name="size_PDF" ftype="pdf" value="Size_distribution.pdf" />
-      <output name="combi_PDF" ftype="pdf" value="Size_distribution_and_Readmaps.pdf" />
+      <output name="readmap_dataframe" ftype="tabular" file="Readmap_dataframe.tab" />
+      <output name="size_distribution_dataframe" ftype="tabular" file="Size_distribution_dataframe.tab" />
+      <output name="readmap_PDF" ftype="pdf" file="Readmaps.pdf" />
+      <output name="size_PDF" ftype="pdf" file="Size_distribution.pdf" />
+      <output name="combi_PDF" ftype="pdf" file="Size_distribution_and_Readmaps.pdf" />
   </test>
-
+  </tests>
 </tool>

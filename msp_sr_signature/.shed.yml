@@ -1,0 +1,11 @@
+# .shed.yml supporting automatic pushes.
+owner: drosofff
+name: msp_sr_signature
+description: Computes the tendency of small RNAs to overlap with each other.
+long_description: |
+  Compute the tendency of small RNAs to overlap with each others for detailed information, 
+  see C. Antoniewski, “Computing siRNA and piRNA Overlap Signatures.,” Methods Mol. Biol., vol. 1173, no. 12, pp. 135–146, 2014.
+categories:
+  - RNA
+homepage_url: http://drosophile.org/
+remote_repository_url: https://bitbucket.org/drosofff/gedtools/

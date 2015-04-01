@@ -1,0 +1,12 @@
+# .shed.yml supporting automatic pushes.
+owner: drosofff
+name: msp_sr_size_histograms
+description: Generates size histograms from small RNA bowtie alignments.
+long_description: |
+  Generates size histograms from small RNA bowtie alignments.
+categories:
+  - RNA
+  - Graphics
+  - Sequence Analysis
+homepage_url: http://drosophile.org/
+remote_repository_url: https://bitbucket.org/drosofff/gedtools/
