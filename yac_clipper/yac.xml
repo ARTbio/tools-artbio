@@ -1,4 +1,4 @@
-<tool id="yac" name="Clip adapter" version="1.3.2">
+<tool id="yac" name="Clip adapter" version="1.3.3">
     <description />
     <command interpreter="python">yac.py --input $input
                                        --output $output
@@ -69,7 +69,8 @@
 This tool clips adapter sequences from a fastq file and outputs either a
 fasta or fastq file of clipped reads with renumbered fasta/fastq headers.
 
-Clipped sequences with Ns can be discarded.
+By defualt clipped sequences with unknown nucleotides are kept, but 
+can be discarded by setting "Accept reads containing N?" to reject.
 
 Min size and max size filter clipped reads on their size.
 

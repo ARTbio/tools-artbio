@@ -1,0 +1,12 @@
+# .shed.yml supporting automatic pushes.
+owner: drosofff
+name: mississippi_toolsuite
+description: Collection of mississippi tools for miRNA, siRNA and piRNA analysis.
+long_description: |
+  Collection of mississippi tools for miRNA, siRNA and piRNA analysis.
+categories:
+  - RNA
+  - Sequence Analysis
+  - Visualization
+homepage_url: http://drosophile.org/
+remote_repository_url: https://bitbucket.org/drosofff/gedtools/

@@ -1,0 +1,12 @@
+# .shed.yml supporting automatic pushes.
+owner: mvdbeek
+name: mismatch_frequencies
+description: calculate mismatch frequencies for individual nucleotide mismatches
+long_description: |
+  Given a set of aligned reads in BAM/SAM format, calculates and plots the frequency of all possible nucleotide mismatches with respect to the reference sequence.
+categories:
+  - RNA
+  - Variant Analysis
+  - Sequence Analysis
+homepage_url: http://drosophile.org/
+remote_repository_url: https://bitbucket.org/drosofff/gedtools/

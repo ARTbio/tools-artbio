@@ -1,0 +1,70 @@
+<tool id="mismatch_frequencies" name="Mismatch Frequencies" version="0.0.5" hidden="false" >
+  <description>Analyze mismatch frequencies in BAM/SAM alignments</description>
+  <requirements>
+    <requirement type="package" version="0.8.1">pysam</requirement>
+    <requirement type="package" version="0.14.1">pandas</requirement>
+    <requirement type="package" version="1.4">matplotlib</requirement>
+  </requirements>
+  <command interpreter="python">mismatch_frequencies.py --input 
+		#for i in $rep
+			"$i.input_file" 
+		#end for
+		--name 
+		#for i in $rep
+			"$i.input_file.name"
+		#end for
+		 --output_pdf $output_pdf --output_tab $output_tab --min $min_length --max $max_length
+                 --n_mm $number_of_mismatches
+                 --five_p $five_p
+                 --three_p $three_p
+  </command>
+  <inputs>
+    <repeat name="rep" title="alignment files" min="1">
+      <param name="input_file" type="data" format="bam,sam" label="Alignment file" help="The input alignment file(s) for which you want to calculate mismatch frequencies."/>
+    </repeat>
+    <param name="number_of_mismatches" label="Maximum number of allowed mismatches per read" help="Discard reads with more than the chosen number of mismatches from the frequency calculation" type="integer" value="3"/>
+    <param name="min_length" label="Minumum read length to analyse" type="integer" value="21"/>
+    <param name="max_length" label="Maximum read length to analyse" type="integer" value="21"/>
+    <param name="five_p" label="Ignore mismatches in the first N nucleotides of a read" type="integer" value="0"/>
+    <param name="three_p" label="Ignore mismatches in the last N nucleotides of a read" help="useful to discriminate between tailing events and editing events" type="integer" value="3"/>
+  </inputs>
+  <outputs>
+    <data format="tabular" name="output_tab" />
+    <data format="pdf" name="output_pdf" />
+  </outputs>
+  <tests>
+    <test>
+      <param name="rep_0|input_file" value="3mismatches_ago2ip_s2.bam" ftype="bam" />
+      <param name="rep_1|input_file" value="3mismatches_ago2ip_ovary.bam" ftype="bam" />
+      <param name="number_of_mismatches" value="1" />
+      <param name="min_length" value="21" />
+      <param name="max_length" value="21" />
+      <output name="tabular" file="mismatch.tab" ftype="tabular"/>
+    </test>
+  </tests>
+  <help>
+
+.. class:: infomark
+
+
+***What it does***
+
+This tool reconstitues for each aligned read of an alignment file in SAM/BAM format whether
+a mismatch is annotated in the MD tag, and if that is the case counts the identity of the 
+mismatch relative to the reference sequence. The output is a PDF document with the calculated
+frequency for each mismatch that occured relative to the total number of valid reads and a table
+with the corresponding values. Read length can be limited to a specific read length, and 5 prime and 
+3 prime-most nucleotides of a read can be ignored.
+
+----
+
+.. class:: warningmark
+
+***Warning***
+
+This tool skips all read that have insertions and has been tested only with bowtie and bowtie2
+generated alignment files.
+
+Written by Marius van den Beek, m.vandenbeek at gmail . com
+  </help>
+</tool>
