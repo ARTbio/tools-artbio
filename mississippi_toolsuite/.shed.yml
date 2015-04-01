@@ -1,5 +1,5 @@
 # .shed.yml supporting automatic pushes.
-owner: drosofff
+owner: mvdbeek
 name: mississippi_toolsuite
 description: Collection of mississippi tools for miRNA, siRNA and piRNA analysis.
 long_description: |
