@@ -1,7 +1,7 @@
-<tool id="mismatch_frequencies" name="Mismatch Frequencies" version="0.0.5" hidden="false" >
+<tool id="mismatch_frequencies" name="Mismatch Frequencies" version="0.0.6" hidden="false" >
   <description>Analyze mismatch frequencies in BAM/SAM alignments</description>
   <requirements>
-    <requirement type="package" version="0.8.1">pysam</requirement>
+    <requirement type="package" version="0.7.7">pysam</requirement>
     <requirement type="package" version="0.14.1">pandas</requirement>
     <requirement type="package" version="1.4">matplotlib</requirement>
   </requirements>
