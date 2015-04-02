@@ -1,0 +1,253 @@
+<tool id="patser-v3e" name="patser" description="finds putative transcription factor binding sites" version="0.1.0">
+    <requirements>
+        <requirement type="package">patser-v3e</requirement>
+    </requirements>
+    <stdio>
+        <exit_code range="1:" />
+    </stdio>
+
+    <command><![CDATA[
+    ## We need to transform the fasta input file into the awkward format in that patser can work on
+    ## The fasta header must be followed by the nucleotide sequence encapsulated by backslashes.
+    ## We simply add backslashes before and after each fasta header and skip the first line, 
+    ## and we add a final backslash at the end of the file. 
+    awk '/>/{print "\\"}1' "$input_fasta"|awk '/>/{print;print "\\";next}1'|tail -n +2 >> special.fa; 
+    echo "\\" >> special.fa; 
+    patser-v3e -A a:t "$at" c:g "$gc" -m "$input_matrix" -b "$b" $c -d1 -ls "$ls" -f special.fa "$p" > "$output1"
+    ]]></command>
+    <inputs>
+        <param type="data" name="input_matrix" format="txt" help="Provide alignment matrix file"/>
+        <param type="data" name="input_fasta" format="fasta" help="Fasta file with sequence"/>
+    <param name="v" type="boolean" label="the matrix is a vertical matrix (default: horizontal matrix)"
+       truevalue="-v" falsevalue=""
+       help="commandline option -v" />
+    <param name="b" type="integer" label="Correction added to the elements of the alignment matrix"
+       value="1"
+       help="commandline option -b" />
+    <param name="gc" type="float" label="Enter the GC frequency"
+       value="0.25" min="0" max="1"
+       help="commandline option -A gc:(value)" />
+    <param name="at" type="float" label="Enter the AT frequency"
+       value="0.25" min="0" max="1"
+       help="commandline option -A at:" />
+    <param name="c" type="boolean" label="Also score the complementary sequences"
+       truevalue="-c" falsevalue="" checked="true"
+       help="commandline option -c: Also score the complementary sequences. The complements are  determined by the program and are not explicitly stated in the sequence fasta" />
+    <param name="p" type="boolean" label="print the weight matrix derived from the alignment matrix"
+       truevalue="-p" falsevalue="" checked="true"
+       help="commandline option -p" />
+    <param name="ls" type="float" label="Lower-threshold score, inclusive"
+       value="7"
+       help="commandline option -ls" />
+    </inputs>
+    <outputs>
+        <data name="output1" format="txt" from_work_dir="output.txt" />
+    </outputs>
+    <tests>
+        <test>
+            <param name="input_matrix" value="PWM_training_EcR-USP.txt"/>
+            <param name="input_fasta" value="EcR_USP_224.fa"/>
+            <output name="output1" file="output.txt" lines_diff="6"/>
+        </test>
+    </tests>
+    <help><![CDATA[
+
+This wrapper has been written by Marius van den Beek (m.vandenbeek at gmail.com).
+Patser is available from http://stormo.wustl.edu/resources.html .
+
+-------------------------------------------------------------------------------
+
+The following options can be determined on the command line:
+
+::
+
+  0) -h: print these directions.
+
+  1) Matrix options.
+     -m filename: (default name is "matrix") file containing the matrix.
+     -w: the matrix is a weight matrix (default: alignment matrix)
+     -b number: a non-negative number indicating the total number of
+         pseudo-counts added to each alignment position (default: 1).
+         Before converting an alignment matrix to a weight matrix, the
+         total pseudo-counts multiplied by the a priori probability
+         (see section 3 below) of the corresponding letter is added
+         to each matrix element.
+     -v: the matrix is a vertical matrix (default: horizontal matrix).
+     -p: print the weight matrix derived from the alignment matrix.
+
+  2) -f filename: this file (default: read from the standard input) contains
+        the names of the sequences.  The corresponding sequence may follow
+        its name if the sequence is enclosed between backslashes (\).
+        Otherwise, the sequence is assumed to be in a separate file having
+        the indicated name.
+
+        In the sequences, whitespace, slashes (/), periods, dashes (unless
+        part of an integer when the "-i" option is used), and comments
+        beginning with ';', '%', or '#' are ignored.  When using letter
+        characters (i.e., with the "-a" or "-A" alphabet option), integers
+        are also ignored so that the sequence file can contain positional
+        information.  When using integer characters (i.e., with the "-i"
+        alphabet option) the integers must be separated by whitespace.
+
+        A "-c" preceding the name of a sequence file indicates that the
+        corresponding sequence is circular.
+
+  3) Alphabet options---the three options in this section are mutually
+     exclusive (default: "-a alphabet").  The a priori probabilities mentioned
+     below are used when converting an alignment matrix to a weight matrix.
+     -a filename: file containing the alphabet and normalization information.
+
+        Each line contains a letter (a symbol in the alphabet) followed by an
+        optional normalization number (default: 1.0).  The normalization is
+        based on the relative a priori probabilities of the letters.  For
+        nucleic acids, this might be be the genomic frequency of the bases
+        or the frequencies observed in the data used to generate the alignment.
+        In nucleic acid alphabets, a letter and its complement appear on the
+        same line, separated by a colon (a letter can be its own complement,
+        e.g. when using a dimer alphabet). Complementary letters may use the
+        same normalization number.  Only the standard 26 letters are
+        permissible; however, when the "-CS" option is used, the alphabet is
+        case sensitive so that a total of 52 different characters are possible.
+
+        POSSIBLE LINE FORMATS WITHOUT COMPLEMENTARY LETTERS:
+        letter
+        letter normalization
+
+        POSSIBLE LINE FORMATS WITH COMPLEMENTARY LETTERS:
+        letter:complement
+        letter:complement normalization
+        letter:complement normalization:complement's_normalization
+
+     -i filename: same as the "-a" option, except that the symbols of
+        the alphabet are represented by integers rather than by letters.
+        Any integer permitted by the machine is a permissible symbol.
+
+     -A alphabet_and_normalization_information: same as "-a" option, except
+        information appears on the command line (e.g., -A a:t 3 c:g 2).
+
+  4) Alphabet modifiers indicating whether ascii alphabets are case
+     sensitive---the two options in this section are mutually exclusive
+     with each other and with the "-i" option (default: ascii alphabets are
+     case insensitive).
+     -CS: ascii alphabets are case sensitive.
+     -CM: ascii alphabets are case insensitive, but mark the location
+          of lowercase letters by printing a line containing their locations.
+          This option is useful when lowercase letters indicate a functional
+          landmark such as a transcriptional start in a DNA sequence.
+
+  5) Options for adjusting or restricting which information
+     and scores are printed.
+     The "-ls", "-li", and "-lp" options are mutually exclusive.
+     -c: also score the complementary sequences.  The complements are
+        determined by the program and are not explicitly stated in the
+        sequence files.
+     -ls number: lower threshold for printing scores, inclusive
+                 (formerly the -l option).
+     -li: assume that the maximum ln(p-value) for printing scores equals
+          the negative of the sample-size adjusted information content;
+          indirectly determines the lower threshold for printing scores.
+     -lp number: the maximum ln(p-value) for printing scores; indirectly
+                 determines the lower threshold for printing scores.
+     -u number: upper threshold for printing scores, exclusive.
+
+     -t: just print the top score for each sequence.
+     -t number: print the indicated number of top scores for each sequence.
+     -ds: if the "-t number" option is used, print the top scores for each
+          sequence in the order of decreasing score (default: order the
+          scores according to their position within the sequence).
+     -e number: the small difference for considering 2 scores equal
+                (default: 0.000001)
+
+     -s: print the sequence corresponding to each score that is printed.
+
+  6) Options indicating how unrecognized symbols are treated (default: -d1).
+     Symbols are letters when option "-a" or "-A" is used;
+     symbols are integers when option "-i" is used.
+     The following three options are mutually exclusive.
+     -d0: treat unrecognized symbols as errors and exit the program.
+     -d1: treat unrecognized symbols as discontinuities, but print a warning.
+          Treating a symbol as a discontinuity means that any L-mer
+          containing the unrecognized symbol will be ignored.
+     -d2: treat unrecognized symbols as discontinuities, and print NO warning.
+
+  7) Options for adjusting the estimation of p-value.
+     If the -R option is set to zero, the p-value is not estimated.
+     -R number: the range for approximating a column of the weight matrix with
+                integers (default: 10000).  This number is the difference
+                between the largest and smallest integers used to estimate
+                the scores.  Higher values increase precision, but will take
+                longer to calculate the table of p-values.
+     -M number: the minimum score for approximating p-values (default: 0).
+                Higher values will increase precision,
+                but may miss interesting scores.
+
+
+::
+
+----------------------------------------------------------------------
+
+Copyright 1990, 1994, 1995, 1996, 2000, 2001, 2002 Gerald Z. Hertz
+May be copied for noncommercial purposes.
+
+Author:
+Gerald Z. Hertz
+gzhertz AT alum.mit.edu
+
+PATSER (version 3e)
+
+This program scores the L-mers (subsequences of length L) of the
+indicated sequences against the indicated alignment or weight matrix.
+The elements of an alignment matrix are simply the number of times
+that the indicated letter is observed at the indicated position of a
+sequence alignment.  Such elements must be processed before the matrix
+can be used to score an L-mer (e.g., Hertz and Stormo, 1999,
+Bioinformatics, 15:563-577).  A weight matrix is a matrix whose
+elements are in a form considered appropriate for scoring an L-mer.
+
+Each element of an alignment matrix is converted to an element of a
+weight matrix by first adding pseudo-counts in proportion to the a
+priori probability of the corresponding letter (see option "-b" in
+section 1 below) and dividing by the total number of sequences plus
+the total number of pseudo-counts.  The resulting frequency is
+normalized by the a priori probability for the corresponding letter.
+The final quotient is converted to an element of a weight matrix by
+taking its natural logarithm.  The use of pseudo-counts here differs
+from previous versions of this program by being proportional to the a
+priori probability.
+
+Version 3 of this program differs from previous versions by also
+numerically estimating the p-value of the scores.  The p-value
+calculated here is the probability of observing a particular score or
+higher at a particular sequence position and does NOT account for the
+total amount of sequence being scored.  P-values are estimated by the
+method described in Staden, 1989, CABIOS, p. 89--96.  The relative
+value for each element of the weight matrix is approximated by
+integers in a range determined by the "-R" and "-M" options (section 6
+below).  The p-value is calculated for each possible integer score and
+the values are stored.  The actual scores for the sequences are
+determined from the true weight matrix.  The true scores are converted
+to their corresponding integer values and their p-values are looked up.
+
+Matrices can be either horizontal or vertical.  In a horizontal
+matrix, the columns correspond to the positions within the pattern,
+and the rows correspond to the letters.  Each row begins with the
+corresponding letter (or integer, if the "-i" option is used).  In a
+vertical matrix, the rows correspond to the positions within the
+pattern, and the columns correspond to the letters.  The first row
+contains the letters (or integers, if the "-i" option is used)
+corresponding to each column.  In both types of matrices, spaces,
+tabs, and vertical bars (|) are ignored.  The output of the "consensus"
+and "wconsensus" programs consists of horizontal alignment matrices.
+
+The input files can contain comments according to the following
+convention.  The portion of a line following a ';', '%', or '#' is
+considered a comment and is ignored.  Comments can begin anywhere in a
+line and always end at the end of the line.  The output of this
+program is sent to the standard output.
+
+
+    ]]></help>
+      <citations>
+          <citation type="doi">10.1093/bioinformatics/15.7.563</citation>
+      </citations>
+</tool>
