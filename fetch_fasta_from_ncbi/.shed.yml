@@ -6,5 +6,6 @@ long_description: |
   Fetch fasta sequences from NCBI using eutils wrappers
 categories:
   - Fasta Manipulation
+  - Data Source
 homepage_url: http://drosophile.org/
 remote_repository_url: https://bitbucket.org/drosofff/gedtools/
