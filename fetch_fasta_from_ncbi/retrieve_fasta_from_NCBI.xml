@@ -1,0 +1,57 @@
+<tool id="retrieve_fasta_from_NCBI" name="Retrieve FASTA from NCBI" version="0.9.2">
+  <description></description>
+  <command interpreter="python">retrieve_fasta_from_NCBI.py -i "$queryString" -d $dbname -o $outfilename -l $logfile </command>
+
+  <inputs>
+    <param name="queryString" type="text" size="5x80" area="True" value="txid10239[orgn] NOT txid131567[orgn] AND complete NOT partial[title] NOT phage[title]" label="Query to NCBI in entrez format" help="exemple:'Drosophila melanogaster[Organism] AND Gcn5[Title]">
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value="&quot;"/>
+          <remove value="\"/>
+        </valid>
+        <mapping initial="none">
+          <add source="&quot;" target="\&quot;"/>
+          <add source="\" target="\\"/>
+        </mapping>
+      </sanitizer>
+    </param>
+    <param name="dbname" type="select" label="NCBI database">
+      <option value="nuccore">Nucleotide</option>
+      <option value="protein">Protein</option>
+<!--      <option value="pubmed">Pubmed (experimental)</option> -->
+    </param>
+  </inputs>
+  <outputs>
+    <data name="outfilename" format="fasta" label="${tool.name} on ${on_string}: queryString${queryString.value}.${dbname.value_label}.fasta" />
+    <data format="txt" name="logfile" label="${tool.name} on ${on_string}: log"/>
+  </outputs>
+  <tests>
+    <test>
+        <param name="queryString" value="DCV AND virus" />
+        <param name="dbname" value="nuccore" />
+        <output name="outfilename" ftype="fasta" file="output.fa" />
+        <output name="logfile" ftype="txt" file="log.txt" />
+    </test>
+  </tests>
+  <help>
+**What it does**
+
+This tool retrieves nucleotide/peptide sequences from the corresponding NCBI database for a given entrez query.
+
+The tool is preset with "txid10239[orgn] NOT txid131567[orgn] AND complete NOT partial[title] NOT phage[title]" for metaVisitor use purpose
+
+See `Entrez help`_ for explanation of query formats
+
+**Acknowledgments**
+
+This Galaxy tool has been adapted from the galaxy tool `get_fasta_from_taxon`_.
+
+It is Copyright © 2014-2015 `CNRS and University Pierre et Marie Curie`_ and is released under the `MIT license`_.
+
+.. _Entrez help: http://www.ncbi.nlm.nih.gov/books/NBK3837/#EntrezHelp.Entrez_Searching_Options
+.. _get_fasta_from_taxon: https://toolshed.g2.bx.psu.edu/view/crs4/get_fasta_from_taxon
+.. _CNRS and University Pierre et Marie Curie: http://www.ibps.upmc.fr/en
+.. _MIT license: http://opensource.org/licenses/MIT
+
+  </help>
+</tool>

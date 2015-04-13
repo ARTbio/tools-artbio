@@ -1,0 +1,9 @@
+2015-04-13 23:37:33|INFO    |retrieving data from http://eutils.ncbi.nlm.nih.gov/entrez/eutils/
+2015-04-13 23:37:33|INFO    |for Query: DCV AND virus and database: nuccore
+2015-04-13 23:37:34|INFO    |Founded 55 UIDs
+2015-04-13 23:37:34|INFO    |Batch size for esearch action: 100000 UIDs
+2015-04-13 23:37:34|INFO    |Number of batches for esearch action: 1 
+2015-04-13 23:37:36|INFO    |Retrieved 55 UIDs
+2015-04-13 23:37:36|INFO    |Batch size for efetch action: 1000
+2015-04-13 23:37:36|INFO    |Number of batches for efetch action: 1
+2015-04-13 23:37:37|INFO    |retrieving batch 1

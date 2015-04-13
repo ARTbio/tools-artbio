@@ -1,0 +1,10 @@
+# .shed.yml supporting automatic pushes.
+owner: drosofff
+name: fetch_fasta_from_ncbi
+description: Fetch fasta sequences from NCBI using eutils wrappers
+long_description: |
+  Fetch fasta sequences from NCBI using eutils wrappers
+categories:
+  - Fasta Manipulation
+homepage_url: http://drosophile.org/
+remote_repository_url: https://bitbucket.org/drosofff/gedtools/
