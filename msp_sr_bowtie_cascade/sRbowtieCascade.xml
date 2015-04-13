@@ -1,4 +1,4 @@
-<tool id="sRbowtie_cascade" name="Annotate smRNA datasets" version="1.0.0">
+<tool id="sRbowtie_cascade" name="Annotate smRNA datasets" version="1.0.1">
   <description>Using iterative sRbowtie Alignments</description>
   <requirements>
         <requirement type="package" version="0.12.7">bowtie</requirement>
@@ -93,9 +93,19 @@
    <data format="tabular" name="output" label="Cascade Annotation Analysis"/>
    </outputs>
 
-    <test>
-    </test>
 
+    <tests>
+        <test>
+      <param name="input" value ="sample1.fa,sample2.fa,sample3.fa" ftype="fasta" />
+      <param name="genomeSource" value="history" />
+      <param name="ownFile" value ="dmel-2L-r6.04.fasta" ftype="fasta" />
+      <param name="AdditionalQueries_0|refGenomeSource|genomeSource" value="history"/>
+      <param name="AdditionalQueries_0|refGenomeSource|ownFile" value="dme_miR21_hairpin.fa" ftype="fasta" />
+      <param name="AdditionalQueries_1|refGenomeSource|genomeSource" value="history"/>
+      <param name="AdditionalQueries_1|refGenomeSource|ownFile" value="Ensembl_transposon_set.fa" ftype="fasta" />
+      <output name="output" ftype="tabular" file="Cascade_Annotation_Analysis.tab" />
+        </test>
+    </tests>
   <help>
 
 **Intro**
