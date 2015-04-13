@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<tool_dependency>
+    <package name="patser" version="v3e">
+      <repository name="package_patser_v3e" owner="mvdbeek" prior_installation_required="False" />
+    </package>
+</tool_dependency>
