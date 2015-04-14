@@ -1,0 +1,41 @@
+<tool id="generate_windows" name="Split fasta sequence in nucleotide windows" version="0.1.0">
+    <requirements>
+        <requirement type="package">biopython-1.65</requirement>
+    </requirements>
+    <stdio>
+        <exit_code range="1:" />
+    </stdio>
+
+    <command interpreter="python"><![CDATA[
+        generate_windows.py --input "$input1" --output "$output1" --window $window --step $step
+    ]]></command>
+    <inputs>
+        <param type="data" name="input1" format="fasta" />
+        <param type="integer" name="window" value="21" min="2" label="window size" help="Specifiy the size of the windows that should be generated"/>
+        <param type="integer" name="step" value="21" min="2" label="step size" help="Specify the distance with which windows should be spaced apart."/>
+    </inputs>
+    <outputs>
+        <data name="output1" format="fasta" />
+    </outputs>
+    <tests>
+        <test>
+            <param name="input1" value="EcR_USP_224.fa"/>
+            <param name="window" value="21"/>
+            <param name="step" value="21"/>
+            <output name="output1" file="output.fa"/>
+        </test>
+    </tests>
+    <help><![CDATA[
+
+Generate fixed size windows in fasta format from multi-fasta sequence.
+
+optional arguments:
+  -h, --help       show this help message and exit
+  --input INPUT    supply an input multi-fasta file.
+  --output OUTPUT  supply an output multi-fasta file. If not specified use
+                   stdout.
+  --window WINDOW  Set the size of the generated windows
+  --step STEP      Set distance between the windows
+
+    ]]></help>
+</tool>
