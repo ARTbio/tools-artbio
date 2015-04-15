@@ -8,7 +8,7 @@
     </stdio>
 
     <command interpreter="python"><![CDATA[
-        generate_sliding_windows.py --input "$input1" --output "$output1" --window $window --step $step
+        generate_sliding_windows.py --input "$input" --output "$output1" --window $window --step $step
     ]]></command>
     <inputs>
         <param type="data" name="input" label="input fasta file" help="select fasta file for which you wish to generate a multi-fasta file in a sliding window fashion" format="fasta" />
