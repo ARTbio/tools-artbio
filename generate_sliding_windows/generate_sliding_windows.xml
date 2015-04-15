@@ -1,4 +1,5 @@
-<tool id="generate_sliding_windows" name="Split fasta sequence in nucleotide windows" version="0.1.1">
+<tool id="generate_sliding_windows" name="generate_sliding_windows"  version="0.1.2">
+<description>"Split fasta sequence in nucleotide windows"</description>
     <requirements>
         <requirement type="package" version="1.65">biopython</requirement>
     </requirements>
@@ -19,7 +20,7 @@
     </outputs>
     <tests>
         <test>
-            <param name="input1" value="EcR_USP_224.fa"/>
+            <param name="input" value="EcR_USP_224.fa"/>
             <param name="window" value="21"/>
             <param name="step" value="21"/>
             <output name="output1" file="output.fa"/>
