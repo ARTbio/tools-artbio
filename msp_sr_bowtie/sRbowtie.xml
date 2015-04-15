@@ -44,7 +44,7 @@
                 <option value="history">Use one from the history</option>
             </param>
             <when value="indexed">
-                <param help="if your genome of interest is not listed - contact GED team" label="Select a DNA reference index" name="index" type="select">
+                <param help="if your genome of interest is not listed - contact instance administrator" label="Select a DNA reference index" name="index" type="select">
                     <options from_data_table="bowtie_indexes">
       
           </options>
