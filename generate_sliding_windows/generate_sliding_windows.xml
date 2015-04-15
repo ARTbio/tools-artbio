@@ -1,4 +1,4 @@
-<tool id="generate_sliding_windows" name="generate_sliding_windows"  version="0.1.2">
+<tool id="generate_sliding_windows" name="generate_sliding_windows"  version="0.1.3">
 <description>Split fasta sequence in nucleotide windows</description>
     <requirements>
         <requirement type="package" version="1.65">biopython</requirement>
