@@ -1,5 +1,5 @@
 <tool id="generate_sliding_windows" name="generate_sliding_windows"  version="0.1.2">
-<description>"Split fasta sequence in nucleotide windows"</description>
+<description>Split fasta sequence in nucleotide windows</description>
     <requirements>
         <requirement type="package" version="1.65">biopython</requirement>
     </requirements>
@@ -8,7 +8,7 @@
     </stdio>
 
     <command interpreter="python"><![CDATA[
-        generate_sliding_windows.py --input "$input" --output "$output1" --window $window --step $step
+        generate_sliding_windows.py --input "$input" --output "$output" --window $window --step $step
     ]]></command>
     <inputs>
         <param type="data" name="input" label="input fasta file" help="select fasta file for which you wish to generate a multi-fasta file in a sliding window fashion" format="fasta" />
@@ -16,19 +16,49 @@
         <param type="integer" name="step" value="21" min="1" label="step size" help="Specify the distance with which windows should be spaced apart."/>
     </inputs>
     <outputs>
-        <data name="output1" format="fasta" />
+        <data name="output" format="fasta" />
     </outputs>
     <tests>
         <test>
             <param name="input" value="EcR_USP_224.fa"/>
             <param name="window" value="21"/>
             <param name="step" value="21"/>
-            <output name="output1" file="output.fa"/>
+            <output name="output" file="output.fa"/>
         </test>
     </tests>
     <help><![CDATA[
 
 Generate fixed size sliding windows in fasta format from multi-fasta sequence.
+
+-----------------------------
+
+Given an input fasta sequence 
+
+::
+
+
+  >input
+  ATGCATGCATGCATGCATGCATGCATCGATGCATCGATCG
+
+produces the following multi-fasta output with window size 10 and step 5:
+
+::
+
+
+  >input_start:1_stop:10
+  ATGCATGCAT
+  >input_start:6_stop:15
+  TGCATGCATG
+  >input_start:11_stop:20
+  GCATGCATGC
+  >input_start:16_stop:25
+  CATGCATGCA
+  >input_start:21_stop:30
+  ATGCATCGAT
+  >input_start:26_stop:35
+  TCGATGCATC 
+
+-------------------------
 
 optional arguments:
   -h, --help       show this help message and exit
