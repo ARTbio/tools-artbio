@@ -1,18 +1,18 @@
-<tool id="generate_windows" name="Split fasta sequence in nucleotide windows" version="0.1.0">
+<tool id="generate_sliding_windows" name="Split fasta sequence in nucleotide windows" version="0.1.0">
     <requirements>
-        <requirement type="package">biopython-1.65</requirement>
+        <requirement type="package" version="1.65">biopython</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" />
     </stdio>
 
     <command interpreter="python"><![CDATA[
-        generate_windows.py --input "$input1" --output "$output1" --window $window --step $step
+        generate_sliding_windows.py --input "$input1" --output "$output1" --window $window --step $step
     ]]></command>
     <inputs>
         <param type="data" name="input1" format="fasta" />
-        <param type="integer" name="window" value="21" min="2" label="window size" help="Specifiy the size of the windows that should be generated"/>
-        <param type="integer" name="step" value="21" min="2" label="step size" help="Specify the distance with which windows should be spaced apart."/>
+        <param type="integer" name="window" value="21" min="1" label="window size" help="Specifiy the size of the windows that should be generated"/>
+        <param type="integer" name="step" value="21" min="1" label="step size" help="Specify the distance with which windows should be spaced apart."/>
     </inputs>
     <outputs>
         <data name="output1" format="fasta" />
@@ -27,7 +27,7 @@
     </tests>
     <help><![CDATA[
 
-Generate fixed size windows in fasta format from multi-fasta sequence.
+Generate fixed size sliding windows in fasta format from multi-fasta sequence.
 
 optional arguments:
   -h, --help       show this help message and exit

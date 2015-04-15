@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<repositories description="Requires Biopython as a dependency.">
+  <repository name="package_biopython_1_65" owner="biopython" />
+</repositories>
