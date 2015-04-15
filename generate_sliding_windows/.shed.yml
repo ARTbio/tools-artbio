@@ -1,0 +1,14 @@
+# .shed.yml supporting automatic pushes.
+owner: mvdbeek
+name: generate_sliding_windows
+description: Generate sliding windows starting from sequence in a fasta file.
+long_description: |
+  Generate sliding windows starting from sequence in a fasta file and writes out each window as a seperate sequence
+  in a multi-fasta file.
+categories:
+  - RNA
+  - Fasta Manipulation
+  - Proteomics
+  - Sequence Analysis
+homepage_url: http://drosophile.org/
+remote_repository_url: https://bitbucket.org/drosofff/gedtools/
