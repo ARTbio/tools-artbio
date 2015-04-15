@@ -1,0 +1,3 @@
+library	readsize	A to C	A to G	A to T	C to A	C to G	C to T	G to A	G to C	G to T	T to A	T to C	T to G	total valid reads
+3mismatches_ago2ip_s2.bam	21	31	5484	69	25	40	137	156	109	188	51	196	29	43881
+3mismatches_ago2ip_ovary.bam	21	293	879	411	452	231	872	845	191	473	384	818	324	138649

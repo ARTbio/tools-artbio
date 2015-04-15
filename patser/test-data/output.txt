@@ -1,0 +1,65 @@
+COMMAND LINE: patser-v3e -A a:t 0.25 c:g 0.25 -m /tmp/tmpE8Kxfh/files/000/dataset_2.dat -b 1 -c -d1 -ls 7.0 -f special.fa -p
+
+File containing the matrix: /tmp/tmpE8Kxfh/files/000/dataset_2.dat
+File containing the sequence information: special.fa
+Type of matrix: alignment
+Total pseudo-counts added to the elements of the alignment matrix: 1
+
+Range for approximating a weight matrix with integers: 10000
+Minimum score for calculating p-values: 0
+Also score the complementary strands
+Treat unrecognized symbols as discontinuities in the sequence.
+Print scores greater than or equal to 7.00
+
+***** Information for the alphabet from the command line. *****
+letter   1: A (complement: T)  prior frequency = 0.250000
+letter   2: C (complement: G)  prior frequency = 0.250000
+letter   3: G (complement: C)  prior frequency = 0.250000
+letter   4: T (complement: A)  prior frequency = 0.250000
+
+width of the alignment matrix: 13
+A |   3   0   0   0   0   7   6   0   1   4   7   1   0
+C |   2   0   0   0   7   1   0   1   1   3   3   5   1
+G |   5   8   7   0   2   1   2   1   8   3   0   0   5
+T |   0   2   3  10   1   1   2   8   0   0   0   4   4
+
+width of the matrix in file "/tmp/tmpE8Kxfh/files/000/dataset_2.dat": 13
+     A        C        G        T  
+    0.17    -0.20     0.65    -2.40
+   -2.40    -2.40     1.10    -0.20
+   -2.40    -2.40     0.97     0.17
+   -2.40    -2.40    -2.40     1.32
+   -2.40     0.97    -0.20    -0.79
+    0.97    -0.79    -0.79    -0.79
+    0.82    -2.40    -0.20    -0.20
+   -2.40    -0.79    -0.79     1.10
+   -0.79    -0.79     1.10    -2.40
+    0.44     0.17     0.17    -2.40
+    0.97     0.17    -2.40    -2.40
+   -0.79     0.65    -2.40     0.44
+   -2.40    -0.79     0.65     0.44
+
+Information content (base e):   8.324
+Sample size adjusted information content
+     (information content minus the average information
+     expected from an arbitrary alignment of random sequences):   6.101
+Information content after adding pseudo-counts:   6.370
+
+                                    maximum score:   11.685
+                                    minimum score:  -29.563
+            range of scores:   11.685 -  -29.563 =   41.248
+
+           minimum score for calculating p-values:    0.000
+       maximum ln(numerically calculated p-value):   -3.681
+       minimum ln(numerically calculated p-value):  -18.022
+
+ln(cutoff p-value) based on sample size adjusted information content:   -6.101
+              numerically calculated cutoff score:    3.835
+        ln(numerically calculated cutoff p-value):   -6.102
+average score above numerically calculated cutoff:    4.996
+
+ >3L:3245372,3251371  position=   2004  score=   7.87  ln(p-value)=  -10.00
+ >3L:3245372,3251371  position=   2062C score=   7.14  ln(p-value)=   -9.15
+ >3L:3245372,3251371  position=   2535  score=   8.69  ln(p-value)=  -11.09
+ >3L:3245372,3251371  position=   3092  score=   7.73  ln(p-value)=   -9.82
+ >3L:3245372,3251371  position=   4690C score=   7.02  ln(p-value)=   -9.01

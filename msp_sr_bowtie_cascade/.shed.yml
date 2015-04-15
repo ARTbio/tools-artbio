@@ -1,0 +1,10 @@
+# .shed.yml supporting automatic pushes.
+owner: drosofff
+name: msp_sr_bowtie_cascade
+description: Maps iteratively small RNA sequencing datasets to reference sequences.
+long_description: |
+  Maps iteratively small RNA sequencing datasets to reference sequences, in order to generate annotation of these datasets.
+categories:
+  - RNA
+homepage_url: http://drosophile.org/
+remote_repository_url: https://bitbucket.org/drosofff/gedtools/

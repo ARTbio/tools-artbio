@@ -1,0 +1,12 @@
+# .shed.yml supporting automatic pushes.
+owner: drosofff
+name: yac_clipper
+description: Clips 3' adapters for small RNA sequencing reads.
+long_description: |
+  Clips 3' adapters for small RNA sequencing reads. Supports
+  fasta and fastq output
+categories:
+  - RNA
+  - Fastq Manipulation
+homepage_url: http://drosophile.org/
+remote_repository_url: https://bitbucket.org/drosofff/gedtools/
