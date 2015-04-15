@@ -11,7 +11,21 @@
         generate_sliding_windows.py --input "$input" --output "$output" --window $window --step $step
     ]]></command>
     <inputs>
-        <param type="data" name="input" label="input fasta file" help="select fasta file for which you wish to generate a multi-fasta file in a sliding window fashion" format="fasta" />
+        <conditional name="refFastaSource">
+            <param help="" label="Will you select a fasta sequence from your history or use a pre-installed sequence?" name="fastaSource" type="select">
+                <option value="history">Use one from the history</option>
+                <option value="pre-installed">Use a pre-installed fasta sequence</option>
+            </param>
+            <when value="pre-installed">
+                <param help="if you wish to have your fasta sequence listed contact instance administrator" label="Select a fasta sequence" name="input" type="select">
+                    <options from_data_table="all_fasta">
+          </options>
+                </param>
+            </when>
+            <when value="history">
+                <param format="fasta" label="Select a fasta file for which you wish to generate a multi-fasta file in a sliding window fashion" name="input" type="data" />
+            </when>
+        </conditional>
         <param type="integer" name="window" value="21" min="1" label="window size" help="Specifiy the size of the windows that should be generated"/>
         <param type="integer" name="step" value="21" min="1" label="step size" help="Specify the distance with which windows should be spaced apart."/>
     </inputs>
