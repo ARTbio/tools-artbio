@@ -1,4 +1,4 @@
-<tool id="generate_sliding_windows" name="generate_sliding_windows"  version="0.1.3">
+<tool id="generate_sliding_windows" name="generate_sliding_windows"  version="0.2.0">
 <description>Split fasta sequence in nucleotide windows</description>
     <requirements>
         <requirement type="package" version="1.65">biopython</requirement>
@@ -8,16 +8,22 @@
     </stdio>
 
     <command interpreter="python"><![CDATA[
-        generate_sliding_windows.py --input "$input" --output "$output" --window $window --step $step
+        generate_sliding_windows.py --input 
+        #if $refFastaSource.fastaSource == "history":
+            "$input"
+        #else 
+            "$refFastaSource.pre_installed_fasta.fields.path"
+        #end if 
+        --output "$output" --window $window --step $step
     ]]></command>
     <inputs>
         <conditional name="refFastaSource">
             <param help="" label="Will you select a fasta sequence from your history or use a pre-installed sequence?" name="fastaSource" type="select">
                 <option value="history">Use one from the history</option>
-                <option value="pre-installed">Use a pre-installed fasta sequence</option>
+                <option value="pre_installed">Use a pre-installed fasta sequence</option>
             </param>
-            <when value="pre-installed">
-                <param help="if you wish to have your fasta sequence listed contact instance administrator" label="Select a fasta sequence" name="input" type="select">
+            <when value="pre_installed">
+                <param help="if you wish to have your fasta sequence listed contact instance administrator" label="Select a fasta sequence" name="pre_installed_fasta" type="select">
                     <options from_data_table="all_fasta">
           </options>
                 </param>
