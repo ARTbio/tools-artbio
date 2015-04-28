@@ -1,0 +1,12 @@
+# .shed.yml supporting automatic pushes.
+owner: mvdbeek
+name: get_reference_fasta
+description: Obtain reference genome sequence.
+long_description: |
+  Places the reference genome sequence in the current history.
+  Useful for sharing purposes or tools that work directly on fasta files.
+categories:
+  - Data Source
+  - Fasta Manipulation
+homepage_url: http://drosophile.org/
+remote_repository_url: https://bitbucket.org/drosofff/gedtools/

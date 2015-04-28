@@ -1,0 +1,29 @@
+<tool id="get_fasta_reference" name="get fasta reference"  version="0.1.1">
+<description>Obtain reference genome sequence</description>
+    <stdio>
+        <exit_code range="1:" />
+    </stdio>
+    <command><![CDATA[
+        cat "$pre_installed_fasta.fields.path" > "$output"
+    ]]></command>
+    <inputs>
+          <param help="if you wish to have your fasta sequence listed contact instance administrator" label="Select a fasta sequence" name="pre_installed_fasta" type="select">
+          <options from_data_table="all_fasta"/>
+          </param>
+    </inputs>
+    <outputs>
+        <data name="output" label="${pre_installed_fasta.value_label}" format="fasta" />
+    </outputs>
+    <tests>
+        <test>
+            <param name="pre_installed_fasta" value="EcR_USP_224.fa"/>
+            <output name="output" file="EcR_USP_224.fa"/>
+        </test>
+    </tests>
+    <help><![CDATA[
+
+Places the reference genome sequence in the current history.    
+Useful for sharing purposes or tools that work directly on fasta files.
+
+    ]]></help>
+</tool>
