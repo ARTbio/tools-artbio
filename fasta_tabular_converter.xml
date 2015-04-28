@@ -6,8 +6,8 @@
        <param name="conversionType" type="select" label="conversion option">
           <option value="fasta2tabular" select="true">fasta to tabular</option>
           <option value="tabular2fasta">tabular to fasta</option>
-          <option value="tabular2fastaweight">tabular to fasta weighted</option>
-          <option value="fastaweight2fastaweight">recompile fasta weighted in catenated fasta weighted</option>
+          <option value="tabular2fastaweight">tabular to weighted fasta</option>
+          <option value="fastaweight2fastaweight">recompile weighted fasta to catenated fasta weighted</option>
           <option value="fastaweight2fasta">fasta weighted to fasta</option>
        </param>
     <when value="fasta2tabular">
