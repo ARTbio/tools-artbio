@@ -150,6 +150,8 @@ class Eutils:
         req = urllib2.Request(url, data)
         response = urllib2.urlopen(req)
         fasta = response.read()
+        if "Resource temporarily unavailable" in fasta:
+            return '' # to reiterate the failed download
         if self.dbname != "pubmed":
             assert fasta.startswith(">"), fasta
         fasta = self.sanitiser(self.dbname, fasta) #
@@ -212,8 +214,10 @@ class Eutils:
                 end = min(count, start+batch_size)
                 batch = uids_list[start:end]
                 self.epost(self.dbname, ",".join(batch))
-                self.logger.info("retrieving batch %d" % ((start / batch_size) + 1))
-                mfasta = self.efetch(self.dbname, self.query_key, self.webenv)
+                mfasta = ''
+                while not mfasta:
+                    self.logger.info("retrieving batch %d" % ((start / batch_size) + 1))
+                    mfasta = self.efetch(self.dbname, self.query_key, self.webenv)
                 out.write(mfasta + '\n')
 
 
