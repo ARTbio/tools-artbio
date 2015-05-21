@@ -1,3 +1,3 @@
-library	readsize	A to C	A to G	A to T	C to A	C to G	C to T	G to A	G to C	G to T	T to A	T to C	T to G	total valid reads
-3mismatches_ago2ip_s2.bam	21	48	6503	106	68	46	173	222	144	220	90	232	40	43881
+Library	Readlength	AC	AG	AT	CA	CG	CT	GA	GC	GT	TA	TC	TG	total aligned reads
 3mismatches_ago2ip_ovary.bam	21	380	1214	524	581	278	1127	1032	239	595	483	973	394	138649
+3mismatches_ago2ip_s2.bam	21	48	6503	106	68	46	173	222	144	220	90	232	40	43881

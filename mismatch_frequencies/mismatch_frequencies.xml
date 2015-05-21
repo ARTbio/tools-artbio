@@ -1,4 +1,4 @@
-<tool id="mismatch_frequencies" name="Mismatch Frequencies" version="0.0.7" hidden="false" >
+<tool id="mismatch_frequencies" name="Mismatch Frequencies" version="0.0.8" hidden="false" >
   <description>Analyze mismatch frequencies in BAM/SAM alignments</description>
   <requirements>
     <requirement type="package" version="0.7.7">pysam</requirement>
@@ -17,6 +17,7 @@
                  --n_mm $number_of_mismatches
                  --five_p $five_p
                  --three_p $three_p
+                 --expanded_output_tab $expanded_tab
   </command>
   <inputs>
     <repeat name="rep" title="alignment files">
@@ -27,9 +28,16 @@
     <param name="max_length" label="Maximum read length to analyse" type="integer" value="21"/>
     <param name="five_p" label="Ignore mismatches in the first N nucleotides of a read" type="integer" value="0"/>
     <param name="three_p" label="Ignore mismatches in the last N nucleotides of a read" help="useful to discriminate between tailing events and editing events" type="integer" value="3"/>
+    <param help="Output expanded tabular format" label="Nucleotide mismatches per reference sequence" name="expanded" type="select">
+        <option select="true" value="false">No</option>
+        <option value="expanded">Yes</option>
+    </param>
   </inputs>
   <outputs>
     <data format="tabular" name="output_tab" />
+    <data format="fasta" name="expanded_tab">
+        <filter> expanded == "expanded"</filter>
+    </data>
     <data format="pdf" name="output_pdf" />
   </outputs>
   <tests>
@@ -72,4 +80,6 @@ generated alignment files.
 
 Written by Marius van den Beek, m.vandenbeek at gmail . com
   </help>
+  <citations>
+  </citations>
 </tool>
