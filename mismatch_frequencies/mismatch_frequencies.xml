@@ -1,4 +1,4 @@
-<tool id="mismatch_frequencies" name="Mismatch Frequencies" version="0.0.8" hidden="false" >
+<tool id="mismatch_frequencies" name="Mismatch Frequencies" version="0.0.9" hidden="false" >
   <description>Analyze mismatch frequencies in BAM/SAM alignments</description>
   <requirements>
     <requirement type="package" version="0.7.7">pysam</requirement>
@@ -39,7 +39,7 @@
   </inputs>
   <outputs>
     <data format="tabular" name="output_tab" />
-    <data format="fasta" name="expanded_tab">
+    <data format="tabular" name="expanded_tab">
         <filter> expanded == "expanded"</filter>
     </data>
     <data format="pdf" name="output_pdf" />
