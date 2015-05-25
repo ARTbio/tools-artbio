@@ -52,7 +52,7 @@ def bowtieCommandLiner(alignment_method="RNA", v_mis="1", out_type="tabular",
                        index="path", output="path", pslots="4"):
     if input_format == "fasta":
         input_format = "-f"
-    elif input_format == "fastq":
+    elif (input_format == "fastq") or (input_format == "fastqsanger"):
         input_format = "-q"
     else:
         raise Exception('input format must be one of fasta or fastq')
