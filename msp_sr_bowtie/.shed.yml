@@ -3,9 +3,9 @@ owner: drosofff
 name: msp_sr_bowtie
 description: bowtie wrapper tool to align small RNA sequencing reads
 long_description: |
-  bowtie wrapper tool to align small RNA sequencing reads. This tool belongs to the mississippi tool suite.
+  Bowtie wrapper tool to align small RNA sequencing reads. This tool belongs to the mississippi tool suite.
 categories:
   - RNA
-  - Fastq Manipulation
+  - Next Gen Mappers
 homepage_url: http://drosophile.org/
 remote_repository_url: https://bitbucket.org/drosofff/gedtools/
