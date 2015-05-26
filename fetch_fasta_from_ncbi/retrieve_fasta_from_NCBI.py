@@ -24,7 +24,7 @@ queries are 1 sec delayed, to satisfy NCBI guidelines (more than what they reque
 python get_fasta_from_taxon.py -i 1638 -o test.out -d protein
 python get_fasta_from_taxon.py -i 327045 -o test.out -d nuccore # 556468 UIDs
 """
-
+import sys
 import logging
 import optparse
 import time
@@ -122,7 +122,19 @@ class Eutils:
         req = urllib2.Request(url, data)
         #self.logger.debug("data: %s" % str(data))
         req = urllib2.Request(url, data)
-        response = urllib2.urlopen(req)
+        serverResponse = False
+        while not serverResponse:
+            try:
+                response = urllib2.urlopen(req)
+                serverResponse = True
+            except: # catch *all* exceptions
+                e = sys.exc_info()[0]
+                self.logger.info( "Catched Error: %s" % e )
+                self.logger.info( "Retrying in 10 sec")
+                time.sleep(10)
+#            except urllib2.HTTPError as e:
+#                serverResponse = False
+#                self.logger.info("epost error:%s, %s" % (e.code, e.read() ) )
         querylog = response.readlines()
         self.logger.debug("query response:")
         for line in querylog:
@@ -148,7 +160,14 @@ class Eutils:
         req = urllib2.Request(url, data)
         self.logger.debug("data: %s" % str(data))
         req = urllib2.Request(url, data)
-        response = urllib2.urlopen(req)
+        serverResponse = False
+        while not serverResponse:
+            try:
+                response = urllib2.urlopen(req)
+                serverResponse = True
+            except urllib2.HTTPError as e:
+                serverResponse = False
+                self.logger.info("urlopen error:%s, %s" % (e.code, e.read() ) )
         fasta = response.read()
         if "Resource temporarily unavailable" in fasta:
             return '' # to reiterate the failed download
@@ -191,7 +210,7 @@ class Eutils:
 				fastalines[0] = re.sub(regex, "_", fastalines[0])
 				cleanseq = "\n".join(fastalines)
 				sane_seqlist.append(cleanseq)
-#		sane_seqlist[-1] = sane_seqlist[-1] + "\n" # remove to have sequence blocks not separated by two \n
+		self.logger.info("clean sequences appended: %d" % (len(sane_seqlist) ) )
 		return "\n".join(sane_seqlist)
 
     def get_sequences(self):
