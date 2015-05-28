@@ -1,6 +1,6 @@
 # .shed.yml supporting automatic pushes.
 owner: drosofff
-name: Blastx2scaffold
+name: Blastx_to_scaffold
 description: Generate DNA scaffold from blastx alignment of Contigs
 long_description: |
   This tool start from DNA contigs that aligned to a subject protein sequence through blastx.

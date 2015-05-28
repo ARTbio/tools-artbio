@@ -1,9 +1,9 @@
-<tool id="Blastx2scaffold" name="Blastx2scaffold" version="0.01">
+<tool id="Blastx2scaffold" name="Blastx_to_scaffold" version="0.01">
 <description>Generate DNA scaffold from blastx alignment of Contigs</description>
 <requirements>
 </requirements>
 <command interpreter="python">
-        Blastx2scaffold.py --sequences $sequences
+        Blastx_to_scaffold.py --sequences $sequences
                            --blastx-tab $blastx-tab
                            --output $output
 </command>
