@@ -1,0 +1,16 @@
+# .shed.yml supporting automatic pushes.
+owner: drosofff
+name: Blastx2scaffold
+description: Generate DNA scaffold from blastx alignment of Contigs
+long_description: |
+  This tool start from DNA contigs that aligned to a subject protein sequence through blastx.
+  The contigs must be provided in fasta format. The blastx output must be tabular, the 12 standard column plus column 13 with the length of the blastx subject.
+  The final scaffold is a DNA sequence.
+  Sequences of the subject protein which were not aligned to the contigs are replaced by Ns in this scaffold.
+
+categories:
+  - RNA
+  - Sequence Analysis
+  - Assembly
+homepage_url: http://drosophile.org/
+remote_repository_url: https://bitbucket.org/drosofff/gedtools/
