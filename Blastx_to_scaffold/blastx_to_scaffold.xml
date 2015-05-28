@@ -4,7 +4,7 @@
 </requirements>
 <command interpreter="python">
         blastx_to_scaffold.py --sequences $sequences
-                              --blastx-tab $blastx-tab
+                              --blastx-tab $blastx_tab
                               --output $output
 </command>
 <inputs>
