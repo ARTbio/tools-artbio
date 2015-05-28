@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import sys
+import argparse
 
 def insert_newlines(string, every=60):
     lines = []
