@@ -1,11 +1,11 @@
-<tool id="Blastx2scaffold" name="Blastx_to_scaffold" version="0.01">
+<tool id="blastx2scaffold" name="blastx_to_scaffold" version="0.01">
 <description>Generate DNA scaffold from blastx alignment of Contigs</description>
 <requirements>
 </requirements>
 <command interpreter="python">
-        Blastx_to_scaffold.py --sequences $sequences
-                           --blastx-tab $blastx-tab
-                           --output $output
+        blastx_to_scaffold.py --sequences $sequences
+                              --blastx-tab $blastx-tab
+                              --output $output
 </command>
 <inputs>
 <param name="sequences" type="data" format="fasta" label="Select a fasta contigs file"/> 
