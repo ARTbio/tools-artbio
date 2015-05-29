@@ -1,0 +1,14 @@
+# .shed.yml supporting automatic pushes.
+owner: drosofff
+name: msp_cap3
+description: cap3 wrapper
+long_description: |
+  cap3 wrapper.
+  CAP3: A DNA sequence assembly program.
+  Huang, X. and Madan, A. (1999) CAP3: A DNA sequence assembly program. Genome Res., 9, 868-877.
+  http://seq.cs.iastate.edu/
+
+categories:
+  - Assembly
+homepage_url: http://drosophile.org/
+remote_repository_url: https://bitbucket.org/drosofff/gedtools/
