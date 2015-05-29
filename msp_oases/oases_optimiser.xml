@@ -1,5 +1,5 @@
-<tool id="oasesoptimiserchrisdev" name="oasesoptimiser_indev" version="1.0.2">
-	<description>Auto optimise a denovo RNA-seq Oases/Velvet assembly</description>
+<tool id="oasesoptimiserv" name="Oases_optimiser" version="1.1.0">
+	<description>Auto optimise de novo RNA-seq Oases/Velvet assembly</description>
         <requirements>
                 <requirement type="package" version="1.2.10_9adf09f7ded7fedaf6b0e5e4edf9f46602e263d3">velvet</requirement>
                 <requirement type="set_environment">PATH</requirement>

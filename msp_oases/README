@@ -11,7 +11,7 @@ Note that this wrapper is designed to focused on small RNA reads from small RNA 
 Prerequisites:
 
 1. Enclosed scripts
-2. velvet_ged and oases_ged dependencies packages
+2. package_ged_velvet and package_ged_oases dependency packages
 
 Limitations:
 

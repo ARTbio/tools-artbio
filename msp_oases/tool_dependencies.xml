@@ -4,10 +4,10 @@
     <environment_variable name="PATH" action="prepend_to">$REPOSITORY_INSTALL_DIR</environment_variable>
   </set_environment>
   <package name="velvet" version="1.2.10_9adf09f7ded7fedaf6b0e5e4edf9f46602e263d3">
-      <repository changeset_revision="ce8a4a8d9604" name="velvet_ged_package" owner="drosofff" toolshed="http://lbcd41.snv.jussieu.fr:9009" />
+      <repository name="package_ged_velvet" owner="drosofff" />
     </package>
     <package name="oases" version="0.2.08_7a32460a60929b510037952ae815bb6e29b68123">
-      <repository changeset_revision="ef2b86862408" name="oases_ged_package" owner="drosofff" toolshed="http://lbcd41.snv.jussieu.fr:9009" />
+      <repository name="package_ged_oases" owner="drosofff" />
     </package>
     <action type="set_environment">
       <environment_variable name="PATH" action="prepend_to">$INSTALL_DIR</environment_variable>

@@ -1,0 +1,11 @@
+# .shed.yml supporting automatic pushes.
+owner: drosofff
+name: msp_oases
+description: Short read assembler
+long_description: |
+  Oases use velvet to assemble sequence reads. Here the tool is used for short read assembly
+categories:
+  - Assembly
+  - RNA
+homepage_url: http://drosophile.org/
+remote_repository_url: https://bitbucket.org/drosofff/gedtools/
