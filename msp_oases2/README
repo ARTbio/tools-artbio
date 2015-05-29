@@ -1,0 +1,18 @@
+#Created 28/11/2014
+#Christophe Antoniewski, CNRS/University Pierre et Marie Curie, drosofff@gmail.com
+# inspired from the oases wrapper developped by Konrad Paszkiewicz, Exeter Sequencing Service, University of Exeter 
+
+Oases optimiser
+
+This Galaxy tool is intended to provide a crude but effective method of producing semi-optimised transcriptome assemblies.
+It operates by performing a number of user defined Velvet assemblies upon which Oases is then run.
+The results of all of these runs are then put through a final Oases step where they act as scaffolds for the main assembly.
+Note that this wrapper is designed to focused on small RNA reads from small RNA sequencings and will run velvetg with kmers ranging from 11 to 35 
+Prerequisites:
+
+1. Enclosed scripts
+2. velvet_ged and oases_ged dependencies packages
+
+Limitations:
+
+This is a crude optimisation step which DOES NOT try to evaluate the quality of each assembly or map to any reference cDNA. 

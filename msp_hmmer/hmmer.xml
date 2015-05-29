@@ -1,0 +1,165 @@
+<tool id="hmmer" name="hmmer" version="1.0.0">
+<description>hmmscan/search seqs vs profiles</description>
+<requirements>
+    <requirement type="package" version="3.1b1">hmmer</requirement>
+</requirements>
+<command interpreter="perl">
+hmmer_wrapper.pl
+$program
+--cpu 8
+--tblout $tblout
+--domtblout $domtblout
+$acc
+$noali
+--notextw
+#if $threshold.select == 'E':
+-E $threshold.profile
+--domE $threshold.dom
+#else:
+-T $threshold.profile
+--domT $threshold.dom
+#end if
+--incE $incE
+--incdomE $incdomE
+#if $acceleration.select == "1":
+$acceleration.max
+--F1 $acceleration.F1
+--F2 $acceleration.F2
+--F3 $acceleration.F3
+$acceleration.nobias
+#end if
+#if $other.select == "1":
+$other.nonull2
+--seed $other.seed
+#end if
+-o $logfile
+#if $hmmdb.select == 'db':
+$hmmdb.file
+#else:
+${hmmdb.file.extra_files_path}/hmm
+#end if
+$seqfile
+</command>
+<inputs>
+    <param name="program" type="select" display="radio" label="Query">
+        <option value="hmmscan">Sequence (i.e. hmmscan)</option>
+        <option value="hmmsearch">Profile (i.e. hmmsearch)</option>
+    </param>
+
+    <param name="seqfile" type="data" format="fasta" label="Sequences" /> <!-- NYI embl, genbank -->
+
+    <conditional name="hmmdb">
+        <param name="select" type="select" label="HMM Db">
+          <option value="db" selected="True">Precompiled HMM Database</option>
+          <option value="user">HMM Database in your History</option>
+        </param>
+        <when value="db">
+            <param name="file" type="select" label="Precompiled HMM database">
+                <options from_file="hmmdb.loc">
+                    <column name="name" index="1"/>
+                    <column name="value" index="2"/>
+                </options>
+            </param>
+        </when>
+        <when value="user">
+            <param name="file" type="data" format="hmmer" label="HMM database" />
+        </when>
+    </conditional>
+
+    <param name="acc" type="boolean" truevalue="--acc" falsevalue="" checked="false" label="[--acc] Prefer accessions over names in output" />
+    <param name="noali" type="boolean" truevalue="--noali" falsevalue="" checked="false" label="[--noali] Omit the alignment section from the main output" help="This can greatly reduce the output volume" />
+
+    <!-- OPTIONS FOR REPORTING THRESHOLDS -->
+    <conditional name="threshold">
+        <param name="select" type="select" label="Select reporting threshold to control which hits are reported in output files">
+            <option value="E">Using E-value thresholds</option>
+            <option value="T">Using bit score thresholds</option>
+        </param>
+        <when value="E">
+            <param name="profile" type="float" value="10.0" label="[-E] Report target profiles with an E-value of &lt;= this value" help="The default is 10.0, meaning that on average, about 10 false positives will be reported per query, so you can see the top of the noise and decide for yourself if it is really noise." />
+            <param name="dom" type="float" value="10.0" label="[--domE] In the per-domain output, for target profiles that have already satisfied the per-profile reporting threshold, report individual domains with a conditional E-value of &lt;= this value" help="The default value is 10.0.  A conditional E-value means the expected number of additional false positive domains in the smaller search space of those comparisons that already satisfied the per-profile reporting threshold (and thus must have at least one homologous domain already)." />
+        </when>
+        <when value="T">
+            <param name="profile" type="integer" value="100" label="[-T] Report target profiles with a bit score of &gt;= this value" />
+            <param name="dom" type="integer" value="100" label="[--domT] Report domains with a bit score &gt;= this value" />
+        </when>
+    </conditional>
+
+    <!-- OPTIONS FOR INCLUSION THRESHOLDS; incT & incdomT WERE DELIBERATELY EXCLUDED SINCE THEY ARE NOT RECOMMENDED -->
+    <param name="incE" type="float" value="0.01" label="[--incE] Use an E-value of &lt;= this value as the per-target inclusion threshold" help="The default is 0.01, meaning that on average, about 1 false positive would be expected in every 100 searches with different query subsequences." />
+    <param name="incdomE" type="float" value="0.01" label="[--incdomE] Use a conditional E-value of &lt;= this value as the per-domain inclusion threshold, in targets that have already satisfied the overall per-target inclusion threshold" />
+
+    <!-- NYI: OPTIONS FOR MODEL-SPECIFIC SCORE THRESHOLDING -->
+
+    <!-- CONTROL OF THE ACCELERATION PIPELINE -->
+    <conditional name="acceleration">
+        <param name="select" type="select" label="Control of the acceleration pipeline" help="HMMER3 searches are accelerated in a three-step filter pipeline: the MSV filter, the Viterbi filter, and the Forward filter. The first filter is the fastest and most approximate; the last is the full Forward scoring algorithm.
+        There is also a bias filter step between MSV and Viterbi. Targets that pass all the steps in the acceleration pipeline are then subjected to postprocessing -- domain identification and scoring using the Forward/Backward algorithm. Changing filter thresholds only removes or includes targets from consideration;
+        changing filter thresholds does not alter bit scores, E-values, or alignments, all of which are determined solely in postprocessing.">
+            <option value="0">Use defaults</option>
+            <option value="1">Define options</option>
+        </param>
+        <when value="0">
+        </when>
+        <when value="1">
+            <param name="max" type="boolean" truevalue="--max" falsevalue="" label="[--max] Turn off all filters, including the bias filter, and run full Forward/Backward postprocessing on every target." help="This increases sensitivity somewhat, at a large cost in speed" />
+            <param name="F1" type="float" value="0.02" label="[--F1] Set the P-value threshold for the MSV filter step." help="The default is 0.02, meaning that roughly 2% of the highest scoring nonhomologous targets are expected to pass the filter" />
+            <param name="F2" type="float" value="0.001" label="[--F2] Set the P-value threshold for the Viterbi filter step." />
+            <param name="F3" type="float" value="0.00001" label="[--F3] Set the P-value threshold for the Forward filter step." />
+            <param name="nobias" type="boolean" truevalue="--nobias" falsevalue="" label="[--nobias] Turn off the bias filter." help="This increases sensitivity somewhat, but can come at a high cost in speed, especially if the query has biased residue composition (such as a repetitive sequence region, or if it is a membrane protein with large regions of hydrophobicity). Without the bias filter, too many sequences may pass the filter with biased queries, leading to slower than expected performance as the computationally intensive Forward/Backward algorithms shoulder an abnormally heavy load." />
+        </when>
+    </conditional>
+
+    <!-- OTHER OPTIONS -->
+    <conditional name="other">
+        <param name="select" type="select" label="Other options">
+            <option value="0">Use defaults</option>
+            <option value="1">Define options</option>
+        </param>
+        <when value="0">
+        </when>
+        <when value="1">
+            <param name="nonull2" type="boolean" truevalue="--nonull2" falsevalue="" label="[--nonull2] Turn off the null2 score corrections for biased composition." />
+            <!-- NYI: Z, domZ -->
+            <param name="seed" type="integer" value="42" label="[--seed] Set the random number seed" help="Some steps in postprocessing require Monte Carlo simulation. The default is to use a fixed seed (42), so that results are exactly reproducible. Any other positive integer will give different (but also reproducible) results. A choice of 0 uses an arbitrarily chosen seed." />
+        </when>
+    </conditional>
+</inputs>
+<outputs>
+    <data name="logfile" format="txt" />
+    <data name="tblout" format="tabular" label="${tool.name} on $on_string: Per-sequence hits" />
+    <data name="domtblout" format="tabular" label="${tool.name} on $on_string: Per-domain hits" />
+</outputs>
+<tests>
+</tests>
+<help>
+.. class:: warningmark
+
+**Note**. Hidden Markov Model (HMM) searches take a substantial amount of time.
+For large input datasets it is advisable to allow overnight processing.  
+
+-----
+
+**What it does**
+
+hmmscan is used to search sequences against collections of profiles. For each sequence in seqfile,
+use that query sequence to search the target database of profiles in hmmdb, and output ranked lists of
+the profiles with the most significant matches to the sequence.
+
+hmmsearch is used to search one or more profiles against a sequence database.
+For each profile in "hmmfile", use that query profile to search the target database of profiles in "seqdb", 
+and output ranked lists of the sequences with the most significant matches to the profile.
+
+If using a user-supplied profile database, it needs to be pressed using hmmpress before it can be searched with hmmscan.
+
+**Author**
+
+Sean Eddy, Howard Hughes Medical Institute and Dept. of Genetics, Washington University School of Medicine
+
+http://www.genetics.wustl.edu/eddy/
+
+**Manual**
+
+ftp://selab.janelia.org/pub/software/hmmer/CURRENT/Userguide.pdf
+</help>
+</tool>

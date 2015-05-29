@@ -1,0 +1,166 @@
+<tool id="oasesoptimiserchrisdev" name="oasesoptimiser_indev" version="1.0.2">
+	<description>Auto optimise a denovo RNA-seq Oases/Velvet assembly</description>
+        <requirements>
+                <requirement type="package" version="1.2.10_9adf09f7ded7fedaf6b0e5e4edf9f46602e263d3">velvet</requirement>
+                <requirement type="set_environment">PATH</requirement>
+                <requirement type="package" version="0.2.08_7a32460a60929b510037952ae815bb6e29b68123">oases</requirement>
+        </requirements>
+	<command interpreter="python">
+	oases_optimiser.py  '$start_hash_length' '$end_hash_length' 
+	'#for $i in $inputs
+		${i.input}
+           #end for
+    '
+	'$transcripts'
+	</command>
+
+        <inputs>
+          <param label="Start Hash Length" name="start_hash_length" type="select" help="k-mer length in base pairs of the words being hashed. Shorter hash lengths (i.e. less than 31) may cause out-of-memory problems.">
+                        <option value="11" selected="yes">11</option>
+                        <option value="13">13</option> 
+                        <option value="15">15</option>
+                        <option value="17">17</option>
+                        <option value="19">19</option>
+                        <option value="21">21</option>
+                        <option value="23">23</option>
+                        <option value="25">25</option>
+
+          </param>
+          <param label="End Hash Length" name="end_hash_length" type="select" help="k-mer length in base pairs of the words being hashed.">
+                        <option value="25">25</option>
+                        <option value="27">27</option>
+                        <option value="29">29</option>
+                        <option value="31">31</option>
+                        <option value="33">33</option>
+                        <option value="35">35</option>
+          </param>
+
+
+
+          <repeat name="inputs" title="Input Files">
+                      <param name="input" type="data" format="fasta" label="Dataset: short reads, fasta format"/>
+          </repeat>
+        </inputs>
+	
+	<outputs>
+        <data format="fasta" name="transcripts" label="${tool.name} on ${on_string}: Denovo assembled transcripts"/>
+	</outputs>
+	
+	<help>
+**Oases Optimiser Overview**
+
+Oases_ is a de novo transcriptome assembler specially designed to work with short reads. It is an extension of Velvet developed by Daniel Zerbino and Ewan Birney at the European Bioinformatics Institute (EMBL-EBI), near Cambridge, in the United Kingdom.
+
+Provide all the information about insert lengths and their standard deviation as
+possible (identical to Velvet). In the advanced oases options you should set the -ins_length flag when using paired-end reads (e.g. -ins_length 200 -ins_length_sd 100). If you do not do this, then paired-end information will not be used by Oases!
+
+----------------------------------------------------------------------------------
+
+Oases produces a number of output files, which correspond to the different algorithms
+being run succesively on the data. In the above example, you would find:
+
+transcripts.fa
+	A FASTA file containing the transcripts imputed directly from trivial
+	clusters of contigs (loci with less than two transcripts and Confidence Values = 1)
+	and the highly expressed transcripts imputed by dynamic
+	programming (loci with more than 2 transcripts and Confidence Values less than 1).
+
+splicing_events.txt
+	A hybrid file which describes the contigs contained in each locus in FASTA
+	format, interlaced with one line descriptions of splicing events using the
+	AStalavista nomenclature*.
+
+Read the Oases `documentation`__ for details on using the Oases Assembler.
+
+.. _Velvet: http://www.ebi.ac.uk/~zerbino/oases/
+
+.. __: http://www.ebi.ac.uk/~zerbino/oases/Manual.txt
+
+------
+
+**Other outputs (as per Velvet)**
+
+
+**Contigs**
+
+The *contigs.fa* file.
+This fasta file contains the sequences of the contigs longer than 2k, where k is the word-length used in velveth. If you have specified a min contig lgth threshold, then the contigs shorter than that value are omitted.
+Note that the length and coverage information provided in the header of each contig should therefore be understood in k-mers and in k-mer coverage (cf. 5.1) respectively.
+The N's in the sequence correspond to gaps between scaffolded contigs. The number of N's corresponds to the estimated length of the gap. For reasons of compatibility with the archives, any gap shorter than 10bp is represented by a sequence of 10 N's.
+
+**Stats**
+
+The *stats.txt* file.
+This file is a simple tabbed-delimited description of the nodes. The column names are pretty much self-explanatory. Note however that node lengths are given in k-mers. To obtain the length in nucleotides of each node you simply need to add k - 1, where k is the word-length used in velveth.
+The in and out columns correspond to the number of arcs on the 5' and 3' ends of the contig respectively.
+The coverages in columns short1 cov, short1 Ocov, short2 cov, and short2 Ocov are provided in k-mer coverage (5.1).
+Also, the difference between # cov and # Ocov is the way these values are computed. In the first count, slightly divergent sequences are added to the coverage tally. However, in the second, stricter count, only the sequences which map perfectly onto the consensus sequence are taken into account.
+
+**LastGraph**
+
+The *LastGraph* file.
+This file describes in its entirety the graph produced by Velvet.
+
+**AMOS.afg**
+The *velvet_asm.afg* file.
+This file is mainly designed to be read by the open-source AMOS genome assembly package. Nonetheless, a number of programs are available to transform this kind of file into other assembly file formats (namely ACE, TIGR, Arachne and Celera). See http://amos.sourceforge.net/ for more information.
+The file describes all the contigs contained in the contigs.fa file (cf 4.2.1).
+
+**Advanced options**
+	    -ins_length integer	   : expected distance between two paired-end reads in the first short-read dataset (default: no read pairing)
+	    -ins_length2 integer          : expected distance between two paired-end reads in the second short-read dataset (default: no read pairing)
+        -ins_length_long integer      : expected distance between two long paired-end reads (default: no read pairing)
+        -ins_length*_sd  integer      : est. standard deviation of respective dataset (default: 10% of corresponding length)
+        -scaffolding  yes|no             : scaffolding of contigs used paired end information (default: on)
+        -max_branch_length  integer      : maximum length in base pair of bubble (default: 100)
+        -max_divergence  floating-point  : maximum divergence rate between two branches in a bubble (default: 0.2)
+        -max_gap_count  integer          : maximum number of gaps allowed in the alignment of the two branches of a bubble (default: 3)
+        -min_pair_count  integer         : minimum number of paired end connections to justify the scaffolding of two long contigs (default: 10)
+        -max_coverage  floating point    : removal of high coverage nodes AFTER tour bus (default: no removal)
+        -long_mult_cutoff  int           : minimum number of long reads required to merge contigs (default: 2)
+	-min_trans_length
+	simple threshold on output transcript length
+	-cov_cutoff 
+	minimum number of times a k-mer has to be observed to be used in the 
+	assembly (just like in Velvet) [default=3]
+	-min_pair_cov
+	minimum number of times two contigs must be connected by reads or read pairs to be clustered together [default=4]
+	-paired_cutoff 
+	minimum ratio between the numbers of observed and expected connecting
+	read pairs between two contigs [default=0.1]
+
+
+
+**Hash Length**
+
+The hash length, also known as k-mer length, corresponds to the length, in base pairs, of the words being hashed. 
+
+The hash length is the length of the k-mers being entered in the hash table. Firstly, you must observe three technical constraints::
+
+# it must be an odd number, to avoid palindromes. If you put in an even number, Velvet will just decrement it and proceed.
+# it must be below or equal to MAXKMERHASH length (cf. 2.3.3, by default 31bp), because it is stored on 64 bits
+# it must be strictly inferior to read length, otherwise you simply will not observe any overlaps between reads, for obvious reasons.
+
+Now you still have quite a lot of possibilities. As is often the case, it's a trade- off between specificity and sensitivity. Longer kmers bring you more specificity (i.e. less spurious overlaps) but lowers coverage (cf. below). . . so there's a sweet spot to be found with time and experience.
+We like to think in terms of "k-mer coverage", i.e. how many times has a k-mer been seen among the reads. The relation between k-mer coverage Ck and standard (nucleotide-wise) coverage C is Ck = C # (L - k + 1)/L where k is your hash length, and L you read length.
+Experience shows that this kmer coverage should be above 10 to start getting decent results. If Ck is above 20, you might be "wasting" coverage. Experience also shows that empirical tests with different values for k are not that costly to run! VelvetOptimiser automates these tests for you.
+
+
+**Velvetg options**
+
+
+
+**Input Files**
+
+This Velvet wrapper works only with fasta format, non-paired-end reads.
+
+Supported file formats are::
+
+  fasta
+
+Read categories are::
+
+  short (default)
+
+	</help>
+</tool>
