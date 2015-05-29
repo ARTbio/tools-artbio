@@ -1,0 +1,10 @@
+# .shed.yml supporting automatic pushes.
+owner: drosofff
+name: package_ged_oases
+description: oases package
+long_description: |
+  oases package
+categories:
+  - Tool Dependency Packages
+homepage_url: http://drosophile.org/
+remote_repository_url: https://bitbucket.org/drosofff/gedtools/
