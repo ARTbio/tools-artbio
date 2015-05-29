@@ -1,0 +1,111 @@
+<tool id="transform counts with normalization factor" name="transform counts with normalization factor" version="0.04">
+<description>Transform count column with normalization factor</description>
+<requirements>
+      <requirement type="package" version="9.10">ghostscript</requirement>
+      <requirement type="package" version="1.3.18">graphicsmagick</requirement>
+      <container type="docker">toolfactory/custombuild:base</container>
+</requirements>
+<command interpreter="python">
+
+        transform_counts_with_normalization_factor.py --script_path "$runMe" --interpreter "Rscript" 
+            --tool_name "transform counts with normalization factor" --input_tab $input1 $input2  --output_dir "./" --output_tab "$tab_file" 
+</command>
+<inputs>
+<param name="input1"  type="data" format="tabular" label="Select a suitable input file from your history"/> 
+<param name="input2"  type="data" format="tabular" label="Select a suitable input file from your history"/> 
+
+</inputs>
+<outputs>
+ <data format="tabular" name="tab_file"/>
+
+</outputs>
+<configfiles>
+<configfile name="runMe">
+ourargs = commandArgs(TRUE)
+inf1= ourargs[1]
+inf2= ourargs[2]
+outf= ourargs[3]
+correction_factors=read.delim(inf1, header=T)
+counts=read.delim(inf2, header=T,)
+
+corrected_counts=
+  lapply(correction_factors\$library,
+         function(x) transform(counts[counts\$sample==x,],
+                            count=count*correction_factors[correction_factors\$library==x,]\$normalization_factor))
+
+for (i in seq(length(corrected_counts))) {
+   if (i==1) {
+     tr=corrected_counts[[i]]}
+   else {
+     tr=rbind(tr, corrected_counts[[i]])}
+
+    }
+
+write.table(tr, outf, sep="\t", quote=F, row.names=F)
+</configfile>
+</configfiles>
+
+
+        <tests>
+        <test>
+        <param name="input1" value="transform_counts_with_normalization_factor_test1_input.xls" ftype="tabular"/>
+        <param name="runMe" value="$runMe"/>
+        <output name="tab_file" file="transform_counts_with_normalization_factor_test1_output.xls" ftype="tabular"/>
+        </test>
+        </tests>
+        
+
+<help>
+
+
+**What it Does**
+Given a tabular file with a "count column", and a "sample" column (input file 1) as such:
+gene	size	count	polarity	sample
+FBgn0004904_TART-C_AY600955	21	-7.0	R	piwi +/- 2 R2
+
+apply a normalization factor given in a tabular file (input file 2):
+normalization_factor	library
+0.45614964992795116279	piwi +/- 2 R2
+
+to yield a transform count:
+
+gene	size	count	polarity	sample
+FBgn0004904_TART-C_AY600955	21	-3.19304754949566	R	piwi +/- 2 R2
+
+**Script**
+Pressing execute will run the following code over your input file and generate some outputs in your history::
+
+
+ ourargs = commandArgs(TRUE)
+ inf1= ourargs[1]
+ inf2= ourargs[2]
+ outf= ourargs[3]
+ correction_factors=read.delim(inf1, header=T)
+ counts=read.delim(inf2, header=T,)
+ 
+ corrected_counts=
+   lapply(correction_factors\$library,
+          function(x) transform(counts[counts\$sample==x,],
+                             count=count*correction_factors[correction_factors\$library==x,]\$normalization_factor))
+ 
+ for (i in seq(length(corrected_counts))) {
+    if (i==1) {
+      tr=corrected_counts[[i]]}
+    else {
+      tr=rbind(tr, corrected_counts[[i]])}
+ 
+     }
+ 
+ write.table(tr, outf, sep="\t", quote=F, row.names=F)
+
+**Attribution**
+This Galaxy tool was created by m.vandenbeek@gmail.com at 14/01/2015 21:18:10
+using the Galaxy Tool Factory.
+
+See https://bitbucket.org/fubar/galaxytoolfactory for details of that project
+Please cite: Creating re-usable tools from scripts: The Galaxy Tool Factory. Ross Lazarus; Antony Kaspi; Mark Ziemann; The Galaxy Team. 
+Bioinformatics 2012; doi: 10.1093/bioinformatics/bts573
+
+
+</help>
+</tool>
