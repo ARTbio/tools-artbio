@@ -58,4 +58,7 @@ It is Copyright © 2014-2015 `CNRS and University Pierre et Marie Curie`_ and is
 .. _MIT license: http://opensource.org/licenses/MIT
 
   </help>
+  <citations>
+      <citation type="doi">10.1186/1471-2105-14-73</citation>
+  </citations>
 </tool>
