@@ -42,6 +42,10 @@ The tool is preset with "txid10239[orgn] NOT txid131567[orgn] AND complete NOT p
 
 See `Entrez help`_ for explanation of query formats
 
+Be sure to use the appropriate NCBI query syntax. Always use [] to specify the search fields.
+
+Note that the tool may fail in case of interrupted connexion with the NCBI database (see the log dataset)
+
 **Acknowledgments**
 
 This Galaxy tool has been adapted from the galaxy tool `get_fasta_from_taxon`_.
