@@ -168,7 +168,10 @@ class Eutils:
             except urllib2.HTTPError as e:
                 serverResponse = False
                 self.logger.info("urlopen error:%s, %s" % (e.code, e.read() ) )
-        fasta = response.read()
+        try:
+            fasta = response.read()
+        except httplib.IncompleteRead as e:
+            fasta = e.partial
         if "Resource temporarily unavailable" in fasta:
             return '' # to reiterate the failed download
         if self.dbname != "pubmed":
@@ -178,40 +181,40 @@ class Eutils:
         return fasta
         
     def sanitiser(self, db, fastaseq):
-		if db not in "nuccore protein" : return fastaseq
-		regex = re.compile(r"[ACDEFGHIKLMNPQRSTVWYBZ]{49,}")
-		sane_seqlist = []
-		seqlist = fastaseq.split("\n\n")
-		for seq in seqlist[:-1]:
-			fastalines = seq.split("\n")
-			if len(fastalines) < 2:
-				self.logger.info("Empty sequence for %s" % ("|".join(fastalines[0].split("|")[:4]) ) )
-				self.logger.info("%s download is skipped" % ("|".join(fastalines[0].split("|")[:4]) ) )
-				continue
-			if db == "nuccore":
-				badnuc = 0
-				for nucleotide in fastalines[1]:
-					if nucleotide not in "ATGC":
-						badnuc += 1
-				if float(badnuc)/len(fastalines[1]) > 0.4:
-					self.logger.info("%s ambiguous nucleotides in %s or download interrupted at this offset | %s" % ( float(badnuc)/len(fastalines[1]), "|".join(fastalines[0].split("|")[:4]), fastalines[1]) )
-					self.logger.info("%s download is skipped" % (fastalines[0].split("|")[:4]) )
-					continue
-				fastalines[0] = fastalines[0].replace(" ","_")[:100] # remove spaces and trim the header to 100 chars
-				cleanseq = "\n".join(fastalines)
-				sane_seqlist.append(cleanseq)
-			elif db == "protein":
-				fastalines[0] = fastalines[0][0:100]
-				fastalines[0] = fastalines[0].replace(" ", "_")
-				fastalines[0] = fastalines[0].replace("[", "_")
-				fastalines[0] = fastalines[0].replace("]", "_")
-				fastalines[0] = fastalines[0].replace("=", "_")
-				fastalines[0] = fastalines[0].rstrip("_") # because blast makedb doesn't like it 
-				fastalines[0] = re.sub(regex, "_", fastalines[0])
-				cleanseq = "\n".join(fastalines)
-				sane_seqlist.append(cleanseq)
-		self.logger.info("clean sequences appended: %d" % (len(sane_seqlist) ) )
-		return "\n".join(sane_seqlist)
+        if db not in "nuccore protein" : return fastaseq
+        regex = re.compile(r"[ACDEFGHIKLMNPQRSTVWYBZ]{49,}")
+        sane_seqlist = []
+        seqlist = fastaseq.split("\n\n")
+        for seq in seqlist[:-1]:
+            fastalines = seq.split("\n")
+            if len(fastalines) < 2:
+                self.logger.info("Empty sequence for %s" % ("|".join(fastalines[0].split("|")[:4]) ) )
+                self.logger.info("%s download is skipped" % ("|".join(fastalines[0].split("|")[:4]) ) )
+                continue
+            if db == "nuccore":
+                badnuc = 0
+                for nucleotide in fastalines[1]:
+                    if nucleotide not in "ATGC":
+                        badnuc += 1
+                if float(badnuc)/len(fastalines[1]) > 0.4:
+                    self.logger.info("%s ambiguous nucleotides in %s or download interrupted at this offset | %s" % ( float(badnuc)/len(fastalines[1]), "|".join(fastalines[0].split("|")[:4]), fastalines[1]) )
+                    self.logger.info("%s download is skipped" % (fastalines[0].split("|")[:4]) )
+                    continue
+                fastalines[0] = fastalines[0].replace(" ","_")[:100] # remove spaces and trim the header to 100 chars
+                cleanseq = "\n".join(fastalines)
+                sane_seqlist.append(cleanseq)
+            elif db == "protein":
+                fastalines[0] = fastalines[0][0:100]
+                fastalines[0] = fastalines[0].replace(" ", "_")
+                fastalines[0] = fastalines[0].replace("[", "_")
+                fastalines[0] = fastalines[0].replace("]", "_")
+                fastalines[0] = fastalines[0].replace("=", "_")
+                fastalines[0] = fastalines[0].rstrip("_") # because blast makedb doesn't like it 
+                fastalines[0] = re.sub(regex, "_", fastalines[0])
+                cleanseq = "\n".join(fastalines)
+                sane_seqlist.append(cleanseq)
+        self.logger.info("clean sequences appended: %d" % (len(sane_seqlist) ) )
+        return "\n".join(sane_seqlist)
 
     def get_sequences(self):
         """
