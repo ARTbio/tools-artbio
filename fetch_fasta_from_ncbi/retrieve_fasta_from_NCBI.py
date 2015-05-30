@@ -30,6 +30,7 @@ import optparse
 import time
 import urllib
 import urllib2
+import httplib
 import re
 class Eutils:
 
