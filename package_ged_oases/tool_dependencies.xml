@@ -13,7 +13,7 @@
             <package name="velvet" version="1.2.10_9adf09f7ded7fedaf6b0e5e4edf9f46602e263d3" />
           </repository>
         </action>
-        <action type="shell_command">VELVETPATH=`echo $PATH | awk -F: '{print $1}'`; make VELVET_DIR=$VELVETPATH MAXKMERLENGTH=35</action>
+        <action type="shell_command">VELVETPATH=`echo $PATH | awk -F: '{print $1}'`; make VELVET_DIR=$VELVETPATH MAXKMERLENGTH=70</action>
         <action type="move_directory_files">
             <source_directory>.</source_directory>
             <destination_directory>$INSTALL_DIR</destination_directory>
