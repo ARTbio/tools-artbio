@@ -133,9 +133,6 @@ class Eutils:
                 self.logger.info( "Catched Error: %s" % e )
                 self.logger.info( "Retrying in 10 sec")
                 time.sleep(10)
-#            except urllib2.HTTPError as e:
-#                serverResponse = False
-#                self.logger.info("epost error:%s, %s" % (e.code, e.read() ) )
         querylog = response.readlines()
         self.logger.debug("query response:")
         for line in querylog:
@@ -161,20 +158,24 @@ class Eutils:
         req = urllib2.Request(url, data)
         self.logger.debug("data: %s" % str(data))
         req = urllib2.Request(url, data)
-        serverResponse = False
-        while not serverResponse:
+        serverTransaction = False
+        counter = 0
+        while not serverTransaction:
+            counter += 1
+            self.logger.info("Server Transaction Trial:  %s" % ( counter ) )
             try:
                 response = urllib2.urlopen(req)
-                serverResponse = True
+                fasta = response.read()
+                if "Resource temporarily unavailable" in fasta:
+                    serverTransaction = False
+                else:
+                    serverTransaction = True
             except urllib2.HTTPError as e:
-                serverResponse = False
+                serverTransaction = False
                 self.logger.info("urlopen error:%s, %s" % (e.code, e.read() ) )
-        try:
-            fasta = response.read()
-        except httplib.IncompleteRead as e:
-            fasta = e.partial
-        if "Resource temporarily unavailable" in fasta:
-            return '' # to reiterate the failed download
+            except httplib.IncompleteRead as e:
+                serverTransaction = False
+                self.logger.info("IncompleteRead error:  %s" % ( e.partial ) )
         if self.dbname != "pubmed":
             assert fasta.startswith(">"), fasta
         fasta = self.sanitiser(self.dbname, fasta) #
