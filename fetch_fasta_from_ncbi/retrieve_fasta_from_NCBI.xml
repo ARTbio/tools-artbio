@@ -3,7 +3,7 @@
   <command interpreter="python">retrieve_fasta_from_NCBI.py -i "$queryString" -d $dbname -o $outfilename -l $logfile </command>
 
   <inputs>
-    <param name="queryString" type="text" size="5x80" area="True" value="txid10239[orgn] NOT txid131567[orgn] AND complete NOT partial[title] NOT phage[title]" label="Query to NCBI in entrez format" help="exemple:'Drosophila melanogaster[Organism] AND Gcn5[Title]">
+    <param name="queryString" type="text" size="5x80" area="True" value="txid10239[orgn] NOT txid131567[orgn] AND complete[all] NOT partial[title] NOT phage[title]" label="Query to NCBI in entrez format" help="exemple:'Drosophila melanogaster[Organism] AND Gcn5[Title]">
       <sanitizer>
         <valid initial="string.printable">
           <remove value="&quot;"/>
@@ -42,6 +42,10 @@ The tool is preset with "txid10239[orgn] NOT txid131567[orgn] AND complete NOT p
 
 See `Entrez help`_ for explanation of query formats
 
+Be sure to use the appropriate NCBI query syntax. Always use [] to specify the search fields.
+
+Note that the tool may fail in case of interrupted connexion with the NCBI database (see the log dataset)
+
 **Acknowledgments**
 
 This Galaxy tool has been adapted from the galaxy tool `get_fasta_from_taxon`_.
@@ -54,4 +58,7 @@ It is Copyright © 2014-2015 `CNRS and University Pierre et Marie Curie`_ and is
 .. _MIT license: http://opensource.org/licenses/MIT
 
   </help>
+  <citations>
+      <citation type="doi">10.1186/1471-2105-14-73</citation>
+  </citations>
 </tool>

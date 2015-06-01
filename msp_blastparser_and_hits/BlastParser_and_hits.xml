@@ -1,0 +1,31 @@
+<tool id="BlastParser_and_hits" name="Parse blast output and compile hits" version="2.0.0">
+<description>for virus discovery</description>
+<requirements></requirements>
+<command interpreter="python">
+BlastParser_and_hits.py
+	--sequences $sequences
+	--blast $blast
+	--tabularOutput $tabularOutput
+	--fastaOutput $fastaOutput
+	--flanking $flanking
+</command>
+<inputs>
+	<param name="sequences" type="data" format="fasta"  label="fasta sequences that have been blasted" />
+	<param name="blast" type="data" format="tabular" label="The blast output you wish to parse" />
+	<param name="flanking" type="text" size="5" value= "5" label="Number of flanking nucleotides to add to hits for CAP3 assembly"/>
+</inputs>
+<outputs>
+	<data name="tabularOutput" format="tabular" label="blast analysis, by subjects"/>
+	<data name="fastaOutput" format="fasta" label="hits"/>
+</outputs>
+<help>
+
+**What it does**
+
+Parse blast outputs for virus genome assembly. Outputs analysis and hit sequences for further assembly
+
+</help>
+<test>
+</test>
+
+</tool>

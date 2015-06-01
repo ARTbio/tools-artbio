@@ -1,0 +1,13 @@
+# .shed.yml supporting automatic pushes.
+owner: drosofff
+name: msp_blastparser_and_hits
+description: Parse blast outputs and compile hits
+long_description: |
+  This tool is part of the visitor2 toolsuite.
+  The tool parses blastn or blastx outputs and organizes hits to subjects, with various coverage informations
+  It also outputs query hits sorted by their alignment to blast subjects, so that they can be picked for subsequent CAP3 assembly
+categories:
+  - Assembly
+  - RNA
+homepage_url: http://drosophile.org/
+remote_repository_url: https://bitbucket.org/drosofff/gedtools/
