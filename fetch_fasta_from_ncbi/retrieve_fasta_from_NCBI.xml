@@ -27,7 +27,7 @@
   </outputs>
   <tests>
     <test>
-        <param name="queryString" value="DCV AND virus" />
+        <param name="queryString" value="9629650[gi]" />
         <param name="dbname" value="nuccore" />
         <output name="outfilename" ftype="fasta" file="output.fa" />
         <!--  <output name="logfile" ftype="txt" file="log.txt" />  log.txt changes with timestamp. removed to pass the  test -->
