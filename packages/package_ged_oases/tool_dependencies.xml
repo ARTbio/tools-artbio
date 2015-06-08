@@ -8,6 +8,8 @@
       <actions>
         <action type="shell_command">git clone git://github.com/dzerbino/oases.git</action>
         <action type="shell_command">git reset --hard 7a32460a60929b510037952ae815bb6e29b68123</action>
+        <action type="shell_command">sed -i -e "32s/cleanobj//" Makefile</action>
+        <action type="shell_command">sed -i -e "32s/doc//" Makefile</action>
         <action type="set_environment_for_install">
           <repository name="package_ged_velvet" owner="drosofff" prior_installation_required="True" >
             <package name="velvet" version="1.2.10_9adf09f7ded7fedaf6b0e5e4edf9f46602e263d3" />

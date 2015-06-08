@@ -1,0 +1,10 @@
+# .shed.yml supporting automatic pushes.
+owner: mvdbeek
+name: deseq2
+description: DESeq2 Profiling of readcount lists 
+long_description: |
+  DESeq2 Profiling of readcount lists. DESeq2 differential calling (order by padj, ascending). Still in development and testing for replicates/no replicates.
+categories:
+  - RNA
+homepage_url: http://drosophile.org/
+remote_repository_url: https://bitbucket.org/drosofff/gedtools/

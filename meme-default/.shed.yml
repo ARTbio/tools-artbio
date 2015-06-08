@@ -1,6 +1,6 @@
 # .shed.yml supporting automatic pushes.
 owner: mvdbeek
-name: meme_test4
+name: meme
 description: motif discovery using meme
 long_description: |
   MEME discovers novel, ungapped motifs (recurring, fixed-length patterns) in your nucleotide or protein sequences (sample output from sequences). MEME splits variable-length patterns into two or more separate motifs. See this Manual for more information.

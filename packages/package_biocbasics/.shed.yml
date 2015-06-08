@@ -1,0 +1,11 @@
+# .shed.yml supporting automatic pushes.
+owner: mvdbeek
+name: package_biocbasics
+description: Contains a tool dependency definition that downloads and installs various bioconductor packages into R.
+long_description: |
+  This dependency first installs R and then installs packages from bioconductor 2.14.
+categories:
+  - Tool Dependency Packages
+homepage_url: http://www.bioconductor.org/
+remote_repository_url: http://drosophile.org
+type: tool_dependency_definition

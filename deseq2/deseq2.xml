@@ -1,19 +1,21 @@
-<tool id="DESeq2" name="DESeq2 Profiling">
-	<description></description>
-	<command interpreter="bash">r_wrapper.sh $DESeq2 </command>
+<tool id="DESeq2" name="DESeq2 Profiling" version="1.0.1">
+	<description>of readcount lists</description>
+        <requirements>
+          <requirement type="package" version="3.1.2">R</requirement>
+          <requirement type="package" version="2.14">biocbasics</requirement>
+        </requirements>
+	<command>Rscript $DESeq2 </command>
 	<inputs>
 		<param name="input" type="data" format="tabular" label="miR hit lists, more thant 2 samples"/>
-                <param name="expPlan" type="text" label="experimental plan"/>
+                <param name="expPlan" type="text" label="experimental plan" help="Use a string of Cs and Ts. exemple: CCCTTT means 3 control samples versus 3 test samples"/>
 	</inputs>
-
-
   <configfiles>
     <configfile name="DESeq2">
       ## Setup R error handling to go to stderr
       options( show.error.messages=F,  error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
       suppressMessages(require(DESeq2))
       ## suppressMessages(require(ReportingTools))
-      countData = read.delim("${input}", header=TRUE)
+      countData = read.delim("${input}", header=TRUE, check.names=False)
       rownames( countData )= countData[,1]
       countData= countData[ , -1 ]
       stringconds = "${expPlan}"

@@ -1,6 +1,10 @@
-<tool id="DESeq_normalization" name="DESeq Normalization">
+<tool id="DESeq_normalization" name="DESeq Normalization" version="1.0.2">
 	<description>of hit lists (geometric method)</description>
-	<command interpreter="bash">r_wrapper.sh $normalizationDESeq </command>
+        <requirements>
+          <requirement type="package" version="3.1.2">R</requirement>
+          <requirement type="package" version="2.14">biocbasics</requirement>
+        </requirements>
+	<command interpreter="Rscript"> $normalizationDESeq </command>
 	<inputs>
 		<param name="input" type="data" format="tabular" label="Hit lists of items"/>
 	</inputs>
@@ -11,7 +15,7 @@
       ## Setup R error handling to go to stderr
       options( show.error.messages=F,  error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
       suppressMessages(require(DESeq))
-      countsTable = read.delim("${input}", header=TRUE)
+      countsTable = read.delim("${input}", header=TRUE, check.names=FALSE)
       rownames( countsTable )= countsTable[,1]
       countsTable= countsTable[ , -1 ]
       conds = c(rep ("C", length(countsTable[1,])-1 ), "T")
