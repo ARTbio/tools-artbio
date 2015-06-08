@@ -1,9 +1,13 @@
-<tool id="replicateDESeq" name="DESeq Profiling (replicates)">
+<tool id="replicateDESeq" name="DESeq1 Profiling (replicates)" version="1.0.1">
 	<description>with sample replicates</description>
-	<command interpreter="bash">r_wrapper.sh $replicateDESeq </command>
+        <requirements>
+          <requirement type="package" version="3.1.2">R</requirement>
+          <requirement type="package" version="2.14">biocbasics</requirement>
+        </requirements>
+	<command>Rscript $replicateDESeq </command>
 	<inputs>
-		<param name="input" type="data" format="tabular" label="miR hit lists, more thant 2 samples"/>
-                <param name="expPlan" type="text" label="experimental plan"/>
+		<param name="input" type="data" format="tabular" label="gene readcount list, more than 2 samples"/>
+                <param name="expPlan" type="text" label="experimental plan" help="Use a string of Cs and Ts. exemple: CCCTTT means 3 control samples versus 3 test samples"/>
 	</inputs>
 
 
@@ -12,7 +16,7 @@
       ## Setup R error handling to go to stderr
       options( show.error.messages=F,  error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
       suppressMessages(require(DESeq))
-      countsTable = read.delim("${input}", header=TRUE)
+      countsTable = read.delim("${input}", header=TRUE, check.names=FALSE)
       rownames( countsTable )= countsTable[,1]
       countsTable= countsTable[ , -1 ]
       stringconds = "${expPlan}"
@@ -22,8 +26,8 @@
       cds = estimateDispersions( cds, method="per-condition", sharingMode="maximum") ## was fit-only before 9-12-2013 !! tried for RNAseq - Actually does not change anything !
       ## Attention: fitType="local" is added when parametricDispersionFit fails. remove after use !
       res = nbinomTest( cds, "C", "T" )
-      resNA = res[-which(is.na(res[,8])),] ## omit the NA lignes
-      write.table ( resNA[order(resNA[,8]), ], file = "${output}", row.names=FALSE, col.names=TRUE, quote= FALSE, dec = ".", sep = "\t", eol = "\n")
+      # resNA = res[-which(is.na(res[,8])),] ## omitted the NA lignes, but this was causing a full delete of the table completely devoid of NA !! (not logical but true)
+      write.table ( res[order(res[,8]), ], file = "${output}", row.names=FALSE, col.names=TRUE, quote= FALSE, dec = ".", sep = "\t", eol = "\n")
     </configfile>
   </configfiles>
 
@@ -37,7 +41,7 @@
 
 **What it does**
 
-DESeq differential calling (order by padj, ascending), on two samples, no replicate
+DESeq differential calling (order by padj, ascending), on more than two samples, with replicates.
 
 
 	</help>

@@ -1,6 +1,10 @@
-<tool id="simpleDESeq" name="DESeq Profilng">
+<tool id="simpleDESeq" name="DESeq Profilng" version="1.0.1">
 	<description>2 samples / no replicates</description>
-	<command interpreter="bash">r_wrapper.sh $simpleDESeq </command>
+        <requirements>
+          <requirement type="package" version="3.1.2">R</requirement>
+          <requirement type="package" version="2.14">biocbasics</requirement>
+        </requirements>
+	<command interpreter="Rscript">$simpleDESeq </command>
 	<inputs>
 		<param name="input" type="data" format="tabular" label="miR hit lists, 2 samples"/>
 	</inputs>
@@ -11,7 +15,7 @@
       ## Setup R error handling to go to stderr
       options( show.error.messages=F,  error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
       suppressMessages(require(DESeq))
-      countsTable = read.delim("${input}", header=TRUE)
+      countsTable = read.delim("${input}", header=TRUE, check.names=FALSE)
       rownames( countsTable )= countsTable[,1]
       countsTable= countsTable[ , -1 ]
       conds = c("C","T")
@@ -34,8 +38,7 @@
 
 **What it does**
 
-DESeq differential calling (order by padj, ascending), on two samples, no replicate
-
+DESeq (version 1) differential calling (order by padj, ascending), on two samples, no replicate
 
 	</help>
 </tool>

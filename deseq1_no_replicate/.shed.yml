@@ -1,0 +1,10 @@
+# .shed.yml supporting automatic pushes.
+owner: mvdbeek
+name: simple_deseq
+description: DESeq 1 profiling for 2 samples without replicates.
+long_description: |
+  DESeq 1 profiling for 2 samples without replicates.
+categories:
+  - RNA
+homepage_url: http://bioconductor.org/packages/release/bioc/html/DESeq.html
+remote_repository_url: https://bitbucket.org/drosofff/gedtools/
