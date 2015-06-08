@@ -1,4 +1,4 @@
-<tool id="simpleDESeq" name="DESeq Profilng" version="1.0.1">
+<tool id="simpleDESeq" name="DESeq Profiling" version="1.0.1">
 	<description>2 samples / no replicates</description>
         <requirements>
           <requirement type="package" version="3.1.2">R</requirement>
