@@ -7,8 +7,8 @@
   </command>
 
   <inputs>
-    <param name="query" type="text" size="30" value="" label="Select sequences with this string in their header" help="exemple:'gi|40557596'">
-      <sanitizer>
+    <param name="query" type="text" size="30" value="" label="Select sequences with this string in their header" help="exemple: gi|40557596">
+<!--      <sanitizer>
         <valid initial="string.printable">
           <remove value="&quot;"/>
           <remove value="\"/>
@@ -17,7 +17,7 @@
           <add source="&quot;" target="\&quot;"/>
           <add source="\" target="\\"/>
         </mapping>
-      </sanitizer>
+      </sanitizer> -->
     </param>
     <param format="fasta" label="Source file" name="input" type="data" />
   </inputs>
