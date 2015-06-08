@@ -1,0 +1,14 @@
+# .shed.yml supporting automatic pushes.
+owner: drosofff
+name: msp_fasta_tabular_converter
+description: various fasta to tabular conversions
+long_description: |
+  tool to convert fasta to tabular format or fasta to weighted fasta format and vice versa
+
+categories:
+  - Convert Formats
+  - Fasta Manipulation
+
+homepage_url: http://drosophile.org/
+
+remote_repository_url: https://bitbucket.org/drosofff/gedtools/
