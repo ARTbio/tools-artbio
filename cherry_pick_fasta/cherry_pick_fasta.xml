@@ -38,6 +38,7 @@ This tool retrieves nucleotide/peptide sequences from a fasta file whose headers
 
 It is Copyright © 2015 `CNRS and University Pierre et Marie Curie`_ and is released under the `MIT license`_.
 
+.. _CNRS and University Pierre et Marie Curie: http://www.upmc.fr/en/index.html
 .. _MIT license: http://opensource.org/licenses/MIT
 
   </help>
