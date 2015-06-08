@@ -1,0 +1,12 @@
+# .shed.yml supporting automatic pushes.
+owner: drosofff
+name: cherry_pick_fasta
+description: Pick fasta sequence with specific header content
+long_description: |
+  This tool takes a collection of fasta sequences as an input and select those that satisfy a query match in their header/name
+  A subset of fasta sequence satisfying the query is returned
+
+categories:
+  - Fasta Manipulation
+homepage_url: http://drosophile.org/
+remote_repository_url: https://bitbucket.org/drosofff/gedtools/

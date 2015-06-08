@@ -1,0 +1,47 @@
+<tool id="cherry_pick_fasta" name="Pick Fasta sequences" version="0.9.0">
+  <description>with header satisfying a query string</description>
+  <command interpreter="python">cherry_pick-fasta.py
+                                   --input "$input"
+                                   --query-string $query
+                                   --output $output
+  </command>
+
+  <inputs>
+    <param name="query" type="text" size="30" value="" label="Select sequences with this string in their header" help="exemple:'gi|40557596'">
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value="&quot;"/>
+          <remove value="\"/>
+        </valid>
+        <mapping initial="none">
+          <add source="&quot;" target="\&quot;"/>
+          <add source="\" target="\\"/>
+        </mapping>
+      </sanitizer>
+    </param>
+    <param format="fasta" label="Source file" name="input" type="data" />
+  </inputs>
+  <outputs>
+    <data name="output" format="fasta" label="${tool.name} on ${input.value} with query: ${query.value}" />
+  </outputs>
+  <tests>
+    <test>
+        <param ftype="fasta" name="input" value="input.fa" />
+        <param name="query" value="AAR88092.1" />
+        <output name="output" ftype="fasta" file="output.fa" />
+    </test>
+  </tests>
+  <help>
+**What it does**
+
+This tool retrieves nucleotide/peptide sequences from a fasta file whose headers match a given query string
+
+It is Copyright © 2015 `CNRS and University Pierre et Marie Curie`_ and is released under the `MIT license`_.
+
+.. _MIT license: http://opensource.org/licenses/MIT
+
+  </help>
+  <citations>
+      <citation></citation>
+  </citations>
+</tool>
