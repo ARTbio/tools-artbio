@@ -1,8 +1,8 @@
 <tool id="cherry_pick_fasta" name="Pick Fasta sequences" version="0.9.0">
   <description>with header satisfying a query string</description>
   <command interpreter="python">cherry_pick_fasta.py
-                                   --input "$input"
-                                   --query-string $query
+                                   --input $input
+                                   --query-string "$query"
                                    --output $output
   </command>
 
