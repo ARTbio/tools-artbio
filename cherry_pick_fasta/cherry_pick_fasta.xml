@@ -22,7 +22,7 @@
     <param format="fasta" label="Source file" name="input" type="data" />
   </inputs>
   <outputs>
-    <data name="output" format="fasta" label="${tool.name} on ${input.value} with query: ${query.value}" />
+    <data name="output" format="fasta" label="${tool.name} on ${on_string} including '${query.value}' in header" />
   </outputs>
   <tests>
     <test>
