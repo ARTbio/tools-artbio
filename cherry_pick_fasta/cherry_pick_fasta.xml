@@ -27,7 +27,7 @@
   <tests>
     <test>
         <param ftype="fasta" name="input" value="input.fa" />
-        <param name="query" value="AAR88092.1" />
+        <param name="query" value="gi|81971654" />
         <output name="output" ftype="fasta" file="output.fa" />
     </test>
   </tests>
