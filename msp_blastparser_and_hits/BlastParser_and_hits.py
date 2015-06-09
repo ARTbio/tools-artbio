@@ -40,6 +40,12 @@ def getfasta (fastafile):
     for header in fastadic:
         fastadic[header] = "".join(fastadic[header].split("\n"))
     return fastadic
+
+def insert_newlines(string, every=60):
+    lines = []
+    for i in xrange(0, len(string), every):
+        lines.append(string[i:i+every])
+    return '\n'.join(lines)
     
 def getblast (blastfile):
     '''blastinfo [0]	Percentage of identical matches
@@ -129,7 +135,7 @@ def __main__ ():
         print >> F, "# Maximum Bit Score: %s" % (results[subject]["maxBitScores"])
         print >> F, "# Median Bit Score: %s" % (results[subject]["medianBitScores"])
         for header in results[subject]["HitDic"]:
-            print >> Fasta, ">%s\n%s" % (header, results[subject]["HitDic"][header])
+            print >> Fasta, ">%s\n%s" % (header, insert_newlines(results[subject]["HitDic"][header]) )
         for transcript in Xblastdict[subject]:
             transcriptSize = float(len(fastadict[transcript]))
             for hit in Xblastdict[subject][transcript]:
