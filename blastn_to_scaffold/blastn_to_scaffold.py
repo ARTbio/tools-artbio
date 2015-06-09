@@ -22,8 +22,8 @@ def Parser():
 
 def __main__():
     args = Parser()
-    dnaLenght = int (open (args.blastx_tab, "r").readline().split("\t")[12])
-    BlastxOutput = open (args.blastx_tab, "r")
+    dnaLenght = int (open (args.blastn_tab, "r").readline().split("\t")[12])
+    BlastnOutput = open (args.blastn_tab, "r")
     Contigs = open (args.sequences, "r")
     ContigsDict = {}
     protScaffold = {}
@@ -37,7 +37,7 @@ def __main__():
             
     dnaScaffold = dict ( [(i,"N") for i in range (1, dnaLenght+1)] )
         
-    for line in BlastxOutput:
+    for line in BlastnOutput:
         fields = line[:-1].split("\t")
         queryStart = int(fields[6])
         queryStop = int(fields[7])
@@ -58,7 +58,7 @@ def __main__():
     print >> Out, ">Scaffold"
     print >> Out, finalSequence
             
-    BlastxOutput.close()
+    BlastnOutput.close()
     Contigs.close()
     Out.close()
         

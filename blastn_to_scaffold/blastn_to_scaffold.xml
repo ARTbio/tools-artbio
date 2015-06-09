@@ -3,7 +3,7 @@
 <requirements>
 </requirements>
 <command interpreter="python">
-        blastx_to_scaffold.py --sequences $sequences
+        blastn_to_scaffold.py --sequences $sequences
                               --blastn-tab $blastn_tab
                               --output $output
 </command>
