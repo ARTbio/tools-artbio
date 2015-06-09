@@ -1,4 +1,4 @@
-<tool id="blastx2scaffold" name="blastx_to_scaffold" version="0.01">
+<tool id="blastx2scaffold" name="blastx_to_scaffold" version="0.9.0">
 <description>Generate DNA scaffold from blastx alignment of Contigs</description>
 <requirements>
 </requirements>
@@ -19,9 +19,9 @@
 
 <tests>
   <test>
-    <param name="input1" value="Blastx2scaffold_test1_input.xls" ftype="tabular"/>
-    <param name="runMe" value="$runMe"/>
-    <output name="tab_file" file="Blastx2scaffold_test1_output.xls" ftype="tabular"/>
+    <param name="sequences" value="contigs.fa" ftype="fasta"/>
+    <param name="blastx_tab" value="blastx.tab" ftype="tabular"/>
+    <output name="output" file="scaffold.fa" ftype="fasta"/>
   </test>
 </tests>
         
