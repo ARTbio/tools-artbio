@@ -4,11 +4,13 @@
 </requirements>
 <command interpreter="python">
         blastn_to_scaffold.py --sequences $sequences
+                              --guideSequence $guideSequence
                               --blastn-tab $blastn_tab
                               --output $output
 </command>
 <inputs>
 <param name="sequences" type="data" format="fasta" label="Select a fasta contigs file"/> 
+<param name="guideSequence" type="data" format="fasta" label="Select the fasta guide sequence for scaffolding"/> 
 <param name="blastn_tab"  type="data" format="tabular" label="Select a blastn output from your history" help="must have 13 columns with column 13 containing the subject lenght, other columns are standard"/> 
 
 </inputs>
@@ -21,6 +23,7 @@
   <test>
     <param name="sequences" value="contigs.fa" ftype="fasta"/>
     <param name="blastn_tab" value="blastn.tab" ftype="tabular"/>
+    <param name="guideSequence" value="guideSequence.fa" ftype="tabular"/>
     <output name="output" file="scaffold.fa" ftype="fasta"/>
   </test>
 </tests>
