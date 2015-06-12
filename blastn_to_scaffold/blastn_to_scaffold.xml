@@ -33,10 +33,12 @@
 
 
 **What it Does**
-This tool start from DNA contigs that aligned to a subject protein sequence through blastn.
+This tool start from DNA contigs that aligned to a subject DNA sequence through blastn.
 The contigs must be provided in fasta format. The blastn output must be tabular, the 12 standard column plus column 13 with the length of the blastn subject.
-The final scaffold is a DNA sequence.
-Sequences of the subject DNA sequence which were not aligned to the contigs are replaced by Ns in this scaffold.
+The sequence used to blastn the contigs must be provided to serve as a guide to the final assembly
+The final assembly is a DNA sequence.
+Nucleotides of the guide sequence which were not covered by contigs are in small letters in the output assembly.
+
 
 **Attribution**
 This Galaxy tool was created by drosofff@gmail.com on 9/06/2015
