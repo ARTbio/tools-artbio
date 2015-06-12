@@ -24,7 +24,7 @@
     <param name="sequences" value="contigs.fa" ftype="fasta"/>
     <param name="blastn_tab" value="blastn.tab" ftype="tabular"/>
     <param name="guideSequence" value="guideSequence.fa" ftype="tabular"/>
-    <output name="output" file="scaffold.fa" ftype="fasta"/>
+    <output name="output" file="assembly.fa" ftype="fasta"/>
   </test>
 </tests>
         
