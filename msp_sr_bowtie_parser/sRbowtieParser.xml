@@ -1,4 +1,4 @@
-<tool id="sRbowtieParser" name="Parse items in sRbowtie alignment" version="1.0.4">
+<tool id="sRbowtieParser" name="Parse items in sRbowtie alignment" version="1.0.5">
   <description></description>
   <requirements>
 	<requirement type="package" version="0.12.7">bowtie</requirement>
