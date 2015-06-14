@@ -4,7 +4,8 @@
 import sys, subprocess
 from collections import defaultdict
 from numpy import mean, median, std
-from scipy import stats
+##Disable scipy import temporarily, as no working scipy on toolshed.
+##from scipy import stats
 
 def get_fasta (index="/home/galaxy/galaxy-dist/bowtie/5.37_Dmel/5.37_Dmel"):
   '''This function will return a dictionary containing fasta identifiers as keys and the
@@ -273,6 +274,8 @@ class SmRNAwindow:
 
   def correlation_mapper (self, reference, window_size):
     '''to map correlation with a sliding window 26-2-2013'''
+    from scipy import stats
+
     if window_size > self.size:
       return []
     F=open(reference, "r")

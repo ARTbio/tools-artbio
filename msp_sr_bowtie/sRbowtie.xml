@@ -1,8 +1,8 @@
-<tool id="bowtieForSmallRNA" name="sRbowtie" version="1.1.0">
+<tool id="bowtieForSmallRNA" name="sRbowtie" version="1.1.1">
     <description>for FASTA small reads</description>
     <requirements>
         <requirement type="package" version="0.12.7">bowtie</requirement>
-        <requirement type="package" version="0.1.18">samtools</requirement>
+        <requirement type="package" version="1.2">samtools</requirement>
     </requirements>
     <command interpreter="python"> sRbowtie.py --input $input
                                              --input-format $input.extension
@@ -105,7 +105,7 @@
             <param ftype="fasta" name="input" value="input.fa" />
             <param name="v_mismatches" value="1" />
             <param name="output_format" value="bam" />
-            <output file="output.bam" ftype="bam" lines_diff="4" name="output" />
+            <output file="output.bam" ftype="bam" compare="sim_size" delta="1000" name="output" />
         </test>
         <test>
             <param name="genomeSource" value="history" />
@@ -114,7 +114,7 @@
             <param ftype="fastq" name="input" value="input.fastq" />
             <param name="v_mismatches" value="1" />
             <param name="output_format" value="bam" />
-            <output file="output2.bam" ftype="bam" lines_diff="4" name="output" />
+            <output file="output2.bam" ftype="bam" compare="sim_size" delta="1000" name="output" />
         </test>
     </tests>
     <help>
