@@ -1,4 +1,4 @@
-<tool id="id_to_fasta_in_bowtie" name="Recover Fasta read list" version="0.0.1">
+<tool id="id_to_fasta_in_bowtie" name="Recover Fasta read list" version="0.0.2">
     <description> from a bowtie output WHITHOUT polarity information</description>
     <command interpreter="python">
         id_to_fasta_in_bowtie.py $bowtieout $fasta_ref $fasta_out $output_format $filter_string
@@ -10,7 +10,7 @@
        <param name="filter_string" type="text" label="3' end filter" help="Keep only original reads with this 3' end sequence (leave empty for no filtering)"/>
        <param name="output_format" type="select" label="output format" help="select your output format; yes if you did not filter on last nucleotides, bowtie format is a stupid option that do virtually nothing">
           <option value="bowtie">bowtie</option>
-          <option value="fasta" select="yes">fasta</option>
+          <option value="fasta" selected="true">fasta</option>
        </param>
 
 
