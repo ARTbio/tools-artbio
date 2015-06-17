@@ -1,4 +1,4 @@
-<tool id="yac" name="Clip adapter" version="1.3.4">
+<tool id="yac" name="Clip adapter" version="1.3.5">
     <description />
     <command interpreter="python">yac.py --input $input
                                        --output $output
@@ -39,10 +39,11 @@
         </conditional>
     </inputs>
     <outputs>
-        <data format="fasta" metadata_source="input" name="output" />
-        <change_format>
-            <when format="fastq" input="out_format" value="fastq" />
-        </change_format>
+        <data format="fasta" metadata_source="input" name="output">
+          <change_format>
+              <when input="out_format" value="fastq" format="fastq" />
+          </change_format>
+        </data>
     </outputs>
     <tests>
         <test>
