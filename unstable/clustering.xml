@@ -1,4 +1,4 @@
-<tool id="clustering" name="Clustering" version="0.0.1">
+<tool id="clustering" name="Clustering" version="0.0.2">
 	<description></description>
 	<command interpreter="python">clustering3.py $input $output $index $dist $threshold $average_read_size $folding $format</command>
 	<inputs>
@@ -10,11 +10,11 @@
             <param name="threshold" type="text" size="5" value="30" label="minimum number of reads to display a cluster"/>
             <param name="average_read_size" type="text" size="5" value="19" label="minimum average read size to display a cluster" help="Use this parameter to filter out clusters of degraded RNA, for instance"/>
             <param name="folding" type="select" label="RNA fold clusters">
-              <option value="no" select="true">No</option>
+              <option value="no" selected="true">No</option>
               <option value="yes">Yes</option>
             </param>
             <param name="format" type="select" label="Output format">
-              <option value="detailed" select="true">Detailed information</option>
+              <option value="detailed" selected="true">Detailed information</option>
               <option value="GFF3">GFF3 format</option>
               <option value="intervals">INTERVALS format (for operations on intervals)</option>
             </param>

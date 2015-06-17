@@ -1,4 +1,4 @@
-<tool id="hit_list_aggregater2" name="Agregate" version="0.0.1" hidden="True">
+<tool id="hit_list_aggregater2" name="Agregate" version="0.0.1" hidden="true">
     <description> miR hit list</description>
     <command interpreter="python">
         hit_list_aggregater.py
