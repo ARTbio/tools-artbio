@@ -1,10 +1,10 @@
-<tool id="fasta_tabular_converter" name="fasta - tabular" version="1.0.1">
+<tool id="fasta_tabular_converter" name="fasta - tabular" version="1.0.2">
   <description>conversions</description>
   <command interpreter="python">fasta_tabular_converter.py $input $output $switch.conversionType</command>
   <inputs>
     <conditional name="switch">
        <param name="conversionType" type="select" label="conversion option">
-          <option value="fasta2tabular" select="true">fasta to tabular</option>
+          <option value="fasta2tabular" selected="true">fasta to tabular</option>
           <option value="tabular2fasta">tabular to fasta</option>
           <option value="tabular2fastaweight">tabular to weighted fasta</option>
           <option value="fastaweight2fastaweight">recompile weighted fasta to catenated fasta weighted</option>
