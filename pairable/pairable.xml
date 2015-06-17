@@ -3,7 +3,7 @@
 	<command interpreter="python">pairable.py $input $minquery $maxquery $mintarget $maxtarget $output $index</command>
 	<inputs>
             <param name="index" type="select" label="Select the reference genome used for the bowtie output" help="if your genome of interest is not listed - contact Christophe Antoniewski at drosofff@gmail.com">
-                <options from_data_table="bowtie_indexes"</options>
+                <options>from_data_table="bowtie_indexes"</options>
             </param>
        		<param name="input" type="data" format="bam, sam, tabular" label="Compute signature from this alignment file"/>
 		<param name="minquery" type="integer" size="3" value="23" label="Min size of query small RNAs" help="'24' = 24 nucleotides"/>
