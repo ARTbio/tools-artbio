@@ -55,12 +55,12 @@
             </when>
         </conditional>
         <param help="Note that the BAM will be viewable in trackster only if you choose a full genome referenced for Trackster usage. see the doc below" label="Select output format" name="output_format" type="select">
-            <option select="true" value="tabular">tabular</option>
+            <option selected="true" value="tabular">tabular</option>
             <option value="sam">sam</option>
             <option value="bam">bam</option>
         </param>
         <param help="to get aligned and unaligned reads in fasta format" label="additional fasta output" name="additional_fasta" type="select">
-            <option select="true" value="No">No</option>
+            <option selected="true" value="No">No</option>
             <option value="al">aligned</option>
             <option value="unal">unaligned</option>
             <option value="al_and_unal">both aligned and unaligned</option>

@@ -36,7 +36,4 @@ BlastParser_and_hits.py
 Parse blast outputs for viruses genome assembly. Outputs analysis and hit sequences for further assembly
 
 </help>
-<test>
-</test>
-
 </tool>
