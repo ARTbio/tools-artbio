@@ -1,4 +1,4 @@
-<tool id="smRNA_diagnostic" name="smRNA_diagnostic">
+<tool id="smRNA_diagnostic" name="smRNA_diagnostic" version="0.0.1">
 	<description></description>
 	<command interpreter="python">smRNA_diagnostic.py $input $output $index</command>
 	<inputs>

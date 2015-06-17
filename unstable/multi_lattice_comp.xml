@@ -1,7 +1,10 @@
-
-<tool id="multi_lattice_comp" name="Plot multiple Lattices">
+<tool id="multi_lattice_comp" name="Plot multiple Lattices" version="0.0.1">
 	<description>for comparison</description>
-	<command interpreter="bash">r_wrapper.sh $Rplotter</command>
+        <requirements>
+          <requirement type="package" version="3.1.2">R</requirement>
+          <requirement type="package" version="2.14">biocbasics</requirement>
+        </requirements>
+	<command interpreter="bash">Rscript $Rplotter</command>
 
     <inputs>
         <param name="title" type="text" label="Graph Title"/>

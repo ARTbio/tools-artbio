@@ -1,13 +1,17 @@
-<tool id="fasta_sizes_histogrammer" name="Size Histogram">
+<tool id="fasta_sizes_histogrammer" name="Size Histogram" version="0.0.1">
     <description> fasta files</description>
-    <command interpreter="python">
-        fasta_sizes_histogrammer.py
+        <requirements>
+          <requirement type="package" version="3.1.2">R</requirement>
+          <requirement type="package" version="2.14">biocbasics</requirement>
+        </requirements>    
+    <command>
+        python fasta_sizes_histogrammer.py
         $input1 "$label1"
         #for $q in $queries
             ${q.input2} "${q.label2}"
         #end for
         $output
-        ; bash /home/galaxy/galaxy-dist/tools/chrisTools/r_wrapper.sh $Rplotter
+        ; Rscript $Rplotter
     </command>
     <inputs>
        <param name="title" type="text" label="Main Title" />

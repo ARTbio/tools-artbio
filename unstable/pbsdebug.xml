@@ -1,4 +1,4 @@
-<tool id="pbsdebug" name="PBS DEBUG">
+<tool id="pbsdebug" name="PBS DEBUG" version="0.0.1">
   <command>                                                                                                               
     echo \$GALAXY_SLOTS > $out1;                                                                                          
     env > $out3;                                                                                                          

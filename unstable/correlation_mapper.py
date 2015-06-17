@@ -4,9 +4,6 @@
 # Usage correlation_mapper.py <bowtie input> <output> <bowtie index> <reference_window_file_path>
 
 import sys, subprocess
-from collections import defaultdict # required for some SmRNAwindow attributes (readDic)
-from numpy import mean, std # required for some SmRNAwindow methods
-from scipy import stats
 from smRtools import *
 
 fasta_dic = get_fasta (sys.argv[3])

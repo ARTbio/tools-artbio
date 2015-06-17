@@ -1,4 +1,4 @@
-<tool id="bowtie_window_extraction" name="Extract a region">
+<tool id="bowtie_window_extraction" name="Extract a region" version="0.0.1">
 	<description>from a bowtie output</description>
 	<command interpreter="python">bowtie_window_extraction.py $input $geneID $Upstream_Coordinate $Downstream_Coordinate $output $minsize $maxsize $output_format</command>
 	<inputs>

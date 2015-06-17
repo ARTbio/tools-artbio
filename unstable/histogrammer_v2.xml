@@ -1,6 +1,10 @@
 <tool id="X2_histogrammer_F_and_R_strands" name="Small RNA size distributions" version="2.0.0">
   <description>in Lattice graph</description>
-  <command>python /home/galaxy/galaxy-dist/tools/chrisTools/histogrammer_v2.py $input $output $Nfact $minrange $maxrange; bash /home/galaxy/galaxy-dist/tools/chrisTools/r_wrapper.sh $Rplotter</command>
+        <requirements>
+          <requirement type="package" version="3.1.2">R</requirement>
+          <requirement type="package" version="2.14">biocbasics</requirement>
+        </requirements>
+  <command>python histogrammer_v2.py $input $output $Nfact $minrange $maxrange; Rscript $Rplotter</command>
   <inputs>
      <param name="input" type="data" format="tabular" label="Bowtie standard output" help="2nd column in bowtie output must not be suppressed"/>
      <param name="Nfact" type="float" size="6" value="1" label="Normalization factor" help="enter a normalization factor for distribution comparison, if neededd"/>

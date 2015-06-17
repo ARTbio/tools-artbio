@@ -1,4 +1,4 @@
-<tool id="hit_list_aggregater2" name="Agregate">
+<tool id="hit_list_aggregater2" name="Agregate" version="0.0.1" hidden="True">
     <description> miR hit list</description>
     <command interpreter="python">
         hit_list_aggregater.py
@@ -28,6 +28,7 @@
 **What it does**
 
 Agregate miR profiles (experimental version 20-2-2012)
+Do not use for new projects, replaced by "combine read counts".
 
    </help>
 </tool>

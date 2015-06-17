@@ -1,6 +1,10 @@
-<tool id="X_PlotTabler" name="Lattice read count maps">
+<tool id="X_PlotTabler" name="Lattice read count maps" version="0.0.1">
 	<description></description>
-	<command>python /home/galaxy/galaxy-dist/tools/chrisTools/smRplotTabler.py $input $minquery $maxquery $output
+        <requirements>
+          <requirement type="package" version="3.1.2">R</requirement>
+          <requirement type="package" version="2.14">biocbasics</requirement>
+        </requirements>
+	<command>python smRplotTabler.py $input $minquery $maxquery $output
                                       #if $refGenomeSource.genomeSource == "history":
                                         $refGenomeSource.ownFile
                                         --do_not_extract_index
@@ -8,7 +12,7 @@
                                         $refGenomeSource.index
                                         --extract_index
                                       #end if
-                                      ;bash /home/galaxy/galaxy-dist/tools/chrisTools/r_wrapper.sh $Rplotter
+                                      ;Rscript $Rplotter
        </command>
 	<inputs>
           <conditional name="refGenomeSource">

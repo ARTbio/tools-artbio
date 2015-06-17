@@ -1,7 +1,7 @@
 <tool id="X_histogrammer_F_and_R_strands" name="Small RNA size distribution" version="1.0.0">
   <description>(all targets pooled)</description>
   <parallelism method="basic"></parallelism>
-  <command>python /home/galaxy/galaxy-dist/tools/chrisTools/histogrammer.py $input $output $Nfact; bash /home/galaxy/galaxy-dist/tools/chrisTools/r_wrapper.sh $distributionDrawer </command>
+  <command>python histogrammer.py $input $output $Nfact; Rscript $distributionDrawer </command>
   <inputs>
      <param name="input" type="data" format="tabular" label="Bowtie standard output" help="2nd column in bowtie output must not be suppressed"/>
      <param name="Nfact" type="float" size="6" value="1" label="Normalization factor" help="enter a normalization factor for distribution comparison, if neededd"/>

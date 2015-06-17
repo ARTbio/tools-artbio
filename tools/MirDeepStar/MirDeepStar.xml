@@ -1,4 +1,4 @@
-<tool id="MirDeepStar" name="MirDeepStar">
+<tool id="MirDeepStar" name="MirDeepStar" version="0.0.1">
     <description />
     <command interpreter="python">MDS_wrapper.py $input $genome $output $output2 $output3</command>
     <inputs>

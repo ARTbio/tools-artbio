@@ -1,4 +1,4 @@
-<tool id="includeScore" name="includeScore">
+<tool id="includeScore" name="includeScore" version="0.0.1">
 <description>of a DESeq list in a GFF file</description>
 <command interpreter="python">includeScore.py $DESeq_input $GFF_input $output $id_column $score_column $filter_limit</command>
 

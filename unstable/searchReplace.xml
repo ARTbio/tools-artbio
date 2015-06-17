@@ -1,4 +1,4 @@
-<tool id="search_and_replace" name="Text Search and Replace">
+<tool id="search_and_replace" name="Text Search and Replace" version="0.0.1">
     <description> for annotation manipulation</description>
     <command interpreter="python">
         searchReplace.py $dictionary $input_text_file $replaced_text_file

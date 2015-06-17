@@ -1,4 +1,4 @@
-<tool id="id_to_fasta_in_bowtie" name="Recover Fasta read list">
+<tool id="id_to_fasta_in_bowtie" name="Recover Fasta read list" version="0.0.1">
     <description> from a bowtie output WHITHOUT polarity information</description>
     <command interpreter="python">
         id_to_fasta_in_bowtie.py $bowtieout $fasta_ref $fasta_out $output_format $filter_string

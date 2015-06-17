@@ -1,4 +1,4 @@
-<tool id="08_output_10nt_overlapped_paires" name="Output 10nt overlapped pairs">
+<tool id="08_output_10nt_overlapped_paires" name="Output 10nt overlapped pairs" version="0.0.1">
 	<description></description>
 	<command interpreter="python">pairer.py $input $minquery $maxquery $mintarget $maxtarget $output $output1 $output2 $output3 $output4 $output5 $output6 $index</command>
 	<inputs>

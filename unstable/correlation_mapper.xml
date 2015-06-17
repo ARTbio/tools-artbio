@@ -1,4 +1,4 @@
-<tool id="correlation_mapper" name="Correlation Mapper">
+<tool id="correlation_mapper" name="Correlation Mapper" version="0.0.1">
 	<description></description>
 	<command interpreter="python">correlation_mapper.py $input $output $index $referencetable</command>
 	<inputs>

@@ -1,7 +1,10 @@
-
-<tool id="canonical_tRNA_lattice" name="Plot canonical tRNA dataframe">
+<tool id="canonical_tRNA_lattice" name="Plot canonical tRNA dataframe" version="0.0.1">
 	<description>Using R lattice package</description>
-	<command interpreter="bash">r_wrapper.sh $Rplotter</command>
+        <requirements>
+          <requirement type="package" version="3.1.2">R</requirement>
+          <requirement type="package" version="2.14">biocbasics</requirement>
+        </requirements>
+	<command interpreter="bash">Rscript $Rplotter</command>
 	<inputs>
 		<param name="input" type="data" format="tabular" label="R Plot from this tabular input"/>
 		<param name="title" type="text" size="15" value="Main Title" label="Main Titles"/>

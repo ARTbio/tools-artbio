@@ -1,4 +1,4 @@
-<tool id="clustering" name="Clustering">
+<tool id="clustering" name="Clustering" version="0.0.1">
 	<description></description>
 	<command interpreter="python">clustering3.py $input $output $index $dist $threshold $average_read_size $folding $format</command>
 	<inputs>

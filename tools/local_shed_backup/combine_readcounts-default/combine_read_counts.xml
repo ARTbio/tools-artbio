@@ -1,4 +1,4 @@
-<tool id="combin_read_count_v1" name="Combine read counts">
+<tool id="combin_read_count_v1" name="Combine read counts" version="0.0.1">
     <description> Combine the read counts of multiple files</description>
     <command interpreter="python">
 combine_read_counts.py $out_file1

@@ -1,4 +1,4 @@
-<tool id="trial" name="class trial">
+<tool id="trial" name="class trial" version="0.0.1">
 	<description></description>
 	<command interpreter="python">classextract_test.py $input $index $output</command>
 	<inputs>

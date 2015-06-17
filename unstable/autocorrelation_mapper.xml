@@ -1,4 +1,4 @@
-<tool id="autocorrelation_mapper" name="Autocorrelation Mapper">
+<tool id="autocorrelation_mapper" name="Autocorrelation Mapper" version="0.0.1">
 	<description></description>
 	<command interpreter="python">autocorrelation_mapper.py $input $mincoor $maxcoor $output</command>
 	<inputs>
