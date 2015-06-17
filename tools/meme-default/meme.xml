@@ -2,7 +2,7 @@
   <requirements>
     <requirement type="package" version="4.10.0_4">meme</requirement>
   </requirements>
-  <description>motif discovery</description>
+  <descriptionmotif discovery</description>
   <command>meme "$input1" -o "${html_outfile.files_path}" 
   -nostatus
   
