@@ -6,3 +6,4 @@ Contact gedserver@gmail.com if you have questions.
 CI      | Test                            |  Status
 ------- |-------------------------------- | -------
 Jenkins | Planemo lint tests (error only) | [![Lint Status](https://lbcd41.snv.jussieu.fr/jenkins/buildStatus/icon?job=galaxy_tool_lint)](https://lbcd41.snv.jussieu.fr/jenkins/job/galaxy_tool_lint/)
+Jenkins | Planemo lint tests (strict) | [![Lint Status](https://lbcd41.snv.jussieu.fr/jenkins/buildStatus/icon?job=galaxy_tool_lint_strict)](https://lbcd41.snv.jussieu.fr/jenkins/job/galaxy_tool_lint_strict/)
