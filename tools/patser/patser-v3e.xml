@@ -1,4 +1,5 @@
-<tool id="patser-v3e" name="patser" description="finds putative transcription factor binding sites" version="0.1.2">
+<tool id="patser-v3e" name="patser" version="0.1.2">
+    <description "finds putative transcription factor binding sites"/>
     <requirements>
         <requirement type="package" version="v3e">patser</requirement>
     </requirements>
