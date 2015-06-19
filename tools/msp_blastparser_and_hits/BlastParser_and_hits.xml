@@ -1,4 +1,4 @@
-<tool id="BlastParser_and_hits" name="Parse blast output and compile hits" version="2.0.0">
+<tool id="BlastParser_and_hits" name="Parse blast output and compile hits" version="2.1.0">
 <description>for virus discovery</description>
 <requirements></requirements>
 <command interpreter="python">
@@ -8,11 +8,16 @@ BlastParser_and_hits.py
 	--tabularOutput $tabularOutput
 	--fastaOutput $fastaOutput
 	--flanking $flanking
+	--mode $mode
 </command>
 <inputs>
 	<param name="sequences" type="data" format="fasta"  label="fasta sequences that have been blasted" />
 	<param name="blast" type="data" format="tabular" label="The blast output you wish to parse" />
 	<param name="flanking" type="text" size="5" value= "5" label="Number of flanking nucleotides to add to hits for CAP3 assembly"/>
+	<param name="mode" type="select" label="Verbose or short reporting mode" help="display or not the oases contigs">
+	    <option value="verbose" default="true">verbose</option>
+	    <option value="short">do not report oases contigs</option>
+	</param>
 </inputs>
 <outputs>
 	<data name="tabularOutput" format="tabular" label="blast analysis, by subjects"/>
@@ -24,6 +29,7 @@ BlastParser_and_hits.py
         <param ftype="fasta" name="sequences" value="input.fa" />
         <param ftype="tabular" name="blast" value="blast.tab" />
         <param name="flanking" value="5" />
+        <param name="mode" value="verbose" />
         <output name="tabularOutput" ftype="tabular" file="output.tab" />
         <output name="fastaOutput" ftype="fasta" file="output.fa" />
     </test>
