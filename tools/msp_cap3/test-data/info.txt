@@ -1,0 +1,23 @@
+No file of quality values (.qual) is found
+No file of constraints (.con) is found.
+Number of overlaps saved: 12
+ComputeOverlap done
+IdentifyChimeras done
+Number of overlaps removed: 0
+RemovePoorOverlaps done
+ASSEM done
+ComputDistForContigs done
+PresentLayout done
+Clip gi|225356593|gb|FJ150422.1|_Drosophila_A_virus_iso left clip: 1, right clip: 395,  length: 395,  right size 0
+Clip gi|225356593|gb|FJ150422.1|_Drosophila_A_virus_iso left clip: 1, right clip: 197,  length: 197,  right size 0
+Clip gi|225356593|gb|FJ150422.1|_Drosophila_A_virus_iso left clip: 1, right clip: 224,  length: 224,  right size 0
+Clip gi|225356593|gb|FJ150422.1|_Drosophila_A_virus_iso left clip: 1, right clip: 1372,  length: 1372,  right size 0
+Clip gi|225356593|gb|FJ150422.1|_Drosophila_A_virus_iso left clip: 1, right clip: 402,  length: 409,  right size 7
+Clip gi|225356593|gb|FJ150422.1|_Drosophila_A_virus_iso left clip: 1, right clip: 421,  length: 421,  right size 0
+Clip gi|225356593|gb|FJ150422.1|_Drosophila_A_virus_iso left clip: 1, right clip: 627,  length: 627,  right size 0
+Clip gi|225356593|gb|FJ150422.1|_Drosophila_A_virus_iso left clip: 1, right clip: 515,  length: 515,  right size 0
+Clip gi|225356593|gb|FJ150422.1|_Drosophila_A_virus_iso left clip: 1, right clip: 506,  length: 506,  right size 0
+Clip gi|225356593|gb|FJ150422.1|_Drosophila_A_virus_iso left clip: 1, right clip: 284,  length: 284,  right size 0
+Clip gi|225356593|gb|FJ150422.1|_Drosophila_A_virus_iso left clip: 1, right clip: 236,  length: 236,  right size 0
+Clip gi|225356593|gb|FJ150422.1|_Drosophila_A_virus_iso left clip: 4, right clip: 253,  length: 253,  right size 0
+Clip gi|225356593|gb|FJ150422.1|_Drosophila_A_virus_iso left clip: 2, right clip: 251,  length: 251,  right size 0

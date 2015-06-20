@@ -1,0 +1,299 @@
+Number of segment pairs = 342; number of pairwise comparisons = 14
+'+' means given segment; '-' means reverse complement
+
+Overlaps            Containments  No. of Constraints Supporting Overlap
+
+******************* Contig 1 ********************
+gi|225356593|gb|FJ150422.1|_Drosophila_A_virus_iso+
+                    gi|225356593|gb|FJ150422.1|_Drosophila_A_virus_iso+ is in gi|225356593|gb|FJ150422.1|_Drosophila_A_virus_iso+
+                    gi|225356593|gb|FJ150422.1|_Drosophila_A_virus_iso+ is in gi|225356593|gb|FJ150422.1|_Drosophila_A_virus_iso+
+gi|225356593|gb|FJ150422.1|_Drosophila_A_virus_iso+
+                    gi|225356593|gb|FJ150422.1|_Drosophila_A_virus_iso+ is in gi|225356593|gb|FJ150422.1|_Drosophila_A_virus_iso+
+                    gi|225356593|gb|FJ150422.1|_Drosophila_A_virus_iso+ is in gi|225356593|gb|FJ150422.1|_Drosophila_A_virus_iso+
+gi|225356593|gb|FJ150422.1|_Drosophila_A_virus_iso+
+******************* Contig 2 ********************
+gi|225356593|gb|FJ150422.1|_Drosophila_A_virus_iso+
+                    gi|225356593|gb|FJ150422.1|_Drosophila_A_virus_iso+ is in gi|225356593|gb|FJ150422.1|_Drosophila_A_virus_iso+
+******************* Contig 3 ********************
+gi|225356593|gb|FJ150422.1|_Drosophila_A_virus_iso+
+gi|225356593|gb|FJ150422.1|_Drosophila_A_virus_iso+
+******************* Contig 4 ********************
+gi|225356593|gb|FJ150422.1|_Drosophila_A_virus_iso+
+gi|225356593|gb|FJ150422.1|_Drosophila_A_virus_iso+
+
+DETAILED DISPLAY OF CONTIGS
+******************* Contig 1 ********************
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ GTTGCATATTCAACCTGCCGAGCCCAGGAAGACTCAGGCGGGGGAGGCACTACATTAGGG
+gi|225356593|gb|FJ15+ GTTGCATATTCAACCTGCCGAGCCCAGGAAGACTCAGGCGGGGGAGGCACTACATTAGGG
+gi|225356593|gb|FJ15+ GTTGCATATTCAACCTGCCGAGCCCAGGAAGACTCAGGCGGGGGAGGCACTACATTAGGG
+                      ____________________________________________________________
+consensus             GTTGCATATTCAACCTGCCGAGCCCAGGAAGACTCAGGCGGGGGAGGCACTACATTAGGG
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ GTCGCAAAGCTAGACTTCTTGTATGGGATGTTGTTAACCTCCAAAATAGCTGCACAGATG
+gi|225356593|gb|FJ15+ GTCGCAAAGCTAGACTTCTTGTATGGGATGTTGTTAACCTCCAAAATAGCTGCACAGATG
+gi|225356593|gb|FJ15+ GTCGCAAAGCTAGACTTCTTGTATGGGATGTTGTTAACCTCCAAAATAGCTGCACAGATG
+                      ____________________________________________________________
+consensus             GTCGCAAAGCTAGACTTCTTGTATGGGATGTTGTTAACCTCCAAAATAGCTGCACAGATG
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ TATTCCTTAGCCAGTTTGGCAGAGGAAGACCAGGCTTCTCCCAACAGCTTCACATCCTGG
+gi|225356593|gb|FJ15+ TATTCCTTAGCCAGTTTGGCAGAGGAAGACCAGGCTTCTCCCAACAGCTTCACATCCTGG
+gi|225356593|gb|FJ15+                                                    ACATCCTGG
+gi|225356593|gb|FJ15+ TATTCCTTAGCCAGTTTGGCAGAGGAAGACCAGGCTTCTCCCAACAGCTTCACATCCTGG
+                      ____________________________________________________________
+consensus             TATTCCTTAGCCAGTTTGGCAGAGGAAGACCAGGCTTCTCCCAACAGCTTCACATCCTGG
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ GTATGGTGGCTGTGGGCGTAGAGCCTAACTCCAACAGGATTGGCAGCATTTGGCCGTACC
+gi|225356593|gb|FJ15+ GTATGGTGGCTGTGGGC                                           
+gi|225356593|gb|FJ15+ GTATGGTGGCTGTGGGCGTAGAGCCTAACTCCAACAGGATTGGCAGCATTTGGCCGTACC
+gi|225356593|gb|FJ15+ GTATGGTGGCTGTGGGCGTAGAGCCTAACTCCAACAGGATTGGCAGCATTTGGCCGTACC
+                      ____________________________________________________________
+consensus             GTATGGTGGCTGTGGGCGTAGAGCCTAACTCCAACAGGATTGGCAGCATTTGGCCGTACC
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ TCAGATATCCATTTAGTGAATCCTGAGAATCTCCCGCTGACCATTGCATGGACATATGCC
+gi|225356593|gb|FJ15+ TCAGATATCCATTTAGTGAATCCTGAGAATCTCCCGCTGACCATTGCATGGACATATGCC
+gi|225356593|gb|FJ15+ TCAGATATCCATTTAGTGAATCCTGAGAATCTCCCGCTGACCATTGCATGGACATATGCC
+                      ____________________________________________________________
+consensus             TCAGATATCCATTTAGTGAATCCTGAGAATCTCCCGCTGACCATTGCATGGACATATGCC
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ ATGGCATCCTCTGCTGTATTTATATCGTGGGGAGGTGGATGGAGGTTCGATACTCCTGCA
+gi|225356593|gb|FJ15+ ATGGCATCCTCTGCTGTATTTATATCGTGGGGAGGTGGATGGAGGTTCGATACTCCTGCA
+gi|225356593|gb|FJ15+ ATGGCATCCTCTGCTGTATTTATATCGTGGGGAGGTGGATGGAGGTTCGATACTCCTGCA
+gi|225356593|gb|FJ15+                                                   TACTCCTGCA
+                      ____________________________________________________________
+consensus             ATGGCATCCTCTGCTGTATTTATATCGTGGGGAGGTGGATGGAGGTTCGATACTCCTGCA
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ ACGTCCAGGTTAATGAGCTCAGGTTGGGTTTTTAC                         
+gi|225356593|gb|FJ15+ ACGTCCAGGTTAATGAGCTCAGGTTGGGTTTTTAC                         
+gi|225356593|gb|FJ15+ ACGTCCAGGTTAATGAGCTCAGGTTGGGTTTTTACAATCTCCCGTCTCAAAGCTGACGTT
+gi|225356593|gb|FJ15+          TTAATGAGCTCAGGTTGGGTTTTTACAATCTCCCGTCTCAAAGCTGACGTT
+gi|225356593|gb|FJ15+ ACGTCCAGATTAATGAGCTCAGGTTGGGTTTTTACAATCTCCCGTCTCAAAGCTGACGTT
+                      ____________________________________________________________
+consensus             ACGTCCAGGTTAATGAGCTCAGGTTGGGTTTTTACAATCTCCCGTCTCAAAGCTGACGTT
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ CTGGCTGCAGTAGTCTTATCAATCAGATTACGCTTTTCCTCCATTTCTTCTCTTTGACTG
+gi|225356593|gb|FJ15+ CTGGCTGCAGTAGTCTTATCAATCAGATTACGCTTTTCCTCCATTTCTTCTCTTTGACTG
+gi|225356593|gb|FJ15+ CTGGCTGCAGTAGTCTTATCAATCAGATTACGCTTTTCCTCCATTTCTTCTCTTTGACTG
+                      ____________________________________________________________
+consensus             CTGGCTGCAGTAGTCTTATCAATCAGATTACGCTTTTCCTCCATTTCTTCTCTTTGACTG
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ TCCTGCAATGTGGGGAAAGGAGTCACTAGTGGGTATAAGGAAATCAAGTCTCCAAGTTCA
+gi|225356593|gb|FJ15+ TCCTGCAATGTGGGGAAAGGAGTCACTAGTGGGTATAAGGAAATCAAGTCTCCAAGTTCA
+gi|225356593|gb|FJ15+ TCCTGCAATGTGGGGAAAGGAGTCACTAGTGGGTATAAGGAAATCAAGTCTCCAAGTTCA
+                      ____________________________________________________________
+consensus             TCCTGCAATGTGGGGAAAGGAGTCACTAGTGGGTATAAGGAAATCAAGTCTCCAAGTTCA
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ TCTCCAGTAGTGAAATAGCCCCCTTTAGCAGCACCCACAACAATTTGGTAGGCACTAGCT
+gi|225356593|gb|FJ15+ TCTCCAGTAGTGAAATAGCCCCCTTTAGCAGCACCCACAACAATTTGGTAGGCACTAGCT
+gi|225356593|gb|FJ15+ TCTCCAGTAGTGAAATAGCCCCCTTTAGCAGCACCCACAACAATTTGGTAGGCACTAGCT
+                      ____________________________________________________________
+consensus             TCTCCAGTAGTGAAATAGCCCCCTTTAGCAGCACCCACAACAATTTGGTAGGCACTAGCT
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ CCAACTTTATCGGCAACAGTACCAACCTGAGAAACACCTCCAACTGAGGTAAGCCATCTA
+gi|225356593|gb|FJ15+ CCAACTTTATCGGCAACAGTACCAACCTGAGAAACACCTCCAACTGAGGTAAGCCATCTA
+gi|225356593|gb|FJ15+ CCAACTTTATCGGCAACAGTACCAACCTGAGAAACACCTCCAACTGAGGTAAGCCATCTA
+                      ____________________________________________________________
+consensus             CCAACTTTATCGGCAACAGTACCAACCTGAGAAACACCTCCAACTGAGGTAAGCCATCTA
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ ACGACGGCTTGAGCCATATTTGGTAGGAATTTCTCAGGGATGTCACCACTTTCTGTGATC
+gi|225356593|gb|FJ15+ ACGACGGCTTGAGCCATATTTGGTAGGAATTTCTCAGGGATGTCACCACTTTCTGTGATC
+gi|225356593|gb|FJ15+ ACGACGGCTTGAGCCATATTTGGTAGGAATTTCTCAGGGATGTCACCACTTTCTGTGATC
+                      ____________________________________________________________
+consensus             ACGACGGCTTGAGCCATATTTGGTAGGAATTTCTCAGGGATGTCACCACTTTCTGTGATC
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ CGAACTACTTTGGGTCTGGGGTTCGGTTCTGAATACTGGACTTGCTGAGGTCTAAGAGCC
+gi|225356593|gb|FJ15+ CGAACTACTTTGGGTCTGGGGTTCGGTTCTGAATACTGGACTTGCTGAGGT         
+gi|225356593|gb|FJ15+ CGAACTACTTTGGGTCTGGGGTTCGGTTCTGAATACTGGACTTGCTGAGGT         
+gi|225356593|gb|FJ15+                          GTTCTGAATACTGGACTTGCTGAGGTCTAAGAGCC
+                      ____________________________________________________________
+consensus             CGAACTACTTTGGGTCTGGGGTTCGGTTCTGAATACTGGACTTGCTGAGGTCTAAGAGCC
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ TCAAACACTTTGTACTCATCATTCAGATTCGCCTCAGGAGGAGGAGGGCATCCTACAACC
+gi|225356593|gb|FJ15+ TCAAACACTTTGTACTCATCATTCAGATTCGCCTCAGGAGGAGGAGGGCATCCTACAACC
+                      ____________________________________________________________
+consensus             TCAAACACTTTGTACTCATCATTCAGATTCGCCTCAGGAGGAGGAGGGCATCCTACAACC
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ TCCTTGACATCATAGTCGTTGGATTGGACTGTCAAATTTATCTGCCTCACAGCCACTCTC
+gi|225356593|gb|FJ15+ TCCTTGACATCATAGTCGTTGGATTGGACTGTCAAATTTATCTGCCTCACAGCCACTCTC
+                      ____________________________________________________________
+consensus             TCCTTGACATCATAGTCGTTGGATTGGACTGTCAAATTTATCTGCCTCACAGCCACTCTC
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ TGCTCCCTCTTAAACTCGTCCAGGAATCCTGACAATGTGGGGAACAGATTAATCCATCCC
+gi|225356593|gb|FJ15+ TGCTCCCTCTTAAACTCGTCCAGGAATCCTGACAATGTGGGGAACAGATTAATCCATCCC
+                      ____________________________________________________________
+consensus             TGCTCCCTCTTAAACTCGTCCAGGAATCCTGACAATGTGGGGAACAGATTAATCCATCCC
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ GCTTTGTCATCCTCTCCATCTGAATAGAGGTCTAGACAGAAGTCCCGAGAGGGGAATCCT
+gi|225356593|gb|FJ15+ GCTTTGTCATCCTCTCCATCTGAATAGAGGTCTAGACAGAAGTCCCGAGAGGGGAATCCT
+                      ____________________________________________________________
+consensus             GCTTTGTCATCCTCTCCATCTGAATAGAGGTCTAGACAGAAGTCCCGAGAGGGGAATCCT
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ GACGAATCTGGATATTCAAAGTCCTGGAGGGTTATATGTTCTGGCTTCGTTCCGGTTTGC
+gi|225356593|gb|FJ15+ GACGAATCTGGATATTCAAAGTCCTGGAGGGTTATATGTTCTGGCTTCGTTCCGGTTTGC
+                      ____________________________________________________________
+consensus             GACGAATCTGGATATTCAAAGTCCTGGAGGGTTATATGTTCTGGCTTCGTTCCGGTTTGC
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ TCTTGCGTTTGCATGACAATAATCTCGCCGGGGATTGTGTTAACCACAGCGTGTATTGTC
+gi|225356593|gb|FJ15+ TCTTGCGTTTGCATGACAATAATCTCGCCGGGGATTGTGTTAACCACAGCGTGTATTGTC
+                      ____________________________________________________________
+consensus             TCTTGCGTTTGCATGACAATAATCTCGCCGGGGATTGTGTTAACCACAGCGTGTATTGTC
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ TCTTCGATCCGAGGTATGCTGAATCCCATTGTTATCATTAAACCCCTCATACGGTCATAC
+gi|225356593|gb|FJ15+ TCTTCGATCCGAGGTATGCTGAATCCCATTGTTATCATTAAACCCCTCATACGGTCATAC
+                      ____________________________________________________________
+consensus             TCTTCGATCCGAGGTATGCTGAATCCCATTGTTATCATTAAACCCCTCATACGGTCATAC
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ AGAGTTCTTTGGCGTGCCGTTCTAGATACTGCCTTTTCAAAGGGATTATCCTTCTGGCAG
+gi|225356593|gb|FJ15+ AGAGTTCTTTGGCGTGCCGTTCTAGATACTGCCTTTTCAAAGGGATTATCCTTCTGGCAG
+                      ____________________________________________________________
+consensus             AGAGTTCTTTGGCGTGCCGTTCTAGATACTGCCTTTTCAAAGGGATTATCCTTCTGGCAG
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ AGCATCATCTCAAGAGCATCGCTCTCAGGCATTGTGGGGACATGTATCACACGGTGTCTG
+gi|225356593|gb|FJ15+ AGCATCATCTCAAGAGCATCGCTCTCAGGCATTGTGGGGACATGTATCACACGGTGTCTG
+                      ____________________________________________________________
+consensus             AGCATCATCTCAAGAGCATCGCTCTCAGGCATTGTGGGGACATGTATCACACGGTGTCTG
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ TGGTACACTCCCATAATTTGTACGCCAAGAAATTTGTGGTCCGTAATTAGAC
+gi|225356593|gb|FJ15+ TGGTACACTCCCATAATTTGTACGCCAAGAAATTTGTGGTCCGTAATTAGAC
+                      ____________________________________________________________
+consensus             TGGTACACTCCCATAATTTGTACGCCAAGAAATTTGTGGTCCGTAATTAGAC
+
+******************* Contig 2 ********************
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ TGGATTTTCATCCATTGCTGGAGGGCTTACTAGGATGGTCGACTGGATGTATGCCTGCCC
+gi|225356593|gb|FJ15+ TGGATTTTCATCCATTGCTGGAGGGCTTACTAGGATGGTCGACTGGATGTATGCCTGCCC
+                      ____________________________________________________________
+consensus             TGGATTTTCATCCATTGCTGGAGGGCTTACTAGGATGGTCGACTGGATGTATGCCTGCCC
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ AAAGCGGCGGGGACGGGTTGTCTGTTACGGTGACGATGCATGTATAACATTTTGGAGCCA
+gi|225356593|gb|FJ15+ AAAGCGGCGGGGACGGGTTGTCTGTTACGGTGACGATGCATGTATAACATTTTGGAGCCA
+                      ____________________________________________________________
+consensus             AAAGCGGCGGGGACGGGTTGTCTGTTACGGTGACGATGCATGTATAACATTTTGGAGCCA
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ GGGCGTCCTCTATCGGGTGGATCCAGATTTTAAACAAATGGACGGGTCCATAGATAGAGA
+gi|225356593|gb|FJ15+ GGGCGTCCTCTATCGGGTGGATCCAGATTTTAAACAAATGGACGGGTCCATAGATAGAGA
+                      ____________________________________________________________
+consensus             GGGCGTCCTCTATCGGGTGGATCCAGATTTTAAACAAATGGACGGGTCCATAGATAGAGA
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ GGATGCAAGAATCACCATTGAGTGGGTCCTCCACCATCTCAGAAAGGATTTAGGTGTAGA
+gi|225356593|gb|FJ15+ GGATGCAAGAATCACCATTGAGTGGGTCCTCCACCATCTCAGAAAGGATTTAGGTGTAGA
+                      ____________________________________________________________
+consensus             GGATGCAAGAATCACCATTGAGTGGGTCCTCCACCATCTCAGAAAGGATTTAGGTGTAGA
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ GGAGACCCCTGCTTTTTGGAAGACAGTTGCAGCAGTGTGGCTTGATATGGCCATTGACCC
+gi|225356593|gb|FJ15+ GGAGACCCCTGCTTTTTGGAAGACAGTTGCAGCAGTGTGGCTTGATATGGCCATTGACCC
+                      ____________________________________________________________
+consensus             GGAGACCCCTGCTTTTTGGAAGACAGTTGCAGCAGTGTGGCTTGATATGGCCATTGACCC
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ CCACTTTATCGTGGATGGTAAAACTGTTTACAAGAAGAAGAACCCCCATGGACTCATGAC
+gi|225356593|gb|FJ15+ CCACTTTATCGTGGATGGTAAAACTGTTTACAAGAAGAAGAACCCCCATGGACTCATGAC
+                      ____________________________________________________________
+consensus             CCACTTTATCGTGGATGGTAAAACTGTTTACAAGAAGAAGAACCCCCATGGACTCATGAC
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ TGGAGTTCCAGGAACAACCCTATTTGACACTGTGAAATCTGTAATAGTCTGGAATGAAAT
+gi|225356593|gb|FJ15+ TGGAGTTCCAGGAACAACCCTATTTGACACTGTGAAATCTGTAATAGTCTGGAATGAAAT
+                      ____________________________________________________________
+consensus             TGGAGTTCCAGGAACAACCCTATTTGACACTGTGAAATCTGTAATAGTCTGGAATGAAAT
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ GTTGGATCAGGCTGGTGCAGGTTCCATAGACCTTTTAAATGAAGCTCAAGTAGTTGAATG
+gi|225356593|gb|FJ15+ GTTGGATCAGGCTGGTGCAGGTTCCATAGACCTTTTAAATGAAGCTCAAGTAGTTGAATG
+                      ____________________________________________________________
+consensus             GTTGGATCAGGCTGGTGCAGGTTCCATAGACCTTTTAAATGAAGCTCAAGTAGTTGAATG
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ GATGAAGAGACAAGGCTTGGTTGTCAAAGAGGGAA
+gi|225356593|gb|FJ15+ GATGAAGAGACAAGGCTTAGTTGTCA         
+                      ____________________________________________________________
+consensus             GATGAAGAGACAAGGCTTAGTTGTCAAAGAGGGAA
+
+******************* Contig 3 ********************
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ AACGTAAAACAAACGACATGGATGCATCTAACCCTATTATTTCAAGCGATAGAAGCACTG
+gi|225356593|gb|FJ15+                                                 ATAGAAGCACTG
+                      ____________________________________________________________
+consensus             AACGTAAAACAAACGACATGGATGCATCTAACCCTATTATTTCAAGCGATAGAAGCACTG
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ TGAATCAGGTTTATGCGAAGATGGTGAGGAGAAAACGGCAAGATCTTGCCTATCTCCAGG
+gi|225356593|gb|FJ15+ TGAATCAGGTTTACGCGAAGATGGTGAGGAGAAAACGGCAAGATCTTGCCTATCTCCAGG
+                      ____________________________________________________________
+consensus             TGAATCAGGTTTACGCGAAGATGGTGAGGAGAAAACGGCAAGATCTTGCCTATCTCCAGG
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ AGTTGGTGAGGACAGCCCATCGAGAGATTCTCCCCCAAGGAGAACTTCTCCATGAGTCGG
+gi|225356593|gb|FJ15+ AGTTGGTGAGGACAGCCCATCGAGAGATTCTCCCCCAAGGAGAACTTCTCCATGAGTCGG
+                      ____________________________________________________________
+consensus             AGTTGGTGAGGACAGCCCATCGAGAGATTCTCCCCCAAGGAGAACTTCTCCATGAGTCGG
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ AAGCCAAACAGTATGTAGCCGAATATAAGGCTCGACTACCTGTGGTTGACACTAAGAAAG
+gi|225356593|gb|FJ15+ AAGCCAAACAGTATGTAGCCGAATATAAGGCTCGACTACCTGTGGTTGACACTAAGAAAG
+                      ____________________________________________________________
+consensus             AAGCCAAACAGTATGTAGCCGAATATAAGGCTCGACTACCTGTGGTTGACACTAAGAAAG
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ TTGGCGAACTGCCAACTGAGGTCTTCCAGGTAGCACTCCCAAGT
+gi|225356593|gb|FJ15+ TTGGCGAACTGCCAACTGAGGTCTTCCAGGTAGCACTCCCAAGT
+                      ____________________________________________________________
+consensus             TTGGCGAACTGCCAACTGAGGTCTTCCAGGTAGCACTCCCAAGT
+
+******************* Contig 4 ********************
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ TACGGTGCCCCTAAGAGAATCGAACTCAAACTCTCCAGTTGTGTAGTAACCAGAGAGCCA
+gi|225356593|gb|FJ15+    GGTGCCCCTAAGAGAATCGAACTCAAACTCTCCAGTTGTGTAGTAACCAGAGAGCCA
+                      ____________________________________________________________
+consensus             TACGGTGCCCCTAAGAGAATCGAACTCAAACTCTCCAGTTGTGTAGTAACCAGAGAGCCA
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ CCGAGGAGGGACGGGGTGGTGATTATGAAAAGATGATGGGTTTTGGGGAGAGGTTATACA
+gi|225356593|gb|FJ15+ CCGAGGAGGGACGGGGTGGTGATTATGAAAAGATGATGGGTTTTGGGGAGAGGTTATACA
+                      ____________________________________________________________
+consensus             CCGAGGAGGGACGGGGTGGTGATTATGAAAAGATGATGGGTTTTGGGGAGAGGTTATACA
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ ATTTCAAAATCTTGAACGGCCACTGGGTCTTCAGATATCACTTTGAAAGGACTGAGTGTC
+gi|225356593|gb|FJ15+ ATTTCAAAATCTTGAACGGCCACTGGGTCTTCAGATATCACTTTGAAAGGACTGAGTGTC
+                      ____________________________________________________________
+consensus             ATTTCAAAATCTTGAACGGCCACTGGGTCTTCAGATATCACTTTGAAAGGACTGAGTGTC
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ GTTCCATCAGGCATACCCTCAAGTTTGGTCCTAATCTTAGCTGTGTCCTTGCTGAGAGCA
+gi|225356593|gb|FJ15+ GTTCCATCAGGCATACCCTCAAGTTTGGTCCTAATCTTAGCTGTGTCCTTGCTGAGAGCA
+                      ____________________________________________________________
+consensus             GTTCCATCAGGCATACCCTCAAGTTTGGTCCTAATCTTAGCTGTGTCCTTGCTGAGAGCA
+
+                          .    :    .    :    .    :    .    :    .    :    .    :
+gi|225356593|gb|FJ15+ ACAGTTCTTGTTA
+gi|225356593|gb|FJ15+ ACAGTTCTTGTTA
+                      ____________________________________________________________
+consensus             ACAGTTCTTGTTA
+
