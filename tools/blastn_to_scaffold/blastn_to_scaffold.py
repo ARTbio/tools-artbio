@@ -91,7 +91,10 @@ def updateGuide (blastlist, GuideDict, ContigsDict):
             orientation = "direct"
         sequence = getseq (ContigsDict, seqHeader, queryStart, queryStop, orientation)
         for i in range(subjectStart, subjectStop+1):
-            del GuideDict[i]
+            try:
+                del GuideDict[i]
+            except KeyError:
+                continue
         for i, nucleotide in enumerate(sequence):
             GuideDict[i+subjectStart] = nucleotide
             
