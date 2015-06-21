@@ -72,7 +72,7 @@
                     <package>https://github.com/fubar2/galaxy_tool_source/blob/master/RELEASE_2_14/diffcount/Hmisc_3.14-6.tar.gz?raw=true</package>
                     <package>https://github.com/fubar2/galaxy_tool_source/blob/master/RELEASE_2_14/diffcount/DESeq2_1.6.3.tar.gz?raw=true</package>
                     <package>https://bitbucket.org/mvdbeek/galaxy_downloads/downloads/DESeq_1.20.0.tar.gz</package>
-
+                    <package>https://bitbucket.org/mvdbeek/galaxy_downloads/downloads/gridExtra_0.9.1.tar.gz</package>
                 </action>
             </actions>
         </install>

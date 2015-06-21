@@ -1,13 +1,11 @@
-<tool id="Readmap" name="Generate readmap and histograms from alignment files" version="1.0.0">
+<tool id="Readmap" name="Generate readmap and histograms from alignment files" version="1.0.1">
   <description>from sRbowtie aligment</description>
   <requirements>
         <requirement type="package" version="0.12.7">bowtie</requirement>
         <requirement type="package" version="0.1.18">samtools</requirement>
         <requirement type="package" version="0.7.7">pysam</requirement>
         <requirement type="package" version="2.14">biocbasics</requirement>
-        <requirement type="package" version="3.0.3">R</requirement>
         <requirement type="package" version="1.9">numpy</requirement>
-        <requirement type="package" version="0.14">scipy</requirement>
   </requirements>
 <command interpreter="python">
         readmap.py 
