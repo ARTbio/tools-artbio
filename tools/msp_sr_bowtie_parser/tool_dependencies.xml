@@ -9,7 +9,7 @@
     <package name="pysam" version="0.7.7">
       <repository name="package_pysam_0_7_7" owner="iuc" prior_installation_required="False"/>
     </package>
-    <package name="scipy" version="0.12.0">
-        <repository name="package_scipy_0_12_with_atlas" owner="iuc"/>
+    <package name="numpy" version="1.9">
+        <repository name="package_numpy_1.9" owner="iuc"/>
     </package>
 </tool_dependency>
