@@ -45,6 +45,14 @@
 	<outputs>
         <data format="fasta" name="transcripts" label="${tool.name} on ${on_string}: Denovo assembled transcripts"/>
 	</outputs>
+  <tests>
+    <test>
+      <param name="input" value="input.fa" ftype="fasta"/>
+      <param name="start_hash_length" value="15" />
+      <param name="end_hash_length" value="35" />
+      <output name="transcripts" file="output.fa"/>
+    </test>
+  </tests>
 	
 	<help>
 **Oases Optimiser Overview**
