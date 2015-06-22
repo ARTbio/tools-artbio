@@ -1,6 +1,15 @@
 <?xml version="1.0"?>
 <tool_dependency>
+  <package name="bowtie" version="0.12.7">
+      <repository name="package_bowtie_0_12_7" owner="devteam" />
+    </package>
+    <package name="pysam" version="0.7.7">
+      <repository name="package_pysam_0_7_7" owner="iuc" />
+    </package>
     <package name="numpy" version="1.9">
-        <repository name="package_numpy_1_9" owner="iuc" prior_installation_required="True"/>
+        <repository name="package_numpy_1_9" owner="iuc" />
+    </package>
+    <package name="biocbasics" version="2.14">
+        <repository name="package_biocbasics" owner="mvdbeek"/>
     </package>
 </tool_dependency>

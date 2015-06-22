@@ -1,0 +1,13 @@
+# .shed.yml supporting automatic pushes.
+owner: drosofff
+name: mir_parser
+description: Generates miRNA count lists from read alignments guided by mirBase gff files.
+long_description: |
+  Generates miRNA count lists from read alignments guided by mirBase gff files.
+categories:
+  - RNA
+  - Transcriptomics
+homepage_url: http://drosophile.org/
+remote_repository_url: https://bitbucket.org/drosofff/gedtools/
+toolshed:
+  - https://lbcd41.snv.jussieu.fr/toolshed/
