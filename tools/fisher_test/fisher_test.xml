@@ -1,5 +1,9 @@
-<tool id="fishertest" name="Fisher's exact test" version="0.1.1">
+<tool id="fishertest" name="Fisher's exact test" version="0.1.2">
 	<description>on two gene hit lists</description>
+        <requirements>
+          <requirement type="package" version="3.1.2">R</requirement>
+          <requirement type="package" version="2.14">biocbasics</requirement>
+        </requirements>
 	<command interpreter="Rscript">$fisher_test </command>
 	<inputs>
 		<param name="input" type="data" format="tabular" label="gene hit lists, 2 samples"/>

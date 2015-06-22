@@ -3,7 +3,4 @@
     <package name="numpy" version="1.9">
         <repository name="package_numpy_1_9" owner="iuc" prior_installation_required="True"/>
     </package>
-    <package name="scipy" version="0.14">
-        <repository name="package_scipy_0_14" owner="iuc" prior_installation_required="True"/>
-    </package>
 </tool_dependency>

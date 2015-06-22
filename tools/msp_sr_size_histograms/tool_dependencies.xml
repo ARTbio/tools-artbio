@@ -3,8 +3,8 @@
   <package name="bowtie" version="0.12.7">
       <repository name="package_bowtie_0_12_7" owner="devteam"/>
     </package>
-    <package name="samtools" version="0.1.18">
-      <repository name="package_samtools_0_1_18" owner="devteam"/>
+    <package name="samtools" version="1.2">
+      <repository name="package_samtools_1_2" owner="iuc" prior_installation_required="False" />
     </package>
     <package name="pysam" version="0.7.7">
       <repository name="package_pysam_0_7_7" owner="iuc"/>

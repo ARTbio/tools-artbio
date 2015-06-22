@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <tool_dependency>
   <package name="hmmer" version="3.1b1">
-    <repository changeset_revision="01eedf555cff" name="package_hmmer_3_1" owner="lionelguy" toolshed="http://lbcd41.snv.jussieu.fr:9009" />
+    <repository name="package_hmmer_3_1" owner="lionelguy" />
   </package>
   <action type="set_environment">
     <environment_variable name="PATH" action="prepend_to">$INSTALL_DIR/bin</environment_variable>
