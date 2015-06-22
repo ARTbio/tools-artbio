@@ -17,34 +17,32 @@ def stop_err( msg ):
     sys.stderr.write( "%s\n" % msg )
     sys.exit()
 
+def oases_optimiser(starthash, endhash, input, job_dir):
+    '''
+    Replaces call to oases_optimiser.sh. For all k-mers between
+    starthash and endhash run velvet and oases.
+    '''
+    for i in xrange(starthash, endhash, 2):
+        cmd1="velveth {0}/outputFolder_{1} {1} {2} && ".format(job_dir, i, input)
+        cmd2="velvetg {0}/outputFolder_{1} -read_trkg yes && ".format(job_dir, i)
+        cmd3="oases {0}/outputFolder_{1}".format(job_dir, i)
+        proc = subprocess.call( args=cmd1+cmd2+cmd3, shell=True, stdout=sys.stdout, stderr=sys.stderr )
+    cmd4="velveth {0}/MergedAssemblyFolder 27 -long outputFolder_*/transcripts.fa && ".format(job_dir)
+    cmd5="velvetg {0}/MergedAssemblyFolder -read_trkg yes -conserveLong yes && ".format(job_dir)
+    cmd6="oases {0}/MergedAssemblyFolder -merge yes".format(job_dir)
+    proc = subprocess.call( args=cmd4+cmd5+cmd6, shell=True, stdout=sys.stdout, stderr=sys.stderr )
+
 def __main__():
     job_dir= os.getcwd()
-    #tmp_work_dir = tempfile.mkdtemp(dir = job_dir) # make temp directory in the job_dir
     #Parse Command Line
-    starthash = sys.argv[1]
-    endhash = sys.argv[2]
-    inputs = sys.argv[3]
+    starthash = int(sys.argv[1])
+    endhash = int(sys.argv[2])
+    input = sys.argv[3]
     transcripts = sys.argv[4]
     transcripts_path = ''
-    cmdline = "oases_optimiser.sh %s %s '%s' %s  2&1>/dev/null" % (starthash, endhash, inputs, job_dir) # 2&1>/dev/null
-    print >> sys.stdout, cmdline # so will appear as blurb for file
-    print >> sys.stdout, job_dir
     print >> sys.stdout, "PATH = %s" % (os.environ['PATH'])
     try:
-        proc = subprocess.Popen( args=cmdline, shell=True, stderr=subprocess.PIPE ) #  cwd=job_dir
-        returncode = proc.wait()
-        # get stderr, allowing for case where it's very large
-        stderr = ''
-        buffsize = 1048576
-        try:
-            while True:
-                stderr += proc.stderr.read( buffsize )
-                if not stderr or len( stderr ) % buffsize != 0:
-                    break
-        except OverflowError:
-            pass
-        if returncode != 0:
-            raise Exception, stderr
+        oases_optimiser(starthash, endhash, input, job_dir)
     except Exception, e:
         stop_err( 'Error running oases_optimiser.py' + str( e ) )
     out = open(transcripts,'w')

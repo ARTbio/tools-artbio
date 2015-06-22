@@ -1,16 +1,6 @@
 <?xml version="1.0"?>
 <tool_dependency>
-  <set_environment version="1.0">
-    <environment_variable name="PATH" action="prepend_to">$REPOSITORY_INSTALL_DIR</environment_variable>
-  </set_environment>
-  <package name="velvet" version="1.2.10_9adf09f7ded7fedaf6b0e5e4edf9f46602e263d3">
-      <repository name="package_ged_velvet" owner="drosofff" />
-    </package>
     <package name="oases" version="0.2.08_7a32460a60929b510037952ae815bb6e29b68123">
       <repository name="package_ged_oases" owner="drosofff" />
     </package>
-    <action type="set_environment">
-      <environment_variable name="PATH" action="prepend_to">$INSTALL_DIR</environment_variable>
-      <environment_variable name="PATH" action="prepend_to">$REPOSITORY_INSTALL_DIR</environment_variable>
-    </action>
 </tool_dependency>
