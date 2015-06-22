@@ -1,8 +1,10 @@
 <tool id="FeaturesParser" name="Parse GFF3 features" version="0.9.1">
+  <!-- deprecated, usage should be replaced with featureCounts -->
   <description>in sRbowtie alignment</description>
   <requirements>
-      <requirement type='package'>bowtie-inspect</requirement>
+      <requirement type="package" version="0.12.7">bowtie</requirement>
       <requirement type="package" version="1.9">numpy</requirement>
+      <requirement type="package" version="0.7.7">pysam</requirement>
   </requirements>
   <parallelism method="basic"></parallelism>
 <command interpreter="python">
@@ -20,7 +22,6 @@
 		  #for $i in $refGenomeSource.input_list
     		    $i $i.ext "$i.name"
 		  #end for
-
 </command>
   <inputs>
        <conditional name="refGenomeSource">
@@ -44,6 +45,8 @@
    <data format="tabular" name="output" label="Feature Counts  Lists"/>
    </outputs>
   <help>
+
+** This tool is depreacted, parsing GFF3 files can be done using featureCounts. **
 
 **What it does**
 
