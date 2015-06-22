@@ -1,0 +1,13 @@
+# .shed.yml supporting automatic pushes.
+owner: drosofff
+name: fishertest
+description: Fisher's exact test on two gene hit lists.
+long_description: |
+  Fisher's exact test on two gene hit lists.
+categories:
+  - RNA
+  - Statistics
+homepage_url: http://drosophile.org/
+remote_repository_url: https://bitbucket.org/drosofff/gedtools/
+toolshed:
+  - https://lbcd41.snv.jussieu.fr/toolshed/

@@ -22,6 +22,9 @@
 
 MirDeep* wrapper
 
+Currently in early alpha version.
+Dont' use it, if you can avoid it.
+Requires test data, .shed.yml, integratio with dataset tables ... .
 
 </help>
 </tool>
