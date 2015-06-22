@@ -33,5 +33,12 @@
 
 Generates Annotation Table from fasta files
 
+Collect Annotation counts from matched fasta files.
+Counts number of lines in fasta files and outputs a
+tabular file with Label in the first column, number of fasta
+sequences in second column. Percent of counts is in the third
+column with the number of fasta entries in the first file
+set to 100%, and the remaining lines expressed as fractions.
+
    </help>
 </tool>
