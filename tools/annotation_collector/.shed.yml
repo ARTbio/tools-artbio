@@ -1,0 +1,18 @@
+# .shed.yml supporting automatic pushes.
+owner: drosofff
+name: annotation_collector
+description: Collect Annotation counts from matched fasta files.
+long_description: |
+  Collect Annotation counts from matched fasta files.
+  Counts number of lines in fasta files and outputs a 
+  tabular file with Label in the first column, number of fasta
+  sequences in second column. Percent of counts is in the third
+  column with the number of fasta entries in the first file 
+  set to 100%, and the remaining lines expressed as fractions.
+categories:
+  - RNA
+  - Fasta Manipulation
+homepage_url: http://drosophile.org/
+remote_repository_url: https://bitbucket.org/drosofff/gedtools/
+toolshed:
+  - https://lbcd41.snv.jussieu.fr/toolshed/
