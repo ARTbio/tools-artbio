@@ -26,3 +26,5 @@ categories:
   - Sequence Analysis
 homepage_url: http://drosophile.org/
 remote_repository_url: http://stormo.wustl.edu/resources.html
+toolshed:
+  - https://lbcd41.snv.jussieu.fr/toolshed/
