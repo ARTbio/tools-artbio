@@ -4,7 +4,7 @@
           <requirement type="package" version="3.1.2">R</requirement>
           <requirement type="package" version="2.14">biocbasics</requirement>
         </requirements>
-	<command interpreter="Rscript">$fisher_test </command>
+	<command interpreter="Rscript">$fisher_test "\${GALAXY_SLOTS:-1}" </command>
 	<inputs>
 		<param name="input" type="data" format="tabular" label="gene hit lists, 2 samples"/>
 	</inputs>
@@ -24,20 +24,27 @@
       options( show.error.messages=F,  error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
       options(warn=-1)
       suppressMessages(library(qvalue))
+      library(parallel)
+      args = commandArgs(trailingOnly = TRUE)
+      slots = as.numeric(args[1])
       countsTable = read.delim("${input}", header=TRUE, check.names=FALSE, stringsAsFactor = TRUE)
       depth1 = sum(countsTable[,2])
       depth2 = sum(countsTable[,3])
-      p_val=c()
-      for (seq in countsTable[,1])
-        {
-        n1=countsTable[,2][countsTable[,1]==seq]
-        n2=countsTable[,3][countsTable[,1]==seq]
-        thearray = array( c(n1, n2, (depth1 - n1), (depth2 - n2)), dim=c(2,2)) 
+      float_table=data.frame(countsTable[,2], countsTable[,3])
+
+      calc_pvalue <- function(row, depth1, depth2, ... ){
+        thearray = array( c(row, (depth1 - row[1]), (depth2 - row[2])), dim=c(2,2))
         current_test = fisher.test( thearray )
-        p_val = c(p_val, current_test\$p.value)
-        }
-      ##Workround for p_values slightly greater than 1
-      p_val[p_val>1] = 1
+        return(current_test\$p.value)
+      }
+
+      cl <- makePSOCKcluster(slots)
+      clusterExport(cl=cl, varlist=c("calc_pvalue", "depth1", "depth2"))
+      ptm <- proc.time()
+      p_val = parApply(cl, float_table, 1, function(x) calc_pvalue(x, depth1, depth2))
+      stopCluster(cl)
+      proc.time() - ptm
+      p_val[p_val>1]=1
       p = qvalue(p_val)
       finalTable = cbind(countsTable, data.frame(p\$pvalues), data.frame(p\$qvalues))
       write.table ( finalTable, file = "${output}", row.names=FALSE, col.names=TRUE, quote= FALSE, dec = ".", sep = "\t", eol = "\n")
