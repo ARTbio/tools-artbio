@@ -39,13 +39,13 @@
                <option value="history">Use one from the history</option>
            </param>
            <when value="indexed">
-               <param name="input_list" type="data" label="Select multiple alignments to parse" multiple="true">
+               <param name="input_list" type="data" format="tabular,sam,bam" label="Select multiple alignments to parse" multiple="true">
                   <validator type="dataset_metadata_in_data_table" table_name="bowtie_indexes" metadata_name="dbkey" metadata_column="0" message="database not set for this bowtie output. Select the database(=genome used for matching) manually, or select a reference fasta from your history."/>
                </param>
            </when>
            <when value="history">
                 <param name="ownFile" type="data" format="fasta"  label="Select the fasta reference" />
-	        <param name="input_list" type="data" label="Select multiple alignments to parse" multiple="true"/>
+	        <param name="input_list" type="data" format="tabular,sam,bam" label="Select multiple alignments to parse" multiple="true"/>
            </when>
        </conditional>  <!-- refGenomeSource -->
        <param name="polarity" type="select" label="how to count sense and antisense reads">

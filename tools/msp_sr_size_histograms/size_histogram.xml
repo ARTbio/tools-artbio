@@ -61,7 +61,7 @@
            </param>
            <when value="indexed">
 	     <repeat name="series" title="Add alignment files">
-	       <param name="input" type="data" label="Select multiple alignments to parse">
+	       <param name="input" type="data" label="Select multiple alignments to parse" format="tabular,sam,bam">
                   <validator type="dataset_metadata_in_data_table" table_name="bowtie_indexes" metadata_name="dbkey" metadata_column="0" message="database not set for this bowtie output. Select the database(=genome used for matching) manually, or select a reference fasta from your history."/>
                </param>
 	       <param name="norm" type="float" value="1" label="Indicate a normalization factor to compare multiple aligments"/>
@@ -70,12 +70,12 @@
            <when value="history">
               <param name="ownFile" type="data" format="fasta" label="Select a fasta file, to serve as index reference" />
 	     <repeat name="series" title="Add alignment files">
-	       <param name="input" type="data" label="Select multiple alignments to parse"/>
+	       <param name="input" type="data" label="Select multiple alignments to parse" format="tabular,sam,bam"/>
 	       <param name="norm" type="float" value="1" label="Indicate a normalization factor to compare multiple aligments"/>
 	     </repeat>
 	   </when>
        </conditional>
-                <param name="gff" type="data" optional="true" label="Optional: select a GFF to investigate regions of interest" help="GFF must match genome build"/>
+                <param name="gff" type="data" format="gff,gff3" optional="true" label="Optional: select a GFF to investigate regions of interest" help="GFF must match genome build"/>
                  <!-- <validator type="dataset_metadata_in_data_table" table_name="bowtie_indexes" metadata_name="dbkey" metadata_column="0" message="GFF database and alignment file databse do not match!"/> -->
 		<param name="global" type="select" label="Generate size distribution for each item, or generate a global alignment">
                   <option value="no">for each item</option>

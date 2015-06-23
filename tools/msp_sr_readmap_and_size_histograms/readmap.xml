@@ -57,7 +57,7 @@
            </param>
            <when value="indexed">
 	     <repeat name="series" title="Add alignment files">
-	       <param name="input" type="data" label="Select multiple alignments to parse">
+	       <param name="input" type="data" label="Select multiple alignments to parse" format="tabular,sam,bam">
                   <validator type="dataset_metadata_in_data_table" table_name="bowtie_indexes" metadata_name="dbkey" metadata_column="0" message="database not set for this bowtie output. Select the database(=genome used for matching) manually, or select a reference fasta from your history."/>
                </param>
 	       <param name="norm" type="float" value="1" label="Indicate a normalization factor to compare multiple aligments"/>
@@ -66,7 +66,7 @@
            <when value="history">
              <param name="ownFile" type="data" format="fasta" label="Select a fasta file, that served as the reference index for the alignments" />
 	     <repeat name="series" title="Add alignment files">
-	       <param name="input" type="data" label="Select multiple alignments to parse"/>
+	       <param name="input" type="data" label="Select multiple alignments to parse" format="tabular,sam,bam"/>
 	       <param name="norm" type="float" value="1" label="Indicate a normalization factor to compare multiple aligments"/>
 	     </repeat>
 	   </when>
