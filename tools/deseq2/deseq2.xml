@@ -9,7 +9,16 @@
 		<param name="input" type="data" format="tabular" label="miR hit lists, more thant 2 samples"/>
                 <param name="expPlan" type="text" label="experimental plan" help="Use a string of Cs and Ts. exemple: CCCTTT means 3 control samples versus 3 test samples"/>
 	</inputs>
-  <configfiles>
+  	<outputs>
+		<data name="output" format="tabular" label="DESeq2 differential calling" />
+	</outputs>
+        <tests>
+            <test>
+                <param name="input" value="counts.tab" ftype="tabular"/>
+                <output name="output" file="dge.tab" ftype="tabular"/>
+            </test>
+        </tests>
+<configfiles>
     <configfile name="DESeq2">
       ## Setup R error handling to go to stderr
       options( show.error.messages=F,  error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
@@ -34,14 +43,7 @@
       ## write.csv(as.data.frame(res), file="${output}")
     </configfile>
   </configfiles>
-
-
-
-
-	<outputs>
-		<data name="output" format="tabular" label="DESeq2 differential calling" />
-	</outputs>
-	<help>
+  <help>
 
 **What it does**
 
@@ -49,5 +51,5 @@ DESeq2 differential calling (order by padj, ascending).
 Still in development and testing for replicates/no replicates
 
 
-	</help>
+  </help>
 </tool>

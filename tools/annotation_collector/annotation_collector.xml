@@ -21,6 +21,16 @@
     <outputs>
         <data format="tabular" label="Annotations" metadata_source="input1" name="out_file" />
     </outputs>
+    <tests>
+        <test>
+           <param name="title" value="Test Title"/>
+           <param name="input1" value="input1.fa" ftype="fasta"/>
+           <param name="label1" value="label1" />
+           <param name="queries_0|input2" value="input2.fa" ftype="fasta"/>
+           <param name="queries_0|label2" value="label2" />
+           <patam name="out_file" file="output.tab" ftype="tabular" />
+        </test>
+    </tests>
     <help>
 
 .. class:: warningmark

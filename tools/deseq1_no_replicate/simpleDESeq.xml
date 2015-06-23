@@ -1,4 +1,4 @@
-<tool id="simpleDESeq" name="DESeq Profiling" version="1.0.1">
+<tool id="simpleDESeq" name="DESeq Profiling" version="1.0.2">
 	<description>2 samples / no replicates</description>
         <requirements>
           <requirement type="package" version="3.1.2">R</requirement>
@@ -6,10 +6,17 @@
         </requirements>
 	<command interpreter="Rscript">$simpleDESeq </command>
 	<inputs>
-		<param name="input" type="data" format="tabular" label="miR hit lists, 2 samples"/>
+		<param name="input" type="data" format="tabular" label="readcount lists, 2 samples"/>
 	</inputs>
-
-
+  <outputs>
+    <data name="output" format="tabular" label="DESeq differential calling" />
+  </outputs>
+  <tests>
+    <test>
+      <param name="input" value="counts.tab" ftype="tabular"/>
+      <param name="output" file="dge.tab" ftype="tabular"/>
+    </test>
+  </tests>
   <configfiles>
     <configfile name="simpleDESeq">
       ## Setup R error handling to go to stderr
@@ -27,18 +34,10 @@
       write.table ( resNA[order(resNA[,8]), ], file = "${output}", row.names=FALSE, col.names=TRUE, quote= FALSE, dec = ".", sep = "\t", eol = "\n")
     </configfile>
   </configfiles>
-
-
-
-
-	<outputs>
-		<data name="output" format="tabular" label="DESeq differential calling" />
-	</outputs>
-	<help>
+ <help>
 
 **What it does**
 
 DESeq (version 1) differential calling (order by padj, ascending), on two samples, no replicate
-
-	</help>
+  </help>
 </tool>

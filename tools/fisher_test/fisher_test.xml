@@ -1,4 +1,4 @@
-<tool id="fishertest" name="Fisher's exact test" version="0.1.2">
+<tool id="fishertest" name="Fisher's exact test" version="0.1.3">
 	<description>on two gene hit lists</description>
         <requirements>
           <requirement type="package" version="3.1.2">R</requirement>
@@ -8,8 +8,15 @@
 	<inputs>
 		<param name="input" type="data" format="tabular" label="gene hit lists, 2 samples"/>
 	</inputs>
-
-
+	<outputs>
+		<data name="output" format="tabular" label="Fisher test p-values" />
+	</outputs>
+    <tests>
+    <test>
+      <param name="input" value="counts.tab" ftype="tabular"/>
+      <output name="output" file="fisher.tab" ftype="tabular"/>
+    </test>
+    </tests>
   <configfiles>
     <configfile name="fisher_test">
     <![CDATA[
@@ -17,14 +24,14 @@
       options( show.error.messages=F,  error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
       options(warn=-1)
       suppressMessages(library(qvalue))
-      countsTable = read.delim("${input}", header=TRUE, stringsAsFactor = TRUE)
+      countsTable = read.delim("${input}", header=TRUE, check.names=FALSE, stringsAsFactor = TRUE)
       depth1 = sum(countsTable[,2])
       depth2 = sum(countsTable[,3])
       p_val=c()
-      for (seq in countsTable\$gene)
+      for (seq in countsTable[,1])
         {
-        n1=countsTable[,2][countsTable\$gene==seq]
-        n2=countsTable[,3][countsTable\$gene==seq]
+        n1=countsTable[,2][countsTable[,1]==seq]
+        n2=countsTable[,3][countsTable[,1]==seq]
         thearray = array( c(n1, n2, (depth1 - n1), (depth2 - n2)), dim=c(2,2)) 
         current_test = fisher.test( thearray )
         p_val = c(p_val, current_test\$p.value)
@@ -37,13 +44,6 @@
     ]]>
     </configfile>
   </configfiles>
-
-
-
-
-	<outputs>
-		<data name="output" format="tabular" label="Fisher test p-values" />
-	</outputs>
 	<help>
 
 **What it does**

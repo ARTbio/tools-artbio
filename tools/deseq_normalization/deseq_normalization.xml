@@ -8,8 +8,17 @@
 	<inputs>
 		<param name="input" type="data" format="tabular" label="Hit lists of items"/>
 	</inputs>
-
-
+	<outputs>
+                <data name="output_factors" format="tabular" label="Normalization Factors (Geometric mean method)" />
+                <data name="norm_hit_table" format="tabular" label="Normalized Hit Table (Geometric mean method)" />
+	</outputs>
+        <tests>
+            <test>
+                <param name="input" value="counts.tab" ftype="tabular"/>
+                <output name="output_factors" file="norm_factors.tab" ftype="tabular"/>
+                <output name="norm_hit_table" file="norm_table.tab" ftype="tabular"/>
+            </test>
+        </tests>
   <configfiles>
     <configfile name="normalizationDESeq">
       ## Setup R error handling to go to stderr
@@ -28,11 +37,6 @@
       write.table (norm_table, file="${norm_hit_table}", row.names=FALSE, col.names=TRUE, quote= FALSE, dec = ".", sep = "\t", eol = "\n")
     </configfile>
   </configfiles>
-
-	<outputs>
-                <data name="output_factors" format="tabular" label="Normalization Factors (Geometric mean method)" />
-                <data name="norm_hit_table" format="tabular" label="Normalized Hit Table (Geometric mean method)" />
-	</outputs>
 	<help>
 
 **What it does**
