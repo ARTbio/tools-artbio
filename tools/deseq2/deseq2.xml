@@ -15,6 +15,7 @@
         <tests>
             <test>
                 <param name="input" value="counts.tab" ftype="tabular"/>
+                <param name="expPlan" value="CCTTT"/>
                 <output name="output" file="dge.tab" ftype="tabular"/>
             </test>
         </tests>
