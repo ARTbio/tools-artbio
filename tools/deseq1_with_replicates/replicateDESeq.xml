@@ -9,8 +9,16 @@
 		<param name="input" type="data" format="tabular" label="gene readcount list, more than 2 samples"/>
                 <param name="expPlan" type="text" label="experimental plan" help="Use a string of Cs and Ts. exemple: CCCTTT means 3 control samples versus 3 test samples"/>
 	</inputs>
-
-
+	<outputs>
+		<data name="output" format="tabular" label="DESeq differential calling" />
+	</outputs>
+        <tests>
+            <test>
+                <param name="input" value="counts.tab" ftype="tabular"/>
+                <param name="expPlan" value="CCTTT"/>
+                <output name="output" file="dge.tab" ftype="tabular"/>
+            </test>
+        </tests>
   <configfiles>
     <configfile name="replicateDESeq">
       ## Setup R error handling to go to stderr
@@ -30,13 +38,6 @@
       write.table ( res[order(res[,8]), ], file = "${output}", row.names=FALSE, col.names=TRUE, quote= FALSE, dec = ".", sep = "\t", eol = "\n")
     </configfile>
   </configfiles>
-
-
-
-
-	<outputs>
-		<data name="output" format="tabular" label="DESeq differential calling" />
-	</outputs>
 	<help>
 
 **What it does**

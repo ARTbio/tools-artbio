@@ -11,10 +11,10 @@
     </command>
     <inputs>
         <param label="Annotation Title" name="title" type="text" />
-        <param label="fasta file to annotate" name="input1" type="data" />
+        <param label="fasta file to annotate" name="input1" type="data" format="fasta"/>
         <param label="category label" name="label1" type="text" />
         <repeat name="queries" title="Additional fasta file and label">
-            <param label="Select" name="input2" type="data" />
+            <param label="Select" name="input2" type="data" format="fasta"/>
             <param label="Label" name="label2" type="text" />
         </repeat>
     </inputs>
@@ -28,7 +28,7 @@
            <param name="label1" value="label1" />
            <param name="queries_0|input2" value="input2.fa" ftype="fasta"/>
            <param name="queries_0|label2" value="label2" />
-           <patam name="out_file" file="output.tab" ftype="tabular" />
+           <output name="out_file" file="output.tab" ftype="tabular" />
         </test>
     </tests>
     <help>
