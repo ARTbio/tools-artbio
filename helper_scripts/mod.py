@@ -13,7 +13,10 @@ for i,line in enumerate(input):
         fields=line.strip().split('\t')
         for i, field in enumerate(fields):
             if not i==0:
-                field=field[:-2]+'.+'
+                if len(field)>3:
+                    field=field[:-3]+'.*?'
+                else:
+                    field='.*?'
             newline.append(field)
         output.write("\t".join(newline)+"\n")
 input.close()
