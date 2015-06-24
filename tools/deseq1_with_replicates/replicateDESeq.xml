@@ -16,7 +16,7 @@
             <test>
                 <param name="input" value="counts.tab" ftype="tabular"/>
                 <param name="expPlan" value="CCTTT"/>
-                <output name="output" file="dge.tab" ftype="tabular"/>
+                <output name="output" file="dge.tab.re_match.modified" ftype="tabular" compare="re_match"/>
             </test>
         </tests>
   <configfiles>
