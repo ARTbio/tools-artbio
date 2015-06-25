@@ -17,6 +17,9 @@ for i,line in enumerate(input):
                     if 'e' in field:
                         field=field.split('e')[0][:-2]
                     field=field[:-3]+'.*?'
+                    if '.' in field:
+                        fields=field.split('\.')
+                        field=fields[0]+'\.'+fields[1][:-5]+'.*?'
                 else:
                     field='.*?'
             newline.append(field)
