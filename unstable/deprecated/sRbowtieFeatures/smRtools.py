@@ -1,1 +1,1 @@
-../python_modules/smRtools.py
+../../../tools/python_modules/smRtools.py

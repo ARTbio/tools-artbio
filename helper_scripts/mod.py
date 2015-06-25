@@ -14,6 +14,8 @@ for i,line in enumerate(input):
         for i, field in enumerate(fields):
             if not i==0:
                 if len(field)>3:
+                    if 'e' in field:
+                        field=field.split('e')[0][:-2]
                     field=field[:-3]+'.*?'
                 else:
                     field='.*?'
