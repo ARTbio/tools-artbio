@@ -49,6 +49,7 @@ BlastParser_and_hits.py
         <param ftype="fasta" name="sequences" value="input.fa" />
         <param ftype="tabular" name="blast" value="blast.tab" />
         <param name="flanking" value="5" />
+        <param name="use_filters" value="no" />
         <param name="mode" value="verbose" />
         <output name="tabularOutput" ftype="tabular" file="output.tab" />
         <output name="fastaOutput" ftype="fasta" file="output.fa" />
