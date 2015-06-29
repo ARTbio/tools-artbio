@@ -11,3 +11,4 @@ remote_repository_url: http://drosophile.org
 type: tool_dependency_definition
 toolshed:
   - https://lbcd41.snv.jussieu.fr/toolshed/
+  - testtoolshed
