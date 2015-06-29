@@ -14,6 +14,9 @@ def Parser():
     the_parser.add_argument('--tabularOutput', action="store", type=str, help="tabular output file of blast analysis")
     the_parser.add_argument('--flanking', action="store", type=int, help="number of flanking nucleotides added to the hit sequences") 
     the_parser.add_argument('--mode', action="store", choices=["verbose", "short"], type=str, help="reporting (verbose) or not reporting (short) oases contigs")
+    the_parser.add_argument('--filter_relativeCov', action="store", type=float, default=0, help="filter out relative coverages below the specified ratio (float number)")
+    the_parser.add_argument('--filter_maxScore', action="store", type=float, default=0, help="filter out maximum BitScore below the specified float number")
+    the_parser.add_argument('--filter_meanScore', action="store", type=float, default=0, help="filter out maximum BitScore below the specified float number")
     args = the_parser.parse_args()
     if not all ( (args.sequences, args.blast, args.fastaOutput, args.tabularOutput) ):
         the_parser.error('argument(s) missing, call the -h option of the script')
@@ -122,12 +125,14 @@ def GetHitSequence (fastadict, FastaHeader, leftCoordinate, rightCoordinate, Fla
         leftCoordinate = 1
     return getseq (fastadict, FastaHeader, leftCoordinate, rightCoordinate, polarity)
     
-def outputParsing (F, Fasta, results, Xblastdict, fastadict, mode="verbose"):
+def outputParsing (F, Fasta, results, Xblastdict, fastadict, filter_relativeCov=0, filter_maxScore=0, filter_meanScore=0, mode="verbose"):
     F= open(F, "w")
     Fasta=open(Fasta, "w")
     if mode == "verbose":
         print >>F, "# SeqId\t%Identity\tAlignLength\tStartSubject\tEndSubject\t%QueryHitCov\tE-value\tBitScore\n"
         for subject in sorted (results, key=lambda x: results[x]["meanBitScores"], reverse=True):
+            if results[subject]["RelativeSubjectCoverage"]<filter_relativeCov or results[subject]["maxBitScores"]<filter_maxScore or results[subject]["meanBitScores"]<filter_meanScore:
+                continue
             print >> F, "#\n# %s" % subject
             print >> F, "# Suject Length: %s" % (results[subject]["subjectLength"])
             print >> F, "# Total Subject Coverage: %s" % (results[subject]["TotalCoverage"])
@@ -149,6 +154,8 @@ def outputParsing (F, Fasta, results, Xblastdict, fastadict, mode="verbose"):
     else:
         print >>F, "# subject\tsubject length\tTotal Subject Coverage\tRelative Subject Coverage\tMaximum Bit Score\tMean Bit Score"
         for subject in sorted (results, key=lambda x: results[x]["meanBitScores"], reverse=True):
+            if results[subject]["RelativeSubjectCoverage"]<filter_relativeCov or results[subject]["maxBitScores"]<filter_maxScore or results[subject]["meanBitScores"]<filter_meanScore:
+                continue
             line = []
             line.append(subject)
             line.append(results[subject]["subjectLength"])
@@ -173,5 +180,7 @@ def __main__ ():
     results = defaultdict(dict)
     for subject in Xblastdict:
         results[subject]["HitDic"], results[subject]["subjectLength"], results[subject]["TotalCoverage"], results[subject]["RelativeSubjectCoverage"], results[subject]["maxBitScores"], results[subject]["meanBitScores"]  = subjectCoverage(fastadict, Xblastdict, subject, args.flanking)
-    outputParsing (args.tabularOutput, args.fastaOutput, results, Xblastdict, fastadict, args.mode)
+    outputParsing (args.tabularOutput, args.fastaOutput, results, Xblastdict, fastadict,
+                  filter_relativeCov=args.filter_relativeCov, filter_maxScore=args.filter_maxScore,
+                  filter_meanScore=args.filter_meanScore, mode=args.mode)
 if __name__=="__main__": __main__()
