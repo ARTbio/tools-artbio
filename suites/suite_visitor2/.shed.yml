@@ -9,3 +9,6 @@ categories:
   - Sequence Analysis
 homepage_url: http://drosophile.org/
 remote_repository_url: https://bitbucket.org/drosofff/gedtools/
+toolshed:
+  - https://lbcd41.snv.jussieu.fr/toolshed/
+  - testtoolshed
