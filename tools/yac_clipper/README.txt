@@ -8,4 +8,4 @@ Min size and max size filter clipped reads on their size.
 Note that unclipped reads that satisfy the min and max size conditions are kept.
 
 Homepage: drosophile.org
-
+Repositoy development: https://bitbucket.org/drosofff/gedtools/
