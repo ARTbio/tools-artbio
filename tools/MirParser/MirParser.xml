@@ -5,6 +5,7 @@
         <requirement type="package" version="0.7.7">pysam</requirement>
         <requirement type="package" version="1.9">numpy</requirement>
         <requirement type="package" version="2.14">biocbasics</requirement>
+        <requirement type="package" version="1.2">samtools</requirement
     </requirements>
     <command interpreter="python">
         MirParser.py 

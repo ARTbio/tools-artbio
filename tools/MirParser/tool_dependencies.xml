@@ -12,4 +12,7 @@
     <package name="biocbasics" version="2.14">
         <repository name="package_biocbasics" owner="mvdbeek"/>
     </package>
+    <package name="samtools" version="1.2">
+        <repository name="package_samtools_1_2" owner="iuc"/>
+    </package>
 </tool_dependency>
