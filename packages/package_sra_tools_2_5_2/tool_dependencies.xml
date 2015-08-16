@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<tool_dependency>
+    <package name="ncbi_vdb" version="2.5.2">
+        <repository name="package_ncbi_vdb_2_5_2" owner="mvdbeek" prior_installation_required="True" />
+    </package>
+    <package name="ngs" version="1.1.3">
+        <repository name="package_ngs_1_1_3" owner="mvdbeek" prior_installation_required="True" />
+    </package>
+    <package name="sra_toolkit" version="2.5.2">
+        <install version="1.0">
+        <actions>
+            <action type="download_by_url" target_filename="sra-tools-2.5.2.tar.gz">https://github.com/ncbi/sra-tools/archive/2.5.2.tar.gz</action>
+            <action type="shell_command">
+            ./configure --prefix=$INSTALL_DIR --build-prefix=$INSTALL_DIR/build
+            sed -i -e "109s/-static//" tools/copycat/Makefile
+            make
+            make install
+            cd $INSTALL_DIR/bin
+            ./vdb-config -s "/repository/user/main/public/cache-enabled=false"
+            ./vdb-config -s "/repository/user/main/public/root=$INSTALL_DIR"
+            </action>
+            <action type="set_environment">
+            <environment_variable name="PATH" action="prepend_to">$INSTALL_DIR/bin</environment_variable>
+        </action>
+      </actions>
+    </install>
+    <readme>
+Tools from NCBI SRA Toolkit for extracting FASTQ and SAM format reads from SRA format archives.
+This software release was designed to run under Linux, MacOSX operating systems on Intel x86-compatible 64 bit architectures.
+When running on Amazon EC2, be sure to keep in mind the size limitation of EBS storage devices when requesting a
+download of a large SRA data set.
+
+Build Requirements:
+  - make
+  - git
+  - gcc
+  - g++
+  - libxml2
+  - libcurl4
+  - zlib
+
+On a debian based Linux OS use:
+
+  apt-get install build-essential libxml2-dev libcurl4-openssl-dev zlib-dev
+
+    </readme>
+  </package>
+</tool_dependency>

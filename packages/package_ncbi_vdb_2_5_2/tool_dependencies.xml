@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<tool_dependency>
+  <package name="ncbi-vdb" version="2.5.2">
+    <install version="1.0">
+      <actions>
+        <action type="download_by_url" target_filename="ncbi-vdb-2.5.2.tar.gz">https://github.com/ncbi/ncbi-vdb/archive/2.5.2.tar.gz</action>
+        <action type="autoconf"></action>
+      </actions>
+    </install>
+    <readme>
+  ncbi-vdb, required for sra-tools package.
+    </readme>
+  </package>
+</tool_dependency>

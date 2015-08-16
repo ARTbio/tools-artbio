@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<tool_dependency>
+    <package name="aspc" version="3.6.0.106805">
+        <install version="1.0">
+            <actions_group>
+                <actions architecture="x86_64" os="darwin">
+<!--                        <action type="download_by_url">http://download.asperasoft.com/download/sw/connect/3.6.0/AsperaConnectInstaller-3.6.0.106805.dmg</action> -->
+                        <action type="download_by_url">https://bitbucket.org/mvdbeek/galaxy_downloads/downloads/AsperaConnectInstaller-3.6.0.106805.dmg</action>
+                        <action type="shell_command">hdiutil attach -mountpoint install AsperaConnectInstaller-3.6.0.106805.dmg</action>
+                       <action type="shell_command">pkgutil --expand install/AsperaConnectInstaller.pkg extract</action>
+                       <action type="shell_command">cat extract/AsperaConnect.pkg/Payload | gzip -d - | cpio -id</action>
+                       <action type="shell_command">hdiutil detach install</action>
+                       <action type="move_directory_files">
+                          <source_directory>Applications/Aspera Connect.app/Contents/Resources/</source_directory>
+                          <destination_directory>$INSTALL_DIR/bin</destination_directory>
+                        </action>
+                         <action type="set_environment">
+                            <environment_variable name="PATH" action="prepend_to">$INSTALL_DIR/bin</environment_variable>
+                        </action>
+                    </actions>
+            </actions_group>
+        </install>
+
+        <readme>
+            This tool dependency definition downloads and installs the aspera connect client, used for accelerating
+            ncbi sra downloads.
+        </readme>
+    </package>
+</tool_dependency>

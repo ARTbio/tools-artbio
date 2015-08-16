@@ -1,0 +1,26 @@
+<tool id="get_sra_info" name="get_sra_info" version="0.1.0">
+    <requirements>
+    </requirements>
+    <stdio>
+        <exit_code range="1:" />
+    </stdio>
+
+    <command interpreter="python"><![CDATA[
+        get_sra_info.py --query $query --output "$output"
+    ]]></command>
+    <inputs>
+        <param name="query" type="text" label="enter valid SRA/SRR accessions">
+            <sanitizer invalid_char=" ">
+                <valid initial="string.letters,string.digits">
+                </valid>
+             </sanitizer>
+        </param>
+    </inputs>
+    <outputs>
+        <data name="output" format="tabular" label="Run info for $query"/>
+    </outputs>
+    <help><![CDATA[
+        Downloads a table with sra info.
+        May be used as input to download_sra_data tool.
+    ]]></help>
+</tool>

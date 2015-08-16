@@ -1,0 +1,10 @@
+# .shed.yml supporting automatic pushes.
+owner: mvdbeek
+name: package_ncbi_vdb_2_5_2
+description: NCBI VDB package
+long_description: |
+  NCBI VDB package. Required for NCBI sra toolkit package.
+categories:
+  - Tool Dependency Packages
+homepage_url: 
+remote_repository_url: 

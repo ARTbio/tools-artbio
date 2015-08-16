@@ -1,0 +1,10 @@
+# .shed.yml supporting automatic pushes.
+owner: mvdbeek
+name: package_sra_tools_2_5_2
+description: NCBI sra_tools package
+long_description: |
+  NCBI sra_tools package.
+categories:
+  - Tool Dependency Packages
+homepage_url: 
+remote_repository_url: 
