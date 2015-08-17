@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
 <tool_dependency>
+    <package name="ascp" version="3">
+        <repository name="package_ascp_3" owner="mvdbeek" />
+    </package>
     <package name="ncbi_vdb" version="2.5.2">
         <repository name="package_ncbi_vdb_2_5_2" owner="mvdbeek" prior_installation_required="True" />
     </package>
@@ -22,10 +25,6 @@
                     sed -i -e "109s/-static//" tools/copycat/Makefile
                 </action>
                 <action type="make_install"></action>
-                <action type="shell_command">
-                    $INSTALL_DIR/bin/vdb-config -s "/repository/user/main/public/cache-enabled=false"
-                    $INSTALL_DIR/bin/vdb-config -s "/repository/user/main/public/root=$INSTALL_DIR"
-                </action>
                 <action type="set_environment">
                     <environment_variable name="PATH" action="prepend_to">$INSTALL_DIR/bin</environment_variable>
                 </action>

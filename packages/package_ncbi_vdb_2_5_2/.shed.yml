@@ -8,3 +8,5 @@ categories:
   - Tool Dependency Packages
 homepage_url: 
 remote_repository_url: 
+toolshed:
+  - https://lbcd41.snv.jussieu.fr/toolshed/
