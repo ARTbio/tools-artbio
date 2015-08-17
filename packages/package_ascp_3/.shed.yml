@@ -1,6 +1,6 @@
 # .shed.yml supporting automatic pushes.
 owner: mvdbeek
-name: package_ascp
+name: package_ascp_3
 description: package that downloads and installs the aspera connect client.
 long_description: |
   package that downloads and installs the aspera connect client.
@@ -8,3 +8,5 @@ categories:
   - Tool Dependency Packages
 homepage_url: http://drosophile.org/
 remote_repository_url: https://bitbucket.org/drosofff/gedtools/
+toolshed:
+  - https://lbcd41.snv.jussieu.fr/toolshed/

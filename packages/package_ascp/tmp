@@ -1,1 +1,0 @@
-ascp -i asperaweb_id_dsa.openssh -k 1 –T -l200m ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByRun/sra/SRR/SRR304/SRR304976/SRR304976.sra

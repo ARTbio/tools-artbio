@@ -1,0 +1,59 @@
+<tool id="sra_pileup" name="Generate pileup format" version="1.1.1">
+  <description> from NCBI sra.</description>
+  <command>sra-pileup --log-level fatal
+    #if str( $region ) != "":
+      --aligned-region $region
+    #end if
+    #if str( $minMapq ) != "":
+      --minmapq $minMapq
+    #end if
+    #if $input.input_select == "file":
+      $input.file
+    #elif $input.input_select == "accession_number":
+      $input.accession
+    #elif $input.input_select == "text":
+      `cat $input.text`
+    #end if
+    > $output</command>
+  <version_string>sra-pileup --version</version_string>
+  <inputs>
+    <conditional name="input">
+      <param name="input_select" type="select" label="select input type">
+        <option value="accession_number">SRR accession</option>
+        <option value="file">SRA archive in current history</option>
+        <option value="text">text file containing SRR accession</option>
+      </param>
+      <when value="file">
+        <param format="sra" name="file" type="data" label="sra archive"/>
+      </when>
+      <when value="accession_number">
+        <param format="text" name="accession" type="text" label="accession"/>
+      </when>
+      <when value="text">
+        <param format="txt" name="text" type="data" label="text file"/>
+      </when>
+    </conditional>
+    <param format="text" name="region" type="text" label="aligned region"/>
+    <param format="text" name="minMapq" type="text" label="minimum mapping quality"/>
+  </inputs>
+  <outputs>
+    <data format="pileup" name="output"/>
+  </outputs>
+  <requirements>
+    <requirement type="package" version="2.5.2">sra_toolkit</requirement>
+  </requirements>
+  <tests>
+    <test>
+      <param name="input_select" value="accession_number"/>
+      <param name="accession" value="SRR925743"/>
+      <param name="region" value="17:41243452-41277500"/>
+      <output name="output" file="sra_pileup_result.pileup" ftype="pileup" />
+    </test>
+  </tests>
+  <help>
+    This tool produces pileup format from sra archives using sra-pileup.
+    Browse the NCBI SRA for SRR accessions at http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=studies.
+    The sra-pileup program is developed at NCBI, and is available at: http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=software.
+    Contact Matt Shirley at mdshw5@gmail.com for support and bug reports.
+  </help>
+</tool>
