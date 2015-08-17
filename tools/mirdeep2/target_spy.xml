@@ -1,0 +1,23 @@
+<tool id="target_spy" name="Target Spy" version="1.1">
+	<description>Find targets for miRNAs</description>
+
+	<requirements>
+                <requirement type="perl-module">target_spy_wrapper.pl</requirement>
+        </requirements>
+
+        <command interpreter="perl">
+		target_spy_wrapper.pl $mirna_file $trans_file $targets "$targets.files_path"
+	</command>
+
+	<inputs>
+		<param format="fasta" name="mirna_file" type="data" optional="false" label="miRNA file in Fasta format" />
+		<param format="fasta" name="trans_file" type="data" optional="false" label="3' UTR transcript file in Fasta format" />
+	</inputs>
+
+	<outputs>
+		<data format="txt" name="targets"/>
+	</outputs>
+
+	<help>
+	</help>
+</tool>

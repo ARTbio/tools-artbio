@@ -1,4 +1,4 @@
-<tool id="MirParser" name="Parse miRNAs" version="0.9.2">
+<tool id="MirParser" name="Parse miRNAs" version="0.9.3">
     <description>from aligment files</description>
     <requirements>
         <requirement type="package" version="0.12.7">bowtie</requirement>

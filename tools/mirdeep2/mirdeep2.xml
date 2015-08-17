@@ -1,0 +1,75 @@
+<tool id="mirdeep2" name="miRDeep2" version="0.0.5">
+	<description>Find miRNA candidates using output from mapping step</description>
+
+	<requirements>
+		<requirement type="perl-module">mirdeep2_wrapper.pl</requirement>
+	</requirements>
+
+	<command interpreter="perl">
+		./mirdeep2_wrapper.pl $collapsed_reads $bowtie_index $bowtie_index.extra_files_path $arf_file $mirna_ref $mirna_other $precursors "$html_output.files_path" "$collapsed_reads.name" $csv_output $html_output $survey_output $mrd_output
+
+		#if str($min_stack_height) != '':
+		-a $min_stack_height
+		#end if
+
+		#if str($max_num_precursors) != '':
+		-g $max_num_precursors
+		#end if
+
+		#if str($min_score_cutoff) != '':
+		-b $min_score_cutoff
+		#end if
+
+		#if str($disable_randfold) == 'disable_randfold_true':
+		-c
+		#end if
+
+		#if str($ucsc_genome) != 'None':
+		-t $ucsc_genome
+		#end if
+
+		#if str($star_seq) != 'None':
+		-s $star_seq
+		#end if
+	</command>
+
+	<inputs>
+		<param format="fasta" type="data" name="collapsed_reads" optional="false" label="Collapsed reads fasta file" help="Collapsed read fasta file outputted from mapping step"/>
+		<param format="bowtie_html_index" type="data" name="bowtie_index" optional="false" label="Bowtie indexed reference" help="Select the bowtie-build run, NOT the fasta reference file you indexed"/>
+		<param format="arf" type="data" name="arf_file" optional="false" label="ARF file from mapping step"/>
+		<param format="fasta" type="data" name="mirna_ref" optional="true" label="Known miRBase miRNA sequences in fasta format (optional)" help="If used, these should be the known mature sequences for the species being analyzed"/>
+		<param format="fasta" type="data" name="mirna_other" optional="true" label="Known related miRBase miRNA sequences in fasta format (optional)" help="If used, these should be pooled known mature sequences for 1-5 species closely related to the species being analyzed"/>
+		<param format="fasta" type="data" name="precursors" optional="true" label="Known miRBase miRNA precursors in fasta format (optional)" help="If used, these should be the known precursor sequences for the species being analyzed"/>
+		<param format="fasta" type="data" name="star_seq" optional="true" label="Known miRBase miRNA star sequences in fasta format (optional)" help="If used, these should be the known star sequences for the species being analyzed"/>
+		<param name="min_stack_height" value="" type="integer" optional="true" label="Minimum read stack height that triggers analysis (optional)" help="Using this option disables automatic estimation of the optimal value and all detected precursors are analyzed"/>
+		<param name="max_num_precursors" value="50000" type="integer" label="Maximum number of precursors to analyze when automatic excision gearing is used (default 50000)" help="If set to -1 all precursors will be analyzed"/>
+		<param name="min_score_cutoff" value="0" type="integer" label="Minimum score cut-off for predicted novel miRNAs to be displayed in the overview table" help="This score cut-off is by default 0"/>
+		<param name="disable_randfold" type="boolean" truevalue="disable_randfold_true" falsevalue="disable_randfold_false" checked="false" label="Disable randfold analysis" help="Runs faster but with less accurate results"/>
+		<param name="ucsc_genome" type="select" optional="true" label="Species being analyzed - this is used to link to the appropriate UCSC browser entry (optional)">
+			<options from_file="ucsc_browser_species.txt">
+				<column name="value" index="0"/>
+			</options>
+		</param>
+	</inputs>
+	<outputs>
+		<data format="csv" name="csv_output" label="miRNA CSV output of ${tool.name} on ${on_string}"/>
+		<data format="html" name="html_output" label="miRNA HTML output of ${tool.name} on ${on_string}"/>
+		<data format="csv" name="survey_output" label="miRNA prediction accuracy spreadsheet of ${tool.name} on ${on_string}"/>
+		<data format="txt" name="mrd_output" label="miRNA hairpins of ${tool.name} on ${on_string}"/>
+	</outputs>
+
+	<help>
+		miRDeep2 is a software package for identification of novel and known miRNAs in deep sequencing data. Furthermore, it can be used for miRNA expression profiling across samples.
+
+		The output files produced are:
+
+		result.html: a html table giving an overview of novel and known miRNAs detected in the data. The table is hyperlinked to pdfs showing the signature and structure of each hairpin.
+
+		result.csv: spread-sheet format of results.html
+
+		survey.csv: spread-sheet of prediction accuracy for all score-cutoffs between -10 and 10.
+
+		output.mrd: text output of the reported hairpins.
+
+	</help>
+</tool>

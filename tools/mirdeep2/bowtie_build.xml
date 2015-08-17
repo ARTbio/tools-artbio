@@ -1,0 +1,22 @@
+<tool id="bowtiebuild" name="Bowtie Indexing" version="0.0.5">
+	<description>Build index for Bowtie alignment</description>
+
+	<requirements>
+                <requirement type="perl-module">bowtie_build_wrapper.pl</requirement>
+        </requirements>
+
+        <command interpreter="perl">
+		./bowtie_build_wrapper.pl $fastafile "$output.files_path" $output "$fastafile.name"
+	</command>
+
+	<inputs>
+		<param format="fasta" name="fastafile" type="data" optional="false" label="Fasta reference file" help="Reference file in fasta format"/>
+	</inputs>
+
+	<outputs>
+		<data format="bowtie_html_index" name="output"/>
+	</outputs>
+
+	<help>
+	</help>
+</tool>

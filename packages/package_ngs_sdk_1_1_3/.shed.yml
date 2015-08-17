@@ -1,9 +1,9 @@
 # .shed.yml supporting automatic pushes.
 owner: mvdbeek
-name: package_ngs_1_1_3
-description: NCBI ngs package
+name: package_ngs_sdk_1_1_3
+description: NCBI ngs-sdk package
 long_description: |
-  NCBI ngs package. Required for NCBI sra toolkit package.
+  NCBI ngs-sdk package. Required for NCBI sra toolkit package.
 categories:
   - Tool Dependency Packages
 homepage_url: 
