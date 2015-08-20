@@ -21,10 +21,13 @@
                 <action type="shell_command">tar -xf sra-tools-2.5.2.tar.gz</action>
                 <action type="change_directory">sra-tools-2.5.2</action>
                 <action type="shell_command">
-                    ./configure --prefix=$INSTALL_DIR -with-ngs-sdk-prefix=$NGS_SDK_DIR --with-ncbi-vdb-sources=$NCBI_VDB_SRC_DIR --with-ncbi-vdb-build=$NCBI_VDB_DIR --build=$INSTALL_DIR/build
+                    ./configure --prefix=$INSTALL_DIR -with-ngs-sdk-prefix=$NGS_SDK_DIR --with-ncbi-vdb-sources=$NCBI_VDB_DIR --with-ncbi-vdb-build=$NCBI_VDB_DIR --build=$INSTALL_DIR/build
                     sed -i -e "109s/-static//" tools/copycat/Makefile
                 </action>
                 <action type="make_install"></action>
+                <action type="shell_command">
+                    $INSTALL_DIR/bin/vdb-config --restore-defaults
+                </action>
                 <action type="set_environment">
                     <environment_variable name="PATH" action="prepend_to">$INSTALL_DIR/bin</environment_variable>
                 </action>

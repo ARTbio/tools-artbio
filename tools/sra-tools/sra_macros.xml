@@ -1,0 +1,37 @@
+<macros>
+    <macro name="requirements">
+        <requirements>
+            <requirement type="package" version="2.5.2">sra_toolkit</requirement>
+            <requirement type="package" version="3">ascp</requirement>
+            <requirement type="package" version="5.18.1">perl</requirement>
+        </requirements>
+    </macro>
+    <macro name="input_conditional">
+        <conditional name="input">
+            <param name="input_select" type="select" label="select input type">
+                <option value="accession_number">SRR accession</option>
+                <option value="file">SRA archive in current history</option>
+            </param>
+            <when value="accession_number">
+                <param format="text" name="accession" type="text" label="accession"/>
+            </when>
+            <when value="file">
+                <param format="sra" name="file" type="data" label="sra archive"/>
+            </when>
+        </conditional>
+    </macro>
+    <macro name="alignments">
+        <param format="text" name="alignments" type="select" value="both">
+            <label>aligned or unaligned reads</label>
+            <option value="both">both</option>
+            <option value="aligned">aligned only</option>
+            <option value="unaligned">unaligned only</option>
+        </param>
+    </macro>
+    <macro name="region">
+        <param format="text" name="region" type="text" label="aligned region"/>
+    </macro>
+    <macro name="matepairDist">
+        <param format="text" name="matepairDist" type="text" label="mate-pair distance (from-to|unknown)"/>
+    </macro>
+</macros>

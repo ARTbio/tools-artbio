@@ -6,4 +6,7 @@
     <package name="ascp" version="3">
         <repository name="package_ascp_3" owner="mvdbeek" />
     </package>
+    <package name="perl" version="5.18.1">
+        <repository name="package_perl_5_18" owner="iuc" />
+    </package>
 </tool_dependency>
