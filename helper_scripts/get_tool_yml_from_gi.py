@@ -163,7 +163,7 @@ class GiToToolYaml:
 
     def write_to_yaml(self):
         with open(self.output_file, "w") as output:
-            output.write(yaml.safe_dump(self.filtered_tool_list))
+            output.write(yaml.safe_dump(self.filtered_tool_list, default_flow_style=False))
 
 
 def _parse_cli_options():
