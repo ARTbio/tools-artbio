@@ -2,7 +2,7 @@ This is the private development repository for galaxy tools developed in the ART
 This repository is automatically tested by jenkins (https://lbcd41.snv.jussieu.fr/jenkins).
 
 See http://artbio.fr/ for our homepage.
-Contact gedserver@gmail.com if you have questions.
+Contact artbio.ibps@gmail.com if you have questions.
 
 CI      | Test                            |  Status
 ------- |-------------------------------- | -------
