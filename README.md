@@ -1,6 +1,7 @@
 This is the development repository for galaxy tools developed in the ARTbio platform at the UPMC.
 Tools are installed on https://mississippi.snv.jussieu.fr and downloadable through the galaxy toolshed.
 This repository is automatically tested by jenkins (https://lbcd41.snv.jussieu.fr/jenkins).
+Changes should be proposed via Pull Requests.
 
 See http://artbio.fr/ for our homepage.
 Contact artbio.ibps@gmail.com if you have questions.
