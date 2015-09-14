@@ -1,4 +1,4 @@
-<tool id="BlastParser_and_hits" name="Parse blast output and compile hits" version="2.2.0">
+<tool id="BlastParser_and_hits" name="Parse blast output and compile hits" version="2.3.0">
 <description>for virus discovery</description>
 <requirements></requirements>
 <command interpreter="python">
@@ -15,6 +15,8 @@ BlastParser_and_hits.py
         --filter_maxScore $additional_filters.filter_maxScore
         --filter_meanScore $additional_filters.filter_meanScore
     #end if
+    --al_sequences $al_sequences
+    --un_sequences $un_sequences
 
 </command>
 <inputs>
@@ -42,6 +44,8 @@ BlastParser_and_hits.py
 <outputs>
 	<data name="tabularOutput" format="tabular" label="blast analysis, by subjects"/>
 	<data name="fastaOutput" format="fasta" label="hits"/>
+	<data name="al_sequences" format="fasta" label="Blast aligned sequences"/>
+	<data name="un_sequences" format="fasta" label="Blast unaligned sequences"/>
 </outputs>
 
   <tests>
@@ -53,6 +57,8 @@ BlastParser_and_hits.py
         <param name="mode" value="verbose" />
         <output name="tabularOutput" ftype="tabular" file="output.tab" />
         <output name="fastaOutput" ftype="fasta" file="output.fa" />
+        <output name="al_sequences" ftype="fasta" file="al_sequences.fa" />
+        <output name="un_sequences" ftype="fasta" file="un_sequences.fa" />
     </test>
   </tests>
 
@@ -60,7 +66,7 @@ BlastParser_and_hits.py
 
 **What it does**
 
-Parse blast outputs for viruses genome assembly. Outputs analysis and hit sequences for further assembly
+Parse blast outputs for viruses genome assembly. Outputs analysis and hit sequences for further assembly. Output also the contig sequences which have or not been blast aligned with the indicated cut-off
 
 </help>
 </tool>

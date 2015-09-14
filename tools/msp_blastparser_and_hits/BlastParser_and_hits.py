@@ -17,6 +17,8 @@ def Parser():
     the_parser.add_argument('--filter_relativeCov', action="store", type=float, default=0, help="filter out relative coverages below the specified ratio (float number)")
     the_parser.add_argument('--filter_maxScore', action="store", type=float, default=0, help="filter out maximum BitScore below the specified float number")
     the_parser.add_argument('--filter_meanScore', action="store", type=float, default=0, help="filter out maximum BitScore below the specified float number")
+    the_parser.add_argument('--al_sequences', action="store", type=str, help="sequences that have been blast aligned")
+    the_parser.add_argument('--un_sequences', action="store", type=str, help="sequences that have not been blast aligned")
     args = the_parser.parse_args()
     if not all ( (args.sequences, args.blast, args.fastaOutput, args.tabularOutput) ):
         the_parser.error('argument(s) missing, call the -h option of the script')
@@ -171,12 +173,29 @@ def outputParsing (F, Fasta, results, Xblastdict, fastadict, filter_relativeCov=
     F.close()
     Fasta.close()
         
-    
+def sort_sequences (fastadict, blastdict, matched_sequences, unmatched_sequences):
+    '''to output the sequences that matched and did not matched in the blast'''
+    blasted_transcripts = []
+    for subject in blastdict:
+        for transcript in blastdict[subject]:
+            blasted_transcripts.append(transcript)
+    blasted_transcripts = list( set( blasted_transcripts))
+    F_matched = open (matched_sequences, "w")
+    F_unmatched = open (unmatched_sequences, "w")
+    for transcript in fastadict:
+        if transcript in blasted_transcripts:
+            print >> F_matched, ">%s\n%s" % (transcript, insert_newlines(fastadict[transcript]) )
+        else:
+            print >> F_unmatched, ">%s\n%s" % (transcript, insert_newlines(fastadict[transcript]) )
+    F_matched.close()
+    F_unmatched.close()
+    return
 
 def __main__ ():
     args = Parser()
     fastadict = getfasta (args.sequences)
     Xblastdict = getblast (args.blast)
+    sort_sequences (fastadict, Xblastdict, args.al_sequences, args.un_sequences)
     results = defaultdict(dict)
     for subject in Xblastdict:
         results[subject]["HitDic"], results[subject]["subjectLength"], results[subject]["TotalCoverage"], results[subject]["RelativeSubjectCoverage"], results[subject]["maxBitScores"], results[subject]["meanBitScores"]  = subjectCoverage(fastadict, Xblastdict, subject, args.flanking)
