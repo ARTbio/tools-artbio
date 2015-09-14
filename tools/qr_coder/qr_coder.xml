@@ -1,8 +1,8 @@
-<tool id="qrCoder_1" name="qr Coder" version="1.0">
+<tool id="qr_coder_1" name="qr_coder" version="1.0">
    <description>Generate qr code images</description>
    <requirements>
-      <requirement type="package" version="1.0">qrcode</requirement>
-      <requirement type="package" version="1.0">Image</requirement>
+      <requirement type="package" version="5.1">qrcode</requirement>
+      <requirement type="package" version="1.4.1">image</requirement>
    </requirements>
    <stdio>
       <exit_code range="1:" />
@@ -10,11 +10,10 @@
       <regex match="Exception:" />
    </stdio>
    <command interpreter="python">
-      qrCoder.py -qrData "$qrData" -qrOutput $qrOutput
-      #if $qrFit
+      qr_coder.py -qrData "$qrData" -qrOutput $qrOutput
+      #if $qrVersion == ""
          --qrFit
-      #end if
-      #if $qrVersion
+      #else
          -qrVersion $qrVersion
       #end if
        #if $qrBorder
@@ -28,12 +27,11 @@
       #end if
    </command>
    <inputs>
-      <param name="qrData"            type="text"    label="Data to be coded as an qr image"                                   optional="false" />
-      <param name="qrVersion"         type="integer" label="An integer from 1 to 40 that controls the size of the QR Code"     optional="true"  />
-      <param name="qrFit"             type="boolean" label="Makes the code to determine the size of the QR Code automatically" optional="true"  checked="true" />
-      <param name="qrBorder"          type="integer" label="Controls how many boxes thick the border should be"                optional="true"  />
-      <param name="qrBoxSize"         type="integer" label="Controls how many pixels each 'box' of the QR code is"             optional="true"  />
-      <param name="qrErrorCorrection" type="select"  label="Controls the error correction used for the QR Code"                optional="true"  >
+      <param name="qrData"            type="text"    label="Data to be coded as an qr image"                                           optional="false" value="https://mississippi.snv.jussieu.fr/artbio/"/>
+      <param name="qrVersion"         type="integer" label="An integer from 0 (automatic) to 40 that controls the size of the QR Code" optional="true"  value="0" max="40" min="0" />
+      <param name="qrBorder"          type="integer" label="Controls how many boxes thick the border should be"                        optional="true"  min="0" />
+      <param name="qrBoxSize"         type="integer" label="Controls how many pixels each 'box' of the QR code is"                     optional="true"  min="0"/>
+      <param name="qrErrorCorrection" type="select"  label="Controls the error correction used for the QR Code"                        optional="true"  >
          <option value="Low">Low</option>
          <option value="Medium">Medium</option>
          <option value="Q">Q</option>
@@ -46,7 +44,7 @@
    <tests>
       <test>
          <param name="qrData" value="http://upmc.fr"/>
-         <output name="qrOutput" value="upmc.qrcode.png"/>
+         <output name="qrOutput" file="upmc_qrcode.png" ftype="png"/>
       </test>
    </tests>
    <help>
@@ -56,8 +54,7 @@ Usage: %(prog)s -qrData {data} [options]
 Parameters:
  -qrData ["data"] (Data to be coded as an qr image)
  -qrOutput ["file_name"] (Name of the image PNG file)
- -qrVersion [integer] An integer from 1 to 40 that controls the size of the QR Code)
- --qrFit (Makes the code to determine the size of the QR Code automatically)
+ -qrVersion [integer] (An integer from 0 (automatic) to 40 that controls the size of the QR Code)
  -qrBorder [integer] (Controls how many boxes thick the border should be)
  -qrBoxSize [integer] (Controls how many pixels each 'box' of the QR code is)
  -qrErrorCorrection [integer] (Controls the error correction used for the QR Code)

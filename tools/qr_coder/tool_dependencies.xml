@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<tool_dependency>
+    <package name="qrcode" version="5.1">
+        <install version="1.0">
+            <actions>
+                <action type="setup_virtualenv">qrcode==5.1</action> -->
+            </actions>
+        </install>
+    </package>
+    <package name="image" version="1.4.1">
+        <install version="1.0">
+            <actions>
+                <action type="setup_virtualenv">image==1.4.1</action> -->
+            </actions>
+        </install>
+    </package>
+</tool_dependency>
