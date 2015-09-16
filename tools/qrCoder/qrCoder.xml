@@ -43,10 +43,21 @@
    <outputs>
       <data name="qrOutput" label="Name of the image PNG file" format="png" />
    </outputs>
+
+
+    <tests>
+        <test>
+            <param name="input" value="EcR_USP_224.fa"/>
+            <param name="window" value="21"/>
+            <param name="step" value="21"/>
+            <output name="output" file="output.fa"/>
+        </test>
+    </tests>
+
    <tests>
       <test>
          <param name="qrData" value="http://upmc.fr"/>
-         <output name="qrOutput" value="upmc.qrcode.png"/>
+         <output name="qrOutput" file="upmc.qrcode.png"/>
       </test>
    </tests>
    <help>
