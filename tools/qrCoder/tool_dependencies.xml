@@ -1,16 +1,8 @@
 <tool_dependency>
-    <package name="qrcode" version="1.0">
-        <install version="1.0">
-            <actions>
-                <action type="shell_command">pip install qrcode</action>
-            </actions>
-        </install>
+   <package name="qrcode" version="5.1">
+      <repository name="package_qrcode_5_1" owner="fabiorjvieira" />
     </package>
     <package name="Image" version="1.0">
-        <install version="1.0">
-            <actions>
-                <action type="shell_command">pip install Image</action>
-            </actions>
-        </install>
+      <repository name="package_image_1_0" owner="fabiorjvieira" />
     </package>
 </tool_dependency>

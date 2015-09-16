@@ -1,7 +1,7 @@
-<tool id="qrCoder_1" name="qr Coder" version="1.0">
+<tool id="qrCoder_1" name="qrCoder" version="1.0">
    <description>Generate qr code images</description>
    <requirements>
-      <requirement type="package" version="1.0">qrcode</requirement>
+      <requirement type="package" version="5.1">qrcode</requirement>
       <requirement type="package" version="1.0">Image</requirement>
    </requirements>
    <stdio>
