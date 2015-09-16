@@ -46,6 +46,7 @@
    <tests>
       <test>
          <param name="qrData" value="http://upmc.fr"/>
+         <param name="qrOutput" value="upmc.qrcode.png"/>
          <output name="qrOutput" file="upmc.qrcode.png"/>
       </test>
    </tests>
