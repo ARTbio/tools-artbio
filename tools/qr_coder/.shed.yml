@@ -7,7 +7,7 @@ long_description: |
 categories:
   - Graphics
 homepage_url: http://mississippi.snv.jussieu.fr/
-remote_repository_url: https://github.com/fabiorjvieira/tools-artbio/tree/master/tools/qrCoder
+remote_repository_url: https://github.com/fabiorjvieira/tools-artbio/tree/master/tools/qr_coder
 toolshed:
-  - https://lbcd41.snv.jussieu.fr/toolshed/
+  - https://localhost:9009
   - testtoolshed
