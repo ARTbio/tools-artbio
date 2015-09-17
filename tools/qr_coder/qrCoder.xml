@@ -1,0 +1,68 @@
+<tool id="qr_coder_1" name="qr_coder" version="1.0">
+   <description>Generate qr code images</description>
+   <requirements>
+      <requirement type="package" version="5.1">qrcode</requirement>
+      <requirement type="package" version="1.4.1">Image</requirement>
+   </requirements>
+   <stdio>
+      <exit_code range="1:" />
+      <regex match="Error:" />
+      <regex match="Exception:" />
+   </stdio>
+   <command interpreter="python">
+      qrCoder.py -qrData "$qrData" -qrOutput $qrOutput
+      #if $qrFit
+         --qrFit
+      #end if
+      #if $qrVersion
+         -qrVersion $qrVersion
+      #end if
+       #if $qrBorder
+         -qrBorder $qrBorder
+      #end if
+      #if $qrBoxSize
+         -qrBoxSize $qrBoxSize
+      #end if
+      #if $qrErrorCorrection
+         -qrErrorCorrection $qrErrorCorrection
+      #end if
+   </command>
+   <inputs>
+      <param name="qrData"            type="text"    label="Data to be coded as an qr image"                                   optional="false" />
+      <param name="qrVersion"         type="integer" label="An integer from 1 to 40 that controls the size of the QR Code"     optional="true"  />
+      <param name="qrFit"             type="boolean" label="Makes the code to determine the size of the QR Code automatically" optional="true"  checked="true" />
+      <param name="qrBorder"          type="integer" label="Controls how many boxes thick the border should be"                optional="true"  />
+      <param name="qrBoxSize"         type="integer" label="Controls how many pixels each 'box' of the QR code is"             optional="true"  />
+      <param name="qrErrorCorrection" type="select"  label="Controls the error correction used for the QR Code"                optional="true"  >
+         <option value="Low">Low</option>
+         <option value="Medium">Medium</option>
+         <option value="Q">Q</option>
+         <option value="High">High</option>
+      </param>
+   </inputs>
+   <outputs>
+      <data name="qrOutput" label="Name of the image PNG file" format="png" />
+   </outputs>
+   <tests>
+      <test>
+         <param name="qrData" value="http://upmc.fr"/>
+         <output name="qrOutput" file="upmc_qrcode.png" ftype="png"/>
+      </test>
+   </tests>
+   <help>
+**What it does**
+Generate qr code images
+Usage: %(prog)s -qrData {data} [options]
+Parameters:
+ -qrData ["data"] (Data to be coded as an qr image)
+ -qrOutput ["file_name"] (Name of the image PNG file)
+ -qrVersion [integer] An integer from 1 to 40 that controls the size of the QR Code)
+ --qrFit (Makes the code to determine the size of the QR Code automatically)
+ -qrBorder [integer] (Controls how many boxes thick the border should be)
+ -qrBoxSize [integer] (Controls how many pixels each 'box' of the QR code is)
+ -qrErrorCorrection [integer] (Controls the error correction used for the QR Code)
+   </help>
+   <citations>
+      <citation type="doi">10.1145/1971519.1971593</citation>
+   </citations>
+</tool>
