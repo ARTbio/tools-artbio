@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+
+## Example usage: python get_tool_yml_from_gi.py -g https://mississippi.snv.jussieu.fr/ -a <api_key> -o tools.yml
+
 from operator import itemgetter
 from argparse import ArgumentParser
 
