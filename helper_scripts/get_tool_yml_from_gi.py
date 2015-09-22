@@ -85,6 +85,8 @@ class GiToToolYaml:
             if self.get_packages is False:
                 if repo["name"].startswith("package_"):
                     continue
+            repo["tool_shed"] = "https://" + repo["tool_shed"] + "/"
+            print repo
             filtered_repository_list.append(repo)
         return filtered_repository_list
 
@@ -129,7 +131,6 @@ class GiToToolYaml:
         tool_list = []
         for repo in filtered_repository_list:
             values = itemgetter(*required_fields)(repo)
-            values = (values[0], values[1], values[2], values[3], "https://"+values[4])
             tool_list.append(dict(zip(yaml_categories, values)))
         return tool_list
 
