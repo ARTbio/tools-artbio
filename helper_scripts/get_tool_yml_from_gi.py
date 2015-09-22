@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+
+## Example usage: python get_tool_yml_from_gi.py -g https://mississippi.snv.jussieu.fr/ -a <api_key> -o tools.yml
+
 from operator import itemgetter
 from argparse import ArgumentParser
 
@@ -53,7 +57,7 @@ class GiToToolYaml:
                         tool_panel_section_id = tool["panel_section_id"]
                         split_repo_url = tool["id"].split("/repos/")
                         sub_dir = split_repo_url[1].split("/")
-                        tool_shed = split_repo_url[0]
+                        tool_shed = "https://" + split_repo_url[0] + "/"
                         owner = sub_dir[0]
                         name = sub_dir[1]
                         tool_panel_list_filtered.append(
@@ -85,6 +89,7 @@ class GiToToolYaml:
             if self.get_packages is False:
                 if repo["name"].startswith("package_"):
                     continue
+            repo["tool_shed"] = "https://" + repo["tool_shed"] + "/"
             filtered_repository_list.append(repo)
         return filtered_repository_list
 
@@ -162,8 +167,9 @@ class GiToToolYaml:
                 del tool["tool_panel_section_id"]
 
     def write_to_yaml(self):
+	tool_dict={"tools":self.filtered_tool_list}
         with open(self.output_file, "w") as output:
-            output.write(yaml.safe_dump(self.filtered_tool_list, default_flow_style=False))
+            output.write(yaml.safe_dump(tool_dict, default_flow_style=False))
 
 
 def _parse_cli_options():
