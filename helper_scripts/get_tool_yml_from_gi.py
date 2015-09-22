@@ -129,6 +129,7 @@ class GiToToolYaml:
         tool_list = []
         for repo in filtered_repository_list:
             values = itemgetter(*required_fields)(repo)
+            values = (values[0], values[1], values[2], values[3], "https://"+values[4])
             tool_list.append(dict(zip(yaml_categories, values)))
         return tool_list
 
@@ -162,8 +163,9 @@ class GiToToolYaml:
                 del tool["tool_panel_section_id"]
 
     def write_to_yaml(self):
+	tool_dict={"tools":self.filtered_tool_list}
         with open(self.output_file, "w") as output:
-            output.write(yaml.safe_dump(self.filtered_tool_list, default_flow_style=False))
+            output.write(yaml.safe_dump(tool_dict, default_flow_style=False))
 
 
 def _parse_cli_options():
