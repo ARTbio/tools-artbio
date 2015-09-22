@@ -86,7 +86,6 @@ class GiToToolYaml:
                 if repo["name"].startswith("package_"):
                     continue
             repo["tool_shed"] = "https://" + repo["tool_shed"] + "/"
-            print repo
             filtered_repository_list.append(repo)
         return filtered_repository_list
 
