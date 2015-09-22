@@ -57,7 +57,7 @@ class GiToToolYaml:
                         tool_panel_section_id = tool["panel_section_id"]
                         split_repo_url = tool["id"].split("/repos/")
                         sub_dir = split_repo_url[1].split("/")
-                        tool_shed = split_repo_url[0]
+                        tool_shed = "https://" + split_repo_url[0] + "/"
                         owner = sub_dir[0]
                         name = sub_dir[1]
                         tool_panel_list_filtered.append(
