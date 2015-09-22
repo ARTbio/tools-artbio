@@ -6,8 +6,7 @@ long_description: |
   Generate qr codes images.
 categories:
   - Graphics
-homepage_url: http://mississippi.snv.jussieu.fr/
-remote_repository_url: https://github.com/fabiorjvieira/tools-artbio/tree/master/tools/qr_coder
+homepage_url: https://github.com/ARTbio/
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/qr_coder
 toolshed:
-  - https://localhost:9009
-  - testtoolshed
+  - http://134.157.182.55:9009/ 
