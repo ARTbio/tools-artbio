@@ -1,0 +1,13 @@
+# .shed.yml supporting automatic pushes.
+owner: fabiorjvieira
+name: qr_coder
+description: Generate qr codes images.
+long_description: |
+  Generate qr codes images.
+categories:
+  - Graphics
+homepage_url: https://github.com/ARTbio/
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/qr_coder
+toolshed:
+  - https://lbcd41.snv.jussieu.fr/toolshed/
+  - testtoolshed
