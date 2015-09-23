@@ -1,15 +1,22 @@
-<tool id="sra_pileup" name="Generate pileup format" version="1.1.1">
-    <description> from NCBI sra.</description>
+<tool id="sra_pileup" name="Generate pileup format" version="1.2.1">
+    <description>from NCBI sra.</description>
     <macros>
         <import>sra_macros.xml</import>
     </macros>
     <expand macro="requirements"/>
     <command>
+        <![CDATA[
+        ## Need to set the home directory to the current working directory,
+        ## else the tool tries to write to home/.ncbi and fails when used 
+        ## with a cluster manager. 
+        export HOME=\$PWD;
         vdb-config --restore-defaults;
         vdb-config -s "/repository/user/main/public/root=\$PWD";
         sra-pileup --log-level fatal
         #if str( $region ) != "":
+
         --aligned-region $region
+
         #end if
         #if str( $minMapq ) != "":
         --minmapq $minMapq
@@ -21,7 +28,9 @@
         #elif $input.input_select == "text":
         `cat $input.text`
         #end if
-        > $output</command>
+        > $output
+        ]]>
+    </command>
     <version_string>sra-pileup --version</version_string>
     <inputs>
         <conditional name="input">
@@ -44,20 +53,27 @@
         <param format="text" name="minMapq" type="text" label="minimum mapping quality"/>
     </inputs>
     <outputs>
-        <data format="pileup" name="output"/>
+        <data format="pileup" name="output_accession" label="${input.accession}.pileup">
+            <filter>input['input_select'] == "accession_number"</filter>
+        </data>
+        <data format="pileup" name="output_file" label="${input.file.name}.pileup">
+            <filter>input['input_select'] == "file"</filter>
+        <data format="pileup" name="output_text" label="${input.text.name}.pileup">
+            <filter>input['input_select'] == "text"</filter>
     </outputs>
     <tests>
         <test>
             <param name="input_select" value="accession_number"/>
             <param name="accession" value="SRR925743"/>
             <param name="region" value="17:41243452-41277500"/>
-            <output name="output" file="sra_pileup_result.pileup" ftype="pileup" />
+            <output name="output" file="sra_pileup_result.pileup" ftype="pileup"/>
         </test>
     </tests>
     <help>
         This tool produces pileup format from sra archives using sra-pileup.
         Browse the NCBI SRA for SRR accessions at http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=studies.
-        The sra-pileup program is developed at NCBI, and is available at: http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=software.
+        The sra-pileup program is developed at NCBI, and is available at:
+        http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=software.
         Contact Matt Shirley at mdshw5@gmail.com for support and bug reports.
     </help>
 </tool>

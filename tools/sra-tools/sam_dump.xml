@@ -1,15 +1,20 @@
-<tool id="sam_dump" name="Extract reads" version="1.1.2">
-    <description> in SAM or BAM format from NCBI SRA.</description>
+<tool id="sam_dump" name="Extract reads" version="1.2.1">
+    <description>in SAM or BAM format from NCBI SRA.</description>
     <macros>
         <import>sra_macros.xml</import>
     </macros>
     <expand macro="requirements"/>
     <command>
+        <![CDATA[
+        ## Need to set the home directory to the current working directory,
+        ## else the tool tries to write to home/.ncbi and fails when used 
+        ## with a cluster manager. 
+        export HOME=\$PWD;
         vdb-config --restore-defaults;
         vdb-config -s "/repository/user/main/public/root=\$PWD";
         ## Do not use prefetch if region is specified, to avoid downloading
         ## the complete sra file.
-        #if str( $region ) == "":
+        #if ( str( $region ) == "" ) and ( str( $minID ) == "" ) and ( str( $maxID ) == "" ):
             ASCP_PATH=`which ascp`;
             ASCP_KEY=`dirname \$ASCP_PATH`/asperaweb_id_dsa.openssh;
             prefetch --ascp-path "\$ASCP_PATH|\$ASCP_KEY" $input.accession;
@@ -54,6 +59,7 @@
         #elif $input.input_select == "accession_number":
         > $output_accession
         #end if
+        ]]>
     </command>
     <version_string>sam-dump --version</version_string>
     <inputs>
@@ -81,13 +87,13 @@
         <data name="output_accession" format="bam" label="${input.accession}.${outputformat}">
             <filter>input['input_select'] == "accession_number"</filter>
             <change_format>
-                <when input="outputformat" value="sam" format="sam" />
+                <when input="outputformat" value="sam" format="sam"/>
             </change_format>
         </data>
         <data name="output_file" format="bam" label="${input.file.name}.${outputformat}">
             <filter>input['input_select'] == "file"</filter>
             <change_format>
-                <when input="outputformat" value="sam" format="sam" />
+                <when input="outputformat" value="sam" format="sam"/>
             </change_format>
         </data>
     </outputs>
@@ -96,13 +102,14 @@
             <param name="input_select" value="accession_number"/>
             <param name="accession" value="SRR925743"/>
             <param name="region" value="17:41243452-41277500"/>
-            <output name="output" file="sam_dump_result.sam" ftype="sam" />
+            <output name="output" file="sam_dump_result.sam" ftype="sam"/>
         </test>
     </tests>
     <help>
         This tool extracts reads from sra archives using sam-dump.
         Browse the NCBI SRA for SRR accessions at http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=studies.
-        The sam-dump program is developed at NCBI, and is available at: http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=software.
+        The sam-dump program is developed at NCBI, and is available at:
+        http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=software.
         Contact Matt Shirley at mdshw5@gmail.com for support and bug reports.
     </help>
 </tool>
