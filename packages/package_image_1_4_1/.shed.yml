@@ -10,4 +10,4 @@ homepage_url: https://github.com/fabiorjvieira/
 remote_repository_url: https://github.com/fabiorjvieira/tools-artbio/tree/master/packages/package_image_1_4_1
 type: tool_dependency_definition
 toolshed:
-  - http://134.157.182.55:9009/
+  - http://localhost:9009/

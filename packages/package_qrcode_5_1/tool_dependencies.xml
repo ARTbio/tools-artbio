@@ -1,5 +1,5 @@
 <tool_dependency>
-    <package name="qrcore" version="5.1">
+    <package name="qrcode" version="5.1">
         <install version="1.0">
             <actions>
                 <action type="download_by_url">https://codeload.github.com/lincolnloop/python-qrcode/tar.gz/master</action>

@@ -9,4 +9,4 @@ categories:
 homepage_url: https://github.com/ARTbio/
 remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/qr_coder
 toolshed:
-  - http://134.157.182.55:9009/ 
+  - http://localhost:9009/ 
