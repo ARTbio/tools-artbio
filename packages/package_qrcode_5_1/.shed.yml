@@ -6,8 +6,9 @@ long_description: |
   http://www.bcgsc.ca/platform/bioinfo/software/abyss
 name: package_qrcode_5_1
 owner: fabiorjvieira
-homepage_url: https://github.com/fabiorjvieira/
-remote_repository_url: https://github.com/fabiorjvieira/tools-artbio/tree/master/packages/package_qrcode_5_1
+homepage_url: https://github.com/ARTbio/
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/packages/package_qrcode_5_1
 type: tool_dependency_definition
 toolshed:
-  - http://localhost:9009/
+  - https://lbcd41.snv.jussieu.fr/toolshed/
+  - testtoolshed
