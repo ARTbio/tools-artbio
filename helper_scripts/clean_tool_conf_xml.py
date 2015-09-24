@@ -7,7 +7,7 @@ from os import path
 from argparse import ArgumentParser
 
 
-def check_child(root, children, tooldir, removed_tools = []):
+def check_child(root, children, tooldir, removed_tools=[]):
     """
     For each child in children, check if child is tool. If it does not, check
     if child is section. If it is, recurse into section.
@@ -15,12 +15,12 @@ def check_child(root, children, tooldir, removed_tools = []):
     """
     for child in children:
         if child.tag == "section":
-            check_child(root = children, 
-                        children = child.getchildren(),
-                        tooldir = tooldir, 
-                        removed_tools = removed_tools)
+            check_child(root=children,
+                        children=child.getchildren(),
+                        tooldir=tooldir,
+                        removed_tools=removed_tools)
         elif child.tag == "tool":
-            if path.exists( path.join (tooldir, child.attrib["file"])):
+            if path.exists(path.join(tooldir, child.attrib["file"])):
                 pass
             else:
                 children.remove(child)
@@ -37,17 +37,18 @@ def _parse_cli_options():
                         dest="input_xml",
                         required=True,
                         help="shed_tool_conf.xml or migrated_tool_conf.xml \
-                        that needs to be cleaned from non-existant entries." )
+                        that needs to be cleaned from non-existant entries.")
     parser.add_argument("-o", "--output_xml",
                         required=True,
                         dest="output_xml",
                         help="Output file for cleaned xml")
     return parser.parse_args()
 
+
 def __main__():
     args = _parse_cli_options()
-    input_xml=args.input_xml
-    output_xml=args.output_xml
+    input_xml = args.input_xml
+    output_xml = args.output_xml
     tree = ET.parse(input_xml)
     root = tree.getroot()
     tooldir = root.attrib["tool_path"]
@@ -58,6 +59,7 @@ def __main__():
         print tool
     with open(output_xml, "w") as output:
         output.write(ET.tostring(root))
+
 
 if __name__ == "__main__":
     __main__()
