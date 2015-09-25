@@ -1,11 +1,15 @@
-<tool id="fastq_dump" name="Extract reads" version="1.1.11">
-    <description> in FASTQ/A format from NCBI SRA.</description>
+<tool id="fastq_dump" name="Extract reads" version="1.2.4">
+    <description>in FASTQ/A format from NCBI SRA.</description>
     <macros>
         <import>sra_macros.xml</import>
     </macros>
     <expand macro="requirements"/>
     <command>
         <![CDATA[
+    ## Need to set the home directory to the current working directory,
+    ## else the tool tries to write to home/.ncbi and fails when used 
+    ## with a cluster manager. 
+    export HOME=\$PWD;
     vdb-config --restore-defaults;
     #if $input.input_select == "file":
         fastq-dump --log-level fatal --accession '${input.file.name}'
@@ -13,15 +17,15 @@
         vdb-config -s "/repository/user/main/public/root=\$PWD";
         ## Do not use prefetch if region is specified, to avoid downloading
         ## the complete sra file.
-        #if str( $region ) == "":
+        #if ( str( $region ) == "" ) and ( str( $minID ) == "" ) and ( str( $maxID ) == "" ):
             ASCP_PATH=`which ascp`;
             ASCP_KEY=`dirname \$ASCP_PATH`/asperaweb_id_dsa.openssh;
             prefetch --ascp-path "\$ASCP_PATH|\$ASCP_KEY" $input.accession;
-        ##Duplicate vdb-config, in case settings changed between prefetch and
-        ##dump command.
         #end if
+        ## Duplicate vdb-config, in case settings changed between prefetch and
+        ## dump command.
         vdb-config -s "/repository/user/main/public/root=\$PWD";
-        fastq-dump --accession $input.accession
+        fastq-dump --accession "$input.accession"
     #end if
     --defline-seq '@\$sn[_\$rn]/\$ri'
     --stdout
@@ -35,25 +39,25 @@
         --unaligned
     #end if
     #if str( $minID ) != "":
-        --minSpotId $minID
+        --minSpotId "$minID"
     #end if
     #if str( $maxID ) != "":
-        --maxSpotId $maxID
+        --maxSpotId "$maxID"
     #end if
     #if str( $minlen ) != "":
-        --minReadLen $minlen
+        --minReadLen "$minlen"
     #end if
     #if str( $readfilter ) != "":
-        --read-filter $readfilter
+        --read-filter "$readfilter"
     #end if
     #if str( $region ) != "":
-        --aligned-region $region
+        --aligned-region "$region"
     #end if
     #if str( $spotgroups ) != "":
-        --spot-groups $spotgroups
+        --spot-groups "$spotgroups"
     #end if
     #if str( $matepairDist ) != "":
-        --matepair-distance $matepairDist
+        --matepair-distance "$matepairDist"
     #end if
     #if $clip == "yes":
         --clip
@@ -62,21 +66,19 @@
         --fasta
     #end if
     #if $input.input_select=="file":
-        $input.file
-        > $output_file
+        "$input.file" > "$output_file"
     #else:
-    $input.accession
-        > $output_accession
+        "$input.accession" > "$output_accession"
     #end if
     ]]>
     </command>
     <version_string>fastq-dump --version</version_string>
     <inputs>
         <expand macro="input_conditional"/>
-        <param format="text" name="minID" type="text" label="minimum spot ID"/>
-        <param format="text" name="maxID" type="text" label="maximum spot ID"/>
-        <param format="text" name="minlen" type="text" label="minimum read length"/>
-        <param format="text" name="split" type="select" value="yes">
+        <param name="minID" type="integer" label="minimum spot ID" optional="true"/>
+        <param name="maxID" type="integer" label="maximum spot ID" optional="true"/>
+        <param name="minlen" type="integer" label="minimum read length" optional="true"/>
+        <param name="split" type="select" value="yes">
             <label>split spot by read pairs</label>
             <option value="yes">Yes</option>
             <option value="no">No</option>
@@ -84,7 +86,7 @@
         <expand macro="alignments"/>
         <expand macro="region"/>
         <expand macro="matepairDist"/>
-        <param format="text" name="readfilter" type="select" value="">
+        <param name="readfilter" type="select" value="">
             <label>filter by value</label>
             <option value="">None</option>
             <option value="pass">pass</option>
@@ -96,8 +98,8 @@
             <option value="fastqsanger">fastq</option>
             <option value="fasta">fasta</option>
         </param>
-        <param format="text" name="spotgroups" type="text" label="filter by spot-groups"/>
-        <param format="text" name="clip" type="select" value="no">
+        <param name="spotgroups" type="text" label="filter by spot-groups" optional="true"/>
+        <param name="clip" type="select" value="no">
             <label>apply left and right clips</label>
             <option value="no">No</option>
             <option value="yes">Yes</option>
@@ -107,13 +109,13 @@
         <data format="fastq" name="output_accession" label="${input.accession}.${outputformat}">
             <filter>input['input_select'] == "accession_number"</filter>
             <change_format>
-                <when input="outputformat" value="fasta" format="fasta" />
+                <when input="outputformat" value="fasta" format="fasta"/>
             </change_format>
         </data>
         <data format="fastq" name="output_file" label="${input.file.name}.${outputformat}">
             <filter>input['input_select'] == "file"</filter>
             <change_format>
-                <when input="outputformat" value="fasta" format="fasta" />
+                <when input="outputformat" value="fasta" format="fasta"/>
             </change_format>
         </data>
     </outputs>
@@ -123,16 +125,16 @@
     <tests>
         <test>
             <param name="input_select" value="accession_number"/>
+            <param name="outputformat" value="fastqsanger"/>
             <param name="accession" value="SRR925743"/>
             <param name="maxID" value="5"/>
-            <output name="output" file="fastq_dump_result.fastq" ftype="fastq" />
+            <output name="output_accession" file="fastq_dump_result.fastq" ftype="fastq"/>
         </test>
     </tests>
     <help>
         This tool extracts reads from SRA archives using fastq-dump.
-        Browse the NCBI SRA for SRR accessions at http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=studies.
-        The fastq-dump program is developed at NCBI, and is available at: http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=software.
-        Written by Matt Shirley at mdshw5@gmail.com for support and bug reports.
-        Tool dependencies, clean-up and bug-fixes by Marius van den Beek.
+        The fastq-dump program is developed at NCBI, and is available at
+        http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=software.
+        @SRATOOLS_ATTRRIBUTION@
     </help>
 </tool>
