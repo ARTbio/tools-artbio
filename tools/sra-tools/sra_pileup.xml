@@ -80,9 +80,8 @@
     </tests>
     <help>
         This tool produces pileup format from sra archives using sra-pileup.
-        Browse the NCBI SRA for SRR accessions at http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=studies.
-        The sra-pileup program is developed at NCBI, and is available at:
+        The sra-pileup program is developed at NCBI, and is available at
         http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=software.
-        Contact Matt Shirley at mdshw5@gmail.com for support and bug reports.
+        @SRATOOLS_ATTRRIBUTION@
     </help>
 </tool>

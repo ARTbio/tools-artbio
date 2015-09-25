@@ -1,5 +1,5 @@
 <tool id="fastq_dump" name="Extract reads" version="1.2.4">
-    <description> in FASTQ/A format from NCBI SRA.</description>
+    <description>in FASTQ/A format from NCBI SRA.</description>
     <macros>
         <import>sra_macros.xml</import>
     </macros>
@@ -109,13 +109,13 @@
         <data format="fastq" name="output_accession" label="${input.accession}.${outputformat}">
             <filter>input['input_select'] == "accession_number"</filter>
             <change_format>
-                <when input="outputformat" value="fasta" format="fasta" />
+                <when input="outputformat" value="fasta" format="fasta"/>
             </change_format>
         </data>
         <data format="fastq" name="output_file" label="${input.file.name}.${outputformat}">
             <filter>input['input_select'] == "file"</filter>
             <change_format>
-                <when input="outputformat" value="fasta" format="fasta" />
+                <when input="outputformat" value="fasta" format="fasta"/>
             </change_format>
         </data>
     </outputs>
@@ -128,14 +128,13 @@
             <param name="outputformat" value="fastqsanger"/>
             <param name="accession" value="SRR925743"/>
             <param name="maxID" value="5"/>
-            <output name="output_accession" file="fastq_dump_result.fastq" ftype="fastq" />
+            <output name="output_accession" file="fastq_dump_result.fastq" ftype="fastq"/>
         </test>
     </tests>
     <help>
         This tool extracts reads from SRA archives using fastq-dump.
-        Browse the NCBI SRA for SRR accessions at http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=studies.
-        The fastq-dump program is developed at NCBI, and is available at: http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=software.
-        Written by Matt Shirley at mdshw5@gmail.com for support and bug reports.
-        Tool dependencies, clean-up and bug-fixes by Marius van den Beek.
+        The fastq-dump program is developed at NCBI, and is available at
+        http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=software.
+        @SRATOOLS_ATTRRIBUTION@
     </help>
 </tool>

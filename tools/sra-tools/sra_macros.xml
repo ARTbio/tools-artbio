@@ -13,7 +13,7 @@
                 <option value="file">SRA archive in current history</option>
             </param>
             <when value="accession_number">
-                <param  name="accession" type="text" label="accession"/>
+                <param name="accession" type="text" label="accession"/>
             </when>
             <when value="file">
                 <param format="sra" name="file" type="data" label="sra archive"/>
@@ -29,7 +29,7 @@
         </param>
     </macro>
     <macro name="minMapq">
-            <param name="minMapq" type="integer" min="0" max="42" label="minimum mapping quality" optional="true"/>
+        <param name="minMapq" type="integer" min="0" max="42" label="minimum mapping quality" optional="true"/>
     </macro>
     <macro name="region">
         <param format="text" name="region" type="text" label="aligned region" optional="true"
@@ -39,4 +39,8 @@
         <param name="matepairDist" type="text" label="mate-pair distance (from-to|unknown)" optional="true"
                help="Filter by distance between matepairs. Use unknown to find matepairs split between the references. Use from-to (inclusive) to limit matepair distance on the same reference"/>
     </macro>
+    <token name="@SRATOOLS_ATTRRIBUTION@">Browse the NCBI SRA for SRR accessions at http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=studies.
+        Galaxy tool wrapper originally written by Matt Shirley (mdshw5 at gmail.com).
+        Tool dependencies, clean-up and bug-fixes by Marius van den Beek (m.vandenbeek at gmail.com).
+        For support and bug reports contact Matt Shirley or Marius van den Beek or go to https://github.com/mdshw5/sra-tools-galaxy.</token>
 </macros>

@@ -108,9 +108,8 @@
     </tests>
     <help>
         This tool extracts reads from sra archives using sam-dump.
-        Browse the NCBI SRA for SRR accessions at http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=studies.
-        The sam-dump program is developed at NCBI, and is available at:
+        The sam-dump program is developed at NCBI, and is available at
         http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=software.
-        Contact Matt Shirley at mdshw5@gmail.com for support and bug reports.
+	@SRATOOLS_ATTRRIBUTION@
     </help>
 </tool>
