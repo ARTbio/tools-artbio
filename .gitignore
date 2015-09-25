@@ -1,0 +1,6 @@
+tool_test_output.html
+tool_test_output.json
+.*.pyc
+.*.log
+.idea/*
+.git/*
