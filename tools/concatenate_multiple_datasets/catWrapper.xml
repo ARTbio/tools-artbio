@@ -1,0 +1,70 @@
+<tool id="cat_multiple" name="Concatenate multiple datasets" version="0.2">
+    <description>tail-to-head</description>
+    <command><![CDATA[
+        cat
+        #for $file in $input
+            "$file"
+        #end for
+        > "$out_file1"
+        ]]>
+    </command>
+    <inputs>
+        <param name="input" type="data" label="Concatenate Dataset" multiple="True"/>
+    </inputs>
+    <outputs>
+        <data name="out_file1" format_source="input" metadata_source="input"/>
+    </outputs>
+    <tests>
+        <test>
+            <param name="input" value="1.bed,2.bed"/>
+            <output name="out_file1" file="cat_wrapper_out1.bed"/>
+        </test>
+    </tests>
+    <help>
+
+        .. class:: warningmark
+
+        **WARNING:** Be careful not to concatenate datasets of different kinds (e.g., sequences with intervals). This
+        tool does not check if the datasets being concatenated are in the same format.
+
+        -----
+
+        **What it does**
+
+        Concatenates datasets
+
+        -----
+
+        **Example**
+
+        Concatenating Dataset::
+
+        chrX 151087187 151087355 A 0 -
+        chrX 151572400 151572481 B 0 +
+
+        with Dataset1::
+
+        chr1 151242630 151242955 X 0 +
+        chr1 151271715 151271999 Y 0 +
+        chr1 151278832 151279227 Z 0 -
+
+        and with Dataset2::
+
+        chr2 100000030 200000955 P 0 +
+        chr2 100000015 200000999 Q 0 +
+
+        will result in the following::
+
+        chrX 151087187 151087355 A 0 -
+        chrX 151572400 151572481 B 0 +
+        chr1 151242630 151242955 X 0 +
+        chr1 151271715 151271999 Y 0 +
+        chr1 151278832 151279227 Z 0 -
+        chr2 100000030 200000955 P 0 +
+        chr2 100000015 200000999 Q 0 +
+
+        -----
+
+        Adapted from the concatenate tool that comes with galaxy.
+    </help>
+</tool>
