@@ -27,11 +27,11 @@
       #end if
    </command>
    <inputs>
-      <param name="qrData"            type="text"    label="Data to be coded as an qr image"                                           optional="false" value="https://mississippi.snv.jussieu.fr/artbio/"/>
-      <param name="qrVersion"         type="integer" label="An integer from 0 (automatic) to 40 that controls the size of the QR Code" optional="true"  value="0" max="40" min="0" />
+      <param name="qrData"            type="text"    label="Data to be coded as an qr image"                                           optional="false" value="" help="Enter the text for which you whish to generate a QR code." />
+      <param name="qrVersion"         type="integer" label="An integer from 0 (automatic) to 40 that controls the size of the QR Code" optional="true"  value="0" max="40" min="0" help="Higher numbers produce larger PNG image" />
       <param name="qrBorder"          type="integer" label="Controls how many boxes thick the border should be"                        optional="true"  min="0" />
       <param name="qrBoxSize"         type="integer" label="Controls how many pixels each 'box' of the QR code is"                     optional="true"  min="0"/>
-      <param name="qrErrorCorrection" type="select"  label="Controls the error correction used for the QR Code"                        optional="true"  >
+      <param name="qrErrorCorrection" type="select"  label="Controls the error correction used for the QR Code"                        optional="true"  help="How much damage the QR code is expected to suffer in its intended environment, and hence how much error correction may be required.">
          <option value="Low">Low</option>
          <option value="Medium">Medium</option>
          <option value="Q">Q</option>
@@ -39,7 +39,7 @@
       </param>
    </inputs>
    <outputs>
-      <data name="qrOutput" label="Name of the image PNG file" format="png" />
+      <data name="qrOutput" label="QR code for ${qrData}" format="png" />
    </outputs>
    <tests>
       <test>
@@ -49,15 +49,33 @@
    </tests>
    <help>
 **What it does**
+
 Generate qr code images
+
 Usage: %(prog)s -qrData {data} [options]
+
 Parameters:
- -qrData ["data"] (Data to be coded as an qr image)
- -qrOutput ["file_name"] (Name of the image PNG file)
- -qrVersion [integer] (An integer from 0 (automatic) to 40 that controls the size of the QR Code)
- -qrBorder [integer] (Controls how many boxes thick the border should be)
- -qrBoxSize [integer] (Controls how many pixels each 'box' of the QR code is)
- -qrErrorCorrection [integer] (Controls the error correction used for the QR Code)
+
+-qrData ["data"] (Data to be coded as an qr image)
+
+-qrOutput ["file_name"] (Name of the image PNG file)
+
+-qrVersion [integer] (An integer from 0 (automatic) to 40 that controls the size of the QR Code)
+
+-qrBorder [integer] (Controls how many boxes thick the border should be)
+
+-qrBoxSize [integer] (Controls how many pixels each 'box' of the QR code is)
+
+-qrErrorCorrection [integer] (Controls the error correction used for the QR Code)
+
+Level Low – up to 7% damage
+
+Level Medium – up to 15% damage
+
+Level Q – up to 25% damage
+
+Level High – up to 30% damage
+
    </help>
    <citations>
       <citation type="doi">10.1145/1971519.1971593</citation>

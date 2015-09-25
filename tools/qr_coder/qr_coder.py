@@ -90,7 +90,7 @@ def main():
    parser.add_argument("-qrErrorCorrection", dest="qrErrorCorrection", default="", help="Controls the error correction used for the QR Code",                required=False, choices=[Constants.LOW, Constants.MEDIUM, Constants.Q, Constants.HIGH])
 
    argumentList = parser.parse_args()
-   printParameters(argumentList)
+   #printParameters(argumentList)
    qr_coder(argumentList.qrData, argumentList.qrVersion, argumentList.qrErrorCorrection, argumentList.qrBoxSize, argumentList.qrBorder, argumentList.qrOutput)
    
 #real main stream
