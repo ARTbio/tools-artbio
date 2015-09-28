@@ -2,6 +2,7 @@
     <description>for FASTA small reads</description>
     <requirements>
         <requirement type="package" version="0.12.7">bowtie</requirement>
+        <requirement type="package" version="1.2">samtools</requirement>
     </requirements>
     <command interpreter="python"> sRbowtie.py --input $input
                                              --input-format $input.extension
