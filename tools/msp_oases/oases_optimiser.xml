@@ -1,4 +1,4 @@
-<tool id="oasesoptimiserv" name="Oases_optimiser" version="1.1.3">
+<tool id="oasesoptimiserv" name="Oases_optimiser" version="1.1.4">
 	<description>Auto optimise de novo RNA-seq Oases/Velvet assembly</description>
         <requirements>
                 <requirement type="package" version="0.2.08_7a32460a60929b510037952ae815bb6e29b68123">oases</requirement>
@@ -8,7 +8,7 @@
 	'#for $i in $inputs
 		${i.input}
            #end for
-    '
+        '
 	'$transcripts'
 	</command>
 
@@ -22,7 +22,10 @@
                         <option value="21">21</option>
                         <option value="23">23</option>
                         <option value="25">25</option>
-
+                        <option value="35">35</option>
+                        <option value="45">45</option>
+                        <option value="55">55</option>
+                        <option value="65">65</option>
           </param>
           <param label="End Hash Length" name="end_hash_length" type="select" help="k-mer length in base pairs of the words being hashed.">
                         <option value="25">25</option>
@@ -31,6 +34,10 @@
                         <option value="31">31</option>
                         <option value="33">33</option>
                         <option value="35">35</option>
+                        <option value="45">45</option>
+                        <option value="55">55</option>
+                        <option value="63">63</option>
+                        <option value="69">69</option>
           </param>
 
 
