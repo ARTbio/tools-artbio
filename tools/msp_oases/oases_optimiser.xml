@@ -27,7 +27,7 @@
                         <option value="55">55</option>
                         <option value="65">65</option>
           </param>
-          <param label="End Hash Length" name="end_hash_length" type="select" help="k-mer length in base pairs of the words being hashed.">
+          <param label="End Hash Length" name="end_hash_length" type="select" help="k-mer length in base pairs of the words being hashed. Value has to be higher than the Start Hash Length value">
                         <option value="25">25</option>
                         <option value="27">27</option>
                         <option value="29">29</option>
