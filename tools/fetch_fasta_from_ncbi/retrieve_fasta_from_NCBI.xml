@@ -18,7 +18,6 @@
     <param name="dbname" type="select" label="NCBI database">
       <option value="nuccore">Nucleotide</option>
       <option value="protein">Protein</option>
-<!--      <option value="pubmed">Pubmed (experimental)</option> -->
     </param>
   </inputs>
   <outputs>

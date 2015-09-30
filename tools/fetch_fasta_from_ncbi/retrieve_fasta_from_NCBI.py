@@ -166,7 +166,7 @@ class Eutils:
             try:
                 response = urllib2.urlopen(req)
                 fasta = response.read()
-                if "Resource temporarily unavailable" in fasta:
+                if ("Resource temporarily unavailable" in fasta) or (not fasta.startswith(">") ):
                     serverTransaction = False
                 else:
                     serverTransaction = True
@@ -176,8 +176,6 @@ class Eutils:
             except httplib.IncompleteRead as e:
                 serverTransaction = False
                 self.logger.info("IncompleteRead error:  %s" % ( e.partial ) )
-        if self.dbname != "pubmed":
-            assert fasta.startswith(">"), fasta
         fasta = self.sanitiser(self.dbname, fasta) #
         time.sleep(1)
         return fasta
