@@ -15,8 +15,8 @@ def Parser():
     the_parser.add_argument('--flanking', action="store", type=int, help="number of flanking nucleotides added to the hit sequences") 
     the_parser.add_argument('--mode', action="store", choices=["verbose", "short"], type=str, help="reporting (verbose) or not reporting (short) oases contigs")
     the_parser.add_argument('--filter_relativeCov', action="store", type=float, default=0, help="filter out relative coverages below the specified ratio (float number)")
-    the_parser.add_argument('--filter_maxScore', action="store", type=float, default=0, help="filter out maximum BitScore below the specified float number")
-    the_parser.add_argument('--filter_meanScore', action="store", type=float, default=0, help="filter out maximum BitScore below the specified float number")
+    the_parser.add_argument('--filter_maxScore', action="store", type=float, default=0, help="filter out best BitScores below the specified float number")
+    the_parser.add_argument('--filter_meanScore', action="store", type=float, default=0, help="filter out mean BitScores below the specified float number")
     the_parser.add_argument('--al_sequences', action="store", type=str, help="sequences that have been blast aligned")
     the_parser.add_argument('--un_sequences', action="store", type=str, help="sequences that have not been blast aligned")
     args = the_parser.parse_args()
@@ -146,7 +146,7 @@ def outputParsing (F, Fasta, results, Xblastdict, fastadict, filter_relativeCov=
             print >> F, "# Suject Length: %s" % (results[subject]["subjectLength"])
             print >> F, "# Total Subject Coverage: %s" % (results[subject]["TotalCoverage"])
             print >> F, "# Relative Subject Coverage: %s" % (results[subject]["RelativeSubjectCoverage"])
-            print >> F, "# Maximum Bit Score: %s" % (results[subject]["maxBitScores"])
+            print >> F, "# Best Bit Score: %s" % (results[subject]["maxBitScores"])
             print >> F, "# Mean Bit Score: %s" % (results[subject]["meanBitScores"])
             for header in results[subject]["HitDic"]:
                 print >> Fasta, ">%s\n%s" % (header, insert_newlines(results[subject]["HitDic"][header]) )
@@ -161,7 +161,7 @@ def outputParsing (F, Fasta, results, Xblastdict, fastadict, filter_relativeCov=
                     info = "\t".join(info)
                     print >> F, info
     else:
-        print >>F, "# subject\tsubject length\tTotal Subject Coverage\tRelative Subject Coverage\tMaximum Bit Score\tMean Bit Score"
+        print >>F, "# subject\tsubject length\tTotal Subject Coverage\tRelative Subject Coverage\tBest Bit Score\tMean Bit Score"
         for subject in sorted (results, key=lambda x: results[x]["meanBitScores"], reverse=True):
             if results[subject]["RelativeSubjectCoverage"]<filter_relativeCov or results[subject]["maxBitScores"]<filter_maxScore or results[subject]["meanBitScores"]<filter_meanScore:
                 continue
