@@ -1,4 +1,4 @@
-<tool id="BlastParser_and_hits" name="Parse blast output and compile hits" version="2.3.1">
+<tool id="BlastParser_and_hits" name="Parse blast output and compile hits" version="2.3.2">
 <description>for virus discovery</description>
 <requirements></requirements>
 <command interpreter="python">
@@ -23,9 +23,9 @@ BlastParser_and_hits.py
 	<param name="sequences" type="data" format="fasta"  label="fasta sequences that have been blasted" />
 	<param name="blast" type="data" format="tabular" label="The blast output you wish to parse" />
 	<param name="flanking" type="text" size="5" value= "5" label="Number of flanking nucleotides to add to hits for CAP3 assembly"/>
-	<param name="mode" type="select" label="Verbose or short reporting mode" help="display or not the oases contigs">
-	    <option value="verbose" default="true">verbose</option>
-	    <option value="short">do not report oases contigs</option>
+	<param name="mode" type="select" label="Extensive or compact  reporting mode" help="display (extensive)  or not (compact) the oases contigs">
+	    <option value="verbose" default="true">extensive</option>
+	    <option value="short">compact</option>
 	</param>
     <conditional name="additional_filters">
             <param name="use_filters" type="select" label="Use Additional Filters?">
