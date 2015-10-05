@@ -7,8 +7,8 @@ long_description: |
   see C. Antoniewski, “Computing siRNA and piRNA Overlap Signatures.,” Methods Mol. Biol., vol. 1173, no. 12, pp. 135–146, 2014.
 categories:
   - RNA
-homepage_url: http://drosophile.org/
-remote_repository_url: https://bitbucket.org/drosofff/gedtools/
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/msp_sr_signature
 toolshed:
   - https://lbcd41.snv.jussieu.fr/toolshed/
   - testtoolshed

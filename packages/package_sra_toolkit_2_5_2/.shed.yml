@@ -6,8 +6,8 @@ long_description: |
   NCBI sra_toolkit package.
 categories:
   - Tool Dependency Packages
-homepage_url: 
-remote_repository_url: 
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/packages/package_sra_toolkit_2_5_2
 toolshed:
   - https://lbcd41.snv.jussieu.fr/toolshed/
   - testtoolshed

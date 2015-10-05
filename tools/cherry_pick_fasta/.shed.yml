@@ -8,8 +8,8 @@ long_description: |
 
 categories:
   - Fasta Manipulation
-homepage_url: http://drosophile.org/
-remote_repository_url: https://bitbucket.org/drosofff/gedtools/
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/cherry_pick_fasta
 toolshed:
   - https://lbcd41.snv.jussieu.fr/toolshed/
   - testtoolshed
