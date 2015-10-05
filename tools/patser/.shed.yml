@@ -24,8 +24,8 @@ long_description: |
   Comments can begin anywhere in a line and always end at the end of the line. The output of this program is sent to the standard output.
 categories:
   - Sequence Analysis
-homepage_url: http://artbio.fr
-remote_repository_url: http://stormo.wustl.edu/resources.html
+homepage_url: http://stormo.wustl.edu/resources.html
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/patser
 toolshed:
   - https://lbcd41.snv.jussieu.fr/toolshed/
   - testtoolshed

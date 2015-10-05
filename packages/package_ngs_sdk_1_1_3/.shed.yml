@@ -7,7 +7,7 @@ long_description: |
 categories:
   - Tool Dependency Packages
 homepage_url: http://artbio.fr
-remote_repository_url: 
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/packages/package_ngs_sdk_1_1_3
 toolshed:
   - https://lbcd41.snv.jussieu.fr/toolshed/
   - testtoolshed
