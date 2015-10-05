@@ -6,7 +6,7 @@ long_description: |
   NCBI ngs-sdk package. Required for NCBI sra toolkit package.
 categories:
   - Tool Dependency Packages
-homepage_url: 
+homepage_url: http://artbio.fr
 remote_repository_url: 
 toolshed:
   - https://lbcd41.snv.jussieu.fr/toolshed/

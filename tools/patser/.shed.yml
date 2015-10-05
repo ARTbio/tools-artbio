@@ -24,7 +24,7 @@ long_description: |
   Comments can begin anywhere in a line and always end at the end of the line. The output of this program is sent to the standard output.
 categories:
   - Sequence Analysis
-homepage_url: http://drosophile.org/
+homepage_url: http://artbio.fr
 remote_repository_url: http://stormo.wustl.edu/resources.html
 toolshed:
   - https://lbcd41.snv.jussieu.fr/toolshed/
