@@ -10,6 +10,6 @@
         <repository name="package_numpy_1_9" owner="iuc" prior_installation_required="True"/>
     </package>
     <package name="biocbasics" version="2.14">
-        <repository name="package_biocbasics" owner="mvdbeek" prior_installation_required="True"/>
+        <repository name="package_biocbasics_2_14" owner="mvdbeek" prior_installation_required="True"/>
     </package>
 </tool_dependency>
