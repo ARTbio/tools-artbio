@@ -1,4 +1,4 @@
-<tool id="signature" name="Small RNA Signatures" version="2.0.4">
+<tool id="signature" name="Small RNA Signatures" version="2.0.5">
     <description />
     <requirements>
         <requirement type="package" version="0.12.7">bowtie</requirement>
