@@ -1,9 +1,10 @@
-<tool id="MirParser" name="Parse miRNAs" version="0.9.3">
+<tool id="MirParser" name="Parse miRNAs" version="0.9.4">
     <description>from aligment files</description>
     <requirements>
         <requirement type="package" version="0.12.7">bowtie</requirement>
         <requirement type="package" version="0.7.7">pysam</requirement>
         <requirement type="package" version="1.9">numpy</requirement>
+        <requirement type="package" version="3.1.2">R</requirement>
         <requirement type="package" version="2.14">biocbasics</requirement>
         <requirement type="package" version="1.2">samtools</requirement>
     </requirements>
