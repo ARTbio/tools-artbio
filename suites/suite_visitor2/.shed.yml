@@ -12,3 +12,4 @@ remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/suites
 toolshed:
   - https://lbcd41.snv.jussieu.fr/toolshed/
   - testtoolshed
+  - toolshed
