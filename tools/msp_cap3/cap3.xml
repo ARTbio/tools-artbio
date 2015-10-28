@@ -4,7 +4,7 @@
     	<requirement type="package" version="3">cap3</requirement>
     </requirements>
 <command>
-cap3 -o $overlaplength -p overlapidentity "$inputSequences" > "$cap3stdout";
+cap3 "$inputSequences" -o $overlaplength -p overlapidentity > "$cap3stdout";
                 mv "$inputSequences".cap.contigs $contigs;
                 mv "$inputSequences".cap.contigs.qual $contigsqual;
                 mv "$inputSequences".cap.contigs.links $contigslink;
