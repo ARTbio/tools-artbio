@@ -1,10 +1,10 @@
-<tool id="cap3" name="cap3" version="1.1.0">
+<tool id="cap3" name="cap3" version="1.2.0">
 <description>Sequence Assembly tool</description>
     <requirements>
     	<requirement type="package" version="3">cap3</requirement>
     </requirements>
 <command>
-cap3 "$inputSequences" > "$cap3stdout";
+cap3 "$inputSequences" -o $overlaplength -p $overlapidentity > "$cap3stdout";
                 mv "$inputSequences".cap.contigs $contigs;
                 mv "$inputSequences".cap.contigs.qual $contigsqual;
                 mv "$inputSequences".cap.contigs.links $contigslink;
@@ -17,6 +17,8 @@ cap3 "$inputSequences" > "$cap3stdout";
 
         <inputs>
         	<param label="Input sequences to assemble" name="inputSequences" type="data" format="fasta" help="Input sequences to assemble" />
+        	<param label="specify overlap length cutoff > 15 (40)" name="overlaplength" type="integer" size="3" value="40" help="-o option. must be > 15. 40 by default" />
+        	<param label="specify overlap percent identity cutoff N > 65 (90)" name="overlapidentity" type="integer" size="3" value="90"  help="-p option. must be > 65. 90 by default" />
         </inputs>
 
 <outputs>
@@ -33,6 +35,8 @@ cap3 "$inputSequences" > "$cap3stdout";
   <tests>
     <test>
       <param name="inputSequences" value="input.fa" ftype="fasta"/>
+      <param name="overlaplength" value="40" />
+      <param name="overlapidentity" value="90" />
       <output name="contigsandsinglets" file="contigsandsinglets.fa"/>
       <output name="cap3stdout" file="cap3stdout.txt"/>
       <output name="contigs" file="contigs.fa"/>
