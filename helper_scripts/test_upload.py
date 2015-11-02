@@ -4,6 +4,7 @@ from bioblend.galaxyclient import ConnectionError
 from os.path import basename
 import argparse
 import datetime
+import time
 import ftplib
 import pysftp
 import urlparse
@@ -122,6 +123,7 @@ def create_user(url, api_key):
     userlist = gi.users.get_users()
     if not user_exists(username, userlist):
         gi.users.create_local_user(username, user_email, password)
+        userlist = gi.users.get_users()
     api_key = create_user_api_key(gi, username, userlist)
     return api_key, user_email, password
 
