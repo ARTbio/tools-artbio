@@ -1,6 +1,8 @@
 <macros>
     <macro name="requirements">
         <requirements>
+            <requirement type="package" version="1.1.3">ngs_sdk</requirement>
+            <requirement type="package" version="2.5.2">ncbi_vdb</requirement>
             <requirement type="package" version="2.5.2">sra_toolkit</requirement>
             <requirement type="package" version="3">ascp</requirement>
             <requirement type="package" version="5.18.1">perl</requirement>
@@ -13,7 +15,7 @@
                 <option value="file">SRA archive in current history</option>
             </param>
             <when value="accession_number">
-                <param name="accession" type="text" label="accession"/>
+                <param name="accession" type="text" label="SRR accession" help="Must start with SRR, e.g. SRR925743"/>
             </when>
             <when value="file">
                 <param format="sra" name="file" type="data" label="sra archive"/>
@@ -38,6 +40,11 @@
     <macro name="matepairDist">
         <param name="matepairDist" type="text" label="mate-pair distance (from-to|unknown)" optional="true"
                help="Filter by distance between matepairs. Use unknown to find matepairs split between the references. Use from-to (inclusive) to limit matepair distance on the same reference"/>
+    </macro>
+    <macro name="citation">
+        <citations>
+            <citation type="doi">10.1093/nar/gkq1019</citation>
+        </citations>
     </macro>
     <token name="@SRATOOLS_ATTRRIBUTION@">Browse the NCBI SRA for SRR accessions at http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=studies.
         Galaxy tool wrapper originally written by Matt Shirley (mdshw5 at gmail.com).

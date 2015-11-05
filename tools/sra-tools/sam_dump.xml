@@ -1,4 +1,4 @@
-<tool id="sam_dump" name="Extract reads" version="1.2.4">
+<tool id="sam_dump" name="Extract reads" version="1.2.5">
     <description>in SAM or BAM format from NCBI SRA.</description>
     <macros>
         <import>sra_macros.xml</import>
@@ -14,7 +14,7 @@
         vdb-config -s "/repository/user/main/public/root=\$PWD";
         ## Do not use prefetch if region is specified, to avoid downloading
         ## the complete sra file.
-        #if ( str( $region ) == "" ):
+        #if ( str( $adv.region ) == "" ):
             ASCP_PATH=`which ascp`;
             ASCP_KEY=`dirname \$ASCP_PATH`/asperaweb_id_dsa.openssh;
             prefetch --ascp-path "\$ASCP_PATH|\$ASCP_KEY" "$input.accession";
@@ -23,27 +23,27 @@
         #end if
         vdb-config -s "/repository/user/main/public/root=\$PWD";
         sam-dump --log-level fatal --disable-multithreading
-        #if str( $region ) != "":
-        --aligned-region "$region"
+        #if str( $adv.region ) != "":
+        --aligned-region "$adv.region"
         #end if
-        #if str( $matepairDist ) != "":
-        --matepair-distance "$matepairDist"
+        #if str( $adv.matepairDist ) != "":
+        --matepair-distance "$adv.matepairDist"
         #end if
-        #if str( $minMapq ) != "":
-        --min-mapq "$minMapq"
+        #if str( $adv.minMapq ) != "":
+        --min-mapq "$adv.minMapq"
         #end if
-        #if str( $header ) == "yes":
+        #if str( $adv.header ) == "yes":
         --header
         #else:
         --no-header
         #end if
-        #if str( $alignments ) == "both":
+        #if str( $adv.alignments ) == "both":
         --unaligned
         #end if
-        #if str( $alignments ) == "unaligned":
+        #if str( $adv.alignments ) == "unaligned":
         --unaligned-spots-only
         #end if
-        #if (str( $primary ) == "yes") and (str ( $alignments != "unaligned") ):
+        #if (str( $adv.primary ) == "yes") and (str ( $adv.alignments != "unaligned") ):
         --primary
         #end if
         #if $input.input_select == "file":
@@ -68,20 +68,22 @@
             <option value="bam">bam</option>
             <option value="sam">sam</option>
         </param>
-        <param name="header" type="select" value="yes">
-            <label>output header</label>
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
-        </param>
-        <expand macro="alignments"/>
-        <expand macro="region"/>
-        <expand macro="matepairDist"/>
-        <param name="primary" type="select" value="no">
-            <label>only primary aligments</label>
-            <option value="no">No</option>
-            <option value="yes">Yes</option>
-        </param>
-        <expand macro="minMapq"></expand>
+        <section name="adv" title="Advanced Options" expanded="False">
+            <param name="header" type="select" value="yes">
+                <label>output header</label>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </param>
+            <expand macro="alignments"/>
+            <expand macro="region"/>
+            <expand macro="matepairDist"/>
+            <param name="primary" type="select" value="no">
+                <label>only primary aligments</label>
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+            </param>
+            <expand macro="minMapq"></expand>
+        </section>
     </inputs>
     <outputs>
         <data name="output_accession" format="bam" label="${input.accession}.${outputformat}">
@@ -110,6 +112,7 @@
         This tool extracts reads from sra archives using sam-dump.
         The sam-dump program is developed at NCBI, and is available at
         http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=software.
-	@SRATOOLS_ATTRRIBUTION@
+        @SRATOOLS_ATTRRIBUTION@
     </help>
+    <expand macro="citation"/>
 </tool>
