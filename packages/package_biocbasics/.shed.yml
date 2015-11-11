@@ -7,7 +7,7 @@ long_description: |
 categories:
   - Tool Dependency Packages
 homepage_url: http://www.bioconductor.org/
-remote_repository_url: http://drosophile.org
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/packages/package_ged_velvet
 type: tool_dependency_definition
 toolshed:
   - https://lbcd41.snv.jussieu.fr/toolshed/

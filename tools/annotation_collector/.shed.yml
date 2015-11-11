@@ -12,8 +12,8 @@ long_description: |
 categories:
   - RNA
   - Fasta Manipulation
-homepage_url: http://drosophile.org/
-remote_repository_url: https://bitbucket.org/drosofff/gedtools/
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/annotation_collector
 toolshed:
   - https://lbcd41.snv.jussieu.fr/toolshed/
   - testtoolshed

@@ -1,11 +1,9 @@
 <?xml version="1.0"?>
 <tool_dependency>
-  <package name="bowtie" version="0.12.7">
-      <repository name="package_bowtie_0_12_7" owner="devteam" prior_installation_required="False" />
+    <package name="bowtie" version="0.12.7">
+         <repository name="package_bowtie_0_12_7" owner="devteam" prior_installation_required="False" />
     </package>
-<!-- Remove samtools, as it should be part of every galaxy installation.
     <package name="samtools" version="1.2">
-      <repository name="package_samtools_1_2" owner="iuc" prior_installation_required="False" />
+         <repository name="package_samtools_1_2" owner="iuc" prior_installation_required="False" />
     </package>
--->
 </tool_dependency>
