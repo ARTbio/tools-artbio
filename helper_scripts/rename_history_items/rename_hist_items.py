@@ -8,7 +8,10 @@ requests.packages.urllib3.disable_warnings()
 
 
 def parse_args():
-    args = argparse.ArgumentParser(description="Rename files using a tabular file")
+    args = argparse.ArgumentParser(description="Rename history items using a tabular file." +"\n" +
+                                   "Example usage: python rename_hist_items.py -url misssissippi.snv.jussieu.fr \
+                                   -key $your_api_key -hid $your_history_id -table $your_tabular_file \n \
+                                   See test-data/sample_table.tab for an example file.")
     args.add_argument("-url", "--galaxy_url", required=True, help="url of galaxy instance")
     args.add_argument("-key", "--api_key", required=True, help="api key for galaxy instance" )
     args.add_argument("-hid", "--history_id", required=True, help="History id of hitory containing files to be renamed")
