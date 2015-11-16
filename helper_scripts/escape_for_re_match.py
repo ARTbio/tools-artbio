@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+## Use this script to generate escaped output if using re.match
+## for verifying test-data. See deseq2 wrapper for output.
+
 import sys
 
 input = open(sys.argv[1])
