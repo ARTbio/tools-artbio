@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-## Example usage: python get_tool_yml_from_gi.py -g https://mississippi.snv.jussieu.fr/ -a <api_key> -o tools.yml
+## Example usage: python get_tool_yml_from_gi.py -g https://mississippi.snv.jussieu.fr/ -a <api_key> -o tool_list.yml
 
 from operator import itemgetter
 from argparse import ArgumentParser
@@ -14,7 +14,9 @@ class GiToToolYaml:
                  output_file,
                  get_deleted=False,
                  get_packages=False,
-                 get_latest_installed=False):
+                 get_latest_installed=False,
+                 skip_tool_panel_section_id=True,
+                 skip_tool_panel_section_name=True):
 
         self.url = url
         self.api_key = api_key
@@ -22,6 +24,8 @@ class GiToToolYaml:
         self.get_deleted = get_deleted
         self.get_packages = get_packages
         self.get_latest_installed = get_latest_installed
+        self.skip_tool_panel_section_id = skip_tool_panel_section_id
+        self.skip_tool_panel_section_name = skip_tool_panel_section_name
 
         self.gi = self.get_instance()
         self.repository_list = self.get_tools_from_gi()
@@ -55,6 +59,7 @@ class GiToToolYaml:
                 if tool[u'model_class'] == u'Tool':
                     try:
                         tool_panel_section_id = tool["panel_section_id"]
+                        tool_panel_section_label = tool["panel_section_name"]
                         split_repo_url = tool["id"].split("/repos/")
                         sub_dir = split_repo_url[1].split("/")
                         tool_shed = "https://" + split_repo_url[0] + "/"
@@ -62,6 +67,7 @@ class GiToToolYaml:
                         name = sub_dir[1]
                         tool_panel_list_filtered.append(
                             {"tool_panel_section_id": tool_panel_section_id,
+                             "tool_panel_section_label": tool_panel_section_label,
                              "tool_shed": tool_shed,
                              "owner": owner,
                              "name": name}
@@ -79,12 +85,22 @@ class GiToToolYaml:
             if tool_values == required_values:
                 return tool["tool_panel_section_id"]
 
+    def get_tool_panel_section_label(self, required_values):
+        required_fields = ("tool_shed",
+                           "owner",
+                           "name")
+        for tool in self.tool_panel_list_filtered:
+            tool_values = itemgetter(*required_fields)(tool)
+            if tool_values == required_values:
+                return tool["tool_panel_section_label"]
+
     def filter_tools(self):
         filtered_repository_list = []
         for repo in self.repository_list:
             if (repo['deleted'] is True) and (self.get_deleted is False):
                 continue
             if self.get_latest_installed is True and not (self.is_latest_installed(repo)):
+                print "skip because is not latest rev."
                 continue
             if self.get_packages is False:
                 if repo["name"].startswith("package_"):
@@ -113,7 +129,11 @@ class GiToToolYaml:
         for repo in self.filtered_repository_list:
             required_values = itemgetter(*required_fields)(repo)
             tool_panel_section_id = self.get_tool_panel_section_id(required_values)
-            repo["tool_panel_section_id"] = tool_panel_section_id
+            tool_panel_section_label = self.get_tool_panel_section_label(required_values)
+            if not self.skip_tool_panel_section_id:
+                repo["tool_panel_section_id"] = tool_panel_section_id
+            if not self.skip_tool_panel_section_name:
+                repo["tool_panel_section_label"] = tool_panel_section_label
 
     def revisions_to_list(self):
         for repo in self.filtered_repository_list:
@@ -121,16 +141,24 @@ class GiToToolYaml:
 
     def repo_to_tool_list(self):
         filtered_repository_list = self.filtered_repository_list
-        required_fields = ("name",
+        required_fields = ["name",
                            "owner",
                            "tool_panel_section_id",
+                           "tool_panel_section_label",
                            "installed_changeset_revision",
-                           "tool_shed")
-        yaml_categories = ("name",
+                           "tool_shed"]
+        yaml_categories = ["name",
                            "owner",
                            "tool_panel_section_id",
+                           "tool_panel_section_label",
                            "revisions",
-                           "tool_shed_url")
+                           "tool_shed_url"]
+        if self.skip_tool_panel_section_id:
+            required_fields.remove("tool_panel_section_id")
+            yaml_categories.remove("tool_panel_section_id")
+        if self.skip_tool_panel_section_name:
+            required_fields.remove("tool_panel_section_label")
+            yaml_categories.remove("tool_panel_section_label")
         tool_list = []
         for repo in filtered_repository_list:
             values = itemgetter(*required_fields)(repo)
@@ -163,8 +191,13 @@ class GiToToolYaml:
 
     def remove_none(self):
         for tool in self.tool_list:
-            if tool["tool_panel_section_id"] is None:
-                del tool["tool_panel_section_id"]
+            try:
+                if tool["tool_panel_section_id"] is None:
+                    del tool["tool_panel_section_id"]
+                    del tool["tool_panel_section_name"]
+            except KeyError:
+                continue
+
 
     def write_to_yaml(self):
 	tool_dict={"tools":self.filtered_tool_list}
@@ -189,23 +222,29 @@ def _parse_cli_options():
     parser.add_argument("-o", "--output-file",
                         required=True,
                         dest="output",
-                        help="tool.yml output file")
+                        help="tool_list.yml output file")
     parser.add_argument("-d", "--get_deleted",
                         dest="get_deleted",
                         type=bool,
                         default=False,
-                        help="Include deleted repositories in tool.yml ?")
+                        help="Include deleted repositories in tool_list.yml ?")
     parser.add_argument("-p", "--get_packages",
                         dest="get_packages",
                         type=bool,
                         default=False,
-                        help="Include packages in tool.yml?")
+                        help="Include packages in tool_list.yml?")
     parser.add_argument("-l", "--get_latest",
-                        dest="get_latest",
-                        type=bool,
+                        action="store_true",
                         default=False,
-                        help="Include only latest revision of a repository in tool.yml ?")
-
+                        help="Include only latest revision of a repository in tool_list.yml ?")
+    parser.add_argument("-skip_id", "--skip_tool_panel_id",
+                        action="store_true",
+                        default=False,
+                        help="Do not include tool_panel_id in tool_list.yml ?")
+    parser.add_argument("-skip_name", "--skip_tool_panel_name",
+                        action="store_true",
+                        default=False,
+                        help="Do not include tool_panel_name in tool_list.yml ?")
     return parser.parse_args()
 
 
@@ -216,4 +255,6 @@ if __name__ == "__main__":
                                          output_file=options.output,
                                          get_deleted=options.get_deleted,
                                          get_packages=options.get_packages,
-                                         get_latest_installed=options.get_latest)
+                                         get_latest_installed=options.get_latest,
+                                         skip_tool_panel_section_id=options.skip_tool_panel_id,
+                                         skip_tool_panel_section_name=options.skip_tool_panel_name)
