@@ -1,14 +1,20 @@
 <?xml version="1.0"?>
 <repositories>
     <repository name="yac_clipper" owner="drosofff" />
+    <repository name="concatenate_multiple_datasets" owner="mvdbeek" />
     <repository name="msp_sr_bowtie" owner="drosofff" />
     <repository name="msp_fasta_tabular_converter" owner="drosofff" />
     <repository name="fetch_fasta_from_ncbi" owner="drosofff" />
     <repository name="msp_cap3" owner="drosofff" />
     <repository name="cherry_pick_fasta" owner="drosofff" />
     <repository name="msp_blastparser_and_hits" owner="drosofff" />
+    <repository name="get_orfs_or_cdss" owner="peterjc" />
     <repository name="msp_oases" owner="drosofff" />
     <repository name="blastn_to_scaffold" owner="drosofff" />
     <repository name="blastx_to_scaffold" owner="drosofff" />
     <repository name="ncbi_blast_plus" owner="devteam" />
+    <repository name="bowtie2" owner="devteam" />
+    <repository name="fastq_to_fasta" owner="devteam" />
+    <repository name="fasta_filter_by_length" owner="devteam" />
+    <repository name="msp_sr_readmap_and_size_histograms" owner="drosofff" />
 </repositories>
