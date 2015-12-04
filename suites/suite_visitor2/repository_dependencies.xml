@@ -12,7 +12,7 @@
     <repository changeset_revision="f08d9c814ffb" name="msp_oases" owner="drosofff" />
     <repository changeset_revision="ad9a1c117ac6" name="blastn_to_scaffold" owner="drosofff" />
     <repository changeset_revision="a2e034f1638e" name="blastx_to_scaffold" owner="drosofff" />
-    <repository changeset_revision="7f3c448e119b" name="ncbi_blast_plus" owner="devteam" />
+    <repository changeset_revision="577d9c12411a" name="ncbi_blast_plus" owner="devteam" />
     <repository changeset_revision="019c2a81547a" name="bowtie2" owner="devteam" />
     <repository changeset_revision="186b8d913e6c" name="fastq_to_fasta" owner="devteam" />
     <repository changeset_revision="c8cd0a03db49" name="fasta_filter_by_length" owner="devteam" />
