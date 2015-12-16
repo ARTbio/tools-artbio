@@ -22,5 +22,5 @@
     <repository changeset_revision="c8cd0a03db49" name="fasta_filter_by_length" owner="devteam" />
     <repository changeset_revision="e4874d1ae69d" name="msp_sr_readmap_and_size_histograms" owner="drosofff" />
     <repository changeset_revision="9ea374bb0350" name="regex_find_replace" owner="jjohnson" />
-    <repository changeset_revision="6d8793a4923d" name="khmer_normalize_by_median" owner="iuc" />
+    <repository name="khmer_normalize_by_median" owner="iuc" />
 </repositories>
