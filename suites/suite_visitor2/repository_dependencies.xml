@@ -1,9 +1,5 @@
 <?xml version="1.0"?>
 <repositories>
-    <repository name="package_cairo_1_12_14" owner="iuc" />
-    <repository name="package_cairo_1_12_14" owner="devteam" />
-    <repository name="package_freetype_2_5_2" owner="iuc" />
-    <repository name="package_freetype_2_5_2" owner="devteam" />
     <repository changeset_revision="91cce7c1436d" name="yac_clipper" owner="drosofff" />
     <repository changeset_revision="1e06fa2771f9" name="concatenate_multiple_datasets" owner="mvdbeek" />
     <repository changeset_revision="c1bfa227bbb6" name="msp_sr_bowtie" owner="drosofff" />
@@ -21,6 +17,4 @@
     <repository changeset_revision="186b8d913e6c" name="fastq_to_fasta" owner="devteam" />
     <repository changeset_revision="c8cd0a03db49" name="fasta_filter_by_length" owner="devteam" />
     <repository changeset_revision="e4874d1ae69d" name="msp_sr_readmap_and_size_histograms" owner="drosofff" />
-    <repository changeset_revision="9ea374bb0350" name="regex_find_replace" owner="jjohnson" />
-    <repository name="khmer_normalize_by_median" owner="iuc" />
 </repositories>
