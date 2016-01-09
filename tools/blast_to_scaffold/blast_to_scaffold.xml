@@ -3,10 +3,10 @@
 <requirements>
 </requirements>
 <command interpreter="python">
-        blast_to_scaffold.py --sequences $sequences
-                              --guideSequence $guideSequence
-                              --blast-tab $blast_tab
-                              --output $output
+        blast_to_scaffold.py --sequences "$sequences"
+                              --guideSequence "$guideSequence"
+                              --blast-tab "$blast_tab"
+                              --output "$output"
 </command>
 <inputs>
 <param name="sequences" type="data" format="fasta" label="Select a fasta contigs file"/> 
@@ -35,7 +35,7 @@
 **What it Does**
 This tool start from DNA contigs that aligned to a subject DNA sequence through blastn or tblastx.
 The contigs must be provided in fasta format. The blastn or tblastx output must be tabular, the 12 standard column plus column 13 with the length of the blastn or tblastx subject.
-The sequence used to blastn or tblastx the contigs must be provided to serve as a guide to the final assembly
+The sequence used to BLAST (blastn or tblastx) the contigs must be provided to serve as a guide to the final assembly
 The final assembly is a DNA sequence.
 Nucleotides of the guide sequence which were not covered by contigs are in small letters in the output assembly.
 
