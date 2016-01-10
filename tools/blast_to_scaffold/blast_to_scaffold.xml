@@ -1,0 +1,47 @@
+<tool id="blast2scaffold" name="blast_to_scaffold" version="0.1.0">
+<description>Generate DNA scaffold from blastn or tblastx alignment of Contigs</description>
+<requirements>
+</requirements>
+<command interpreter="python">
+        blast_to_scaffold.py --sequences "$sequences"
+                              --guideSequence "$guideSequence"
+                              --blast-tab "$blast_tab"
+                              --output "$output"
+</command>
+<inputs>
+<param name="sequences" type="data" format="fasta" label="Select a fasta contigs file"/> 
+<param name="guideSequence" type="data" format="fasta" label="Select the fasta guide sequence for scaffolding"/> 
+<param name="blast_tab"  type="data" format="tabular" label="Select a blastn or tblastx output from your history" help="must have 13 columns with column 13 containing the subject lenght, other columns are standard"/> 
+
+</inputs>
+<outputs>
+ <data format="fasta" name="output"/>
+</outputs>
+
+
+<tests>
+  <test>
+    <param name="sequences" value="contigs.fa" ftype="fasta"/>
+    <param name="blast_tab" value="blast.tab" ftype="tabular"/>
+    <param name="guideSequence" value="guideSequence.fa" ftype="tabular"/>
+    <output name="output" file="assembly.fa" ftype="fasta"/>
+  </test>
+</tests>
+        
+
+<help>
+
+
+**What it Does**
+This tool start from DNA contigs that aligned to a subject DNA sequence through blastn or tblastx.
+The contigs must be provided in fasta format. The blastn or tblastx output must be tabular, the 12 standard column plus column 13 with the length of the blastn or tblastx subject.
+The sequence used to BLAST (blastn or tblastx) the contigs must be provided to serve as a guide to the final assembly
+The final assembly is a DNA sequence.
+Nucleotides of the guide sequence which were not covered by contigs are in small letters in the output assembly.
+
+
+**Attribution**
+This Galaxy tool was created by drosofff@gmail.com on 5/01/2016
+</help>
+
+</tool>

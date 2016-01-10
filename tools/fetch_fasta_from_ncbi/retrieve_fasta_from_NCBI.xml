@@ -1,4 +1,4 @@
-<tool id="retrieve_fasta_from_NCBI" name="Retrieve FASTA from NCBI" version="0.9.3">
+<tool id="retrieve_fasta_from_NCBI" name="Retrieve FASTA from NCBI" version="0.9.4">
   <description></description>
   <command interpreter="python">retrieve_fasta_from_NCBI.py -i "$queryString" -d $dbname -o $outfilename -l $logfile </command>
 
@@ -21,8 +21,8 @@
     </param>
   </inputs>
   <outputs>
-    <data name="outfilename" format="fasta" label="${tool.name} on ${on_string}: queryString${queryString.value}.${dbname.value_label}.fasta" />
-    <data format="txt" name="logfile" label="${tool.name} on ${on_string}: log"/>
+    <data name="outfilename" format="fasta" label="${tool.name} (${dbname.value_label}) with queryString '${queryString.value}'" />
+    <data format="txt" name="logfile" label="${tool.name}: log"/>
   </outputs>
   <tests>
     <test>
