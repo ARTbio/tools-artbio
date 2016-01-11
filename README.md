@@ -8,5 +8,5 @@ Contact artbio.ibps@gmail.com if you have questions.
 
 CI      | Test                            |  Status
 ------- |-------------------------------- | -------
-Jenkins | Planemo lint tests (error only) | [![Lint Status](https://lbcd41.snv.jussieu.fr/jenkins/buildStatus/icon?job=galaxy_tool_lint)](https://lbcd41.snv.jussieu.fr/jenkins/job/galaxy_tool_lint/)
-# Disabled for now Jenkins | Planemo shed_test testtoolshed | [![Lint Status](https://lbcd41.snv.jussieu.fr/jenkins/buildStatus/icon?job=shed_test_testtoolshed)](https://lbcd41.snv.jussieu.fr/jenkins/job/shed_test_testtoolshed/)
+Travis | Planemo lint tests (error only) | [![Lint Status](https://travis-ci.org/ARTbio/tools-artbio.svg?branch=master)](https://travis-ci.org/ARTbio/tools-artbio)
+# Jenkins out of service | Planemo shed_test testtoolshed | [![Lint Status](https://lbcd41.snv.jussieu.fr/jenkins/buildStatus/icon?job=shed_test_testtoolshed)](https://lbcd41.snv.jussieu.fr/jenkins/job/shed_test_testtoolshed/)
