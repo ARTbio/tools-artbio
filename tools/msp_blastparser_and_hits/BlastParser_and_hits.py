@@ -1,5 +1,5 @@
 #!/usr/bin/python
-#  blastn blastx parser revised debugged: 3-4-2015. Commit issue.
+#  blastn tblastn blastx parser revised 14-1-2016.
 # drosofff@gmail.com
 
 import sys
@@ -17,6 +17,8 @@ def Parser():
     the_parser.add_argument('--filter_relativeCov', action="store", type=float, default=0, help="filter out relative coverages below the specified ratio (float number)")
     the_parser.add_argument('--filter_maxScore', action="store", type=float, default=0, help="filter out best BitScores below the specified float number")
     the_parser.add_argument('--filter_meanScore', action="store", type=float, default=0, help="filter out mean BitScores below the specified float number")
+    the_parser.add_argument('--filter_term_in', action="store", type=str, default="", help="select the specified term in the subject list")
+    the_parser.add_argument('--filter_term_out', action="store", type=str, default="", help="exclude the specified term from the subject list")
     the_parser.add_argument('--al_sequences', action="store", type=str, help="sequences that have been blast aligned")
     the_parser.add_argument('--un_sequences', action="store", type=str, help="sequences that have not been blast aligned")
     args = the_parser.parse_args()
@@ -127,21 +129,39 @@ def GetHitSequence (fastadict, FastaHeader, leftCoordinate, rightCoordinate, Fla
         leftCoordinate = 1
     return getseq (fastadict, FastaHeader, leftCoordinate, rightCoordinate, polarity)
     
-def outputParsing (F, Fasta, results, Xblastdict, fastadict, filter_relativeCov=0, filter_maxScore=0, filter_meanScore=0, mode="verbose"):
+def outputParsing (F, Fasta, results, Xblastdict, fastadict, filter_relativeCov=0, filter_maxScore=0, filter_meanScore=0, filter_term_in="", filter_term_out="", mode="verbose"):
+    def filter_results (results, filter_relativeCov=0, filter_maxScore=0, filter_meanScore=0, filter_term_in="", filter_term_out=""):
+        for subject in results.keys():
+            if results[subject]["RelativeSubjectCoverage"]<filter_relativeCov:
+                del results[subject]
+                continue
+            if results[subject]["maxBitScores"]<filter_maxScore:
+                del results[subject]
+                continue
+            if results[subject]["meanBitScores"]<filter_meanScore:
+                del results[subject]
+                continue
+            if filter_term_in in subject:
+                pass
+            else:
+                del results[subject]
+                continue
+            if filter_term_out and filter_term_out in subject:
+                del results[subject]
+                continue
+        return results
+        
     F= open(F, "w")
     Fasta=open(Fasta, "w")
     blasted_transcripts = []
+    filter_results (results, filter_relativeCov, filter_maxScore, filter_meanScore, filter_term_in, filter_term_out)
     for subject in results:
-        if results[subject]["RelativeSubjectCoverage"]<filter_relativeCov or results[subject]["maxBitScores"]<filter_maxScore or results[subject]["meanBitScores"]<filter_meanScore:
-            continue
         for transcript in Xblastdict[subject]:
             blasted_transcripts.append(transcript)
     blasted_transcripts = list( set( blasted_transcripts))
     if mode == "verbose":
         print >>F, "# SeqId\t%Identity\tAlignLength\tStartSubject\tEndSubject\t%QueryHitCov\tE-value\tBitScore\n"
         for subject in sorted (results, key=lambda x: results[x]["meanBitScores"], reverse=True):
-            if results[subject]["RelativeSubjectCoverage"]<filter_relativeCov or results[subject]["maxBitScores"]<filter_maxScore or results[subject]["meanBitScores"]<filter_meanScore:
-                continue
             print >> F, "#\n# %s" % subject
             print >> F, "# Suject Length: %s" % (results[subject]["subjectLength"])
             print >> F, "# Total Subject Coverage: %s" % (results[subject]["TotalCoverage"])
@@ -163,8 +183,6 @@ def outputParsing (F, Fasta, results, Xblastdict, fastadict, filter_relativeCov=
     else:
         print >>F, "# subject\tsubject length\tTotal Subject Coverage\tRelative Subject Coverage\tBest Bit Score\tMean Bit Score"
         for subject in sorted (results, key=lambda x: results[x]["meanBitScores"], reverse=True):
-            if results[subject]["RelativeSubjectCoverage"]<filter_relativeCov or results[subject]["maxBitScores"]<filter_maxScore or results[subject]["meanBitScores"]<filter_meanScore:
-                continue
             line = []
             line.append(subject)
             line.append(results[subject]["subjectLength"])
@@ -203,7 +221,8 @@ def __main__ ():
         results[subject]["HitDic"], results[subject]["subjectLength"], results[subject]["TotalCoverage"], results[subject]["RelativeSubjectCoverage"], results[subject]["maxBitScores"], results[subject]["meanBitScores"]  = subjectCoverage(fastadict, Xblastdict, subject, args.flanking)
     blasted_transcripts = outputParsing (args.tabularOutput, args.fastaOutput, results, Xblastdict, fastadict,
                                         filter_relativeCov=args.filter_relativeCov, filter_maxScore=args.filter_maxScore,
-                                        filter_meanScore=args.filter_meanScore, mode=args.mode)
+                                        filter_meanScore=args.filter_meanScore, filter_term_in=args.filter_term_in,
+                                        filter_term_out=args.filter_term_out, mode=args.mode)
     dispatch_sequences (fastadict, blasted_transcripts, args.al_sequences, args.un_sequences)
 
 if __name__=="__main__": __main__()
