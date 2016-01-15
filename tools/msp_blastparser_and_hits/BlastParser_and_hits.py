@@ -131,7 +131,6 @@ def GetHitSequence (fastadict, FastaHeader, leftCoordinate, rightCoordinate, Fla
     
 def outputParsing (F, Fasta, results, Xblastdict, fastadict, filter_relativeCov=0, filter_maxScore=0, filter_meanScore=0, filter_term_in="", filter_term_out="", mode="verbose"):
     def filter_results (results, filter_relativeCov=0, filter_maxScore=0, filter_meanScore=0, filter_term_in="", filter_term_out=""):
-        print "###", filter_term_in
         for subject in results.keys():
             if results[subject]["RelativeSubjectCoverage"]<filter_relativeCov:
                 del results[subject]
