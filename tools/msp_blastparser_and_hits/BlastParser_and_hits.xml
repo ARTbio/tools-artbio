@@ -1,4 +1,4 @@
-<tool id="BlastParser_and_hits" name="Parse blast output and compile hits" version="2.3.2">
+<tool id="BlastParser_and_hits" name="Parse blast output and compile hits" version="2.3.3">
 <description>for virus discovery</description>
 <requirements></requirements>
 <command interpreter="python">
@@ -14,6 +14,8 @@ BlastParser_and_hits.py
         --filter_relativeCov $additional_filters.filter_relativeCov
         --filter_maxScore $additional_filters.filter_maxScore
         --filter_meanScore $additional_filters.filter_meanScore
+        --filter_term_in "$additional_filters.filter_term_in"
+        --filter_term_out "$additional_filters.filter_term_out"
     #end if
     --al_sequences $al_sequences
     --un_sequences $un_sequences
@@ -38,6 +40,8 @@ BlastParser_and_hits.py
                 <param name="filter_relativeCov" type="float" value="0" max="1" label="Minimum Relative Subject Coverage" help=""/>
                 <param name="filter_maxScore" type="float" value="0" label="Minimum maximum BitScore" help=""/>
                 <param name="filter_meanScore" type="float" value="0" label="Minimum mean BitScore" help=""/>
+                <param name="filter_term_in" type="text" value="" label="filter the subject list with a keyword" help=""/>
+                <param name="filter_term_out" type="text" value="" label="filter the subject list excluding a keyword" help=""/>
             </when>
     </conditional>
 </inputs>
