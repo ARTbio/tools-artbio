@@ -1,7 +1,7 @@
 metavisitor
 
 version 1_2
-- The metavisitor suite now comes without the ncbi_blast_plus suite, which has to be installed separately from https://toolshed.g2.bx.psu.edu
+- The metavisitor suite now comes without the ncbi_blast_plus suite, which has to be installed separately from https://toolshed.g2.bx.psu.edu/view/devteam/ncbi_blast_plus/
 
 version 1_1:
 - introduce the tool blast_to_contig which accomodate both blastn and tblastx alignments
