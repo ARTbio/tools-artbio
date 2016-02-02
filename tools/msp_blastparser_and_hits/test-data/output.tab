@@ -1,6 +1,6 @@
+--- blast.tab ---
 # SeqId	%Identity	AlignLength	StartSubject	EndSubject	%QueryHitCov	E-value	BitScore
-
-#
+ 
 # gi|262225307|gb|GQ342964.1|_Drosophila_melanogaster_tetravirus_SW-2009a_strain_DTRV_putative_RNA-de
 # Suject Length: 3005
 # Total Subject Coverage: 3001
@@ -9,7 +9,7 @@
 # Mean Bit Score: 3241.5
 Locus_42_Transcript_2/2_Confidence_0.333_Length_597	100.0	593	2409	3001	99.2	0.0	1070.0
 Locus_42_Transcript_1/2_Confidence_0.333_Length_3138	100.0	3001	1	3001	95.6	0.0	5413.0
-#
+ 
 # gi|268053723|ref|NC_013499.1|_Drosophila_melanogaster_totivirus_SW-2009a,_complete_genome
 # Suject Length: 6780
 # Total Subject Coverage: 6765
@@ -38,7 +38,7 @@ Locus_7_Transcript_6/11_Confidence_0.154_Length_656	99.69	655	3974	4628	99.7	0.0
 Locus_10_Transcript_2/8_Confidence_0.111_Length_1023	99.9	1023	6163	5141	99.9	0.0	1840.0
 Locus_7_Transcript_2/11_Confidence_0.077_Length_1069	99.06	1069	679	1741	99.9	0.0	1884.0
 Locus_7_Transcript_3/11_Confidence_0.154_Length_1743	99.89	1742	1716	3457	99.9	0.0	3133.0
-#
+ 
 # gi|262225299|gb|GQ342961.1|_Drosophila_melanogaster_totivirus_SW-2009a_strain_DTV,_complete_genome
 # Suject Length: 6780
 # Total Subject Coverage: 6765
@@ -67,7 +67,7 @@ Locus_7_Transcript_6/11_Confidence_0.154_Length_656	99.69	655	3974	4628	99.7	0.0
 Locus_10_Transcript_2/8_Confidence_0.111_Length_1023	99.9	1023	6163	5141	99.9	0.0	1840.0
 Locus_7_Transcript_2/11_Confidence_0.077_Length_1069	99.06	1069	679	1741	99.9	0.0	1884.0
 Locus_7_Transcript_3/11_Confidence_0.154_Length_1743	99.89	1742	1716	3457	99.9	0.0	3133.0
-#
+ 
 # gi|253761971|ref|NC_012958.1|_Drosophila_A_virus,_complete_genome
 # Suject Length: 4806
 # Total Subject Coverage: 4708
@@ -79,7 +79,7 @@ Locus_42_Transcript_2/2_Confidence_0.333_Length_597	97.81	594	2761	3354	99.3	0.0
 Locus_40_Transcript_1/1_Confidence_0.000_Length_1029	97.47	1028	3779	4806	99.8	0.0	1737.0
 Locus_20_Transcript_1/1_Confidence_0.000_Length_191	97.86	187	43	229	97.4	7e-86	320.0
 Locus_42_Transcript_1/2_Confidence_0.333_Length_3138	97.61	3136	219	3354	99.9	0.0	5317.0
-#
+ 
 # gi|225356593|gb|FJ150422.1|_Drosophila_A_virus_isolate_HD,_complete_genome
 # Suject Length: 4806
 # Total Subject Coverage: 4708
@@ -91,7 +91,7 @@ Locus_42_Transcript_2/2_Confidence_0.333_Length_597	97.81	594	2761	3354	99.3	0.0
 Locus_40_Transcript_1/1_Confidence_0.000_Length_1029	97.47	1028	3779	4806	99.8	0.0	1737.0
 Locus_20_Transcript_1/1_Confidence_0.000_Length_191	97.86	187	43	229	97.4	7e-86	320.0
 Locus_42_Transcript_1/2_Confidence_0.333_Length_3138	97.61	3136	219	3354	99.9	0.0	5317.0
-#
+ 
 # gi|262225305|gb|GQ342963.1|_Drosophila_melanogaster_birnavirus_SW-2009a_strain_DBV_segment_B,_compl
 # Suject Length: 3014
 # Total Subject Coverage: 3004
@@ -102,7 +102,7 @@ Locus_21_Transcript_1/1_Confidence_0.000_Length_919	100.0	919	813	1731	99.9	0.0	
 Locus_12_Transcript_1/1_Confidence_0.000_Length_1279	100.0	1273	3014	1742	99.5	0.0	2296.0
 Locus_3_Transcript_5/5_Confidence_0.250_Length_1016	100.0	825	825	1	81.1	0.0	1489.0
 Locus_3_Transcript_4/5_Confidence_0.250_Length_926	100.0	825	825	1	89.0	0.0	1489.0
-#
+ 
 # gi|262225302|gb|GQ342962.1|_Drosophila_melanogaster_birnavirus_SW-2009a_strain_DBV_segment_A,_compl
 # Suject Length: 3260
 # Total Subject Coverage: 3150
@@ -115,7 +115,7 @@ Locus_31_Transcript_1/1_Confidence_0.000_Length_373	100.0	373	597	969	99.7	0.0	6
 Locus_9_Transcript_3/3_Confidence_0.000_Length_1571	99.43	1572	1617	3186	99.9	0.0	2789.0
 Locus_9_Transcript_1/3_Confidence_0.667_Length_681	100.0	681	972	1652	99.9	0.0	1229.0
 Locus_16_Transcript_1/1_Confidence_0.000_Length_152	100.0	152	458	609	99.3	2e-72	275.0
-#
+ 
 # gi|18254451|gb|AF196645.2|_Drosophila_x_virus_segment_B_putative_RNA-dependent_RNA_polymerase_VP1_(
 # Suject Length: 3243
 # Total Subject Coverage: 3016
@@ -127,7 +127,7 @@ Locus_43_Transcript_1/1_Confidence_0.000_Length_1002	98.4	1003	2189	3191	99.9	0.
 Locus_45_Transcript_1/1_Confidence_0.000_Length_631	98.73	631	57	687	99.8	0.0	1103.0
 Locus_17_Transcript_2/3_Confidence_0.400_Length_2274	99.03	414	1694	2107	18.2	0.0	729.0
 Locus_47_Transcript_1/1_Confidence_0.000_Length_940	99.26	940	674	1613	99.9	0.0	1663.0
-#
+ 
 # gi|22855185|ref|NC_004169.1|_Drosophila_x_virus_segment_B,_complete_sequence
 # Suject Length: 3243
 # Total Subject Coverage: 3016
@@ -139,7 +139,7 @@ Locus_43_Transcript_1/1_Confidence_0.000_Length_1002	98.4	1003	2189	3191	99.9	0.
 Locus_45_Transcript_1/1_Confidence_0.000_Length_631	98.73	631	57	687	99.8	0.0	1103.0
 Locus_17_Transcript_2/3_Confidence_0.400_Length_2274	99.03	414	1694	2107	18.2	0.0	729.0
 Locus_47_Transcript_1/1_Confidence_0.000_Length_940	99.26	940	674	1613	99.9	0.0	1663.0
-#
+ 
 # gi|1545997|gb|U60650.1|DXU60650_Drosophila_x_virus_polyprotein_gene,_complete_cds
 # Suject Length: 3360
 # Total Subject Coverage: 2526
@@ -158,7 +158,7 @@ Locus_59_Transcript_1/1_Confidence_0.000_Length_123	99.19	123	1014	1136	99.2	4e-
 Locus_44_Transcript_1/1_Confidence_0.000_Length_557	98.92	557	3203	2647	99.8	0.0	978.0
 Locus_58_Transcript_1/2_Confidence_0.333_Length_476	99.16	476	2375	1900	99.8	0.0	841.0
 Locus_58_Transcript_2/2_Confidence_0.333_Length_368	99.69	323	2222	1900	87.5	3e-163	578.0
-#
+ 
 # gi|22855187|ref|NC_004177.1|_Drosophila_x_virus_segment_A,_complete_sequence
 # Suject Length: 3360
 # Total Subject Coverage: 2526
@@ -177,7 +177,7 @@ Locus_59_Transcript_1/1_Confidence_0.000_Length_123	99.19	123	1014	1136	99.2	4e-
 Locus_44_Transcript_1/1_Confidence_0.000_Length_557	98.92	557	3203	2647	99.8	0.0	978.0
 Locus_58_Transcript_1/2_Confidence_0.333_Length_476	99.16	476	2375	1900	99.8	0.0	841.0
 Locus_58_Transcript_2/2_Confidence_0.333_Length_368	99.69	323	2222	1900	87.5	3e-163	578.0
-#
+ 
 # gi|821369836|gb|KP714070.1|_Newfield_virus_putative_replicase_gene,_complete_cds
 # Suject Length: 4743
 # Total Subject Coverage: 779
@@ -191,7 +191,7 @@ Locus_2_Transcript_2/5_Confidence_0.250_Length_809	94.55	367	1	367	45.2	3e-161	5
 Locus_2_Transcript_2/5_Confidence_0.250_Length_809	98.56	209	209	1	25.7	3e-98	363.0
 Locus_2_Transcript_3/5_Confidence_0.250_Length_207	90.76	184	184	367	88.4	3e-66	255.0
 Locus_2_Transcript_3/5_Confidence_0.250_Length_207	100.0	26	209	184	12.1	7e-04	48.2
-#
+ 
 # gi|262225309|gb|GQ342965.1|_Drosophila_melanogaster_American_nodavirus_(ANV)_SW-2009a_segment_RNA1
 # Suject Length: 3107
 # Total Subject Coverage: 2360
@@ -222,7 +222,7 @@ Locus_48_Transcript_1/1_Confidence_0.000_Length_372	99.73	372	1564	1193	99.7	0.0
 Locus_80_Transcript_1/1_Confidence_1.000_Length_101	100.0	99	2851	2753	97.0	7e-44	179.0
 Locus_49_Transcript_1/1_Confidence_0.000_Length_499	100.0	499	893	395	99.8	0.0	901.0
 Locus_1_Transcript_5/7_Confidence_0.231_Length_163	97.25	109	2944	3052	66.3	1e-44	183.0
-#
+ 
 # gi|351066201|gb|JF461541.1|_Flock_house_virus_isolate_IP-VIA-022011_segment_RNA1,_complete_sequence
 # Suject Length: 3107
 # Total Subject Coverage: 2359
@@ -252,7 +252,7 @@ Locus_48_Transcript_1/1_Confidence_0.000_Length_372	98.12	372	1564	1193	99.7	0.0
 Locus_80_Transcript_1/1_Confidence_1.000_Length_101	97.98	99	2851	2753	97.0	4e-41	170.0
 Locus_49_Transcript_1/1_Confidence_0.000_Length_499	98.0	499	893	395	99.8	0.0	856.0
 Locus_1_Transcript_5/7_Confidence_0.231_Length_163	96.33	109	2944	3052	66.3	1e-43	179.0
-#
+ 
 # gi|407750681|gb|JX403942.1|_Mosquitoe_x_virus_segment_B,_complete_sequence
 # Suject Length: 3220
 # Total Subject Coverage: 2384
@@ -264,7 +264,7 @@ Locus_43_Transcript_1/1_Confidence_0.000_Length_1002	70.31	458	2732	3183	44.4	2e
 Locus_45_Transcript_1/1_Confidence_0.000_Length_631	68.24	595	93	678	92.7	6e-43	179.0
 Locus_17_Transcript_2/3_Confidence_0.400_Length_2274	74.16	387	1709	2091	16.8	9e-60	237.0
 Locus_47_Transcript_1/1_Confidence_0.000_Length_940	72.01	904	707	1597	95.6	6e-134	482.0
-#
+ 
 # gi|545716023|gb|KF298272.1|_Culicine-associated_Z_virus_isolate_acc_9.2_segment_B_VP1/RdRp_gene,_co
 # Suject Length: 3220
 # Total Subject Coverage: 2390
@@ -276,7 +276,7 @@ Locus_43_Transcript_1/1_Confidence_0.000_Length_1002	70.9	457	2738	3189	44.4	8e-
 Locus_45_Transcript_1/1_Confidence_0.000_Length_631	68.31	590	94	675	92.1	6e-49	199.0
 Locus_17_Transcript_2/3_Confidence_0.400_Length_2274	72.22	414	1688	2097	18.0	2e-55	223.0
 Locus_47_Transcript_1/1_Confidence_0.000_Length_940	71.43	903	704	1603	95.6	2e-126	457.0
-#
+ 
 # gi|545716052|gb|KF298283.1|_Culicine-associated_Z_virus_isolate_acc_9.2s_segment_B_VP1/RdRp_gene,_c
 # Suject Length: 3103
 # Total Subject Coverage: 2337
@@ -288,7 +288,7 @@ Locus_43_Transcript_1/1_Confidence_0.000_Length_1002	70.3	404	2696	3094	39.3	4e-
 Locus_45_Transcript_1/1_Confidence_0.000_Length_631	68.31	590	52	633	92.1	6e-49	199.0
 Locus_17_Transcript_2/3_Confidence_0.400_Length_2274	72.22	414	1646	2055	18.0	2e-55	223.0
 Locus_47_Transcript_1/1_Confidence_0.000_Length_940	71.43	903	662	1561	95.6	2e-126	457.0
-#
+ 
 # gi|152143028|gb|EF690537.1|_Flock_house_virus_isolate_TNCL_segment_RNA1_protein_A_mRNA,_complete_cd
 # Suject Length: 3107
 # Total Subject Coverage: 2355
@@ -318,7 +318,7 @@ Locus_48_Transcript_1/1_Confidence_0.000_Length_372	95.14	370	1564	1195	99.2	7e-
 Locus_80_Transcript_1/1_Confidence_1.000_Length_101	93.94	99	2851	2753	97.0	1e-35	152.0
 Locus_49_Transcript_1/1_Confidence_0.000_Length_499	93.59	499	893	395	99.8	0.0	756.0
 Locus_1_Transcript_5/7_Confidence_0.231_Length_163	95.41	109	2944	3052	66.3	6e-42	174.0
-#
+ 
 # gi|262225312|gb|GQ342966.1|_Drosophila_melanogaster_American_nodavirus_(ANV)_SW-2009a_segment_RNA2
 # Suject Length: 1416
 # Total Subject Coverage: 1133
@@ -338,7 +338,7 @@ Locus_1_Transcript_3/7_Confidence_0.231_Length_407	87.95	166	1250	1415	35.9	3e-5
 Locus_1_Transcript_3/7_Confidence_0.231_Length_407	85.71	42	112	153	10.1	4e-04	50.0
 Locus_1_Transcript_2/7_Confidence_0.231_Length_143	97.44	117	596	712	81.1	4e-49	197.0
 Locus_1_Transcript_5/7_Confidence_0.231_Length_163	100.0	27	146	172	16.0	2e-04	50.0
-#
+ 
 # gi|152143030|gb|EF690538.1|_Flock_house_virus_isolate_TNCL_segment_RNA2_protein_alpha_mRNA,_complet
 # Suject Length: 1383
 # Total Subject Coverage: 1035
@@ -356,7 +356,7 @@ Locus_1_Transcript_3/7_Confidence_0.231_Length_407	93.02	258	456	713	63.1	5e-105
 Locus_1_Transcript_3/7_Confidence_0.231_Length_407	94.87	78	1252	1329	18.9	2e-26	123.0
 Locus_1_Transcript_3/7_Confidence_0.231_Length_407	85.42	48	113	160	11.5	1e-05	55.4
 Locus_1_Transcript_2/7_Confidence_0.231_Length_143	91.45	117	597	713	81.1	7e-40	167.0
-#
+ 
 # gi|351066204|gb|JF461542.1|_Flock_house_virus_isolate_IP-VIA-022011_coat_protein_precursor,_gene,_c
 # Suject Length: 1365
 # Total Subject Coverage: 1054
@@ -374,7 +374,7 @@ Locus_1_Transcript_3/7_Confidence_0.231_Length_407	94.96	258	455	712	63.1	1e-111
 Locus_1_Transcript_3/7_Confidence_0.231_Length_407	77.08	96	1252	1347	18.7	2e-15	87.8
 Locus_1_Transcript_3/7_Confidence_0.231_Length_407	85.71	42	112	153	10.1	4e-04	50.0
 Locus_1_Transcript_2/7_Confidence_0.231_Length_143	92.31	117	596	712	81.1	6e-41	170.0
-#
+ 
 # gi|51014188|ref|NC_001411.2|_Black_beetle_virus,_complete_genome
 # Suject Length: 3106
 # Total Subject Coverage: 2356
@@ -403,7 +403,7 @@ Locus_48_Transcript_1/1_Confidence_0.000_Length_372	87.63	372	1563	1192	99.7	6e-
 Locus_80_Transcript_1/1_Confidence_1.000_Length_101	95.96	99	2850	2752	97.0	2e-38	161.0
 Locus_49_Transcript_1/1_Confidence_0.000_Length_499	87.98	499	892	394	99.8	9e-179	630.0
 Locus_1_Transcript_5/7_Confidence_0.231_Length_163	95.37	108	2944	3051	65.6	2e-41	172.0
-#
+ 
 # gi|22681055|ref|NC_004146.1|_Flock_house_virus_RNA_1,_complete_sequence
 # Suject Length: 3107
 # Total Subject Coverage: 2356
@@ -432,7 +432,7 @@ Locus_48_Transcript_1/1_Confidence_0.000_Length_372	87.9	372	1564	1193	99.7	5e-1
 Locus_80_Transcript_1/1_Confidence_1.000_Length_101	95.96	99	2851	2753	97.0	2e-38	161.0
 Locus_49_Transcript_1/1_Confidence_0.000_Length_499	87.98	499	893	395	99.8	9e-179	630.0
 Locus_1_Transcript_5/7_Confidence_0.231_Length_163	95.37	108	2945	3052	65.6	2e-41	172.0
-#
+ 
 # gi|403311045|gb|JQ659255.1|_Culex_Y_virus_isolate_P1-BS2010_segment_B,_complete_sequence
 # Suject Length: 3254
 # Total Subject Coverage: 2251
@@ -445,7 +445,7 @@ Locus_45_Transcript_1/1_Confidence_0.000_Length_631	70.39	412	288	693	64.2	9e-41
 Locus_45_Transcript_1/1_Confidence_0.000_Length_631	83.33	48	107	154	7.4	2e-04	51.8
 Locus_17_Transcript_2/3_Confidence_0.400_Length_2274	72.8	386	1731	2113	16.8	2e-54	219.0
 Locus_47_Transcript_1/1_Confidence_0.000_Length_940	72.35	897	729	1618	94.6	2e-133	480.0
-#
+ 
 # gi|365735166|gb|JN589002.1|_Espirito_Santo_virus_segment_B,_complete_sequence
 # Suject Length: 3250
 # Total Subject Coverage: 2248
@@ -458,7 +458,7 @@ Locus_45_Transcript_1/1_Confidence_0.000_Length_631	70.15	412	283	688	64.2	1e-39
 Locus_45_Transcript_1/1_Confidence_0.000_Length_631	84.44	45	102	146	7.0	7e-04	50.0
 Locus_17_Transcript_2/3_Confidence_0.400_Length_2274	72.54	386	1726	2108	16.8	3e-53	215.0
 Locus_47_Transcript_1/1_Confidence_0.000_Length_940	72.35	897	724	1613	94.6	2e-133	480.0
-#
+ 
 # gi|366091740|ref|NC_016517.1|_Espirito_Santo_virus_segment_B,_complete_genome
 # Suject Length: 3250
 # Total Subject Coverage: 2248
@@ -471,7 +471,7 @@ Locus_45_Transcript_1/1_Confidence_0.000_Length_631	70.15	412	283	688	64.2	1e-39
 Locus_45_Transcript_1/1_Confidence_0.000_Length_631	84.44	45	102	146	7.0	7e-04	50.0
 Locus_17_Transcript_2/3_Confidence_0.400_Length_2274	72.54	386	1726	2108	16.8	3e-53	215.0
 Locus_47_Transcript_1/1_Confidence_0.000_Length_940	72.35	897	724	1613	94.6	2e-133	480.0
-#
+ 
 # gi|22711883|ref|NC_004144.1|_Flock_house_virus,_complete_genome
 # Suject Length: 1400
 # Total Subject Coverage: 1006
@@ -487,7 +487,7 @@ Locus_1_Transcript_4/7_Confidence_0.077_Length_591	86.54	52	1295	1346	8.6	1e-07	
 Locus_1_Transcript_3/7_Confidence_0.231_Length_407	88.67	256	456	711	62.7	9e-89	331.0
 Locus_1_Transcript_3/7_Confidence_0.231_Length_407	86.54	52	1295	1346	12.5	7e-08	62.6
 Locus_1_Transcript_2/7_Confidence_0.231_Length_143	83.48	115	597	711	79.7	3e-26	122.0
-#
+ 
 # gi|9632343|ref|NC_002037.1|_Black_beetle_virus_RNA_2,_complete_sequence
 # Suject Length: 1399
 # Total Subject Coverage: 1008
@@ -505,7 +505,7 @@ Locus_1_Transcript_3/7_Confidence_0.231_Length_407	83.53	255	457	711	62.4	8e-71	
 Locus_1_Transcript_3/7_Confidence_0.231_Length_407	90.38	52	1292	1343	12.5	1e-10	71.6
 Locus_1_Transcript_3/7_Confidence_0.231_Length_407	96.67	30	125	154	7.1	4e-04	50.0
 Locus_1_Transcript_2/7_Confidence_0.231_Length_143	84.35	115	597	711	79.7	6e-28	127.0
-#
+ 
 # gi|22681027|ref|NC_004142.1|_Boolarra_virus_RNA1,_complete_genome
 # Suject Length: 3096
 # Total Subject Coverage: 2181
@@ -533,7 +533,7 @@ Locus_48_Transcript_1/1_Confidence_0.000_Length_372	76.84	367	1550	1184	98.4	5e-
 Locus_80_Transcript_1/1_Confidence_1.000_Length_101	83.84	99	2838	2740	97.0	4e-22	107.0
 Locus_49_Transcript_1/1_Confidence_0.000_Length_499	77.13	494	875	382	98.8	7e-104	381.0
 Locus_1_Transcript_5/7_Confidence_0.231_Length_163	81.52	92	2949	3039	55.2	3e-14	82.4
-#
+ 
 # gi|13195547|gb|AF329080.1|_Boolarra_virus_segment_RNA1_protein_A_and_B2_genes,_complete_cds
 # Suject Length: 3096
 # Total Subject Coverage: 2181
@@ -561,7 +561,7 @@ Locus_48_Transcript_1/1_Confidence_0.000_Length_372	76.84	367	1550	1184	98.4	5e-
 Locus_80_Transcript_1/1_Confidence_1.000_Length_101	83.84	99	2838	2740	97.0	4e-22	107.0
 Locus_49_Transcript_1/1_Confidence_0.000_Length_499	77.13	494	875	382	98.8	7e-104	381.0
 Locus_1_Transcript_5/7_Confidence_0.231_Length_163	81.52	92	2949	3039	55.2	3e-14	82.4
-#
+ 
 # gi|210673|gb|M33065.1|BBVRNA3_Black_beetle_virus_RNA3_proteins_B1_and_B2_genes,_complete_cds
 # Suject Length: 389
 # Total Subject Coverage: 359
@@ -580,7 +580,7 @@ Locus_60_Transcript_2/4_Confidence_0.400_Length_217	90.7	43	1	43	19.4	1e-07	60.8
 Locus_80_Transcript_1/1_Confidence_1.000_Length_101	94.95	99	133	35	97.0	8e-37	156.0
 Locus_60_Transcript_1/4_Confidence_0.600_Length_282	93.23	133	1	133	46.8	3e-49	199.0
 Locus_1_Transcript_5/7_Confidence_0.231_Length_163	95.37	108	227	334	65.6	2e-41	172.0
-#
+ 
 # gi|307933352|dbj|AB555545.1|_Omono_River_virus_genes_for_capsid_protein,_RNA-dependent_RNA_polymera
 # Suject Length: 7617
 # Total Subject Coverage: 2353
@@ -604,7 +604,7 @@ Locus_10_Transcript_2/8_Confidence_0.111_Length_1023	66.11	897	6863	5980	86.3	2e
 Locus_7_Transcript_7/11_Confidence_0.462_Length_4481	68.67	565	5427	5985	12.5	3e-51	210.0
 Locus_7_Transcript_7/11_Confidence_0.462_Length_4481	68.39	367	2487	2847	8.1	2e-28	134.0
 Locus_7_Transcript_7/11_Confidence_0.462_Length_4481	65.43	564	4482	5036	12.4	2e-22	114.0
-#
+ 
 # gi|307933349|dbj|AB555544.1|_Omono_River_virus_genes_for_capsid_protein,_RNA-dependent_RNA_polymera
 # Suject Length: 7611
 # Total Subject Coverage: 2850
@@ -631,7 +631,7 @@ Locus_10_Transcript_2/8_Confidence_0.111_Length_1023	66.96	896	6857	5970	86.7	3e
 Locus_7_Transcript_7/11_Confidence_0.462_Length_4481	69.64	504	5480	5979	11.1	5e-48	199.0
 Locus_7_Transcript_7/11_Confidence_0.462_Length_4481	65.19	790	2481	3258	17.4	4e-36	159.0
 Locus_7_Transcript_7/11_Confidence_0.462_Length_4481	64.49	628	4416	5036	13.8	6e-21	109.0
-#
+ 
 # gi|545716020|gb|KF298271.1|_Culicine-associated_Z_virus_isolate_acc_9.1_segment_A_pVP2-VP4-VP3_poly
 # Suject Length: 3420
 # Total Subject Coverage: 1015
@@ -645,7 +645,7 @@ Locus_68_Transcript_1/1_Confidence_0.000_Length_211	73.21	209	122	330	98.6	3e-27
 Locus_59_Transcript_1/1_Confidence_0.000_Length_123	71.0	100	1018	1117	80.5	1e-04	50.0
 Locus_58_Transcript_1/2_Confidence_0.333_Length_476	80.92	262	2154	1894	54.6	2e-61	241.0
 Locus_58_Transcript_2/2_Confidence_0.333_Length_368	80.92	262	2154	1894	70.7	1e-61	241.0
-#
+ 
 # gi|403311043|gb|JQ659254.1|_Culex_Y_virus_isolate_P1-BS2010_segment_A,_complete_sequence
 # Suject Length: 3429
 # Total Subject Coverage: 1309
@@ -660,7 +660,7 @@ Locus_66_Transcript_1/2_Confidence_0.333_Length_255	69.41	219	1365	1583	85.5	2e-
 Locus_68_Transcript_1/1_Confidence_0.000_Length_211	74.3	179	134	312	84.4	2e-24	116.0
 Locus_58_Transcript_1/2_Confidence_0.333_Length_476	81.99	272	2175	1906	56.5	1e-68	264.0
 Locus_58_Transcript_2/2_Confidence_0.333_Length_368	81.99	272	2175	1906	73.1	1e-68	264.0
-#
+ 
 # gi|365735168|gb|JN589003.1|_Espirito_Santo_virus_segment_A,_complete_sequence
 # Suject Length: 3427
 # Total Subject Coverage: 1309
@@ -675,7 +675,7 @@ Locus_66_Transcript_1/2_Confidence_0.333_Length_255	68.49	219	1358	1576	85.5	1e-
 Locus_68_Transcript_1/1_Confidence_0.000_Length_211	75.42	179	127	305	84.4	3e-27	125.0
 Locus_58_Transcript_1/2_Confidence_0.333_Length_476	81.99	272	2168	1899	56.5	1e-68	264.0
 Locus_58_Transcript_2/2_Confidence_0.333_Length_368	81.99	272	2168	1899	73.1	1e-68	264.0
-#
+ 
 # gi|366091742|ref|NC_016518.1|_Espirito_Santo_virus_segment_A,_complete_genome
 # Suject Length: 3427
 # Total Subject Coverage: 1309
@@ -690,7 +690,7 @@ Locus_66_Transcript_1/2_Confidence_0.333_Length_255	68.49	219	1358	1576	85.5	1e-
 Locus_68_Transcript_1/1_Confidence_0.000_Length_211	75.42	179	127	305	84.4	3e-27	125.0
 Locus_58_Transcript_1/2_Confidence_0.333_Length_476	81.99	272	2168	1899	56.5	1e-68	264.0
 Locus_58_Transcript_2/2_Confidence_0.333_Length_368	81.99	272	2168	1899	73.1	1e-68	264.0
-#
+ 
 # gi|394935462|ref|NC_017084.1|_Tianjin_totivirus,_complete_genome
 # Suject Length: 7611
 # Total Subject Coverage: 3998
@@ -717,7 +717,7 @@ Locus_10_Transcript_2/8_Confidence_0.111_Length_1023	67.04	895	6857	5970	86.7	8e
 Locus_7_Transcript_2/11_Confidence_0.077_Length_1069	74.36	78	2481	2558	7.2	4e-04	51.8
 Locus_7_Transcript_7/11_Confidence_0.462_Length_4481	62.65	2608	2481	5036	57.0	1e-42	181.0
 Locus_7_Transcript_7/11_Confidence_0.462_Length_4481	67.86	501	5481	5979	11.1	3e-37	163.0
-#
+ 
 # gi|380715048|gb|JN391187.1|_Tianjin_totivirus,_complete_genome
 # Suject Length: 7611
 # Total Subject Coverage: 3998
@@ -744,7 +744,7 @@ Locus_10_Transcript_2/8_Confidence_0.111_Length_1023	67.04	895	6857	5970	86.7	8e
 Locus_7_Transcript_2/11_Confidence_0.077_Length_1069	74.36	78	2481	2558	7.2	4e-04	51.8
 Locus_7_Transcript_7/11_Confidence_0.462_Length_4481	62.65	2608	2481	5036	57.0	1e-42	181.0
 Locus_7_Transcript_7/11_Confidence_0.462_Length_4481	67.86	501	5481	5979	11.1	3e-37	163.0
-#
+ 
 # gi|407750679|gb|JX403941.1|_Mosquitoe_x_virus_segment_A,_complete_sequence
 # Suject Length: 3418
 # Total Subject Coverage: 1257
@@ -759,7 +759,7 @@ Locus_66_Transcript_1/2_Confidence_0.333_Length_255	68.49	219	1355	1573	85.5	1e-
 Locus_68_Transcript_1/1_Confidence_0.000_Length_211	73.74	179	124	302	84.4	7e-23	111.0
 Locus_58_Transcript_1/2_Confidence_0.333_Length_476	81.25	272	2165	1896	56.5	7e-66	255.0
 Locus_58_Transcript_2/2_Confidence_0.333_Length_368	81.25	272	2165	1896	73.1	5e-66	255.0
-#
+ 
 # gi|567840469|gb|KF478765.1|_Lassa_virus_strain_Soromba-R_segment_S,_complete_sequence
 # Suject Length: 3571
 # Total Subject Coverage: 93
@@ -767,7 +767,7 @@ Locus_58_Transcript_2/2_Confidence_0.333_Length_368	81.25	272	2165	1896	73.1	5e-
 # Best Bit Score: 96.9
 # Mean Bit Score: 96.9
 Locus_35_Transcript_1/1_Confidence_0.000_Length_166	83.87	93	150	58	54.8	1e-18	96.9
-#
+ 
 # gi|686484099|gb|KJ556923.1|_Penaeid_shrimp_infectious_myonecrosis_virus_strain_Brazil,_complete_gen
 # Suject Length: 8226
 # Total Subject Coverage: 371
@@ -779,7 +779,7 @@ Locus_10_Transcript_3/8_Confidence_0.222_Length_529	67.02	376	7448	7078	69.9	6e-
 Locus_10_Transcript_2/8_Confidence_0.111_Length_1023	67.02	376	7448	7078	36.2	1e-16	93.3
 Locus_10_Transcript_4/8_Confidence_0.444_Length_1097	67.02	376	7448	7078	33.7	1e-16	93.3
 Locus_10_Transcript_6/8_Confidence_0.333_Length_1121	67.02	376	7448	7078	33.0	1e-16	93.3
-#
+ 
 # gi|124303516|gb|EF061744.1|_Penaeid_shrimp_infectious_myonecrosis_virus_from_Indonesia,_complete_ge
 # Suject Length: 7561
 # Total Subject Coverage: 371
@@ -791,7 +791,7 @@ Locus_10_Transcript_3/8_Confidence_0.222_Length_529	67.02	376	6805	6435	69.9	6e-
 Locus_10_Transcript_2/8_Confidence_0.111_Length_1023	67.02	376	6805	6435	36.2	1e-16	93.3
 Locus_10_Transcript_4/8_Confidence_0.444_Length_1097	67.02	376	6805	6435	33.7	1e-16	93.3
 Locus_10_Transcript_6/8_Confidence_0.333_Length_1121	67.02	376	6805	6435	33.0	1e-16	93.3
-#
+ 
 # gi|723265769|ref|NC_007915.3|_Penaeid_shrimp_infectious_myonecrosis_virus,_complete_genome
 # Suject Length: 8226
 # Total Subject Coverage: 371
@@ -803,7 +803,7 @@ Locus_10_Transcript_3/8_Confidence_0.222_Length_529	67.02	376	7448	7078	69.9	6e-
 Locus_10_Transcript_2/8_Confidence_0.111_Length_1023	67.02	376	7448	7078	36.2	1e-16	93.3
 Locus_10_Transcript_4/8_Confidence_0.444_Length_1097	67.02	376	7448	7078	33.7	1e-16	93.3
 Locus_10_Transcript_6/8_Confidence_0.333_Length_1121	67.02	376	7448	7078	33.0	1e-16	93.3
-#
+ 
 # gi|619810684|gb|KF836757.1|_Penaeid_shrimp_infectious_myonecrosis_virus_strain_Indonesia,_complete_
 # Suject Length: 8226
 # Total Subject Coverage: 371
@@ -815,7 +815,7 @@ Locus_10_Transcript_3/8_Confidence_0.222_Length_529	67.02	376	7448	7078	69.9	6e-
 Locus_10_Transcript_2/8_Confidence_0.111_Length_1023	67.02	376	7448	7078	36.2	1e-16	93.3
 Locus_10_Transcript_4/8_Confidence_0.444_Length_1097	67.02	376	7448	7078	33.7	1e-16	93.3
 Locus_10_Transcript_6/8_Confidence_0.333_Length_1121	67.02	376	7448	7078	33.0	1e-16	93.3
-#
+ 
 # gi|751662875|gb|KJ636783.2|_Penaeid_shrimp_infectious_myonecrosis_virus_isolate_IMNV-ID-EJ-12-1_ORF
 # Suject Length: 8226
 # Total Subject Coverage: 371
@@ -827,7 +827,7 @@ Locus_10_Transcript_3/8_Confidence_0.222_Length_529	67.02	376	7448	7078	69.9	6e-
 Locus_10_Transcript_2/8_Confidence_0.111_Length_1023	67.02	376	7448	7078	36.2	1e-16	93.3
 Locus_10_Transcript_4/8_Confidence_0.444_Length_1097	67.02	376	7448	7078	33.7	1e-16	93.3
 Locus_10_Transcript_6/8_Confidence_0.333_Length_1121	67.02	376	7448	7078	33.0	1e-16	93.3
-#
+ 
 # gi|675273514|gb|AY570982.3|_Penaeid_shrimp_infectious_myonecrosis_virus,_complete_genome
 # Suject Length: 8226
 # Total Subject Coverage: 371
@@ -839,7 +839,7 @@ Locus_10_Transcript_3/8_Confidence_0.222_Length_529	67.02	376	7448	7078	69.9	6e-
 Locus_10_Transcript_2/8_Confidence_0.111_Length_1023	67.02	376	7448	7078	36.2	1e-16	93.3
 Locus_10_Transcript_4/8_Confidence_0.444_Length_1097	67.02	376	7448	7078	33.7	1e-16	93.3
 Locus_10_Transcript_6/8_Confidence_0.333_Length_1121	67.02	376	7448	7078	33.0	1e-16	93.3
-#
+ 
 # gi|823383611|gb|KR815474.1|_Penaeid_shrimp_infectious_myonecrosis_virus_isolate_Brazil_2009,_comple
 # Suject Length: 8226
 # Total Subject Coverage: 371
@@ -851,7 +851,7 @@ Locus_10_Transcript_3/8_Confidence_0.222_Length_529	67.02	376	7448	7078	69.9	6e-
 Locus_10_Transcript_2/8_Confidence_0.111_Length_1023	67.02	376	7448	7078	36.2	1e-16	93.3
 Locus_10_Transcript_4/8_Confidence_0.444_Length_1097	67.02	376	7448	7078	33.7	1e-16	93.3
 Locus_10_Transcript_6/8_Confidence_0.333_Length_1121	67.02	376	7448	7078	33.0	1e-16	93.3
-#
+ 
 # gi|751662874|gb|KJ636782.2|_Penaeid_shrimp_infectious_myonecrosis_virus_isolate_IMNV-ID-LP-11_compl
 # Suject Length: 8230
 # Total Subject Coverage: 371
@@ -863,7 +863,7 @@ Locus_10_Transcript_3/8_Confidence_0.222_Length_529	66.76	376	7451	7081	69.9	2e-
 Locus_10_Transcript_2/8_Confidence_0.111_Length_1023	66.76	376	7451	7081	36.2	5e-15	87.8
 Locus_10_Transcript_4/8_Confidence_0.444_Length_1097	66.76	376	7451	7081	33.7	5e-15	87.8
 Locus_10_Transcript_6/8_Confidence_0.333_Length_1121	66.76	376	7451	7081	33.0	5e-15	87.8
-#
+ 
 # gi|198286505|gb|EU715328.1|_Armigeres_subalbatus_virus_SaX06-AK20,_complete_genome
 # Suject Length: 7510
 # Total Subject Coverage: 568
@@ -881,7 +881,7 @@ Locus_7_Transcript_3/11_Confidence_0.154_Length_1743	74.7	83	3397	3479	4.7	5e-05
 Locus_10_Transcript_2/8_Confidence_0.111_Length_1023	67.15	347	6738	6396	33.4	1e-16	93.3
 Locus_10_Transcript_2/8_Confidence_0.111_Length_1023	71.92	146	5989	5848	13.8	5e-08	64.4
 Locus_7_Transcript_7/11_Confidence_0.462_Length_4481	74.7	83	3397	3479	1.8	1e-04	55.4
-#
+ 
 # gi|309259994|ref|NC_014609.1|_Armigeres_subalbatus_virus_SaX06-AK20,_complete_genome
 # Suject Length: 7510
 # Total Subject Coverage: 568
@@ -899,7 +899,7 @@ Locus_7_Transcript_3/11_Confidence_0.154_Length_1743	74.7	83	3397	3479	4.7	5e-05
 Locus_10_Transcript_2/8_Confidence_0.111_Length_1023	67.15	347	6738	6396	33.4	1e-16	93.3
 Locus_10_Transcript_2/8_Confidence_0.111_Length_1023	71.92	146	5989	5848	13.8	5e-08	64.4
 Locus_7_Transcript_7/11_Confidence_0.462_Length_4481	74.7	83	3397	3479	1.8	1e-04	55.4
-#
+ 
 # gi|384638749|gb|JQ675611.1|_Loreto_virus_strain_Pe_AR_2612/77_hypothetical_protein_1,_hypothetical_
 # Suject Length: 9207
 # Total Subject Coverage: 82
@@ -908,7 +908,7 @@ Locus_7_Transcript_7/11_Confidence_0.462_Length_4481	74.7	83	3397	3479	1.8	1e-04
 # Mean Bit Score: 68.0
 Locus_17_Transcript_1/3_Confidence_0.400_Length_1889	78.05	82	6195	6276	4.3	8e-09	68.0
 Locus_17_Transcript_2/3_Confidence_0.400_Length_2274	78.05	82	6195	6276	3.6	1e-08	68.0
-#
+ 
 # gi|693673103|gb|KM350513.1|_Brejeira_virus_strain_AR800227_hypothetical_protein_1,_hypothetical_pro
 # Suject Length: 9862
 # Total Subject Coverage: 153
@@ -916,7 +916,7 @@ Locus_17_Transcript_2/3_Confidence_0.400_Length_2274	78.05	82	6195	6276	3.6	1e-0
 # Best Bit Score: 62.6
 # Mean Bit Score: 62.6
 Locus_36_Transcript_1/1_Confidence_0.000_Length_445	70.32	155	5424	5272	34.2	8e-08	62.6
-#
+ 
 # gi|22711868|ref|NC_004145.1|_Boolarra_virus_RNA_2,_complete_sequence
 # Suject Length: 1305
 # Total Subject Coverage: 200
@@ -924,7 +924,7 @@ Locus_36_Transcript_1/1_Confidence_0.000_Length_445	70.32	155	5424	5272	34.2	8e-
 # Best Bit Score: 62.6
 # Mean Bit Score: 62.6
 Locus_56_Transcript_1/1_Confidence_0.000_Length_450	67.82	202	1111	912	44.2	8e-08	62.6
-#
+ 
 # gi|384638739|gb|JQ675609.1|_Negev_virus_strain_M33056_hypothetical_protein_1,_hypothetical_protein_
 # Suject Length: 9532
 # Total Subject Coverage: 351
@@ -935,7 +935,7 @@ Locus_30_Transcript_1/1_Confidence_0.000_Length_395	73.39	109	3223	3330	26.6	3e-
 Locus_17_Transcript_1/3_Confidence_0.400_Length_1889	68.16	201	6262	6459	10.4	3e-07	62.6
 Locus_17_Transcript_2/3_Confidence_0.400_Length_2274	68.16	201	6262	6459	8.7	4e-07	62.6
 Locus_29_Transcript_1/1_Confidence_0.000_Length_870	86.67	45	9124	9080	5.1	2e-05	55.4
-#
+ 
 # gi|384638734|gb|JQ675608.1|_Negev_virus_strain_M30957_hypothetical_protein_1,_hypothetical_protein_
 # Suject Length: 9538
 # Total Subject Coverage: 351
@@ -946,7 +946,7 @@ Locus_30_Transcript_1/1_Confidence_0.000_Length_395	73.39	109	3225	3332	26.6	3e-
 Locus_17_Transcript_1/3_Confidence_0.400_Length_1889	68.16	201	6264	6461	10.4	3e-07	62.6
 Locus_17_Transcript_2/3_Confidence_0.400_Length_2274	68.16	201	6264	6461	8.7	4e-07	62.6
 Locus_29_Transcript_1/1_Confidence_0.000_Length_870	86.67	45	9126	9082	5.1	2e-05	55.4
-#
+ 
 # gi|693673080|gb|KM350509.1|_Brejeira_virus_strain_AR800212-B_hypothetical_protein_1,_hypothetical_p
 # Suject Length: 9822
 # Total Subject Coverage: 153
@@ -954,7 +954,7 @@ Locus_29_Transcript_1/1_Confidence_0.000_Length_870	86.67	45	9126	9082	5.1	2e-05
 # Best Bit Score: 59.0
 # Mean Bit Score: 59.0
 Locus_36_Transcript_1/1_Confidence_0.000_Length_445	69.68	155	5397	5245	34.2	9e-07	59.0
-#
+ 
 # gi|831181913|dbj|AB935183.1|_Negev_virus_genes_for_hypothetical_protein,_complete_cds,_isolate:_#73
 # Suject Length: 9545
 # Total Subject Coverage: 596
@@ -969,7 +969,7 @@ Locus_17_Transcript_1/3_Confidence_0.400_Length_1889	70.21	141	6600	6736	7.2	5e-
 Locus_29_Transcript_1/1_Confidence_0.000_Length_870	88.89	45	9125	9081	5.1	2e-06	59.0
 Locus_30_Transcript_1/1_Confidence_0.000_Length_395	74.76	103	3216	3315	25.8	7e-08	62.6
 Locus_4_Transcript_4/5_Confidence_0.333_Length_1170	69.83	116	4652	4767	9.8	4e-04	51.8
-#
+ 
 # gi|667668455|gb|KJ738331.1|_UNVERIFIED:_Black_queen_cell_virus_non-structural_polyprotein-like_gene
 # Suject Length: 8278
 # Total Subject Coverage: 44
@@ -977,7 +977,7 @@ Locus_4_Transcript_4/5_Confidence_0.333_Length_1170	69.83	116	4652	4767	9.8	4e-0
 # Best Bit Score: 57.2
 # Mean Bit Score: 57.2
 Locus_70_Transcript_1/1_Confidence_0.000_Length_147	88.64	44	8238	8195	29.3	9e-07	57.2
-#
+ 
 # gi|693673085|gb|KM350510.1|_Brejeira_virus_strain_AR800213-B_hypothetical_protein_1,_hypothetical_p
 # Suject Length: 9663
 # Total Subject Coverage: 241
@@ -986,7 +986,7 @@ Locus_70_Transcript_1/1_Confidence_0.000_Length_147	88.64	44	8238	8195	29.3	9e-0
 # Mean Bit Score: 57.2
 Locus_36_Transcript_1/1_Confidence_0.000_Length_445	70.32	155	5239	5087	34.2	8e-08	62.6
 Locus_29_Transcript_1/1_Confidence_0.000_Length_870	72.73	88	9248	9161	10.0	3e-04	51.8
-#
+ 
 # gi|20451021|ref|NC_003784.1|_Black_queen_cell_virus,_complete_genome
 # Suject Length: 8550
 # Total Subject Coverage: 44
@@ -994,7 +994,7 @@ Locus_29_Transcript_1/1_Confidence_0.000_Length_870	72.73	88	9248	9161	10.0	3e-0
 # Best Bit Score: 57.2
 # Mean Bit Score: 57.2
 Locus_70_Transcript_1/1_Confidence_0.000_Length_147	88.64	44	8510	8467	29.3	9e-07	57.2
-#
+ 
 # gi|384638729|gb|JQ675607.1|_Piura_virus_strain_P60_hypothetical_protein_1,_hypothetical_protein_2,_
 # Suject Length: 10059
 # Total Subject Coverage: 34
@@ -1003,7 +1003,7 @@ Locus_70_Transcript_1/1_Confidence_0.000_Length_147	88.64	44	8510	8467	29.3	9e-0
 # Mean Bit Score: 57.2
 Locus_17_Transcript_1/3_Confidence_0.400_Length_1889	97.06	34	7002	7035	1.7	1e-05	57.2
 Locus_17_Transcript_2/3_Confidence_0.400_Length_2274	97.06	34	7002	7035	1.5	2e-05	57.2
-#
+ 
 # gi|693673074|gb|KM350508.1|_Brejeira_virus_strain_AR800208-B_hypothetical_protein_1,_hypothetical_p
 # Suject Length: 9863
 # Total Subject Coverage: 241
@@ -1012,7 +1012,7 @@ Locus_17_Transcript_2/3_Confidence_0.400_Length_2274	97.06	34	7002	7035	1.5	2e-0
 # Mean Bit Score: 57.2
 Locus_36_Transcript_1/1_Confidence_0.000_Length_445	70.32	155	5438	5286	34.2	8e-08	62.6
 Locus_29_Transcript_1/1_Confidence_0.000_Length_870	72.73	88	9447	9360	10.0	3e-04	51.8
-#
+ 
 # gi|693673109|gb|KM350514.1|_Brejeira_virus_strain_AR800233-B_hypothetical_protein_1,_hypothetical_p
 # Suject Length: 9776
 # Total Subject Coverage: 241
@@ -1021,7 +1021,7 @@ Locus_29_Transcript_1/1_Confidence_0.000_Length_870	72.73	88	9447	9360	10.0	3e-0
 # Mean Bit Score: 57.2
 Locus_36_Transcript_1/1_Confidence_0.000_Length_445	70.32	155	5352	5200	34.2	8e-08	62.6
 Locus_29_Transcript_1/1_Confidence_0.000_Length_870	72.73	88	9361	9274	10.0	3e-04	51.8
-#
+ 
 # gi|732449831|gb|KP119603.1|_Black_queen_cell_virus_isolate_JL1,_complete_genome
 # Suject Length: 8358
 # Total Subject Coverage: 44
@@ -1029,7 +1029,7 @@ Locus_29_Transcript_1/1_Confidence_0.000_Length_870	72.73	88	9361	9274	10.0	3e-0
 # Best Bit Score: 57.2
 # Mean Bit Score: 57.2
 Locus_70_Transcript_1/1_Confidence_0.000_Length_147	88.64	44	8318	8275	29.3	9e-07	57.2
-#
+ 
 # gi|8100530|gb|AF183905.1|_Black_queen_cell_virus_nonstructural_polyprotein_(orf1)_and_structural_po
 # Suject Length: 8550
 # Total Subject Coverage: 44
@@ -1037,7 +1037,7 @@ Locus_70_Transcript_1/1_Confidence_0.000_Length_147	88.64	44	8318	8275	29.3	9e-0
 # Best Bit Score: 57.2
 # Mean Bit Score: 57.2
 Locus_70_Transcript_1/1_Confidence_0.000_Length_147	88.64	44	8510	8467	29.3	9e-07	57.2
-#
+ 
 # gi|693673091|gb|KM350511.1|_Brejeira_virus_strain_AR800214_hypothetical_protein_1,_hypothetical_pro
 # Suject Length: 9838
 # Total Subject Coverage: 241
@@ -1046,7 +1046,7 @@ Locus_70_Transcript_1/1_Confidence_0.000_Length_147	88.64	44	8510	8467	29.3	9e-0
 # Mean Bit Score: 57.2
 Locus_36_Transcript_1/1_Confidence_0.000_Length_445	70.32	155	5439	5287	34.2	8e-08	62.6
 Locus_29_Transcript_1/1_Confidence_0.000_Length_870	72.73	88	9448	9361	10.0	3e-04	51.8
-#
+ 
 # gi|14582979|gb|AF362773.1|_Infectious_bursal_disease_virus_strain_23/82_segment_A_structural_polypr
 # Suject Length: 3191
 # Total Subject Coverage: 91
@@ -1054,7 +1054,7 @@ Locus_29_Transcript_1/1_Confidence_0.000_Length_870	72.73	88	9448	9361	10.0	3e-0
 # Best Bit Score: 57.2
 # Mean Bit Score: 57.2
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.63	91	514	424	54.9	1e-06	57.2
-#
+ 
 # gi|384638719|gb|JQ675605.1|_Negev_virus_strain_EO-329_hypothetical_protein_1,_hypothetical_protein_
 # Suject Length: 9536
 # Total Subject Coverage: 282
@@ -1065,7 +1065,7 @@ Locus_30_Transcript_1/1_Confidence_0.000_Length_395	74.76	103	3216	3315	25.8	7e-
 Locus_17_Transcript_1/3_Confidence_0.400_Length_1889	70.21	141	6600	6736	7.2	5e-05	55.4
 Locus_17_Transcript_2/3_Confidence_0.400_Length_2274	70.21	141	6600	6736	6.0	6e-05	55.4
 Locus_29_Transcript_1/1_Confidence_0.000_Length_870	84.44	45	9124	9080	5.1	0.001	50.0
-#
+ 
 # gi|365176197|gb|JN542439.1|_Black_queen_cell_virus_isolate_Kor1-BQCV3_polyprotein_gene,_complete_cd
 # Suject Length: 627
 # Total Subject Coverage: 40
@@ -1073,7 +1073,7 @@ Locus_29_Transcript_1/1_Confidence_0.000_Length_870	84.44	45	9124	9080	5.1	0.001
 # Best Bit Score: 55.4
 # Mean Bit Score: 55.4
 Locus_70_Transcript_1/1_Confidence_0.000_Length_147	90.0	40	627	588	26.5	3e-06	55.4
-#
+ 
 # gi|693673097|gb|KM350512.1|_Brejeira_virus_strain_AR800224_hypothetical_protein_1,_hypothetical_pro
 # Suject Length: 9940
 # Total Subject Coverage: 241
@@ -1082,7 +1082,7 @@ Locus_70_Transcript_1/1_Confidence_0.000_Length_147	90.0	40	627	588	26.5	3e-06	5
 # Mean Bit Score: 55.4
 Locus_36_Transcript_1/1_Confidence_0.000_Length_445	69.68	155	5514	5362	34.2	9e-07	59.0
 Locus_29_Transcript_1/1_Confidence_0.000_Length_870	72.73	88	9523	9436	10.0	3e-04	51.8
-#
+ 
 # gi|693673115|gb|KM350515.1|_Brejeira_virus_strain_AR800239_hypothetical_protein_1,_hypothetical_pro
 # Suject Length: 9815
 # Total Subject Coverage: 241
@@ -1091,7 +1091,7 @@ Locus_29_Transcript_1/1_Confidence_0.000_Length_870	72.73	88	9523	9436	10.0	3e-0
 # Mean Bit Score: 55.4
 Locus_36_Transcript_1/1_Confidence_0.000_Length_445	69.68	155	5416	5264	34.2	9e-07	59.0
 Locus_29_Transcript_1/1_Confidence_0.000_Length_870	72.73	88	9425	9338	10.0	3e-04	51.8
-#
+ 
 # gi|84683224|gb|DQ333351.1|_Choristoneura_occidentalis_granulovirus,_complete_genome
 # Suject Length: 104710
 # Total Subject Coverage: 42
@@ -1099,7 +1099,7 @@ Locus_29_Transcript_1/1_Confidence_0.000_Length_870	72.73	88	9425	9338	10.0	3e-0
 # Best Bit Score: 53.6
 # Mean Bit Score: 53.6
 Locus_35_Transcript_1/1_Confidence_0.000_Length_166	88.1	42	20023	19982	24.7	1e-05	53.6
-#
+ 
 # gi|158426958|gb|EU184687.1|_Infectious_bursal_disease_virus_strain_Cro-Po/00_VP5_and_structural_pol
 # Suject Length: 3101
 # Total Subject Coverage: 82
@@ -1107,7 +1107,7 @@ Locus_35_Transcript_1/1_Confidence_0.000_Length_166	88.1	42	20023	19982	24.7	1e-
 # Best Bit Score: 53.6
 # Mean Bit Score: 53.6
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	74.39	82	468	387	49.4	1e-05	53.6
-#
+ 
 # gi|351066210|gb|JN187416.1|_Macrobrachium_rosenbergii_nodavirus_RNA-dependent_RNA_polymerase_gene,_
 # Suject Length: 3199
 # Total Subject Coverage: 79
@@ -1115,7 +1115,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	74.39	82	468	387	49.4	1e-05	
 # Best Bit Score: 53.6
 # Mean Bit Score: 53.6
 Locus_73_Transcript_1/1_Confidence_0.000_Length_164	74.68	79	1711	1789	47.6	1e-05	53.6
-#
+ 
 # gi|109255272|ref|NC_008168.1|_Choristoneura_occidentalis_granulovirus,_complete_genome
 # Suject Length: 104710
 # Total Subject Coverage: 42
@@ -1123,7 +1123,7 @@ Locus_73_Transcript_1/1_Confidence_0.000_Length_164	74.68	79	1711	1789	47.6	1e-0
 # Best Bit Score: 53.6
 # Mean Bit Score: 53.6
 Locus_35_Transcript_1/1_Confidence_0.000_Length_166	88.1	42	20023	19982	24.7	1e-05	53.6
-#
+ 
 # gi|401668676|gb|JX149531.1|_Black_queen_cell_virus_strain_AY_non-structural_polyprotein_and_structu
 # Suject Length: 8392
 # Total Subject Coverage: 44
@@ -1131,7 +1131,7 @@ Locus_35_Transcript_1/1_Confidence_0.000_Length_166	88.1	42	20023	19982	24.7	1e-
 # Best Bit Score: 53.6
 # Mean Bit Score: 53.6
 Locus_70_Transcript_1/1_Confidence_0.000_Length_147	86.36	44	8364	8321	29.3	1e-05	53.6
-#
+ 
 # gi|13249660|ref|NC_002690.1|_Nodamura_virus_RNA1,_complete_sequence
 # Suject Length: 3204
 # Total Subject Coverage: 64
@@ -1139,7 +1139,7 @@ Locus_70_Transcript_1/1_Confidence_0.000_Length_147	86.36	44	8364	8321	29.3	1e-0
 # Best Bit Score: 53.6
 # Mean Bit Score: 53.6
 Locus_49_Transcript_1/1_Confidence_0.000_Length_499	78.12	64	751	688	12.6	5e-05	53.6
-#
+ 
 # gi|34559206|gb|AY374435.1|_Infectious_pancreatic_necrosis_virus_isolate_NVI-001_segment_A_15.4_kDa_
 # Suject Length: 3097
 # Total Subject Coverage: 87
@@ -1148,7 +1148,7 @@ Locus_49_Transcript_1/1_Confidence_0.000_Length_499	78.12	64	751	688	12.6	5e-05	
 # Mean Bit Score: 53.6
 Locus_9_Transcript_2/3_Confidence_0.333_Length_2216	75.0	88	1211	1297	3.9	2e-04	53.6
 Locus_9_Transcript_1/3_Confidence_0.667_Length_681	75.0	88	1211	1297	12.6	6e-05	53.6
-#
+ 
 # gi|9739005|gb|AF174533.1|_Nodamura_virus_RNA1_segment,_complete_sequence
 # Suject Length: 3204
 # Total Subject Coverage: 64
@@ -1156,7 +1156,7 @@ Locus_9_Transcript_1/3_Confidence_0.667_Length_681	75.0	88	1211	1297	12.6	6e-05	
 # Best Bit Score: 53.6
 # Mean Bit Score: 53.6
 Locus_49_Transcript_1/1_Confidence_0.000_Length_499	78.12	64	751	688	12.6	5e-05	53.6
-#
+ 
 # gi|344165504|gb|HQ833318.1|_Infectious_pancreatic_necrosis_virus_isolate_S-IPNV/FS2-01_VP5_and_poly
 # Suject Length: 3046
 # Total Subject Coverage: 96
@@ -1165,7 +1165,7 @@ Locus_49_Transcript_1/1_Confidence_0.000_Length_499	78.12	64	751	688	12.6	5e-05	
 # Mean Bit Score: 51.8
 Locus_9_Transcript_2/3_Confidence_0.333_Length_2216	73.2	97	1141	1236	4.3	7e-04	51.8
 Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1141	1236	14.0	2e-04	51.8
-#
+ 
 # gi|1235705|gb|L40582.1|IPNVP5C_Infectious_pancreatic_necrosis_virus_(d'Honnincthun_(Fr.21))_segment
 # Suject Length: 1736
 # Total Subject Coverage: 96
@@ -1174,7 +1174,7 @@ Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1141	1236	14.0	2e-04	
 # Mean Bit Score: 51.8
 Locus_9_Transcript_2/3_Confidence_0.333_Length_2216	73.2	97	1162	1257	4.3	7e-04	51.8
 Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1162	1257	14.0	2e-04	51.8
-#
+ 
 # gi|60550099|gb|AY823632.1|_Infectious_pancreatic_necrosis_virus_isolate_VP5-deficient_Sp103_polypro
 # Suject Length: 3097
 # Total Subject Coverage: 96
@@ -1183,7 +1183,7 @@ Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1162	1257	14.0	2e-04	
 # Mean Bit Score: 51.8
 Locus_9_Transcript_2/3_Confidence_0.333_Length_2216	73.2	97	1162	1257	4.3	7e-04	51.8
 Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1162	1257	14.0	2e-04	51.8
-#
+ 
 # gi|4204721|gb|U48225.1|IPU48225_Infectious_pancreatic_necrosis_virus_structural_polyprotein_gene_in
 # Suject Length: 2919
 # Total Subject Coverage: 96
@@ -1192,7 +1192,7 @@ Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1162	1257	14.0	2e-04	
 # Mean Bit Score: 51.8
 Locus_9_Transcript_2/3_Confidence_0.333_Length_2216	73.2	97	1044	1139	4.3	7e-04	51.8
 Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1044	1139	14.0	2e-04	51.8
-#
+ 
 # gi|38049624|gb|AY354520.1|_Infectious_pancreatic_necrosis_virus_isolate_Sp116_15-kDa_nonstructural_
 # Suject Length: 3097
 # Total Subject Coverage: 96
@@ -1201,7 +1201,7 @@ Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1044	1139	14.0	2e-04	
 # Mean Bit Score: 51.8
 Locus_9_Transcript_2/3_Confidence_0.333_Length_2216	73.2	97	1162	1257	4.3	7e-04	51.8
 Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1162	1257	14.0	2e-04	51.8
-#
+ 
 # gi|344165501|gb|HQ833317.1|_Infectious_pancreatic_necrosis_virus_isolate_S-IPNV/FS1-01_VP5_and_poly
 # Suject Length: 3046
 # Total Subject Coverage: 96
@@ -1210,7 +1210,7 @@ Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1162	1257	14.0	2e-04	
 # Mean Bit Score: 51.8
 Locus_9_Transcript_2/3_Confidence_0.333_Length_2216	73.2	97	1141	1236	4.3	7e-04	51.8
 Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1141	1236	14.0	2e-04	51.8
-#
+ 
 # gi|344165507|gb|HQ833319.1|_Infectious_pancreatic_necrosis_virus_isolate_S-IPNV/FS3-01_nonfunctiona
 # Suject Length: 3047
 # Total Subject Coverage: 96
@@ -1219,7 +1219,7 @@ Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1141	1236	14.0	2e-04	
 # Mean Bit Score: 51.8
 Locus_9_Transcript_2/3_Confidence_0.333_Length_2216	73.2	97	1142	1237	4.3	7e-04	51.8
 Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1142	1237	14.0	2e-04	51.8
-#
+ 
 # gi|34559183|gb|AY379736.1|_Infectious_pancreatic_necrosis_virus_isolate_NVI-020_segment_A_15.4_kDa_
 # Suject Length: 3097
 # Total Subject Coverage: 96
@@ -1228,7 +1228,7 @@ Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1142	1237	14.0	2e-04	
 # Mean Bit Score: 51.8
 Locus_9_Transcript_2/3_Confidence_0.333_Length_2216	73.2	97	1162	1257	4.3	7e-04	51.8
 Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1162	1257	14.0	2e-04	51.8
-#
+ 
 # gi|34559189|gb|AY379738.1|_Infectious_pancreatic_necrosis_virus_isolate_NVI-013_segment_A_12.1_kDa_
 # Suject Length: 3097
 # Total Subject Coverage: 96
@@ -1237,7 +1237,7 @@ Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1162	1257	14.0	2e-04	
 # Mean Bit Score: 51.8
 Locus_9_Transcript_2/3_Confidence_0.333_Length_2216	73.2	97	1162	1257	4.3	7e-04	51.8
 Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1162	1257	14.0	2e-04	51.8
-#
+ 
 # gi|38049606|gb|AY354519.1|_Infectious_pancreatic_necrosis_virus_isolate_Sp103_15-kDa_nonstructural_
 # Suject Length: 3097
 # Total Subject Coverage: 96
@@ -1246,7 +1246,7 @@ Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1162	1257	14.0	2e-04	
 # Mean Bit Score: 51.8
 Locus_9_Transcript_2/3_Confidence_0.333_Length_2216	73.2	97	1162	1257	4.3	7e-04	51.8
 Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1162	1257	14.0	2e-04	51.8
-#
+ 
 # gi|34559180|gb|AY379735.1|_Infectious_pancreatic_necrosis_virus_isolate_NVI-011_segment_A_14.7_kDa_
 # Suject Length: 3097
 # Total Subject Coverage: 96
@@ -1255,7 +1255,7 @@ Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1162	1257	14.0	2e-04	
 # Mean Bit Score: 51.8
 Locus_9_Transcript_2/3_Confidence_0.333_Length_2216	73.2	97	1162	1257	4.3	7e-04	51.8
 Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1162	1257	14.0	2e-04	51.8
-#
+ 
 # gi|34559186|gb|AY379737.1|_Infectious_pancreatic_necrosis_virus_isolate_NVI-023_segment_A_12.1_kDa_
 # Suject Length: 3097
 # Total Subject Coverage: 96
@@ -1264,7 +1264,7 @@ Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1162	1257	14.0	2e-04	
 # Mean Bit Score: 51.8
 Locus_9_Transcript_2/3_Confidence_0.333_Length_2216	73.2	97	1162	1257	4.3	7e-04	51.8
 Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1162	1257	14.0	2e-04	51.8
-#
+ 
 # gi|344165509|gb|HQ833320.1|_Infectious_pancreatic_necrosis_virus_isolate_S-IPNV/FS5-01_nonfunctiona
 # Suject Length: 3046
 # Total Subject Coverage: 96
@@ -1273,7 +1273,7 @@ Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1162	1257	14.0	2e-04	
 # Mean Bit Score: 51.8
 Locus_9_Transcript_2/3_Confidence_0.333_Length_2216	73.2	97	1141	1236	4.3	7e-04	51.8
 Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1141	1236	14.0	2e-04	51.8
-#
+ 
 # gi|34559204|gb|AY379744.1|_Infectious_pancreatic_necrosis_virus_isolate_NVI-010_segment_A_107_kDa_p
 # Suject Length: 3097
 # Total Subject Coverage: 96
@@ -1282,7 +1282,7 @@ Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1141	1236	14.0	2e-04	
 # Mean Bit Score: 51.8
 Locus_9_Transcript_2/3_Confidence_0.333_Length_2216	73.2	97	1162	1257	4.3	7e-04	51.8
 Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1162	1257	14.0	2e-04	51.8
-#
+ 
 # gi|1762324|gb|U56907.1|IPU56907_Infectious_pancreatic_necrosis_virus_structural_polyprotein_gene,_c
 # Suject Length: 2962
 # Total Subject Coverage: 96
@@ -1291,7 +1291,7 @@ Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1162	1257	14.0	2e-04	
 # Mean Bit Score: 51.8
 Locus_9_Transcript_2/3_Confidence_0.333_Length_2216	73.2	97	1066	1161	4.3	7e-04	51.8
 Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1066	1161	14.0	2e-04	51.8
-#
+ 
 # gi|34559194|gb|AY379740.1|_Infectious_pancreatic_necrosis_virus_isolate_NVI-015_segment_A_12.1_kDa_
 # Suject Length: 3097
 # Total Subject Coverage: 96
@@ -1300,7 +1300,7 @@ Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1066	1161	14.0	2e-04	
 # Mean Bit Score: 51.8
 Locus_9_Transcript_2/3_Confidence_0.333_Length_2216	73.2	97	1162	1257	4.3	7e-04	51.8
 Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1162	1257	14.0	2e-04	51.8
-#
+ 
 # gi|100913603|gb|DQ536090.1|_Infectious_pancreatic_necrosis_virus_isolate_S-IPNV/FS12-01_segment_A,_
 # Suject Length: 3048
 # Total Subject Coverage: 96
@@ -1309,7 +1309,7 @@ Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1162	1257	14.0	2e-04	
 # Mean Bit Score: 51.8
 Locus_9_Transcript_2/3_Confidence_0.333_Length_2216	73.2	97	1139	1234	4.3	7e-04	51.8
 Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1139	1234	14.0	2e-04	51.8
-#
+ 
 # gi|38049628|gb|AY354521.1|_Infectious_pancreatic_necrosis_virus_isolate_Sp122_12-kDa_nonstructural_
 # Suject Length: 3097
 # Total Subject Coverage: 96
@@ -1318,7 +1318,7 @@ Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1139	1234	14.0	2e-04	
 # Mean Bit Score: 51.8
 Locus_9_Transcript_2/3_Confidence_0.333_Length_2216	73.2	97	1162	1257	4.3	7e-04	51.8
 Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1162	1257	14.0	2e-04	51.8
-#
+ 
 # gi|100913606|gb|DQ536091.1|_Infectious_pancreatic_necrosis_virus_isolate_S-IPNV/SH96_segment_A,_com
 # Suject Length: 3050
 # Total Subject Coverage: 96
@@ -1327,7 +1327,7 @@ Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1162	1257	14.0	2e-04	
 # Mean Bit Score: 51.8
 Locus_9_Transcript_2/3_Confidence_0.333_Length_2216	73.2	97	1141	1236	4.3	7e-04	51.8
 Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1141	1236	14.0	2e-04	51.8
-#
+ 
 # gi|34559199|gb|AY379742.1|_Infectious_pancreatic_necrosis_virus_isolate_NVI-016_segment_A_15.4_kDa_
 # Suject Length: 3097
 # Total Subject Coverage: 96
@@ -1336,7 +1336,7 @@ Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1141	1236	14.0	2e-04	
 # Mean Bit Score: 51.8
 Locus_9_Transcript_2/3_Confidence_0.333_Length_2216	73.2	97	1162	1257	4.3	7e-04	51.8
 Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1162	1257	14.0	2e-04	51.8
-#
+ 
 # gi|17066747|gb|AF443294.1|_Infectious_bursal_disease_virus_polyprotein_gene,_complete_cds
 # Suject Length: 3054
 # Total Subject Coverage: 79
@@ -1344,7 +1344,7 @@ Locus_9_Transcript_1/3_Confidence_0.667_Length_681	73.2	97	1162	1257	14.0	2e-04	
 # Best Bit Score: 51.8
 # Mean Bit Score: 51.8
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	74.39	82	420	342	49.4	5e-05	51.8
-#
+ 
 # gi|395863912|gb|JN982266.1|_Infectious_bursal_disease_virus_isolate_SP30_VP2_protein_gene,_complete
 # Suject Length: 1356
 # Total Subject Coverage: 82
@@ -1352,7 +1352,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	74.39	82	420	342	49.4	5e-05	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	50.0
-#
+ 
 # gi|158426953|gb|EU184685.1|_Infectious_bursal_disease_virus_strain_Cro-Ig/02_VP5_and_structural_pol
 # Suject Length: 3145
 # Total Subject Coverage: 82
@@ -1360,7 +1360,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	512	431	49.4	2e-04	50.0
-#
+ 
 # gi|227438895|gb|FJ842492.1|_Infectious_bursal_disease_virus_strain_BDG23_polyprotein_gene,_complete
 # Suject Length: 3039
 # Total Subject Coverage: 82
@@ -1368,7 +1368,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	512	431	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	50.0
-#
+ 
 # gi|395863888|gb|JN982254.1|_Infectious_bursal_disease_virus_isolate_SC9_VP2_protein_gene,_complete_
 # Suject Length: 1356
 # Total Subject Coverage: 82
@@ -1376,7 +1376,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	50.0
-#
+ 
 # gi|62860669|gb|AY918948.1|_Infectious_bursal_disease_virus_isolate_Lukert_VP5_and_polyprotein_genes
 # Suject Length: 3260
 # Total Subject Coverage: 87
@@ -1384,7 +1384,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	72.41	87	543	457	52.4	2e-04	50.0
-#
+ 
 # gi|395863902|gb|JN982261.1|_Infectious_bursal_disease_virus_isolate_SP28_VP2_protein_gene,_complete
 # Suject Length: 1356
 # Total Subject Coverage: 82
@@ -1392,7 +1392,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	72.41	87	543	457	52.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	50.0
-#
+ 
 # gi|51242682|gb|AY598356.1|_Infectious_bursal_disease_virus_segment_A,_complete_sequence
 # Suject Length: 3260
 # Total Subject Coverage: 82
@@ -1400,7 +1400,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	538	457	49.4	2e-04	50.0
-#
+ 
 # gi|22855166|ref|NC_004178.1|_Infectious_bursal_disease_virus_segment_A,_complete_sequence
 # Suject Length: 3183
 # Total Subject Coverage: 82
@@ -1408,7 +1408,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	538	457	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	537	456	49.4	2e-04	50.0
-#
+ 
 # gi|395863914|gb|JN982267.1|_Infectious_bursal_disease_virus_isolate_SC8_VP2_protein_gene,_complete_
 # Suject Length: 1356
 # Total Subject Coverage: 82
@@ -1416,7 +1416,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	537	456	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	50.0
-#
+ 
 # gi|4566479|gb|AF092943.1|_Infectious_bursal_disease_virus_VP5_(VP5)_and_structural_polyprotein_(VP2
 # Suject Length: 3269
 # Total Subject Coverage: 82
@@ -1424,7 +1424,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	539	458	49.4	2e-04	50.0
-#
+ 
 # gi|395863926|gb|JN982273.1|_Infectious_bursal_disease_virus_isolate_SC5_VP2_protein_gene,_complete_
 # Suject Length: 1356
 # Total Subject Coverage: 82
@@ -1432,7 +1432,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	539	458	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	50.0
-#
+ 
 # gi|350543517|gb|JF907702.1|_Infectious_bursal_disease_virus_isolate_CAHFS-785-SESW_polyprotein_gene
 # Suject Length: 3186
 # Total Subject Coverage: 82
@@ -1440,7 +1440,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	546	465	49.4	2e-04	50.0
-#
+ 
 # gi|630375504|gb|KJ547674.1|_Infectious_bursal_disease_virus_isolate_VRDC-IBDV-NZ_polyprotein_mRNA,_
 # Suject Length: 3164
 # Total Subject Coverage: 82
@@ -1448,7 +1448,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	546	465	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	417	336	49.4	2e-04	50.0
-#
+ 
 # gi|630375498|gb|KJ547671.1|_Infectious_bursal_disease_virus_isolate_VRDC-IBDV-SZ_polyprotein_mRNA,_
 # Suject Length: 3040
 # Total Subject Coverage: 82
@@ -1456,7 +1456,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	417	336	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	409	328	49.4	2e-04	50.0
-#
+ 
 # gi|544586540|gb|KF241548.1|_Infectious_bursal_disease_virus_isolate_SA-KZN95_polyprotein_gene,_comp
 # Suject Length: 3039
 # Total Subject Coverage: 82
@@ -1464,7 +1464,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	409	328	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	50.0
-#
+ 
 # gi|117582107|gb|DQ927042.1|_Infectious_bursal_disease_virus_strain_ks_segment_A_polyprotein_mRNA,_c
 # Suject Length: 3163
 # Total Subject Coverage: 82
@@ -1472,7 +1472,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	477	396	49.4	2e-04	50.0
-#
+ 
 # gi|395863898|gb|JN982259.1|_Infectious_bursal_disease_virus_isolate_SP25_VP2_protein_gene,_complete
 # Suject Length: 1356
 # Total Subject Coverage: 82
@@ -1480,7 +1480,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	477	396	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	50.0
-#
+ 
 # gi|385139617|gb|JQ403646.1|_Infectious_bursal_disease_virus_isolate_7741-SEGA-SESW_polyprotein_gene
 # Suject Length: 3184
 # Total Subject Coverage: 82
@@ -1488,7 +1488,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	532	451	49.4	2e-04	50.0
-#
+ 
 # gi|114153396|gb|DQ927040.1|_Infectious_bursal_disease_virus_strain_mb_segment_A_polyprotein_mRNA,_c
 # Suject Length: 3163
 # Total Subject Coverage: 82
@@ -1496,7 +1496,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	532	451	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	477	396	49.4	2e-04	50.0
-#
+ 
 # gi|395863900|gb|JN982260.1|_Infectious_bursal_disease_virus_isolate_SP26_VP2_protein_gene,_complete
 # Suject Length: 1356
 # Total Subject Coverage: 82
@@ -1504,7 +1504,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	477	396	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	50.0
-#
+ 
 # gi|395863916|gb|JN982268.1|_Infectious_bursal_disease_virus_isolate_SC10_VP2_protein_gene,_complete
 # Suject Length: 1356
 # Total Subject Coverage: 82
@@ -1512,7 +1512,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	50.0
-#
+ 
 # gi|395863890|gb|JN982255.1|_Infectious_bursal_disease_virus_isolate_SP22_VP2_protein_gene,_complete
 # Suject Length: 1356
 # Total Subject Coverage: 82
@@ -1520,7 +1520,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	50.0
-#
+ 
 # gi|145693790|gb|EF493156.1|_Infectious_pancreatic_necrosis_virus_from_Spain_segment_A_polyprotein_g
 # Suject Length: 3056
 # Total Subject Coverage: 47
@@ -1528,7 +1528,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_9_Transcript_1/3_Confidence_0.667_Length_681	82.98	47	1188	1234	6.8	8e-04	50.0
-#
+ 
 # gi|395863908|gb|JN982264.1|_Infectious_bursal_disease_virus_isolate_SP20_VP2_protein_gene,_complete
 # Suject Length: 1356
 # Total Subject Coverage: 82
@@ -1536,7 +1536,7 @@ Locus_9_Transcript_1/3_Confidence_0.667_Length_681	82.98	47	1188	1234	6.8	8e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	50.0
-#
+ 
 # gi|56117954|gb|AY665672.1|_Infectious_bursal_disease_virus_isolate_PO7_polyprotein_gene,_complete_c
 # Suject Length: 3131
 # Total Subject Coverage: 82
@@ -1544,7 +1544,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	50.0
-#
+ 
 # gi|395863894|gb|JN982257.1|_Infectious_bursal_disease_virus_isolate_SP5_VP2_protein_gene,_complete_
 # Suject Length: 1356
 # Total Subject Coverage: 82
@@ -1552,7 +1552,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	50.0
-#
+ 
 # gi|32492037|gb|AY323952.1|_Infectious_bursal_disease_virus_segment_A_structural_protein_VP5_(VP5)_a
 # Suject Length: 3179
 # Total Subject Coverage: 82
@@ -1560,7 +1560,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	469	388	49.4	2e-04	50.0
-#
+ 
 # gi|171906495|gb|EU595670.1|_Infectious_bursal_disease_virus_segment_A_VP5_and_polyprotein_genes,_co
 # Suject Length: 3259
 # Total Subject Coverage: 82
@@ -1568,7 +1568,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	469	388	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	538	457	49.4	2e-04	50.0
-#
+ 
 # gi|171906489|gb|EU595668.1|_Infectious_bursal_disease_virus_VP5_and_polyprotein_genes,_complete_cds
 # Suject Length: 3260
 # Total Subject Coverage: 82
@@ -1576,7 +1576,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	538	457	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	538	457	49.4	2e-04	50.0
-#
+ 
 # gi|395863904|gb|JN982262.1|_Infectious_bursal_disease_virus_isolate_SP11_VP2_protein_gene,_complete
 # Suject Length: 1356
 # Total Subject Coverage: 82
@@ -1584,7 +1584,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	538	457	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	50.0
-#
+ 
 # gi|417346921|gb|JX682711.1|_Infectious_bursal_disease_virus_isolate_ZZ-11_segment_A,_complete_seque
 # Suject Length: 3260
 # Total Subject Coverage: 82
@@ -1592,7 +1592,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	538	457	49.4	2e-04	50.0
-#
+ 
 # gi|20805928|gb|AF508177.1|_Infectious_bursal_disease_virus_VP2_gene,_complete_cds
 # Suject Length: 1356
 # Total Subject Coverage: 82
@@ -1600,7 +1600,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	538	457	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	50.0
-#
+ 
 # gi|803378129|emb|HG974563.1|_Infectious_bursal_disease_virus_segment_A,_complete_genome,_strain_891
 # Suject Length: 3198
 # Total Subject Coverage: 82
@@ -1608,7 +1608,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	507	426	49.4	2e-04	50.0
-#
+ 
 # gi|227438897|gb|FJ842491.1|_Infectious_bursal_disease_virus_strain_G202_polyprotein_gene,_complete_
 # Suject Length: 3039
 # Total Subject Coverage: 82
@@ -1616,7 +1616,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	507	426	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	50.0
-#
+ 
 # gi|395863886|gb|JN982253.1|_Infectious_bursal_disease_virus_isolate_SP9_VP2_protein_gene,_complete_
 # Suject Length: 1356
 # Total Subject Coverage: 82
@@ -1624,7 +1624,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	50.0
-#
+ 
 # gi|14582985|gb|AF362776.1|_Infectious_bursal_disease_virus_strain_BD_3/99_segment_A_structural_poly
 # Suject Length: 3201
 # Total Subject Coverage: 82
@@ -1632,7 +1632,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	508	427	49.4	2e-04	50.0
-#
+ 
 # gi|20805925|gb|AF508176.1|_Infectious_bursal_disease_virus_segment_A,_complete_sequence
 # Suject Length: 3269
 # Total Subject Coverage: 82
@@ -1640,7 +1640,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	508	427	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	539	458	49.4	2e-04	50.0
-#
+ 
 # gi|9230678|gb|AF240686.1|_Infectious_bursal_disease_virus_segment_A_viral_protein_5_and_polyprotein
 # Suject Length: 3260
 # Total Subject Coverage: 82
@@ -1648,7 +1648,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	539	458	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	538	457	49.4	2e-04	50.0
-#
+ 
 # gi|28629198|gb|AF533670.1|_Infectious_bursal_disease_virus_strain_SH/92_polyprotein_mRNA,_complete_
 # Suject Length: 3039
 # Total Subject Coverage: 82
@@ -1656,7 +1656,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	538	457	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	50.0
-#
+ 
 # gi|145864612|gb|EF517528.1|_Infectious_bursal_disease_virus_isolate_Harbin-1_segment_A,_complete_se
 # Suject Length: 3261
 # Total Subject Coverage: 82
@@ -1664,7 +1664,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	538	457	49.4	2e-04	50.0
-#
+ 
 # gi|667756313|gb|KF569803.1|_Infectious_bursal_disease_virus_isolate_SD10LY01_segment_A,_complete_se
 # Suject Length: 3260
 # Total Subject Coverage: 82
@@ -1672,7 +1672,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	538	457	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	538	457	49.4	2e-04	50.0
-#
+ 
 # gi|428227288|gb|JQ686833.1|_Ngewotan_virus,_complete_genome
 # Suject Length: 9226
 # Total Subject Coverage: 80
@@ -1680,7 +1680,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	538	457	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_36_Transcript_1/1_Confidence_0.000_Length_445	73.75	80	4879	4800	17.8	5e-04	50.0
-#
+ 
 # gi|431823432|gb|JX948746.1|_Infectious_bursal_disease_virus_isolate_DG12_polyprotein_gene,_complete
 # Suject Length: 3039
 # Total Subject Coverage: 82
@@ -1688,7 +1688,7 @@ Locus_36_Transcript_1/1_Confidence_0.000_Length_445	73.75	80	4879	4800	17.8	5e-0
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	50.0
-#
+ 
 # gi|171906486|gb|EU595667.1|_Infectious_bursal_disease_virus_segment_A_VP5_and_polyprotein_genes,_co
 # Suject Length: 3260
 # Total Subject Coverage: 82
@@ -1696,7 +1696,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	538	457	49.4	2e-04	50.0
-#
+ 
 # gi|22654953|gb|AY134874.1|_Infectious_bursal_disease_virus_strain_SH95_polyprotein_gene,_complete_c
 # Suject Length: 3040
 # Total Subject Coverage: 82
@@ -1704,7 +1704,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	538	457	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	409	328	49.4	2e-04	50.0
-#
+ 
 # gi|350543519|gb|JF907703.1|_Infectious_bursal_disease_virus_isolate_2009CAH495-SESW_polyprotein_gen
 # Suject Length: 3193
 # Total Subject Coverage: 82
@@ -1712,7 +1712,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	409	328	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	539	458	49.4	2e-04	50.0
-#
+ 
 # gi|157886466|emb|AM111353.1|_Infectious_bursal_disease_virus_segment_A,_complete_sequence,_genomic_
 # Suject Length: 3262
 # Total Subject Coverage: 82
@@ -1720,7 +1720,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	539	458	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	538	457	49.4	2e-04	50.0
-#
+ 
 # gi|667756318|gb|KF569805.1|_Infectious_bursal_disease_virus_isolate_HuB-1_segment_A,_complete_seque
 # Suject Length: 3260
 # Total Subject Coverage: 82
@@ -1728,7 +1728,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	538	457	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	538	457	49.4	2e-04	50.0
-#
+ 
 # gi|89112096|gb|AY444873.3|_Infectious_bursal_disease_virus_VP5_protein_and_structural_polyprotein_g
 # Suject Length: 3260
 # Total Subject Coverage: 82
@@ -1736,7 +1736,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	538	457	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	538	457	49.4	2e-04	50.0
-#
+ 
 # gi|395863892|gb|JN982256.1|_Infectious_bursal_disease_virus_isolate_SP33_VP2_protein_gene,_complete
 # Suject Length: 1356
 # Total Subject Coverage: 82
@@ -1744,7 +1744,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	538	457	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	50.0
-#
+ 
 # gi|630375502|gb|KJ547673.1|_Infectious_bursal_disease_virus_isolate_VRDC-IBDV-WZ_polyprotein_mRNA,_
 # Suject Length: 3084
 # Total Subject Coverage: 82
@@ -1752,7 +1752,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	446	365	49.4	2e-04	50.0
-#
+ 
 # gi|452029935|gb|KC189836.1|_Infectious_bursal_disease_virus_strain_3529/92_polyprotein_mRNA,_comple
 # Suject Length: 3039
 # Total Subject Coverage: 82
@@ -1760,7 +1760,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	446	365	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	50.0
-#
+ 
 # gi|630375496|gb|KJ547670.1|_Infectious_bursal_disease_virus_isolate_Ventri-IBDV-Plus_polyprotein_mR
 # Suject Length: 3040
 # Total Subject Coverage: 82
@@ -1768,7 +1768,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	409	328	49.4	2e-04	50.0
-#
+ 
 # gi|395863906|gb|JN982263.1|_Infectious_bursal_disease_virus_isolate_SC6_VP2_protein_gene,_complete_
 # Suject Length: 1356
 # Total Subject Coverage: 82
@@ -1776,7 +1776,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	409	328	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	50.0
-#
+ 
 # gi|395863910|gb|JN982265.1|_Infectious_bursal_disease_virus_isolate_SP21_VP2_protein_gene,_complete
 # Suject Length: 1356
 # Total Subject Coverage: 82
@@ -1784,7 +1784,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	50.0
-#
+ 
 # gi|367057603|gb|JN585293.1|_Infectious_bursal_disease_virus_isolate_CAHFS_K669_segment_A,_complete_
 # Suject Length: 3184
 # Total Subject Coverage: 82
@@ -1792,7 +1792,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	532	451	49.4	2e-04	50.0
-#
+ 
 # gi|395863918|gb|JN982269.1|_Infectious_bursal_disease_virus_isolate_SC12_VP2_protein_gene,_complete
 # Suject Length: 1356
 # Total Subject Coverage: 82
@@ -1800,7 +1800,7 @@ Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	532	451	49.4	2e-04	
 # Best Bit Score: 50.0
 # Mean Bit Score: 50.0
 Locus_69_Transcript_1/1_Confidence_0.000_Length_164	73.17	82	408	327	49.4	2e-04	50.0
-#
+ 
 # gi|24306007|gb|AF322444.1|_Infectious_bursal_disease_virus_segment_A_VP5_protein_and_polyprotein_ge
 # Suject Length: 3085
 # Total Subject Coverage: 82
