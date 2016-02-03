@@ -89,11 +89,11 @@ def handle_start_stop_coordinates(plottable, readDict):
   gene, coordinate, count, orientation = listify_plottable_item(first_line)
   if not coordinate == "0":
     new_line = "\t".join([gene, "0", "0", "F"])
-    plottable = new_line + plottable
+    plottable = [new_line] + plottable
   gene_length = str(lookup_gene_length(gene, readDict))
   if not coordinate == gene_length:
     last_line = "\t".join([gene, gene_length, "0", "F"])
-    plottable = plottable + last_line
+    plottable = plottable + [last_line]
 
 def write_readplot_dataframe(readDict, readmap_file):
   listoflines = []
