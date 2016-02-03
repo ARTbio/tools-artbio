@@ -77,7 +77,7 @@ def listify_plottable_item(item):
   return gene, coordinate, count, orientation
 
 def lookup_gene_length(gene, readDict):
-  return readDict[readDict.keys()[0]].instanceDict["size"]
+  return readDict[readDict.keys()[0]].instanceDict.values()[0].size
 
 def handle_start_stop_coordinates(plottable, readDict):
   """
@@ -91,9 +91,11 @@ def handle_start_stop_coordinates(plottable, readDict):
     new_line = "\t".join([gene, "0", "0", "F"])
     plottable = [new_line] + plottable
   gene_length = str(lookup_gene_length(gene, readDict))
+  gene, coordinate, count, orientation = listify_plottable_item(last_line)
   if not coordinate == gene_length:
     last_line = "\t".join([gene, gene_length, "0", "F"])
     plottable = plottable + [last_line]
+  return plottable
 
 def write_readplot_dataframe(readDict, readmap_file):
   listoflines = []
@@ -106,7 +108,7 @@ def write_readplot_dataframe(readDict, readmap_file):
         dict=readDict[sample].instanceDict
       for gene in dict.keys():
         plottable = dict[gene].readplot()
-        handle_start_stop_coordinates(plottable, readDict)
+        plottable = handle_start_stop_coordinates(plottable, readDict)
         for line in plottable:
           #print >>readmap, "%s\t%s" % (line, sample)
           listoflines.append ("%s\t%s" % (line, sample))
