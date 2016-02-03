@@ -1,0 +1,14 @@
+# .shed.yml supporting automatic pushes.
+owner: mvdbeek
+name: add_input_name_as_column
+description: Add input name as column on an existing tabular file
+long_description: |
+  Retrieves the history name of the input dataset and adds it as the last column. Very useful when working with dataset collections.
+categories:
+  - RNA
+  - Fastq Manipulation
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/add_input_name_as_column
+toolshed:
+  - https://testtoolshed.g2.bx.psu.edu/
+  - https://toolshed.g2.bx.psu.edu/
