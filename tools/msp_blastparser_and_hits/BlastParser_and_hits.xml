@@ -19,7 +19,7 @@ BlastParser_and_hits.py
     #end if
     --al_sequences $al_sequences
     --un_sequences $un_sequences
-    --dataset_name $blast.name
+    --dataset_name "$blast.name"
 
 </command>
 <inputs>
