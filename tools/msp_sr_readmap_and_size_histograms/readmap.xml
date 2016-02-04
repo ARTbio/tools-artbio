@@ -1,4 +1,4 @@
-<tool id="Readmap" name="Generate readmap and histograms from alignment files" version="1.1.1">
+<tool id="Readmap" name="Generate readmap and histograms from alignment files" version="1.1.5">
   <description>from sRbowtie aligment</description>
   <requirements>
         <requirement type="package" version="0.12.7">bowtie</requirement>
@@ -158,7 +158,7 @@
       ## GRAPHS
 
       if (n_genes > 7) {page_height_simple = 11.69; page_height_combi=11.69; rows_per_page=${rows_per_page}; extrarow=0 } else {
-                         rows_per_page= 8; page_height_simple = 11.69; page_height_combi=11.69; extrarow=0 }
+                         rows_per_page= n_genes; page_height_simple = 2.5*n_genes; page_height_combi=page_height_simple*2; extrarow=0 }
                          ## rows_per_page= 8; page_height_simple = 11.69/7*n_genes; page_height_combi=11.69/9*(n_genes*2); extrarow=0 }
                          ## rows_per_page= n_genes; page_height_simple = 11.69/n_genes/4; page_height_combi=11.69/(n_genes*2); extrarow=1 }
      if (n_samples > 4) {page_width = 8.2677*n_samples/4} else {page_width = 8.2677*n_samples/3} # to test
@@ -198,6 +198,7 @@
       devname=dev.off()
 
       pdf(file="${combi_PDF}", paper="special", height=page_height_combi, width=page_width)
+      if (rows_per_page %% 2 != 0) { rows_per_page = rows_per_page + 1}
       for (i in seq(1,n_genes,rows_per_page/2)) {
         start=i
         end=i+rows_per_page/2-1

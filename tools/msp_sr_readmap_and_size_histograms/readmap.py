@@ -66,6 +66,37 @@ def dataframe_sanityzer (listofdatalines):
       filtered_list.append(line) 
   return filtered_list
 
+
+def listify_plottable_item(item):
+  """
+  plottable is a list of strings:
+  'FBti0020401\t78\t-1.0\tR'
+  split on tab and return gene, coordinate, count and orientation
+  """
+  gene, coordinate, count, orientation = item.split("\t")
+  return gene, coordinate, count, orientation
+
+def lookup_gene_length(gene, readDict):
+  return readDict[readDict.keys()[0]].instanceDict[gene].size
+
+def handle_start_stop_coordinates(plottable, readDict):
+  """
+  To ensure that the plot area always includes the correct start and end coordinates,
+  we add an entry at start [coordinate 0] and end [last coordinate] of count 0, if these do not exist.
+  """
+  first_line = plottable[0]
+  last_line = plottable[-1]
+  gene, coordinate, count, orientation = listify_plottable_item(first_line)
+  if not coordinate == "0":
+    new_line = "\t".join([gene, "0", "0", "F"])
+    plottable = [new_line] + plottable
+  gene_length = str(lookup_gene_length(gene, readDict))
+  gene, coordinate, count, orientation = listify_plottable_item(last_line)
+  if not coordinate == gene_length:
+    last_line = "\t".join([gene, gene_length, "0", "F"])
+    plottable = plottable + [last_line]
+  return plottable
+
 def write_readplot_dataframe(readDict, readmap_file):
   listoflines = []
   with open(readmap_file, 'w') as readmap:
@@ -77,6 +108,7 @@ def write_readplot_dataframe(readDict, readmap_file):
         dict=readDict[sample].instanceDict
       for gene in dict.keys():
         plottable = dict[gene].readplot()
+        plottable = handle_start_stop_coordinates(plottable, readDict)
         for line in plottable:
           #print >>readmap, "%s\t%s" % (line, sample)
           listoflines.append ("%s\t%s" % (line, sample))
