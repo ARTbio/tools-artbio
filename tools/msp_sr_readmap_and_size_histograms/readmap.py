@@ -77,7 +77,7 @@ def listify_plottable_item(item):
   return gene, coordinate, count, orientation
 
 def lookup_gene_length(gene, readDict):
-  return readDict[readDict.keys()[0]].instanceDict.values()[0].size
+  return readDict[readDict.keys()[0]].instanceDict[gene].size
 
 def handle_start_stop_coordinates(plottable, readDict):
   """
