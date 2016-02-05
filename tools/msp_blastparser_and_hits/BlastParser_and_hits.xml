@@ -1,25 +1,25 @@
-<tool id="BlastParser_and_hits" name="Parse blast output and compile hits" version="2.4.0">
+<tool id="BlastParser_and_hits" name="Parse blast output and compile hits" version="2.4.2">
 <description>for virus discovery</description>
 <requirements></requirements>
 <command interpreter="python">
 BlastParser_and_hits.py
-	--sequences $sequences
-	--blast $blast
-	--tabularOutput $tabularOutput
-	--fastaOutput $fastaOutput
-	--flanking $flanking
-	--mode $mode
+	--sequences "$sequences"
+	--blast "$blast"
+	--tabularOutput "$tabularOutput"
+	--fastaOutput "$fastaOutput"
+	--flanking "$flanking"
+	--mode "$mode"
 	## Additional parameters.
     #if $additional_filters.use_filters == "yes":
-        --filter_relativeCov $additional_filters.filter_relativeCov
-        --filter_maxScore $additional_filters.filter_maxScore
-        --filter_meanScore $additional_filters.filter_meanScore
+        --filter_relativeCov "$additional_filters.filter_relativeCov"
+        --filter_maxScore "$additional_filters.filter_maxScore"
+        --filter_meanScore "$additional_filters.filter_meanScore"
         --filter_term_in "$additional_filters.filter_term_in"
         --filter_term_out "$additional_filters.filter_term_out"
     #end if
-    --al_sequences $al_sequences
-    --un_sequences $un_sequences
-    --dataset_name $blast.name
+    --al_sequences "$al_sequences"
+    --un_sequences "$un_sequences"
+    --dataset_name "$blast.element_identifier"
 
 </command>
 <inputs>
