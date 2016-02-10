@@ -1,4 +1,4 @@
-<tool id="BlastParser_and_hits" name="Parse blast output and compile hits" version="2.4.0">
+<tool id="BlastParser_and_hits" name="Parse blast output and compile hits" version="2.4.3">
 <description>for virus discovery</description>
 <requirements></requirements>
 <command interpreter="python">
@@ -19,7 +19,7 @@ BlastParser_and_hits.py
     #end if
     --al_sequences $al_sequences
     --un_sequences $un_sequences
-    --dataset_name $blast.name
+    --dataset_name "$blast.element_identifier"
 
 </command>
 <inputs>

@@ -7,7 +7,7 @@
     <repository changeset_revision="befdb392fece" name="fetch_fasta_from_ncbi" owner="drosofff" />
     <repository changeset_revision="ddb463fdf57e" name="msp_cap3" owner="drosofff" />
     <repository changeset_revision="c7a0ec8263b4" name="cherry_pick_fasta" owner="drosofff" />
-    <repository changeset_revision="78c34df2dd8d" name="msp_blastparser_and_hits" owner="drosofff" />
+    <repository changeset_revision="77346ecf5a28" name="msp_blastparser_and_hits" owner="drosofff" />
     <repository changeset_revision="09a8be9247ca" name="get_orfs_or_cdss" owner="peterjc" />
     <repository changeset_revision="f08d9c814ffb" name="msp_oases" owner="drosofff" />
     <repository changeset_revision="35e2e6452cf7" name="blast_to_scaffold" owner="drosofff" />
