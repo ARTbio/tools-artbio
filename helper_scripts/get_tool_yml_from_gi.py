@@ -26,8 +26,11 @@ class GiToToolYaml:
         self.get_latest_installed = get_latest_installed
         self.skip_tool_panel_section_id = skip_tool_panel_section_id
         self.skip_tool_panel_section_name = skip_tool_panel_section_name
-
         self.gi = self.get_instance()
+        self.galaxy_client = bioblend.galaxy.config.ConfigClient( self.gi )
+        self.galaxy_config = self.galaxy_client.get_config()
+        if not self.galaxy_config[u'is_admin_user']:
+            raise ValueError("Current API key is not an admin api-key.")
         self.repository_list = self.get_tools_from_gi()
         self.filtered_repository_list = self.filter_tools()
         self.revisions_to_list()
@@ -51,29 +54,41 @@ class GiToToolYaml:
     def get_tool_panel_list_from_gi(self):
         return self.gi.tools.get_tool_panel()
 
+    def parse_panel_section(self, tool, tool_panel_list_filtered):
+        if tool[u'model_class'] == u'Tool':
+            try:
+                tool_panel_section_id = tool["panel_section_id"]
+                tool_panel_section_label = tool["panel_section_name"]
+                split_repo_url = tool["id"].split("/repos/")
+                sub_dir = split_repo_url[1].split("/")
+                tool_shed = "https://" + split_repo_url[0] + "/"
+                owner = sub_dir[0]
+                name = sub_dir[1]
+                tool_panel_list_filtered.append(
+                    {"tool_panel_section_id": tool_panel_section_id,
+                    "tool_panel_section_label": tool_panel_section_label,
+                    "tool_shed": tool_shed,
+                    "owner": owner,
+                    "name": name}
+                )
+            except IndexError:  # when tools are not coming from the toolshed
+                pass
+
     def filter_tool_panel_list(self):
         tool_panel_list = self.tool_panel_list
         tool_panel_list_filtered = []
         for section in tool_panel_list:
-            for tool in section["elems"]:
-                if tool[u'model_class'] == u'Tool':
-                    try:
-                        tool_panel_section_id = tool["panel_section_id"]
-                        tool_panel_section_label = tool["panel_section_name"]
-                        split_repo_url = tool["id"].split("/repos/")
-                        sub_dir = split_repo_url[1].split("/")
-                        tool_shed = "https://" + split_repo_url[0] + "/"
-                        owner = sub_dir[0]
-                        name = sub_dir[1]
-                        tool_panel_list_filtered.append(
-                            {"tool_panel_section_id": tool_panel_section_id,
-                             "tool_panel_section_label": tool_panel_section_label,
-                             "tool_shed": tool_shed,
-                             "owner": owner,
-                             "name": name}
-                        )
-                    except IndexError:  # when tools are not coming from the toolshed
-                        continue
+            elems = section.get("elems", None)
+            if elems:
+                for tool in elems:
+                    self.parse_panel_section(tool, tool_panel_list_filtered)
+            else:
+                try:
+                    self.parse_panel_section(section, tool_panel_list_filtered)
+                except Exception:
+                    print "could not parse section, continuing anyway"
+                    continue
+
         return tool_panel_list_filtered
 
     def get_tool_panel_section_id(self, required_values):
