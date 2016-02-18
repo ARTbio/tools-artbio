@@ -54,6 +54,26 @@ class GiToToolYaml:
     def get_tool_panel_list_from_gi(self):
         return self.gi.tools.get_tool_panel()
 
+    def parse_panel_section(self, tool, tool_panel_list_filtered):
+        if tool[u'model_class'] == u'Tool':
+            try:
+                tool_panel_section_id = tool["panel_section_id"]
+                tool_panel_section_label = tool["panel_section_name"]
+                split_repo_url = tool["id"].split("/repos/")
+                sub_dir = split_repo_url[1].split("/")
+                tool_shed = "https://" + split_repo_url[0] + "/"
+                owner = sub_dir[0]
+                name = sub_dir[1]
+                tool_panel_list_filtered.append(
+                    {"tool_panel_section_id": tool_panel_section_id,
+                    "tool_panel_section_label": tool_panel_section_label,
+                    "tool_shed": tool_shed,
+                    "owner": owner,
+                    "name": name}
+                )
+            except IndexError:  # when tools are not coming from the toolshed
+                pass
+
     def filter_tool_panel_list(self):
         tool_panel_list = self.tool_panel_list
         tool_panel_list_filtered = []
@@ -61,26 +81,14 @@ class GiToToolYaml:
             elems = section.get("elems", None)
             if elems:
                 for tool in elems:
-                    if tool[u'model_class'] == u'Tool':
-                        try:
-                            tool_panel_section_id = tool["panel_section_id"]
-                            tool_panel_section_label = tool["panel_section_name"]
-                            split_repo_url = tool["id"].split("/repos/")
-                            sub_dir = split_repo_url[1].split("/")
-                            tool_shed = "https://" + split_repo_url[0] + "/"
-                            owner = sub_dir[0]
-                            name = sub_dir[1]
-                            tool_panel_list_filtered.append(
-                                {"tool_panel_section_id": tool_panel_section_id,
-                                "tool_panel_section_label": tool_panel_section_label,
-                                "tool_shed": tool_shed,
-                                "owner": owner,
-                                "name": name}
-                            )
-                        except IndexError:  # when tools are not coming from the toolshed
-                            continue
+                    self.parse_panel_section(tool, tool_panel_list_filtered)
             else:
-                print("This section had no \"elems\" key:\n%s".format( section ))
+                try:
+                    self.parse_panel_section(section, tool_panel_list_filtered)
+                except Exception:
+                    print "could not parse section, continuing anyway"
+                    continue
+
         return tool_panel_list_filtered
 
     def get_tool_panel_section_id(self, required_values):
