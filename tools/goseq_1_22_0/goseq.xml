@@ -1,0 +1,62 @@
+<tool id="goseq" name="goseq gene ontology analyser" version="0.1.0">
+    <description />
+    <requirements>
+        <requirement type="package" version="3.2.1">R</requirement>
+        <requirement type="package" version="1.22.0">goseq</requirement>
+    </requirements>
+    <command interpreter="Rscript">
+        goseq.r --dge_file "$dge_file"
+        --p_adj_column "$p_adj_column"
+        --p_adj_cutoff "$p_adj_cutoff"
+        --genome "$genome"
+        --gene_id "$gene_id"
+        --wallenius_tab "$wallenius_tab"
+        --sampling_tab "$sampling_tab"
+        --nobias_tab "$nobias_tab"
+        --length_bias_plot "$length_bias_plot"
+        --sample_vs_wallenius_plot "$sample_vs_wallenius_plot"
+        --repcnt "$repcnt"
+    </command>
+    <inputs>
+        <param help="deseq2/edger/limma differential gene expression list" label="DGE list" name="dge_file" type="data" format="tabular" />
+        <param help="Select the column that contains the multiple-testing corrected p-value" label="p adjust column" name="p_adj_column" type="data_column" data_ref="dge_file" numerical="true"/>
+        <param help="Typically 0.05 after multiple testing correction" max="1" label="Minimum p adjust value to consider gene" name="p_adj_cutoff" type="float" value="0.05" />
+        <param help="Select the genome source" label="Max size of target small RNAs" name="genome" size="3" type="select">
+            <options from_file="genomes.loc">
+                    <column name="name" index="3"/>
+                    <column name="value" index="0"/>
+            </options>
+        </param>
+        <param help="Select gene identifier" label="Minimal relative overlap analyzed" name="gene_id" size="3" type="select">
+            <options from_file="gene_ids.loc">
+                    <column name="name" index="0"/>
+                    <column name="value" index="0"/>
+            </options>
+        </param>
+        <param help="Do this many random samplings. Larger values take a long time" label="Number of random sampling" name="repcnt" size="3" type="integer" min="100" max="10000" value="1000" />
+    </inputs>
+    <outputs>
+        <data format="tabular" label="Ranked category list - wallenius" name="wallenius_tab" />
+        <data format="tabular" label="Ranked category list - sampling" name="sampling_tab" />
+        <data format="tabular" label="Ranked category list - no length bias correction" name="nobias_tab" />
+        <data format="pdf" label="length bias plot" name="length_bias_plot" />
+        <data format="pdf" label="Plot P-value from sampling against wallenius distribution" name="sample_vs_wallenius_plot" />
+    </outputs>
+    <tests>
+        <test>
+
+        </test>
+    </tests>
+    <help>
+
+        **What it does**
+
+        Detects Gene Ontology and/or other user defined categories which are over/under represented in RNA-seq data.
+        Options map closely to the excellent .. _manual: https://bioconductor.org/packages/release/bioc/vignettes/goseq/inst/doc/goseq.pdf
+
+
+        </help>
+    <citations>
+            <citation type="doi">10.1186/gb-2010-11-2-r14</citation>
+    </citations>
+</tool>
