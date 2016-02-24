@@ -1,0 +1,10 @@
+<tables>
+    <table name="gogenomes" comment_char="#">
+        <columns>value, name, path</columns>
+        <file path="${__HERE__}/genomes.loc" />
+    </table>
+    <table name="gogeneid" comment_char="#">
+        <columns>value, name, path</columns>
+        <file path="${__HERE__}/gene_id.loc" />
+    </table>
+</tables>

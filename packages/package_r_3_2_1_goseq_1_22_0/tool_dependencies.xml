@@ -23,6 +23,8 @@
                      <repository name="package_libcurl_7_35" owner="iuc">
                         <package name="libcurl" version="7.35" />
                     </repository>
+                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/getopt_1.20.0.tar.gz?raw=true</package>
+                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/optparse_1.3.2.tar.gz?raw=true</package>
                         <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/BiasedUrn_1.07.tar.gz?raw=true</package>
                         <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/BiocGenerics_0.16.1.tar.gz?raw=true</package>
                         <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/S4Vectors_0.8.11.tar.gz?raw=true</package>
@@ -52,6 +54,7 @@
                         <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/GenomicFeatures_1.22.13.tar.gz?raw=true</package>
                         <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/geneLenDataBase_1.6.0.tar.gz?raw=true</package>
                         <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/GO.db_3.2.2.tar.gz?raw=true</package>
+                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/org.Hs.eg.db_3.2.3.tar.gz?raw=true</package>
                         <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/goseq_1.22.0.tar.gz?raw=true</package>
                 </action>
             </actions>
