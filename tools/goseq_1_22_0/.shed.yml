@@ -1,6 +1,6 @@
 # .shed.yml supporting automatic pushes.
 owner: mvdbeek
-name: goseq_1_22_0
+name: r_goseq_1_22_0
 description: goseq does selection-unbiased testing for category enrichment amongst differentially expressed (DE) genes for RNA-seq data
 long_description: |
    Gene Ontology analyser. Does selection-unbiased testing for category enrichment amongst differentially expressed (DE) genes for RNA-seq data.
@@ -10,7 +10,6 @@ categories:
   - Micro-array Analysis
 homepage_url: https://bioconductor.org/packages/release/bioc/html/goseq.html
 remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/goseq_1_22_0
-type: tool_dependency_definition
 toolshed:
   - testtoolshed
   - toolshed
