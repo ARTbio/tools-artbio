@@ -55,6 +55,8 @@
                         <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/geneLenDataBase_1.6.0.tar.gz?raw=true</package>
                         <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/GO.db_3.2.2.tar.gz?raw=true</package>
                         <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/org.Hs.eg.db_3.2.3.tar.gz?raw=true</package>
+                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/chron_2.3-47.tar.gz?raw=true</package>
+                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/data.table_1.9.6.tar.gz?raw=true</package>
                         <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/goseq_1.22.0.tar.gz?raw=true</package>
                 </action>
             </actions>
