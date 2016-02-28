@@ -23,8 +23,17 @@
                      <repository name="package_libcurl_7_35" owner="iuc">
                         <package name="libcurl" version="7.35" />
                     </repository>
+                        <!-- optparse dependencies -->
                         <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/getopt_1.20.0.tar.gz?raw=true</package>
                         <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/optparse_1.3.2.tar.gz?raw=true</package>
+                        <!-- reshape2 dependencies -->
+                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/Rcpp_0.12.3.tar.gz?raw=true</package>
+                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/plyr_1.8.3.tar.gz?raw=true</package>
+                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/stringi_1.0-1.tar.gz?raw=true</package>
+                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/magrittr_1.5.tar.gz?raw=true</package>
+                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/stringr_1.0.0.tar.gz?raw=true</package>
+                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/reshape2_1.4.1.tar.gz?raw=true</package>
+                        <!-- goseq and suggested packages -->
                         <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/BiasedUrn_1.07.tar.gz?raw=true</package>
                         <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/BiocGenerics_0.16.1.tar.gz?raw=true</package>
                         <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/S4Vectors_0.8.11.tar.gz?raw=true</package>
