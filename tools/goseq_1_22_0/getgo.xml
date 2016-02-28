@@ -19,7 +19,12 @@
         <param help="Needed for GO analysis" label="Select gene identifier format" name="gene_id" type="select">
             <options from_data_table="go_gene_ids"></options>
         </param>
-        <param name="cats"
+        <param name="cats" help="Select the categories for which you would like to retrieve ontologies" type="select" multiple="true" display="checkboxes">
+            <option value="GO:CC">GO:Cellular Components</option>
+            <option value="GO:BP">BiologicalProcesses</option>
+            <option value="GO:MF">Molecular Function</option>
+            <option value="KEGG">KEGG pathway</option>
+        </param>
     </inputs>
     <outputs>
         <data format="tabular" label="GO category mapping" name="output" />

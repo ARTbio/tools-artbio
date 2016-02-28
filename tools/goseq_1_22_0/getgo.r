@@ -20,10 +20,10 @@ gtf = args$gtf
 genome = args$genome
 gene_id = args$gene_id
 output = args$output
-cats = args$cats
-print(gtf)
+cats = unlist(strsplit(args$cats, ','))
+print(cats)
 genes = unique(import.gff(gtf)$gene_id)
-
+print(head(genes))
 go_categories = getgo(genes, genome, id, fetch.cats=cats)
 
 go_categories <- lapply(go_categories, unlist)
