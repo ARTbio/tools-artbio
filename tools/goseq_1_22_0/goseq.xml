@@ -1,4 +1,4 @@
-<tool id="goseq" name="goseq gene ontology analyser" version="0.1.1">
+<tool id="goseq" name="goseq gene ontology analyser" version="0.1.5">
     <description />
     <requirements>
         <requirement type="package" version="3.2.1">R</requirement>
@@ -8,6 +8,9 @@
         goseq.r --dge_file "$dge_file"
         --p_adj_column "$p_adj_column"
         --cutoff "$p_adj_cutoff"
+        #if $source.use_length_file == "yes":
+        --length_file "$length_file"
+        #end if
         --genome "$genome"
         --gene_id "$gene_id"
         --wallenius_tab "$wallenius_tab"
@@ -16,35 +19,52 @@
         --length_bias_plot "$length_bias_plot"
         --sample_vs_wallenius_plot "$sample_vs_wallenius_plot"
         --repcnt "$repcnt"
+        --use_genes_without_cat "$use_genes_without_cat"
     </command>
     <inputs>
         <param help="deseq2/edger/limma differential gene expression list" label="DGE list" name="dge_file" type="data" format="tabular" />
-        <param help="Select the column that contains the multiple-testing corrected p-value" label="p adjust column" name="p_adj_column" type="data_column" data_ref="dge_file"/>
-        <param help="Typically 0.05 after multiple testing correction" max="1" label="Minimum p adjust value to consider gene differentially expressed" name="p_adj_cutoff" type="float" value="0.05" />
-        <param help="Needed to retrive gene length for length correction" label="Select the genome source" name="genome" size="3" type="select">
-            <options from_file="genomes.loc">
-                <column name="value" index="0"/>
-                <column name="name" index="1"/>
-            </options>
+        <param help="Select the column that contains the multiple-testing corrected p-value" label="p adjust column" name="p_adj_column" type="data_column" numeric="true" data_ref="dge_file"/>
+        <param help="A boolean to indicate whether genes without a categorie should still be used. For example, a large number of gene may have no GO term annotated.  If this option is set to FALSE, those genes will be ignored in the calculation of p-values. If this option is set to TRUE, then these genes will count towards the total number of genes outside the category being tested"
+               name="use_genes_without_cat" label="Count genes without any category" type="boolean"/>
+        <param help="Typically 0.05 after multiple testing correction" max="1" label="Minimum p adjust value to consider genes as differentially expressed" name="p_adj_cutoff" type="float" value="0.05" />
+        <conditional name="source">
+            <param help="This is needed if the gene length is not available in goseq. e.g. hg38 and mm10." label="Use gene length file?" name="use_length_file" type="select">
+                <option value="no">no</option>
+                <option value="yes">yes</option>
+            </param>
+            <when value="yes">
+                <param label="Gene length file" name="length_file" type="data" format="tabular" required="false" />
+            </when>
+            <when value="no">
+            </when>
+        </conditional>
+        <param help="Needed to retrieve gene length for length correction" label="Select the genome source" name="genome" size="3" type="select">
+            <options from_data_table="go_genomes"></options>
         </param>
         <param help="Needed for GO analysis" label="Select gene identifier" name="gene_id" type="select">
-            <options from_file="gene_ids.loc">
-                <column name="value" index="0"/>
-                <column name="name" index="1"/>
-            </options>
+            <options from_data_table="go_gene_ids"></options>
         </param>
-        <param help="Do this many random samplings. Larger values take a long time" label="Number of random sampling" name="repcnt" size="3" type="integer" min="100" max="10000" value="1000" />
+        <param help="Draw this many random control gene sets. Set to 0 to not do sampling. Larger values take a long time" label="sampling depth" name="repcnt" size="3" type="integer" min="0" max="10000" value="0" />
     </inputs>
     <outputs>
-        <data format="tabular" label="Ranked category list - wallenius" name="wallenius_tab" />
-        <data format="tabular" label="Ranked category list - sampling" name="sampling_tab" />
-        <data format="tabular" label="Ranked category list - no length bias correction" name="nobias_tab" />
         <data format="pdf" label="length bias plot" name="length_bias_plot" />
-        <data format="pdf" label="Plot P-value from sampling against wallenius distribution" name="sample_vs_wallenius_plot" />
+        <data format="pdf" label="Plot P-value from sampling against wallenius distribution" name="sample_vs_wallenius_plot">
+            <filter>repcnt != 0</filter>
+        </data>
+        <data format="tabular" label="Ranked category list - no length bias correction" name="nobias_tab" />
+        <data format="tabular" label="Ranked category list - sampling" name="sampling_tab">
+            <filter>repcnt != 0</filter>
+        </data>
+        <data format="tabular" label="Ranked category list - wallenius approx. of p-values" name="wallenius_tab" />
     </outputs>
     <tests>
         <test>
-
+            <param name="dge_file" value="dge_list.tab" ftype="tabular"/>
+            <param name="use_length_file" value="no" />
+            <param name="p_adj_column" value="2" />
+            <param name="genome" value="hg19" />
+            <param name="gene_id" value="ensGene" />
+            <output name="wallenius_tab" file="wall.tab" compare="contains"/>/>
         </test>
     </tests>
     <help>
@@ -58,8 +78,8 @@
         .. _manual: https://bioconductor.org/packages/release/bioc/vignettes/goseq/inst/doc/goseq.pdf
 
 
-        </help>
+    </help>
     <citations>
-            <citation type="doi">10.1186/gb-2010-11-2-r14</citation>
+        <citation type="doi">10.1186/gb-2010-11-2-r14</citation>
     </citations>
 </tool>
