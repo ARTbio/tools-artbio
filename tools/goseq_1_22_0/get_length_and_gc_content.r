@@ -1,11 +1,13 @@
 # originally by Devon Ryan, https://www.biostars.org/p/84467/
+
+library("GenomicRanges")
+library("rtracklayer")
+library("Rsamtools")
+library("optparse")
+library("data.table")
+
 sink(stdout(), type = "message")
 
-library(GenomicRanges)
-library(rtracklayer)
-library(Rsamtools)
-library(optparse)
-library(data.table)
 
 option_list <- list(
     make_option(c("-g","--gtf"), type="character", help="Input GTF file with gene / exon information."),

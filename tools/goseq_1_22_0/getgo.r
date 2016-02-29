@@ -1,7 +1,7 @@
-suppressWarnings(suppressMessages(library(goseq)))
-suppressWarnings(suppressMessages(library(optparse)))
-suppressWarnings(suppressMessages(library(rtracklayer)))
-suppressWarnings(suppressMessages(library(reshape2)))
+suppressWarnings(suppressMessages(library("goseq")))
+suppressWarnings(suppressMessages(library("optparse")))
+suppressWarnings(suppressMessages(library("rtracklayer")))
+suppressWarnings(suppressMessages(library("reshape2")))
 sink(stdout(), type = "message")
 
 option_list <- list(
@@ -23,7 +23,7 @@ gene_id = args$gene_id
 output = args$output
 cats = unlist(strsplit(args$cats, ','))
 genes = unique(import.gff(gtf)$gene_id)
-go_categories = getgo(genes, genome, id, fetch.cats=cats)
+go_categories = getgo(genes, genome, gene_id, fetch.cats=cats)
 
 # transform go category list to sth. more manipulatable in galaxy
 go_categories <- lapply(go_categories, unlist)
