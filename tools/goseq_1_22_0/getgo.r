@@ -1,7 +1,15 @@
-suppressWarnings(suppressMessages(library("goseq")))
-suppressWarnings(suppressMessages(library("optparse")))
-suppressWarnings(suppressMessages(library("rtracklayer")))
-suppressWarnings(suppressMessages(library("reshape2")))
+options( show.error.messages=F, error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+
+# we need that to not crash galaxy with an UTF8 error on German LC settings.
+loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
+
+suppressPackageStartupMessages({
+    library("goseq")
+    library("optparse")
+    library("rtracklayer")
+    library("reshape2")
+})
+
 sink(stdout(), type = "message")
 
 option_list <- list(
@@ -15,21 +23,19 @@ option_list <- list(
 parser <- OptionParser(usage = "%prog [options] file", option_list=option_list)
 args = parse_args(parser)
 
-# Vars:
+# vars
 
 gtf = args$gtf
 genome = args$genome
 gene_id = args$gene_id
 output = args$output
 cats = unlist(strsplit(args$cats, ','))
+
+# retrieve and transform data
 genes = unique(import.gff(gtf)$gene_id)
 go_categories = getgo(genes, genome, gene_id, fetch.cats=cats)
-
-# transform go category list to sth. more manipulatable in galaxy
-go_categories <- lapply(go_categories, unlist)
 go_categories = goseq:::reversemapping(go_categories)
 go_categories = melt(go_categories)
-colnames(go_categories) = c("#gene_id", "go_category")
 
-write.table(go_categories, output, sep="\t", row.names = FALSE, quote = FALSE)
+write.table(go_categories, output, sep="\t", col.names = FALSE, row.names = FALSE, quote = FALSE)
 sessionInfo()

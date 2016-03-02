@@ -1,6 +1,12 @@
-sink(stdout(), type = "message")
-suppressWarnings(suppressMessages(library(goseq)))
-suppressWarnings(suppressMessages(library(optparse)))
+options( show.error.messages=F, error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+
+# we need that to not crash galaxy with an UTF8 error on German LC settings.
+loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
+
+suppressPackageStartupMessages({
+    library("goseq")
+    library("optparse")
+})
 
 option_list <- list(
     make_option(c("-d", "--dge_file"), type="character", help="Path to file with differential gene expression result"),
@@ -14,16 +20,20 @@ option_list <- list(
                 help="Genes with p.adjust below cutoff are considered not differentially expressed and serve as control genes"),
     make_option(c("-r", "--repcnt"), type="integer", default=100, help="Number of repeats for sampling"),
     make_option(c("-lf", "--length_file"), type="character", default="FALSE", help = "Path to tabular file mapping gene id to length"),
-    make_option(c("-g", "--genome"), type="character", help = "Genome [used for looking up correct gene length]"),
-    make_option(c("-i", "--gene_id"), type="character", help="Gene ID of gene column in DGE file"),
-    make_option(c("-cat", "--use_genes_without_cat"), default=FALSE, type="logical", help="A boolean to indicate whether genes without a categorie should still be used. For example, a large number of gene may have no GO term annotated.  If thisoption is set to FALSE, those genes will be ignored in the calculation of p-values(default behaviour).  If this option is set to TRUE, then these genes will count towards  the  total  number  of  genes  outside  the  category  being  tested  (default behaviour prior to version 1.15.2)."
-)
-  )
+    make_option(c("-cat_file", "--category_file"), default="FALSE", type="character", help = "Path to tabular file with gene_id <-> category mapping."),
+    make_option(c("-g", "--genome"), default=NULL, type="character", help = "Genome [used for looking up correct gene length]"),
+    make_option(c("-i", "--gene_id"), default=NULL, type="character", help = "Gene ID format of genes in DGE file"),
+    make_option(c("-cat", "--use_genes_without_cat"), default=FALSE, type="logical",
+                help="A large number of gene may have no GO term annotated. If this option is set to FALSE, genes without category will be ignored in the calculation of p-values(default behaviour). If TRUE these genes will count towards the total number of genes outside the tested category (default behaviour prior to version 1.15.2)."),
+    make_option(c("-plots", "--make_plots"), default=FALSE, type="logical", help="produce diagnostic plots?")
+    )
+
 parser <- OptionParser(usage = "%prog [options] file", option_list=option_list)
 args = parse_args(parser)
 
 # Vars:
 dge_file = args$dge_file
+category_file = args$category_file
 p_adj_column = args$p_adj_colum
 p_adj_cutoff = args$p_adj_cutoff
 length_file = args$length_file
@@ -36,45 +46,72 @@ length_bias_plot = args$length_bias_plot
 sample_vs_wallenius_plot = args$sample_vs_wallenius_plot
 repcnt = args$repcnt
 use_genes_without_cat = args$use_genes_without_cat
+make_plots = args$make_plots
 
-# format DE genes into vector suitable for use with goseq
-dge_table = read.delim(dge_file, header = TRUE, sep="\t", check.names = FALSE)
+# format DE genes into named vector suitable for goseq
+first_line = read.delim(dge_file, header = FALSE, nrow=1)
+# check if header [character where numeric is expected]
+if (is.numeric(first_line[,p_adj_column])) {
+  dge_table = read.delim(dge_file, header = FALSE, sep="\t")
+  } else {
+  dge_table = read.delim(dge_file, header = TRUE, sep="\t")
+  }
+
 genes = as.integer(dge_table[,p_adj_column]<p_adj_cutoff)
 names(genes) = dge_table[,1] # Assuming first row contains gene names
 
-# Get gene lengths
+# gene lengths, assuming last column
 if (length_file != "FALSE" ) {
-  length_table = read.delim(length_file, header=TRUE, sep="\t", check.names=FALSE)
+  first_line = read.delim(dge_file, header = FALSE, nrow=1)
+  if (is.numeric(first_line[, ncol(first_line)])) {
+    length_table = read.delim(length_file, header=FALSE, sep="\t", check.names=FALSE)
+    } else {
+    length_table = read.delim(length_file, header=TRUE, sep="\t", check.names=FALSE)
+    }
   row.names(length_table) = length_table[,1]
-  gene_lengths = length_table[names(genes),]$length
+  gene_lengths = length_table[names(genes),][,ncol(length_table)]
   } else {
   gene_lengths = getlength(names(genes), genome, gene_id)
   }
 
 # Estimate PWF
 
-pdf(length_bias_plot)
-pwf=nullp(genes, genome, gene_id, gene_lengths)
-message = dev.off()
+if (make_plots == TRUE) {
+  pdf(length_bias_plot)
+}
+pwf=nullp(genes, genome = genome, id = gene_id, bias.data = gene_lengths, plot.fit=make_plots)
+graphics.off()
 
-# Fetch GO annotations:
-go_map=getgo(names(genes), genome, gene_id, fetch.cats=c("GO:CC", "GO:BP", "GO:MF", "KEGG"))
+# Fetch GO annotations if category_file hasn't been supplied:
+if (category_file == "FALSE") {
+  go_map=getgo(genes = names(genes), genome = genome, id = gene_id, fetch.cats=c("GO:CC", "GO:BP", "GO:MF", "KEGG"))
+  } else {
+  # check for header: first entry in first column must be present in genes, else it's a header
+  first_line = read.delim(category_file, header = FALSE, nrow=1)
+  if (first_line[,1] %in% names(genes)) {
+     go_map = read.delim(category_file, header = FALSE)
+     } else {
+     go_map = read.delim(category_file, header= TRUE)
+    }
+}
 
 # wallenius approximation of p-values
-GO.wall=goseq(pwf, genome, gene_id, use_genes_without_cat = use_genes_without_cat, gene2cat=go_map)
+GO.wall=goseq(pwf, genome = genome, id = gene_id, use_genes_without_cat = use_genes_without_cat, gene2cat=go_map)
 
-GO.nobias=goseq(pwf, genome, gene_id, method="Hypergeometric", use_genes_without_cat = use_genes_without_cat, gene2cat=go_map)
+GO.nobias=goseq(pwf, genome = genome, id = gene_id, method="Hypergeometric", use_genes_without_cat = use_genes_without_cat, gene2cat=go_map)
 
 # Sampling distribution
 if (repcnt > 0) {
-  GO.samp=goseq(pwf,genome, gene_id, method="Sampling", repcnt=repcnt, use_genes_without_cat = use_genes_without_cat, gene2cat=go_map)
+  GO.samp=goseq(pwf, genome = genome, id = gene_id, method="Sampling", repcnt=repcnt, use_genes_without_cat = use_genes_without_cat, gene2cat=go_map)
   # Compare sampling with wallenius
+  if (make_plots == TRUE) {
   pdf(sample_vs_wallenius_plot)
   plot(log10(GO.wall[,2]), log10(GO.samp[match(GO.samp[,1],GO.wall[,1]),2]),
      xlab="log10(Wallenius p-values)",ylab="log10(Sampling p-values)",
      xlim=c(-3,0))
      abline(0,1,col=3,lty=2)
-  message = dev.off()
+  graphics.off()
+  }
   write.table(GO.samp, sampling_tab, sep="\t", row.names = FALSE, quote = FALSE)
 }
 

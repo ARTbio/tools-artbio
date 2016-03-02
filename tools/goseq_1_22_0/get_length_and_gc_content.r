@@ -1,18 +1,23 @@
 # originally by Devon Ryan, https://www.biostars.org/p/84467/
 
-library("GenomicRanges")
-library("rtracklayer")
-library("Rsamtools")
-library("optparse")
-library("data.table")
+options( show.error.messages=F, error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
 
-sink(stdout(), type = "message")
+# we need that to not crash galaxy with an UTF8 error on German LC settings.
+loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
 
+suppressPackageStartupMessages({
+    library("GenomicRanges")
+    library("rtracklayer")
+    library("Rsamtools")
+    library("optparse")
+    library("data.table")
+})
 
 option_list <- list(
     make_option(c("-g","--gtf"), type="character", help="Input GTF file with gene / exon information."),
     make_option(c("-f","--fasta"), type="character", default=FALSE, help="Fasta file that corresponds to the supplied GTF."),
-    make_option(c("-o","--output"), type="character", default=FALSE, help="Output file with gene name, length and GC content.")
+    make_option(c("-l","--length"), type="character", default=FALSE, help="Output file with gene name and length."),
+    make_option(c("-gc","--gc_content"), type="character", default=FALSE, help="Output file with gene name and GC content.")
   )
 
 parser <- OptionParser(usage = "%prog [options] file", option_list=option_list)
@@ -20,7 +25,8 @@ args = parse_args(parser)
 
 GTFfile = args$gtf
 FASTAfile = args$fasta
-output_file = args$output
+length = args$length
+gc_content = args$gc_content
 
 #Load the annotation and reduce it
 GTF <- import.gff(GTFfile, format="gtf", genome=NA, feature.type="exon")
@@ -43,9 +49,11 @@ calc_GC_length <- function(x) {
     c(width, nGCs/width)
 }
 output <- t(sapply(split(reducedGTF, elementMetadata(reducedGTF)$gene_id), calc_GC_length))
-output <- setDT(data.frame(output), keep.rownames = TRUE)[]
-colnames(output) <- c("#gene_id", "length", "GC")
+output <- data.frame(setDT(data.frame(output), keep.rownames = TRUE)[])
 
-write.table(output, file=output_file, row.names=FALSE, quote=FALSE, sep="\t")
+
+write.table(output[,c(1,2)], file=length, col.names=FALSE, row.names=FALSE, quote=FALSE, sep="\t")
+write.table(output[,c(1,3)], file=gc_content, col.names=FALSE, row.names=FALSE, quote=FALSE, sep="\t")
+
 
 sessionInfo()

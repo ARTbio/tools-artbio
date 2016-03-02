@@ -1,9 +1,10 @@
-<tool id="getgo" name="Retrieve GO ontologies" version="0.1.0">
-    <description />
-    <requirements>
-        <requirement type="package" version="3.2.1">R</requirement>
-        <requirement type="package" version="1.22.0">goseq</requirement>
-    </requirements>
+<tool id="getgo" name="getgo" version="0.1.0">
+    <description>downloads gene ontologies for model organisms</description>
+    <macros>
+        <import>go_macros.xml</import>
+    </macros>
+    <expand macro="requirements" />
+    <expand macro="stdio" />
     <command interpreter="Rscript">
         getgo.r --genome "$genome"
         --gtf "$gtf"
@@ -29,15 +30,24 @@
     <outputs>
         <data format="tabular" label="GO category mapping" name="output" />
     </outputs>
-    <tests></tests>
+    <tests>
+        <test>
+            <param name="gtf" value="in.gtf" ftype="gtf"></param>
+            <param name="genome" value="hg38"></param>
+            <param name="gene_id" value="ensGene"></param>
+            <param name="cats" value="GO:CC,GO:BP,GO:MF"></param>
+            <output name="output" file="go_terms.tab"></output>
+        </test>
+    </tests>
     <help>
 
         **What it does**
 
-        Returns a tabular file with GO gene categories.
+        Returns a tabular file with GO gene categories for all genes present in the input GTF file.
 
 
         </help>
     <citations>
+        <citation type="doi">10.1186/gb-2010-11-2-r14</citation>
     </citations>
 </tool>
