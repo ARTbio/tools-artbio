@@ -1,3 +1,3 @@
-category	over_represented_pvalue	under_represented_pvalue	numDEInCat	numInCat	term	ontology
-GO:0000278	0.0170267979816278	0.998916032265352	4	5	mitotic cell cycle	BP
-GO:0000003	1	0.795019237774538	0	1	reproduction	BP
+category	over_represented_pvalue	under_represented_pvalue	numDEInCat	numInCat	term	ontology	p.adjust.over_represented	p.adjust.under_represented
+GO:0000278	0.416311963944304	1	4	5	mitotic cell cycle	BP	0.832623927888609	1
+GO:0000003	1	0.416311963944305	0	1	reproduction	BP	1	0.83262392788861

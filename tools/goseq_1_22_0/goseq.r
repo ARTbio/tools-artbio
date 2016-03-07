@@ -15,14 +15,12 @@ option_list <- list(
     make_option(c("-n","--nobias_tab"), type="character", default=FALSE, help="Path to output file with P-values estimated using wallenius distribution and no correction for gene length bias."),
     make_option(c("-l","--length_bias_plot"), type="character", default=FALSE, help="Path to length-bias plot."),
     make_option(c("-sw","--sample_vs_wallenius_plot"), type="character", default=FALSE, help="Path to plot comparing sampling with wallenius p-values."),
-    make_option(c("-padj", "--p_adj_column"), type="integer",help="Column that contains p. adjust values"),
-    make_option(c("-c", "--cutoff"), type="double",dest="p_adj_cutoff",
-                help="Genes with p.adjust below cutoff are considered not differentially expressed and serve as control genes"),
     make_option(c("-r", "--repcnt"), type="integer", default=100, help="Number of repeats for sampling"),
     make_option(c("-lf", "--length_file"), type="character", default="FALSE", help = "Path to tabular file mapping gene id to length"),
     make_option(c("-cat_file", "--category_file"), default="FALSE", type="character", help = "Path to tabular file with gene_id <-> category mapping."),
     make_option(c("-g", "--genome"), default=NULL, type="character", help = "Genome [used for looking up correct gene length]"),
     make_option(c("-i", "--gene_id"), default=NULL, type="character", help = "Gene ID format of genes in DGE file"),
+    make_option(c("-p", "--p_adj_method"), default="BH", type="character", help="Multiple hypothesis testing correction method to use"),
     make_option(c("-cat", "--use_genes_without_cat"), default=FALSE, type="logical",
                 help="A large number of gene may have no GO term annotated. If this option is set to FALSE, genes without category will be ignored in the calculation of p-values(default behaviour). If TRUE these genes will count towards the total number of genes outside the tested category (default behaviour prior to version 1.15.2)."),
     make_option(c("-plots", "--make_plots"), default=FALSE, type="logical", help="produce diagnostic plots?")
@@ -34,8 +32,6 @@ args = parse_args(parser)
 # Vars:
 dge_file = args$dge_file
 category_file = args$category_file
-p_adj_column = args$p_adj_colum
-p_adj_cutoff = args$p_adj_cutoff
 length_file = args$length_file
 genome = args$genome
 gene_id = args$gene_id
@@ -45,20 +41,14 @@ nobias_tab = args$nobias_tab
 length_bias_plot = args$length_bias_plot
 sample_vs_wallenius_plot = args$sample_vs_wallenius_plot
 repcnt = args$repcnt
+p_adj_method = args$p_adj_method
 use_genes_without_cat = args$use_genes_without_cat
 make_plots = args$make_plots
 
 # format DE genes into named vector suitable for goseq
-first_line = read.delim(dge_file, header = FALSE, nrow=1)
-# check if header [character where numeric is expected]
-if (is.numeric(first_line[,p_adj_column])) {
-  dge_table = read.delim(dge_file, header = FALSE, sep="\t")
-  } else {
-  dge_table = read.delim(dge_file, header = TRUE, sep="\t")
-  }
-
-genes = as.integer(dge_table[,p_adj_column]<p_adj_cutoff)
-names(genes) = dge_table[,1] # Assuming first row contains gene names
+dge_table = read.delim(dge_file, header = FALSE, sep="\t")
+genes = as.numeric(as.logical(dge_table[,ncol(dge_table)])) # Last column contains TRUE/FALSE
+names(genes) = dge_table[,1] # Assuming first column contains gene names
 
 # gene lengths, assuming last column
 if (length_file != "FALSE" ) {
@@ -96,13 +86,27 @@ if (category_file == "FALSE") {
 }
 
 # wallenius approximation of p-values
-GO.wall=goseq(pwf, genome = genome, id = gene_id, use_genes_without_cat = use_genes_without_cat, gene2cat=go_map)
+if (wallenius_tab != "" && wallenius_tab!="None") {
+  GO.wall=goseq(pwf, genome = genome, id = gene_id, use_genes_without_cat = use_genes_without_cat, gene2cat=go_map)
+  GO.wall$p.adjust.over_represented = p.adjust(GO.wall$over_represented_pvalue, method=p_adj_method)
+  GO.wall$p.adjust.under_represented = p.adjust(GO.wall$under_represented_pvalue, method=p_adj_method)
+  write.table(GO.wall, wallenius_tab, sep="\t", row.names = FALSE, quote = FALSE)
+}
 
-GO.nobias=goseq(pwf, genome = genome, id = gene_id, method="Hypergeometric", use_genes_without_cat = use_genes_without_cat, gene2cat=go_map)
+# hypergeometric (no length bias correction)
+if (nobias_tab != "" && nobias_tab != "None") {
+  GO.nobias=goseq(pwf, genome = genome, id = gene_id, method="Hypergeometric", use_genes_without_cat = use_genes_without_cat, gene2cat=go_map)
+  GO.nobias$p.adjust.over_represented = p.adjust(GO.nobias$over_represented_pvalue, method=p_adj_method)
+  GO.nobias$p.adjust.under_represented = p.adjust(GO.nobias$under_represented_pvalue, method=p_adj_method)
+  write.table(GO.nobias, nobias_tab, sep="\t", row.names = FALSE, quote = FALSE)
+}
 
 # Sampling distribution
 if (repcnt > 0) {
   GO.samp=goseq(pwf, genome = genome, id = gene_id, method="Sampling", repcnt=repcnt, use_genes_without_cat = use_genes_without_cat, gene2cat=go_map)
+  GO.samp$p.adjust.over_represented = p.adjust(GO.samp$over_represented_pvalue, method=p_adj_method)
+  GO.samp$p.adjust.under_represented = p.adjust(GO.samp$under_represented_pvalue, method=p_adj_method)
+  write.table(GO.samp, sampling_tab, sep="\t", row.names = FALSE, quote = FALSE)
   # Compare sampling with wallenius
   if (make_plots == TRUE) {
   pdf(sample_vs_wallenius_plot)
@@ -112,17 +116,22 @@ if (repcnt > 0) {
      abline(0,1,col=3,lty=2)
   graphics.off()
   }
-  write.table(GO.samp, sampling_tab, sep="\t", row.names = FALSE, quote = FALSE)
 }
-
-
-write.table(GO.wall, wallenius_tab, sep="\t", row.names = FALSE, quote = FALSE)
-write.table(GO.nobias, nobias_tab, sep="\t", row.names = FALSE, quote = FALSE)
 
 sessionInfo()
 
 # Use the following to get a list of supported genomes / gene ids
 
-# write.table(supportedGenomes(), "available_genomes.tab", row.names = FALSE, quote=FALSE)
+# supported_genomes = subset(supportedGenomes(), AvailableGeneIDs != "")
+# write.table(supported_genomes, "available_genomes.tab", row.names = FALSE, quote=FALSE)
 # write.table(supportedGeneIDs(), "supported_gene_ids.tab", row.name = FALSE, quote = FALSE)
 # write.table(table.summary, "input_gene_count_matrix.tab", row.names = FALSE, quote = FALSE)
+
+## get a list of genome db packages to install:
+# library("stringr")
+# orglist = unique(sapply(supported_genomes$db, function(x) str_extract(x, "[a-zA-Z]+" )))
+## install all genome packages
+# sapply(orglist, function(x) biocLite(paste("org", x, "eg.db", sep=".")))
+## get list of packages:
+# org_packages = sapply(orglist, function(x) paste("org", x, "eg.db", sep="."))
+# write.table(org_packages, "org_packages.tab", row.names = FALSE, col.names=FALSE, quote = FALSE)
