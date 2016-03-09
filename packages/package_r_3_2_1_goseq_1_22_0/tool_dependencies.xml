@@ -3,10 +3,10 @@
     <package name="R" version="3.2.1">
         <repository name="package_r_3_2_1" owner="iuc" prior_installation_required="True" />
     </package>
-    <package name="libxml2" version="2.9.1">
-        <repository name="package_libxml2_2_9_1" owner="iuc" prior_installation_required="True" />
+    <package name="libxml2" version="2.9.3">
+        <repository name="package_libxml2_2_9_3" owner="iuc" prior_installation_required="True" />
     </package>
-     <package name="libxml2" version="7.35">
+    <package name="libcurl" version="7.35">
         <repository name="package_libcurl_7_35" owner="iuc" prior_installation_required="True" />
     </package>
     <package name="goseq" version="1.22.0">
@@ -17,42 +17,79 @@
                         <package name="R" version="3.2.1" />
                     </repository>
                     <!-- libxml2 needs to be sourced after R because R also was compiled against a different version of libxml2 -->
-                    <repository name="package_libxml2_2_9_1" owner="iuc">
-                        <package name="libxml2" version="2.9.1" />
+                    <repository name="package_libxml2_2_9_3" owner="iuc">
+                        <package name="libxml2" version="2.9.3" />
                     </repository>
-                     <repository name="package_libcurl_7_35" owner="iuc">
+                    <repository name="package_libcurl_7_35" owner="iuc">
                         <package name="libcurl" version="7.35" />
                     </repository>
-                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/BiasedUrn_1.07.tar.gz?raw=true</package>
-                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/BiocGenerics_0.16.1.tar.gz?raw=true</package>
-                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/S4Vectors_0.8.11.tar.gz?raw=true</package>
-                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/IRanges_2.4.7.tar.gz?raw=true</package>
-                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/GenomeInfoDb_1.6.3.tar.gz?raw=true</package>
-                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/zlibbioc_1.16.0.tar.gz?raw=true</package>
-                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/XVector_0.10.0.tar.gz?raw=true</package>
-                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/GenomicRanges_1.22.4.tar.gz?raw=true</package>
-                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/XML_3.98-1.3.tar.gz?raw=true</package>
-                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/Biostrings_2.38.4.tar.gz?raw=true</package>
-                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/bitops_1.0-6.tar.gz?raw=true</package>
-                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/RCurl_1.95-4.7.tar.gz?raw=true</package>
-                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/lambda.r_1.1.7.tar.gz?raw=true</package>
-                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/futile.options_1.0.0.tar.gz?raw=true</package>
-                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/futile.logger_1.4.1.tar.gz?raw=true</package>
-                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/snow_0.4-1.tar.gz?raw=true</package>
-                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/BiocParallel_1.4.3.tar.gz?raw=true</package>
-                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/Rsamtools_1.22.0.tar.gz?raw=true</package>
-                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/Biobase_2.30.0.tar.gz?raw=true</package>
-                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/SummarizedExperiment_1.0.2.tar.gz?raw=true</package>
-                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/GenomicAlignments_1.6.3.tar.gz?raw=true</package>
-                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/rtracklayer_1.30.2.tar.gz?raw=true</package>
-                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/DBI_0.3.1.tar.gz?raw=true</package>
-                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/RSQLite_1.0.0.tar.gz?raw=true</package>
-                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/AnnotationDbi_1.32.3.tar.gz?raw=true</package>
-                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/biomaRt_2.26.1.tar.gz?raw=true</package>
-                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/GenomicFeatures_1.22.13.tar.gz?raw=true</package>
-                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/geneLenDataBase_1.6.0.tar.gz?raw=true</package>
-                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/GO.db_3.2.2.tar.gz?raw=true</package>
-                        <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/goseq_1.22.0.tar.gz?raw=true</package>
+                    <!-- optparse dependencies -->
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/getopt_1.20.0.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/optparse_1.3.2.tar.gz?raw=true</package>
+                    <!-- reshape2 dependencies -->
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/Rcpp_0.12.3.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/plyr_1.8.3.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/stringi_1.0-1.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/magrittr_1.5.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/stringr_1.0.0.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/reshape2_1.4.1.tar.gz?raw=true</package>
+                    <!-- goseq and suggested packages -->
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/BiasedUrn_1.07.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/BiocGenerics_0.16.1.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/S4Vectors_0.8.11.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/IRanges_2.4.7.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/GenomeInfoDb_1.6.3.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/zlibbioc_1.16.0.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/XVector_0.10.0.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/GenomicRanges_1.22.4.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/XML_3.98-1.3.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/Biostrings_2.38.4.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/bitops_1.0-6.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/RCurl_1.95-4.7.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/lambda.r_1.1.7.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/futile.options_1.0.0.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/futile.logger_1.4.1.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/snow_0.4-1.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/BiocParallel_1.4.3.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/Rsamtools_1.22.0.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/Biobase_2.30.0.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/SummarizedExperiment_1.0.2.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/GenomicAlignments_1.6.3.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/rtracklayer_1.30.2.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/DBI_0.3.1.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/RSQLite_1.0.0.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/AnnotationDbi_1.32.3.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/biomaRt_2.26.1.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/GenomicFeatures_1.22.13.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/geneLenDataBase_1.6.0.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/GO.db_3.2.2.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/chron_2.3-47.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/data.table_1.9.6.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/goseq_1.22.0.tar.gz?raw=true</package>
+                    <!-- organism packages for go lookup -->
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/PAnnBuilder_1.34.0.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/org.Ag.eg.db_3.2.3.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/org.At.tair.db_3.2.3.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/org.Bt.eg.db_3.2.3.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/org.Ce.eg.db_3.2.3.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/org.Cf.eg.db_3.2.3.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/org.Dm.eg.db_3.2.3.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/org.Dr.eg.db_3.2.3.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/org.EcK12.eg.db_3.2.3.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/org.EcSakai.eg.db_3.2.3.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/org.Gg.eg.db_3.2.3.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/org.Hs.eg.db_3.2.3.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/org.Hs.ipi.db_1.3.0.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/org.Mm.eg.db_3.2.3.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/org.Mmu.eg.db_3.2.3.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/org.Pf.plasmo.db_3.2.3.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/org.Pt.eg.db_3.2.3.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/org.Rn.eg.db_3.2.3.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/org.Sc.sgd.db_3.2.3.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/org.Sco.eg.db_2.4.2.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/org.Ss.eg.db_3.2.3.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/org.Tgondii.eg.db_1.0.tar.gz?raw=true</package>
+                    <package>https://github.com/mvdbeek/galaxy_package_sources/blob/master/package_r_3_2_1_goseq/org.Xl.eg.db_3.2.3.tar.gz?raw=true</package>
                 </action>
             </actions>
         </install>

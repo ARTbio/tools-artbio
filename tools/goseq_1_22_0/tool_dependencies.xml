@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<tool_dependency>
+    <package name="R" version="3.2.1">
+         <repository name="package_r_3_2_1" owner="iuc" />
+    </package>
+    <package name="goseq" version="1.22.0">
+         <repository name="package_r_3_2_1_goseq_1_22_0" owner="mvdbeek" />
+    </package>
+</tool_dependency>

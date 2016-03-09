@@ -1,0 +1,11 @@
+<tables>
+    <!-- Location of Picard dict file and other files -->
+    <table name="go_genomes" comment_char="#">
+        <columns>value, name</columns>
+        <file path="tool-data/genomes.loc" />
+    </table>
+    <table name="go_gene_ids" comment_char="#">
+        <columns>value, name</columns>
+        <file path="tool-data/gene_ids.loc" />
+    </table>
+</tables>

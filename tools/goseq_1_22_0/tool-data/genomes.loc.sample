@@ -1,0 +1,170 @@
+hg38	hg38, Human, Dec. 2013, Genome Reference Consortium GRCh38
+hg19	hg19, Human, Feb. 2009, Genome Reference Consortium GRCh37
+hg18	hg18, Human, Mar. 2006, NCBI Build 36.1
+hg17	hg17, Human, May 2004, NCBI Build 35
+hg16	hg16, Human, Jul. 2003, NCBI Build 34
+vicPac2	vicPac2, Alpaca, Mar. 2013, Broad Institute Vicugna_pacos-2.0.1
+vicPac1	vicPac1, Alpaca, Jul. 2008, Broad Institute VicPac1.0
+dasNov3	dasNov3, Armadillo, Dec. 2011, Broad Institute DasNov3
+otoGar3	otoGar3, Bushbaby, Mar. 2011, Broad Institute OtoGar3
+papHam1	papHam1, Baboon, Nov. 2008, Baylor College of Medicine HGSC Pham_1.0
+papAnu2	papAnu2, Baboon, Mar. 2012, Baylor College of Medicine Panu_2.0
+felCat8	felCat8, Cat, Nov. 2014, ICGSC Felis_catus_8.0
+felCat5	felCat5, Cat, Sep. 2011, ICGSC Felis_catus-6.2
+felCat4	felCat4, Cat, Dec. 2008, NHGRI catChrV17e
+felCat3	felCat3, Cat, Mar. 2006, Broad Institute Release 3
+panTro4	panTro4, Chimp, Feb. 2011, CGSC Build 2.1.4
+panTro3	panTro3, Chimp, Oct. 2010, CGSC Build 2.1.3
+panTro2	panTro2, Chimp, Mar. 2006, CGSC Build 2.1
+panTro1	panTro1, Chimp, Nov. 2003, CGSC Build 1.1
+criGri1	criGri1, Chinese hamster, Jul. 2013, Beijing Genomics Institution-Shenzhen C_griseus_v1.0
+bosTau8	bosTau8, Cow, Jun. 2014, University of Maryland v3.1.1
+bosTau7	bosTau7, Cow, Oct. 2011, Baylor College of Medicine HGSC Btau_4.6.1
+bosTau6	bosTau6, Cow, Nov. 2009, University of Maryland v3.1
+bosTau4	bosTau4, Cow, Oct. 2007, Baylor College of Medicine HGSC Btau_4.0
+bosTau3	bosTau3, Cow, Aug. 2006, Baylor College of Medicine HGSC Btau_3.1
+bosTau2	bosTau2, Cow, Mar. 2005, Baylor College of Medicine HGSC Btau_2.0
+canFam3	canFam3, Dog, Sep. 2011, Broad Institute v3.1
+canFam2	canFam2, Dog, May 2005, Broad Institute v2.0
+canFam1	canFam1, Dog, Jul. 2004, Broad Institute v1.0
+turTru2	turTru2, Dolphin, Oct. 2011, Baylor College of Medicine Ttru_1.4
+loxAfr3	loxAfr3, Elephant, Jul. 2009, Broad Institute LoxAfr3
+musFur1	musFur1, Ferret, Apr. 2011, Ferret Genome Sequencing Consortium MusPutFur1.0
+nomLeu3	nomLeu3, Gibbon, Oct. 2012, Gibbon Genome Sequencing Consortium Nleu3.0
+nomLeu2	nomLeu2, Gibbon, Jun. 2011, Gibbon Genome Sequencing Consortium Nleu1.1
+nomLeu1	nomLeu1, Gibbon, Jan. 2010, Gibbon Genome Sequencing Consortium Nleu1.0
+gorGor3	gorGor3, Gorilla, May 2011, Wellcome Trust Sanger Institute gorGor3.1
+cavPor3	cavPor3, Guinea pig, Feb. 2008, Broad Institute cavPor3
+eriEur2	eriEur2, Hedgehog, May 2012, Broad Institute EriEur2.0
+eriEur1	eriEur1, Hedgehog, Jun. 2006, Broad Institute Draft_v1
+equCab2	equCab2, Horse, Sep. 2007, Broad Institute EquCab2
+equCab1	equCab1, Horse, Jan. 2007, Broad Institute EquCab1
+dipOrd1	dipOrd1, Kangaroo rat, Jul. 2008, Baylor/Broad Institute DipOrd1.0
+triMan1	triMan1, Manatee, Oct. 2011, Broad Institute TriManLat1.0
+calJac3	calJac3, Marmoset, Mar. 2009, WUSTL Callithrix_jacchus-v3.2
+calJac1	calJac1, Marmoset, Jun. 2007, WUSTL Callithrix_jacchus-v2.0.2
+pteVam1	pteVam1, Megabat, Jul. 2008, Broad Institute Ptevap1.0
+myoLuc2	myoLuc2, Microbat, Jul. 2010, Broad Institute MyoLuc2.0
+balAcu1	balAcu1, Minke whale, Oct. 2013, KORDI BalAcu1.0
+mm10	mm10, Mouse, Dec. 2011, Genome Reference Consortium GRCm38
+mm9	mm9, Mouse, Jul. 2007, NCBI Build 37
+mm8	mm8, Mouse, Feb. 2006, NCBI Build 36
+mm7	mm7, Mouse, Aug. 2005, NCBI Build 35
+micMur2	micMur2, Mouse lemur, May 2015, Baylor/Broad Institute Mmur_2.0
+micMur1	micMur1, Mouse lemur, Jul. 2007, Broad Institute MicMur1.0
+hetGla2	hetGla2, Naked mole-rat, Jan. 2012, Broad Institute HetGla_female_1.0
+hetGla1	hetGla1, Naked mole-rat, Jul. 2011, Beijing Genomics Institute HetGla_1.0
+monDom5	monDom5, Opossum, Oct. 2006, Broad Institute release MonDom5
+monDom4	monDom4, Opossum, Jan. 2006, Broad Institute release MonDom4
+monDom1	monDom1, Opossum, Oct. 2004, Broad Institute release MonDom1
+ponAbe2	ponAbe2, Orangutan, Jul. 2007, WUSTL Pongo_albelii-2.0.2
+ailMel1	ailMel1, Panda, Dec. 2009, BGI-Shenzhen AilMel 1.0
+susScr3	susScr3, Pig, Aug. 2011, Swine Genome Sequencing Consortium Sscrofa10.2
+susScr2	susScr2, Pig, Nov. 2009, Swine Genome Sequencing Consortium Sscrofa9.2
+ochPri3	ochPri3, Pika, May 2012, Broad Institute OchPri3.0
+ochPri2	ochPri2, Pika, Jul. 2008, Broad Institute OchPri2
+ornAna2	ornAna2, Platypus, Feb. 2007, WUSTL v5.0.1
+ornAna1	ornAna1, Platypus, Mar. 2007, WUSTL v5.0.1
+oryCun2	oryCun2, Rabbit, Apr. 2009, Broad Institute release OryCun2
+rn6	rn6, Rat, Jul. 2014, RGSC Rnor_6.0
+rn5	rn5, Rat, Mar. 2012, RGSC Rnor_5.0
+rn4	rn4, Rat, Nov. 2004, Baylor College of Medicine HGSC v3.4
+rn3	rn3, Rat, Jun. 2003, Baylor College of Medicine HGSC v3.1
+rheMac3	rheMac3, Rhesus, Oct. 2010, Beijing Genomics Institute CR_1.0
+rheMac2	rheMac2, Rhesus, Jan. 2006, Baylor College of Medicine HGSC v1.0 Mmul_051212
+proCap1	proCap1, Rock hyrax, Jul. 2008, Baylor College of Medicine HGSC Procap1.0
+oviAri3	oviAri3, Sheep, Aug. 2012, ISGC Oar_v3.1
+oviAri1	oviAri1, Sheep, Feb. 2010, ISGC Ovis aries 1.0
+sorAra2	sorAra2, Shrew, Aug. 2008, Broad Institute SorAra2.0
+sorAra1	sorAra1, Shrew, Jun. 2006, Broad Institute SorAra1.0
+choHof1	choHof1, Sloth, Jul. 2008, Broad Institute ChoHof1.0
+speTri2	speTri2, Squirrel, Nov. 2011, Broad Institute SpeTri2.0
+saiBol1	saiBol1, Squirrel monkey, Oct. 2011, Broad Institute SaiBol1.0
+tarSyr2	tarSyr2, Tarsier, Sep. 2013, WashU Tarsius_syrichta-2.0.1
+tarSyr1	tarSyr1, Tarsier, Aug. 2008, WUSTL/Broad Institute Tarsyr1.0
+sarHar1	sarHar1, Tasmanian devil, Feb. 2011, Wellcome Trust Sanger Institute Devil_refv7.0
+echTel2	echTel2, Tenrec, Nov. 2012, Broad Institute EchTel2.0
+echTel1	echTel1, Tenrec, Jul. 2005, Broad Institute echTel1
+tupBel1	tupBel1, Tree shrew, Dec. 2006, Broad Institute Tupbel1.0
+macEug2	macEug2, Wallaby, Sep. 2009, Tammar Wallaby Genome Sequencing Consortium Meug_1.1
+cerSim1	cerSim1, White rhinoceros, May 2012, Broad Institute CerSimSim1.0
+allMis1	allMis1, American alligator, Aug. 2012, Int. Crocodilian Genomes Working Group allMis0.2
+gadMor1	gadMor1, Atlantic cod, May 2010, Genofisk GadMor_May2010
+melUnd1	melUnd1, Budgerigar, Sep. 2011, WUSTL v6.3
+galGal4	galGal4, Chicken, Nov.
+2011, ICGC Gallus-gallus-4.0
+galGal3	galGal3, Chicken, May 2006, WUSTL Gallus-gallus-2.1
+galGal2	galGal2, Chicken, Feb. 2004, WUSTL Gallus-gallus-1.0
+latCha1	latCha1, Coelacanth, Aug. 2011, Broad Institute LatCha1
+calMil1	calMil1, Elephant shark, Dec. 2013, IMCB Callorhinchus_milli_6.1.3
+fr3	fr3, Fugu, Oct. 2011, JGI v5.0
+fr2	fr2, Fugu, Oct. 2004, JGI v4.0
+fr1	fr1, Fugu, Aug. 2002, JGI v3.0
+petMar2	petMar2, Lamprey, Sep. 2010, WUGSC 7.0
+petMar1	petMar1, Lamprey, Mar. 2007, WUSTL v3.0
+anoCar2	anoCar2, Lizard, May 2010, Broad Institute AnoCar2
+anoCar1	anoCar1, Lizard, Feb. 2007, Broad Institute AnoCar1
+oryLat2	oryLat2, Medaka, Oct. 2005, NIG v1.0
+geoFor1	geoFor1, Medium ground finch, Apr. 2012, BGI GeoFor_1.0 / NCBI 13302
+oreNil2	oreNil2, Nile tilapia, Jan. 2011, Broad Institute Release OreNil1.1
+chrPic1	chrPic1, Painted turtle, Dec. 2011, IPTGSC Chrysemys_picta_bellii-3.0.1
+gasAcu1	gasAcu1, Stickleback, Feb. 2006, Broad Institute Release 1.0
+tetNig2	tetNig2, Tetraodon, Mar. 2007, Genoscope v7
+tetNig1	tetNig1, Tetraodon, Feb. 2004, Genoscope v7
+melGal1	melGal1, Turkey, Dec. 2009, Turkey Genome Consortium v2.01
+xenTro7	xenTro7, X. tropicalis, Sep. 2012, JGI v.7.0
+xenTro3	xenTro3, X. tropicalis, Nov. 2009, JGI v.4.2
+xenTro2	xenTro2, X. tropicalis, Aug. 2005, JGI v.4.1
+xenTro1	xenTro1, X. tropicalis, Oct. 2004, JGI v.3.0
+taeGut2	taeGut2, Zebra finch, Feb. 2013, WashU taeGut324
+taeGut1	taeGut1, Zebra finch, Jul. 2008, WUSTL v3.2.4
+danRer10	danRer10, Zebrafish, Sep. 2014, Genome Reference Consortium GRCz10 
+danRer7	danRer7, Zebrafish, Jul. 2010, Sanger Institute Zv9 
+danRer6	danRer6, Zebrafish, Dec. 2008, Sanger Institute Zv8 
+danRer5	danRer5, Zebrafish, Jul. 2007, Sanger Institute Zv7 
+danRer4	danRer4, Zebrafish, Mar. 2006, Sanger Institute Zv6 
+danRer3	danRer3, Zebrafish, May 2005, Sanger Institute Zv5 
+ci2	ci2, C. intestinalis, Mar. 2005, JGI v2.0
+ci1	ci1, C. intestinalis, Dec. 2002, JGI v1.0
+braFlo1	braFlo1, Lancelet, Mar. 2006, JGI v1.0
+strPur2	strPur2, S. purpuratus, Sep. 2006, Baylor College of Medicine HGSC v. Spur 2.1
+strPur1	strPur1, S. purpuratus, Apr. 2005, Baylor College of Medicine HGSC v. Spur_0.5
+apiMel2	apiMel2, A. mellifera, Jan. 2005, Baylor College of Medicine HGSC v.Amel_2.0 
+apiMel1	apiMel1, A. mellifera, Jul. 2004, Baylor College of Medicine HGSC v.Amel_1.2 
+anoGam1	anoGam1, A. gambiae, Feb. 2003, IAGP v.MOZ2
+droAna2	droAna2, D. ananassae, Aug. 2005, Agencourt Arachne release
+droAna1	droAna1, D. ananassae, Jul. 2004, TIGR Celera release
+droEre1	droEre1, D. erecta, Aug. 2005, Agencourt Arachne release
+droGri1	droGri1, D. grimshawi, Aug. 2005, Agencourt Arachne release
+dm6	dm6, D. melanogaster, Aug. 2014, BDGP Release 6 + ISO1 MT
+dm3	dm3, D. melanogaster, Apr. 2006, BDGP Release 5
+dm2	dm2, D. melanogaster, Apr. 2004, BDGP Release 4
+dm1	dm1, D. melanogaster, Jan. 2003, BDGP Release 3
+droMoj2	droMoj2, D. mojavensis, Aug. 2005, Agencourt Arachne release
+droMoj1	droMoj1, D. mojavensis, Aug. 2004, Agencourt Arachne release
+droPer1	droPer1, D. persimilis, Oct. 2005, Broad Institute release
+dp3	dp3, D. pseudoobscura, Nov. 2004, Flybase Release 1.0
+dp2	dp2, D. pseudoobscura, Aug. 2003, Baylor College of Medicine HGSC Freeze 1
+droSec1	droSec1, D. sechellia, Oct. 2005, Broad Institute Release 1.0
+droSim1	droSim1, D. simulans, Apr. 2005, WUSTL Release 1.0
+droVir2	droVir2, D. virilis, Aug. 2005, Agencourt Arachne release
+droVir1	droVir1, D. virilis, Jul. 2004, Agencourt Arachne release
+droYak2	droYak2, D. yakuba, Nov. 2005, WUSTL Release 2.0
+droYak1	droYak1, D. yakuba, Apr. 2004, WUSTL Release 1.0
+caePb2	caePb2, C. brenneri, Feb. 2008, WUSTL 6.0.1
+caePb1	caePb1, C. brenneri, Jan. 2007, WUSTL 4.0
+cb3	cb3, C. briggsae, Jan. 2007, WUSTL Cb3
+cb1	cb1, C. briggsae, Jul. 2002, WormBase v. cb25.agp8
+ce10	ce10, C. elegans, Oct. 2010, WormBase v. WS220
+ce6	ce6, C. elegans, May 2008, WormBase v. WS190
+ce4	ce4, C. elegans, Jan. 2007, WormBase v. WS170
+ce2	ce2, C. elegans, Mar. 2004, WormBase v. WS120
+caeJap1	caeJap1, C. japonica, Mar. 2008, WUSTL 3.0.2
+caeRem3	caeRem3, C. remanei, May 2007, WUSTL 15.0.1
+caeRem2	caeRem2, C. remanei, Mar. 2006, WUSTL 1.0
+priPac1	priPac1, P. pacificus, Feb. 2007, WUSTL 5.0
+aplCal1	aplCal1, Sea Hare, Sep. 2008, Broad Release Aplcal2.0
+sacCer3	sacCer3, Yeast, April 2011, SGD April 2011 sequence
+sacCer2	sacCer2, Yeast, June 2008, SGD June 2008 sequence
+sacCer1	sacCer1, Yeast, Oct. 2003, SGD 1 Oct 2003 sequence
+eboVir3	eboVir3, Ebola Virus, June 2014, Sierra Leone 2014 (G3683/KM034562.1)
