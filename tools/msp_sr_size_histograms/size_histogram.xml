@@ -42,13 +42,13 @@
             $i.norm
         #end for
         #if $gff:
-        --gff $gff
+            --gff $gff
         #end if
         #if $global.value == 'yes':
-        --global_size
+            --global_size
         #end if
         #if $collapsestrands.value == 'yes':
-        --collapse
+            --collapse
         #end if
 
     </command>
