@@ -22,49 +22,49 @@
     </tests>
     <help>
 
-        .. class:: warningmark
+.. class:: warningmark
 
-        **WARNING:** Be careful not to concatenate datasets of different kinds (e.g., sequences with intervals). This
-        tool does not check if the datasets being concatenated are in the same format.
+**WARNING:** Be careful not to concatenate datasets of different kinds (e.g., sequences with intervals). This tool does not check if the datasets being concatenated are in the same format.
 
-        -----
+-----
 
-        **What it does**
+**What it does**
 
-        Concatenates datasets
+Concatenates datasets
 
-        -----
+-----
 
-        **Example**
+**Example**
 
-        Concatenating Dataset::
+Concatenating Dataset::
 
-        chrX 151087187 151087355 A 0 -
-        chrX 151572400 151572481 B 0 +
+    chrX  151087187  151087355  A  0  -
+    chrX  151572400  151572481  B  0  +
 
-        with Dataset1::
+with Dataset1::
 
-        chr1 151242630 151242955 X 0 +
-        chr1 151271715 151271999 Y 0 +
-        chr1 151278832 151279227 Z 0 -
+    chr1  151242630  151242955  X  0  +
+    chr1  151271715  151271999  Y  0  +
+    chr1  151278832  151279227  Z  0  -
 
-        and with Dataset2::
+and with Dataset2::
 
-        chr2 100000030 200000955 P 0 +
-        chr2 100000015 200000999 Q 0 +
+    chr2  100000030  200000955  P  0  +
+    chr2  100000015  200000999  Q  0  +
 
-        will result in the following::
+will result in the following::
 
-        chrX 151087187 151087355 A 0 -
-        chrX 151572400 151572481 B 0 +
-        chr1 151242630 151242955 X 0 +
-        chr1 151271715 151271999 Y 0 +
-        chr1 151278832 151279227 Z 0 -
-        chr2 100000030 200000955 P 0 +
-        chr2 100000015 200000999 Q 0 +
+    chrX  151087187  151087355  A  0  -
+    chrX  151572400  151572481  B  0  +
+    chr1  151242630  151242955  X  0  +
+    chr1  151271715  151271999  Y  0  +
+    chr1  151278832  151279227  Z  0  -
+    chr2  100000030  200000955  P  0  +
+    chr2  100000015  200000999  Q  0  +
 
-        -----
+-----
 
-        Adapted from the concatenate tool that comes with galaxy.
+Adapted from galaxy's catWrapper.xml to allow multiple input files
+
     </help>
 </tool>
