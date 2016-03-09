@@ -1,99 +1,99 @@
-<tool id="Size_histogram" name="Generate size histograms from alignment files" version="0.9.7">
-  <description>from sRbowtie aligment</description>
-  <requirements>
+<tool id="Size_histogram" name="Generate size histograms from alignment files" version="0.9.8">
+    <description>from sRbowtie aligment</description>
+    <requirements>
         <requirement type="package" version="0.12.7">bowtie</requirement>
         <requirement type="package" version="0.7.7">pysam</requirement>
         <requirement type="package" version="3.1.2">R</requirement>
         <requirement type="package" version="2.14">biocbasics</requirement>
         <requirement type="package" version="1.9">numpy</requirement>
-  </requirements>
-<command interpreter="python">
-        size_histogram.py 
-	          #if $refGenomeSource.genomeSource == "history":
-         	    --reference_fasta  ## sys.argv[2]
-                    $refGenomeSource.ownFile ## index source
-          	  #else:
-                    #silent reference= filter( lambda x: str( x[0] ) == str( $refGenomeSource.series[0].input.dbkey ), $__app__.tool_data_tables[ 'bowtie_indexes' ].get_fields() )[0][-1]
-		    --reference_bowtie_index
-                    $reference
-          	  #end if
-		  --rcode
-		  $plotCode
-		  --output_size_distribution
-		  $size_distribution_dataframe
-		  --minquery
-		  $minquery
-		  --maxquery
-		  $maxquery
-		  --input
-		  #for $i in $refGenomeSource.series
-    		    $i.input 
-		  #end for
-		  --ext
-		  #for $i in $refGenomeSource.series
-    		    $i.input.ext 
-		  #end for
-		  --label
-		  #for $i in $refGenomeSource.series
-    		    "$i.input.name" 
-		  #end for
-		  --normalization_factor
-		  #for $i in $refGenomeSource.series
-    		    $i.norm
-		  #end for
-		  #if $gff:
-		    --gff
-                    $gff
-                  #end if
-                  #if $global.value == 'yes':
-                    --global_size
-                  #end if
-                  #if $collapsestrands.value == 'yes':
-                    --collapse
-                  #end if
+    </requirements>
+    <command interpreter="python">
+        size_histogram.py
+        #if $refGenomeSource.genomeSource == "history":
+            --reference_fasta  ## sys.argv[2]
+            $refGenomeSource.ownFile ## index source
+        #else:
+            #silent reference= filter( lambda x: str( x[0] ) == str( $refGenomeSource.series[0].input.dbkey ), $__app__.tool_data_tables[ 'bowtie_indexes' ].get_fields() )[0][-1]
+            --reference_bowtie_index
+            $reference
+        #end if
+        --rcode
+        $plotCode
+        --output_size_distribution
+        $size_distribution_dataframe
+        --minquery
+        $minquery
+        --maxquery
+        $maxquery
+        --input
+        #for $i in $refGenomeSource.series
+            $i.input
+        #end for
+        --ext
+        #for $i in $refGenomeSource.series
+            $i.input.ext
+        #end for
+        --label
+        #for $i in $refGenomeSource.series
+            "$i.input.name"
+        #end for
+        --normalization_factor
+        #for $i in $refGenomeSource.series
+            $i.norm
+        #end for
+        #if $gff:
+        --gff $gff
+        #end if
+        #if $global.value == 'yes':
+        --global_size
+        #end if
+        #if $collapsestrands.value == 'yes':
+        --collapse
+        #end if
 
-</command>
-  <inputs>
-       <conditional name="refGenomeSource">
-           <param name="genomeSource" type="select" label="Will you select a reference genome from your history or use a built-in index?" help="Built-ins were indexed using default options">
-               <option value="indexed">Use a built-in index</option>
-               <option value="history">Use one from the history</option>
-           </param>
-           <when value="indexed">
-	     <repeat name="series" title="Add alignment files">
-	       <param name="input" type="data" label="Select multiple alignments to parse" format="tabular,sam,bam">
-                  <validator type="dataset_metadata_in_data_table" table_name="bowtie_indexes" metadata_name="dbkey" metadata_column="0" message="database not set for this bowtie output. Select the database(=genome used for matching) manually, or select a reference fasta from your history."/>
-               </param>
-	       <param name="norm" type="float" value="1" label="Indicate a normalization factor to compare multiple aligments"/>
-	     </repeat>
-           </when>
-           <when value="history">
-              <param name="ownFile" type="data" format="fasta" label="Select a fasta file, to serve as index reference" />
-	     <repeat name="series" title="Add alignment files">
-	       <param name="input" type="data" label="Select multiple alignments to parse" format="tabular,sam,bam"/>
-	       <param name="norm" type="float" value="1" label="Indicate a normalization factor to compare multiple aligments"/>
-	     </repeat>
-	   </when>
-       </conditional>
-                <param name="gff" type="data" format="gff,gff3" optional="true" label="Optional: select a GFF to investigate regions of interest" help="GFF must match genome build"/>
-                 <!-- <validator type="dataset_metadata_in_data_table" table_name="bowtie_indexes" metadata_name="dbkey" metadata_column="0" message="GFF database and alignment file databse do not match!"/> -->
-		<param name="global" type="select" label="Generate size distribution for each item, or generate a global alignment">
-                  <option value="no">for each item</option>
-                  <option value="yes">global</option>
-                </param>
-                <param name="collapsestrands" type="select" label="Whether + and - reads should be collapsed or not">
-                  <option value="no">Do not collapse</option>
-                  <option value="yes">Collapse + and - reads</option>
-                </param>
-                <param name="minquery" type="integer" size="3" value="18" label="Min size of reads to plot" help="'15' = 15 nucleotides"/>
-                <param name="maxquery" type="integer" size="3" value="28" label="Max size of reads to plot" help="'30' = 30 nucleotides"/>
-                <param name="title" type="text" size="15" value="Size distribution" label="Main Titles"/>
-                <param name="xlabel" type="text" size="15" value="Size in nucleotides" label="x axis label"/>
-                <param name="ylabel" type="text" size="15" value="Number of reads" label="y axis label"/>
-                <param name="rows_per_page" type="text" size="9" value="8" label="How many items to display per page?">
-                  <validator type="in_range" min="6" max="20" message="Select between 6 and 20 rows, as the readability will suffer otherwise."/>
-		</param>
-  </inputs>
+    </command>
+    <inputs>
+        <conditional name="refGenomeSource">
+            <param name="genomeSource" type="select" label="Will you select a reference genome from your history or use a built-in index?" help="Built-ins were indexed using default options">
+                <option value="indexed">Use a built-in index</option>
+                <option value="history">Use one from the history</option>
+            </param>
+            <when value="indexed">
+                <repeat name="series" title="Add alignment files">
+                    <param name="input" type="data" label="Select multiple alignments to parse" format="tabular,sam,bam">
+                        <validator type="dataset_metadata_in_data_table" table_name="bowtie_indexes" metadata_name="dbkey" metadata_column="0" message="database not set for this bowtie output. Select the database(=genome used for matching) manually, or select a reference fasta from your history."/>
+                    </param>
+                    <param name="norm" type="float" value="1" label="Indicate a normalization factor to compare multiple aligments"/>
+                </repeat>
+            </when>
+            <when value="history">
+                <param name="ownFile" type="data" format="fasta" label="Select a fasta file, to serve as index reference" />
+                <repeat name="series" title="Add alignment files">
+                    <param name="input" type="data" label="Select multiple alignments to parse" format="tabular,sam,bam"/>
+                    <param name="norm" type="float" value="1" label="Indicate a normalization factor to compare multiple aligments"/>
+                </repeat>
+            </when>
+        </conditional>
+        <param name="gff" type="data" format="gff,gff3" optional="true" label="Optional: select a GFF to investigate regions of interest" help="GFF must match genome build"/>
+        <!-- <validator type="dataset_metadata_in_data_table" table_name="bowtie_indexes" metadata_name="dbkey" metadata_column="0" message="GFF database and alignment file databse do not match!"/> -->
+        <param name="global" type="select" label="Generate size distribution for each item, or generate a global alignment">
+            <option value="no">for each item</option>
+            <option value="yes">global</option>
+        </param>
+        <param name="collapsestrands" type="select" label="Whether + and - reads should be collapsed or not">
+            <option value="no">Do not collapse</option>
+            <option value="yes">Collapse + and - reads</option>
+        </param>
+        <param name="minquery" type="integer" size="3" value="18" label="Min size of reads to plot" help="'15' = 15 nucleotides"/>
+        <param name="maxquery" type="integer" size="3" value="28" label="Max size of reads to plot" help="'30' = 30 nucleotides"/>
+        <param name="title" type="text" size="15" value="Size distribution" label="Main Titles"/>
+        <param name="xlabel" type="text" size="15" value="Size in nucleotides" label="x axis label"/>
+        <param name="ylabel" type="text" size="15" value="Number of reads" label="y axis label"/>
+        <param name="yrange" type="integer" size="3" value="0" label="y axis range for size distributions. 0 means auto-scaling."/>
+        <param name="rows_per_page" type="text" size="9" value="8" label="How many items to display per page?">
+            <validator type="in_range" min="6" max="20" message="Select between 6 and 20 rows, as the readability will suffer otherwise."/>
+        </param>
+    </inputs>
    <configfiles>
      <configfile name="plotCode">
       ## Setup R error handling to go to stderr
@@ -109,6 +109,11 @@
       size=read.delim("${size_distribution_dataframe}", header=T, row.names=NULL)
       n_samples = length(unique (size\$sample))
       n_genes = length (unique (levels(size\$gene)))
+
+      if (${yrange} != 0) {
+         # This is used for specifying the y-axis limits
+         ylim=c(-${yrange}, ${yrange})
+      } else { ylim="" }
 
       par.settings.size=list(layout.heights=list(top.padding=1, bottom.padding=1),
                              strip.background = list(col = c("lightblue", "lightgreen"))
@@ -132,7 +137,7 @@
                       newpage = T,
                       ...)
 
-          combineLimits(update(useOuterStrips(bc, 
+          combineLimits(update(useOuterStrips(bc,
                                               strip.left = strip.custom(par.strip.text = list(cex=0.5))
                                               ),
                         layout=c(n_samples,${rows_per_page})),
@@ -147,44 +152,61 @@
       #end if
 
       if (global=="no") {
+      width = 8.2677*n_samples/4
+      } else { width = 8.2677 }
 
       options(warn=-1)
-      pdf(file="${size_PDF}", paper="special", height=11.69, width=8.2677*n_samples/4)
-      plot_size_distribution(size, par.settings=par.settings.size) # removed , prepanel=smR.prepanel
+      pdf(file="${size_PDF}", paper="special", height=11.69, width=width)
 
-       } else {
+      if (ylim == "" &amp;&amp; global=="no") {
+          plot_size_distribution(size, par.settings=par.settings.size)
+         }
+      if (ylim != "" &amp;&amp; global=="no") { plot_size_distribution(size, par.settings=par.settings.size, ylim=ylim)
+         }
+      if (ylim == "" &amp;&amp; global=="yes") {  bc= barchart(count~as.factor(size)|factor(sample, levels=unique(sample)), data = size, origin = 0,
+              horizontal=FALSE,
+              group=polarity,
+              stack=TRUE,
+              col=c('red', 'blue'),
+              scales=list(y=list(tick.number=4, rot=90, relation="same"), cex=1),
+              xlab = "readsize in nucleotides",
+              ylab = "${ylabel}",
+              main="${title}" , as.table=TRUE, newpage = T,
+              aspect=0.5,
+              strip = strip.custom(par.strip.text = list(cex = 1), which.given=1, bg="lightblue")
+              )
+         bc
+         }
+      if (ylim != "" &amp;&amp; global=="yes") {  bc= barchart(count~as.factor(size)|factor(sample, levels=unique(sample)), data = size, origin = 0,
+              horizontal=FALSE,
+              group=polarity,
+              stack=TRUE,
+              col=c('red', 'blue'),
+              scales=list(y=list(tick.number=4, rot=90, relation="same"), cex=1),
+              xlab = "readsize in nucleotides",
+              ylab = "${ylabel}",
+              ylim = ylim,
+              main="${title}" , as.table=TRUE, newpage = T,
+              aspect=0.5,
+              strip = strip.custom(par.strip.text = list(cex = 1), which.given=1, bg="lightblue")
+              )
+         bc
+         }
 
-      pdf(file="${size_PDF}", paper="special", height=11.69, width=8.2677)
-          bc= barchart(count~as.factor(size)|factor(sample, levels=unique(sample)), data = size, origin = 0,
-          horizontal=FALSE,
-	  group=polarity,
-	  stack=TRUE,
-          col=c('red', 'blue'),
-#	  par.settings=list(fontsize = list(text=8, points=8)),
-          scales=list(y=list(tick.number=4, rot=90, relation="same"), cex=1),
-          xlab = "readsize in nucleotides",
-          ylab = "${ylabel}",
-          main="${title}" , as.table=TRUE, newpage = T,
-          aspect=0.5,
-          strip = strip.custom(par.strip.text = list(cex = 1), which.given=1, bg="lightblue")
-          )
-          bc
-      }
       devname=dev.off()
 
      </configfile>
    </configfiles>
-
-   <outputs>
-   <data format="tabular" name="size_distribution_dataframe" label="Size_distribution_dataframe.tab"/>
-   <data format="pdf" name="size_PDF" label="Size_distribution.pdf"/>
-   </outputs>
+    <outputs>
+        <data format="tabular" name="size_distribution_dataframe" label="Size_distribution_dataframe.tab"/>
+        <data format="pdf" name="size_PDF" label="Size_distribution.pdf"/>
+    </outputs>
 <help>
 
 **What it does**
 
-Takes one or more alignment files (BAM, SAM or tabular bowtie output) as input and produces a histogram of read sizes, 
-where by default for each "chromosome" a histogram of read sizes is drawn. 
+Takes one or more alignment files (BAM, SAM or tabular bowtie output) as input and produces a histogram of read sizes,
+where by default for each "chromosome" a histogram of read sizes is drawn.
 Reads that map in sense are on the top (red), reads that map antisense are on the bottom (blue).
 
 
@@ -209,32 +231,32 @@ produce a plot like this:
 
 ----
 
-.. image:: static/images/size_histogram.png 
-    :height: 800 
+.. image:: static/images/size_histogram.png
+    :height: 800
     :width: 500
 
 </help>
-  <tests>
-  <test>
-      <param name="genomeSource" value="history" />
-      <param name="ownFile" value="transposons.fasta" ftype="fasta" />
-      <param name="series_0|input" value="sample1.srbowtie_out" ftype="tabular"/>
-      <param name="series_0|norm" value="1" />
-      <param name="series_1|input" value="sample2.srbowtie_out" ftype="tabular"/>
-      <param name="series_1|norm" value="1" />
-      <param name="series_2|input" value="sample3.srbowtie_out" ftype="tabular"/>
-      <param name="series_2|norm" value="1" />
-      <param name="global" value="no" />
-      <param name="collapsestrands" value="no" />
-      <param name="minquery" value="18"/>
-      <param name="maxquery" value="30"/>
-      <param name="title" value="Size distribution"/>
-      <param name="xlabel" value="Size in nucleotides"/>
-      <param name="ylabel" value="Number of reads"/>
-      <param name="rows_per_page" value="10"/>
-      <output name="size_distribution_dataframe" ftype="tabular" file="Size_distribution_dataframe.tab" />
-      <output name="size_PDF" ftype="pdf" file="Size_distribution.pdf" />
-  </test>
-  </tests>
+    <tests>
+        <test>
+            <param name="genomeSource" value="history" />
+            <param name="ownFile" value="transposons.fasta" ftype="fasta" />
+            <param name="series_0|input" value="sample1.srbowtie_out" ftype="tabular"/>
+            <param name="series_0|norm" value="1" />
+            <param name="series_1|input" value="sample2.srbowtie_out" ftype="tabular"/>
+            <param name="series_1|norm" value="1" />
+            <param name="series_2|input" value="sample3.srbowtie_out" ftype="tabular"/>
+            <param name="series_2|norm" value="1" />
+            <param name="global" value="no" />
+            <param name="collapsestrands" value="no" />
+            <param name="minquery" value="18"/>
+            <param name="maxquery" value="30"/>
+            <param name="title" value="Size distribution"/>
+            <param name="xlabel" value="Size in nucleotides"/>
+            <param name="ylabel" value="Number of reads"/>
+            <param name="rows_per_page" value="10"/>
+            <output name="size_distribution_dataframe" ftype="tabular" file="Size_distribution_dataframe.tab" />
+            <output name="size_PDF" ftype="pdf" file="Size_distribution.pdf" />
+        </test>
+    </tests>
 </tool>
 
