@@ -3,6 +3,7 @@
         <requirements>
             <requirement type="package" version="3.2.1">R</requirement>
             <requirement type="package" version="1.22.0">goseq</requirement>
+            <requirement type="package" version="1.22.0">bioconductor-goseq</requirement>
         </requirements>
     </xml>
     <xml name="stdio">
