@@ -76,19 +76,14 @@ Parse blast output for viruses genome assembly.
 Takes as an input
 
 - the fasta sequences that have been submitted to blast
-
 - a blast alignment in a tabular format. Inportantly this tabular output must contains the 12 standard columns (see blast documentation), plus a column 13 that will report the length of the subject sequence (slen)
-
 - the numbers of flanking nucleotides to be recovered at the ends of blast hit sequences
 
 The tool returns 4 datasets
 
 - the fasta sequences that produced significant blast hits
-
 - the fasta sequences that did not produced significant blast hits
-
 - the sequences of the blast hits, plus the flanking sequences (as specified in the tool form). This dataset may be further used in metavisitor workflows to produce contigs of hits.
-
 - and the parsing of the blast alignments which summarizes the blast results by "subject" sequences (blast analysis, by subjects)
 
 This latter parsing dataset may be customized by tuning the reporting mode and/or using filters
