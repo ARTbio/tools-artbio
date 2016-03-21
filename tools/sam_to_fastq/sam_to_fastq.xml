@@ -1,0 +1,28 @@
+<tool id="sam_to_fastq" name="SAM to FASTQ" version="0.1">
+  <description></description>
+  <command interpreter="python">sam_to_fastq.py --input $input --output $output</command>
+  <inputs>
+       <param name="input" type="data" format="sam" label="SAM file for extraction of aligned reads in FASTQ format"/>
+   </inputs>
+
+ <outputs>
+   <data format="fastqsanger" name="output" label="FASTQ extraction" />
+</outputs>
+
+    <tests>
+        <test>
+            <param ftype="fasta" name="input" value="input.sam" />
+            <output file="output.fastq" name="output" />
+        </test>
+    </tests>
+
+
+<help>
+
+**What it does**
+
+Extract sequence and sequence quality of aligned reads in a SAM alignment file and return a FASTQ file containing those reads
+
+</help>
+
+</tool>
