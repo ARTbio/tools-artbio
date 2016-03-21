@@ -15,7 +15,7 @@ def Parser():
         
 def print_fastq_sequence(samline, file):
   samfields = samline[:-1].split("\t")
-  file.write ( '@%s\n%s\n+\n%s' % (samfields[0], samfields[9], samfields[10]) )
+  file.write ( '@%s\n%s\n+\n%s\n' % (samfields[0], samfields[9], samfields[10]) )
 
 def main(input, output):
     infile = open (input, "r")
