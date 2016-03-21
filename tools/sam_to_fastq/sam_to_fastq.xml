@@ -11,7 +11,7 @@
 
     <tests>
         <test>
-            <param ftype="fasta" name="input" value="input.sam" />
+            <param ftype="sam" name="input" value="input.sam" />
             <output file="output.fastq" name="output" />
         </test>
     </tests>
