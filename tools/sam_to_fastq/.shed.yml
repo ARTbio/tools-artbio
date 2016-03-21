@@ -3,7 +3,7 @@ owner: drosofff
 name: sam_to_fastq
 description: extract fastq reads from a SAM alignment file
 long_description: |
-  extract reads and their sequence quality from a SAM alignment file and returns a fastq file
+  extracts reads and their sequence quality from a SAM alignment file and returns a fastq file
 
 categories:
   - Convert Formats
