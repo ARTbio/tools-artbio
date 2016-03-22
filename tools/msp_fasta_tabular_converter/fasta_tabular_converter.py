@@ -1,19 +1,37 @@
 #!/usr/bin/python
 #
 import sys
+import string
+import argparse
 from collections import defaultdict
 
-def readfasta_writetabular(fasta, tabular):
-  F = open(fasta, "r")
-  for line in F:
-    if line[0] == ">": continue
-    else:
-      seqdic[line[:-1]] += 1
-  F.close()
-  F = open(tabular, "w")
-  for seq in sorted(seqdic, key=seqdic.get, reverse=True):
-    print >> F, "%s\t%s" % (seq, seqdic[seq])
-  F.close()
+def Parser():
+    the_parser = argparse.ArgumentParser()
+    the_parser.add_argument(
+        '--input', action="store", type=str, help="input file")
+    the_parser.add_argument(
+        '--output', action="store", type=str, help="output converted file")
+    the_parser.add_argument(
+        '--type', action="store", type=str, help="type of convertion")
+    args = the_parser.parse_args()
+    return args
+
+def readfasta_writetabular(fasta, tabular, mode="oneline"):
+    F = open(fasta, "r")
+    for line in F:
+        if line[0] == ">":
+            try:
+                seqdic["".join(stringlist)] += 1 # to dump the sequence of the previous item - try because of first missing stringlist variable
+            except: pass
+            stringlist=[]
+        else:
+            stringlist.append(line[:-1])
+    seqdic["".join(stringlist)] +=  1 # for the last sequence
+    F.close()
+    F = open(tabular, "w")
+    for seq in sorted(seqdic, key=seqdic.get, reverse=True):
+        print >> F, "%s\t%s" % (seq, seqdic[seq])
+    F.close()
     
         
 def readtabular_writefasta(tabular, fasta):
@@ -72,17 +90,19 @@ def readfastaeighted_writefasta(fastaweigthed, fasta):
   F.close()
   Fw.close()
 
+def main(input, output, type):
+    if type == "fasta2tabular":
+        readfasta_writetabular(input, output)
+    elif type == "tabular2fasta":
+        readtabular_writefasta(input, output)
+    elif type == "tabular2fastaweight":
+        readtabular_writefastaweighted (input, output)
+    elif type == "fastaweight2fastaweight":
+        readfastaeighted_writefastaweighted(input, output)
+    elif type == "fastaweight2fasta":
+        readfastaeighted_writefasta(input, output)
 
-seqdic = defaultdict(int)
-option = sys.argv[3]
-
-if option == "fasta2tabular":
-  readfasta_writetabular(sys.argv[1], sys.argv[2])
-elif option == "tabular2fasta":
-  readtabular_writefasta(sys.argv[1], sys.argv[2])
-elif option == "tabular2fastaweight":
-  readtabular_writefastaweighted (sys.argv[1], sys.argv[2])
-elif option == "fastaweight2fastaweight":
-  readfastaeighted_writefastaweighted(sys.argv[1], sys.argv[2])
-elif option == "fastaweight2fasta":
-  readfastaeighted_writefasta(sys.argv[1], sys.argv[2])
+if __name__ == "__main__":
+    seqdic = defaultdict(int)
+    args = Parser()
+    main (args.input, args.output, args.type)

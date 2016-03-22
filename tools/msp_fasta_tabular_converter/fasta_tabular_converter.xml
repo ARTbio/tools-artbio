@@ -1,6 +1,10 @@
-<tool id="fasta_tabular_converter" name="fasta - tabular" version="1.0.2">
+<tool id="fasta_tabular_converter" name="fasta - tabular" version="1.1.0">
   <description>conversions</description>
-  <command interpreter="python">fasta_tabular_converter.py $input $output $switch.conversionType</command>
+  <command interpreter="python">fasta_tabular_converter.py
+                                          --input $input
+                                          --output $output
+                                          --type $switch.conversionType
+  </command>
   <inputs>
     <conditional name="switch">
        <param name="conversionType" type="select" label="conversion option">
@@ -10,23 +14,22 @@
           <option value="fastaweight2fastaweight">recompile weighted fasta to catenated fasta weighted</option>
           <option value="fastaweight2fasta">fasta weighted to fasta</option>
        </param>
-    <when value="fasta2tabular">
-       <param name="input" type="data" format="fasta" label="fasta file to convert to tabular"/>
-    </when>
-    <when value="tabular2fasta">
-       <param name="input" type="data" format="tabular" label="tabular file to convert to fasta"/>
-    </when>
-    <when value="tabular2fastaweight">
-       <param name="input" type="data" format="tabular" label="tabular file to convert to fasta weighted"/>
-    </when>
-    <when value="fastaweight2fastaweight">
-       <param name="input" type="data" format="fasta" label="catenated fasta weighted to recompile" help="Use this option only if you known what you're doing"/>
-    </when>
-    <when value="fastaweight2fasta">
-       <param name="input" type="data" format="fasta" label="fasta weighted file to convert to fasta"/>
-    </when>
-   </conditional>
-
+       <when value="fasta2tabular">
+          <param name="input" type="data" format="fasta" label="fasta file to convert to tabular"/>
+       </when>
+       <when value="tabular2fasta">
+          <param name="input" type="data" format="tabular" label="tabular file to convert to fasta"/>
+       </when>
+       <when value="tabular2fastaweight">
+          <param name="input" type="data" format="tabular" label="tabular file to convert to fasta weighted"/>
+       </when>
+       <when value="fastaweight2fastaweight">
+          <param name="input" type="data" format="fasta" label="catenated fasta weighted to recompile" help="Use this option only if you known what you're doing"/>
+       </when>
+       <when value="fastaweight2fasta">
+          <param name="input" type="data" format="fasta" label="fasta weighted file to convert to fasta"/>
+       </when>
+    </conditional>
    </inputs>
 
  <outputs>
@@ -43,6 +46,7 @@
         <test>
             <param name="conversionType" value="fasta2tabular" />
             <param ftype="fasta" name="input" value="input.fa" />
+            <param name="lines" value="oneline" />
             <output file="output.tab" name="output" />
         </test>
         <test>
