@@ -46,7 +46,6 @@
         <test>
             <param name="conversionType" value="fasta2tabular" />
             <param ftype="fasta" name="input" value="input.fa" />
-            <param name="lines" value="oneline" />
             <output file="output.tab" name="output" />
         </test>
         <test>
