@@ -1,4 +1,4 @@
-<tool id="mismatch_frequencies" name="Mismatch Frequencies" version="0.0.9" hidden="false" >
+<tool id="mismatch_frequencies" name="Mismatch Frequencies" version="0.1.0" hidden="false" >
   <description>Analyze mismatch frequencies in BAM/SAM alignments</description>
   <requirements>
     <requirement type="package" version="0.7.7">pysam</requirement>
@@ -11,7 +11,7 @@
 		#end for
 		--name 
 		#for i in $rep
-			"$i.input_file.name"
+			"$i.input_file.element_identifier"
 		#end for
 		 --output_pdf $output_pdf --output_tab $output_tab --min $min_length --max $max_length
                  --n_mm $number_of_mismatches
