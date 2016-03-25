@@ -8,7 +8,7 @@
                              --blast-tab "$blast_tab"
                              --output "$output"
                              --scaffold_prefix "$sequences.element_identifier"
-                             --scaffold_suffix "guideSequence.element_identifier"
+                             --scaffold_suffix "guideSequence.name"
 </command>
 <inputs>
 <param name="sequences" type="data" format="fasta" label="Select a fasta contigs file"/> 

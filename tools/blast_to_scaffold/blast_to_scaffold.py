@@ -108,7 +108,7 @@ def finalAssembly (GuideDict, outputfile, prefix, suffix):
         finalSeqList.append(GuideDict[keys])
     finalSequence = insert_newlines("".join(finalSeqList) )
     Out = open (outputfile, "w")
-    print >> Out, ">Scaffold_from_%_guided_by_%" % (prefix, suffix)
+    print >> Out, ">Scaffold_from_%s_guided_by_%s" % (prefix, suffix)
     print >> Out, finalSequence
     Out.close()
     
