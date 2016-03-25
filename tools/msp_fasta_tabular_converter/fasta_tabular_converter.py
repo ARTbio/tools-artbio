@@ -26,7 +26,9 @@ def readfasta_writetabular(fasta, tabular, mode="oneline"):
             stringlist=[]
         else:
             stringlist.append(line[:-1])
-    seqdic["".join(stringlist)] +=  1 # for the last sequence
+    try:
+        seqdic["".join(stringlist)] +=  1 # for the last sequence
+    except: pass # in case file to convert is empty
     F.close()
     F = open(tabular, "w")
     for seq in sorted(seqdic, key=seqdic.get, reverse=True):
