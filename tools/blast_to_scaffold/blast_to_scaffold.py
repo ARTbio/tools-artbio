@@ -118,7 +118,7 @@ def __main__():
     GuideDict = myGuide (args.guideSequence)
     blastlist = blatnInfo(args.blast_tab)
     updateGuide(blastlist, GuideDict, ContigsDict)
-    finalAssembly(GuideDict, args.output, arg.scaffold_prefix, arg.scaffold_suffix)
+    finalAssembly(GuideDict, args.output, args.scaffold_prefix, args.scaffold_suffix)
 
 if __name__ == "__main__":
     __main__()
