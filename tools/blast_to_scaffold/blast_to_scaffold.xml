@@ -7,7 +7,7 @@
                              --guideSequence "$guideSequence"
                              --blast-tab "$blast_tab"
                              --output "$output"
-                             --scaffold_prefix "$sequence.element_identifier"
+                             --scaffold_prefix "$sequences.element_identifier"
                              --scaffold_suffix "guideSequence.element_identifier"
 </command>
 <inputs>
