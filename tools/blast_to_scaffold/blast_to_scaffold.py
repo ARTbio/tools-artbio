@@ -30,6 +30,10 @@ def Parser():
         '--blast-tab', dest="blast_tab", action="store", type=str, help="13-columns tabular blastn or tblastx output")
     the_parser.add_argument(
         '--output', action="store", type=str, help="output file path, fasta format")
+    the_parser.add_argument(
+        '--scaffold_prefix', action="store", type=str, help="the prefix that will be used for the header of the fasta scaffold")
+    the_parser.add_argument(
+        '--scaffold_suffix', action="store", type=str, help="the sufix that will be used for the header of the fasta scaffold")
     args = the_parser.parse_args()
     return args
     
@@ -98,13 +102,13 @@ def updateGuide (blastlist, GuideDict, ContigsDict):
         for i, nucleotide in enumerate(sequence):
             GuideDict[i+subjectStart] = nucleotide
             
-def finalAssembly (GuideDict, outputfile):
+def finalAssembly (GuideDict, outputfile, prefix, suffix):
     finalSeqList = []
     for keys in sorted(GuideDict):
         finalSeqList.append(GuideDict[keys])
     finalSequence = insert_newlines("".join(finalSeqList) )
     Out = open (outputfile, "w")
-    print >> Out, ">Scaffold"
+    print >> Out, ">Scaffold_from_%s_guided_by_%s" % (prefix, suffix)
     print >> Out, finalSequence
     Out.close()
     
@@ -114,7 +118,7 @@ def __main__():
     GuideDict = myGuide (args.guideSequence)
     blastlist = blatnInfo(args.blast_tab)
     updateGuide(blastlist, GuideDict, ContigsDict)
-    finalAssembly(GuideDict, args.output)
+    finalAssembly(GuideDict, args.output, args.scaffold_prefix, args.scaffold_suffix)
 
 if __name__ == "__main__":
     __main__()
