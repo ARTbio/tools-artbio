@@ -13,7 +13,7 @@ suppressPackageStartupMessages({
 sink(stdout(), type = "message")
 
 option_list <- list(
-    make_option(c("-gtf", "--gtf"), type="character", help = "Path to GTF file for which to fetch GO data"),
+    # make_option(c("-gtf", "--gtf"), type="character", help = "Path to GTF file for which to fetch GO data"),
     make_option(c("-g", "--genome"), type="character", help = "Genome [used for looking up GO categories]"),
     make_option(c("-i", "--gene_id"), type="character", help="Gene ID format"),
     make_option(c("-c", "--cats"), type="character", help="Comma-seperated list of categories to fetch"),

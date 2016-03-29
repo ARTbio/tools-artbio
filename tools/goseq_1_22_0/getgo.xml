@@ -13,7 +13,9 @@
         --cats "$cats"
     </command>
     <inputs>
+        <!--
         <param name="gtf" label="select GTF file" help="GO annotations for all gene ids in this GTF will be fetched" type="data" format="gtf"/>
+        -->
         <param help="Needed to retrieve GO annotations for the selected genome" label="Select the genome source" name="genome" size="3" type="select">
             <options from_data_table="go_genomes"></options>
         </param>
