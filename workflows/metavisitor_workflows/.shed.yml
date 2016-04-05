@@ -1,0 +1,16 @@
+# .shed.yml supporting automatic pushes.
+owner: drosofff
+name: metavisitor_workflows
+description: A collection of workflows using the Metavisitor tools
+long_description: |
+  This Tool Shed Repository contains a collection of workflows using the Metavisitor tools.
+
+categories:
+  - RNA
+  - Sequence Analysis
+  - Assembly
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/workflows
+toolshed:
+  - toolshed
+
