@@ -1,10 +1,10 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 #
 import argparse
 import logging
-import string
 import sys
 from collections import defaultdict
+
 
 def Parser():
     the_parser = argparse.ArgumentParser()
@@ -17,95 +17,89 @@ def Parser():
     args = the_parser.parse_args()
     return args
 
+
 def readfasta_writetabular(fasta, tabular, mode="oneline"):
-    with open(fasta, "r") as F:
-        for line in F:
-            if line[0] == ">":
-                try:
-                    seqdic["".join(stringlist)] += 1 # to dump the sequence of the previous item - try because of first missing stringlist variable
-                except NameError: pass
-                stringlist=[]
-            else:
+    for line in fasta:
+        if line[0] == ">":
+            try:
+                seqdic["".join(stringlist)] += 1 # to dump the sequence of the previous item - try because of first missing stringlist variable
+            except NameError: pass
+            stringlist=[]
+        else:
+            try:
                 stringlist.append(line[:-1])
-        try:
-            seqdic["".join(stringlist)] +=  1 # for the last sequence
-        except NameError:
-            logging.warning("input file empty.")
-        with open(tabular, "w") as F:
-            for seq in sorted(seqdic, key=seqdic.get, reverse=True):
-                F.write( "%s\t%s" % (seq, seqdic[seq]))
-            F.close()
-    
-        
+            except UnboundLocalError:  # if file went through filter and contains only empty lines
+                logging.info("first line is empty.")
+    try:
+        seqdic["".join(stringlist)] +=  1 # for the last sequence
+    except NameError:
+        logging.info("input file has not fasta sequences.")
+    for seq in sorted(seqdic, key=seqdic.get, reverse=True):
+        tabular.write( "%s\t%s\n" % (seq, seqdic[seq]))
+
+
 def readtabular_writefasta(tabular, fasta):
-  F = open(tabular, "r")
-  Fw = open(fasta, "w")
-  counter = 0
-  for line in F:
-    fields = line.split()
-    for i in range(int(fields[1])):
-      counter += 1
-      print >> Fw, ">%s\n%s" % (counter, fields[0])
-  F.close()
-  Fw.close()
+    counter = 0
+    for line in tabular:
+        fields = line.split()
+        for i in range(int(fields[1])):
+            counter += 1
+            fasta.write( ">%s\n%s\n" % (counter, fields[0]) )
+
 
 def readtabular_writefastaweighted (tabular, fasta):
-  F = open(tabular, "r")
-  Fw = open(fasta, "w")
-  counter = 0
-  for line in F:
-    counter += 1
-    fields = line[:-1].split()
-    print >> Fw, ">%s_%s\n%s" % (counter, fields[1],  fields[0])
-  F.close()
-  Fw.close()
-
-def readfastaeighted_writefastaweighted(fastaweigthed_input, fastaweigthed_reparsed):
-  F = open(fastaweigthed_input, "r")
-  number_reads = 0
-  for line in F:
-    if line[0] == ">":
-      weigth = int(line[1:-1].split("_")[-1])
-      number_reads += weigth
-    else:
-      seqdic[line[:-1]] += weigth
-  F.close()
-  F = open(fastaweigthed_reparsed, "w")
-  n=0
-  for seq in sorted(seqdic, key=seqdic.get, reverse=True):
-    n += 1
-    print >> F, ">%s_%s\n%s" % (n, seqdic[seq], seq)
-  F.close()
-  print "%s reads collapsed" % number_reads
-
-def readfastaeighted_writefasta(fastaweigthed, fasta):
-  F = open(fastaweigthed, "r")
-  Fw = open(fasta, "w")
-  counter = 0
-  for line in F:
-    if line[0] == ">":
-      weigth = int(line[1:-1].split("_")[-1])
-    else:
-      seq = line[:-1]
-      for i in range (weigth):
+    counter = 0
+    for line in tabular:
         counter += 1
-        print >> Fw, ">%s\n%s" % (counter, seq)
-  F.close()
-  Fw.close()
+        fields = line[:-1].split()
+        fasta.write( ">%s_%s\n%s\n" % (counter, fields[1],  fields[0]) )
+
+
+def readfastaweighted_writefastaweighted(fastaweigthed_input, fastaweigthed_reparsed):
+    number_reads = 0
+    for line in fastaweigthed_input:
+        if line[0] == ">":
+            weigth = int(line[1:-1].split("_")[-1])
+            number_reads += weigth
+        else:
+            seqdic[line[:-1]] += weigth
+    n=0
+    for seq in sorted(seqdic, key=seqdic.get, reverse=True):
+        n += 1
+        fastaweigthed_reparsed.write( ">%s_%s\n%s\n" % (n, seqdic[seq], seq) )
+    log.info( "%s reads collapsed" % number_reads)
+
+
+def readfastaweighted_writefasta(fastaweigthed, fasta):
+    counter = 0
+    for line in fastaweigthed:
+        if line[0] == ">":
+            weigth = int(line[1:-1].split("_")[-1])
+        else:
+            seq = line[:-1]
+            for i in range (weigth):
+                counter += 1
+                fasta.write( ">%s\n%s\n" % (counter, seq) )
+
 
 def main(input, output, type):
-    if type == "fasta2tabular":
-        readfasta_writetabular(input, output)
-    elif type == "tabular2fasta":
-        readtabular_writefasta(input, output)
-    elif type == "tabular2fastaweight":
-        readtabular_writefastaweighted (input, output)
-    elif type == "fastaweight2fastaweight":
-        readfastaeighted_writefastaweighted(input, output)
-    elif type == "fastaweight2fasta":
-        readfastaeighted_writefasta(input, output)
+    with open(input, "r") as input:
+        with open(output, "w") as output:
+            if type == "fasta2tabular":
+                readfasta_writetabular(input, output)
+            elif type == "tabular2fasta":
+                readtabular_writefasta(input, output)
+            elif type == "tabular2fastaweight":
+                readtabular_writefastaweighted (input, output)
+            elif type == "fastaweight2fastaweight":
+                readfastaweighted_writefastaweighted(input, output)
+            elif type == "fastaweight2fasta":
+                readfastaweighted_writefasta(input, output)
+
 
 if __name__ == "__main__":
     seqdic = defaultdict(int)
     args = Parser()
+    log = logging.getLogger(__name__)
+    logging.basicConfig(stream=sys.stdout, level=logging.INFO)
     main (args.input, args.output, args.type)
