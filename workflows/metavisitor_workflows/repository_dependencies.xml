@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<repositories description="These workflows require the repository suite_metavisitor_1_2">
+    <repository  name="suite_metavisitor_1_2" owner="drosofff" toolshed="http://toolshed.g2.bx.psu.edu" />
+</repositories>
