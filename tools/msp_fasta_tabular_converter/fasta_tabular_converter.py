@@ -1,8 +1,9 @@
 #!/usr/bin/python
 #
-import sys
-import string
 import argparse
+import logging
+import string
+import sys
 from collections import defaultdict
 
 def Parser():
@@ -17,23 +18,23 @@ def Parser():
     return args
 
 def readfasta_writetabular(fasta, tabular, mode="oneline"):
-    F = open(fasta, "r")
-    for line in F:
-        if line[0] == ">":
-            try:
-                seqdic["".join(stringlist)] += 1 # to dump the sequence of the previous item - try because of first missing stringlist variable
-            except: pass
-            stringlist=[]
-        else:
-            stringlist.append(line[:-1])
-    try:
-        seqdic["".join(stringlist)] +=  1 # for the last sequence
-    except: pass # in case file to convert is empty
-    F.close()
-    F = open(tabular, "w")
-    for seq in sorted(seqdic, key=seqdic.get, reverse=True):
-        print >> F, "%s\t%s" % (seq, seqdic[seq])
-    F.close()
+    with open(fasta, "r") as F:
+        for line in F:
+            if line[0] == ">":
+                try:
+                    seqdic["".join(stringlist)] += 1 # to dump the sequence of the previous item - try because of first missing stringlist variable
+                except NameError: pass
+                stringlist=[]
+            else:
+                stringlist.append(line[:-1])
+        try:
+            seqdic["".join(stringlist)] +=  1 # for the last sequence
+        except NameError:
+            logging.warning("input file empty.")
+        with open(tabular, "w") as F:
+            for seq in sorted(seqdic, key=seqdic.get, reverse=True):
+                F.write( "%s\t%s" % (seq, seqdic[seq]))
+            F.close()
     
         
 def readtabular_writefasta(tabular, fasta):
