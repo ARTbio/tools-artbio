@@ -71,7 +71,22 @@ BlastParser_and_hits.py
 
 **What it does**
 
-Parse blast outputs for viruses genome assembly. Outputs analysis and hit sequences for further assembly. Outputs also the contig sequences which have or not been blast aligned taking into account all indicated cut-offs
+Parse blast output for viruses genome assembly.
+
+Takes as inputs
+
+ - 1. the fasta sequences that have been submitted to blast
+ - 2. a blast alignment in a tabular format. **Importantly** this tabular output must contains the 12 standard columns (see blast documentation), **plus a column 13** that will report the length of the subject sequence (slen). When you use blast tools prior using this tool, remember to **check the appropriate box** to get the 13th column in the blast tabular output.
+ - 3. the numbers of flanking nucleotides to be recovered at the ends of blast hit sequences
+
+The tool returns 4 datasets
+
+ - 1. the fasta input sequences that produced significant blast hits
+ - 2. the fasta sequences that did not produced significant blast hits
+ - 3. the sequences of the blast hits, plus the flanking sequences (as specified in the tool form). This dataset may be further used in metavisitor workflows to produce contigs of hits.
+ - 4. and the parsing of the blast alignments which summarizes the blast results by "subject" sequences (blast analysis, by subjects)
+
+This latter parsing dataset may be customized by tuning the reporting mode and/or using filters
 
 </help>
 </tool>
