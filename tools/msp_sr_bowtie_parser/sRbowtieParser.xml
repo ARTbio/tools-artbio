@@ -1,12 +1,12 @@
-<tool id="sRbowtieParser" name="Parse items in sRbowtie alignment" version="1.0.5">
+<tool id="sRbowtieParser" name="Parse items in sRbowtie alignment" version="1.0.6">
   <description></description>
   <requirements>
 	<requirement type="package" version="0.12.7">bowtie</requirement>
         <requirement type="package" version="0.7.7">pysam</requirement>
         <requirement type="package" version="1.9">numpy</requirement>
  </requirements>
-<command interpreter="python">
-        sRbowtieParser.py 
+<command>
+        python $__tool_directory__/sRbowtieParser.py
 	          #if $refGenomeSource.genomeSource == "history":
                     --IndexSource $refGenomeSource.ownFile
          	    --ExtractDirective fastaSource
@@ -27,7 +27,7 @@
                   #end for
                   --alignmentLabel          
                   #for $i in $refGenomeSource.input_list
-                    "$i.name"
+                    "$i.element_identifier"
                   #end for
 
 </command>
