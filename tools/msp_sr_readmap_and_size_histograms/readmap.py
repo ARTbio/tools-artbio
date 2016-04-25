@@ -23,7 +23,6 @@ def Parser():
   the_parser.add_argument('--gff', type=str, help="GFF containing regions of interest")
   the_parser.add_argument('--minquery', type=int, help="Minimum readsize")
   the_parser.add_argument('--maxquery', type=int, help="Maximum readsize")
-  the_parser.add_argument('--rcode', type=str, help="R script")
   args = the_parser.parse_args()
   return args
 
@@ -38,7 +37,6 @@ readmap_file=args.output_readmap
 size_distribution_file=args.output_size_distribution
 minquery=args.minquery
 maxquery=args.maxquery
-Rcode = args.rcode
 filePath=args.input
 fileExt=args.ext
 fileLabel=args.label
@@ -154,10 +152,6 @@ def gff_item_subinstances(readDict, gff3):
       item_downstream_coordinate = int(gff_fields[4])
       item_polarity = gff_fields[6]
       for sample in readDict.keys():
-## this is not required anymore but test
-#        if not GFFinstanceDict.has_key(sample):
-#          GFFinstanceDict[sample]={}
-####
         subinstance=extractsubinstance(item_upstream_coordinate, item_downstream_coordinate, readDict[sample].instanceDict[chrom])
         if item_polarity == '-':
           subinstance.readDict={key*-1:value for key, value in subinstance.readDict.iteritems()}
@@ -172,8 +166,4 @@ if args.gff:
 
 write_readplot_dataframe(MasterListOfGenomes, readmap_file)
 write_size_distribution_dataframe(MasterListOfGenomes, size_distribution_file)
-
-R_command="Rscript "+ Rcode
-process = subprocess.Popen(R_command.split())
-process.wait()
 	
