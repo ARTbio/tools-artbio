@@ -1,64 +1,57 @@
-<tool id="oasesoptimiserv" name="Oases_optimiser" version="1.1.4">
-	<description>Auto optimise de novo RNA-seq Oases/Velvet assembly</description>
-        <requirements>
-                <requirement type="package" version="0.2.08_7a32460a60929b510037952ae815bb6e29b68123">oases</requirement>
-        </requirements>
-	<command interpreter="python">
-	oases_optimiser.py  '$start_hash_length' '$end_hash_length' 
-	'#for $i in $inputs
-		${i.input}
-           #end for
-        '
-	'$transcripts'
-	</command>
-
-        <inputs>
-          <param label="Start Hash Length" name="start_hash_length" type="select" help="k-mer length in base pairs of the words being hashed. Shorter hash lengths (i.e. less than 31) may cause out-of-memory problems.">
-                        <option value="11" selected="yes">11</option>
-                        <option value="13">13</option> 
-                        <option value="15">15</option>
-                        <option value="17">17</option>
-                        <option value="19">19</option>
-                        <option value="21">21</option>
-                        <option value="23">23</option>
-                        <option value="25">25</option>
-                        <option value="35">35</option>
-                        <option value="45">45</option>
-                        <option value="55">55</option>
-                        <option value="65">65</option>
-          </param>
-          <param label="End Hash Length" name="end_hash_length" type="select" help="k-mer length in base pairs of the words being hashed. Value has to be higher than the Start Hash Length value">
-                        <option value="25">25</option>
-                        <option value="27">27</option>
-                        <option value="29">29</option>
-                        <option value="31">31</option>
-                        <option value="33">33</option>
-                        <option value="35">35</option>
-                        <option value="45">45</option>
-                        <option value="55">55</option>
-                        <option value="63">63</option>
-                        <option value="69">69</option>
-          </param>
-
-
-
-          <repeat name="inputs" title="Input Files">
-                      <param name="input" type="data" format="fasta" label="Dataset: short reads, fasta format"/>
-          </repeat>
-        </inputs>
-	
-	<outputs>
+<tool id="oasesoptimiserv" name="Oases_optimiser" version="1.1.5">
+    <description>Auto optimise de novo RNA-seq Oases/Velvet assembly</description>
+    <requirements>
+        <requirement type="package" version="0.2.08_7a32460a60929b510037952ae815bb6e29b68123">oases</requirement>
+    </requirements>
+    <command><![CDATA[
+	python "$__tool_directory__"/oases_optimiser.py  "$start_hash_length" "$end_hash_length"
+	#for $i in $inputs
+		"${i.input}"
+    #end for
+	"$transcripts"
+	]]></command>
+    <inputs>
+        <param label="Start Hash Length" name="start_hash_length" type="select" help="k-mer length in base pairs of the words being hashed. Shorter hash lengths (i.e. less than 31) may cause out-of-memory problems.">
+            <option value="11" selected="yes">11</option>
+            <option value="13">13</option>
+            <option value="15">15</option>
+            <option value="17">17</option>
+            <option value="19">19</option>
+            <option value="21">21</option>
+            <option value="23">23</option>
+            <option value="25">25</option>
+            <option value="35">35</option>
+            <option value="45">45</option>
+            <option value="55">55</option>
+            <option value="65">65</option>
+        </param>
+        <param label="End Hash Length" name="end_hash_length" type="select" help="k-mer length in base pairs of the words being hashed. Value has to be higher than the Start Hash Length value">
+            <option value="25">25</option>
+            <option value="27">27</option>
+            <option value="29">29</option>
+            <option value="31">31</option>
+            <option value="33">33</option>
+            <option value="35">35</option>
+            <option value="45">45</option>
+            <option value="55">55</option>
+            <option value="63">63</option>
+            <option value="69">69</option>
+        </param>
+        <repeat name="inputs" title="Input Files">
+            <param name="input" type="data" format="fasta" label="Dataset: short reads, fasta format"/>
+        </repeat>
+    </inputs>
+    <outputs>
         <data format="fasta" name="transcripts" label="${tool.name} on ${on_string}: Denovo assembled transcripts"/>
-	</outputs>
-  <tests>
-    <test>
-      <param name="input" value="input.fa" ftype="fasta"/>
-      <param name="start_hash_length" value="15" />
-      <param name="end_hash_length" value="35" />
-      <output name="transcripts" file="output.fa"/>
-    </test>
-  </tests>
-	
+    </outputs>
+    <tests>
+        <test>
+            <param name="input" value="input.fa" ftype="fasta"/>
+            <param name="start_hash_length" value="15" />
+            <param name="end_hash_length" value="35" />
+            <output name="transcripts" file="output.fa"/>
+        </test>
+    </tests>
 	<help>
 **Oases Optimiser Overview**
 
@@ -85,7 +78,7 @@ splicing_events.txt
 
 Read the Oases `documentation`__ for details on using the Oases Assembler.
 
-.. _Velvet: http://www.ebi.ac.uk/~zerbino/oases/
+.. _Oases: http://www.ebi.ac.uk/~zerbino/oases/
 
 .. __: http://www.ebi.ac.uk/~zerbino/oases/Manual.txt
 
@@ -120,28 +113,21 @@ This file is mainly designed to be read by the open-source AMOS genome assembly 
 The file describes all the contigs contained in the contigs.fa file (cf 4.2.1).
 
 **Advanced options**
-	    -ins_length integer	   : expected distance between two paired-end reads in the first short-read dataset (default: no read pairing)
-	    -ins_length2 integer          : expected distance between two paired-end reads in the second short-read dataset (default: no read pairing)
-        -ins_length_long integer      : expected distance between two long paired-end reads (default: no read pairing)
-        -ins_length*_sd  integer      : est. standard deviation of respective dataset (default: 10% of corresponding length)
-        -scaffolding  yes|no             : scaffolding of contigs used paired end information (default: on)
-        -max_branch_length  integer      : maximum length in base pair of bubble (default: 100)
-        -max_divergence  floating-point  : maximum divergence rate between two branches in a bubble (default: 0.2)
-        -max_gap_count  integer          : maximum number of gaps allowed in the alignment of the two branches of a bubble (default: 3)
-        -min_pair_count  integer         : minimum number of paired end connections to justify the scaffolding of two long contigs (default: 10)
-        -max_coverage  floating point    : removal of high coverage nodes AFTER tour bus (default: no removal)
-        -long_mult_cutoff  int           : minimum number of long reads required to merge contigs (default: 2)
-	-min_trans_length
-	simple threshold on output transcript length
-	-cov_cutoff 
-	minimum number of times a k-mer has to be observed to be used in the 
-	assembly (just like in Velvet) [default=3]
-	-min_pair_cov
-	minimum number of times two contigs must be connected by reads or read pairs to be clustered together [default=4]
-	-paired_cutoff 
-	minimum ratio between the numbers of observed and expected connecting
-	read pairs between two contigs [default=0.1]
-
+    -ins_length integer: expected distance between two paired-end reads in the first short-read dataset (default: no read pairing)
+    -ins_length2 integer: expected distance between two paired-end reads in the second short-read dataset (default: no read pairing)
+    -ins_length_long integer: expected distance between two long paired-end reads (default: no read pairing)
+    -ins_length_sd  integer: est. standard deviation of respective dataset (default: 10% of corresponding length)
+    -scaffolding  yes|no: scaffolding of contigs used paired end information (default: on)
+    -max_branch_length  integer: maximum length in base pair of bubble (default: 100)
+    -max_divergence  floating-point: maximum divergence rate between two branches in a bubble (default: 0.2)
+    -max_gap_count  integer: maximum number of gaps allowed in the alignment of the two branches of a bubble (default: 3)
+    -min_pair_count  integer: minimum number of paired end connections to justify the scaffolding of two long contigs (default: 10)
+    -max_coverage  floating point: removal of high coverage nodes AFTER tour bus (default: no removal)
+    -long_mult_cutoff  int: minimum number of long reads required to merge contigs (default: 2)
+    -min_trans_length: simple threshold on output transcript length
+    -cov_cutoff: minimum number of times a k-mer has to be observed to be used in the assembly (just like in Velvet) [default=3]
+    -min_pair_cov: minimum number of times two contigs must be connected by reads or read pairs to be clustered together [default=4]
+    -paired_cutoff: minimum ratio between the numbers of observed and expected connecting read pairs between two contigs [default=0.1]
 
 
 **Hash Length**
@@ -157,6 +143,7 @@ The hash length is the length of the k-mers being entered in the hash table. Fir
 Now you still have quite a lot of possibilities. As is often the case, it's a trade- off between specificity and sensitivity. Longer kmers bring you more specificity (i.e. less spurious overlaps) but lowers coverage (cf. below). . . so there's a sweet spot to be found with time and experience.
 We like to think in terms of "k-mer coverage", i.e. how many times has a k-mer been seen among the reads. The relation between k-mer coverage Ck and standard (nucleotide-wise) coverage C is Ck = C # (L - k + 1)/L where k is your hash length, and L you read length.
 Experience shows that this kmer coverage should be above 10 to start getting decent results. If Ck is above 20, you might be "wasting" coverage. Experience also shows that empirical tests with different values for k are not that costly to run! VelvetOptimiser automates these tests for you.
+Occasionally oases crashes at specific k-mers, in that case this Galaxy wrapper will skip this k-mer and continue the analysis without this k-mer.
 
 
 **Velvetg options**
@@ -175,5 +162,9 @@ Read categories are::
 
   short (default)
 
-	</help>
+    </help>
+    <citations>
+        <citation type="doi">10.1093/bioinformatics/bts094</citation>
+        <citation type="doi">10.1101/gr.074492.107</citation>
+    </citations>
 </tool>
