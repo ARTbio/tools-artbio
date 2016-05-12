@@ -10,7 +10,7 @@
     <repository changeset_revision="c7a0ec8263b4" name="cherry_pick_fasta" owner="drosofff" />
     <repository changeset_revision="6dfa79a6908a" name="msp_blastparser_and_hits" owner="drosofff" />
     <repository changeset_revision="09a8be9247ca" name="get_orfs_or_cdss" owner="peterjc" />
-    <repository changeset_revision="f08d9c814ffb" name="msp_oases" owner="drosofff" />
+    <repository changeset_revision="dc684e37f668" name="msp_oases" owner="drosofff" />
     <repository changeset_revision="0a576a57a9eb" name="trinityrnaseq" owner="anmoljh" />
     <repository changeset_revision="3288cc5a57e5" name="blast_to_scaffold" owner="drosofff" />
     <repository changeset_revision="a2e034f1638e" name="blastx_to_scaffold" owner="drosofff" />
