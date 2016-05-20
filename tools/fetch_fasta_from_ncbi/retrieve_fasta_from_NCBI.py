@@ -32,6 +32,8 @@ import urllib
 import urllib2
 import httplib
 import re
+import os
+
 class Eutils:
 
     def __init__(self, options, logger):
@@ -231,7 +233,7 @@ class Eutils:
         uids_list = self.ids
         self.logger.info("Batch size for efetch action: %d" % batch_size)
         self.logger.info("Number of batches for efetch action: %d" % ((count / batch_size) + 1))
-        with open(self.outname, 'w') as out:
+        with open(self.outname, 'a') as out:
             for start in range(0, count, batch_size):
                 end = min(count, start+batch_size)
                 batch = uids_list[start:end]
@@ -256,10 +258,20 @@ def __main__():
     parser.add_option('-l', '--logfile', help='log file (default=stderr)')
     parser.add_option('--loglevel', choices=LOG_LEVELS, default='INFO', help='logging level (default: INFO)')
     parser.add_option('-d', dest='dbname', help='database type')
+    parser.add_option('--bins', dest='bins', help='bins limits (separate values with space)')
     (options, args) = parser.parse_args()
     if len(args) > 0:
         parser.error('Wrong number of arguments')
-    
+
+    try:
+        os.remove(options.outname)
+    except OSError:
+        pass
+    try:
+        os.remove(options.logfile)
+    except OSError:
+        pass
+
     log_level = getattr(logging, options.loglevel)
     kwargs = {'format': LOG_FORMAT,
               'datefmt': LOG_DATEFMT,
@@ -268,9 +280,14 @@ def __main__():
         kwargs['filename'] = options.logfile
     logging.basicConfig(**kwargs)
     logger = logging.getLogger('data_from_NCBI')
-    
-    E = Eutils(options, logger)
-    E.retrieve()
+
+    query=options.query_string
+    bins=options.bins.split(" ")
+    for i in range(len(bins)-1):
+        options.query_string=query+" AND "+str(int(bins[i])+1)+":"+bins[i+1]+"[Sequence Length]"
+        print options.query_string
+        E = Eutils(options, logger)
+        E.retrieve()
 
 
 if __name__ == "__main__":
