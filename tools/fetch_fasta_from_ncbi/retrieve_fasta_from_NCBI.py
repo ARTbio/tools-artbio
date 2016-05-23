@@ -32,7 +32,6 @@ import urllib
 import urllib2
 import httplib
 import re
-import os
 
 class Eutils:
 
