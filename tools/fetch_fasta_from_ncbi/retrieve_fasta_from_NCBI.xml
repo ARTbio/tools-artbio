@@ -1,6 +1,10 @@
-<tool id="retrieve_fasta_from_NCBI" name="Retrieve FASTA from NCBI" version="0.9.4">
+<tool id="retrieve_fasta_from_NCBI" name="Retrieve FASTA from NCBI" version="0.9.5">
   <description></description>
-  <command interpreter="python">retrieve_fasta_from_NCBI.py -i "$queryString" -d $dbname -o $outfilename -l $logfile </command>
+  <command interpreter="python">retrieve_fasta_from_NCBI.py -i "$queryString" -d $dbname -o $outfilename -l $logfile 
+	#if $slice.options == "yes"
+	--bins "$slice.bins"
+	#end if
+  </command>
 
   <inputs>
     <param name="queryString" type="text" size="5x80" area="True" value="txid10239[orgn] NOT txid131567[orgn] AND complete[all] NOT partial[title] NOT phage[title]" label="Query to NCBI in entrez format" help="exemple:'Drosophila melanogaster[Organism] AND Gcn5[Title]">
@@ -19,6 +23,17 @@
       <option value="nuccore">Nucleotide</option>
       <option value="protein">Protein</option>
     </param>
+    <conditional name="slice">
+      <param name="options" type="select" label="Would you like to bin your query?">
+           <option value="no" selected="true">No, retrieve complete query.</option>
+	   <option value="yes">Yes (recommended for big databases)</option>
+      </param>
+      <when value="no">
+      </when>
+      <when value="yes">
+            <param name="bins" label="Define the intervals (enter sequence length limits separated by a space)" type="text" value="0 50000 100000" />
+      </when>
+    </conditional>
   </inputs>
   <outputs>
     <data name="outfilename" format="fasta" label="${tool.name} (${dbname.value_label}) with queryString '${queryString.value}'" />
@@ -28,6 +43,7 @@
     <test>
         <param name="queryString" value="9629650[gi]" />
         <param name="dbname" value="nuccore" />
+	<param name="slice.options" value="no" />
         <output name="outfilename" ftype="fasta" file="output.fa" />
         <!--  <output name="logfile" ftype="txt" file="log.txt" />  log.txt changes with timestamp. removed to pass the  test -->
     </test>

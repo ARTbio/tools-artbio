@@ -263,15 +263,6 @@ def __main__():
     if len(args) > 0:
         parser.error('Wrong number of arguments')
 
-    try:
-        os.remove(options.outname)
-    except OSError:
-        pass
-    try:
-        os.remove(options.logfile)
-    except OSError:
-        pass
-
     log_level = getattr(logging, options.loglevel)
     kwargs = {'format': LOG_FORMAT,
               'datefmt': LOG_DATEFMT,
@@ -282,13 +273,17 @@ def __main__():
     logger = logging.getLogger('data_from_NCBI')
 
     query=options.query_string
-    bins=options.bins.split(" ")
-    for i in range(len(bins)-1):
-        options.query_string=query+" AND "+str(int(bins[i])+1)+":"+bins[i+1]+"[Sequence Length]"
-        print options.query_string
-        E = Eutils(options, logger)
-        E.retrieve()
-
+    try:
+  	bins=map(int,options.bins.split(" "))
+	for i in range(len(bins)-1):
+        	options.query_string=query+" AND "+str(bins[i]+1)+":"+str(bins[i+1])+"[Sequence Length]"
+        	print options.query_string
+        	E = Eutils(options, logger)
+        	E.retrieve()
+    except:
+	print "Retrieving without sequence length binning"
+	E=Eutils(options,logger)
+	E.retrieve()
 
 if __name__ == "__main__":
     __main__()
