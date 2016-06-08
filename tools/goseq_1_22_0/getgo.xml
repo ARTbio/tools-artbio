@@ -1,53 +1,58 @@
-<tool id="getgo" name="getgo" version="0.1.0">
-    <description>downloads gene ontologies for model organisms</description>
+<tool id="getgo" name="get_gene_categories" version="0.1.0">
+    <description>retrieve gene categories for model organisms</description>
     <macros>
         <import>go_macros.xml</import>
     </macros>
     <expand macro="requirements" />
     <expand macro="stdio" />
-    <command interpreter="Rscript">
-        getgo.r --genome "$genome"
-        --gtf "$gtf"
+    <command><![CDATA[
+        Rscript $__tool_directory__/getgo.r
+        --package "$package"
         --gene_id "$gene_id"
         --output "$output"
         --cats "$cats"
+        ]]>
     </command>
     <inputs>
-        <param name="gtf" label="select GTF file" help="GO annotations for all gene ids in this GTF will be fetched" type="data" format="gtf"/>
-        <param help="Needed to retrieve GO annotations for the selected genome" label="Select the genome source" name="genome" size="3" type="select">
-            <options from_data_table="go_genomes"></options>
+        <param help="These are bioconductor genome annotation packages." label="Select the genome package" name="package" size="3" type="select">
+            <options from_data_table="org_names"></options>
         </param>
-        <param help="Needed for GO analysis" label="Select gene identifier format" name="gene_id" type="select">
-            <options from_data_table="go_gene_ids"></options>
+        <param help="This option determines which gene identifier format is used for mapping genes to categories in the output file. If you have a list of differentially expressed genes, choose the same format." label="Select gene identifier format" name="gene_id" type="select">
+            <options from_data_table="available_identifiers">
+                <filter type="param_value" ref="package" column="2"/>
+            </options>
         </param>
-        <param name="cats" help="Select the categories for which you would like to retrieve ontologies" type="select" multiple="true" display="checkboxes">
-            <option value="GO:CC">GO:Cellular Components</option>
-            <option value="GO:BP">BiologicalProcesses</option>
-            <option value="GO:MF">Molecular Function</option>
-            <option value="KEGG">KEGG pathway</option>
+        <param name="cats" label="Select categories" help="Select a category will return the category and a list of all genes in that category" type="select" multiple="true" display="checkboxes">
+            <options from_data_table="available_categories">
+                <filter type="param_value" ref="package" column="2"/>
+            </options>
         </param>
     </inputs>
     <outputs>
-        <data format="tabular" label="GO category mapping" name="output" />
+        <data format="tabular" label="gene category mapping" name="output" />
     </outputs>
     <tests>
         <test>
-            <param name="gtf" value="in.gtf" ftype="gtf"></param>
-            <param name="genome" value="hg38"></param>
-            <param name="gene_id" value="ensGene"></param>
-            <param name="cats" value="GO:CC,GO:BP,GO:MF"></param>
-            <output name="output" file="go_terms.tab"></output>
+            <param name="package" value="org.Hs.eg.db"></param>
+            <param name="gene_id" value="ENSEMBL"></param>
+            <param name="cats" value="GO2ALLEGS"></param>
+            <output name="output" file="go_terms.tab" compare="contains"></output>
         </test>
     </tests>
     <help>
 
         **What it does**
 
-        Returns a tabular file with GO gene categories for all genes present in the input GTF file.
-
+        This tool uses bioconductor species annotation packages [org.Xx.xx.db] to extract gene category information.
+        To do gene {category/set} enrichment analysis, use the output of this tool with the goseq tool.
 
         </help>
     <citations>
-        <citation type="doi">10.1186/gb-2010-11-2-r14</citation>
+        <citation type="bibtex">@ARTICLE{AnnotationDbi,
+        title = {AnnotationDbi: Annotation Database Interface},
+        author = {Herve Pages and Marc Carlson and Seth Falcon and Nianhua Li},
+        note = {R package version 1.32.3}
+        }
+        </citation>
     </citations>
 </tool>

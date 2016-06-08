@@ -70,8 +70,7 @@
             <param name="length_file" value="gene_length.tab" ftype="tabular"/>
             <param name="category_file" value="category.tab" ftype="tabular"/>
             <param name="use_genes_without_cat" value="true" />
-            <param name="p_adj_column" value="2" />
-            <output name="wallenius_tab" file="wal.tab" compare="contains"/>/>
+            <output name="wallenius_tab" file="wal.tab" compare="re_match"/>/>
         </test>
     </tests>
     <help>
