@@ -142,26 +142,6 @@ class HandleSmRNAwindows:
           self.alignedReads += 1
       F.close()
       return self.instanceDict
-#    elif self.alignmentFileFormat == "sam":
-#      F = open (self.alignmentFile, "r")
-#      dict = {"0":"+", "16":"-"}
-#      for line in F:
-#        if line[0]=='@':
-#            continue
-#        fields = line.split()
-#        if fields[2] == "*": continue
-#        polarity = dict[fields[1]]
-#        gene = fields[2]
-#        offset = int(fields[3])
-#        size = len (fields[9])
-#        if self.size_inf:
-#          if (size>=self.size_inf and size<= self.size_sup):
-#            self.instanceDict[gene].addread (polarity, offset, size)
-#            self.alignedReads += 1
-#       else:
-#          self.instanceDict[gene].addread (polarity, offset, size)
-#          self.alignedReads += 1
-#      F.close()
     elif self.alignmentFileFormat == "bam" or self.alignmentFileFormat == "sam":
       import pysam
       samfile = pysam.Samfile(self.alignmentFile)
@@ -184,22 +164,6 @@ class HandleSmRNAwindows:
           self.alignedReads += 1
       return self.instanceDict
 
-#  def size_histogram (self):
-#    size_dict={}
-#    size_dict['F']= defaultdict (int)
-#    size_dict['R']= defaultdict (int)
-#    size_dict['both'] = defaultdict (int)
-#    for item in self.instanceDict:
-#      buffer_dict_F = self.instanceDict[item].size_histogram()['F']
-#      buffer_dict_R = self.instanceDict[item].size_histogram()['R']
-#      for size in buffer_dict_F:
-#        size_dict['F'][size] += buffer_dict_F[size]
-#      for size in buffer_dict_R:
-#        size_dict['R'][size] -= buffer_dict_R[size]
-#    allSizeKeys = list (set (size_dict['F'].keys() + size_dict['R'].keys() ) )
-#    for size in allSizeKeys:
-#      size_dict['both'][size] = size_dict['F'][size] + size_dict['R'][size]
-#    return size_dict
   def size_histogram (self): # in HandleSmRNAwindows
     '''refactored on 7-9-2014 to debug size_histogram tool'''
     size_dict={}
@@ -361,24 +325,7 @@ class SmRNAwindow:
     for offset in range (min(dicsize.keys()), max(dicsize.keys())+1):
       dicsize[size] = dicsize.get(size, 0) # to fill offsets with null values
     return dicsize
-    
-#  def size_histogram(self):
-#    norm=self.norm
-#    hist_dict={}
-#    hist_dict['F']={}
-#    hist_dict['R']={}
-#    for offset in self.readDict:
-#      for size in self.readDict[offset]:
-#        if offset < 0:
-#          hist_dict['R'][size] = hist_dict['R'].get(size, 0) - 1*norm
-#        else:
-#          hist_dict['F'][size] = hist_dict['F'].get(size, 0) + 1*norm
-#   ## patch to avoid missing graphs when parsed by R-lattice. 27-08-2014. Test and validate !    
-#    if not (hist_dict['F']) and (not hist_dict['R']):
-#      hist_dict['F'][21] = 0
-#      hist_dict['R'][21] = 0
-#   ##
-#    return hist_dict
+
 
   def size_histogram(self, minquery=None, maxquery=None): # in SmRNAwindow
     '''refactored on 7-9-2014 to debug size_histogram tool'''
@@ -480,7 +427,6 @@ class SmRNAwindow:
       return ". | %s" % (freqDic["Trev"] / reverse_sum * 100)
     else:
       return "%s | %s" % (freqDic["Tfor"] / forward_sum * 100, freqDic["Trev"] / reverse_sum * 100)
-
     
   def readplot (self):
     norm=self.norm
