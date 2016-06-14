@@ -151,9 +151,6 @@ produce a plot like this:
             <param name="rows_per_page" value="8" />
             <output name="readmap_dataframe" ftype="tabular" file="Readmap_dataframe.tab" />
             <output name="size_distribution_dataframe" ftype="tabular" file="Size_distribution_dataframe.tab" />
-            <output name="readmap_PDF" ftype="pdf" file="Readmaps.pdf" />
-            <output name="size_PDF" ftype="pdf" file="Size_distribution.pdf" />
-            <output name="combi_PDF" ftype="pdf" file="Size_distribution_and_Readmaps.pdf" />
         </test>
     </tests>
 </tool>

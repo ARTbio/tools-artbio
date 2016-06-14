@@ -52,16 +52,19 @@ def process_samples(filePath):
                         biosample=fileLabel[i], size_inf=minquery, size_sup=maxquery, norm=norm)
   return MasterListOfGenomes
 
-def dataframe_sanityzer (listofdatalines):
-  Dict = defaultdict(float) 
+def remove_null_entries(listofdatalines):
+  """
+  This function removes genes that have no reads aligned.
+  """
+  Dict = defaultdict(float)
   for line in listofdatalines:
     fields= line.split("\t")
-    Dict[fields[0]] += float (fields[2])
+    Dict[fields[0]] += abs(float(fields[2]))
   filtered_list = []
   for line in listofdatalines:
     fields= line.split("\t")
     if Dict[fields[0]] != 0:
-      filtered_list.append(line) 
+      filtered_list.append(line)
   return filtered_list
 
 
@@ -108,9 +111,8 @@ def write_readplot_dataframe(readDict, readmap_file):
         plottable = dict[gene].readplot()
         plottable = handle_start_stop_coordinates(plottable, readDict)
         for line in plottable:
-          #print >>readmap, "%s\t%s" % (line, sample)
           listoflines.append ("%s\t%s" % (line, sample))
-    listoflines = dataframe_sanityzer(listoflines)
+    listoflines = remove_null_entries(listoflines)
     for line in listoflines:
       print >>readmap, line
 
@@ -124,19 +126,15 @@ def write_size_distribution_dataframe(readDict, size_distribution_file):
       else:
         dict=readDict[sample].instanceDict
       for gene in dict.keys():
-        histogram = dict[gene].size_histogram(minquery=args.minquery, maxquery=args.maxquery)
+        histogram = dict[gene].size_histogram(minquery=minquery, maxquery=maxquery)
         for polarity in histogram.keys():
           if polarity=='both':
             continue
-          #for size in xrange(args.minquery, args.maxquery):
-          #  if not size in histogram[polarity].keys():
-          #    histogram[size]=0
           for size, count in histogram[polarity].iteritems():
-            #print >>size_distrib, "%s\t%s\t%s\t%s\t%s" % (gene, size, count, polarity, sample) # test, changed the order accordingly
             listoflines.append ("%s\t%s\t%s\t%s\t%s" % (gene, size, count, polarity, sample) )
-    listoflines = dataframe_sanityzer(listoflines)
+    listoflines = remove_null_entries(listoflines)
     for line in listoflines:
-      print >>size_distrib, line  
+      print >>size_distrib, line
 
 def gff_item_subinstances(readDict, gff3):
   GFFinstanceDict=OrderedDict()
