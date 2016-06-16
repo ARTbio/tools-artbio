@@ -33,6 +33,7 @@ import urllib2
 import httplib
 import re
 from socket import error as SocketError
+from datetime import datetime
 
 class Eutils:
 
@@ -173,26 +174,27 @@ class Eutils:
                 else:
                     serverTransaction = True
             except urllib2.HTTPError as e:
+                print "urllib2.HTTPError at ", datetime.now()
                 serverTransaction = False
                 self.logger.info("urlopen error:%s, %s" % (e.code, e.read() ) )
             except httplib.IncompleteRead as e:
+                print "httplib.IncompleteRead at ", datetime.now()
                 serverTransaction = False
-                self.logger.info("IncompleteRead error:  %s" % ( e.partial ) )
+                self.logger.info("IncompleteRead error")
             except urllib2.URLError as e:
-                print "EXCEPT"
+                print "urllib2.URLError at ", datetime.now()
                 serverTransaction = False
                 self.logger.info("No route to host: %s" % ( e.errno ) )
             except SocketError as e:
-                if e.errno != errno.ECONNRESET:
-                    print "OUPS"
-                    serverTransaction = False
-                    self.logger.info("Connection error: %s" % (e.errno))
-                    raise  # Not error we are looking for
-                print "UH OH"
+                print "SocketError at ", datetime.now()
                 serverTransaction = False
                 self.logger.info("Connection reset by peer: %s\n Try to reconnect" % (e.errno))
                 data = urllib.urlencode(values)
                 req = urllib2.Request(url, data)
+            except httplib.BadStatusLine as e:
+                print "httplib.BadStatusLine at ", datetime.now()
+                serverTransaction = False
+                self.logger.info("Bad status line: %s" % e.line)
         fasta = self.sanitiser(self.dbname, fasta) #
         time.sleep(1)
         return fasta
