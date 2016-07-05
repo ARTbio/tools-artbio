@@ -169,7 +169,7 @@ class Eutils:
             try:
                 response = urllib2.urlopen(req)
                 fasta = response.read()
-                if ("Resource temporarily unavailable" in fasta) or (not fasta.startswith(">") ):
+                if ("Resource temporarily unavailable" in fasta) or ("Error" in fasta) or (not fasta.startswith(">") ):
                     serverTransaction = False
                 else:
                     serverTransaction = True
