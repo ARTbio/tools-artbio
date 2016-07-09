@@ -1,4 +1,4 @@
-<tool id="Size_histogram" name="Generate size histograms from alignment files" version="0.9.8">
+<tool id="Size_histogram" name="Generate size histograms from alignment files" version="0.9.9">
     <description>from sRbowtie aligment</description>
     <requirements>
         <requirement type="package" version="0.12.7">bowtie</requirement>
@@ -35,7 +35,7 @@
         #end for
         --label
         #for $i in $refGenomeSource.series
-            "$i.input.name"
+            "$i.input.element_identifier"
         #end for
         --normalization_factor
         #for $i in $refGenomeSource.series
