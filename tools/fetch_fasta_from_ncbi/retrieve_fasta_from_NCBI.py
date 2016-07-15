@@ -193,9 +193,6 @@ class Eutils:
 		print "httplib.BadStatusLine at ", datetime.now()
                 serverTransaction = False
                 self.logger.info("Bad status line: %s" % e.line)
-            if counter>=100:
-                self.logger.info("Connection problem. Exiting")
-		break
         fasta = self.sanitiser(self.dbname, fasta) #
         time.sleep(1)
         return fasta
