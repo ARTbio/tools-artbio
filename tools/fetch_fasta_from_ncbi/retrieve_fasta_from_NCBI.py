@@ -187,14 +187,15 @@ class Eutils:
                 self.logger.info("No route to host: %s" % ( e.errno ) )
             except SocketError as e:
                 print "SocketError at ", datetime.now()
-                serverTransaction = False
                 self.logger.info("Connection reset by peer: %s\n Try to reconnect" % (e.errno))
-                data = urllib.urlencode(values)
-                req = urllib2.Request(url, data)
+		break
             except httplib.BadStatusLine as e:
-                print "httplib.BadStatusLine at ", datetime.now()
+		print "httplib.BadStatusLine at ", datetime.now()
                 serverTransaction = False
                 self.logger.info("Bad status line: %s" % e.line)
+            if counter>=100:
+                self.logger.info("Connection problem. Exiting")
+		break
         fasta = self.sanitiser(self.dbname, fasta) #
         time.sleep(1)
         return fasta
