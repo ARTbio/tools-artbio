@@ -33,7 +33,6 @@ import urllib2
 import httplib
 import re
 from socket import error as SocketError
-from datetime import datetime
 
 class Eutils:
 
@@ -174,23 +173,18 @@ class Eutils:
                 else:
                     serverTransaction = True
             except urllib2.HTTPError as e:
-                print "urllib2.HTTPError at ", datetime.now()
                 serverTransaction = False
                 self.logger.info("urlopen error:%s, %s" % (e.code, e.read() ) )
             except httplib.IncompleteRead as e:
-                print "httplib.IncompleteRead at ", datetime.now()
                 serverTransaction = False
                 self.logger.info("IncompleteRead error")
             except urllib2.URLError as e:
-                print "urllib2.URLError at ", datetime.now()
                 serverTransaction = False
                 self.logger.info("No route to host: %s" % ( e.errno ) )
             except SocketError as e:
-                print "SocketError at ", datetime.now()
                 self.logger.info("Connection reset by peer: %s\n Try to reconnect" % (e.errno))
 		break
             except httplib.BadStatusLine as e:
-		print "httplib.BadStatusLine at ", datetime.now()
                 serverTransaction = False
                 self.logger.info("Bad status line: %s" % e.line)
         fasta = self.sanitiser(self.dbname, fasta) #
