@@ -165,16 +165,19 @@ class Eutils:
         while not serverTransaction:
             counter += 1
             self.logger.info("Server Transaction Trial:  %s" % ( counter ) )
-            response = urllib2.urlopen(req)
-	    print response.getcode()
-            if response.getcode() == 200:
+	    try:
+		response = urllib2.urlopen(req)
 	        fasta = response.read()
-		if ("Resource temporarily unavailable" in fasta) or ("Error" in fasta) or (not fasta.startswith(">") ):
+		if (response.getcode() != 200) or ("Resource temporarily unavailable" in fasta) or ("Error" in fasta) or (not fasta.startswith(">") ):
                     serverTransaction = False
-		    print "fasta error"
                 else:
                     serverTransaction = True
-		    print "severTransaction = True"
+	    except urllib2.HTTPError as e:
+		serverTransaction = False
+                self.logger.info("urlopen error:%s, %s" % (e.code, e.read() ))
+            except httplib.IncompleteRead as e:
+                serverTransaction = False
+                self.logger.info("IncompleteRead error")
         fasta = self.sanitiser(self.dbname, fasta) #
         time.sleep(1)
         return fasta
