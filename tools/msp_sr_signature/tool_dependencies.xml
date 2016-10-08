@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <tool_dependency>
-  <package name="bowtie" version="0.12.7">
-      <repository name="package_bowtie_0_12_7" owner="devteam"/>
+  <package name="bowtie" version="1.1.2">
+      <repository name="package_bowtie_1_1_2" owner="iuc"/>
     </package>
-    <package name="pysam" version="0.7.7">
-      <repository name="package_pysam_0_7_7" owner="iuc"/>
+    <package name="pysam" version="0.8.3">
+      <repository name="package_python_2_7_pysam_0_8_3" owner="iuc"/>
     </package>
     <package name="numpy" version="1.9">
-        <repository name="package_numpy_1_9" owner="iuc"/>
+        <repository name="package_python_2_7_numpy_1_9" owner="iuc"/>
     </package>
     <package name="R" version="3.1.2">
         <repository name="package_r_3_1_2" owner="iuc"/>
