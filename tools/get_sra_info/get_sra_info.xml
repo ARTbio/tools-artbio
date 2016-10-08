@@ -1,12 +1,13 @@
-<tool id="get_sra_info" name="get_sra_info" version="0.1.0">
+<tool id="get_sra_info" name="get_sra_info" version="0.1.1">
     <requirements>
+        <requirement type="package" version="2.9.1">requests</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" />
     </stdio>
 
-    <command interpreter="python"><![CDATA[
-        get_sra_info.py --query $query --output "$output"
+    <command><![CDATA[
+        python '$__tool_directory__'/get_sra_info.py --query '$query' --output '$output'
     ]]></command>
     <inputs>
         <param name="query" type="text" label="enter valid SRA/SRR accessions">
@@ -19,6 +20,12 @@
     <outputs>
         <data name="output" format="tabular" label="Run info for $query"/>
     </outputs>
+    <tests>
+        <test>
+            <param name="query" value="SRR925743 ERP012885"/>
+            <output name="output" file="run_info.tab"/>
+        </test>
+    </tests>
     <help><![CDATA[
         Downloads a table with sra info.
         May be used as input to download_sra_data tool.
