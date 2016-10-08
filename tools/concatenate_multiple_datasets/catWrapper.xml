@@ -64,7 +64,7 @@ will result in the following::
 
 -----
 
-Adapted from galaxy's catWrapper.xml to allow multiple input files
+Adapted from galaxy's catWrapper.xml to allow multiple input files.
 
     </help>
 </tool>
