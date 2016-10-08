@@ -1,10 +1,8 @@
 tools/MirParser/MirParser.xml
-tools/add_input_name_as_column/add_input_name_as_column.xml
 tools/annotation_collector/annotation_collector.xml
 tools/blast_to_scaffold/blast_to_scaffold.xml
 tools/blastn_to_scaffold/blastn_to_scaffold.xml
 tools/blastx_to_scaffold/blastx_to_scaffold.xml
-tools/cherry_pick_fasta/cherry_pick_fasta.xml
 tools/concatenate_multiple_datasets/catWrapper.xml
 tools/deseq1_no_replicate/simpleDESeq.xml
 tools/deseq1_with_replicates/replicateDESeq.xml

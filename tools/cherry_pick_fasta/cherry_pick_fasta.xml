@@ -34,7 +34,7 @@
   <help>
 **What it does**
 
-This tool retrieves nucleotide/peptide sequences from a fasta file whose headers match a given query string
+This tool retrieves nucleotide/peptide sequences from a fasta file whose headers match a given query string.
 
 It is Copyright © 2015 `CNRS and University Pierre et Marie Curie`_ and is released under the `MIT license`_.
 
