@@ -16,7 +16,6 @@ tools/msp_sr_signature/signature.xml
 tools/msp_sr_size_histograms/size_histogram.xml
 tools/patser/patser-v3e.xml
 tools/qr_coder/qr_coder.xml
-tools/sam_to_fastq/sam_to_fastq.xml
 tools/sra-tools/fastq_dump.xml
 tools/sra-tools/sam_dump.xml
 tools/sra-tools/sra_pileup.xml

@@ -1,6 +1,8 @@
 <tool id="sam_to_fastq" name="SAM to FASTQ" version="0.1">
   <description></description>
-  <command interpreter="python">sam_to_fastq.py --input $input --output $output</command>
+  <command><![CDATA[
+      python '$__tool_directory__'/sam_to_fastq.py --input '$input' --output '$output'
+  ]]></command>
   <inputs>
        <param name="input" type="data" format="sam" label="SAM file for extraction of aligned reads in FASTQ format"/>
    </inputs>
