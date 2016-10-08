@@ -67,8 +67,9 @@
         </test>
     </tests>
     <help>
-This tool clips adapter sequences from a fastq file and outputs either a
-fasta or fastq file of clipped reads with renumbered fasta/fastq headers.
+This tool clips adapter sequences from a fasta or fastq file and
+outputs either a fasta or fastq file of clipped reads with
+renumbered fasta/fastq headers.
 
 By default clipped sequences with unknown nucleotides are kept, but 
 can be discarded by setting "Accept reads containing N?" to reject.

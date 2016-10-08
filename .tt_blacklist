@@ -24,7 +24,6 @@ tools/sam_to_fastq/sam_to_fastq.xml
 tools/sra-tools/fastq_dump.xml
 tools/sra-tools/sam_dump.xml
 tools/sra-tools/sra_pileup.xml
-tools/yac_clipper/yac.xml
 unstable/deprecated/sRbowtieFeatures/FeaturesParser.xml
 unstable/development/MirDeepStar/MirDeepStar.xml
 unstable/development/meme-default/meme.xml
