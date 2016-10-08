@@ -13,7 +13,6 @@ tools/msp_blastparser_and_hits/BlastParser_and_hits.xml
 tools/msp_cap3/cap3.xml
 tools/msp_fasta_tabular_converter/fasta_tabular_converter.xml
 tools/msp_oases/oases_optimiser.xml
-tools/msp_sr_bowtie_parser/sRbowtieParser.xml
 tools/msp_sr_signature/signature.xml
 tools/msp_sr_size_histograms/size_histogram.xml
 tools/patser/patser-v3e.xml
