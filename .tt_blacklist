@@ -12,8 +12,6 @@ tools/mismatch_frequencies/mismatch_frequencies.xml
 tools/msp_cap3/cap3.xml
 tools/msp_fasta_tabular_converter/fasta_tabular_converter.xml
 tools/msp_oases/oases_optimiser.xml
-tools/msp_sr_signature/signature.xml
-tools/msp_sr_size_histograms/size_histogram.xml
 tools/patser/patser-v3e.xml
 tools/qr_coder/qr_coder.xml
 tools/sra-tools/fastq_dump.xml

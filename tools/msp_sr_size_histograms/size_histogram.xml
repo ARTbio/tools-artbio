@@ -1,37 +1,39 @@
 <tool id="Size_histogram" name="Generate size histograms from alignment files" version="0.9.9">
     <description>from sRbowtie aligment</description>
     <requirements>
-        <requirement type="package" version="0.12.7">bowtie</requirement>
-        <requirement type="package" version="0.7.7">pysam</requirement>
+        <requirement type="package" version="1.1.2">bowtie</requirement>
+        <requirement type="package" version="0.8.3">pysam</requirement>
         <requirement type="package" version="3.1.2">R</requirement>
         <requirement type="package" version="2.14">biocbasics</requirement>
         <requirement type="package" version="1.9">numpy</requirement>
+        <requirement type="package" version="2.0.0=r3.2.2_0a">r-gridextra</requirement>
+        <requirement type="package" version="0.6_26=r3.2.2_0a">r-latticeextra</requirement>
     </requirements>
-    <command interpreter="python">
-        size_histogram.py
+    <command><![CDATA[
+        python '$__tool_directory__'/size_histogram.py
         #if $refGenomeSource.genomeSource == "history":
             --reference_fasta  ## sys.argv[2]
-            $refGenomeSource.ownFile ## index source
+            '$refGenomeSource.ownFile' ## index source
         #else:
             #silent reference= filter( lambda x: str( x[0] ) == str( $refGenomeSource.series[0].input.dbkey ), $__app__.tool_data_tables[ 'bowtie_indexes' ].get_fields() )[0][-1]
             --reference_bowtie_index
-            $reference
+            '$reference'
         #end if
         --rcode
-        $plotCode
+        '$plotCode'
         --output_size_distribution
-        $size_distribution_dataframe
+        '$size_distribution_dataframe'
         --minquery
         $minquery
         --maxquery
         $maxquery
         --input
         #for $i in $refGenomeSource.series
-            $i.input
+            '$i.input'
         #end for
         --ext
         #for $i in $refGenomeSource.series
-            $i.input.ext
+            '$i.input.ext'
         #end for
         --label
         #for $i in $refGenomeSource.series
@@ -42,7 +44,7 @@
             $i.norm
         #end for
         #if $gff:
-            --gff $gff
+            --gff '$gff'
         #end if
         #if $global.value == 'yes':
             --global_size
@@ -51,7 +53,7 @@
             --collapse
         #end if
 
-    </command>
+    ]]></command>
     <inputs>
         <conditional name="refGenomeSource">
             <param name="genomeSource" type="select" label="Will you select a reference genome from your history or use a built-in index?" help="Built-ins were indexed using default options">
