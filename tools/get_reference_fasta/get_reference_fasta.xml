@@ -21,9 +21,7 @@
         </test>
     </tests>
     <help><![CDATA[
-
 Places the reference genome sequence in the current history.    
 Useful for sharing purposes or tools that work directly on fasta files.
-
     ]]></help>
 </tool>
