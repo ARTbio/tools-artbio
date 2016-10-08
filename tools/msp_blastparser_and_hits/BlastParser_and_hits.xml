@@ -1,12 +1,12 @@
 <tool id="BlastParser_and_hits" name="Parse blast output and compile hits" version="2.4.3">
 <description>for virus discovery</description>
 <requirements></requirements>
-<command interpreter="python">
-BlastParser_and_hits.py
-	--sequences $sequences
-	--blast $blast
-	--tabularOutput $tabularOutput
-	--fastaOutput $fastaOutput
+<command><![CDATA[
+    python '$__tool_directory__'/BlastParser_and_hits.py
+	--sequences '$sequences'
+	--blast '$blast'
+	--tabularOutput '$tabularOutput'
+	--fastaOutput '$fastaOutput'
 	--flanking $flanking
 	--mode $mode
 	## Additional parameters.
@@ -17,15 +17,15 @@ BlastParser_and_hits.py
         --filter_term_in "$additional_filters.filter_term_in"
         --filter_term_out "$additional_filters.filter_term_out"
     #end if
-    --al_sequences $al_sequences
-    --un_sequences $un_sequences
+    --al_sequences '$al_sequences'
+    --un_sequences '$un_sequences'
     --dataset_name "$blast.element_identifier"
 
-</command>
+    ]]></command>
 <inputs>
 	<param name="sequences" type="data" format="fasta"  label="fasta sequences that have been blasted" />
 	<param name="blast" type="data" format="tabular" label="The blast output you wish to parse" />
-	<param name="flanking" type="text" size="5" value= "5" label="Number of flanking nucleotides to add to hits for CAP3 assembly"/>
+	<param name="flanking" type="integer" value= "5" label="Number of flanking nucleotides to add to hits for CAP3 assembly"/>
 	<param name="mode" type="select" label="Extensive or compact  reporting mode" help="display (extensive)  or not (compact) the oases contigs">
 	    <option value="verbose" default="true">extensive</option>
 	    <option value="short">compact</option>
