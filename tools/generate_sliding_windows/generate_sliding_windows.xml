@@ -78,15 +78,5 @@ produces the following multi-fasta output with window size 10 and step 5:
   >input_start:26_stop:35
   TCGATGCATC 
 
--------------------------
-
-optional arguments:
-  -h, --help       show this help message and exit
-  --input INPUT    supply an input multi-fasta file.
-  --output OUTPUT  supply an output multi-fasta file. If not specified use
-                   stdout.
-  --window WINDOW  Set the size of the generated windows
-  --step STEP      Set distance between the windows
-
     ]]></help>
 </tool>
