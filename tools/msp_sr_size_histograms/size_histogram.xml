@@ -7,7 +7,7 @@
         <requirement type="package" version="2.14">biocbasics</requirement>
         <requirement type="package" version="1.9">numpy</requirement>
         <requirement type="package" version="2.0.0=r3.2.2_0a">r-gridextra</requirement>
-        <requirement type="package" version="0.6_26=r3.2.2_0a">r-latticeextra</requirement>
+        <requirement type="package" version="0.6_26=r3.2.2_2a">r-latticeextra</requirement>
     </requirements>
     <command><![CDATA[
         python '$__tool_directory__'/size_histogram.py
