@@ -1,3 +1,5 @@
+tools/goseq_1_22_0/goseq.xml
+tools/goseq_1_22_0/get_length_and_gc_content.xml
 tools/goseq_1_22_0/getgo.xml
 tools/msp_cap3/cap3.xml
 tools/msp_oases/oases_optimiser.xml
