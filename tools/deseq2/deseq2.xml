@@ -5,7 +5,7 @@
           <requirement type="package" version="2.14">biocbasics</requirement>
           <requirement type="package" version="1.10.1=r3.2.2_0">bioconductor-deseq2</requirement>
         </requirements>
-	<command>Rscript $DESeq2 </command>
+	<command detect_errors="aggressive">Rscript $DESeq2 </command>
 	<inputs>
 		<param name="input" type="data" format="tabular" label="miR hit lists, more thant 2 samples"/>
         <param name="expPlan" type="text" label="experimental plan" help="Use a string of Cs and Ts. exemple: CCCTTT means 3 control samples versus 3 test samples"/>
