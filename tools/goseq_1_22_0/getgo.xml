@@ -6,7 +6,7 @@
     <expand macro="requirements" />
     <expand macro="stdio" />
     <command><![CDATA[
-        Rscript $__tool_directory__/getgo.r
+        Rscript '$__tool_directory__'/getgo.r
         --package "$package"
         --gene_id "$gene_id"
         --output "$output"
