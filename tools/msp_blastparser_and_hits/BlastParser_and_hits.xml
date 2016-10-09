@@ -27,7 +27,7 @@
 	<param name="blast" type="data" format="tabular" label="The blast output you wish to parse" />
 	<param name="flanking" type="integer" value= "5" label="Number of flanking nucleotides to add to hits for CAP3 assembly"/>
 	<param name="mode" type="select" label="Extensive or compact  reporting mode" help="display (extensive)  or not (compact) the oases contigs">
-	    <option value="verbose" default="true">extensive</option>
+	    <option value="verbose" selected="true">extensive</option>
 	    <option value="short">compact</option>
 	</param>
     <conditional name="additional_filters">
