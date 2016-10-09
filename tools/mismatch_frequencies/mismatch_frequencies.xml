@@ -1,25 +1,29 @@
 <tool id="mismatch_frequencies" name="Mismatch Frequencies" version="0.1.0" hidden="false" >
   <description>Analyze mismatch frequencies in BAM/SAM alignments</description>
   <requirements>
-    <requirement type="package" version="0.7.7">pysam</requirement>
-    <requirement type="package" version="0.14.1">pandas</requirement>
-    <requirement type="package" version="1.2.1">matplotlib</requirement>
+    <requirement type="package" version="0.8.3">pysam</requirement>
+    <requirement type="package" version="0.19.0">pandas</requirement>
+    <requirement type="package" version="1.5.3">matplotlib</requirement>
   </requirements>
-  <command interpreter="python">mismatch_frequencies.py --input 
-		#for i in $rep
-			"$i.input_file" 
-		#end for
-		--name 
-		#for i in $rep
-			"$i.input_file.element_identifier"
-		#end for
-		 --output_pdf $output_pdf --output_tab $output_tab --min $min_length --max $max_length
-                 --n_mm $number_of_mismatches
-                 --five_p $five_p
-                 --three_p $three_p
-                 --expanded_output_tab $expanded_tab
-                 --possible_mismatches $possible_mismatches
-  </command>
+  <command detect_errors="aggressive"><![CDATA[
+      python '$__tool_directory__'/mismatch_frequencies.py --input
+        #for i in $rep
+            "$i.input_file"
+        #end for
+        --name
+        #for i in $rep
+            "$i.input_file.element_identifier"
+        #end for
+        --output_pdf '$output_pdf'
+        --output_tab '$output_tab'
+        --min $min_length
+        --max $max_length
+        --n_mm $number_of_mismatches
+        --five_p $five_p
+        --three_p $three_p
+        --expanded_output_tab '$expanded_tab'
+        --possible_mismatches $possible_mismatches
+  ]]></command>
   <inputs>
     <repeat name="rep" title="alignment files">
       <param name="input_file" type="data" format="bam,sam" label="Alignment file" help="The input alignment file(s) for which to analyze the mismatches."/>
@@ -33,7 +37,7 @@
     <param name="five_p" label="Ignore mismatches in the first N nucleotides of a read" type="integer" value="0"/>
     <param name="three_p" label="Ignore mismatches in the last N nucleotides of a read" help="useful to discriminate between tailing events and editing events" type="integer" value="3"/>
     <param help="Output expanded tabular format" label="Nucleotide mismatches per reference sequence" name="expanded" type="select">
-        <option select="true" value="false">No</option>
+        <option selected="true" value="false">No</option>
         <option value="expanded">Yes</option>
     </param>
   </inputs>
@@ -66,12 +70,13 @@
 
 ***What it does***
 
-This tool reconstitues for each aligned read of an alignment file in SAM/BAM format whether
-a mismatch is annotated in the MD tag, and if that is the case counts the identity of the 
-mismatch relative to the reference sequence. The output is a PDF document with the calculated
-frequency for each mismatch that occured relative to the total number of valid reads and a table
-with the corresponding values. Read length can be limited to a specific read length, and 5 prime and 
-3 prime-most nucleotides of a read can be ignored.
+This tool reconstitues for each aligned read of an alignment file in SAM/BAM
+format whether a mismatch is annotated in the MD tag, and if that is the case
+counts the identity of the mismatch relative to the reference sequence. The
+output is a PDF document with the calculated frequency for each mismatch that
+occured relative to the total number of valid reads and a table with the
+corresponding values. Read length can be limited to a specific read length, and
+5 prime and 3 prime-most nucleotides of a read can be ignored.
 
 ----
 
