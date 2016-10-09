@@ -3,7 +3,6 @@ tools/deseq1_no_replicate/simpleDESeq.xml
 tools/deseq1_with_replicates/replicateDESeq.xml
 tools/deseq2/deseq2.xml
 tools/deseq_normalization/deseq_normalization.xml
-tools/fetch_fasta_from_ncbi/retrieve_fasta_from_NCBI.xml
 tools/fisher_test/fisher_test.xml
 tools/goseq_1_22_0/get_length_and_gc_content.xml
 tools/goseq_1_22_0/getgo.xml

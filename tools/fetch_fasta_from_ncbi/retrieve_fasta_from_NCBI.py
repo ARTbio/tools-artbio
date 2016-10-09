@@ -32,11 +32,13 @@ import urllib
 import urllib2
 import httplib
 import re
+
+
 class Eutils:
 
     def __init__(self, options, logger):
         self.logger = logger
-        self.base = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
+        self.base = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
         self.query_string = options.query_string
         self.dbname = options.dbname
         if options.outname:
