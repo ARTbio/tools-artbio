@@ -10,9 +10,6 @@ tools/msp_oases/oases_optimiser.xml
 tools/patser/patser-v3e.xml
 tools/qr_coder/qr_coder.xml
 unstable/deprecated/sRbowtieFeatures/FeaturesParser.xml
-unstable/deprecated/sra-tools/fastq_dump.xml
-unstable/deprecated/sra-tools/sam_dump.xml
-unstable/deprecated/sra-tools/sra_pileup.xml
 unstable/development/MirDeepStar/MirDeepStar.xml
 unstable/development/meme-default/meme.xml
 unstable/development/msp_hmmer/hmmer.xml
