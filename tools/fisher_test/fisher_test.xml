@@ -1,10 +1,13 @@
 <tool id="fishertest" name="Fisher's exact test" version="0.1.3">
 	<description>on two gene hit lists</description>
         <requirements>
-          <requirement type="package" version="3.1.2">R</requirement>
-          <requirement type="package" version="2.14">biocbasics</requirement>
+            <requirement type="package" version="3.1.2">R</requirement>
+            <requirement type="package" version="2.14">biocbasics</requirement>
+            <requirement type="package" version="2.4.2=r3.3.1_0">bioconductor-qvalue</requirement>
         </requirements>
-	<command interpreter="Rscript">$fisher_test "\${GALAXY_SLOTS:-1}" </command>
+        <command><![CDATA[
+            Rscript '$fisher_test' "\${GALAXY_SLOTS:-1}"
+    ]]></command>
 	<inputs>
 		<param name="input" type="data" format="tabular" label="gene hit lists, 2 samples"/>
 	</inputs>
