@@ -1,6 +1,4 @@
-tools/goseq_1_22_0/goseq.xml
-tools/goseq_1_22_0/get_length_and_gc_content.xml
-tools/goseq_1_22_0/getgo.xml
+tools/goseq_1_22_0/
 tools/msp_cap3/cap3.xml
 tools/msp_oases/oases_optimiser.xml
 tools/patser/patser-v3e.xml
