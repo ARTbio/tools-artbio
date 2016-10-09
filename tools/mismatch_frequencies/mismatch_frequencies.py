@@ -1,12 +1,15 @@
 import re
 import string
 import pysam
-import matplotlib.pyplot as plt
+import matplotlib
 import pandas as pd
 from collections import defaultdict
 from collections import OrderedDict
 import argparse
 import itertools
+
+matplotlib.use('pdf')
+import matplotlib.pyplot as plt  # noqa: E402
 
 
 class MismatchFrequencies:
