@@ -57,7 +57,7 @@ This Galaxy tool has been adapted from the galaxy tool `get_fasta_from_taxon`_.
 
 It is Copyright © 2014-2015 `CNRS and University Pierre et Marie Curie`_ and is released under the `MIT license`_.
 
-.. _Entrez help: http://www.ncbi.nlm.nih.gov/books/NBK3837/#EntrezHelp.Entrez_Searching_Options
+.. _Entrez help: https://www.ncbi.nlm.nih.gov/books/NBK3837/#EntrezHelp.Entrez_Searching_Options
 .. _get_fasta_from_taxon: https://toolshed.g2.bx.psu.edu/view/crs4/get_fasta_from_taxon
 .. _CNRS and University Pierre et Marie Curie: http://www.ibps.upmc.fr/en
 .. _MIT license: http://opensource.org/licenses/MIT
