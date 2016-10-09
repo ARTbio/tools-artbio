@@ -3,8 +3,11 @@
         <requirements>
           <requirement type="package" version="3.1.2">R</requirement>
           <requirement type="package" version="2.14">biocbasics</requirement>
+          <requirement type="package" version="1.22.1=r3.2.2_0">bioconductor-deseq</requirement>
         </requirements>
-	<command interpreter="Rscript">$simpleDESeq </command>
+        <command><![CDATA[
+            Rscript '$simpleDESeq'
+        ]]></command>
 	<inputs>
 		<param name="input" type="data" format="tabular" label="readcount lists, 2 samples"/>
 	</inputs>

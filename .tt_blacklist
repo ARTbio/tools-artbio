@@ -1,7 +1,3 @@
-tools/deseq1_no_replicate/simpleDESeq.xml
-tools/deseq1_with_replicates/replicateDESeq.xml
-tools/deseq2/deseq2.xml
-tools/deseq_normalization/deseq_normalization.xml
 tools/goseq_1_22_0/getgo.xml
 tools/msp_cap3/cap3.xml
 tools/msp_oases/oases_optimiser.xml
