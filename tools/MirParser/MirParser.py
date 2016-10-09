@@ -8,7 +8,7 @@
 import sys
 import subprocess
 
-from smRtools import *
+from smRtools import HandleSmRNAwindows
 
 IndexSource = sys.argv[1]
 ExtractionDirective = sys.argv[2]

@@ -1,4 +1,3 @@
-tools/MirParser/MirParser.xml
 tools/deseq1_no_replicate/simpleDESeq.xml
 tools/deseq1_with_replicates/replicateDESeq.xml
 tools/deseq2/deseq2.xml
