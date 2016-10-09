@@ -4,7 +4,6 @@ tools/deseq2/deseq2.xml
 tools/deseq_normalization/deseq_normalization.xml
 tools/goseq_1_22_0/getgo.xml
 tools/msp_cap3/cap3.xml
-tools/msp_fasta_tabular_converter/fasta_tabular_converter.xml
 tools/msp_oases/oases_optimiser.xml
 tools/patser/patser-v3e.xml
 tools/qr_coder/qr_coder.xml
