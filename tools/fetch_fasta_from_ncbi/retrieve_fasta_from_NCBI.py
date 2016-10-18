@@ -32,6 +32,8 @@ import urllib
 import urllib2
 import httplib
 import re
+from socket import error as SocketError
+
 class Eutils:
 
     def __init__(self, options, logger):
@@ -163,19 +165,19 @@ class Eutils:
         while not serverTransaction:
             counter += 1
             self.logger.info("Server Transaction Trial:  %s" % ( counter ) )
-            try:
-                response = urllib2.urlopen(req)
-                fasta = response.read()
-                if ("Resource temporarily unavailable" in fasta) or (not fasta.startswith(">") ):
+	    try:
+		response = urllib2.urlopen(req)
+	        fasta = response.read()
+		if (response.getcode() != 200) or ("Resource temporarily unavailable" in fasta) or ("Error" in fasta) or (not fasta.startswith(">") ):
                     serverTransaction = False
                 else:
                     serverTransaction = True
-            except urllib2.HTTPError as e:
-                serverTransaction = False
-                self.logger.info("urlopen error:%s, %s" % (e.code, e.read() ) )
+	    except urllib2.HTTPError as e:
+		serverTransaction = False
+                self.logger.info("urlopen error:%s, %s" % (e.code, e.read() ))
             except httplib.IncompleteRead as e:
                 serverTransaction = False
-                self.logger.info("IncompleteRead error:  %s" % ( e.partial ) )
+                self.logger.info("IncompleteRead error")
         fasta = self.sanitiser(self.dbname, fasta) #
         time.sleep(1)
         return fasta
