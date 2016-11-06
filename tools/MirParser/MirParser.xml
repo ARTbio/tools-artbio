@@ -1,40 +1,40 @@
-<tool id="MirParser" name="Parse miRNAs" version="0.9.4">
+<tool id="MirParser" name="Parse miRNAs" version="0.9.5">
     <description>from aligment files</description>
     <requirements>
-        <requirement type="package" version="0.12.7">bowtie</requirement>
-        <requirement type="package" version="0.7.7">pysam</requirement>
+        <requirement type="package" version="1.1.2">bowtie</requirement>
+        <requirement type="package" version="0.8.3">pysam</requirement>
         <requirement type="package" version="1.9">numpy</requirement>
         <requirement type="package" version="3.1.2">R</requirement>
         <requirement type="package" version="2.14">biocbasics</requirement>
-        <requirement type="package" version="1.2">samtools</requirement>
+        <requirement type="package" version="0.20_33=r3.2.2_0a">r-lattice</requirement>
     </requirements>
-    <command interpreter="python">
-        MirParser.py 
-	          #if $refGenomeSource.genomeSource == "history":
-                    $refGenomeSource.ownFile ## index source sys.arg[1]
-         	    --do_not_extract_index  ## sys.argv[2]
-          	  #else:
-		    #silent reference= filter( lambda x: str( x[0] ) == str( $input_list.dbkey ), $__app__.tool_data_tables[ 'bowtie_indexes' ].get_fields() )[0][-1]
-		    $reference   ## sys.argv[1]
+    <command><![CDATA[
+        python '$__tool_directory__'/MirParser.py
+	    #if $refGenomeSource.genomeSource == "history":
+            '$refGenomeSource.ownFile' ## index source sys.arg[1]
+            --do_not_extract_index  ## sys.argv[2]
+        #else:
+		    #silent reference = filter( lambda x: str( x[0] ) == str( $input_list.dbkey ), $__app__.tool_data_tables[ 'bowtie_indexes' ].get_fields() )[0][-1]
+		    '$reference'   ## sys.argv[1]
 		    --extract_index  ## sys.argv[2]
-          	  #end if
-		  $output1 ## for pre-mirs  ## sys.argv[3]
-		  $output2 ## for mature mirs  ## sys.argv[4]
-		  $GFF3    ## sys.argv[5]
-		  #if $plotting.plottingOption == "yes":
-		    $lattice_dataframe   ## sys.argv[6]
-		    $plotCode   ## sys.argv[7]
-		    $latticePDF ## sys.argv[8]
-		  #else:
+        #end if
+		'$output1' ## for pre-mirs  ## sys.argv[3]
+		'$output2' ## for mature mirs  ## sys.argv[4]
+		'$GFF3'    ## sys.argv[5]
+		#if $plotting.plottingOption == "yes":
+		    '$lattice_dataframe'   ## sys.argv[6]
+		    '$plotCode'   ## sys.argv[7]
+		    '$latticePDF' ## sys.argv[8]
+		#else:
 		    "dummy_dataframe_path"   ## sys.argv[6]
-                    "dummy_plotCode"   ## sys.argv[7]
+            "dummy_plotCode"   ## sys.argv[7]
 		    "dummy_latticePDF" ## sys.argv[8]
-		  #end if
-		  #for $i in $refGenomeSource.input_list
-    		    $i $i.ext "$i.name" ## sys.argv[9,10,11] modulo 3
-		  #end for
-                  #silent plottingoption = $plotting.plottingOption
-</command>
+		#end if
+		#for $i in $refGenomeSource.input_list
+    	    '$i' '$i.ext' "$i.name" ## sys.argv[9,10,11] modulo 3
+		#end for
+        #silent plottingoption = $plotting.plottingOption
+    ]]></command>
     <inputs>
         <conditional name="refGenomeSource">
             <param help="Built-ins were indexed using default options" label="Will you select a reference genome from your history or use a built-in index?" name="genomeSource" type="select">

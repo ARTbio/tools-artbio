@@ -1,10 +1,11 @@
 <tool id="fasta_tabular_converter" name="fasta - tabular" version="1.1.0">
   <description>conversions</description>
-  <command interpreter="python">fasta_tabular_converter.py
-                                          --input $input
-                                          --output $output
-                                          --type $switch.conversionType
-  </command>
+  <command><![CDATA[
+      python '$__tool_directory__'/fasta_tabular_converter.py
+      --input '$input'
+      --output '$output'
+      --type $switch.conversionType
+  ]]></command>
   <inputs>
     <conditional name="switch">
        <param name="conversionType" type="select" label="conversion option">

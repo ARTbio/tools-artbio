@@ -25,8 +25,8 @@
     </command>
     <inputs>
         <param help="A tabular file with gene names in the first column, and TRUE or FALSE in the last column. TRUE means a gene is differentially expressed. See help section for details." label="Differentially expressed gene file" name="dge_file" type="data" format="tabular" />
-        <param label="Gene length file for length bias correction" help="You can calculate the gene length using the get length and gc content tool" name="length_file" type="data" format="tabular" required="true" />
-        <param label="Gene category file" help="You can obtain a mapping of gene id to gene ontology using the getgo tool" name="category_file" type="data" format="tabular" required="true" />
+        <param label="Gene length file for length bias correction" help="You can calculate the gene length using the get length and gc content tool" name="length_file" type="data" format="tabular" />
+        <param label="Gene category file" help="You can obtain a mapping of gene id to gene ontology using the getgo tool" name="category_file" type="data" format="tabular" />
         <param help="For example, a large number of gene may have no GO term annotated. If this option is set to FALSE, those genes will be ignored in the calculation of p-values. If this option is set to TRUE, then these genes will count towards the total number of genes outside the category being tested"
                name="use_genes_without_cat" label="Count genes without any category?" type="boolean"/>
         <section name="methods" title="Method options" expanded="True">
@@ -70,7 +70,7 @@
             <param name="length_file" value="gene_length.tab" ftype="tabular"/>
             <param name="category_file" value="category.tab" ftype="tabular"/>
             <param name="use_genes_without_cat" value="true" />
-            <output name="wallenius_tab" file="wal.tab" compare="re_match"/>/>
+            <output name="wallenius_tab" file="wal.tab" compare="re_match"/>
         </test>
     </tests>
     <help>

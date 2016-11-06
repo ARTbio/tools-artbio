@@ -2,13 +2,15 @@
 # python parser module for size distributions, guided by GFF3
 # version 0.9.1 (1-6-2014)
 # Usage readmap.py  <1:index source> <2:extraction directive> <3:output pre-mir> <4: output mature miRs> <5:mirbase GFF3>
-#                     <6:pathToLatticeDataframe or "dummy_dataframe_path"> <7:Rcode or "dummy_plotCode"> <8:latticePDF or "dummy_latticePDF">
-#                     <9:10:11 filePath:FileExt:FileLabel> <.. ad  lib>
+# <6:pathToLatticeDataframe or "dummy_dataframe_path"> <7:Rcode or "dummy_plotCode"> <8:latticePDF or "dummy_latticePDF">
+# <9:10:11 filePath:FileExt:FileLabel> <.. ad  lib>
 
-import sys, subprocess, argparse
-from smRtools import *
-from collections import OrderedDict, defaultdict
-import os
+import argparse
+import subprocess
+from collections import OrderedDict
+from smRtools import extractsubinstance
+from smRtools import HandleSmRNAwindows
+
 
 def Parser():
   the_parser = argparse.ArgumentParser()
@@ -23,10 +25,11 @@ def Parser():
   the_parser.add_argument('--minquery', type=int, help="Minimum readsize")
   the_parser.add_argument('--maxquery', type=int, help="Maximum readsize")
   the_parser.add_argument('--rcode', type=str, help="R script")
-  the_parser.add_argument('--global_size', action="store_true", help="if specified, size distribution is calcilated for the sum of all items")
+  the_parser.add_argument('--global_size', action="store_true", help="if specified, size distribution is calculated for the sum of all items")
   the_parser.add_argument('--collapse', action="store_true", help="if specified, forward and reverse reads are collapsed")
   args = the_parser.parse_args()
   return args
+
 
 args=Parser()
 if args.reference_fasta:
@@ -61,6 +64,7 @@ def process_samples(filePath):
                         biosample=fileLabel[i], size_inf=minquery, size_sup=maxquery, norm=norm)
   return MasterListOfGenomes
 
+
 def write_size_distribution_dataframe(readDict, size_distribution_file, pol=["both"] ):
   '''refactored on 7-9-2014'''
   with open(size_distribution_file, 'w') as size_distrib:
@@ -76,6 +80,7 @@ def write_size_distribution_dataframe(readDict, size_distribution_file, pol=["bo
           for size, count in histogram[polarity].iteritems():
             print >>size_distrib, "%s\t%s\t%s\t%s\t%s" % (gene, polarity, size, count, sample)
 
+
 def write_size_distribution_dataframe_global(readDict, size_distribution_file, pol=["both"]):
   with open(size_distribution_file, 'w') as size_distrib:
     print >>size_distrib, "gene\tpolarity\tsize\tcount\tsample"
@@ -85,6 +90,7 @@ def write_size_distribution_dataframe_global(readDict, size_distribution_file, p
       for polarity in pol:
         for size, count in histogram[polarity].iteritems():
           print >>size_distrib, "%s\t%s\t%s\t%s\t%s" % (gene, polarity, size, count, sample)
+
 
 def gff_item_subinstances(readDict, gff3):
   GFFinstanceDict=OrderedDict()
@@ -98,7 +104,7 @@ def gff_item_subinstances(readDict, gff3):
       item_downstream_coordinate = int(gff_fields[4])
       item_polarity = gff_fields[6]
       for sample in readDict.keys():
-	if not GFFinstanceDict.has_key(sample):
+        if sample not in GFFinstanceDict:
           GFFinstanceDict[sample]={}
         subinstance=extractsubinstance(item_upstream_coordinate, item_downstream_coordinate, readDict[sample].instanceDict[chrom])
         if item_polarity == '-':
@@ -121,5 +127,3 @@ else:
 R_command="Rscript "+ Rcode
 process = subprocess.Popen(R_command.split())
 process.wait()
-	
-

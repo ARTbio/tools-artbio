@@ -1,10 +1,11 @@
-<tool id="DESeq_normalization" name="DESeq Normalization" version="1.0.2">
+<tool id="DESeq_normalization" name="DESeq Normalization" version="1.0.3">
 	<description>of hit lists (geometric method)</description>
-        <requirements>
-          <requirement type="package" version="3.1.2">R</requirement>
-          <requirement type="package" version="2.14">biocbasics</requirement>
-        </requirements>
-	<command interpreter="Rscript"> $normalizationDESeq </command>
+    <requirements>
+      <requirement type="package" version="3.1.2">R</requirement>
+      <requirement type="package" version="2.14">biocbasics</requirement>
+      <requirement type="package" version="1.22.1=r3.2.2_0">bioconductor-deseq</requirement>
+    </requirements>
+    <command><![CDATA[ Rscript $normalizationDESeq ]]></command>
 	<inputs>
 		<param name="input" type="data" format="tabular" label="Hit lists of items"/>
 	</inputs>

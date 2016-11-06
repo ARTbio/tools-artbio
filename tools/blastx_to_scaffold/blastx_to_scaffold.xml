@@ -30,7 +30,7 @@
 
 
 **What it Does**
-This tool start from DNA contigs that aligned to a subject protein sequence through blastx.
+This tool starts from DNA contigs that aligned to a subject protein sequence through blastx.
 The contigs must be provided in fasta format. The blastx output must be tabular, the 12 standard column plus column 13 with the length of the blastx subject.
 The final scaffold is a DNA sequence.
 Sequences of the subject protein which were not aligned to the contigs are replaced by Ns in this scaffold.

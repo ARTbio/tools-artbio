@@ -181,7 +181,7 @@ def __main__():
     else:
         tmp_dir, index_path = "dummy/dymmy", args.index_source
     command_line = bowtieCommandLiner(args.method, args.v_mismatches, args.output_format,
-                                      args.aligned, args.unaligned, args.input_format, args.input, 
+                                      args.aligned, args.unaligned, args.input_format, args.input,
                                       index_path, args.output, args.num_threads)
     bowtie_alignment(command_line, flyPreIndexed=tmp_dir)
     F.close()

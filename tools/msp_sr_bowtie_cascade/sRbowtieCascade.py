@@ -4,8 +4,14 @@
 # Usage sRbowtie_cascade.py see Parser() for valid arguments
 # Christophe Antoniewski <drosofff@gmail.com>
 
-import sys, os, subprocess, tempfile, shutil, argparse
+import argparse
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
 from collections import defaultdict
+
 
 def Parser():
   the_parser = argparse.ArgumentParser()
@@ -13,16 +19,18 @@ def Parser():
   the_parser.add_argument('--num-threads', dest="num_threads", action="store", type=str, help="number of bowtie threads")
   the_parser.add_argument('--mismatch', action="store", type=str, help="number of mismatches allowed")
   the_parser.add_argument('--indexing-flags', dest="indexing_flags", nargs='+', help="whether the index should be generated or not by bowtie-buid")
-  the_parser.add_argument('--index',nargs='+', help="paths to indexed or fasta references")
-  the_parser.add_argument('--indexName',nargs='+', help="Names of the indexes")
-  the_parser.add_argument('--input',nargs='+', help="paths to multiple input files")
-  the_parser.add_argument('--label',nargs='+', help="labels of multiple input files")
+  the_parser.add_argument('--index', nargs='+', help="paths to indexed or fasta references")
+  the_parser.add_argument('--indexName', nargs='+', help="Names of the indexes")
+  the_parser.add_argument('--input', nargs='+', help="paths to multiple input files")
+  the_parser.add_argument('--label', nargs='+', help="labels of multiple input files")
   args = the_parser.parse_args()
   return args
- 
-def stop_err( msg ):
-  sys.stderr.write( '%s\n' % msg )
+
+
+def stop_err(msg):
+  sys.stderr.write('%s\n' % msg)
   sys.exit()
+
 
 def bowtie_squash(fasta):
   tmp_index_dir = tempfile.mkdtemp() # make temp directory for bowtie indexes
@@ -34,7 +42,7 @@ def bowtie_squash(fasta):
   try:
     FNULL = open(os.devnull, 'w')
     tmp = tempfile.NamedTemporaryFile( dir=tmp_index_dir ).name # a path string for a temp file in tmp_index_dir. Just a string
-    tmp_stderr = open( tmp, 'wb' ) # creates and open a file handler pointing to the temp file
+    tmp_stderr = open(tmp, 'wb') # creates and open a file handler pointing to the temp file
     proc = subprocess.Popen( args=cmd1, shell=True, cwd=tmp_index_dir, stderr=FNULL, stdout=FNULL ) # both stderr and stdout of bowtie-build are redirected in  dev/null
     returncode = proc.wait()
     tmp_stderr.close()
@@ -42,21 +50,24 @@ def bowtie_squash(fasta):
     sys.stdout.write(cmd1 + "\n")
   except Exception, e:
     # clean up temp dir
-    if os.path.exists( tmp_index_dir ):
-      shutil.rmtree( tmp_index_dir )
-      stop_err( 'Error indexing reference sequence\n' + str( e ) )
+    if os.path.exists(tmp_index_dir):
+      shutil.rmtree(tmp_index_dir)
+      stop_err('Error indexing reference sequence\n' + str(e))
   # no Cleaning if no Exception, tmp_index_dir has to be cleaned after bowtie_alignment()
   index_full_path = os.path.join(tmp_index_dir, ref_file_name) # bowtie fashion path without extention
   return index_full_path  
-  
+
+
 def make_working_dir():
   working_dir = tempfile.mkdtemp()
   return working_dir
-  
+
+
 def Clean_TempDir(directory):
-  if os.path.exists( directory ):
-    shutil.rmtree( directory )
+  if os.path.exists(directory):
+    shutil.rmtree(directory)
   return
+
 
 def bowtie_alignment(command_line="None", working_dir = ""):
   FNULL = open(os.devnull, 'w')
@@ -76,8 +87,10 @@ def bowtie_alignment(command_line="None", working_dir = ""):
   sys.stdout.write("Aligned: %s\n" % aligned)
   return aligned/2
 
+
 def CommandLiner (v_mis="1", pslots="12", index="dum/my", input="dum/my", working_dir=""):
   return "bowtie -v %s -k 1 --best -p %s --al %s/al.fasta --un %s/unal.fasta --suppress 1,2,3,4,5,6,7,8 %s -f %s" % (v_mis, pslots, working_dir, working_dir, index, input)
+
 
 def __main__():
   args = Parser()
@@ -86,11 +99,11 @@ def __main__():
   BowtieIndexList = []
   for indexing_flags, bowtiePath in zip (args.indexing_flags, args.index):
     if indexing_flags == "history":
-      BowtieIndexList.append ( bowtie_squash (bowtiePath) )
-      BowtieIndexList.append ( "toClear" )
+      BowtieIndexList.append(bowtie_squash (bowtiePath))
+      BowtieIndexList.append("toClear")
     else:
-      BowtieIndexList.append ( bowtiePath )
-      BowtieIndexList.append ( "DoNotDelete") 
+      BowtieIndexList.append(bowtiePath)
+      BowtieIndexList.append("DoNotDelete")
   ###### temporary Indexes are generated. They must be deleted at the end (after removing file name in the temp path) 
   ResultDict = defaultdict(list)
   for label, input in zip(args.label, args.input): ## the main cascade, iterating over samples and bowtie indexes
@@ -121,8 +134,6 @@ def __main__():
     if IndexFlag == "toClear":
       Clean_TempDir ("/".join(IndexPath.split("/")[:-1]))
   ## end of cleaning
-  
-  
     
   F = open (args.output, "w")
   print >> F, "alignment reference\t%s" % "\t".join(args.label)

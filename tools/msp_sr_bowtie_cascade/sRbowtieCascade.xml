@@ -1,7 +1,7 @@
 <tool id="sRbowtie_cascade" name="Annotate smRNA datasets" version="1.0.1">
   <description>Using iterative sRbowtie Alignments</description>
   <requirements>
-        <requirement type="package" version="0.12.7">bowtie</requirement>
+        <requirement type="package" version="1.1.2">bowtie</requirement>
   </requirements>
   <command interpreter="python"> sRbowtieCascade.py --output $output
                                                     --num-threads \${GALAXY_SLOTS:-4} ## number of processors to be handled by bowtie
