@@ -10,6 +10,5 @@ categories:
 homepage_url: http://artbio.fr
 remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/suites/suite_metavisitor_1_2
 toolshed:
-  - https://lbcd41.snv.jussieu.fr/toolshed/
   - testtoolshed
   - toolshed
