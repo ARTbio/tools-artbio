@@ -9,7 +9,6 @@
     <repository changeset_revision="ddb463fdf57e" name="msp_cap3" owner="drosofff" />
     <repository changeset_revision="f7684171dab3" name="cherry_pick_fasta" owner="drosofff" />
     <repository changeset_revision="1991c830504a" name="msp_blastparser_and_hits" owner="drosofff" />
-    <repository changeset_revision="09a8be9247ca" name="get_orfs_or_cdss" owner="peterjc" />
     <repository changeset_revision="dc684e37f668" name="msp_oases" owner="drosofff" />
     <repository changeset_revision="0a576a57a9eb" name="trinityrnaseq" owner="anmoljh" />
     <repository changeset_revision="81ffa74cf96e" name="blast_to_scaffold" owner="drosofff" />
@@ -21,4 +20,9 @@
     <repository changeset_revision="92898cc3ea19" name="msp_sr_readmap_and_size_histograms" owner="drosofff" />
     <repository changeset_revision="9ea374bb0350" name="regex_find_replace" owner="jjohnson" />
     <repository changeset_revision="ee081dc6c578" name="khmer_normalize_by_median" owner="iuc" />
+    <repository changeset_revision="e87aeff2cf88" name="data_manager_bowtie2_index_builder" owner="devteam" />
+    <repository changeset_revision="086edfff112b" name="data_manager_bowtie_index_builder" owner="devteam" />
+    <repository changeset_revision="86fa71e9b427" name="data_manager_fetch_genome_dbkeys_all_fasta" owner="devteam" />
+    <repository changeset_revision="3034ce97dd33" name="ncbi_blast_plus" owner="devteam" />
+    <repository changeset_revision="35cb17bd8bf9" name="spades" owner="nml" />
 </repositories>
