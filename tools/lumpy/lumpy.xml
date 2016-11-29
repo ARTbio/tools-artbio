@@ -11,7 +11,7 @@
         samtools view -h input.bam | python $__tool_directory__/extractSplitReads_BwaMem.py -i stdin | samtools view -Sb - > "input.splitters.unsorted.bam" &&
         samtools sort input.discordants.unsorted.bam > input.discordants.bam &&
         samtools sort input.splitters.unsorted.bam > input.splitters.bam &&
-        samtools view -r readgroup input.bam |tail -n +100000 |python $__tool_directory__/Pairedend_distro.py -r 101 -X 4 -N 10000 -o input.lib.histo &&
+        samtools view -r readgroup input.bam |tail -n +100000 |python $__tool_directory__/pairend_distro.py -r 101 -X 4 -N 10000 -o input.lib.histo &&
         lumpy -mw 4 -tt 0 \
             -pe id:input.bam,bam_file:input.discordants.bam,histo_file:input.lib.histo,mean:450,stdev:50,read_length:151,min_non_overlap:101,discordant_z:5,back_distance:10,weight:1,min_mapping_threshold:20 \
             -sr id:input.bam,bam_file:input.splitters.bam,back_distance:10,weight:1,min_mapping_threshold:20 > output.vcf &&
@@ -19,6 +19,7 @@
         mv input.splitters.bam $splits &&
         mv input.lib.histo $histogram &&
         mv output.vcf $vcf_call &&
+        rm input.discordants.unsorted.bam input.splitters.unsorted.bam
     ]]></command>
     <!-- basic error handling -->
     <stdio>
