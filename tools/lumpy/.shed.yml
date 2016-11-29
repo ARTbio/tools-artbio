@@ -1,0 +1,15 @@
+# .shed.yml supporting automatic pushes.
+owner: drosofff
+name: lumpy
+description: Find structural variations
+long_description: |
+  This tool takes as an input a sorted bam alignment of paired-end sequencing reads.
+  It extracts discordant paired-end alignments and split-read alignments,
+  and generates a vcf file containing structural variation calls
+categories:
+  - Variant Analysis
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/lumpy
+toolshed:
+  - testtoolshed
+  - toolshed
