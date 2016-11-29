@@ -4,6 +4,7 @@
     <requirements>
         <requirement type="package" version="0.2.12">lumpy-sv</requirement>
         <requirement type="package" version="1.3.1">samtools</requirement>
+        <requirement type="package" version="1.11.2">numpy</requirement>
     </requirements>
     <command><![CDATA[
         ln -f -s "$input_file" input.bam &&
