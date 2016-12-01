@@ -1,34 +1,49 @@
 <tool id="lumpy" name="lumpy-sv" version="0.1">
     <description>find structural variants</description>
-    <version_command>lumpy --version</version_command>
     <requirements>
         <requirement type="package" version="0.2.12">lumpy-sv</requirement>
         <requirement type="package" version="1.3.1">samtools</requirement>
         <requirement type="package" version="1.11.2">numpy</requirement>
     </requirements>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Tool exception" />
+    </stdio>
+    <version_command>lumpy --version</version_command>
     <command><![CDATA[
         ln -f -s "$input_file" input.bam &&
         samtools view -b -F 1294 input.bam > "input.discordants.unsorted.bam" &&
         samtools view -h input.bam | python $__tool_directory__/extractSplitReads_BwaMem.py -i stdin | samtools view -Sb - > "input.splitters.unsorted.bam" &&
         samtools sort input.discordants.unsorted.bam > input.discordants.bam &&
         samtools sort input.splitters.unsorted.bam > input.splitters.bam &&
-        samtools view -r readgroup input.bam |tail -n +100000 |python $__tool_directory__/pairend_distro.py -r 101 -X 4 -N 10000 -o input.lib.histo &&
+        samtools view -r readgroup input.bam
+            |tail -n +$additional_params.samplingValue
+            |python $__tool_directory__/pairend_distro.py -r 101 -X 4 -N $additional_params.samplingValue -o input.lib.histo > meandev.txt &&
+        mean=\$(cat meandev.txt | sed s/mean:// | sed -r s/stdev:.+//) &&
+        stdev=\$(cat meandev.txt | sed -r s/mean:.+stdev://) &&
         lumpy -mw 4 -tt 0 
-            -pe id:input.bam,bam_file:input.discordants.bam,histo_file:input.lib.histo,mean:450,stdev:50,read_length:151,min_non_overlap:101,discordant_z:5,back_distance:10,weight:1,min_mapping_threshold:20 
-            -sr id:input.bam,bam_file:input.splitters.bam,back_distance:10,weight:1,min_mapping_threshold:20 > output.vcf &&
+            -pe id:input.bam,bam_file:input.discordants.bam,histo_file:input.lib.histo,mean:"\$mean",stdev:"\$stdev",read_length:$readLength,min_non_overlap:$additional_params.min_non_overlap,discordant_z:$additional_params.discordant_z,back_distance:$additional_params.back_distance,weight:$additional_params.weight,min_mapping_threshold:$additional_params.min_mapping_threshold 
+            -sr id:input.bam,bam_file:input.splitters.bam,back_distance:$additional_params.back_distance,weight:$additional_params.weight,min_mapping_threshold:$additional_params.min_mapping_threshold > output.vcf &&
         mv input.discordants.bam $discordants &&
         mv input.splitters.bam $splits &&
         mv input.lib.histo $histogram &&
         mv output.vcf $vcf_call &&
-        rm input.discordants.unsorted.bam input.splitters.unsorted.bam
+        rm input.discordants.unsorted.bam input.splitters.unsorted.bam meandev.txt
+
     ]]></command>
     <!-- basic error handling -->
-    <stdio>
-        <exit_code range="1:" level="fatal" description="Tool exception" />
-    </stdio>
-
     <inputs>
         <param format="bam" name="input_file" type="data" label="One BAM alignment files produced by BWA"/>
+        <param name="readLength" value="151"  type="integer" label="read length" help="e.g. 150 nt" />
+        <section name="additional_params" title="Additional Options" expanded="False">
+            <param name="samplingValue" value="100000"  type="integer" label="number of reads to compute mean and stdev of read length" help="e.g. 10000" />
+            <param name="min_non_overlap" value="101"  type="integer" label="min_non_overlap" help="e.g. 101" />
+            <param name="discordant_z" value="5"  type="integer" label="discordant_z" help="e.g. 5" />
+            <param name="back_distance" value="10"  type="integer" label="back_distance" help="e.g. 10" />
+            <param name="weight" value="1"  type="integer" label="weight" help="e.g. 1" />
+            <param name="min_mapping_threshold" value="20"  type="integer" label="min_mapping_threshold" help="e.g. 20" />
+
+        </section>
+
     </inputs>
 
     <outputs>
