@@ -11,45 +11,73 @@
     <version_command>lumpy --version</version_command>
     <command><![CDATA[
         ln -f -s "$input_file" input.bam &&
-        samtools view -b -F 1294 input.bam > "input.discordants.unsorted.bam" &&
-        samtools view -h input.bam | python $__tool_directory__/extractSplitReads_BwaMem.py -i stdin | samtools view -Sb - > "input.splitters.unsorted.bam" &&
-        samtools sort input.discordants.unsorted.bam > input.discordants.bam &&
-        samtools sort input.splitters.unsorted.bam > input.splitters.bam &&
-        samtools view -r readgroup input.bam
-            |tail -n +$additional_params.samplingValue
-            |python $__tool_directory__/pairend_distro.py -r 101 -X 4 -N $additional_params.samplingValue -o input.lib.histo > meandev.txt &&
-        mean=\$(cat meandev.txt | sed s/mean:// | sed -r s/stdev:.+//) &&
-        stdev=\$(cat meandev.txt | sed -r s/mean:.+stdev://) &&
-        lumpy -mw 4 -tt 0 
-            -pe id:input.bam,bam_file:input.discordants.bam,histo_file:input.lib.histo,mean:"\$mean",stdev:"\$stdev",read_length:$readLength,min_non_overlap:$additional_params.min_non_overlap,discordant_z:$additional_params.discordant_z,back_distance:$additional_params.back_distance,weight:$additional_params.weight,min_mapping_threshold:$additional_params.min_mapping_threshold 
-            -sr id:input.bam,bam_file:input.splitters.bam,back_distance:$additional_params.back_distance,weight:$additional_params.weight,min_mapping_threshold:$additional_params.min_mapping_threshold > output.vcf &&
-        mv input.discordants.bam $discordants &&
-        mv input.splitters.bam $splits &&
-        mv input.lib.histo $histogram &&
-        mv output.vcf $vcf_call &&
-        rm input.discordants.unsorted.bam input.splitters.unsorted.bam meandev.txt
+        #if $seq_method.seq_method_list == "paired-end":
+            samtools view -b -F 1294 input.bam > "input.discordants.unsorted.bam" &&
+            samtools view -h input.bam | python $__tool_directory__/extractSplitReads_BwaMem.py -i stdin | samtools view -Sb - > "input.splitters.unsorted.bam" &&
+            samtools sort input.discordants.unsorted.bam > input.discordants.bam &&
+            samtools sort input.splitters.unsorted.bam > input.splitters.bam &&
+            samtools view -r readgroup input.bam
+                |tail -n +$seq_method.additional_params.samplingValue
+                |python $__tool_directory__/pairend_distro.py -r 101 -X 4 -N $seq_method.additional_params.samplingValue -o input.lib.histo > meandev.txt &&
+            mean=\$(cat meandev.txt | sed s/mean:// | sed -r s/stdev:.+//) &&
+            stdev=\$(cat meandev.txt | sed -r s/mean:.+stdev://) &&
+            lumpy -mw 4 -tt 0 
+                -pe id:input.bam,bam_file:input.discordants.bam,histo_file:input.lib.histo,mean:"\$mean",stdev:"\$stdev",read_length:$seq_method.readLength,min_non_overlap:$seq_method.additional_params.min_non_overlap,discordant_z:$seq_method.additional_params.discordant_z,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold 
+                -sr id:input.bam,bam_file:input.splitters.bam,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold > output.vcf &&
+            mv input.discordants.bam $discordants &&
+            mv input.splitters.bam $splits &&
+            mv input.lib.histo $histogram &&
+            mv output.vcf $vcf_call &&
+            rm input.discordants.unsorted.bam input.splitters.unsorted.bam meandev.txt
+        #end if
+        #if $seq_method.seq_method_list == "single-read":
+            samtools view -h input.bam | python $__tool_directory__/extractSplitReads_BwaMem.py -i stdin | samtools view -Sb - > "input.splitters.unsorted.bam" &&
+            lumpy -mw 4 -tt 0
+                -sr id:input.bam,bam_file:input.splitters.unsorted.bam,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold > output.vcf &&
+            mv input.splitters.unsorted.bam $splits &&
+            mv output.vcf $vcf_call
+        #end if
 
     ]]></command>
     <!-- basic error handling -->
     <inputs>
-        <param format="bam" name="input_file" type="data" label="One BAM alignment files produced by BWA"/>
-        <param name="readLength" value="151"  type="integer" label="read length" help="e.g. 150 nt" />
-        <section name="additional_params" title="Additional Options" expanded="False">
-            <param name="samplingValue" value="100000"  type="integer" label="number of reads to compute mean and stdev of read length" help="e.g. 10000" />
-            <param name="min_non_overlap" value="101"  type="integer" label="min_non_overlap" help="e.g. 101" />
-            <param name="discordant_z" value="5"  type="integer" label="discordant_z" help="e.g. 5" />
-            <param name="back_distance" value="10"  type="integer" label="back_distance" help="e.g. 10" />
-            <param name="weight" value="1"  type="integer" label="weight" help="e.g. 1" />
-            <param name="min_mapping_threshold" value="20"  type="integer" label="min_mapping_threshold" help="e.g. 20" />
-
-        </section>
+        <param format="bam" name="input_file" type="data" label="One BAM alignment file produced by BWA-mem"/>
+        <conditional name="seq_method">
+            <param help="Paired-end or single-read sequencing" label="Sequencing method" name="seq_method_list" type="select">
+                <option selected="True" value="paired-end">Paired-end sequencing</option>
+                <option value="single-read">Single-read sequencing</option>
+            </param>
+            <when value="paired-end">
+                <param name="readLength" value="151"  type="integer" label="read length" help="e.g. 151 nt" />
+                <section name="additional_params" title="Additional Options" expanded="False">
+                    <param name="samplingValue" value="100000"  type="integer" label="number of reads to compute mean and stdev of read length" help="e.g. 10000" />
+                    <param name="min_non_overlap" value="101"  type="integer" label="min_non_overlap" help="e.g. 101" />
+                    <param name="discordant_z" value="5"  type="integer" label="discordant_z" help="e.g. 5" />
+                    <param name="back_distance" value="10"  type="integer" label="back_distance" help="e.g. 10" />
+                    <param name="weight" value="1"  type="integer" label="weight" help="e.g. 1" />
+                    <param name="min_mapping_threshold" value="20"  type="integer" label="min_mapping_threshold" help="e.g. 20" />
+                </section>
+            </when>
+            <when value="single-read">
+                <section name="additional_params" title="Additional Options" expanded="False">
+                    <param name="back_distance" value="10"  type="integer" label="back_distance" help="e.g. 10" />
+                    <param name="weight" value="1"  type="integer" label="weight" help="e.g. 1" />
+                    <param name="min_mapping_threshold" value="20"  type="integer" label="min_mapping_threshold" help="e.g. 20" />
+                </section>
+            </when>
+            
+        </conditional>
 
     </inputs>
 
     <outputs>
-        <data format="tabular" name="histogram" type="data" label="${input_file.element_identifier} Fragment size distribution"/>
+        <data format="tabular" name="histogram" type="data" label="${input_file.element_identifier} Fragment size distribution">
+            <filter>seq_method['seq_method_list'] == "paired-end"</filter>
+        </data>
         <data format="bam" name="splits" type="data" label="${input_file.element_identifier} Split Reads (Bam format)"/>
-        <data format="bam" name="discordants" type="data" label="${input_file.element_identifier} Discordant Pairs (Bam format)"/>
+        <data format="bam" name="discordants" type="data" label="${input_file.element_identifier} Discordant Pairs (Bam format)">
+            <filter>seq_method['seq_method_list'] == "paired-end"</filter>
+        </data>
         <data format="vcf" name="vcf_call" type="data" label="${input_file.element_identifier} Variant Calling (vcf format)"/>
     </outputs>
 
@@ -58,7 +86,11 @@
             <param name="input_file" value="input.bam" ftype="bam"/>
             <output name="vcf_call" file="output.vcf" ftype="vcf"/>
         </test>
-    </tests>
+         <test>
+            <param name="input_file" value="sr.input.bam" ftype="bam"/>
+            <output name="vcf_call" file="sr.output.vcf" ftype="vcf"/>
+        </test>
+   </tests>
 
     <help>
         Some help required
