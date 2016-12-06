@@ -84,10 +84,12 @@
     <tests>
         <test>
             <param name="input_file" value="sr.input.bam" ftype="bam"/>
-            <param name="seq_method" value="single-read" />
+            <param name="seq_method_list" value="single-read" />
+            <param name="back_distance" value="10"/>
+            <param name="weight" value="1" />
+            <param name="min_mapping_threshold" value="20" />
             <output name="vcf_call" file="output.vcf" ftype="vcf"/>
         </test>
-         <test>
    </tests>
 
     <help>
