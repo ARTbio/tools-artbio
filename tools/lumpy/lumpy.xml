@@ -83,13 +83,11 @@
 
     <tests>
         <test>
-            <param name="input_file" value="input.bam" ftype="bam"/>
+            <param name="input_file" value="sr.input.bam" ftype="bam"/>
+            <param name="seq_method" value="single-read" />
             <output name="vcf_call" file="output.vcf" ftype="vcf"/>
         </test>
          <test>
-            <param name="input_file" value="sr.input.bam" ftype="bam"/>
-            <output name="vcf_call" file="sr.output.vcf" ftype="vcf"/>
-        </test>
    </tests>
 
     <help>
