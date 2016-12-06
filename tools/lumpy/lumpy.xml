@@ -71,14 +71,14 @@
     </inputs>
 
     <outputs>
-        <data format="tabular" name="histogram" type="data" label="${input_file.element_identifier} Fragment size distribution">
+        <data format="tabular" name="histogram" type="data" label="Lumpy on ${input_file.element_identifier}: Fragment size distribution">
             <filter>seq_method['seq_method_list'] == "paired-end"</filter>
         </data>
-        <data format="bam" name="splits" type="data" label="${input_file.element_identifier} Split Reads (Bam format)"/>
-        <data format="bam" name="discordants" type="data" label="${input_file.element_identifier} Discordant Pairs (Bam format)">
+        <data format="bam" name="splits" type="data" label="Lumpy on ${input_file.element_identifier}: Split Reads (Bam format)"/>
+        <data format="bam" name="discordants" type="data" label="Lumpy on ${input_file.element_identifier}: Discordant Pairs (Bam format)">
             <filter>seq_method['seq_method_list'] == "paired-end"</filter>
         </data>
-        <data format="vcf" name="vcf_call" type="data" label="${input_file.element_identifier} Variant Calling (vcf format)"/>
+        <data format="vcf" name="vcf_call" type="data" label="Lumpy on ${input_file.element_identifier}: Variant Calling (vcf format)"/>
     </outputs>
 
     <tests>
@@ -93,7 +93,57 @@
    </tests>
 
     <help>
-        Some help required
+    
+**lumpy-sv manual**
+
+Read the lumpy-sv_ documentation for details on using lumpy.
+
+.. _lumpy-sv: https://github.com/arq5x/lumpy-sv
+
+**lumpy options**
+
+v 0.2.13
+Author:  Ryan Layer (rl6sf@virginia.edu)
+
+Summary: Find structural variations in various signals.
+
+Options::
+
+	-g	Genome file (defines chromosome order)
+	-e	Show evidence for each call
+	-w	File read windows size (default 1000000)
+	-mw	minimum weight for a call
+	-msw	minimum per-sample weight for a call
+	-tt	trim threshold
+	-x	exclude file bed file
+	-t	temp file prefix, must be to a writeable directory
+	-P	output probability curve for each variant
+	-b	output BEDPE instead of VCF
+	-sr	bam_file:&lt;file name&gt;,
+		id:&lt;sample name&gt;,
+		back_distance:&lt;distance&gt;,
+		min_mapping_threshold:&lt;mapping quality&gt;,
+		weight:&lt;sample weight&gt;,
+		min_clip:&lt;minimum clip length&gt;,
+		read_group:&lt;string&gt;
+
+	-pe	bam_file:&lt;file name&gt;,
+		id:&lt;sample name&gt;,
+		histo_file:&lt;file name&gt;,
+		mean:&lt;value&gt;,
+		stdev:&lt;value&gt;,
+		read_length:&lt;length&gt;,
+		min_non_overlap:&lt;length&gt;,
+		discordant_z:&lt;z value&gt;,
+		back_distance:&lt;distance&gt;,
+		min_mapping_threshold:&lt;mapping quality&gt;,
+		weight:&lt;sample weight&gt;,
+		read_group:&lt;string&gt;
+
+	-bedpe	bedpe_file:&lt;bedpe file&gt;,
+		id:&lt;sample name&gt;,
+		weight:&lt;sample weight&gt;
+		
     </help>
 
     <citations>
