@@ -21,7 +21,7 @@
                 |python $__tool_directory__/pairend_distro.py -r 101 -X 4 -N $seq_method.additional_params.samplingValue -o input.lib.histo > meandev.txt &&
             mean=\$(cat meandev.txt | sed s/mean:// | sed -r s/stdev:.+//) &&
             stdev=\$(cat meandev.txt | sed -r s/mean:.+stdev://) &&
-            lumpy -mw 4 -tt 0 
+            lumpy -mw $seq_method.additional_params.mw -tt $seq_method.additional_params.tt 
                 -pe id:input.bam,bam_file:input.discordants.bam,histo_file:input.lib.histo,mean:"\$mean",stdev:"\$stdev",read_length:$seq_method.readLength,min_non_overlap:$seq_method.additional_params.min_non_overlap,discordant_z:$seq_method.additional_params.discordant_z,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold 
                 -sr id:input.bam,bam_file:input.splitters.bam,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold > output.vcf &&
             mv input.discordants.bam $discordants &&
@@ -32,7 +32,7 @@
         #end if
         #if $seq_method.seq_method_list == "single-read":
             samtools view -h input.bam | python $__tool_directory__/extractSplitReads_BwaMem.py -i stdin | samtools view -Sb - > "input.splitters.unsorted.bam" &&
-            lumpy -mw 4 -tt 0
+            lumpy -mw $seq_method.additional_params.mw -tt $seq_method.additional_params.tt
                 -sr id:input.bam,bam_file:input.splitters.unsorted.bam,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold > output.vcf &&
             mv input.splitters.unsorted.bam $splits &&
             mv output.vcf $vcf_call
@@ -51,6 +51,8 @@
                 <param name="readLength" value="151"  type="integer" label="read length" help="e.g. 151 nt" />
                 <section name="additional_params" title="Additional Options" expanded="False">
                     <param name="samplingValue" value="100000"  type="integer" label="number of reads to compute mean and stdev of read length" help="e.g. 10000" />
+                    <param name="mw" value="4"  type="integer" label="-mw" help="minimum weight across all samples for a call (default: 4)" />
+                    <param name="tt" value="0"  type="integer" label="-tt" help="trim threshold (default: 0)" />
                     <param name="min_non_overlap" value="101"  type="integer" label="min_non_overlap" help="e.g. 101" />
                     <param name="discordant_z" value="5"  type="integer" label="discordant_z" help="e.g. 5" />
                     <param name="back_distance" value="10"  type="integer" label="back_distance" help="e.g. 10" />
@@ -60,6 +62,8 @@
             </when>
             <when value="single-read">
                 <section name="additional_params" title="Additional Options" expanded="False">
+                    <param name="mw" value="4"  type="integer" label="-mw" help="minimum weight across all samples for a call (default: 4)" />
+                    <param name="tt" value="0"  type="integer" label="-tt" help="trim threshold (default: 0)" />
                     <param name="back_distance" value="10"  type="integer" label="back_distance" help="e.g. 10" />
                     <param name="weight" value="1"  type="integer" label="weight" help="e.g. 1" />
                     <param name="min_mapping_threshold" value="20"  type="integer" label="min_mapping_threshold" help="e.g. 20" />
@@ -85,6 +89,8 @@
         <test>
             <param name="input_file" value="sr.input.bam" ftype="bam"/>
             <param name="seq_method_list" value="single-read" />
+            <param name="mw" value="4"/>
+            <param name="tt" value="0"/>
             <param name="back_distance" value="10"/>
             <param name="weight" value="1" />
             <param name="min_mapping_threshold" value="20" />
