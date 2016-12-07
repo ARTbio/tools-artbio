@@ -25,7 +25,7 @@
                 samtools sort input.discordants.unsorted.bam > input.discordants.bam &&
                 samtools sort input.splitters.unsorted.bam > input.splitters.bam &&
                 samtools view -r readgroup input.bam
-                    |tail -n +$seq_method.additional_params.samplingValue
+                    |tail -n +1
                     |python $__tool_directory__/pairend_distro.py -r 101 -X 4 -N $seq_method.additional_params.samplingValue -o input.lib.histo > meandev.txt &&
                 mean=\$(cat meandev.txt | sed s/mean:// | sed -r s/stdev:.+//) &&
                 stdev=\$(cat meandev.txt | sed -r s/mean:.+stdev://) &&
@@ -58,10 +58,10 @@
                 samtools sort input.A.splitters.unsorted.bam > input.A.splitters.bam &&
                 samtools sort input.B.splitters.unsorted.bam > input.B.splitters.bam &&
                 samtools view -r readgroup input.A.bam
-                    |tail -n +$seq_method.additional_params.samplingValue
+                    |tail -n +1
                     |python $__tool_directory__/pairend_distro.py -r 101 -X 4 -N $seq_method.additional_params.samplingValue -o input.A.lib.histo > meandevA.txt &&
                 samtools view -r readgroup input.B.bam
-                    |tail -n +$seq_method.additional_params.samplingValue
+                    |tail -n +1
                     |python $__tool_directory__/pairend_distro.py -r 101 -X 4 -N $seq_method.additional_params.samplingValue -o input.B.lib.histo > meandevB.txt &&
                 meanA=\$(cat meandevA.txt | sed s/mean:// | sed -r s/stdev:.+//) &&
                 meanB=\$(cat meandevB.txt | sed s/mean:// | sed -r s/stdev:.+//) &&               
