@@ -146,25 +146,25 @@
     </inputs>
 
     <outputs>
-        <data format="tabular" name="histogram" type="data" label="Lumpy on ${analysis_type.input_file.element_identifier}: Fragment size distribution">
+        <data format="tabular" name="histogram" label="Lumpy on ${analysis_type.input_file.element_identifier}: Fragment size distribution">
             <filter>seq_method['seq_method_list'] == "paired-end"</filter>
         </data>
-        <data format="tabular" name="histogramB" type="data" label="Lumpy on ${analysis_type.input_fileB.element_identifier}: Fragment size distribution">
-            <filter>seq_method['seq_method_list'] == "paired-end"</filter>
-            <filter>analysis_type['analysis_type_list'] == "two_sample"</filter>
-        </data>
-        <data format="bam" name="splits" type="data" label="Lumpy on ${analysis_type.input_file.element_identifier}: Split Reads (Bam format)"/>
-        <data format="bam" name="splitsB" type="data" label="Lumpy on ${analysis_type.input_fileB.element_identifier}: Split Reads (Bam format)">
-            <filter>analysis_type['analysis_type_list'] == "two_sample"</filter>
-        </data>
-        <data format="bam" name="discordants" type="data" label="Lumpy on ${analysis_type.input_file.element_identifier}: Discordant Pairs (Bam format)">
-            <filter>seq_method['seq_method_list'] == "paired-end"</filter>
-        </data>
-        <data format="bam" name="discordantsB" type="data" label="Lumpy on ${analysis_type.input_fileB.element_identifier}: Discordant Pairs (Bam format)">
+        <data format="tabular" name="histogramB" label="Lumpy on ${analysis_type.input_fileB.element_identifier}: Fragment size distribution">
             <filter>seq_method['seq_method_list'] == "paired-end"</filter>
             <filter>analysis_type['analysis_type_list'] == "two_sample"</filter>
         </data>
-        <data format="vcf" name="vcf_call" type="data" label="Lumpy Variant Calling (vcf format)"/>
+        <data format="bam" name="splits" label="Lumpy on ${analysis_type.input_file.element_identifier}: Split Reads (Bam format)"/>
+        <data format="bam" name="splitsB" label="Lumpy on ${analysis_type.input_fileB.element_identifier}: Split Reads (Bam format)">
+            <filter>analysis_type['analysis_type_list'] == "two_sample"</filter>
+        </data>
+        <data format="bam" name="discordants" label="Lumpy on ${analysis_type.input_file.element_identifier}: Discordant Pairs (Bam format)">
+            <filter>seq_method['seq_method_list'] == "paired-end"</filter>
+        </data>
+        <data format="bam" name="discordantsB" label="Lumpy on ${analysis_type.input_fileB.element_identifier}: Discordant Pairs (Bam format)">
+            <filter>seq_method['seq_method_list'] == "paired-end"</filter>
+            <filter>analysis_type['analysis_type_list'] == "two_sample"</filter>
+        </data>
+        <data format="vcf" name="vcf_call" label="Lumpy Variant Calling (vcf format)"/>
     </outputs>
 
     <tests>
