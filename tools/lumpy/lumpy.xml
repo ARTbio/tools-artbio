@@ -3,18 +3,18 @@
     <requirements>
         <requirement type="package" version="0.2.12">lumpy-sv</requirement>
         <requirement type="package" version="1.3.1">samtools</requirement>
-        <requirement type="package" version="1.11.2">numpy</requirement>
+        <requirement type="package" version="1.11.2=py27">numpy</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
     </stdio>
     <version_command>lumpy --version</version_command>
-    <command><![CDATA[
+    <command detect_errors="exit_code"><![CDATA[
         #if $analysis_type.analysis_type_list == "one_sample":
-            ln -f -s $analysis_type.input_file input.bam &&
+            ln -f -s '$analysis_type.input_file' input.bam &&
         #else:
-            ln -f -s $analysis_type.input_file input.A.bam &&
-            ln -f -s $analysis_type.input_fileB input.B.bam &&
+            ln -f -s '$analysis_type.input_file' input.A.bam &&
+            ln -f -s '$analysis_type.input_fileB' input.B.bam &&
         #end if
 
         #if $analysis_type.analysis_type_list == "one_sample":
@@ -146,21 +146,21 @@
     </inputs>
 
     <outputs>
-        <data format="tabular" name="histogram" label="Lumpy on ${analysis_type.input_file.element_identifier}: Fragment size distribution">
+        <data format="tabular" name="histogram" label="Lumpy on ${on_string}: Fragment size distribution">
             <filter>seq_method['seq_method_list'] == "paired-end"</filter>
         </data>
-        <data format="tabular" name="histogramB" label="Lumpy on ${analysis_type.input_fileB.element_identifier}: Fragment size distribution">
+        <data format="tabular" name="histogramB" label="Lumpy on ${on_string}: Fragment size distribution">
             <filter>seq_method['seq_method_list'] == "paired-end"</filter>
             <filter>analysis_type['analysis_type_list'] == "two_sample"</filter>
         </data>
-        <data format="bam" name="splits" label="Lumpy on ${analysis_type.input_file.element_identifier}: Split Reads (Bam format)"/>
-        <data format="bam" name="splitsB" label="Lumpy on ${analysis_type.input_fileB.element_identifier}: Split Reads (Bam format)">
+        <data format="bam" name="splits" label="Lumpy on ${on_string}: Split Reads (Bam format)"/>
+        <data format="bam" name="splitsB" label="Lumpy on ${on_string}: Split Reads (Bam format)">
             <filter>analysis_type['analysis_type_list'] == "two_sample"</filter>
         </data>
-        <data format="bam" name="discordants" label="Lumpy on ${analysis_type.input_file.element_identifier}: Discordant Pairs (Bam format)">
+        <data format="bam" name="discordants" label="Lumpy on ${on_string}: Discordant Pairs (Bam format)">
             <filter>seq_method['seq_method_list'] == "paired-end"</filter>
         </data>
-        <data format="bam" name="discordantsB" label="Lumpy on ${analysis_type.input_fileB.element_identifier}: Discordant Pairs (Bam format)">
+        <data format="bam" name="discordantsB" label="Lumpy on ${on_string}: Discordant Pairs (Bam format)">
             <filter>seq_method['seq_method_list'] == "paired-end"</filter>
             <filter>analysis_type['analysis_type_list'] == "two_sample"</filter>
         </data>
@@ -217,6 +217,7 @@ Author:  Ryan Layer (rl6sf@virginia.edu)
 Summary: Find structural variations in various signals.
 
 Options::
+<![CDATA[
 
 	-g	Genome file (defines chromosome order)
 	-e	Show evidence for each call
@@ -228,31 +229,31 @@ Options::
 	-t	temp file prefix, must be to a writeable directory
 	-P	output probability curve for each variant
 	-b	output BEDPE instead of VCF
-	-sr	bam_file:&lt;file name&gt;,
-		id:&lt;sample name&gt;,
-		back_distance:&lt;distance&gt;,
-		min_mapping_threshold:&lt;mapping quality&gt;,
-		weight:&lt;sample weight&gt;,
-		min_clip:&lt;minimum clip length&gt;,
-		read_group:&lt;string&gt;
+	-sr	bam_file:<file name>,
+		id:<sample name>,
+		back_distance:<distance>,
+		min_mapping_threshold:<mapping quality>,
+		weight:<sample weight>,
+		min_clip:<minimum clip length>,
+		read_group:<string>
 
-	-pe	bam_file:&lt;file name&gt;,
-		id:&lt;sample name&gt;,
-		histo_file:&lt;file name&gt;,
-		mean:&lt;value&gt;,
-		stdev:&lt;value&gt;,
-		read_length:&lt;length&gt;,
-		min_non_overlap:&lt;length&gt;,
-		discordant_z:&lt;z value&gt;,
-		back_distance:&lt;distance&gt;,
-		min_mapping_threshold:&lt;mapping quality&gt;,
-		weight:&lt;sample weight&gt;,
-		read_group:&lt;string&gt;
+	-pe	bam_file:<file name>,
+		id:<sample name>,
+		histo_file:<file name>,
+		mean:<value>,
+		stdev:<value>,
+		read_length:<length>,
+		min_non_overlap:<length>,
+		discordant_z:<z value>,
+		back_distance:<distance>,
+		min_mapping_threshold:<mapping quality>,
+		weight:<sample weight>,
+		read_group:<string>
 
-	-bedpe	bedpe_file:&lt;bedpe file&gt;,
-		id:&lt;sample name&gt;,
-		weight:&lt;sample weight&gt;
-		
+	-bedpe	bedpe_file:<bedpe file>,
+		id:<sample name>,
+		weight:<sample weight> 
+]]>		
     </help>
 
     <citations>
