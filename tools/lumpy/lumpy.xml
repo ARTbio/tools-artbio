@@ -30,7 +30,7 @@
                 mean=\$(cat meandev.txt | sed s/mean:// | sed -r s/stdev:.+//) &&
                 stdev=\$(cat meandev.txt | sed -r s/mean:.+stdev://) &&
                 lumpy -mw $seq_method.additional_params.mw -tt $seq_method.additional_params.tt 
-                    -pe id:input.bam,bam_file:input.discordants.bam,histo_file:input.lib.histo,mean:"\$mean",stdev:"\$stdev",read_length:$seq_method.readLength,min_non_overlap:$seq_method.additional_params.min_non_overlap,discordant_z:$seq_method.additional_params.discordant_z,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold 
+                    -pe id:input.bam,bam_file:input.discordants.bam,histo_file:input.lib.histo,mean:"\$mean",stdev:"\$stdev",read_length:$analysis_type.readLength,min_non_overlap:$seq_method.additional_params.min_non_overlap,discordant_z:$seq_method.additional_params.discordant_z,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold 
                     -sr id:input.bam,bam_file:input.splitters.bam,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold > output.vcf &&
                 mv input.discordants.bam $discordants &&
                 mv input.splitters.bam $splits &&
@@ -68,8 +68,8 @@
                 stdevA=\$(cat meandevA.txt | sed -r s/mean:.+stdev://) &&
                 stdevB=\$(cat meandevB.txt | sed -r s/mean:.+stdev://) &&
                 lumpy -mw $seq_method.additional_params.mw -tt $seq_method.additional_params.tt 
-                    -pe id:inputA.bam,bam_file:input.A.discordants.bam,histo_file:input.A.lib.histo,mean:"\$meanA",stdev:"\$stdevA",read_length:$seq_method.readLength,min_non_overlap:$seq_method.additional_params.min_non_overlap,discordant_z:$seq_method.additional_params.discordant_z,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold 
-                    -pe id:inputB.bam,bam_file:input.B.discordants.bam,histo_file:input.B.lib.histo,mean:"\$meanB",stdev:"\$stdevA",read_length:$seq_method.readLength,min_non_overlap:$seq_method.additional_params.min_non_overlap,discordant_z:$seq_method.additional_params.discordant_z,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold 
+                    -pe id:inputA.bam,bam_file:input.A.discordants.bam,histo_file:input.A.lib.histo,mean:"\$meanA",stdev:"\$stdevA",read_length:$analysis_type.readLength,min_non_overlap:$seq_method.additional_params.min_non_overlap,discordant_z:$seq_method.additional_params.discordant_z,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold 
+                    -pe id:inputB.bam,bam_file:input.B.discordants.bam,histo_file:input.B.lib.histo,mean:"\$meanB",stdev:"\$stdevA",read_length:$analysis_type.readLengthB,min_non_overlap:$seq_method.additional_params.min_non_overlap,discordant_z:$seq_method.additional_params.discordant_z,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold 
                     -sr id:inputA.bam,bam_file:input.A.splitters.bam,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold
                     -sr id:inputB.bam,bam_file:input.B.splitters.bam,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold > output.vcf &&
                 mv input.A.discordants.bam $discordants &&
@@ -105,10 +105,13 @@
             </param>
             <when value="one_sample">
                 <param format="bam" name="input_file" type="data" label="One BAM alignment file produced by BWA-mem"/>
+                <param name="readLength" value="151"  type="integer" label="read length" help="e.g. 151 nt" />
             </when>
             <when value="two_sample">
                 <param format="bam" name="input_file" type="data" label="One BAM alignment file produced by BWA-mem"/>
+                <param name="readLength" value="151"  type="integer" label="read length" help="e.g. 151 nt" />
                 <param format="bam" name="input_fileB" type="data" label="One BAM alignment file produced by BWA-mem"/>
+                <param name="readLengthB" value="151"  type="integer" label="read length" help="e.g. 151 nt" />
             </when>
         </conditional>
         <conditional name="seq_method">
@@ -117,7 +120,6 @@
                 <option value="single-read">Single-read sequencing</option>
             </param>
             <when value="paired-end">
-                <param name="readLength" value="151"  type="integer" label="read length" help="e.g. 151 nt" />
                 <section name="additional_params" title="Additional Options" expanded="False">
                     <param name="samplingValue" value="100000"  type="integer" label="number of reads to compute mean and stdev of read length" help="e.g. 10000" />
                     <param name="mw" value="4"  type="integer" label="-mw" help="minimum weight across all samples for a call (default: 4)" />
