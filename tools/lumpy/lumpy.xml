@@ -8,7 +8,6 @@
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
     </stdio>
-    <version_command>lumpy --version</version_command>
     <command detect_errors="exit_code"><![CDATA[
         #if $analysis_type.analysis_type_list == "one_sample":
             ln -f -s '$analysis_type.input_file' input.bam &&
@@ -26,7 +25,7 @@
                 samtools sort input.splitters.unsorted.bam > input.splitters.bam &&
                 samtools view -r readgroup input.bam
                     |tail -n +1
-                    |python $__tool_directory__/pairend_distro.py -r 101 -X 4 -N $seq_method.additional_params.samplingValue -o input.lib.histo > meandev.txt &&
+                    |python $__tool_directory__/pairend_distro.py -r $readLength -X 4 -N $seq_method.additional_params.samplingValue -o input.lib.histo > meandev.txt &&
                 mean=\$(cat meandev.txt | sed s/mean:// | sed -r s/stdev:.+//) &&
                 stdev=\$(cat meandev.txt | sed -r s/mean:.+stdev://) &&
                 lumpy -mw $seq_method.additional_params.mw -tt $seq_method.additional_params.tt
@@ -65,10 +64,10 @@
                 samtools sort input.B.splitters.unsorted.bam > input.B.splitters.bam &&
                 samtools view -r readgroup input.A.bam
                     |tail -n +1
-                    |python $__tool_directory__/pairend_distro.py -r 101 -X 4 -N $seq_method.additional_params.samplingValue -o input.A.lib.histo > meandevA.txt &&
+                    |python $__tool_directory__/pairend_distro.py -r $readLength -X 4 -N $seq_method.additional_params.samplingValue -o input.A.lib.histo > meandevA.txt &&
                 samtools view -r readgroup input.B.bam
                     |tail -n +1
-                    |python $__tool_directory__/pairend_distro.py -r 101 -X 4 -N $seq_method.additional_params.samplingValue -o input.B.lib.histo > meandevB.txt &&
+                    |python $__tool_directory__/pairend_distro.py -r $readLengthB -X 4 -N $seq_method.additional_params.samplingValue -o input.B.lib.histo > meandevB.txt &&
                 meanA=\$(cat meandevA.txt | sed s/mean:// | sed -r s/stdev:.+//) &&
                 meanB=\$(cat meandevB.txt | sed s/mean:// | sed -r s/stdev:.+//) &&               
                 stdevA=\$(cat meandevA.txt | sed -r s/mean:.+stdev://) &&
