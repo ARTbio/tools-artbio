@@ -8,7 +8,6 @@
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
     </stdio>
-    <version_command>lumpy --version</version_command>
     <command detect_errors="exit_code"><![CDATA[
         #if $analysis_type.analysis_type_list == "one_sample":
             ln -f -s '$analysis_type.input_file' input.bam &&
@@ -24,16 +23,16 @@
                 samtools view -h input.bam | python $__tool_directory__/extractSplitReads_BwaMem.py -i stdin | samtools view -Sb - > "input.splitters.unsorted.bam" &&
                 samtools sort input.discordants.unsorted.bam > input.discordants.bam &&
                 samtools sort input.splitters.unsorted.bam > input.splitters.bam &&
-                samtools view -r readgroup input.bam
+                samtools view input.bam
                     |tail -n +1
-                    |python $__tool_directory__/pairend_distro.py -r 101 -X 4 -N $seq_method.additional_params.samplingValue -o input.lib.histo > meandev.txt &&
+                    |python $__tool_directory__/pairend_distro.py -r $readLength -X 4 -N $seq_method.additional_params.samplingValue -o input.lib.histo > meandev.txt &&
                 mean=\$(cat meandev.txt | sed s/mean:// | sed -r s/stdev:.+//) &&
                 stdev=\$(cat meandev.txt | sed -r s/mean:.+stdev://) &&
                 lumpy -mw $seq_method.additional_params.mw -tt $seq_method.additional_params.tt
                     #if $output_format == "BEDPE":
                         -b
                     #end if
-                    -pe id:input.bam,bam_file:input.discordants.bam,histo_file:input.lib.histo,mean:"\$mean",stdev:"\$stdev",read_length:$analysis_type.readLength,min_non_overlap:$seq_method.additional_params.min_non_overlap,discordant_z:$seq_method.additional_params.discordant_z,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold 
+                    -pe id:input.bam,bam_file:input.discordants.bam,histo_file:input.lib.histo,mean:"\$mean",stdev:"\$stdev",read_length:$analysis_type.readLength,min_non_overlap:$seq_method.additional_params.min_non_overlap,discordant_z:$seq_method.additional_params.discordant_z,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold
                     -sr id:input.bam,bam_file:input.splitters.bam,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold > output.vcf &&
                 mv input.discordants.bam $discordants &&
                 mv input.splitters.bam $splits &&
@@ -51,7 +50,7 @@
                 mv input.splitters.unsorted.bam $splits &&
                 mv output.vcf $vcf_call
             #end if
-        
+
         #else:
 
             #if $seq_method.seq_method_list == "paired-end":
@@ -63,22 +62,23 @@
                 samtools sort input.B.discordants.unsorted.bam > input.B.discordants.bam &&
                 samtools sort input.A.splitters.unsorted.bam > input.A.splitters.bam &&
                 samtools sort input.B.splitters.unsorted.bam > input.B.splitters.bam &&
-                samtools view -r readgroup input.A.bam
+                samtools view  input.A.bam
                     |tail -n +1
-                    |python $__tool_directory__/pairend_distro.py -r 101 -X 4 -N $seq_method.additional_params.samplingValue -o input.A.lib.histo > meandevA.txt &&
-                samtools view -r readgroup input.B.bam
+                    |python $__tool_directory__/pairend_distro.py -r $readLength -X 4 -N $seq_method.additional_params.samplingValue -o input.A.lib.histo > meandevA.txt &&
+                samtools view  input.B.bam
                     |tail -n +1
-                    |python $__tool_directory__/pairend_distro.py -r 101 -X 4 -N $seq_method.additional_params.samplingValue -o input.B.lib.histo > meandevB.txt &&
+                    |python $__tool_directory__/pairend_distro.py -r $readLengthB -X 4 -N $seq_method.additional_params.samplingValue -o input.B.lib.histo > meandevB.txt &&
                 meanA=\$(cat meandevA.txt | sed s/mean:// | sed -r s/stdev:.+//) &&
-                meanB=\$(cat meandevB.txt | sed s/mean:// | sed -r s/stdev:.+//) &&               
+                meanB=\$(cat meandevB.txt | sed s/mean:// | sed -r s/stdev:.+//) &&
                 stdevA=\$(cat meandevA.txt | sed -r s/mean:.+stdev://) &&
                 stdevB=\$(cat meandevB.txt | sed -r s/mean:.+stdev://) &&
-                lumpy -mw $seq_method.additional_params.mw -tt $seq_method.additional_params.tt 
+<<<<<<< HEAD
+                lumpy -mw $seq_method.additional_params.mw -tt $seq_method.additional_params.tt
                     #if $output_format == "BEDPE":
                         -b
                     #end if
-                    -pe id:inputA.bam,bam_file:input.A.discordants.bam,histo_file:input.A.lib.histo,mean:"\$meanA",stdev:"\$stdevA",read_length:$analysis_type.readLength,min_non_overlap:$seq_method.additional_params.min_non_overlap,discordant_z:$seq_method.additional_params.discordant_z,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold 
-                    -pe id:inputB.bam,bam_file:input.B.discordants.bam,histo_file:input.B.lib.histo,mean:"\$meanB",stdev:"\$stdevA",read_length:$analysis_type.readLengthB,min_non_overlap:$seq_method.additional_params.min_non_overlap,discordant_z:$seq_method.additional_params.discordant_z,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold 
+                    -pe id:inputA.bam,bam_file:input.A.discordants.bam,histo_file:input.A.lib.histo,mean:"\$meanA",stdev:"\$stdevA",read_length:$analysis_type.readLength,min_non_overlap:$seq_method.additional_params.min_non_overlap,discordant_z:$seq_method.additional_params.discordant_z,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold
+                    -pe id:inputB.bam,bam_file:input.B.discordants.bam,histo_file:input.B.lib.histo,mean:"\$meanB",stdev:"\$stdevA",read_length:$analysis_type.readLengthB,min_non_overlap:$seq_method.additional_params.min_non_overlap,discordant_z:$seq_method.additional_params.discordant_z,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold
                     -sr id:inputA.bam,bam_file:input.A.splitters.bam,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold
                     -sr id:inputB.bam,bam_file:input.B.splitters.bam,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold > output.vcf &&
                 mv input.A.discordants.bam $discordants &&
@@ -104,7 +104,7 @@
                 mv output.vcf $vcf_call
             #end if
 
-        
+
         #end if
 
     ]]></command>
@@ -152,7 +152,7 @@
                     <param name="min_mapping_threshold" value="20"  type="integer" label="min_mapping_threshold" help="e.g. 20" />
                 </section>
             </when>
-            
+
         </conditional>
             <param help="get variant calling in vcf or BEDPE format" label="variant calling format" name="output_format" type="select">
                 <option selected="True" value="vcf">vcf</option>
@@ -201,7 +201,7 @@
    </tests>
 
     <help>
-    
+
 **Input(s)**
 
 *One sample* : lumpy search structural variations inside a single sequencing dataset
@@ -221,7 +221,7 @@ Analysis of sample replicates is not implemented yet in this wrapper
 *Read length*: The length of the sequencing reads in the library. This information is required only for paired-end sequencing data
 
 *Additional options*: refer to lumpy-sv_ documentation and the publication (doi 10.1186/gb-2014-15-6-r84)
-    
+
 **lumpy-sv manual**
 
 Read the lumpy-sv_ documentation for details on using lumpy.
@@ -271,8 +271,8 @@ Options::
 
 	-bedpe	bedpe_file:<bedpe file>,
 		id:<sample name>,
-		weight:<sample weight> 
-]]>		
+		weight:<sample weight>
+]]>
     </help>
 
     <citations>
