@@ -29,7 +29,10 @@
                     |python $__tool_directory__/pairend_distro.py -r 101 -X 4 -N $seq_method.additional_params.samplingValue -o input.lib.histo > meandev.txt &&
                 mean=\$(cat meandev.txt | sed s/mean:// | sed -r s/stdev:.+//) &&
                 stdev=\$(cat meandev.txt | sed -r s/mean:.+stdev://) &&
-                lumpy -mw $seq_method.additional_params.mw -tt $seq_method.additional_params.tt 
+                lumpy -mw $seq_method.additional_params.mw -tt $seq_method.additional_params.tt
+                    #if $output_format == "BEDPE":
+                        -b
+                    #end if
                     -pe id:input.bam,bam_file:input.discordants.bam,histo_file:input.lib.histo,mean:"\$mean",stdev:"\$stdev",read_length:$analysis_type.readLength,min_non_overlap:$seq_method.additional_params.min_non_overlap,discordant_z:$seq_method.additional_params.discordant_z,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold 
                     -sr id:input.bam,bam_file:input.splitters.bam,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold > output.vcf &&
                 mv input.discordants.bam $discordants &&
@@ -41,6 +44,9 @@
             #if $seq_method.seq_method_list == "single-read":
                 samtools view -h input.bam | python $__tool_directory__/extractSplitReads_BwaMem.py -i stdin | samtools view -Sb - > "input.splitters.unsorted.bam" &&
                 lumpy -mw $seq_method.additional_params.mw -tt $seq_method.additional_params.tt
+                    #if $output_format == "BEDPE":
+                        -b
+                    #end if
                     -sr id:input.bam,bam_file:input.splitters.unsorted.bam,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold > output.vcf &&
                 mv input.splitters.unsorted.bam $splits &&
                 mv output.vcf $vcf_call
@@ -68,6 +74,9 @@
                 stdevA=\$(cat meandevA.txt | sed -r s/mean:.+stdev://) &&
                 stdevB=\$(cat meandevB.txt | sed -r s/mean:.+stdev://) &&
                 lumpy -mw $seq_method.additional_params.mw -tt $seq_method.additional_params.tt 
+                    #if $output_format == "BEDPE":
+                        -b
+                    #end if
                     -pe id:inputA.bam,bam_file:input.A.discordants.bam,histo_file:input.A.lib.histo,mean:"\$meanA",stdev:"\$stdevA",read_length:$analysis_type.readLength,min_non_overlap:$seq_method.additional_params.min_non_overlap,discordant_z:$seq_method.additional_params.discordant_z,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold 
                     -pe id:inputB.bam,bam_file:input.B.discordants.bam,histo_file:input.B.lib.histo,mean:"\$meanB",stdev:"\$stdevA",read_length:$analysis_type.readLengthB,min_non_overlap:$seq_method.additional_params.min_non_overlap,discordant_z:$seq_method.additional_params.discordant_z,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold 
                     -sr id:inputA.bam,bam_file:input.A.splitters.bam,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold
@@ -85,6 +94,9 @@
                 samtools view -h input.A.bam | python $__tool_directory__/extractSplitReads_BwaMem.py -i stdin | samtools view -Sb - > "input.A.splitters.unsorted.bam" &&
                 samtools view -h input.B.bam | python $__tool_directory__/extractSplitReads_BwaMem.py -i stdin | samtools view -Sb - > "input.B.splitters.unsorted.bam" &&
                 lumpy -mw $seq_method.additional_params.mw -tt $seq_method.additional_params.tt
+                    #if $output_format == "BEDPE":
+                        -b
+                    #end if
                     -sr id:input.A.bam,bam_file:input.A.splitters.unsorted.bam,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold
                     -sr id:input.B.bam,bam_file:input.B.splitters.unsorted.bam,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold > output.vcf &&
                 mv input.A.splitters.unsorted.bam $splits &&
@@ -142,7 +154,10 @@
             </when>
             
         </conditional>
-
+            <param help="get variant calling in vcf or BEDPE format" label="variant calling format" name="output_format" type="select">
+                <option selected="True" value="vcf">vcf</option>
+                <option value="BEDPE">BEDPE</option>
+            </param>
     </inputs>
 
     <outputs>
@@ -164,7 +179,11 @@
             <filter>seq_method['seq_method_list'] == "paired-end"</filter>
             <filter>analysis_type['analysis_type_list'] == "two_sample"</filter>
         </data>
-        <data format="vcf" name="vcf_call" label="Lumpy Variant Calling (vcf format)"/>
+        <data format="vcf" name="vcf_call" label="Lumpy Variant Calling">
+            <change_format>
+                <when format="tabular" input="output_format" value="BEDPE" />
+            </change_format>
+        </data>
     </outputs>
 
     <tests>
