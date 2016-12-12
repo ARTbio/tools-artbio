@@ -1,4 +1,4 @@
-<tool id="lumpy" name="lumpy-sv" version="0.2">
+<tool id="lumpy" name="lumpy-sv" version="0.2.1">
     <description>find structural variants</description>
     <requirements>
         <requirement type="package" version="0.2.12">lumpy-sv</requirement>
@@ -25,7 +25,7 @@
                 samtools sort input.splitters.unsorted.bam > input.splitters.bam &&
                 samtools view input.bam
                     |tail -n +1
-                    |python $__tool_directory__/pairend_distro.py -r $readLength -X 4 -N $seq_method.additional_params.samplingValue -o input.lib.histo > meandev.txt &&
+                    |python $__tool_directory__/pairend_distro.py -r $$analysis_type.readLength -X 4 -N $seq_method.additional_params.samplingValue -o input.lib.histo > meandev.txt &&
                 mean=\$(cat meandev.txt | sed s/mean:// | sed -r s/stdev:.+//) &&
                 stdev=\$(cat meandev.txt | sed -r s/mean:.+stdev://) &&
                 lumpy -mw $seq_method.additional_params.mw -tt $seq_method.additional_params.tt
@@ -64,10 +64,10 @@
                 samtools sort input.B.splitters.unsorted.bam > input.B.splitters.bam &&
                 samtools view  input.A.bam
                     |tail -n +1
-                    |python $__tool_directory__/pairend_distro.py -r $readLength -X 4 -N $seq_method.additional_params.samplingValue -o input.A.lib.histo > meandevA.txt &&
+                    |python $__tool_directory__/pairend_distro.py -r $$analysis_type.readLength -X 4 -N $seq_method.additional_params.samplingValue -o input.A.lib.histo > meandevA.txt &&
                 samtools view  input.B.bam
                     |tail -n +1
-                    |python $__tool_directory__/pairend_distro.py -r $readLengthB -X 4 -N $seq_method.additional_params.samplingValue -o input.B.lib.histo > meandevB.txt &&
+                    |python $__tool_directory__/pairend_distro.py -r $$analysis_type.readLengthB -X 4 -N $seq_method.additional_params.samplingValue -o input.B.lib.histo > meandevB.txt &&
                 meanA=\$(cat meandevA.txt | sed s/mean:// | sed -r s/stdev:.+//) &&
                 meanB=\$(cat meandevB.txt | sed s/mean:// | sed -r s/stdev:.+//) &&
                 stdevA=\$(cat meandevA.txt | sed -r s/mean:.+stdev://) &&
