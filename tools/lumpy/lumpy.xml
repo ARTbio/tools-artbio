@@ -1,4 +1,4 @@
-<tool id="lumpy" name="lumpy-sv" version="0.2.2">
+<tool id="lumpy" name="lumpy-sv" version="0.2.3">
     <description>find structural variants</description>
     <requirements>
         <requirement type="package" version="0.2.12">lumpy-sv</requirement>
@@ -27,13 +27,13 @@
         #if $analysis_type.analysis_type_list == "one_sample":
 
             #if $seq_method.seq_method_list == "paired-end":
-                samtools view -F 1294 '$one_sample_bam' | samtools sort -O bam -o input.discordants.bam - &&
-                samtools view -h '$one_sample_bam' | python $__tool_directory__/extractSplitReads_BwaMem.py -i stdin | samtools sort -O bam -o input.splitters.bam - &&
+                samtools view -F 1294 '$one_sample_bam' | samtools sort -O bam -o input.discordants.bam &&
+                samtools view -h '$one_sample_bam' | python $__tool_directory__/extractSplitReads_BwaMem.py -i stdin | samtools sort -O bam -o input.splitters.bam &&
                 samtools view '$one_sample_bam'
                     |python $__tool_directory__/pairend_distro.py -r $analysis_type.readLength -X 4 -N $seq_method.additional_params.samplingValue -o input.lib.histo > meandev.txt &&
                 mean=\$(cat meandev.txt | sed s/mean:// | sed -r s/stdev:.+//) &&
                 stdev=\$(cat meandev.txt | sed -r s/mean:.+stdev://) &&
-                lumpy -mw $seq_method.additional_params.mw -tt $seq_method.additional_params.tt
+                lumpy $seq_method.additional_params.evidence $seq_method.additional_params.probability_curve -mw $seq_method.additional_params.mw -tt $seq_method.additional_params.tt
                     #if $output_format == "BEDPE":
                         -b
                     #end if
@@ -41,7 +41,7 @@
                     -sr id:'$one_sample_bam',bam_file:input.splitters.bam,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold > '$vcf_call'
             #elif $seq_method.seq_method_list == "single-read":
                 samtools view -h '$one_sample_bam' | python $__tool_directory__/extractSplitReads_BwaMem.py -i stdin | samtools sort -O bam -o input.splitters.bam &&
-                lumpy -mw $seq_method.additional_params.mw -tt $seq_method.additional_params.tt
+                lumpy $seq_method.additional_params.evidence $seq_method.additional_params.probability_curve -mw $seq_method.additional_params.mw -tt $seq_method.additional_params.tt
                     #if $output_format == "BEDPE":
                         -b
                     #end if
@@ -49,10 +49,10 @@
             #end if
         #else:
             #if $seq_method.seq_method_list == "paired-end":
-                samtools view -F 1294 '$sample_a_bam' | samtools sort -O bam -o input.discordants.bam - &&
-                samtools view -F 1294 '$sample_b_bam' | samtools sort -O bam -o input.B.discordants.bam - &&
-                samtools view -h '$sample_a_bam' | python $__tool_directory__/extractSplitReads_BwaMem.py -i stdin | samtools sort -O bam -o input.splitters.bam - &&
-                samtools view -h '$sample_b_bam' | python $__tool_directory__/extractSplitReads_BwaMem.py -i stdin | samtools sort -O bam -o input.B.splitters.bam - &&
+                samtools view -F 1294 '$sample_a_bam' | samtools sort -O bam -o input.discordants.bam &&
+                samtools view -F 1294 '$sample_b_bam' | samtools sort -O bam -o input.B.discordants.bam &&
+                samtools view -h '$sample_a_bam' | python $__tool_directory__/extractSplitReads_BwaMem.py -i stdin | samtools sort -O bam -o input.splitters.bam &&
+                samtools view -h '$sample_b_bam' | python $__tool_directory__/extractSplitReads_BwaMem.py -i stdin | samtools sort -O bam -o input.B.splitters.bam &&
                 samtools view  '$sample_a_bam'
                     |python $__tool_directory__/pairend_distro.py -r $analysis_type.readLength -X 4 -N $seq_method.additional_params.samplingValue -o input.lib.histo > meandevA.txt &&
                 samtools view  '$sample_b_bam'
@@ -61,7 +61,7 @@
                 meanB=\$(cat meandevB.txt | sed s/mean:// | sed -r s/stdev:.+//) &&
                 stdevA=\$(cat meandevA.txt | sed -r s/mean:.+stdev://) &&
                 stdevB=\$(cat meandevB.txt | sed -r s/mean:.+stdev://) &&
-                lumpy -mw $seq_method.additional_params.mw -tt $seq_method.additional_params.tt
+                lumpy $seq_method.additional_params.evidence $seq_method.additional_params.probability_curve -mw $seq_method.additional_params.mw -tt $seq_method.additional_params.tt
                     #if $output_format == "BEDPE":
                         -b
                     #end if
@@ -72,7 +72,7 @@
             #elif $seq_method.seq_method_list == "single-read":
                 samtools view -h '$sample_a_bam' | python $__tool_directory__/extractSplitReads_BwaMem.py -i stdin | samtools sort -O bam -o input.splitters.bam &&
                 samtools view -h '$sample_b_bam' | python $__tool_directory__/extractSplitReads_BwaMem.py -i stdin | samtools sort -O bam -o input.B.splitters.bam &&
-                lumpy -mw $seq_method.additional_params.mw -tt $seq_method.additional_params.tt
+                lumpy $seq_method.additional_params.evidence $seq_method.additional_params.probability_curve -mw $seq_method.additional_params.mw -tt $seq_method.additional_params.tt
                     #if $output_format == "BEDPE":
                         -b
                     #end if
@@ -115,6 +115,8 @@
                     <param name="back_distance" value="10"  type="integer" label="back_distance" help="e.g. 10" />
                     <param name="weight" value="1"  type="integer" label="weight" help="e.g. 1" />
                     <param name="min_mapping_threshold" value="20"  type="integer" label="min_mapping_threshold" help="e.g. 20" />
+                    <param name="probability_curve" argument="-P" type="boolean" truevalue="-P" falsevalue="" checked="true" label="output probability curve for each variant"/>
+                    <param name="evidence" argument="-e" type="boolean" truevalue="-e" falsevalue="" checked="true" label="show evidence for each call"/>
                 </section>
             </when>
             <when value="single-read">
@@ -124,6 +126,8 @@
                     <param name="back_distance" value="10"  type="integer" label="back_distance" help="e.g. 10" />
                     <param name="weight" value="1"  type="integer" label="weight" help="e.g. 1" />
                     <param name="min_mapping_threshold" value="20"  type="integer" label="min_mapping_threshold" help="e.g. 20" />
+                    <param name="probability_curve" argument="-P" type="boolean" truevalue="-P" falsevalue="" checked="false" label="output probability curve for each variant"/>
+                    <param name="evidence" argument="-e" type="boolean" truevalue="-e" falsevalue="" checked="false" label="show evidence for each call"/>
                 </section>
             </when>
 
@@ -171,6 +175,19 @@
             <param name="weight" value="1" />
             <param name="min_mapping_threshold" value="20" />
             <output name="vcf_call" file="output.vcf" ftype="vcf"/>
+        </test>
+        <test>
+            <param name="analysis_type_list" value="one_sample" />
+            <param name="input_file" value="sr.input.bam" ftype="bam"/>
+            <param name="seq_method_list" value="single-read" />
+            <param name="mw" value="4"/>
+            <param name="tt" value="0"/>
+            <param name="back_distance" value="10"/>
+            <param name="weight" value="1" />
+            <param name="min_mapping_threshold" value="20" />
+            <param name="evidence" value="true" />
+            <param name="probability_curve" value="true" />
+            <output name="vcf_call" file="output_extended.vcf" ftype="vcf"/>
         </test>
         <test>
             <param name="analysis_type_list" value="two_sample" />
