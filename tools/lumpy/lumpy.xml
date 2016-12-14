@@ -187,7 +187,7 @@
             <param name="min_mapping_threshold" value="20" />
             <param name="evidence" value="true" />
             <param name="probability_curve" value="true" />
-            <output name="vcf_call" file="output_extended.vcf" ftype="vcf"/>
+            <output name="vcf_call" file="output_extended.vcf" ftype="vcf" compare="sim_size"/>
         </test>
         <test>
             <param name="analysis_type_list" value="two_sample" />
