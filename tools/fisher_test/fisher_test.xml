@@ -8,18 +8,6 @@
         <command><![CDATA[
             Rscript '$fisher_test' "\${GALAXY_SLOTS:-1}"
     ]]></command>
-	<inputs>
-		<param name="input" type="data" format="tabular" label="gene hit lists, 2 samples"/>
-	</inputs>
-	<outputs>
-		<data name="output" format="tabular" label="Fisher test p-values" />
-	</outputs>
-    <tests>
-    <test>
-      <param name="input" value="counts.tab" ftype="tabular"/>
-      <output name="output" file="fisher.tab" ftype="tabular"/>
-    </test>
-    </tests>
   <configfiles>
     <configfile name="fisher_test">
     <![CDATA[
@@ -54,7 +42,19 @@
     ]]>
     </configfile>
   </configfiles>
-	<help>
+        <inputs>
+                <param name="input" type="data" format="tabular" label="gene hit lists, 2 samples"/>
+        </inputs>
+        <outputs>
+                <data name="output" format="tabular" label="Fisher test p-values" />
+        </outputs>
+<tests>
+    <test>
+        <param name="input" value="counts.tab" ftype="tabular"/>
+        <output name="output" file="fisher.tab" ftype="tabular"/>
+    </test>
+</tests>
+<help>
 
 **What it does**
 
@@ -67,5 +67,9 @@ q.qvalues: FDR (Faslse Detection Rate) adjusted p-values; a q-value of 0.05 impl
 Be aware that this test does not take into account the biological noise that would be visible if replicates were available.
 
 
-	</help>
+</help>
+<citations>
+    <citation type="doi">10.1111/1467-9868.00346</citation>
+</citations>
+    
 </tool>
