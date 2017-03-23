@@ -13,7 +13,7 @@
             Table = read.delim("${input}", header=TRUE)
             pdf("${plot_pdf}")
 
-            pairs(Table[ ,-1], main="${title}", pch = 21, bg = c("red", "green", "blue"))
+            pairs(Table[ ,-1], main="${title}", pch = 20)
 
 
             dev.off()
@@ -30,7 +30,7 @@
         </outputs>
 <tests>
     <test>
-        <param name="input" value="readcounts.tab" ftype="tabular"/>
+        <param name="input" value="Table.tab" ftype="tabular"/>
         <param name="title" value="Title"/>
         <output name="plot_pdf" file="basicplot.pdf" ftype="pdf"/>
     </test>
@@ -38,13 +38,33 @@
 <help>
 
 **What it does**
-Takes one tabular files as input and produces a basic plot of data.
 
+Take on tabular file of numerical data as input and produces pairwise plots of numerical data, in log-log scale.
+The first column of the data frame is ignored.
+
+Example of input data:
+
+<![CDATA[
+
+gene	sample1	sample2	sample3	sample4	sample5	sample6
+tRNA:Ala-AGC-2-3	4407	4506	2267	2423	2736	1153
+tRNA:Asp-GTC-1-10	2111	2931	3302	3499	3809	1682
+tRNA:Asp-GTC-1-11	2099	2936	3349	3556	4124	1629
+tRNA:Glu-TTC-1-6	1095	1376	1189	1162	1120	561
+tRNA:Glu-TTC-1-5	1022	1415	1156	1081	1120	578
+tRNA:Glu-TTC-1-4	1047	1336	1156	1182	1127	602
+tRNA:Glu-CTC-3-4	3613	3414	8161	9021	9776	5248
+tRNA:Glu-CTC-3-5	3741	3292	7893	8845	9833	5074
+tRNA:Glu-CTC-3-6	3619	3379	7663	8737	9513	5021
+tRNA:Glu-CTC-3-8	7249	5809	80760	39479	62652	27404
+tRNA:Glu-CTC-3-9	3770	3367	8007	8969	9976	5100
+
+]]>
 
 
 </help>
 <citations>
-    <citation type="doi">00000000</citation>
+    <citation type="doi"></citation>
 </citations>
     
 </tool>
