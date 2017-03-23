@@ -1,0 +1,11 @@
+# .shed.yml supporting automatic pushes.
+owner: chamaelj
+name: basicplot
+description: Graphics
+long_description: |
+  Graphics
+categories:
+  - Graphics
+remote_repository_url: https://github.com/chamaelj/tools-artbio/basicplot
+toolshed:
+- toolshed

@@ -1,0 +1,50 @@
+<tool id="basicplot" name="basicplot" version="0.0.1">
+	<description>Basic plot</description>
+        <requirements>
+            <requirement type="package" version="3.1.2">R</requirement>
+
+        </requirements>
+        <command><![CDATA[
+            Rscript '$basicplot' "\${GALAXY_SLOTS:-1}"
+    ]]></command>
+  <configfiles>
+    <configfile name="basicplot">
+    <![CDATA[
+            Table = read.delim("${input}", header=TRUE)
+            pdf("${plot_pdf}")
+
+            pairs(Table[ ,-1], main="${title}", pch = 21, bg = c("red", "green", "blue"))
+
+
+            dev.off()
+
+    ]]>
+    </configfile>
+  </configfiles>
+        <inputs>
+                <param name="input" type="data" format="tabular" label="tabular data"/>
+                <param name="title" type="text" size="25" value="Title" label="Main Title"/>
+        </inputs>
+        <outputs>
+                <data name="plot_pdf" format="pdf" label="basicplot.pdf" />
+        </outputs>
+<tests>
+    <test>
+        <param name="input" value="readcounts.tab" ftype="tabular"/>
+        <param name="title" value="Title"/>
+        <output name="plot_pdf" file="basicplot.pdf" ftype="pdf"/>
+    </test>
+</tests>
+<help>
+
+**What it does**
+Takes one tabular files as input and produces a basic plot of data.
+
+
+
+</help>
+<citations>
+    <citation type="doi">00000000</citation>
+</citations>
+    
+</tool>
