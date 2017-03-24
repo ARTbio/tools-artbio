@@ -6,7 +6,8 @@ long_description: |
   Graphics
 categories:
   - Graphics
-remote_repository_url: https://github.com/chamaelj/master/tools/basicplot
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/chamaelj/tools-artbio/tree/master/tools/basicplot
 toolshed:
 - toolshed
 - testtoolshed
