@@ -9,10 +9,13 @@
   <configfiles>
     <configfile name="basicplot">
     <![CDATA[
-            Table = read.delim("${input}", header=TRUE)
-            pdf("${output}")
-            pairs(Table[ ,-1], main="${title}", pch = 20)
-            dev.off()
+      ## Setup R error handling to go to stderr
+      options( show.error.messages=F,  error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+      options(warn=-1)
+      Table = read.delim("${input}", header=TRUE)
+      pdf("${output}")
+      pairs(Table[ ,-1], main="${title}", log="xy", pch = 20)
+      dev.off()
     ]]>
     </configfile>
   </configfiles>
