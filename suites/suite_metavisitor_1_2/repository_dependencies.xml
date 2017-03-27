@@ -21,7 +21,7 @@
     <repository changeset_revision="9ea374bb0350" name="regex_find_replace" owner="jjohnson" />
     <repository changeset_revision="ee081dc6c578" name="khmer_normalize_by_median" owner="iuc" />
     <repository changeset_revision="e87aeff2cf88" name="data_manager_bowtie2_index_builder" owner="devteam" />
-    <repository changeset_revision="086edfff112b" name="data_manager_bowtie_index_builder" owner="devteam" />
+    <repository changeset_revision="086edfff112b" name="data_manager_bowtie_index_builder" owner="iuc" />
     <repository changeset_revision="86fa71e9b427" name="data_manager_fetch_genome_dbkeys_all_fasta" owner="devteam" />
     <repository changeset_revision="3034ce97dd33" name="ncbi_blast_plus" owner="devteam" />
     <repository changeset_revision="35cb17bd8bf9" name="spades" owner="nml" />
