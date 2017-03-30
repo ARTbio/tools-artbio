@@ -73,8 +73,17 @@ tRNA:Glu-CTC-3-9	3770	3367	8007	8969	9976	5100
 
 </help>
 <citations>
-    <citation type="doi">10.1111/1467-9868.00346</citation>
-</citations>
+        <citation type="bibtex">
+@Manual{,
+     title = {R: A Language and Environment for Statistical Computing},
+     author = {{R Core Team}},
+     organization = {R Foundation for Statistical Computing},
+     address = {Vienna, Austria},
+     year = {2014},
+     url = {http://www.R-project.org/},
+   }
+        </citation>
+    </citations>
     
 </tool>
 
