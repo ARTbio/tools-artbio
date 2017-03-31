@@ -2,7 +2,7 @@
 owner: chamaelj
 name: basicplot
 description: Graphics
-long_description: |
+long_description: Take on tabular file of numerical data as input and produces pairwise plots of numerical data, in log-log scale.|
   Graphics
 categories:
   - Graphics
