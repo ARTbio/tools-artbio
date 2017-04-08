@@ -1,7 +1,8 @@
 <tool id="oasesoptimiserv" name="Oases_optimiser" version="1.1.5">
     <description>Auto optimise de novo RNA-seq Oases/Velvet assembly</description>
     <requirements>
-        <requirement type="package" version="0.2.08_7a32460a60929b510037952ae815bb6e29b68123">oases</requirement>
+        <requirement type="package" version="0.2.09">oases</requirement>
+        <requirement type="package" version="1.2.10">velvet</requirement>
     </requirements>
     <command><![CDATA[
 	python "$__tool_directory__"/oases_optimiser.py  "$start_hash_length" "$end_hash_length"
