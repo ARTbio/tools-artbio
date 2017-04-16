@@ -1,7 +1,8 @@
 metavisitor
 
 version 1_2
-- last upgrade in November 2016
+- last upgrade in April 17,  2017
+- msp_oases now uses conda packages
 
 version 1_1:
 - introduce the tool blast_to_contig which accomodate both blastn and tblastx alignments
