@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-<tool_dependency>
-    <package name="oases" version="0.2.08_7a32460a60929b510037952ae815bb6e29b68123">
-      <repository name="package_ged_oases" owner="drosofff" />
-    </package>
-</tool_dependency>
