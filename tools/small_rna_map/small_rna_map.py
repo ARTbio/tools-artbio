@@ -1,22 +1,39 @@
 import pysam
-samfile= pysam.AlignmentFile("/home/artbio/Bureau/test.sam", "r")
-output = open("/home/artbio/Bureau/output.gff", "w")
-i=0
-for read in samfile.fetch():
-	if read.is_unmapped: NULL
-	else: output.write(read.qname+"\t"+str(read.pos)+"\n")
+import argparse
+from numpy import mean, median
 
-output.close()
+def Parser():
+	the_parser = argparse.ArgumentParser()
+	the_parser.add_argument('--input', action="store", type=str, help="input BAM file")
+	the_parser.add_argument('--output', action="store", type=str, help="output tabular file")
 
-output 2= open("/home/artbio/Bureau/output2.gff", "w")
-header_keys = samfile.header.keys()
-Ref = samfile.references
-lengths = samfile.lengths
-i=0
-for read in Ref:
+	args = the_parser.parse_args()
+	return args
+
+bamfile= pysam.AlignmentFile("/home/artbio/Bureau/input.bam", "rb")
+output = open("/home/artbio/Bureau/output2.tab", "w")
+
+Ref = bamfile.references #Reference names
+lengths = bamfile.lengths # Reference lengths
+nbr_read=0
+
+for ref in Ref:
+	for read in bamfile:
+		if not read.is_unmapped:
+			if ref==bamfile.getrname(read.reference_id):
+				nbr_read=1+nbr_read
 	
-	output2.write(read+"\t"+str(lengths[i])+"\n")
-	i+=1
+			
+	output.write(ref+"\t"+str(read.rlen)+"\t"+str(nbr_read)+"\n")
+			
+output.close()
+bamfile.close()
 
-output2.close()
-samfile.close()
+def main(infile, output):
+	
+	print "\n"
+
+if __name__ == "__main__":
+	args= Parser()
+	main(args.input, args.output)
+
