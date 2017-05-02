@@ -28,36 +28,33 @@ def Ref_length(bamfile):
 
 def Ref_coord_pol(bamfile):
 	ref_coord ={}
-	i=0
+
 	for read in bamfile:
 		polarity = "Forward" if (not read.is_reverse) else "Reverse"
 		if not read.is_unmapped:
 			read_rname = read.reference_name
-			read_position = read.pos
-			
-			if ref_coord.has_key(read_rname): 
-				
-				if int(ref_coord[read_rname][i])==read_position:
-					ref_coord[read_rname][i] += 1 
-				else : 
-					ref_coord[read_rname].append(1)
-					i = i+1				
+			read_position = read.pos + 1
+			the_key = (read_rname, read_position)
+			if ref_coord.has_key(the_key): 
+				nmbr_read = ref_coord[the_key][0] + 1
+				ref_coord[the_key]= (nmbr_read, polarity)		
 			else :	
-				ref_coord[read_rname] = [1]
-				i=0			
+				ref_coord[the_key] = (1,polarity)
+							
 		continue
-		ref_coord[read_rname].append(polarity)
-	return ref_coord
+	
+	return ref_coord #dictionary {(read_rname,read_position):(nmbr_read,polarity)}
 
 
-
-			
-output.close()
-bamfile.close()
 
 def main(infile, output):
-	
-	print "\n"
+	with pysam.AlignmentFile(infile,"rb") as infile:
+		with open(output,"a") as outfile:
+			outfile.write("chromo" + "\t" + "coord" + "\t" + "nbr-reads" + "\t" + "polarity" + "\n")
+			ref_coord = Ref_coord_pol(infile)
+			ref_length = Ref_length(infile)
+			for read in ref_coord:
+				outfile.write(str(read[0]) + "\t" + str(ref_length[str(i[0])]) + "\t" + str(read[1]) + "\t" + str(ref_coord[read][0]) + "\t" + str(ref_coord[read][1])+ "\n")
 
 if __name__ == "__main__":
 	args= Parser()
