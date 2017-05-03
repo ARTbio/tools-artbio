@@ -1,0 +1,32 @@
+<tool id="small_rna_map" name="small rna map" version="0.1">
+  <description></description>
+  <command><![CDATA[
+      python '$__tool_directory__'/small_rna_map.py --input '$input' --output '$output'
+  ]]></command>
+  <inputs>
+       <param name="input" type="data" format="bam" label="BAM file"/>
+   </inputs>
+
+ <outputs>
+   <data format="tabular" name="output" label="tabular file" />
+</outputs>
+
+    <tests>
+        <test>
+            <param ftype="bam" name="input" value="input.bam" />
+            <output file="output.tab" name="output" />
+        </test>
+    </tests>
+
+
+<help>
+
+**What it does**
+
+Generate from BAM file, a tabular file containing 5 columns:
+chromo	coord	nbr-reads	polarity		Max	Mean	Median	
+
+</help>
+
+</tool>
+
