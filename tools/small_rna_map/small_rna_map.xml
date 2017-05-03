@@ -23,8 +23,8 @@
 
 **What it does**
 
-Generate from BAM file, a tabular file containing 5 columns:
-chromo	coord	nbr-reads	polarity		Max	Mean	Median	
+Generate from BAM file, a tabular file containing 9 columns:
+Dataset	Chromosome	Chrom_length	Coordinate	Nbr-reads	Polarity	Max	Mean	Median	
 
 </help>
 
