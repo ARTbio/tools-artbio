@@ -55,8 +55,11 @@ class Eutils:
     def retrieve(self):
         """ """
         self.get_count_value()
-        self.get_uids_list()
-        self.get_sequences()
+        if self.count > 0:
+            self.get_uids_list()
+            self.get_sequences()
+        else:
+            self.logger.info("No UIDs were found. Exiting script.")
 
     def get_count_value(self):
         """
