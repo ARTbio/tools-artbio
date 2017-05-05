@@ -53,8 +53,12 @@ class Eutils:
         self.query_key = ""
 
     def retrieve(self):
-        """ """
+        """
+        Retrieve the fasta sequences corresponding to the query
+        """
         self.get_count_value()
+
+        """ If no UIDs are found exit script """
         if self.count > 0:
             self.get_uids_list()
             self.get_sequences()
@@ -80,7 +84,7 @@ class Eutils:
             self.logger.debug(line.rstrip())
             if '</Count>' in line:
                 self.count = int(line[line.find('<Count>')+len('<Count>') : line.find('</Count>')])
-        self.logger.info("Founded %d UIDs" % self.count)
+        self.logger.info("Found %d UIDs" % self.count)
 
     def get_uids_list(self):
         """
@@ -127,18 +131,28 @@ class Eutils:
         data = urllib.urlencode(values)
         req = urllib2.Request(url, data)
         #self.logger.debug("data: %s" % str(data))
-        req = urllib2.Request(url, data)
         serverResponse = False
+        nbTrys = 0
         while not serverResponse:
+            nbTrys += 1
             try:
+                self.logger.debug("Try number %s for opening and readin URL %s" % ( nbTrys, url+data ))
                 response = urllib2.urlopen(req)
+                querylog = response.readlines()
                 serverResponse = True
-            except: # catch *all* exceptions
-                e = sys.exc_info()[0]
-                self.logger.info( "Catched Error: %s" % e )
-                self.logger.info( "Retrying in 10 sec")
+            except urllib2.HTTPError as e:
+                self.logger.info("urlopen error:%s, %s" % (e.code, e.read() ) )
+                self.logger.info("Retrying in 10 sec")
                 time.sleep(10)
-        querylog = response.readlines()
+            except urllib2.URLError as e:
+                self.logger.info("urlopen error: Failed to reach a server")
+                self.logger.info("Reason :%s" % ( e.reason ) )
+                self.logger.info("Retrying in 10 sec")
+                time.sleep(10)
+            except httplib.IncompleteRead as e:
+                self.logger.info("IncompleteRead error:  %s" % ( e.partial ) )
+                self.logger.info("Retrying in 10 sec")
+                time.sleep(10)
         self.logger.debug("query response:")
         for line in querylog:
             self.logger.debug(line.rstrip())
@@ -162,7 +176,6 @@ class Eutils:
         data = urllib.urlencode(values)
         req = urllib2.Request(url, data)
         self.logger.debug("data: %s" % str(data))
-        req = urllib2.Request(url, data)
         serverTransaction = False
         counter = 0
         while not serverTransaction:
@@ -171,13 +184,17 @@ class Eutils:
             try:
                 response = urllib2.urlopen(req)
                 fasta = response.read()
-                if ("Resource temporarily unavailable" in fasta) or (not fasta.startswith(">") ):
+                if (response.getcode() != 200) or ("Resource temporarily unavailable" in fasta) or ("Error" in fasta) or (not fasta.startswith(">") ):
                     serverTransaction = False
                 else:
                     serverTransaction = True
             except urllib2.HTTPError as e:
                 serverTransaction = False
                 self.logger.info("urlopen error:%s, %s" % (e.code, e.read() ) )
+            except urllib2.URLError as e:
+                serverTransaction = False
+                self.logger.info("urlopen error: Failed to reach a server")
+                self.logger.info("Reason :%s" % ( e.reason ) )
             except httplib.IncompleteRead as e:
                 serverTransaction = False
                 self.logger.info("IncompleteRead error:  %s" % ( e.partial ) )
@@ -240,12 +257,12 @@ class Eutils:
             for start in range(0, count, batch_size):
                 end = min(count, start+batch_size)
                 batch = uids_list[start:end]
-                self.epost(self.dbname, ",".join(batch))
-                mfasta = ''
-                while not mfasta:
-                    self.logger.info("retrieving batch %d" % ((start / batch_size) + 1))
-                    mfasta = self.efetch(self.dbname, self.query_key, self.webenv)
-                out.write(mfasta + '\n')
+                if self.epost(self.dbname, ",".join(batch)) != -1:
+                    mfasta = ''
+                    while not mfasta:
+                        self.logger.info("retrieving batch %d" % ((start / batch_size) + 1))
+                        mfasta = self.efetch(self.dbname, self.query_key, self.webenv)
+                    out.write(mfasta + '\n')
 
 
 LOG_FORMAT = '%(asctime)s|%(levelname)-8s|%(message)s'
