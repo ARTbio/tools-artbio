@@ -2,24 +2,26 @@
   <description></description>
   <requirements>
         <requirement type="package" version="3.1.2">R</requirement>
-        <requirement type="package" version="2.0.0=r3.2.2_0a">r-gridextra</requirement>
-        <requirement type="package" version="0.6_26=r3.2.2_2a">r-latticeextra</requirement>
+        <requirement type="package" version="1.3.0=r3.2.2_1">r-optparse</requirement>
   </requirements>
   <command><![CDATA[
-      python '$__tool_directory__'/small_rna_map.py --input '$input' --output '$output'
+      python '$__tool_directory__'/small_rna_map.py --input '$input' --output '$output_tab'
+      ; Rscript '$__tool_directory__'/small_rna_map.r --output_tab '$output_tab' --output_pdf '$output_pdf'
   ]]></command>
   <inputs>
        <param name="input" type="data" format="bam" label="BAM file"/>
    </inputs>
 
  <outputs>
-   <data format="tabular" name="output" label="tabular file" />
+   <data format="tabular" name="output_tab" label="tabular file" />
+   <data format="pdf" name="output_pdf" label="PDF file" />
 </outputs>
 
     <tests>
         <test>
             <param ftype="bam" name="input" value="input.bam" />
-            <output file="output.tab" name="output" />
+            <output ftype = "tabular" file="output.tab" name="output_tab" />
+            <output file="output_pdf.pdf" name="output_pdf" />
         </test>
     </tests>
 
