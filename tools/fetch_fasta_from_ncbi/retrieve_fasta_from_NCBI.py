@@ -143,15 +143,18 @@ class Eutils:
             except urllib2.HTTPError as e:
                 self.logger.info("urlopen error:%s, %s" % (e.code, e.read() ) )
                 self.logger.info("Retrying in 10 sec")
+                serverResponse = False
                 time.sleep(10)
             except urllib2.URLError as e:
                 self.logger.info("urlopen error: Failed to reach a server")
                 self.logger.info("Reason :%s" % ( e.reason ) )
                 self.logger.info("Retrying in 10 sec")
+                serverResponse = False
                 time.sleep(10)
             except httplib.IncompleteRead as e:
                 self.logger.info("IncompleteRead error:  %s" % ( e.partial ) )
                 self.logger.info("Retrying in 10 sec")
+                serverResponse = False
                 time.sleep(10)
         self.logger.debug("query response:")
         for line in querylog:
