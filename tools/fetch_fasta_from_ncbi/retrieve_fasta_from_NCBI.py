@@ -21,8 +21,6 @@ retmax of efetch is 1/10 of declared value from NCBI
 queries are 1 sec delayed, to satisfy NCBI guidelines (more than what they request)
 
 
-python get_fasta_from_taxon.py -i 1638 -o test.out -d protein
-python get_fasta_from_taxon.py -i 327045 -o test.out -d nuccore # 556468 UIDs
 """
 import sys
 import logging
@@ -38,7 +36,7 @@ class Eutils:
 
     def __init__(self, options, logger):
         """
-        Initialize retrival parametters 
+        Initialize retrieval parameters 
         """
         self.logger = logger
         self.base = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
@@ -134,11 +132,11 @@ class Eutils:
         data = urllib.urlencode(values)
         req = urllib2.Request(url, data)
         serverResponse = False
-        nbTrys = 0
+        nb_trials = 0
         while not serverResponse:
-            nbTrys += 1
+            nb_trials += 1
             try:
-                self.logger.debug("Try number %s for opening and readin URL %s" % ( nbTrys, url+data ))
+                self.logger.debug("Try number %s for opening and readin URL %s" % ( nb_trials, url+data ))
                 response = urllib2.urlopen(req)
                 querylog = response.readlines()
                 serverResponse = True
@@ -186,7 +184,8 @@ class Eutils:
             try:
                 response = urllib2.urlopen(req)
                 fasta = response.read()
-                if (response.getcode() != 200) or ("Resource temporarily unavailable" in fasta) or ("Error" in fasta) or (not fasta.startswith(">") ):
+                if (response.getcode() != 200) or ("Resource temporarily unavailable" in fasta)
+                    or ("Error" in fasta) or (not fasta.startswith(">") ):
                     serverTransaction = False
                 else:
                     serverTransaction = True
