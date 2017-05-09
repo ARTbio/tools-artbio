@@ -37,6 +37,9 @@ import re
 class Eutils:
 
     def __init__(self, options, logger):
+        """
+        Initialize retrival parametters 
+        """
         self.logger = logger
         self.base = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
         self.query_string = options.query_string
@@ -58,7 +61,7 @@ class Eutils:
         """
         self.get_count_value()
 
-        """ If no UIDs are found exit script """
+        # If no UIDs are found exit script
         if self.count > 0:
             self.get_uids_list()
             self.get_sequences()
@@ -130,7 +133,6 @@ class Eutils:
                   'id': ids}
         data = urllib.urlencode(values)
         req = urllib2.Request(url, data)
-        #self.logger.debug("data: %s" % str(data))
         serverResponse = False
         nbTrys = 0
         while not serverResponse:
@@ -198,7 +200,7 @@ class Eutils:
             except httplib.IncompleteRead as e:
                 serverTransaction = False
                 self.logger.info("IncompleteRead error:  %s" % ( e.partial ) )
-        fasta = self.sanitiser(self.dbname, fasta) #
+        fasta = self.sanitiser(self.dbname, fasta) 
         time.sleep(1)
         return fasta
         
