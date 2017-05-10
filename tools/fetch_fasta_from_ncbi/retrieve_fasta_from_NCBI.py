@@ -121,6 +121,7 @@ class Eutils:
         req = urllib2.Request(url, data)
         response = urllib2.urlopen(req)
         querylog = response.readlines()
+        response.close()
         time.sleep(1)
         return querylog
 
@@ -139,6 +140,7 @@ class Eutils:
                 self.logger.debug("Try number %s for opening and readin URL %s" % ( nb_trials, url+data ))
                 response = urllib2.urlopen(req)
                 querylog = response.readlines()
+                response.close()
                 serverResponse = True
             except urllib2.HTTPError as e:
                 self.logger.info("urlopen error:%s, %s" % (e.code, e.read() ) )
@@ -181,13 +183,16 @@ class Eutils:
         self.logger.debug("data: %s" % str(data))
         serverTransaction = False
         counter = 0
+        response_code = 0
         while not serverTransaction:
             counter += 1
             self.logger.info("Server Transaction Trial:  %s" % ( counter ) )
             try:
                 response = urllib2.urlopen(req)
+                response_code = response.getcode()
                 fasta = response.read()
-                if ( (response.getcode() != 200) or ("Resource temporarily unavailable" in fasta)
+                response.close()
+                if ( (response_code != 200) or ("Resource temporarily unavailable" in fasta)
                     or ("Error" in fasta) or (not fasta.startswith(">") ) ):
                     serverTransaction = False
                 else:
