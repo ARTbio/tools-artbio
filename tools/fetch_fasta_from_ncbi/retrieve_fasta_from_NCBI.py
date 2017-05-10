@@ -48,7 +48,7 @@ class Eutils:
             self.outname = 'NCBI_download' + '.' + self.dbname + '.fasta'
         self.ids = []
         self.retmax_esearch = 100000
-        self.retmax_efetch = 1000
+        self.retmax_efetch = 500
         self.count = 0
         self.webenv = ""
         self.query_key = ""
@@ -144,20 +144,20 @@ class Eutils:
                 serverResponse = True
             except urllib2.HTTPError as e:
                 self.logger.info("urlopen error:%s, %s" % (e.code, e.read() ) )
-                self.logger.info("Retrying in 10 sec")
+                self.logger.info("Retrying in 1 sec")
                 serverResponse = False
-                time.sleep(10)
+                time.sleep(1)
             except urllib2.URLError as e:
                 self.logger.info("urlopen error: Failed to reach a server")
                 self.logger.info("Reason :%s" % ( e.reason ) )
-                self.logger.info("Retrying in 10 sec")
+                self.logger.info("Retrying in 1 sec")
                 serverResponse = False
-                time.sleep(10)
+                time.sleep(1)
             except httplib.IncompleteRead as e:
                 self.logger.info("IncompleteRead error:  %s" % ( e.partial ) )
-                self.logger.info("Retrying in 10 sec")
+                self.logger.info("Retrying in 1 sec")
                 serverResponse = False
-                time.sleep(10)
+                time.sleep(1)
         self.logger.debug("query response:")
         for line in querylog:
             self.logger.debug(line.rstrip())
@@ -208,7 +208,7 @@ class Eutils:
                 serverTransaction = False
                 self.logger.info("IncompleteRead error:  %s" % ( e.partial ) )
         fasta = self.sanitiser(self.dbname, fasta) 
-        time.sleep(1)
+        time.sleep(0.1)
         return fasta
         
     def sanitiser(self, db, fastaseq):
