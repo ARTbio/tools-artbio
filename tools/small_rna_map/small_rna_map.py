@@ -35,12 +35,12 @@ def Ref_coord_pol(bamfile):
                         read_rname = read.reference_name
                         read_position = read.pos + 1
                         the_key = (read_rname, read_position,polarity)
-                        cigar = read.cigar[0][1]
+                        read_length = read.qlen
                         try:
                                 ref_coord[the_key][0] = ref_coord[the_key][0]+1
-                                ref_coord[the_key][1].append(cigar)
+                                ref_coord[the_key][1].append(read_length)
                         except:
-                                ref_coord[the_key] = [1,[cigar]]
+                                ref_coord[the_key] = [1,[read_length]]
         return collections.OrderedDict(sorted(ref_coord.items())) #dictionary {(read_rname,read_position,polarity):[nmbr_read,list_of_alignment_length]}
 
 
