@@ -1,5 +1,6 @@
 #! /bin/bash
-
+# Executing this script require bash v4
+# Execution command : bash small_rna_map.bash
 
 sort -k 3 -k 4  samfile.sam -o samfile.sam
 
@@ -37,7 +38,7 @@ rm header.tab
 
 while read rname coord polarity qlen
 do  
-    key=$rname$coord$pol
+    key=$rname$coord$polarity
     len="${tab[$rname]}"
     echo "$rname    $len    $coord  $qlen   $polarity   $key" >> output3.tab
    
@@ -56,3 +57,6 @@ do
     fi
 done < output3.tab
 rm output3.tab
+
+sort -k 1 -k 3 -k 4  output.tab -o output.tab
+
