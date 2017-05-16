@@ -45,7 +45,7 @@ do
 done < output2.tab
 rm output2.tab
 
-echo "Chromosome    Chrom_length    Coordinate  Nbr_reads   Polarity" >> output.tab 
+echo -e "Chromosome\tChrom_length\tCoordinate\tNbr_reads\tPolarity" > output.tab 
 
 while read rname rlen coord qlen pol keys
 do  
@@ -53,7 +53,7 @@ do
     if [[ $key != $keys ]] ; then
         key=$keys
         nbr_reads=`cat output3.tab | grep "$key" | wc -l`
-        echo "$rname    $rlen   $coord  $nbr_reads  $pol" >> output.tab 
+        echo -e "$rname\t$rlen\t$coord\t$nbr_reads\t$pol" >> output.tab 
     fi
 done < output3.tab
 rm output3.tab
