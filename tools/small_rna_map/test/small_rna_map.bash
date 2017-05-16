@@ -36,12 +36,12 @@ rm header.tab
 
 while read rname coord polarity qlen
 do
-    key=$rname$coord$polarity
+    key=$rname-$coord-$polarity
     len="${tab[$rname]}"
     echo -e "$rname\t$len\t$coord\t$qlen\t$polarity\t$key" >> output3.tab
 done < output2.tab
 rm output2.tab
-
+sort -k 6 output3.tab -o output3.tab
 echo -e "Chromosome\tChrom_length\tCoordinate\tNbr_reads\tPolarity" > output.tab
 
 while read rname rlen coord qlen pol keys
