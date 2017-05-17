@@ -31,11 +31,9 @@ for key in sorted(readdic):
 Out.close
 EOF
 
-# chmod 755 pyscript.py
 python ./pyscript.py
 rm output1.tab header.tab pyscript.py
 sort -k 1,1 -k 3,3n -k 5,5  output.tab -o output.tab
-
 if ! diff -q output.tab test-data.dat &>/dev/null; then
   >&2 echo "different"
 else
