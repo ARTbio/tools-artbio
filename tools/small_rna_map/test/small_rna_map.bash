@@ -1,58 +1,42 @@
 #! /bin/bash
-# Executing this script require bash v4
-# Execution command : bash small_rna_map.bash
+# Execution command : bash small_rna_map.bash <sam file>
 
+samfile=$1
+grep -e "^@SQ" $samfile > header.tab
+cat $samfile | perl -ne 'print unless /^@/ or ( (split /\t/)[1] != 0 and (split /\t/)[1] != 16 )' > output1.tab
 
-while read Line
-do
-   if [[ ${Line:0:1} != "@" ]] ; then
-       echo "$Line" >> output1.tab
-   elif [[ ${Line:0:3} = "@SQ" ]] ; then
-           echo "$Line " >> header.tab
-   fi
-done < samfile.sam
+cat << EOF > pyscript.py
+lendic = {}
+for line in open("header.tab"):
+  fields = line[:-1].split()
+  lendic[fields[1][3:]] = fields[2][3:]
+readdic = {}
+for line in (open("output1.tab")):
+  fields = line[:-1].split()
+  key = "-".join([fields[2],fields[3],"F" if fields[1]=="0" else "R"])
+  try:
+    readdic[key] += 1
+  except KeyError:
+    readdic[key] = 1
+Out = open("output.tab", "w")
+Out.write("Chromosome\tChrom_length\tCoordinate\tNbr_reads\tPolarity\n")
+for key in sorted(readdic):
+  fields = key.split("-")
+  Chromosome, Coordinate, Polarity = fields[0], fields[1], fields[2]
+  Chrom_length = lendic[Chromosome]
+  Nbr_reads = str(readdic[key])
+  Out.write("\t".join([Chromosome, Chrom_length, Coordinate, Nbr_reads, Polarity]) )
+  Out.write("\n")
+Out.close
+EOF
 
-while read qname flag rname pos mapq cigar mrnm mpos isize seq qual opt
-do
-   if [[ $flag = 0 ]] ; then
-       polarity="F"
-   elif [[ $flag = 16 ]] ;
-   then
-       polarity="R"
-   fi
-   if [[ $flag = 0 ]] || [[ $flag = 16 ]] ; then
-       echo -e "$rname\t$pos\t$polarity\t${#seq}" >> output2.tab
-   fi
-done < output1.tab
-rm output1.tab
-
-while read SQ SN LN
-do
-    declare -A tab
-    tab["${SN:3}"]=${LN:3};
-done < header.tab
-rm header.tab
-
-
-while read rname coord polarity qlen
-do
-    key=$rname$coord$polarity
-    len="${tab[$rname]}"
-    echo -e "$rname\t$len\t$coord\t$qlen\t$polarity\t$key" >> output3.tab
-done < output2.tab
-rm output2.tab
-
-echo -e "Chromosome\tChrom_length\tCoordinate\tNbr_reads\tPolarity" > output.tab
-
-while read rname rlen coord qlen pol keys
-do
-    if [[ $key != $keys ]] ; then
-        key=$keys
-        nbr_reads=`cat output3.tab | grep "$key" | wc -l`
-        echo -e "$rname\t$rlen\t$coord\t$nbr_reads\t$pol" >> output.tab
-    fi
-done < output3.tab
-rm output3.tab
-
+python ./pyscript.py
+rm output1.tab header.tab pyscript.py
 sort -k 1,1 -k 3,3n -k 5,5  output.tab -o output.tab
+if ! diff -q output.tab test-data.dat &>/dev/null; then
+  >&2 echo "different"
+else
+  >&2 echo "Test passed"
+fi
 
+rm output.tab
