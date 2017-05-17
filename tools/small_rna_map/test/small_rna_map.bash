@@ -6,7 +6,6 @@ grep -e "^@SQ" $samfile > header.tab
 cat $samfile | perl -ne 'print unless /^@/ or ( (split /\t/)[1] != 0 and (split /\t/)[1] != 16 )' > output1.tab
 
 cat << EOF > pyscript.py
-#######!/usr/bin/python
 lendic = {}
 for line in open("header.tab"):
   fields = line[:-1].split()
