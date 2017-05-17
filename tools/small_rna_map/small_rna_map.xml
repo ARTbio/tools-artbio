@@ -21,8 +21,8 @@
     <tests>
         <test>
             <param ftype="bam" name="input" value="input.bam" />
-            <output ftype = "tabular" file="output.tab" name="output_tab" />
-            <output file="output_pdf.pdf" name="output_pdf" />
+            <output ftype="tabular" file="output.tab" name="output_tab" />
+            <output file="output.pdf" name="output_pdf" />
         </test>
     </tests>
 
