@@ -27,6 +27,6 @@ for (read in unique(Table$Chromosome)) {
   plots[[i]] <- bp+xlim(0,Table$Chrom_length[i])
   i=i+1
 }
-pdf(args$output_tab, paper="special", height=11.69, width=8.2677)
+pdf(args$output_pdf, paper="special", height=11.69, width=8.2677)
 do.call(marrangeGrob,list(grobs=plots,ncol=1,nrow=3));
 dev.off()
