@@ -1,7 +1,8 @@
 #! /bin/bash
 # Execution command : bash small_rna_map.bash <sam file>
-
-samfile=$1
+samtools view -h -o input.sam ../test-data/input.bam
+samfile="input.sam"
+cut -f2,3,4,5,6 ../test-data/output.tab > test-data.dat
 grep -e "^@SQ" $samfile > header.tab
 cat $samfile | perl -ne 'print unless /^@/ or ( (split /\t/)[1] != 0 and (split /\t/)[1] != 16 )' > output1.tab
 
@@ -39,4 +40,4 @@ else
   >&2 echo "Test passed"
 fi
 
-rm output.tab
+rm output.tab input.sam test-data.dat
