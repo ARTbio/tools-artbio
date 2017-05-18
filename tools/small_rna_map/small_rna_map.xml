@@ -4,6 +4,7 @@
         <requirement type="package" version="3.2.3">R</requirement>
         <requirement type="package" version="1.2.0=r3.2.3">r-optparse</requirement>
         <requirement type="package" version="2.0.0=r3.2.3">r-ggplot2</requirement>
+        <requirement type="package" version="2.2.1=r3.2.3">r-gridextra</requirement>
   </requirements>
   <command><![CDATA[
       python '$__tool_directory__'/small_rna_map.py --input '$input' --output '$output_tab'
