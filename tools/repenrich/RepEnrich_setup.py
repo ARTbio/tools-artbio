@@ -48,7 +48,7 @@ def import_text(filename, separator):
             yield line
 # Make a setup folder
 if not os.path.exists(setup_folder):
-	os.makedirs(setup_folder)
+    os.makedirs(setup_folder)
 
 ################################################################################
 # load genome into dictionary

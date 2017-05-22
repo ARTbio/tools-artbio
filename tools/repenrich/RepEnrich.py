@@ -46,12 +46,12 @@ try:
     subprocess.call(shlex.split("coverageBed -h"), stdout=open(os.devnull, 'wb'), stderr=open(os.devnull, 'wb'))
     subprocess.call(shlex.split("bowtie --version"), stdout=open(os.devnull, 'wb'), stderr=open(os.devnull, 'wb'))
 except OSError:
-    print "Error: Bowtie or BEDTools not loaded"
+    print ("Error: Bowtie or BEDTools not loaded")
     raise
 
 ################################################################################
 # define a csv reader that reads space deliminated files
-print 'Preparing for analysis using RepEnrich...'
+print ('Preparing for analysis using RepEnrich...')
 csv.field_size_limit(sys.maxsize)
 def import_text(filename, separator):
     for line in csv.reader(open(filename), delimiter=separator, 
@@ -62,33 +62,33 @@ def import_text(filename, separator):
 ################################################################################
 # build dictionaries to convert repclass and rep families'
 if is_bed == "FALSE":
-	repeatclass = {}
-	repeatfamily = {}
-	fin = import_text(annotation_file, ' ')
-	x = 0
-	for line in fin:
-	    if x>2:
-	        classfamily =[]
-	        classfamily = line[10].split(os.path.sep)
-	        line9 = line[9].replace("(","_").replace(")","_").replace("/","_")
-	        repeatclass[line9] = classfamily[0]
-	        if len(classfamily) == 2:
-	            repeatfamily[line9] = classfamily[1]
-	        else:
-	            repeatfamily[line9] = classfamily[0]
-	    x +=1
+    repeatclass = {}
+    repeatfamily = {}
+    fin = import_text(annotation_file, ' ')
+    x = 0
+    for line in fin:
+        if x>2:
+            classfamily =[]
+            classfamily = line[10].split(os.path.sep)
+            line9 = line[9].replace("(","_").replace(")","_").replace("/","_")
+            repeatclass[line9] = classfamily[0]
+            if len(classfamily) == 2:
+                repeatfamily[line9] = classfamily[1]
+            else:
+                repeatfamily[line9] = classfamily[0]
+        x +=1
 if is_bed == "TRUE":
-	repeatclass = {}
-	repeatfamily = {}
-	fin = open(annotation_file, 'r')
-	for line in fin:
-		line=line.strip('\n')
-		line=line.split('\t')
-	        theclass =line[4]
-	        thefamily = line[5]
-	        line3 = line[3].replace("(","_").replace(")","_").replace("/","_")
-	        repeatclass[line3] = theclass 
-                repeatfamily[line3] = thefamily
+    repeatclass = {}
+    repeatfamily = {}
+    fin = open(annotation_file, 'r')
+    for line in fin:
+        line=line.strip('\n')
+        line=line.split('\t')
+        theclass =line[4]
+        thefamily = line[5]
+        line3 = line[3].replace("(","_").replace(")","_").replace("/","_")
+        repeatclass[line3] = theclass 
+        repeatfamily[line3] = thefamily
 fin.close()
 
 ################################################################################
@@ -108,13 +108,13 @@ i = 0
 for line in fin:
     reptotalcounts[line[0]] = 0
     fractionalcounts[line[0]] = 0
-    if repeatclass.has_key(line[0]):
-	classtotalcounts[repeatclass[line[0]]] = 0
-	classfractionalcounts[repeatclass[line[0]]] = 0
-    if repeatfamily.has_key(line[0]):
-	familytotalcounts[repeatfamily[line[0]]] = 0
-	familyfractionalcounts[repeatfamily[line[0]]] = 0
-    if repeatfamily.has_key(line[0]):
+    if line[0] in repeatclass:
+        classtotalcounts[repeatclass[line[0]]] = 0
+        classfractionalcounts[repeatclass[line[0]]] = 0
+    if line[0] in repeatfamily:
+        familytotalcounts[repeatfamily[line[0]]] = 0
+        familyfractionalcounts[repeatfamily[line[0]]] = 0
+    if line[0] in repeatfamily:
         if repeatfamily[line[0]] == simple_repeat:
             reptotalcounts_simple[simple_repeat] = 0
     else:
@@ -126,10 +126,10 @@ fin.close()
 ################################################################################
 # map the repeats to the psuedogenomes:
 if not os.path.exists(outputfolder):
-	os.mkdir(outputfolder)
+    os.mkdir(outputfolder)
 ################################################################################
 # Conduct the regions sorting
-print 'Conducting region sorting on unique mapping reads....'
+print ('Conducting region sorting on unique mapping reads....')
 fileout= outputfolder + os.path.sep + outputfile_prefix + '_regionsorter.txt'
 with open(fileout, 'w') as stdout:
    command = shlex.split("coverageBed -abam " +unique_mapper_bam+" -b " +setup_folder + os.path.sep + 'repnames.bed')
@@ -140,139 +140,139 @@ filein = open(outputfolder + os.path.sep + outputfile_prefix + '_regionsorter.tx
 counts = {}
 sumofrepeatreads=0
 for line in filein:
-	line= line.split('\t')
-	if not counts.has_key(str(repeat_key[line[3]])):
-		counts[str(repeat_key[line[3]])]=0
-	counts[str(repeat_key[line[3]])]+=int(line[4])
-	sumofrepeatreads+=int(line[4])
-print 'Identified ' + str(sumofrepeatreads) + 'unique reads that mapped to repeats.'
+    line= line.split('\t')
+    if not str(repeat_key[line[3]]) in counts:
+        counts[str(repeat_key[line[3]])]=0
+    counts[str(repeat_key[line[3]])]+=int(line[4])
+    sumofrepeatreads+=int(line[4])
+print ('Identified ' + str(sumofrepeatreads) + 'unique reads that mapped to repeats.')
 ################################################################################
 if paired_end == 'TRUE':
-	if not os.path.exists(outputfolder + os.path.sep + 'pair1_bowtie'):
-		os.mkdir(outputfolder + os.path.sep + 'pair1_bowtie')
-	if not os.path.exists(outputfolder + os.path.sep + 'pair2_bowtie'):
-		os.mkdir(outputfolder + os.path.sep + 'pair2_bowtie')
-	folder_pair1 = outputfolder + os.path.sep + 'pair1_bowtie'
-	folder_pair2 = outputfolder + os.path.sep + 'pair2_bowtie'
+    if not os.path.exists(outputfolder + os.path.sep + 'pair1_bowtie'):
+        os.mkdir(outputfolder + os.path.sep + 'pair1_bowtie')
+    if not os.path.exists(outputfolder + os.path.sep + 'pair2_bowtie'):
+        os.mkdir(outputfolder + os.path.sep + 'pair2_bowtie')
+    folder_pair1 = outputfolder + os.path.sep + 'pair1_bowtie'
+    folder_pair2 = outputfolder + os.path.sep + 'pair2_bowtie'
 ################################################################################
-	print "Processing repeat psuedogenomes..."
-	ps = []
-	psb= []
-	ticker= 0
-	for metagenome in repeat_list:
-   		metagenomepath = setup_folder + os.path.sep + metagenome
-		file1=folder_pair1 + os.path.sep + metagenome + '.bowtie'
-		file2 =folder_pair2 + os.path.sep + metagenome + '.bowtie'
-		with open(file1, 'w') as stdout:
-			command = shlex.split("bowtie " + b_opt + " " + metagenomepath + " " + fastqfile_1)
-			p = subprocess.Popen(command,stdout=stdout)
-		with open(file2, 'w') as stdout:
-			command = shlex.split("bowtie " + b_opt + " " + metagenomepath + " " + fastqfile_2)
-			pp = subprocess.Popen(command,stdout=stdout)
-		ps.append(p)
-		ticker +=1
-		psb.append(pp)
-		ticker +=1
-		if ticker == cpus:
-			for p in ps:
-				p.communicate()
-			for p in psb:
-				p.communicate()
-			ticker = 0
-			psb =[]
-			ps = []
-	if len(ps) > 0:
-		for p in ps:
-			p.communicate()
-	stdout.close()
+    print ("Processing repeat psuedogenomes...")
+    ps = []
+    psb= []
+    ticker= 0
+    for metagenome in repeat_list:
+        metagenomepath = setup_folder + os.path.sep + metagenome
+        file1=folder_pair1 + os.path.sep + metagenome + '.bowtie'
+        file2 =folder_pair2 + os.path.sep + metagenome + '.bowtie'
+        with open(file1, 'w') as stdout:
+            command = shlex.split("bowtie " + b_opt + " " + metagenomepath + " " + fastqfile_1)
+            p = subprocess.Popen(command,stdout=stdout)
+        with open(file2, 'w') as stdout:
+            command = shlex.split("bowtie " + b_opt + " " + metagenomepath + " " + fastqfile_2)
+            pp = subprocess.Popen(command,stdout=stdout)
+        ps.append(p)
+        ticker +=1
+        psb.append(pp)
+        ticker +=1
+        if ticker == cpus:
+            for p in ps:
+                p.communicate()
+            for p in psb:
+                p.communicate()
+            ticker = 0
+            psb =[]
+            ps = []
+    if len(ps) > 0:
+        for p in ps:
+            p.communicate()
+    stdout.close()
     
 ################################################################################
 # combine the output from both read pairs:
-	print 'sorting and combining the output for both read pairs...'
-	if not os.path.exists(outputfolder + os.path.sep + 'sorted_bowtie'):
-		os.mkdir(outputfolder + os.path.sep + 'sorted_bowtie')
-	sorted_bowtie = outputfolder + os.path.sep + 'sorted_bowtie'
-	for metagenome in repeat_list:
-		file1 = folder_pair1 + os.path.sep + metagenome + '.bowtie'
-		file2 = folder_pair2 + os.path.sep + metagenome + '.bowtie'
-		fileout= sorted_bowtie + os.path.sep + metagenome + '.bowtie'
-		with open(fileout, 'w') as stdout:
-			p1 = subprocess.Popen(['cat',file1,file2], stdout = subprocess.PIPE)
-			p2 = subprocess.Popen(['cut', '-f1',"-d "], stdin = p1.stdout, stdout = subprocess.PIPE)
-			p3 = subprocess.Popen(['cut', '-f1', "-d/"], stdin = p2.stdout, stdout = subprocess.PIPE)
-			p4 = subprocess.Popen(['sort'], stdin=p3.stdout, stdout = subprocess.PIPE)
-			p5 = subprocess.Popen(['uniq'], stdin=p4.stdout, stdout = stdout)
-			p5.communicate()
-		stdout.close()
-	print 'completed ...'
+    print ('sorting and combining the output for both read pairs...')
+    if not os.path.exists(outputfolder + os.path.sep + 'sorted_bowtie'):
+        os.mkdir(outputfolder + os.path.sep + 'sorted_bowtie')
+    sorted_bowtie = outputfolder + os.path.sep + 'sorted_bowtie'
+    for metagenome in repeat_list:
+        file1 = folder_pair1 + os.path.sep + metagenome + '.bowtie'
+        file2 = folder_pair2 + os.path.sep + metagenome + '.bowtie'
+        fileout= sorted_bowtie + os.path.sep + metagenome + '.bowtie'
+        with open(fileout, 'w') as stdout:
+            p1 = subprocess.Popen(['cat',file1,file2], stdout = subprocess.PIPE)
+            p2 = subprocess.Popen(['cut', '-f1',"-d "], stdin = p1.stdout, stdout = subprocess.PIPE)
+            p3 = subprocess.Popen(['cut', '-f1', "-d/"], stdin = p2.stdout, stdout = subprocess.PIPE)
+            p4 = subprocess.Popen(['sort'], stdin=p3.stdout, stdout = subprocess.PIPE)
+            p5 = subprocess.Popen(['uniq'], stdin=p4.stdout, stdout = stdout)
+            p5.communicate()
+        stdout.close()
+    print ('completed ...')
 ################################################################################
 if paired_end == 'FALSE':
-	if not os.path.exists(outputfolder + os.path.sep + 'pair1_bowtie'):
-		os.mkdir(outputfolder + os.path.sep + 'pair1_bowtie')
-	folder_pair1 = outputfolder + os.path.sep + 'pair1_bowtie'
+    if not os.path.exists(outputfolder + os.path.sep + 'pair1_bowtie'):
+        os.mkdir(outputfolder + os.path.sep + 'pair1_bowtie')
+    folder_pair1 = outputfolder + os.path.sep + 'pair1_bowtie'
 ################################################################################
-	ps = []
-	ticker= 0
-	print "Processing repeat psuedogenomes..."
-	for metagenome in repeat_list:
-    		metagenomepath = setup_folder + os.path.sep + metagenome
-		file1=folder_pair1 + os.path.sep + metagenome + '.bowtie'
-		with open(file1, 'w') as stdout:
-			command = shlex.split("bowtie " + b_opt + " " + metagenomepath + " " + fastqfile_1)
-			p = subprocess.Popen(command,stdout=stdout)
-		ps.append(p)
-		ticker +=1
-		if ticker == cpus:
-			for p in ps:
-				p.communicate()
-			ticker = 0
-			ps = []
-	if len(ps) > 0:
-		for p in ps:
-			p.communicate()
-	stdout.close()
+    ps = []
+    ticker= 0
+    print ("Processing repeat psuedogenomes...")
+    for metagenome in repeat_list:
+        metagenomepath = setup_folder + os.path.sep + metagenome
+        file1=folder_pair1 + os.path.sep + metagenome + '.bowtie'
+        with open(file1, 'w') as stdout:
+            command = shlex.split("bowtie " + b_opt + " " + metagenomepath + " " + fastqfile_1)
+            p = subprocess.Popen(command,stdout=stdout)
+        ps.append(p)
+        ticker +=1
+        if ticker == cpus:
+            for p in ps:
+                p.communicate()
+            ticker = 0
+            ps = []
+    if len(ps) > 0:
+        for p in ps:
+            p.communicate()
+    stdout.close()
     
 ################################################################################
 # combine the output from both read pairs:
-	print 'Sorting and combining the output for both read pairs....'
-	if not os.path.exists(outputfolder + os.path.sep + 'sorted_bowtie'):
-		os.mkdir(outputfolder + os.path.sep + 'sorted_bowtie')
-	sorted_bowtie = outputfolder + os.path.sep + 'sorted_bowtie'
-	for metagenome in repeat_list:
-		file1 = folder_pair1 + os.path.sep + metagenome + '.bowtie'
-		fileout= sorted_bowtie + os.path.sep + metagenome + '.bowtie'
-		with open(fileout, 'w') as stdout:
-			p1 = subprocess.Popen(['cat',file1], stdout = subprocess.PIPE)
-			p2 = subprocess.Popen(['cut', '-f1'], stdin = p1.stdout, stdout = subprocess.PIPE)
-			p3 = subprocess.Popen(['cut', '-f1', "-d/"], stdin = p2.stdout, stdout = subprocess.PIPE)
-			p4 = subprocess.Popen(['sort'], stdin = p3.stdout,stdout = subprocess.PIPE)
-			p5 = subprocess.Popen(['uniq'], stdin = p4.stdout,stdout = stdout)
-			p5.communicate()
-		stdout.close()
-	print 'completed ...'
+    print ('Sorting and combining the output for both read pairs....')
+    if not os.path.exists(outputfolder + os.path.sep + 'sorted_bowtie'):
+        os.mkdir(outputfolder + os.path.sep + 'sorted_bowtie')
+    sorted_bowtie = outputfolder + os.path.sep + 'sorted_bowtie'
+    for metagenome in repeat_list:
+        file1 = folder_pair1 + os.path.sep + metagenome + '.bowtie'
+        fileout= sorted_bowtie + os.path.sep + metagenome + '.bowtie'
+        with open(fileout, 'w') as stdout:
+            p1 = subprocess.Popen(['cat',file1], stdout = subprocess.PIPE)
+            p2 = subprocess.Popen(['cut', '-f1'], stdin = p1.stdout, stdout = subprocess.PIPE)
+            p3 = subprocess.Popen(['cut', '-f1', "-d/"], stdin = p2.stdout, stdout = subprocess.PIPE)
+            p4 = subprocess.Popen(['sort'], stdin = p3.stdout,stdout = subprocess.PIPE)
+            p5 = subprocess.Popen(['uniq'], stdin = p4.stdout,stdout = stdout)
+            p5.communicate()
+        stdout.close()
+    print ('completed ...')
     
 ################################################################################
 # build a file of repeat keys for all reads
-print 'Writing and processing intermediate files...'
+print ('Writing and processing intermediate files...')
 sorted_bowtie = outputfolder + os.path.sep + 'sorted_bowtie'
 readid = {}
 sumofrepeatreads=0
 for rep in repeat_list: 
     for data in import_text(sorted_bowtie + os.path.sep + rep + '.bowtie', '\t'):
-	readid[data[0]] = ''
+        readid[data[0]] = ''
 for rep in repeat_list: 
-    for data in import_text(sorted_bowtie + os.path.sep + rep + '.bowtie', '\t'):	
-	readid[data[0]]+=str(repeat_key[rep]) + str(',')
+    for data in import_text(sorted_bowtie + os.path.sep + rep + '.bowtie', '\t'):
+        readid[data[0]]+=str(repeat_key[rep]) + str(',')
 for subfamilies in readid.values():
-    if not counts.has_key(subfamilies):
-	counts[subfamilies]=0
+    if not subfamilies in counts:
+        counts[subfamilies]=0
     counts[subfamilies] +=1
     sumofrepeatreads+=1
 del readid
-print 'Identified ' + str(sumofrepeatreads) + ' reads that mapped to repeats for unique and multimappers.'
+print ('Identified ' + str(sumofrepeatreads) + ' reads that mapped to repeats for unique and multimappers.')
 
 ################################################################################
-print "Conducting final calculations..."
+print ("Conducting final calculations...")
 # build a converter to numeric label for repeat and yield a combined list of repnames seperated by backslash
 def convert(x):
     x = x.strip(',')
@@ -304,79 +304,79 @@ for key in counts.keys():
         repcounts[repname] = counts[key]
 # building the total counts for class enrichment...
 for key in reptotalcounts.keys():
-	classtotalcounts[repeatclass[key]] += reptotalcounts[key]
+    classtotalcounts[repeatclass[key]] += reptotalcounts[key]
 # building total counts for family enrichment...
 for key in reptotalcounts.keys():
-	familytotalcounts[repeatfamily[key]] += reptotalcounts[key]
+    familytotalcounts[repeatfamily[key]] += reptotalcounts[key]
 # building unique counts table'
 repcounts2 = {}
 for rep in repeat_list:
-    if repcounts.has_key("/" +rep):
+    if "/" +rep in repcounts:
         repcounts2[rep] = repcounts["/" +rep]
     else:
         repcounts2[rep] = 0
 # building the fractionalcounts counts for class enrichment...
 for key in fractionalcounts.keys():
-	classfractionalcounts[repeatclass[key]] += fractionalcounts[key]
+    classfractionalcounts[repeatclass[key]] += fractionalcounts[key]
 # building fractional counts for family enrichment...
 for key in fractionalcounts.keys():
-	familyfractionalcounts[repeatfamily[key]] += fractionalcounts[key]   
+    familyfractionalcounts[repeatfamily[key]] += fractionalcounts[key]   
     
 ################################################################################
-print 'Writing final output and removing intermediate files...'
+print ('Writing final output and removing intermediate files...')
 # print output to file of the categorized counts and total overlapping counts:
 if allcountmethod  == "TRUE":
-	fout1 = open(outputfolder + os.path.sep + outputfile_prefix + '_total_counts.txt' , 'w')
-	for key in reptotalcounts.keys():
-	    print >> fout1, str(key) + '\t' + repeatclass[key] + '\t' + repeatfamily[key] + '\t' + str(reptotalcounts[key])
-	fout2 = open(outputfolder + os.path.sep + outputfile_prefix + '_class_total_counts.txt' , 'w')
-	for key in classtotalcounts.keys():
-	    print >> fout2, str(key) + '\t' + str(classtotalcounts[key])  
-	fout3 = open(outputfolder + os.path.sep + outputfile_prefix + '_family_total_counts.txt' , 'w')
-	for key in familytotalcounts.keys():
-	    print >> fout3, str(key) + '\t' + str(familytotalcounts[key])  
-	fout4 = open(outputfolder + os.path.sep + outputfile_prefix + '_unique_counts.txt' , 'w')
-	for key in repcounts2.keys():
-	    print >> fout4, str(key) + '\t' + repeatclass[key] + '\t' + repeatfamily[key] + '\t' + str(repcounts2[key])     
-    	fout5 = open(outputfolder + os.path.sep + outputfile_prefix + '_class_fraction_counts.txt' , 'w')
-	for key in classfractionalcounts.keys():
-	    print >> fout5, str(key) + '\t' + str(classfractionalcounts[key])  
-	fout6 = open(outputfolder + os.path.sep + outputfile_prefix + '_family_fraction_counts.txt' , 'w')
-	for key in familyfractionalcounts.keys():
-	    print >> fout6, str(key) + '\t' + str(familyfractionalcounts[key])
-	fout7 = open(outputfolder + os.path.sep + outputfile_prefix + '_fraction_counts.txt' , 'w')
-	for key in fractionalcounts.keys():
-	    print >> fout7, str(key) + '\t' + repeatclass[key] + '\t' + repeatfamily[key] + '\t' + str(int(fractionalcounts[key]))
-    	fout1.close()
-	fout2.close()
-	fout3.close()
-	fout4.close()
-	fout5.close()
-	fout6.close()
-	fout7.close()
+    fout1 = open(outputfolder + os.path.sep + outputfile_prefix + '_total_counts.txt' , 'w')
+    for key in reptotalcounts.keys():
+        fout1.write(str(key) + '\t' + repeatclass[key] + '\t' + repeatfamily[key] + '\t' + str(reptotalcounts[key]) + '\n')
+    fout2 = open(outputfolder + os.path.sep + outputfile_prefix + '_class_total_counts.txt' , 'w')
+    for key in classtotalcounts.keys():
+        fout2.write(str(key) + '\t' + str(classtotalcounts[key]) + '\n') 
+    fout3 = open(outputfolder + os.path.sep + outputfile_prefix + '_family_total_counts.txt' , 'w')
+    for key in familytotalcounts.keys():
+        fout3.write(str(key) + '\t' + str(familytotalcounts[key]) + '\n') 
+    fout4 = open(outputfolder + os.path.sep + outputfile_prefix + '_unique_counts.txt' , 'w')
+    for key in repcounts2.keys():
+        fout4.write(str(key) + '\t' + repeatclass[key] + '\t' + repeatfamily[key] + '\t' + str(repcounts2[key]) + '\n') 
+        fout5 = open(outputfolder + os.path.sep + outputfile_prefix + '_class_fraction_counts.txt' , 'w')
+    for key in classfractionalcounts.keys():
+        fout5.write(str(key) + '\t' + str(classfractionalcounts[key]) + '\n')
+    fout6 = open(outputfolder + os.path.sep + outputfile_prefix + '_family_fraction_counts.txt' , 'w')
+    for key in familyfractionalcounts.keys():
+        fout6.write(str(key) + '\t' + str(familyfractionalcounts[key]) + '\n')
+    fout7 = open(outputfolder + os.path.sep + outputfile_prefix + '_fraction_counts.txt' , 'w')
+    for key in fractionalcounts.keys():
+        fout7.write(str(key) + '\t' + repeatclass[key] + '\t' + repeatfamily[key] + '\t' + str(int(fractionalcounts[key])) + '\n')
+        fout1.close()
+    fout2.close()
+    fout3.close()
+    fout4.close()
+    fout5.close()
+    fout6.close()
+    fout7.close()
 else:
-	fout1 = open(outputfolder + os.path.sep + outputfile_prefix + '_class_fraction_counts.txt' , 'w')
-	for key in classfractionalcounts.keys():
-	    print >> fout1, str(key) + '\t' + str(classfractionalcounts[key])  
-	fout2 = open(outputfolder + os.path.sep + outputfile_prefix + '_family_fraction_counts.txt' , 'w')
-	for key in familyfractionalcounts.keys():
-	    print >> fout2, str(key) + '\t' + str(familyfractionalcounts[key])
-	fout3 = open(outputfolder + os.path.sep + outputfile_prefix + '_fraction_counts.txt' , 'w')
-	for key in fractionalcounts.keys():
-	    print >> fout3, str(key) + '\t' + repeatclass[key] + '\t' + repeatfamily[key] + '\t' + str(int(fractionalcounts[key]))
-	fout1.close()
-	fout2.close()
-	fout3.close()
+    fout1 = open(outputfolder + os.path.sep + outputfile_prefix + '_class_fraction_counts.txt' , 'w')
+    for key in classfractionalcounts.keys():
+        fout1.write(str(key) + '\t' + str(classfractionalcounts[key]) + '\n')
+    fout2 = open(outputfolder + os.path.sep + outputfile_prefix + '_family_fraction_counts.txt' , 'w')
+    for key in familyfractionalcounts.keys():
+        fout2.write(str(key) + '\t' + str(familyfractionalcounts[key])+ '\n')
+    fout3 = open(outputfolder + os.path.sep + outputfile_prefix + '_fraction_counts.txt' , 'w')
+    for key in fractionalcounts.keys():
+        fout3.write(str(key) + '\t' + repeatclass[key] + '\t' + repeatfamily[key] + '\t' + str(int(fractionalcounts[key])) + '\n')
+    fout1.close()
+    fout2.close()
+    fout3.close()
     
 ################################################################################
 # Remove Large intermediate files
 if os.path.exists(outputfolder + os.path.sep + outputfile_prefix + '_regionsorter.txt'):
-	os.remove(outputfolder + os.path.sep + outputfile_prefix + '_regionsorter.txt')
+    os.remove(outputfolder + os.path.sep + outputfile_prefix + '_regionsorter.txt')
 if os.path.exists(outputfolder + os.path.sep + 'pair1_bowtie'):
-	shutil.rmtree(outputfolder + os.path.sep + 'pair1_bowtie')
+    shutil.rmtree(outputfolder + os.path.sep + 'pair1_bowtie')
 if os.path.exists(outputfolder + os.path.sep + 'pair2_bowtie'):
-	shutil.rmtree(outputfolder + os.path.sep + 'pair2_bowtie')
+    shutil.rmtree(outputfolder + os.path.sep + 'pair2_bowtie')
 if os.path.exists(outputfolder + os.path.sep + 'sorted_bowtie'):
-	shutil.rmtree(outputfolder + os.path.sep + 'sorted_bowtie')
+    shutil.rmtree(outputfolder + os.path.sep + 'sorted_bowtie')
 
-print "... Done"
+print ("... Done")
