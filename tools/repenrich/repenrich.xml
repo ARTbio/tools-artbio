@@ -33,7 +33,7 @@
     <!-- basic error handling -->
     <inputs>
     <param format="fasta" label="Reference genome in fasta format" name="genome" type="data" />
-    <param format="fastq,fastqsanger" label="Sequencing dataset" name="input_fastq" type="data" help="accepted formats: fastq, fastqsanger" />
+    <param format="fastq,fastqsanger" label="Single-reads equencing dataset" name="input_fastq" type="data" help="accepted formats: fastq, fastqsanger" />
     <param format="txt" label="RepeatMasker description file" name="repeatmasker" type="data" help="see help section"/>
     </inputs>
 
