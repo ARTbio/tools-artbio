@@ -2,7 +2,7 @@
     <description>Repeat Element Profiling</description>
     <requirements>
         <requirement type="package" version="0.12.9">bowtie</requirement>
-        <requirement type="package" version="0.1.19">samtools</requirement>
+        <requirement type="package" version="1.2">samtools</requirement>
         <requirement type="package" version="2.20.1">bedtools</requirement>
         <requirement type="package" version="1.66">biopython</requirement>
     </requirements>
