@@ -1,0 +1,137 @@
+<tool id="repenrich" name="RepEnrich" version="0.0.1">
+    <description>Repeat Element Profiling</description>
+    <requirements>
+        <requirement type="package" version="0.12.9">bowtie</requirement>
+        <requirement type="package" version="0.1.19">samtools</requirement>
+        <requirement type="package" version="2.20.1">bedtools</requirement>
+        <requirement type="package" version="1.66">biopython</requirement>
+    </requirements>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Tool exception" />
+    </stdio>
+    <command detect_errors="exit_code"><![CDATA[
+        #import re
+        #set input_base = re.sub('\.fastq$', '', str($input_fastq.element_identifier))
+        #set baseReference = re.sub('[^\w\-]', '_', str($genome.element_identifier))
+        #set baseReference = re.sub('.fa$', '', $baseReference)
+        ln -f -s '$genome' '${baseReference}.fa' &&
+        bowtie-build '$genome' ${baseReference} &&
+        python $__tool_directory__/RepEnrich_setup.py $repeatmasker ${baseReference}.fa setup_folder_${baseReference} &&
+        bowtie $baseReference -p 16 -t -m 1 -S --max ${input_base}_multimap.fastq ${input_base}.fastq ${input_base}_unique.sam &&
+        samtools view -bS ${input_base}_unique.sam > ${input_base}_unique.bam &&
+        samtools sort ${input_base}_unique.bam ${input_base}_unique_sorted &&
+        mv ${input_base}_unique_sorted.bam ${input_base}_unique.bam &&
+        samtools index ${input_base}_unique.bam &&
+        rm ${input_base}_unique.sam &&
+        python $__tool_directory__/RepEnrich.py $repeatmasker ${input_base} ${input_base} setup_folder_${baseReference} ${input_base}_multimap.fastq ${input_base}_unique.bam --cpus 16 &&
+        cp $input_base/${input_base}_class_fraction_counts.txt $class_fraction_counts &&
+        cp $input_base/${input_base}_class_fraction_counts.txt $family_fraction_counts &&
+        cp $input_base/${input_base}_class_fraction_counts.txt $fraction_counts
+
+    ]]></command>
+    <!-- basic error handling -->
+    <inputs>
+    <param format="fasta" label="Reference genome in fasta format" name="genome" type="data" />
+    <param format="fastq,fastqsanger" label="sequencing dataset" name="input_fastq" type="data" help="accepted formats: fastq, fastqsanger" />
+    <param format="txt" label="RepeatMasker description file" name="repeatmasker" type="data" help="see help section"/>
+    </inputs>
+
+    <outputs>
+        <data format="tabular" name="class_fraction_counts" label="RepEnrich on ${on_string}: class fraction counts">
+        </data>
+        <data format="tabular" name="family_fraction_counts" label="RepEnrich on ${on_string}: family fraction counts">
+        </data>
+        <data format="tabular" name="fraction_counts" label="RepEnrich on ${on_string}: family counts">
+        </data>
+    </outputs>
+
+    <tests>
+        <test>
+            <param name="input_fastq" value="Samp.bam" ftype="fastq"/>
+            <param name="genome" value="ChrM.fa" ftype="fasta"/>
+            <param name="repeatmasker" value="chrM_repeatmasker.txt" ftype="txt"/>
+            <output name="class_fraction_counts" file="Samp_class_fraction_counts.txt" ftype="tabular"/>
+            <output name="family_fraction_counts" file="Samp_family_fraction_counts.txt" ftype="tabular"/>
+            <output name="fraction_counts" file="Samp_fraction_counts.txt" ftype="tabular"/>
+        </test>
+   </tests>
+
+    <help>
+
+**Input(s)**
+
+*One sample* : lumpy search structural variations inside a single sequencing dataset
+
+*Two samples*: lumpy search structural variations inside and across two sequencing datasets from two samples
+
+Analysis of sample replicates is not implemented yet in this wrapper
+
+*BAM files*: Only BAM alignments produced by BWA-mem have been tested with this tool
+
+**Sequencing method**
+
+*Paired-end sequencing*: Both ends of library fragments have been sequenced, resulting in two paired sequencing datasets
+
+*Single-read sequencing*: Only one end of library fragment has been sequenced, resulting in a single sequencing dataset. Under these conditions, evidences of structural variation are obtained only from splited read alignments
+
+*Read length*: The length of the sequencing reads in the library. This information is required only for paired-end sequencing data
+
+*Additional options*: refer to lumpy-sv_ documentation and the publication (doi 10.1186/gb-2014-15-6-r84)
+
+**lumpy-sv manual**
+
+Read the lumpy-sv_ documentation for details on using lumpy.
+
+.. _lumpy-sv: https://github.com/arq5x/lumpy-sv
+
+**lumpy options**
+
+v 0.2.13
+Author:  Ryan Layer (rl6sf@virginia.edu)
+
+Summary: Find structural variations in various signals.
+
+Options::
+<![CDATA[
+
+	-g	Genome file (defines chromosome order)
+	-e	Show evidence for each call
+	-w	File read windows size (default 1000000)
+	-mw	minimum weight for a call
+	-msw	minimum per-sample weight for a call
+	-tt	trim threshold
+	-x	exclude file bed file
+	-t	temp file prefix, must be to a writeable directory
+	-P	output probability curve for each variant
+	-b	output BEDPE instead of VCF
+	-sr	bam_file:<file name>,
+		id:<sample name>,
+		back_distance:<distance>,
+		min_mapping_threshold:<mapping quality>,
+		weight:<sample weight>,
+		min_clip:<minimum clip length>,
+		read_group:<string>
+
+	-pe	bam_file:<file name>,
+		id:<sample name>,
+		histo_file:<file name>,
+		mean:<value>,
+		stdev:<value>,
+		read_length:<length>,
+		min_non_overlap:<length>,
+		discordant_z:<z value>,
+		back_distance:<distance>,
+		min_mapping_threshold:<mapping quality>,
+		weight:<sample weight>,
+		read_group:<string>
+
+	-bedpe	bedpe_file:<bedpe file>,
+		id:<sample name>,
+		weight:<sample weight>
+]]>
+    </help>
+
+    <citations>
+    <citation type="doi">10.1186/gb-2014-15-6-r84</citation>
+  </citations>
+</tool>
