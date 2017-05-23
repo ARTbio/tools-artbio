@@ -1,7 +1,7 @@
 <tool id="repenrich" name="RepEnrich" version="0.1.0">
     <description>Repeat Element Profiling</description>
     <requirements>
-        <requirement type="package" version="1.2.0">bowtie</requirement>
+        <requirement type="package" version="0.12.9">bowtie</requirement>
         <requirement type="package" version="0.1.19">samtools</requirement>
         <requirement type="package" version="2.20.1">bedtools</requirement>
         <requirement type="package" version="1.66">biopython</requirement>
@@ -129,7 +129,7 @@ This Galaxy tool is a wrapper of the RepEnrich tool by steven_criscione@brown.ed
 
 .. _GitHub: https://github.com/nskvir/RepEnrich
 
-Python scripts RepEnrich.py and RepEnrich_setup.py have been adapted to python 3 syntax. Note that sorting of Fraction counts, Family fraction counts and Class fraction counts is  different with this Galaxy wrapper or with RepEnrich as found in the `RepEnrich code repository`_. However, this different sorting does not affect subsequent statistical analyses
+Python scripts RepEnrich.py and RepEnrich_setup.py have been adapted to python 3. Note that sorting of Fraction counts, Family fraction counts and Class fraction counts is  different with this Galaxy wrapper or with RepEnrich as found in the `RepEnrich code repository`_. However, this different sorting does not affect subsequent statistical analyses
 
 .. _RepEnrich code repository: https://github.com/nskvir/RepEnrich
 
