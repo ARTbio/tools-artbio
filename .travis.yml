@@ -19,7 +19,7 @@ install:
   - planemo conda_init
   - export PATH="$PLANEMO_CONDA_PREFIX/bin:$PATH"
   - conda create -y -q -c bioconda --name artbio_conda bowtie=1.2.0
-  - . activate iuc_conda
+  - . activate artbio_conda
   - planemo --version
   - conda --version
   - git diff --quiet "$TRAVIS_COMMIT_RANGE" -- ; GIT_DIFF_EXIT_CODE=$?
