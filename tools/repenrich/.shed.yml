@@ -1,0 +1,15 @@
+# .shed.yml supporting automatic pushes.
+owner: drosofff
+name: repenrich
+description: Repeat element profiling
+long_description: |
+  RepEnrich is a method to estimate repetitive element enrichment
+  using high-throughput sequencing data
+categories:
+  - Transcriptomics
+  - Variant Analysis
+homepage_url: https://github.com/nskvir/RepEnrich
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/repenrich
+toolshed:
+  - testtoolshed
+  - toolshed
