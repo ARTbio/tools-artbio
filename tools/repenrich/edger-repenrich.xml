@@ -146,39 +146,6 @@
     </outputs>
     <tests>
         <test>
-            <repeat name="rep_factorName">
-                <param name="factorName" value="Treatment"/>
-                <repeat name="rep_factorLevel">
-                    <param name="factorLevel" value="Treated"/>
-                    <param name="countsFile" value="GSM461179_treat_single.counts,GSM461180_treat_paired.counts,GSM461181_treat_paired.counts"/>
-                </repeat>
-                <repeat name="rep_factorLevel">
-                    <param name="factorLevel" value="Untreated"/>
-                    <param name="countsFile" value="GSM461176_untreat_single.counts,GSM461177_untreat_paired.counts,GSM461178_untreat_paired.counts,GSM461182_untreat_single.counts"/>
-                </repeat>
-            </repeat>
-            <param name="pdf" value="False"/>
-            <param name="normCounts" value="True"/>
-            <output name="counts_out" file="normalized_readcounts.tab"/>
-            <output name="deseq_out" file="deseq2_out.tab"/>
-        </test>
-        <test>
-            <repeat name="rep_factorName">
-                <param name="factorName" value="Treatment"/>
-                <repeat name="rep_factorLevel">
-                    <param name="factorLevel" value="Treated"/>
-                    <param name="countsFile" value="sailfish_quant_result1.tab,sailfish_quant_result2.tab"/>
-                </repeat>
-                <repeat name="rep_factorLevel">
-                    <param name="factorLevel" value="Untreated"/>
-                    <param name="countsFile" value="sailfish_quant_result3.tab,sailfish_quant_result4.tab"/>
-                </repeat>
-            </repeat>
-            <param name="pdf" value="False"/>
-            <param name="tximport_selector" value="tximport"/>
-            <param name="mapping_format_selector" value="gtf"/>
-            <param name="gtf_file" value="genes_sub.gtf"/>
-            <output name="deseq_out" file="deseq2_tximport_out.tab"/>
         </test>
     </tests>
     <help>
