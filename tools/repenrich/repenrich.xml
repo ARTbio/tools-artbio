@@ -19,9 +19,9 @@
         bowtie-build '$genome' ${baseReference} &&
         python $__tool_directory__/RepEnrich_setup.py $repeatmasker ${baseReference}.fa setup_folder_${baseReference} &&
         bowtie $baseReference -p \${GALAXY_SLOTS:-4} -t -m 1 -S --max ${input_base}_multimap.fastq ${input_base}.fastq ${input_base}_unique.sam 2>bowtie_alignments.txt &&
-        ALIGNED=$(grep '# reads with at least one' bowtie_alignments.txt | cut -d ' ' -f 9) &&
-        NONALIGNED=$(grep '# reads that failed to align:' bowtie_alignments.txt | cut -d ' ' -f 7) &&
-        echo $(($ALIGNED-$NONALIGNED)) > bowtie_aligned.numb &&
+        ALIGNED=\$(grep 'reads with at least one' bowtie_alignments.txt | cut -d ' ' -f 9) &&
+        NONALIGNED=\$(grep 'reads that failed to align:' bowtie_alignments.txt | cut -d ' ' -f 7) &&
+        echo \$((\$ALIGNED-\$NONALIGNED)) > bowtie_aligned.numb &&
         samtools view -bS ${input_base}_unique.sam > ${input_base}_unique.bam &&
         samtools sort ${input_base}_unique.bam ${input_base}_unique_sorted &&
         mv ${input_base}_unique_sorted.bam ${input_base}_unique.bam &&
