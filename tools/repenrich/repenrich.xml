@@ -56,6 +56,7 @@
             <param name="input_fastq" value="Samp.fastq" ftype="fastq"/>
             <param name="genome" value="chrM.fa" ftype="fasta"/>
             <param name="repeatmasker" value="chrM_repeatmasker.txt" ftype="txt"/>
+            <output name="bowtie_alignments" file="aligned_reads.tab" ftype="tabular"/>
             <output name="class_fraction_counts" file="Samp_class_fraction_counts.tabular" ftype="tabular"/>
             <output name="family_fraction_counts" file="Samp_family_fraction_counts.tabular" ftype="tabular"/>
             <output name="fraction_counts" file="Samp_fraction_counts.tabular" ftype="tabular"/>
