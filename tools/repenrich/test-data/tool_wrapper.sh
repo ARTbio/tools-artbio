@@ -1,5 +1,5 @@
-input_base=$1
-baseReference=$2
+input_base=Samp
+baseReference=chrM
 
 bowtie-build ${baseReference}.fa ${baseReference}
 
