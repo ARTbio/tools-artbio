@@ -1,14 +1,7 @@
 #!/usr/bin/env Rscript
 
-# A command-line interface to DESeq2 for use with Galaxy
-# written by Bjoern Gruening and modified by Michael Love 2016.03.30
-#
-# one of these arguments is required:
-#
-#   'factors' a JSON list object from Galaxy
-#
-#   'sample_table' is a sample table as described in ?DESeqDataSetFromHTSeqCount
-#   with columns: sample name, filename, then factors (variables)
+# A command-line interface to edgeR for use with Galaxy edger-repenrich
+# written by Christophe Antoniewski drosofff@gmail.com 2017.05.30
 #
 # the output file has columns:
 # 
@@ -19,24 +12,14 @@
 #   pvalue (p-value from comparison of Wald statistic to a standard Normal)
 #   padj (adjusted p-value, Benjamini Hochberg correction on genes which pass the mean count filter)
 # 
-# the first variable in 'factors' and first column in 'sample_table' will be the primary factor.
-# the levels of the primary factor are used in the order of appearance in factors or in sample_table.
 #
-# by default, levels in the order A,B,C produces a single comparison of B vs A, to a single file 'outfile'
-#
-# for the 'many_contrasts' flag, levels in the order A,B,C produces comparisons C vs A, B vs A, C vs B,
-# to a number of files using the 'outfile' prefix: 'outfile.condition_C_vs_A' etc.
-# all plots will still be sent to a single PDF, named by the arg 'plots', with extra pages.
-#
-# fit_type is an integer valued argument, with the options from ?estimateDisperions
-#   1 "parametric"
-#   2 "local"
-#   3 "mean"
+# Levels in the order A,B produces a single comparison of B vs A, to a single file 'outfile'
+
 
 # setup R error handling to go to stderr
 options( show.error.messages=F, error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
 
-# To not crash galaxy with an UTF8 error on not-US LC settings.
+# To not crash galaxy with an UTF8 error with not-US LC settings.
 loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
 
 library("getopt")
@@ -158,18 +141,27 @@ y <- DGEList(counts=counts, lib.size=libsize)
 # Normalize the data
 y <- calcNormFactors(y)
 y$samples
-plotMDS(y)
+# plotMDS(y) latter
 
 # Estimate the variance
 y <- estimateGLMCommonDisp(y, design)
 y <- estimateGLMTrendedDisp(y, design)
 y <- estimateGLMTagwiseDisp(y, design)
-plotBCV(y)
+# plotBCV(y) latter
 
-# Build an object to contain the normalized read abundance
-logcpm <- cpm(y, log=TRUE, lib.size=libsize)
-logcpm <- as.data.frame(logcpm)
-colnames(logcpm) <- factor(meta$condition)
+# Builds and outputs an object to contain the normalized read abundance in counts per million of reads
+cpm <- cpm(y, log=FALSE, lib.size=libsize)
+cpm <- as.data.frame(cpm)
+colnames(cpm) <- colnames(counts)
+if (!is.null(opt$countsfile)) {
+    normalizedAbundance <- data.frame(Tag=rownames(cpm))
+    normalizedAbundance <- cbind(normalizedAbundance, cpm)
+    write.table(normalizedAbundance, file=opt$countsfile, sep="\t", col.names=TRUE, row.names=FALSE, quote=FALSE)
+}
+
+# test
+print(counts)
+print(cpm)
 
 # Conduct fitting of the GLM
 yfit <- glmFit(y, design)
@@ -185,53 +177,48 @@ my.contrasts <- makeContrasts(
 )
 
 # Define the contrasts used in the comparisons
-allcontrasts =  paste0(opt$levelNameB,"_",opt$levelNameA)
-print (my.contrasts)
-print(my.contrasts[,1])
+allcontrasts =  paste0(opt$levelNameB," vs ",opt$levelNameA)
 
 # Conduct a for loop that will do the fitting of the GLM for each comparison
 # Put the results into the results objects
-for(current_contrast in allcontrasts) {
     lrt <- glmLRT(yfit, contrast=my.contrasts[,1])
     plotSmear(lrt, de.tags=rownames(y))
-    title(current_contrast)
+    title(allcontrasts)
     res <- topTags(lrt,n=dim(c)[1],sort.by="none")$table
-    colnames(res) <- paste(colnames(res),current_contrast,sep=".")
     results <- cbind(results,res[,c(1,5)])
     logfc <- cbind(logfc,res[c(1)])
-}
 
 # Add the repeat types back into the results.
 # We should still have the same order as the input data
 results$class <- listA[[2]][,2]
 results$type <- listA[[2]][,3]
 
-# Sort the results table by the logFC
-#results <- results[with(results, order(-abs(logFC.old_young))), ]
+# Sort the results table by the FDR
+results <- results[with(results, order(FDR)), ]
 
 # Save the results
-write.table(results, opt$outfile, quote=FALSE, sep="\t")
+write.table(results, opt$outfile, quote=FALSE, sep="\t", col.names=FALSE)
 
 # Plot Fold Changes for repeat classes and types
 
-# create the generic plots and leave the device open
+# open the device and plots
 if (!is.null(opt$plots)) {
-  if (verbose) cat("creating plots\n")
-  pdf(opt$plots)
-  for(current_contrast in allcontrasts) {
-      logFC <- results[, paste0("logFC.", current_contrast)]
-      # Plot the repeat classes
-      classes <- with(results, reorder(class, -logFC, median))
-      par(mar=c(6,10,4,1))
-      boxplot(logFC ~ classes, data=results, outline=FALSE, horizontal=TRUE,
-          las=2, xlab="log(Fold Change)", main=current_contrast)
-      abline(v=0)
-      # Plot the repeat types
-      types <- with(results, reorder(type, -logFC, median))
-      boxplot(logFC ~ types, data=results, outline=FALSE, horizontal=TRUE,
-          las=2, xlab="log(Fold Change)", main=current_contrast)
-      abline(v=0)
-      } 
+    if (verbose) cat("creating plots\n")
+    pdf(opt$plots)
+    plotMDS(y, main="Multidimensional Scaling Plot Of Distances Between Samples")
+    plotBCV(y, xlab="Gene abundance (Average log CPM)", main="Biological Coefficient of Variation Plot")
+    logFC <- results[, "logFC"]
+    # Plot the repeat classes
+    classes <- with(results, reorder(class, -logFC, median))
+    par(mar=c(6,10,4,1))
+    boxplot(logFC ~ classes, data=results, outline=FALSE, horizontal=TRUE,
+        las=2, xlab="log(Fold Change)", main=paste0(allcontrasts, ", by Class"))
+    abline(v=0)
+    # Plot the repeat types
+    types <- with(results, reorder(type, -logFC, median))
+    boxplot(logFC ~ types, data=results, outline=FALSE, horizontal=TRUE,
+        las=2, xlab="log(Fold Change)", main=paste0(allcontrasts, ", by Type"))
+    abline(v=0)
 }
 
 # close the plot device
