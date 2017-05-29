@@ -10,23 +10,31 @@ option_list <- list(
 parser <- OptionParser(usage = "%prog [options] file", option_list = option_list)
 args = parse_args(parser)
 
+theme_set(theme_bw())
 Table = read.delim(args$output_tab, header=T, row.names=NULL)
 
+for(i in 1:nrow(Table)){
+  if (Table$Polarity[i] == "R"){
+	Table$Nbr_reads[i]= -1 * Table$Nbr_reads[i]
+	}
+}
 
 i=1
 plots <- list()
-for (read in unique(Table$Chromosome)) {
+for (read in unique(Table$Chromosome,Table$Dataset)) {
+  
   bp <- ggplot(Table[Table$Chromosome==read,], 
   aes(x=Coordinate, y=Nbr_reads, fill=Polarity))+ 
-  geom_bar(stat="identity", color="black", position=position_dodge(),width=1)+
-  facet_grid(Chromosome ~ Dataset)+
-  theme(strip.text.x = element_text(size=8),
-  strip.text.y = element_text(size=12, face="bold"),
-  strip.background = element_rect(colour="white", fill="#CCCCFF"))+
-  geom_text(aes(label=Nbr_reads), vjust=1.2, color="white", position =position_dodge(0.9),size=2)
-  plots[[i]] <- bp+xlim(0,Table$Chrom_length[i])
+  geom_bar(stat="identity", position=position_dodge(),width=1, color= "black" )+
+  facet_wrap(Dataset~Chromosome)+
+  geom_hline(yintercept=0)+
+  geom_text(aes(label=Nbr_reads), position = position_dodge(width = 0.9),vjust=1.5, size=2) 
+  plots[[i]] <- bp+scale_x_continuous(limits=c(0,Table$Chrom_length[i]))
   i=i+1
 }
-pdf(args$output_pdf, paper="special", height=11.69, width=8.2677)
-do.call(marrangeGrob,list(grobs=plots,ncol=1,nrow=3));
-dev.off()
+
+p<-do.call(marrangeGrob,list(grobs=plots,ncol=1,nrow=3));
+ggsave(file=args$output_pdf, plot=p, height=11.69, width=8.2677)
+
+
+
