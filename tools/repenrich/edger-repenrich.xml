@@ -1,4 +1,4 @@
-<tool id="edger-repenrich" name="edgeR-repenrich" version="0.3.0">
+<tool id="edger-repenrich" name="edgeR-repenrich" version="1.0.0">
     <description>Determines differentially expressed features from RepEnrich counts</description>
     <requirements>
         <requirement type="package" version="3.16.5">bioconductor-edger</requirement>
