@@ -2,18 +2,6 @@
 
 # A command-line interface to edgeR for use with Galaxy edger-repenrich
 # written by Christophe Antoniewski drosofff@gmail.com 2017.05.30
-#
-# the output file has columns:
-# 
-#   baseMean (mean normalized count)
-#   log2FoldChange (by default a moderated LFC estimate)
-#   lfcSE (the standard error)
-#   stat (the Wald statistic)
-#   pvalue (p-value from comparison of Wald statistic to a standard Normal)
-#   padj (adjusted p-value, Benjamini Hochberg correction on genes which pass the mean count filter)
-# 
-#
-# Levels in the order A,B produces a single comparison of B vs A, to a single file 'outfile'
 
 
 # setup R error handling to go to stderr
