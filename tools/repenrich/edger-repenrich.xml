@@ -1,10 +1,10 @@
-<tool id="edger-repenrich" name="edgeR-repenrich" version="0.3.0">
+<tool id="edger-repenrich" name="edgeR-repenrich" version="1.0.0">
     <description>Determines differentially expressed features from RepEnrich counts</description>
     <requirements>
-        <requirement type="package" version="3.16.5-r3.3.1_0">bioconductor-edger</requirement>
-        <requirement type="package" version="3.30.13-r3.3.1_0">bioconductor-limma</requirement>
-        <requirement type="package" version="1.20.0-r3.3.1_0">r-getopt</requirement>
-        <requirement type="package" version="0.2.15-r3.3.1_0">r-rjson</requirement>
+        <requirement type="package" version="3.16.5">bioconductor-edger</requirement>
+        <requirement type="package" version="3.30.13">bioconductor-limma</requirement>
+        <requirement type="package" version="1.20.0">r-getopt</requirement>
+        <requirement type="package" version="0.2.15">r-rjson</requirement>
     </requirements>
     <stdio>
         <regex match="Execution halted"
