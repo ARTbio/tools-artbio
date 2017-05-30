@@ -13,11 +13,8 @@ args = parse_args(parser)
 theme_set(theme_bw())
 Table = read.delim(args$output_tab, header=T, row.names=NULL)
 
-for(i in 1:nrow(Table)){
-  if (Table$Polarity[i] == "R"){
-	Table$Nbr_reads[i]= -1 * Table$Nbr_reads[i]
-	}
-}
+Table <- within(Table, Nbr_reads[Polarity=="R"] <- (Nbr_reads[Polarity=="R"]*-1))
+
 
 i=1
 plots <- list()
