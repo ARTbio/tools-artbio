@@ -147,10 +147,6 @@ if (!is.null(opt$countsfile)) {
     write.table(normalizedAbundance, file=opt$countsfile, sep="\t", col.names=TRUE, row.names=FALSE, quote=FALSE)
 }
 
-# test
-print(counts)
-print(cpm)
-
 # Conduct fitting of the GLM
 yfit <- glmFit(y, design)
 
@@ -160,12 +156,12 @@ logfc <- matrix(nrow=dim(counts)[1],ncol=0)
 
 # Make the comparisons for the GLM
 my.contrasts <- makeContrasts(
-    paste0(opt$levelNameB,"_",opt$levelNameA," = ", opt$levelNameB, " - ", opt$levelNameA),
+    paste0(opt$levelNameA,"_",opt$levelNameB," = ", opt$levelNameA, " - ", opt$levelNameB),
     levels = design
 )
 
 # Define the contrasts used in the comparisons
-allcontrasts =  paste0(opt$levelNameB," vs ",opt$levelNameA)
+allcontrasts =  paste0(opt$levelNameA," vs ",opt$levelNameB)
 
 # Conduct a for loop that will do the fitting of the GLM for each comparison
 # Put the results into the results objects
