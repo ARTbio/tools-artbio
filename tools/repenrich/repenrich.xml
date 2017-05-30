@@ -1,4 +1,4 @@
-<tool id="repenrich" name="RepEnrich" version="1.0.0">
+<tool id="repenrich" name="RepEnrich" version="1.1.0">
     <description>Repeat Element Profiling</description>
     <requirements>
         <requirement type="package" version="1.2.0">bowtie</requirement>
@@ -36,7 +36,7 @@
     <!-- basic error handling -->
     <inputs>
     <param format="fasta" label="Reference genome in fasta format" name="genome" type="data" />
-    <param format="fastq,fastqsanger" label="Single-reads equencing dataset" name="input_fastq" type="data" help="accepted formats: fastq, fastqsanger" />
+    <param format="fastq,fastqsanger" label="Single-reads sequencing dataset" name="input_fastq" type="data" help="accepted formats: fastq, fastqsanger" />
     <param format="txt" label="RepeatMasker description file" name="repeatmasker" type="data" help="see help section"/>
     </inputs>
 

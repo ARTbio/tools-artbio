@@ -1,4 +1,4 @@
-<tool id="edger-repenrich" name="edgeR-repenrich" version="1.0.0">
+<tool id="edger-repenrich" name="edgeR-repenrich" version="1.1.0">
     <description>Determines differentially expressed features from RepEnrich counts</description>
     <requirements>
         <requirement type="package" version="3.16.5">bioconductor-edger</requirement>
@@ -98,25 +98,25 @@
             label="Output normalized counts table" />
     </inputs>
     <outputs>
-        <data format="tabular" name="edger_out" label="edgeR result file on ${on_string}">
+        <data format="tabular" name="edger_out" label="edgeR: ${factorLevel_A} compared to ${factorLevel_B}">
             <actions>
                 <action name="column_names" type="metadata" default="Tag,log2(FC),FDR,Class,Type" />
             </actions>
         </data>
-        <data format="pdf" name="plots" label="edgeR plots on ${on_string}" />
-        <data format="tabular" name="counts_out" label="Normalized counts file on ${on_string}">
+        <data format="pdf" name="plots" label="edgeR plots" />
+        <data format="tabular" name="counts_out" label="Normalized counts file">
             <filter>normCounts == True</filter>
         </data>
     </outputs>
     <tests>
         <test>
-            <param name="factorName" value="genotype"/>
-            <param name="factorLevel_A" value="wildtype"/>
-            <param name="countsFiles_A" value="353_fraction_counts.tab,354_fraction_counts.tab"/>
-            <param name="alignmentFiles_A" value="aligned_353.tab,aligned_354.tab"/>
-            <param name="factorLevel_B" value="mutant"/>
-            <param name="countsFiles_B" value="355_fraction_counts.tab,356_fraction_counts.tab"/>
-            <param name="alignmentFiles_B" value="aligned_355.tab,aligned_356.tab"/>
+            <param name="factorName" value="Genotype"/>
+            <param name="factorLevel_A" value="Mutant"/>
+            <param name="countsFiles_A" value="355_fraction_counts.tab,356_fraction_counts.tab"/>
+            <param name="alignmentFiles_A" value="aligned_355.tab,aligned_356.tab"/>
+            <param name="factorLevel_B" value="Wildtype"/>
+            <param name="countsFiles_B" value="353_fraction_counts.tab,354_fraction_counts.tab"/>
+            <param name="alignmentFiles_B" value="aligned_353.tab,aligned_354.tab"/>
             <param name="normCounts" value="True"/>
             <output name="counts_out" file="Normalized_counts_file.tab"/>
             <output name="plots" file="edgeR_plots.pdf"/>
