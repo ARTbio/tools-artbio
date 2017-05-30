@@ -35,8 +35,20 @@
     ]]></command>
     <!-- basic error handling -->
     <inputs>
+    <conditional name="seq_method">
+        <param help="Paired-end or single-read sequencing" label="Sequencing method" name="seq_method_list" type="select">
+            <option selected="True" value="single-read">Single-read sequencing</option>
+            <option value="paired-end">Paired-end sequencing</option>
+        </param>
+        <when value="paired-end">
+            <param format="fastq,fastqsanger" label="Paired-end_1 sequencing dataset" name="inputA_fastq" type="data" help="accepted formats: fastq, fastqsanger" />
+            <param format="fastq,fastqsanger" label="Paired-end_2 sequencing dataset" name="inputB_fastq" type="data" help="accepted formats: fastq, fastqsanger" />
+        </when>
+        <when value="single-read">
+            <param format="fastq,fastqsanger" label="Single-reads sequencing dataset" name="input_fastq" type="data" help="accepted formats: fastq, fastqsanger" />
+        </when>
+    </conditional>
     <param format="fasta" label="Reference genome in fasta format" name="genome" type="data" />
-    <param format="fastq,fastqsanger" label="Single-reads sequencing dataset" name="input_fastq" type="data" help="accepted formats: fastq, fastqsanger" />
     <param format="txt" label="RepeatMasker description file" name="repeatmasker" type="data" help="see help section"/>
     </inputs>
 
