@@ -27,8 +27,8 @@
             echo \$((\$TOTAL-\$NONALIGNED)) > bowtie_aligned.numb &&
         #else:
             bowtie $baseReference -p \${GALAXY_SLOTS:-4} -t -m 1 -S --max ${input_base}_multimap.fastq -1 ${input_base}.fastq -2 ${input_base}_2.fastq ${input_base}_unique.sam 2>bowtie_alignments.txt &&
-            TOTAL=\$(grep 'reads with at least one' bowtie_alignments.txt | cut -d ' ' -f 4) &&
-            NONALIGNED=\$(grep 'reads processed:' bowtie_alignments.txt | cut -d ' ' -f 7) &&
+            TOTAL=\$(grep 'reads processed:' bowtie_alignments.txt | cut -d ' ' -f 4) &&
+            NONALIGNED=\$(grep 'reads that failed to align:' bowtie_alignments.txt | cut -d ' ' -f 7) &&
             echo \$((\$TOTAL-\$NONALIGNED)) > bowtie_aligned.numb &&
         #end if
         samtools view -bS ${input_base}_unique.sam > ${input_base}_unique.bam &&
