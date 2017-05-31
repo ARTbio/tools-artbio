@@ -111,7 +111,7 @@ Reads are mapped to the genome using the Bowtie1 aligner. Reads mapping uniquely
 
 *Reference genome* : reference genome in fasta format
 
-*Sequencing dataset*: Single-reads sequencing dataset. Paired-end sequencing dataset in not implemented yet
+*Sequencing dataset*: Single-reads or Paired-end sequencing datasets in fastq format.
 
 *RepeatMasker description file*: a txt repeatmasker file which can be downloaded from http://www.repeatmasker.org/genomicDatasets/RMGenomicDatasets.html
 
