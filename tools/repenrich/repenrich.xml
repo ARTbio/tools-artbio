@@ -95,7 +95,7 @@
             <output name="bowtie_alignments" file="paired-aligned_reads.tab" ftype="tabular"/>
             <output name="class_fraction_counts" file="Samp-paired_class_fraction_counts.tab" ftype="tabular"/>
             <output name="family_fraction_counts" file="Samp-paired_family_fraction_counts.tab" ftype="tabular"/>
-            <output name="fraction_counts" file="Samp-paired_fraction_counts.tabular" ftype="tab"/>
+            <output name="fraction_counts" file="Samp-paired_fraction_counts.tab" ftype="tabular"/>
         </test>
   </tests>
 
