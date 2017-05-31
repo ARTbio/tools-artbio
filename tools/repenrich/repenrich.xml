@@ -73,8 +73,6 @@
         </data>
         <data format="tabular" name="fraction_counts" label="RepEnrich on ${on_string}: fraction counts" from_work_dir="fraction_counts.tabular">
         </data>
-         <data format="tabular" name="bowtieoutput" label="bowtie aligments" from_work_dir="bowtie_alignments.txt">
-         </data>
    </outputs>
 
     <tests>
