@@ -1,4 +1,4 @@
-<tool id="repenrich" name="RepEnrich" version="1.1.0">
+<tool id="repenrich" name="RepEnrich" version="1.3.0">
     <description>Repeat Element Profiling</description>
     <requirements>
         <requirement type="package" version="1.2.0">bowtie</requirement>
@@ -11,32 +11,56 @@
     </stdio>
     <command detect_errors="exit_code"><![CDATA[
         #import re
-        #set input_base = re.sub('\.fastq$', '', str($input_fastq.element_identifier))
-        #set baseReference = re.sub('[^\w\-]', '_', str($genome.element_identifier))
-        #set baseReference = re.sub('.fa$', '', $baseReference)
+        #set input_base = 'Sample'
+        #set baseReference = 'Genome'
         ln -f -s '$genome' '${baseReference}.fa' &&
         ln -f -s '$input_fastq' '${input_base}.fastq' &&
+        #if $seq_method.seq_method_list == "paired-end":
+            ln -f -s '$input2_fastq' '${input_base}_2.fastq' &&
+        #end if
         bowtie-build '$genome' ${baseReference} &&
         python $__tool_directory__/RepEnrich_setup.py $repeatmasker ${baseReference}.fa setup_folder_${baseReference} &&
-        bowtie $baseReference -p \${GALAXY_SLOTS:-4} -t -m 1 -S --max ${input_base}_multimap.fastq ${input_base}.fastq ${input_base}_unique.sam 2>bowtie_alignments.txt &&
-        ALIGNED=\$(grep 'reads with at least one' bowtie_alignments.txt | cut -d ' ' -f 9) &&
-        NONALIGNED=\$(grep 'reads that failed to align:' bowtie_alignments.txt | cut -d ' ' -f 7) &&
-        echo \$((\$ALIGNED-\$NONALIGNED)) > bowtie_aligned.numb &&
+        #if $seq_method.seq_method_list == "single-read":
+            bowtie $baseReference -p \${GALAXY_SLOTS:-4} -t -m 1 -S --max ${input_base}_multimap.fastq ${input_base}.fastq ${input_base}_unique.sam 2>bowtie_alignments.txt &&
+            TOTAL=\$(grep 'reads processed:' bowtie_alignments.txt | cut -d ' ' -f 4) &&
+            NONALIGNED=\$(grep 'reads that failed to align:' bowtie_alignments.txt | cut -d ' ' -f 7) &&
+            echo \$((\$TOTAL-\$NONALIGNED)) > bowtie_aligned.numb &&
+        #else:
+            bowtie $baseReference -p \${GALAXY_SLOTS:-4} -t -m 1 -S --max ${input_base}_multimap.fastq -1 ${input_base}.fastq -2 ${input_base}_2.fastq ${input_base}_unique.sam 2>bowtie_alignments.txt &&
+            TOTAL=\$(grep 'reads processed:' bowtie_alignments.txt | cut -d ' ' -f 4) &&
+            NONALIGNED=\$(grep 'reads that failed to align:' bowtie_alignments.txt | cut -d ' ' -f 7) &&
+            echo \$((\$TOTAL-\$NONALIGNED)) > bowtie_aligned.numb &&
+        #end if
         samtools view -bS ${input_base}_unique.sam > ${input_base}_unique.bam &&
         samtools sort ${input_base}_unique.bam ${input_base}_unique_sorted &&
         mv ${input_base}_unique_sorted.bam ${input_base}_unique.bam &&
         samtools index ${input_base}_unique.bam &&
         rm ${input_base}_unique.sam &&
-        python $__tool_directory__/RepEnrich.py $repeatmasker ${input_base} ${input_base} setup_folder_${baseReference} ${input_base}_multimap.fastq ${input_base}_unique.bam --cpus "\${GALAXY_SLOTS:-4}" &&
+        #if $seq_method.seq_method_list == "single-read":
+            python $__tool_directory__/RepEnrich.py $repeatmasker ${input_base} ${input_base} setup_folder_${baseReference} ${input_base}_multimap.fastq ${input_base}_unique.bam --cpus "\${GALAXY_SLOTS:-4}" &&
+        #else:
+            python $__tool_directory__/RepEnrich.py $repeatmasker ${input_base} ${input_base} setup_folder_${baseReference} ${input_base}_multimap_1.fastq --fastqfile2 ${input_base}_multimap_2.fastq ${input_base}_unique.bam --cpus "\${GALAXY_SLOTS:-4}" --pairedend TRUE &&
+        #end if
         cp $input_base/${input_base}_class_fraction_counts.txt class_fraction_counts.tabular &&
         cp $input_base/${input_base}_family_fraction_counts.txt family_fraction_counts.tabular &&
         cp $input_base/${input_base}_fraction_counts.txt fraction_counts.tabular
-
     ]]></command>
     <!-- basic error handling -->
     <inputs>
+    <conditional name="seq_method">
+        <param help="Paired-end or single-read sequencing" label="Sequencing method" name="seq_method_list" type="select">
+            <option selected="True" value="single-read">Single-read sequencing</option>
+            <option value="paired-end">Paired-end sequencing</option>
+        </param>
+        <when value="single-read">
+            <param format="fastq,fastqsanger" label="Single-reads" name="input_fastq" type="data" help="accepted formats: fastq, fastqsanger" />
+        </when>
+        <when value="paired-end">
+            <param format="fastq,fastqsanger" label="1st paired-end sequencing dataset" name="input_fastq" type="data" help="accepted formats: fastq, fastqsanger" />
+            <param format="fastq,fastqsanger" label="2nd paired-end sequencing dataset" name="input2_fastq" type="data" help="accepted formats: fastq, fastqsanger" />
+        </when>
+    </conditional>
     <param format="fasta" label="Reference genome in fasta format" name="genome" type="data" />
-    <param format="fastq,fastqsanger" label="Single-reads sequencing dataset" name="input_fastq" type="data" help="accepted formats: fastq, fastqsanger" />
     <param format="txt" label="RepeatMasker description file" name="repeatmasker" type="data" help="see help section"/>
     </inputs>
 
@@ -49,10 +73,11 @@
         </data>
         <data format="tabular" name="fraction_counts" label="RepEnrich on ${on_string}: fraction counts" from_work_dir="fraction_counts.tabular">
         </data>
-    </outputs>
+   </outputs>
 
     <tests>
         <test>
+            <param name="seq_method_list" value="single-read"/>
             <param name="input_fastq" value="Samp.fastq" ftype="fastq"/>
             <param name="genome" value="chrM.fa" ftype="fasta"/>
             <param name="repeatmasker" value="chrM_repeatmasker.txt" ftype="txt"/>
@@ -61,7 +86,18 @@
             <output name="family_fraction_counts" file="Samp_family_fraction_counts.tabular" ftype="tabular"/>
             <output name="fraction_counts" file="Samp_fraction_counts.tabular" ftype="tabular"/>
         </test>
-   </tests>
+         <test>
+            <param name="seq_method_list" value="paired-end"/>
+            <param name="input_fastq" value="Samp_L.fastq" ftype="fastq"/>
+            <param name="input2_fastq" value="Samp_R.fastq" ftype="fastq"/>
+            <param name="genome" value="chrM.fa" ftype="fasta"/>
+            <param name="repeatmasker" value="chrM_repeatmasker.txt" ftype="txt"/>
+            <output name="bowtie_alignments" file="paired-aligned_reads.tab" ftype="tabular"/>
+            <output name="class_fraction_counts" file="Samp-paired_class_fraction_counts.tab" ftype="tabular"/>
+            <output name="family_fraction_counts" file="Samp-paired_family_fraction_counts.tab" ftype="tabular"/>
+            <output name="fraction_counts" file="Samp-paired_fraction_counts.tab" ftype="tabular"/>
+        </test>
+  </tests>
 
     <help>
 
