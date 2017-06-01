@@ -21,17 +21,20 @@ plots <- list()
 for (read in unique(Table$Chromosome,Table$Dataset)) {
   
   bp <- ggplot(Table[Table$Chromosome==read,], 
-  aes(x=Coordinate, y=Nbr_reads, fill=Polarity))+ 
-  geom_bar(stat="identity", position=position_dodge(),width=1, color= "black" )+
-  facet_wrap(Dataset~Chromosome)+
-  geom_hline(yintercept=0)+
-  geom_text(aes(label=Nbr_reads), position = position_dodge(width = 0.9),vjust=1.5, size=2) 
+  aes(x=Coordinate, y=Nbr_reads, color=Polarity))+ 
+  geom_segment(aes(y = 0, 
+                   x = Coordinate, 
+                   yend = Nbr_reads, 
+                   xend = Coordinate), size=1)+
+  facet_wrap(Dataset~Chromosome, scales="free")+
+  geom_hline(yintercept=0)
+  
   plots[[i]] <- bp+scale_x_continuous(limits=c(0,Table$Chrom_length[i]))
   i=i+1
 }
 
-p<-do.call(marrangeGrob,list(grobs=plots,ncol=1,nrow=3));
-ggsave(file=args$output_pdf, plot=p, height=11.69, width=8.2677)
+p<-do.call(marrangeGrob,list(grobs=plots,ncol=1,nrow=4,top=NULL));
+ggsave(file=args$output_pdf, plot=p, height=11.69, width=8)
 
 
 
