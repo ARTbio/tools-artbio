@@ -1,14 +1,15 @@
 # .shed.yml supporting automatic pushes.
-owner: chaimae_eljaouhari
+owner: artbio
 name: small_rna_map
 description: generate tabular file from BAM file
 long_description: |
   Take on BAM file as input and produce a tabular file 
 
 categories:
-  - Small_rna
-  - BAM
+  - RNA
+  - SAM
   - Graphics
+  - Next Gen Mappers
 
 homepage_url: http://artbio.fr
 remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/small_rna_map
