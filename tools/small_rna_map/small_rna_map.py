@@ -63,15 +63,16 @@ def filename(infile):
 
 
 def main(infile, output):
-    with pysam.AlignmentFile(infile,"rb") as infile:
-        with open(output,"w") as outfile:
-            outfile.write("Dataset" + "\t" + "Chromosome"+ "\t" + "Chrom_length" + "\t" + "Coordinate" + "\t" + "Nbr_reads" + "\t" + "Polarity" + "\t" + "Max" + "\t" + "Mean" + "\t" + "Median" + "\n")
-            ref_coord = Ref_coord_pol(infile)
-            ref_length = Ref_length(infile)
-            tabulation = "\t"
-            for read in ref_coord:
-                table = (str(filename(infile)), str(read[0]), str(ref_length[str(read[0])]), str(read[1]), str(ref_coord[read][0]), str(read[2]), str(calcul_stat(ref_coord,read[0])[0]), str(calcul_stat(ref_coord,read[0])[1]), str(numpy.median(ref_coord[read][1])))
-                outfile.write(tabulation.join(table) + "\n")
+   with open(output,"w") as outfile:
+       outfile.write("Dataset" + "\t" + "Chromosome"+ "\t" + "Chrom_length" + "\t" + "Coordinate" + "\t" + "Nbr_reads" + "\t" + "Polarity" + "\t" + "Max" + "\t" + "Mean" + "\t" + "Median" + "\n")
+       for bamfile in infile:
+            with pysam.AlignmentFile(bamfile,"rb") as bamfile:
+                ref_coord = Ref_coord_pol(bamfile)
+                ref_length = Ref_length(bamfile)
+                tabulation = "\t"
+                for read in ref_coord:
+                    table = (str(filename(bamfile)), str(read[0]), str(ref_length[str(read[0])]), str(read[1]), str(ref_coord[read][0]), str(read[2]), str(calcul_stat(ref_coord,read[0])[0]), str(calcul_stat(ref_coord,read[0])[1]), str(numpy.median(ref_coord[read][1])))
+                    outfile.write(tabulation.join(table) + "\n")
 
 
 if __name__ == "__main__":
