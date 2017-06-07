@@ -8,7 +8,7 @@ import collections
 
 def Parser():
     the_parser = argparse.ArgumentParser()
-    the_parser.add_argument('--input', action="store", type=str, help="input BAM file")
+    the_parser.add_argument('--input', dest="input", required=True, nargs='+', help='input BAM files')
     the_parser.add_argument('--output', action="store", type=str, help="output tabular file")
     args = the_parser.parse_args()
     return args

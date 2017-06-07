@@ -11,12 +11,22 @@
       <exit_code range="1:" level="fatal" description="Tool exception" />
   </stdio>
   <command detect_errors="exit_code"><![CDATA[
-      python '$__tool_directory__'/small_rna_map.py --input '$input' --output '$output_tab'
+      python '$__tool_directory__'/small_rna_map.py 
+      --input 
+      #for $i in $input.series
+            '$i.input'
+      #end for 
+      --output '$output_tab'
       ; Rscript '$__tool_directory__'/small_rna_map.r --output_tab '$output_tab' --output_pdf '$output_pdf'
   ]]></command>
-  <inputs>
-       <param name="input" type="data" format="bam" label="BAM file"/>
-   </inputs>
+ <inputs>
+   <repeat name="series" title="Add alignment files">
+       <param name="input" type="data" label="Select multiple alignments to parse" format="bam">
+                    
+       </param>
+                    
+   </repeat>    
+ </inputs>
 
  <outputs>
    <data format="tabular" name="output_tab" label="tabular file" />
@@ -25,7 +35,7 @@
 
     <tests>
         <test>
-            <param ftype="bam" name="input" value="input.bam" />
+            <param name="input" value="input.bam" ftype="bam"/>
             <output file="output.tab" name="output_tab" />
             <output file="output.pdf" name="output_pdf" />
         </test>
