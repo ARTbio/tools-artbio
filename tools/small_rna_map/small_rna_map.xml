@@ -13,18 +13,14 @@
   <command detect_errors="exit_code"><![CDATA[
       python '$__tool_directory__'/small_rna_map.py 
       --input 
-      #for $i in $input.series
-            '$i.input'
+      #for $file in $input
+            '$file'
       #end for 
       --output '$output_tab'
       ; Rscript '$__tool_directory__'/small_rna_map.r --output_tab '$output_tab' --output_pdf '$output_pdf'
   ]]></command>
  <inputs>
-   <repeat name="series" title="Add alignment files">
-       <param name="input" type="data" format="bam" label="Select multiple alignments to parse" multiple="True"/>            
-       </param>
-                    
-   </repeat>    
+   <param name="input" type="data" format="bam" label="Select multiple alignments to parse" multiple="True"/>                
  </inputs>
 
  <outputs>
