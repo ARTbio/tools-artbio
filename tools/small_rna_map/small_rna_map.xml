@@ -21,8 +21,7 @@
   ]]></command>
  <inputs>
    <repeat name="series" title="Add alignment files">
-       <param name="input" type="data" label="Select multiple alignments to parse" format="bam">
-                    
+       <param name="input" type="data" format="bam" label="Select multiple alignments to parse" multiple="True"/>            
        </param>
                     
    </repeat>    
