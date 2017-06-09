@@ -1,0 +1,41 @@
+<tool id="small_rna_map" name="small rna map" version="0.0.1">
+  <description></description>
+  <requirements>
+        <requirement type="package" version="3.2.3">R</requirement>
+        <requirement type="package" version="1.2.0=r3.2.3">r-optparse</requirement>
+        <requirement type="package" version="2.0.0=r3.2.3">r-ggplot2</requirement>
+        <requirement type="package" version="2.2.1=r3.2.3">r-gridextra</requirement>
+  </requirements>
+  <command><![CDATA[
+      python '$__tool_directory__'/small_rna_map.py --input '$input' --output '$output_tab'
+      ; Rscript '$__tool_directory__'/small_rna_map.r --output_tab '$output_tab' --output_pdf '$output_pdf'
+  ]]></command>
+  <inputs>
+       <param name="input" type="data" format="bam" label="BAM file"/>
+   </inputs>
+
+ <outputs>
+   <data format="tabular" name="output_tab" label="tabular file" />
+   <data format="pdf" name="output_pdf" label="PDF file" />
+</outputs>
+
+    <tests>
+        <test>
+            <param ftype="bam" name="input" value="input.bam" />
+            <output ftype="tabular" file="output.tab" name="output_tab" />
+            <output file="output.pdf" name="output_pdf" />
+        </test>
+    </tests>
+
+
+<help>
+
+**What it does**
+
+Generate from BAM file, a tabular file containing 9 columns:
+Dataset	Chromosome	Chrom_length	Coordinate	Nbr-reads	Polarity	Max	Mean	Median	
+
+</help>
+
+</tool>
+
