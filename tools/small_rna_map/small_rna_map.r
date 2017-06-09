@@ -44,5 +44,5 @@ plot.list <- by(data     = Table,
                 })
 
 multi.plot <- marrangeGrob(grobs = plot.list,nrow  = 4, ncol = 1, top=NULL);
-ggsave(args$output_pdf, device="pdf", plot=multi.plot, height=11.69, width=8)
+ggsave(args$output_pdf, device="pdf", plot=multi.plot, height=11.69, width=8.2)
 
