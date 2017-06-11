@@ -3,7 +3,6 @@ deprecated/deseq1_no_replicate
 deprecated/deseq1_with_replicates
 deprecated/deseq2
 deprecated/goseq_1_22_0
-tools/msp_cap3
 tools/patser
 tools/qr_coder
 unstable/deprecated/sRbowtieFeatures/FeaturesParser.xml
