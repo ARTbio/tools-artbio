@@ -1,9 +1,15 @@
-tools/goseq_1_22_0/
 tools/msp_cap3/cap3.xml
-tools/msp_oases/oases_optimiser.xml
 tools/patser/patser-v3e.xml
 tools/qr_coder/qr_coder.xml
+deprecated/blastn_to_scaffold/blastn_to_scaffold.xml
+deprecated/deseq1_no_replicate/simpleDESeq.xml
+deprecated/deseq1_with_replicates/replicateDESeq.xml
+deprecated/deseq2/deseq2.xml
+deprecated/goseq_1_22_0/goseq.xml
 unstable/deprecated/sRbowtieFeatures/FeaturesParser.xml
+unstable/development/deseq_normalization/deseq_normalization.xml
+unstable/development/generate_sliding_windows/generate_sliding_windows.xml
+unstable/development/get_sra_info/get_sra_info.xml
 unstable/development/MirDeepStar/MirDeepStar.xml
 unstable/development/meme-default/meme.xml
 unstable/development/msp_hmmer/hmmer.xml
