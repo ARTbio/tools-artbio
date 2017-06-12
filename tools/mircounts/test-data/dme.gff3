@@ -1,0 +1,23 @@
+##gff-version 3
+##date 2014-6-22
+#
+# Chromosomal coordinates of Drosophila melanogaster microRNAs
+# microRNAs:               miRBase v21
+# genome-build-id:         BDGP5.0
+#
+# Hairpin precursor sequences have type "miRNA_primary_transcript". 
+# Note, these sequences do not represent the full primary transcript, 
+# rather a predicted stem-loop portion that includes the precursor 
+# miRNA. Mature sequences have type "miRNA".
+#
+2LHet	.	miRNA_primary_transcript	27336	27410	.	+	.	ID=MI0011579;Alias=MI0011579;Name=dme-mir-2490
+2LHet	.	miRNA	27344	27366	.	+	.	ID=MIMAT0012197;Alias=MIMAT0012197;Name=dme-miR-2490-5p;Derives_from=MI0011579
+2LHet	.	miRNA	27382	27402	.	+	.	ID=MIMAT0020911;Alias=MIMAT0020911;Name=dme-miR-2490-3p;Derives_from=MI0011579
+3R	.	miRNA_primary_transcript	121091	121178	.	+	.	ID=MI0005853;Alias=MI0005853;Name=dme-mir-929
+3R	.	miRNA	121142	121162	.	+	.	ID=MIMAT0005511;Alias=MIMAT0005511;Name=dme-miR-929-3p;Derives_from=MI0005853
+3R	.	miRNA	121107	121128	.	+	.	ID=MIMAT0020892;Alias=MIMAT0020892;Name=dme-miR-929-5p;Derives_from=MI0005853
+3R	.	miRNA_primary_transcript	574386	574445	.	-	.	ID=MI0028933;Alias=MI0028933;Name=dme-mir-9384
+3R	.	miRNA	574424	574445	.	-	.	ID=MIMAT0035231;Alias=MIMAT0035231;Name=dme-miR-9384-5p;Derives_from=MI0028933
+3R	.	miRNA	574387	574408	.	-	.	ID=MIMAT0035232;Alias=MIMAT0035232;Name=dme-miR-9384-3p;Derives_from=MI0028933
+X	.	miRNA_primary_transcript	29772	29889	.	+	.	ID=MI0017697;Alias=MI0017697;Name=dme-mir-4915
+X	.	miRNA	29772	29796	.	+	.	ID=MIMAT0020508;Alias=MIMAT0020508;Name=dme-miR-4915-5p;Derives_from=MI0017697
