@@ -8,7 +8,6 @@
     </requirements>
     <command><![CDATA[
         ## To be refactored with guidelines in https://github.com/ARTbio/tools-artbio/issues/140
-        ##
         ## filter index.fa for the organism. Wow... realize that this is a single file that can be wget ! ftp://mirbase.org/pub/mirbase/CURRENT/hairpin.fa.gz
         ## Change the header for a single word header ex: >cel-let-7
         ## convert U -> A in hairpin.fa 
@@ -16,9 +15,14 @@
         ## extract a list of key --> organism from miRBase
         ## use this key list to download GFF3 organism (ftp://mirbase.org/pub/mirbase/CURRENT/genomes/aae.gff3)
         ##                                                                                            ***
+        ## tar -xvf GFFs_v21.tar.gz mirbase_gff/zma.gff3 
         ## bowtie align !
         ## sort bam ? expose bam in the output ? expose sam converted bam in the output ?
-        ## bowtie parse !
+        ## bowtie parse :
+        ##     Be careful:
+        ##     Bam: 0-based; SAM: 1-based; GFF: 1-based
+        ##     also, translate mature mirs into hairpin-based coordinates (now genome-based coordinates)
+        ##     for hairpin, no worries, it will be self-consistent
         python '$__tool_directory__'/MirParser.py
 	    #if $refGenomeSource.genomeSource == "history":
             '$refGenomeSource.ownFile' ## index source sys.arg[1]
@@ -47,8 +51,16 @@
         ## ! refactoring
     ]]></command>
     <inputs>
+        <param name="genomeKey" type="select" label="Choose Organism">
+            <options from_file="genomes_v21_list.txt">
+                <column name="name" index="1"/>
+                <column name="value" index="0"/>
+            </options>
+        </param>
+        <!-- actually, the genomeKey should allow picking programatically both corresponding hairpin.fa and GFF3 from the tarball in tool-data
         <param label="miRbase hairpin.fa reference file" name="fasta_hairpins" type="data" format="fasta" help="download from http://www.mirbase.org/ftp.shtml"/>
         <param label="miRbase GFF3 guide" name="GFF3" type="data" format="gff3" help="download from http://www.mirbase.org/ftp.shtml" />
+        -->
         <param label="Select fastq files to align" multiple="true" name="input_list" type="data" format="fastq,fastqsanger" help="Note that sequences reads must be clipped from their adapter"\>
         <conditional name="plotting">
             <param label="Additional miRNA coverage graphs" name="plottingOption" type="select">
