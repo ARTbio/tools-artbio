@@ -2,11 +2,12 @@
     <description> Counts miRNA alignments from small RNA sequence data</description>
     <requirements>
         <requirement type="package" version="1.1.2">bowtie</requirement>
+        <requirement type="package" version="0.1.19">samtools</requirement>
         <requirement type="package" version="1.11.2=py27_0">numpy</requirement>
         <requirement type="package" version="0.11.2.1=py27_0">pysam</requirement>
         <requirement type="package" version="0.20_33=r3.3.1_0">r-lattice</requirement>
     </requirements>
-    <command><![CDATA[
+    <command detect_errors="exit_code"><![CDATA[
         ## To be refactored with guidelines in https://github.com/ARTbio/tools-artbio/issues/140
         wget ftp://mirbase.org/pub/mirbase/CURRENT/genomes/${genomeKey}.gff3 && ## download gff3 specified by the variable genomeKey
         wget ftp://mirbase.org/pub/mirbase/CURRENT/hairpin.fa.gz &&
@@ -19,44 +20,41 @@
         grep ">${genomeKey}-" hairpin.fa > hairpin.fa.tmp && mv hairpin.fa hairpin.fa.bak6 && mv hairpin.fa.tmp hairpin.fa && ## filter tabular hairpins with proper genomeKey
         tr '\t' '\n' < hairpin.fa > hairpin.fa.tmp && mv hairpin.fa hairpin.fa.bak7 && mv hairpin.fa.tmp hairpin.fa && ## terminate parsing by regenerating fasta format, bowtie-build ready
         rm *.bak* && ## cleaning job directory
-        bowtie index haipin.fa hairpin &&
-        
-        #for $file in $input_list
-            bowtie -v $v -M 1 --best --strata --norc -p \${GALAXY_SLOTS:-4} --sam hairpin -q $file output  |samtools view -bS - > ${file}.bam && ## see this. For multiple entries, a loop is required
-        #end for 
-
+        bowtie-build hairpin.fa hairpin &&
+        bowtie -v $v -M 1 --best --strata --norc -p \${GALAXY_SLOTS:-4} --sam hairpin -q $input output.sam &&
+        samtools view -bS output.sam > $output ## see this. For multiple entries, a loop is required
         ## sort bam ? expose bam in the output ? expose sam converted bam in the output ?
         ## bowtie parse :
         ##     Be careful:
         ##     Bam: 0-based; SAM: 1-based; GFF: 1-based
         ##     also, translate mature mirs into hairpin-based coordinates (now genome-based coordinates)
         ##     for hairpin, no worries, it will be self-consistent
-        python '$__tool_directory__'/MirParser.py
-	    #if $refGenomeSource.genomeSource == "history":
-            '$refGenomeSource.ownFile' ## index source sys.arg[1]
-            --do_not_extract_index  ## sys.argv[2]
-        #else:
-		    #silent reference = filter( lambda x: str( x[0] ) == str( $input_list.dbkey ), $__app__.tool_data_tables[ 'bowtie_indexes' ].get_fields() )[0][-1]
-		    '$reference'   ## sys.argv[1]
-		    --extract_index  ## sys.argv[2]
-        #end if
-		'$output1' ## for pre-mirs  ## sys.argv[3]
-		'$output2' ## for mature mirs  ## sys.argv[4]
-		'$GFF3'    ## sys.argv[5]
-		#if $plotting.plottingOption == "yes":
-		    '$lattice_dataframe'   ## sys.argv[6]
-		    '$plotCode'   ## sys.argv[7]
-		    '$latticePDF' ## sys.argv[8]
-		#else:
-		    "dummy_dataframe_path"   ## sys.argv[6]
-            "dummy_plotCode"   ## sys.argv[7]
-		    "dummy_latticePDF" ## sys.argv[8]
-		#end if
-		#for $i in $refGenomeSource.input_list
-    	    '$i' '$i.ext' "$i.name" ## sys.argv[9,10,11] modulo 3
-		#end for
-        #silent plottingoption = $plotting.plottingOption
-        ## ! refactoring
+##        python '$__tool_directory__'/MirParser.py
+##	    #if $refGenomeSource.genomeSource == "history":
+##            '$refGenomeSource.ownFile' ## index source sys.arg[1]
+##            --do_not_extract_index  ## sys.argv[2]
+##        #else:
+##		    #silent reference = filter( lambda x: str( x[0] ) == str( $input_list.dbkey ), $__app__.tool_data_tables[ 'bowtie_indexes' ].get_fields() )[0][-1]
+##		    '$reference'   ## sys.argv[1]
+##		    --extract_index  ## sys.argv[2]
+##        #end if
+##		'$output1' ## for pre-mirs  ## sys.argv[3]
+##		'$output2' ## for mature mirs  ## sys.argv[4]
+##		'$GFF3'    ## sys.argv[5]
+##		#if $plotting.plottingOption == "yes":
+##		    '$lattice_dataframe'   ## sys.argv[6]
+##		    '$plotCode'   ## sys.argv[7]
+##		    '$latticePDF' ## sys.argv[8]
+##		#else:
+##		    "dummy_dataframe_path"   ## sys.argv[6]
+##            "dummy_plotCode"   ## sys.argv[7]
+##		    "dummy_latticePDF" ## sys.argv[8]
+##		#end if
+##		#for $i in $refGenomeSource.input_list
+##    	    '$i' '$i.ext' "$i.name" ## sys.argv[9,10,11] modulo 3
+##		#end for
+##        #silent plottingoption = $plotting.plottingOption
+##        ## ! refactoring
     ]]></command>
     <inputs>
         <param name="genomeKey" type="select" label="Choose Organism">
@@ -71,7 +69,7 @@
             <option value="2">2</option>
             <option value="3">3</option>
         </param>
-        <param label="Select fastq files to align" multiple="true" name="input_list" type="data" format="fastq,fastqsanger" help="Note that sequences reads must be clipped from their adapter" />
+        <param label="Select fastq files to align" multiple="false" name="input" type="data" format="fastq,fastqsanger" help="Note that sequences reads must be clipped from their adapter" />
         <conditional name="plotting">
             <param label="Additional miRNA coverage graphs" name="plottingOption" type="select">
                 <option selected="True" value="no">no</option>
@@ -86,6 +84,8 @@
         </conditional>
     </inputs>
     <outputs>
+        <data format="bam" label="bam alignment" name="output" />
+        <!--
         <data format="tabular" label="Premirs Count  Lists" name="output1" />
         <data format="tabular" label="Mature Mirs Count  Lists" name="output2" />
         <data format="tabular" label="Lattice Dataframe" name="lattice_dataframe">
@@ -94,8 +94,10 @@
         <data format="pdf" label="Mir coverage" name="latticePDF">
             <filter>plotting['plottingOption'] == "yes"</filter>
         </data>
+        -->
     </outputs>
     <tests>
+    <!--
         <test>
             <param name="genomeSource" value="history"/>
             <param name="ownFile" value="Dmel_r5.49_short.fa" ftype="fasta"/>
@@ -107,6 +109,7 @@
             <output name="lattice_dataframe" file="lattice_dataframe.tab" ftype="tabular"/>
             <output name="latticePDF" file="latticePDF.pdf" ftype="pdf"/>
         </test>
+    -->
     </tests>
     <configfiles>
         <configfile name="plotCode">
