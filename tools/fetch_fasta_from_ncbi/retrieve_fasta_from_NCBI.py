@@ -227,7 +227,7 @@ class Eutils:
             if (counter > 500):
                 serverTransaction = True
         if (counter > 500):
-            raise QueryException({"message":"500 Server Transaction Trials attempted for this batch. Guiving up."})
+            raise QueryException({"message":"500 Server Transaction Trials attempted for this batch. Aborting."})
         fasta = self.sanitiser(self.dbname, fasta) 
         time.sleep(0.1)
         return fasta
