@@ -21,7 +21,7 @@ LOG_LEVELS = ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']
 """ Get options """
 parser = optparse.OptionParser(description='Count miRNAs')
 parser.add_option('--index_source', type='string', dest='IndexSource', help='Fastq file of clipped sequence reads', metavar='FILE')
-
+parser.add_option('--alignment', type='string', dest='Alignment', help='Alignment tabular or sam file')
 parser.add_option('--do_not_extract_index', action='store_false', dest='ExtractionDirective', default=True, help='')
 parser.add_option('--pre_mirs_output', type='string', dest='OutputPre_mirs', help='GFF3 describing the mature miRs', metavar='FILE')
 parser.add_option('--mature_mirs_output', type='string', dest='OutputMature_Mirs', help='Reference genome', metavar='FILE')
