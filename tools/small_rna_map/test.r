@@ -1,7 +1,10 @@
 # Table is the data frame
+
 library("ggplot2")
 library("gridExtra")
-library(ggplus)
+library("RColorBrewer")
+library("gtable")
+library("grid")
 
 theme_set(theme_bw())
 #Table=read.delim(your_input, header=T, row.names=NULL)
