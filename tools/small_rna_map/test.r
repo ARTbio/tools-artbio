@@ -9,8 +9,13 @@ library("grid")
 theme_set(theme_bw())
 #Table=read.delim(your_input, header=T, row.names=NULL)
 Table <- within(Table[1:27,], Nbr_reads[Polarity=="R"] <- (Nbr_reads[Polarity=="R"]*-1)) 
+
+myColors <- brewer.pal(3,"Set1")
+names(myColors) <- levels(Table$Polarity)
+colScale <- scale_colour_manual(name = "Polarity",values = myColors)
+
 p1 <- ggplot(Table, aes(x=Coordinate, y=Nbr_reads, colour=Polarity)) +
-  colScale+
+  colScale +
   geom_segment(aes(y = 0, 
                    x = Coordinate, 
                    yend = Nbr_reads, 
@@ -22,8 +27,8 @@ p1 <- ggplot(Table, aes(x=Coordinate, y=Nbr_reads, colour=Polarity)) +
 			 x = 0,
 			 yend=Nbr_reads,
 			 xend=Chrom_length), alpha=0
-		   )+
-  facet_wrap(Dataset~Chromosome, scales="free")+
+		   ) +
+  facet_wrap(Dataset~Chromosome, scales="free") +
   geom_hline(yintercept=0, size=0.3)
 
 p2 <- ggplot(Table, aes(x = Coordinate, y = Median)) +
