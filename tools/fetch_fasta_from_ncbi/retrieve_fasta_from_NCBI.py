@@ -32,6 +32,10 @@ import httplib
 import re
 
 
+class QueryException(Exception):
+    pass
+
+
 class Eutils:
 
     def __init__(self, options, logger):
@@ -62,9 +66,14 @@ class Eutils:
         # If no UIDs are found exit script
         if self.count > 0:
             self.get_uids_list()
-            self.get_sequences()
+            try:
+                self.get_sequences()
+            except QueryException as e:
+                self.logger.error("Exiting script.")
+                raise e
         else:
-            self.logger.info("No UIDs were found. Exiting script.")
+            self.logger.error("No UIDs were found. Exiting script.")
+            raise Exception("")
 
     def get_count_value(self):
         """
@@ -195,6 +204,14 @@ class Eutils:
                 if ( (response_code != 200) or ("Resource temporarily unavailable" in fasta)
                     or ("Error" in fasta) or (not fasta.startswith(">") ) ):
                     serverTransaction = False
+                    if ( response_code != 200 ):
+                        self.logger.info("urlopen error: Response code is not 200")
+                    elif ( "Resource temporarily unavailable" in fasta ):
+                        self.logger.info("Ressource temporarily unavailable")
+                    elif ( "Error" in fasta ):
+                        self.logger.info("Error in fasta")
+                    else:
+                        self.logger.info("Fasta doesn't start with '>'")
                 else:
                     serverTransaction = True
             except urllib2.HTTPError as e:
@@ -207,6 +224,10 @@ class Eutils:
             except httplib.IncompleteRead as e:
                 serverTransaction = False
                 self.logger.info("IncompleteRead error:  %s" % ( e.partial ) )
+            if (counter > 500):
+                serverTransaction = True
+        if (counter > 500):
+            raise QueryException({"message":"500 Server Transaction Trials attempted for this batch. Aborting."})
         fasta = self.sanitiser(self.dbname, fasta) 
         time.sleep(0.1)
         return fasta
@@ -270,8 +291,12 @@ class Eutils:
                     mfasta = ''
                     while not mfasta:
                         self.logger.info("retrieving batch %d" % ((start / batch_size) + 1))
-                        mfasta = self.efetch(self.dbname, self.query_key, self.webenv)
-                    out.write(mfasta + '\n')
+                        try:
+                            mfasta = self.efetch(self.dbname, self.query_key, self.webenv)
+                            out.write(mfasta + '\n')
+                        except QueryException as e:
+                            self.logger.error("%s" % e.message)
+                            raise e
 
 
 LOG_FORMAT = '%(asctime)s|%(levelname)-8s|%(message)s'
@@ -301,7 +326,10 @@ def __main__():
     logger = logging.getLogger('data_from_NCBI')
     
     E = Eutils(options, logger)
-    E.retrieve()
+    try:
+        E.retrieve()
+    except Exception as e:
+        sys.exit(1)
 
 
 if __name__ == "__main__":
