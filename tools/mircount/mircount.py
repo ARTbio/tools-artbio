@@ -20,12 +20,13 @@ LOG_LEVELS = ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']
 
 """ Get options """
 parser = optparse.OptionParser(description='Count miRNAs')
-parser.add_option('--index_source', type='string', dest='IndexSource', help='Fastq file of clipped sequence reads', metavar='FILE')
-parser.add_option('--alignment', type='string', dest='Alignment', help='Alignment tabular or sam file')
+parser.add_option('--ref_genome', type='string', dest='ref_genome_file', help='Fastq file of clipped sequence reads', metavar='FILE')
+parser.add_option('--alignment', type='string', dest='alignment_file', help='Alignment tabular or sam file')
+parser.add_option('--alignment_format', choices=['tabular', 'sam', 'bam'], dest='alignment_format', help='Alignement format (tabular, sam or bam). [default=tabular]', default='tabular')
 parser.add_option('--do_not_extract_index', action='store_false', dest='ExtractionDirective', default=True, help='')
-parser.add_option('--pre_mirs_output', type='string', dest='OutputPre_mirs', help='GFF3 describing the mature miRs', metavar='FILE')
-parser.add_option('--mature_mirs_output', type='string', dest='OutputMature_Mirs', help='Reference genome', metavar='FILE')
-parser.add_option('--gff', type='string', dest='GFF3_file', help=' GFF3 describing both pre-mirs and mature mirs (to be discussed)', metavar='FILE')
+parser.add_option('--pre_mirs_output', type='string', dest='output_pre_mirs', help='GFF3 describing the mature miRs', metavar='FILE')
+parser.add_option('--mature_mirs_output', type='string', dest='output_mature_mirs', help='Reference genome', metavar='FILE')
+parser.add_option('--gff', type='string', dest='gff_file', help=' GFF3 describing both pre-mirs and mature mirs (to be discussed)', metavar='FILE')
 parser.add_option('--lattice', type='string', dest='lattice')
 parser.add_option('--rcode', type='string', dest='Rcode')
 parser.add_option('--lattice_pdf', type='string', dest='latticePDF')
@@ -36,8 +37,8 @@ parser.add_option('-l', '--logfile', help='log file (default=stderr)')
 """ Check if the options were correctly passed """
 if len(args) > 0:
     parser.error('Wrong number of arguments')
-if (not options.reads_file or not options.hair_pin_file or 
-    not options.hair_pin_gff_file or not options.ref_genome_file or not options.ref_genome_gff_file):
+if (not options.ref_genome_file or not options.alignment_file or 
+    not options.gff_file:# or not options._file or not options.ref_genome_gff_file):
     parser.error('Missing file')
 
 """ Set up the logger """
@@ -50,7 +51,45 @@ if options.logfile:
 logging.basicConfig(**kwargs)
 logger = logging.getLogger('MirCount')
 
+""" Read reference genome and store it dictionary """
+ref_genome_dict = dict()
+line = ''
+head = ''
+seq = list()
+try:
+    logger.info("Reading reference Genome")
+    fh = open(options.ref_genome_file, 'r')
+    lines = fh.readlines()
+    for line in lines:
+        if line.startswith('>'):
+            if head != '':
+                ref_genome_dict[head] = dict()
+                ref_genome_dict[head]['seq'] = ''.join(seq)
+                ref_genome_dict[head]['reads'] = list()
+            head = line
+            seq = list()
+        else:
+            seq.append(line)
+    ref_genome_dict[head] = dict()
+    ref_genome_dict[head]['seq'] = ''.join(seq)
+    ref_genome_dict[head]['reads'] = list()
+    fh.close()
+except IOError:
+    logger.error('Cannot find file or read data')
 
+""" Read tabular alignment file and get reads """
+if options.alignment_format == 'tabular':
+    try:
+        fh = open(options.alignment_file, 'r')
+        for line in fh:
+            fields = line.split()
+            polarity = fields[1]
+            gene = fields[2]
+            offset = int(fields[3])
+            size = len(fields[4])
+            ref_genome_dict[head]['reads'].append([[polarity, offset+1, size]])
+    except IOError:
+        logger.error('Cannot find file or read data')
 """
 IndexSource = sys.argv[1]
 ExtractionDirective = sys.argv[2]
