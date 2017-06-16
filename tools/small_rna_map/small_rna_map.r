@@ -33,7 +33,7 @@ p <- ggplot(Table, aes(x=Coordinate, y=Nbr_reads, colour=Polarity)) +
 			 yend=Nbr_reads,
 			 xend=Chrom_length), alpha=0
 		   )+
-  facet_wrap(Dataset~Chromosome, scales="free")+
+  facet_wrap(Dataset~Chromosome, scales="free", nrow=1, labeller = label_wrap_gen(multi_line = FALSE))+
   geom_hline(yintercept=0, size=0.3)
 
 plot.list <- by(data     = Table,
@@ -43,6 +43,6 @@ plot.list <- by(data     = Table,
                   p %+% x 
                 })
 
-multi.plot <- marrangeGrob(grobs = plot.list,nrow  = 4, ncol = 1, top=NULL);
+multi.plot <- marrangeGrob(grobs = plot.list,nrow  = 8, ncol = 1, top=NULL);
 ggsave(args$output_pdf, device="pdf", plot=multi.plot, height=11.69, width=8.2)
 
