@@ -29,34 +29,48 @@
         ##     Bam: 0-based; SAM: 1-based; GFF: 1-based
         ##     also, translate mature mirs into hairpin-based coordinates (now genome-based coordinates)
         ##     for hairpin, no worries, it will be self-consistent
-##        python '$__tool_directory__'/MirParser.py
-##	    #if $refGenomeSource.genomeSource == "history":
-##            '$refGenomeSource.ownFile' ## index source sys.arg[1]
-##            --do_not_extract_index  ## sys.argv[2]
-##        #else:
-##		    #silent reference = filter( lambda x: str( x[0] ) == str( $input_list.dbkey ), $__app__.tool_data_tables[ 'bowtie_indexes' ].get_fields() )[0][-1]
-##		    '$reference'   ## sys.argv[1]
-##		    --extract_index  ## sys.argv[2]
-##        #end if
-##		'$output1' ## for pre-mirs  ## sys.argv[3]
-##		'$output2' ## for mature mirs  ## sys.argv[4]
-##		'$GFF3'    ## sys.argv[5]
-##		#if $plotting.plottingOption == "yes":
-##		    '$lattice_dataframe'   ## sys.argv[6]
-##		    '$plotCode'   ## sys.argv[7]
-##		    '$latticePDF' ## sys.argv[8]
-##		#else:
-##		    "dummy_dataframe_path"   ## sys.argv[6]
-##            "dummy_plotCode"   ## sys.argv[7]
-##		    "dummy_latticePDF" ## sys.argv[8]
-##		#end if
-##		#for $i in $refGenomeSource.input_list
-##    	    '$i' '$i.ext' "$i.name" ## sys.argv[9,10,11] modulo 3
-##		#end for
-##        #silent plottingoption = $plotting.plottingOption
-##        ## ! refactoring
+        ## ! refactoring
     ]]></command>
     <inputs>
+        <conditional name="cutadapt">
+            <param label="Remove adapter sequence before aligning" name="cutoption" type="select">
+                <option value="no">no</option>
+                <option selected="True" value="yes">yes</option>
+            </param>
+            <when value="yes">
+                <param format="fastq" label="Source file" name="input" type="data" />
+                <param label="min size" name="min" size="4" type="integer" value="15" />
+                <param label="max size" name="max" size="4" type="integer" value="36" />
+                <param label="Select output format" name="out_format" type="select">
+                    <option selected="true" value="fasta">Fasta format</option>
+                    <option value="fastq">Fastq format</option>
+                </param>
+                <param label="Accept reads containing N?" name="Nmode" type="select">
+                    <option selected="True" value="accept">accept</option>
+                    <option value="reject">reject</option>
+                </param>
+                <conditional name="clip_source">
+                    <param help="Built-in adapters or User-provided" label="Source" name="clip_source_list" type="select">
+                        <option selected="True" value="prebuilt">Use a built-in adapter (select from the list below)</option>
+                        <option value="user">Use custom sequence</option>
+                    </param>
+                    <when value="prebuilt">
+                        <param help="if your adapter is not listed, input your own sequence" label="Select Adapter to clip" name="clip_sequence" type="select">
+                            <option value="TCGTATGCCGTCTTCTGCTTG">Solexa TCGTATGCCGTCTTCTGCTTG</option>
+                            <option value="ATCTCGTATGCCGTCTTCTGCTT">Illumina ATCTCGTATGCCGTCTTCTGCTT</option>
+                            <option selected="True" value="TGGAATTCTCGGGTGCCAAG">Illumina TruSeq  TGGAATTCTCGGGTGCCAAG</option>
+                            <option value="CTGTAGGCACCATCAATCGT">IdT CTGTAGGCACCATCAATCGT</option>
+                        </param>
+                    </when>
+                    <when value="user">
+                        <param label="Enter your Sequence" name="clip_sequence" size="35" type="text" value="GAATCC" />
+                    </when>
+                </conditional>
+            </when>
+            <when value="no">
+                <param label="Select fastq files to align" multiple="false" name="input" type="data" format="fastq,fastqsanger" help="Note that sequences reads must be clipped from their adapter" />
+            </when>
+        </conditional>
         <param name="genomeKey" type="select" label="Choose Organism">
             <options from_data_table="miRbase_GenomeKeys">
                 <column name="name" index="1"/>
@@ -70,20 +84,6 @@
             <option value="3">3</option>
         </param>
         <param label="Select fastq files to align" multiple="false" name="input" type="data" format="fastq,fastqsanger" help="Note that sequences reads must be clipped from their adapter" />
-<!--
-        <conditional name="plotting">
-            <param label="Additional miRNA coverage graphs" name="plottingOption" type="select">
-                <option selected="True" value="no">no</option>
-                <option value="yes">yes</option>
-            </param>
-            <when value="yes">
-                <param label="Display Coverage with absolute number of reads or relatively to the total number of read matching the gene or mir" name="display" type="select">
-                    <option selected="True" value="relative">Relative Coverage</option>
-                    <option value="absolute">Absolute Coverage</option>
-                </param>
-            </when>
-        </conditional>
--->
     </inputs>
     <outputs>
         <data format="bam" label="bam alignment" name="output" />
