@@ -195,6 +195,14 @@ class Eutils:
                 if ( (response_code != 200) or ("Resource temporarily unavailable" in fasta)
                     or ("Error" in fasta) or (not fasta.startswith(">") ) ):
                     serverTransaction = False
+                    if ( response_code != 200 ):
+                        self.logger.info("urlopen error: Response code is not 200")
+                    elif ( "Resource temporarily unavailable" in fasta ):
+                        self.logger.info("Ressource temporarily unavailable")
+                    elif ( "Error" in fasta ):
+                        self.logger.info("Error in fasta")
+                    else:
+                        self.logger.info("Fasta doesn't start with '>'")
                 else:
                     serverTransaction = True
             except urllib2.HTTPError as e:
@@ -207,6 +215,10 @@ class Eutils:
             except httplib.IncompleteRead as e:
                 serverTransaction = False
                 self.logger.info("IncompleteRead error:  %s" % ( e.partial ) )
+            if (counter > 500):
+                serverTransaction = True
+        if (counter > 500):
+            return "counter"
         fasta = self.sanitiser(self.dbname, fasta) 
         time.sleep(0.1)
         return fasta
@@ -271,7 +283,10 @@ class Eutils:
                     while not mfasta:
                         self.logger.info("retrieving batch %d" % ((start / batch_size) + 1))
                         mfasta = self.efetch(self.dbname, self.query_key, self.webenv)
-                    out.write(mfasta + '\n')
+                    if ("counter" not in mfasta):
+                        out.write(mfasta + '\n')
+                    else:
+                        self.logger.info("Server Trials numbered more than 500. Skipping this batch")
 
 
 LOG_FORMAT = '%(asctime)s|%(levelname)-8s|%(message)s'
