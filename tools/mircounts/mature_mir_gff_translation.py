@@ -26,9 +26,10 @@ GFF3_header= '''
 # rather a predicted stem-loop portion that includes the precursor 
 # miRNA. Mature sequences have type "miRNA".
 #
+
 '''
 
-def load_gff_in_dict (gff_input_file):
+def load_gff_in_dict(gff_input_file):
     '''
     Reads the gff3 file and return a dictionary of dictionaries
     with keys equal to standard gff3 fields (9)
@@ -39,7 +40,7 @@ def load_gff_in_dict (gff_input_file):
         if line[0]=="#":
             continue
         gff_fields=line[:-1].split("\t")
-        ID=gff_fields[8].split("ID=")[0].split(";")[0]
+        ID=gff_fields[8].split("ID=")[1].split(";")[0]
         gff_dict[ID] = {}
         gff_dict[ID]["seqid"]=gff_fields[0]
         gff_dict[ID]["source"]=gff_fields[1]
@@ -52,6 +53,7 @@ def load_gff_in_dict (gff_input_file):
         gff_dict[ID]["attributes"]=gff_fields[8]
     return gff_dict
     
+
 def genome_to_mir_gff(gff_dict, output):
     '''
     Converts seqid field from chromosome to item Name
@@ -61,32 +63,40 @@ def genome_to_mir_gff(gff_dict, output):
     for key in gff_dict:
         name=gff_dict[key]["attributes"].split("Name=")[1].split(";")[0]
         gff_dict[key]["seqid"]=name
-        if "Derives_from=" in name=gff_dict[key]["attributes"]:
+        if "Derives_from=" in gff_dict[key]["attributes"]:
             parent_ID=gff_dict[key]["attributes"].split("Derives_from=")[1].split(";")[0]
-            gff_dict[key]["start"]=gff_dict[key]["start"] - gff_dict[parent_ID]["start"] + 1
-            gff_dict[key]["end"]=gff_dict[key]["end"] - gff_dict[parent_ID]["end"] + 1
+            gff_dict[key]["start"]=str(int(gff_dict[key]["start"]) - int(gff_dict[parent_ID]["start"]) + 1)
+            gff_dict[key]["end"]=str(int(gff_dict[key]["end"]) - int(gff_dict[parent_ID]["start"]) + 1)
     hairpins={}
+    matures={}
     for key in gff_dict:  ## treats miRNA_primary_transcript coordinates in a second loop to avoid errors in conversion
-        if name=gff_dict[key]["type"]=="miRNA_primary_transcript":
-            gff_dict[key]["end"]=gff_dict[key]["end"] - gff_dict[key]["start"] + 1
-            gff_dict[key]["start"]=1
+        if gff_dict[key]["type"]=="miRNA_primary_transcript":
+            gff_dict[key]["end"]=str(int(gff_dict[key]["end"]) - int(gff_dict[key]["start"]) + 1)
+            gff_dict[key]["start"]="1"
             # now, do a dict[ID]=Name but only for miRNA_primary_transcript
             hairpins[key]=gff_dict[key]["attributes"].split("Name=")[1].split(";")[0]
+        else:
+            matures[key]=gff_dict[key]["attributes"].split("Name=")[1].split(";")[0]
     with open(output, "w") as output:
-    for ID in sorted(hairpins, key=hairpins.get):
-    
-            
-        
+        output.write(GFF3_header)
+        for ID in sorted(hairpins, key=hairpins.get):
+            output.write("\t".join([gff_dict[ID]["seqid"], gff_dict[ID]["source"],
+                gff_dict[ID]["type"], gff_dict[ID]["start"], gff_dict[ID]["end"],
+                gff_dict[ID]["score"], gff_dict[ID]["strand"], gff_dict[ID]["phase"],
+                gff_dict[ID]["attributes"]]))
+            output.write("\n")
+            for id in sorted(matures, key=matures.get, reverse=True):
+                if ID in gff_dict[id]["attributes"]:
+                    output.write("\t".join([gff_dict[id]["seqid"], gff_dict[id]["source"],
+                        gff_dict[id]["type"], gff_dict[id]["start"], gff_dict[id]["end"],
+                        gff_dict[id]["score"], gff_dict[id]["strand"],
+                        gff_dict[id]["phase"], gff_dict[id]["attributes"]]))
+                    output.write("\n")
 
-   
-def main(infile, output):
-    with open(infile, "r") as infile:
-        with open(output, "w") as outfile:
-            for line in infile:
-                if line[0] == "@":
-                    continue
-                if line.split("\t")[1] != "4":
-                    print_fastq_sequence(line, outfile)
+
+def main(infile, outfile):
+    gff_dict = load_gff_in_dict(infile)
+    genome_to_mir_gff(gff_dict, outfile)
 
 
 if __name__ == "__main__":
