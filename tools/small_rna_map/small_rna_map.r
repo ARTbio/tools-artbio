@@ -37,7 +37,8 @@ p <- ggplot(Table, aes(x=Coordinate, y=Nbr_reads, colour=Polarity)) +
   geom_hline(yintercept=0, size=0.3)+
   theme(strip.text = element_text(size = 8, lineheight = 0.1), 
         panel.grid.major = element_line(colour = "#ffffff"),
-        panel.grid.minor = element_line(colour = "#ffffff"))
+        panel.grid.minor = element_line(colour = "#ffffff"),
+        axis.title = element_blank())
   
 
 plot.list <- by(data     = Table,
@@ -47,6 +48,6 @@ plot.list <- by(data     = Table,
                   p %+% x 
                 })
 
-multi.plot <- marrangeGrob(grobs = plot.list,nrow  = 8, ncol = 1, top=NULL);
+multi.plot <- marrangeGrob(grobs = plot.list,nrow  = 8, ncol = 1, top=NULL, bottom="Coordinate", left="Number of reads");
 ggsave(args$output_pdf, device="pdf", plot=multi.plot, height=11.69, width=8.2)
 
