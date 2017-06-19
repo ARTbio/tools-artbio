@@ -10,6 +10,7 @@
     <command detect_errors="exit_code"><![CDATA[
         ## To be refactored with guidelines in https://github.com/ARTbio/tools-artbio/issues/140
         wget ftp://mirbase.org/pub/mirbase/CURRENT/genomes/${genomeKey}.gff3 && ## download gff3 specified by the variable genomeKey
+        ## python '$__tool_directory__'/mature_mir_gff_translation.py && ## I am working on this script that basically will transcode the mature mir genome coordinates into coordinates relative to the corresponding Premirs.
         wget ftp://mirbase.org/pub/mirbase/CURRENT/hairpin.fa.gz &&
         gunzip hairpin.fa.gz &&
         sed -i.bak '/^[^>]/ y/uU/tT/' hairpin.fa && ## replace U by tT
