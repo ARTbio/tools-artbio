@@ -34,6 +34,7 @@ p <- ggplot(Table, aes(x=Coordinate, y=Nbr_reads, colour=Polarity)) +
 			 xend=Chrom_length), alpha=0
 		   )+
   facet_wrap(Dataset~Chromosome, scales="free", nrow=1, labeller = label_wrap_gen(multi_line = FALSE))+
+  scale_y_continuous(breaks = function(x) round(pretty(seq(-(max(x) + 1), (max(x) + 1)))))+
   geom_hline(yintercept=0, size=0.3)+
   theme(strip.text = element_text(size = 8, lineheight = 0.1), 
         panel.grid.major = element_line(colour = "#ffffff"),
