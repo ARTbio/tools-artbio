@@ -45,10 +45,10 @@ def read_bam_sam(alignment_file, alignment_format):
     offset = None
     size = None
     samfile = None
-    if alignment_format == "bam" :
-        samfile = pysam.AlignmentFile(alignment_file, 'rb')
-    else:
-        samfile = pysam.AlignmentFile(alignment_file, 'r')
+    samfile = pysam.AlignmentFile(alignment_file, 'r')
+    """ Initialize dictionary """
+    for reference in samfile.header['SQ']:
+        hit_store[reference['SN']] = HitContainer(reference['SN'])
     for read in samfile:
         """
         Get:
@@ -63,11 +63,7 @@ def read_bam_sam(alignment_file, alignment_format):
             offset = read.pos + 1
             size = read.qlen
             """ If the gene hasn't been read yet add it to store """
-            try:
-                hit_store[gene].add_read(offset, polarity, size)
-            except:
-                hit_store[gene] = HitContainer(gene)
-                hit_store[gene].add_read(offset, polarity, size)
+            hit_store[gene].add_read(offset, polarity, size)
     return hit_store
 
 def read_tabular(alignment_file):
@@ -119,7 +115,7 @@ class HitContainer:
     def count_reads(self, upstream_coord, downstream_coord, polarity):
         """
         Takes upstream and downstream coordinates as well as the polarity of
-        the pre-mir and counts the number of reads overlaping it.
+        the mir and counts the number of reads overlaping it.
         """
         overlaping = 0
         if polarity == "F":
@@ -146,14 +142,16 @@ def __main__():
     """ Get options """
     parser = optparse.OptionParser(description='Count miRNAs')
     parser.add_option('--loglevel', choices=LOG_LEVELS, default='INFO', help='logging level (default: INFO)')
+    parser.add_option('-p', '--pre_mirs', action='store_true', dest='pre_mirs', help='Count pre-miRNAs', default=False)
+    parser.add_option('-m', '--mirs', action='store_true', dest='mirs', help='Count mature miRNAs', default=False)
     inputs = optparse.OptionGroup(parser, 'Inputs')
     inputs.add_option('--alignment', type='string', dest='alignment_file', help='Alignment tabular or sam file')
     inputs.add_option('--alignment_format', choices=['tabular', 'sam', 'bam'], dest='alignment_format', help='Alignement format (tabular, sam or bam). [default=tabular]', default='tabular')
     inputs.add_option('--gff', type='string', dest='gff_file', help=' GFF3 describing both pre-mirs and mature mirs (to be discussed)', metavar='FILE')
     parser.add_option_group(inputs)
     outputs = optparse.OptionGroup(parser, 'Outputs')
-    outputs.add_option('--pre_mirs_output', type='string', dest='output_pre_mirs', help='GFF3 describing the mature miRs', metavar='FILE')
-    outputs.add_option('--mature_mirs_output', type='string', dest='output_mature_mirs', help='Reference genome', metavar='FILE')
+    outputs.add_option('--pre_mirs_output', type='string', dest='output_pre_mirs', help='GFF3 describing the mature miRs', metavar='FILE', default='output_pre_mirs_count.tab')
+    outputs.add_option('--mature_mirs_output', type='string', dest='output_mature_mirs', help='Reference genome', metavar='FILE', default='output_mirs-count.tab')
     outputs.add_option('--lattice', type='string', dest='lattice')
     outputs.add_option('-l', '--logfile', help='log file (default=stderr)')
     parser.add_option_group(outputs)
@@ -161,9 +159,8 @@ def __main__():
     """ Check if the options were correctly passed """
     if len(args) > 0:
         parser.error('Wrong number of arguments')
-    if (not options.alignment_file or not options.gff_file):# or not options._file or not options.ref_genome_gff_file):
+    if (not options.alignment_file or not options.gff_file or (not options.mirs and not options.premirs)):
         parser.error('Missing file')
-    
     """ Set up the logger """
     log_level = getattr(logging, options.loglevel)
     kwargs = {'format': LOG_FORMAT,
@@ -176,23 +173,69 @@ def __main__():
     
     """ Declare Variables """
     hit_store = dict()
-    """ If the pre-mirs are needed """
-    if options.output_pre_mirs :
-        if options.alignment_format != 'tabular':
-            hit_store = read_bam_sam(options.alignment_file, options.alignment_format)
-        else:
-            hit_store = read_tabular(options.alignment_file)
+    """ Read alignment file """
+    if options.alignment_format != 'tabular':
+        hit_store = read_bam_sam(options.alignment_file, options.alignment_format)
+    else:
+        hit_store = read_tabular(options.alignment_file)
+    """ If the pre-mirs are asked """
+    if options.pre_mirs:
+        text = list()
+        out_pre_mirs = options.output_pre_mirs
+        try:
+            """ header """
+            text.append("Gene\tCount")
+            for gene in hit_store.keys():
+                text.append("\t".join([gene,str(hit_store[gene].aligned_reads_count)]))
+            fh = open(out_pre_mirs, 'w')
+            fh.write("\n".join(text))
+            fh.close()
+        except IOError as e:
+            logger.error("I/O error(%s): %s" % (e.errno, e.strerror))
     """ Read GFF file and count hits """
+    if options.mirs:
+        out_mirs = options.output_mature_mirs
+        text = list()
+        try:
+            """ Open GFF and Output file """
+            gff = open(options.gff_file, 'r')
+            text.append("Gene\tCount")
+            for line in gff.readlines():
+                """ For each line if it doesn't start with '#' split it and get fields """
+                if line[0] != '#':
+                    gff_fields = line[:-1].split("\t")
+                    chrom = gff_fields[0]
+                    item_upstream_coordinate = int(gff_fields[3])
+                    item_downstream_coordinate = int(gff_fields[4])
+                    if gff_fields[6] == '+':
+                        item_polarity = 'F'
+                    else:
+                        item_polarity = 'R'
+                    """ count reads and write table """
+                    count = hit_store[chrom].count_reads(upstream, downstream, polarity)
+                    text.append("\t".join([chrom, count]))
+            gff.close()
+            fh_out_mirs = open(out_mirs, 'w')
+            fh_out_mirs.write("\n".join(text))
+            fh_out_mirs.close()
+        except IOError as e:
+            logger.error("I/O error(%s): %s" % (e.errno, e.strerror))
+        except KeyError as e:
+            logger.error("The first column of the GFF and the headers of the reference genome of the alignment are not the same")
+            logger.error("We caught %s in the GFF3" % e)
 
 def __test__():
     aln = sys.argv[1]
     aln_fmt = sys.argv[2]
     print aln,aln_fmt
     hit_store = read_bam_sam(aln,aln_fmt)
-    print len(hit_store.keys())
+    print "NB genes:\t",len(hit_store.keys())
+    print "Gene\tCount"
+    for gene in hit_store.keys():
+        print gene+"\t"+str(hit_store[gene].aligned_reads_count)
 
-if __test__():
-    __test__()
+if __main__():
+    __main__()
 """
 IndexSource = sys.argv[1]
 ExtractionDirective = sys.argv[2]
