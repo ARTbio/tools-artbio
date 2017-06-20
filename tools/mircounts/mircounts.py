@@ -6,12 +6,10 @@
 #                     <9:10:11 filePath:FileExt:FileLabel> <.. ad  lib>
 
 import sys
-import subprocess
-import sys
 import logging
 import optparse
 import time
-
+from collections import defaultdict
 #from smRtools import HandleSmRNAwindows
 """ Log parsing """
 LOG_FORMAT = '%(asctime)s|%(levelname)-8s|%(message)s'
@@ -19,7 +17,7 @@ LOG_DATEFMT = '%Y-%m-%d %H:%M:%S'
 LOG_LEVELS = ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']
 
 
-def getHeaders(fasta_file, logger):
+def get_headers_from_fasta(fasta_file, logger):
     """
     Takes a fasta file and returns a list of fasta headers.
     """
@@ -33,6 +31,70 @@ def getHeaders(fasta_file, logger):
         fh.close()
     except IOError as e:
         logger.error("I/O error(%s): %s" % (e.errno, e.strerror))
+        raise e
+    return headers
+
+def read_bam_sam(alignment_file, alignment_format):
+    """
+    Takes an alignment file and its format (must be either bam or sam)
+    and returns a HitContainer dictionary
+    """
+    import pysam
+    hit_store = dict()
+    gene = None
+    offset = None
+    size = None
+    samfile = None
+    if alignment_format == "bam" :
+        samfile = pysam.AlignmentFile(alignment_file, 'rb')
+    else:
+        samfile = pysam.AlignmentFile(alignment_file, 'r')
+    for read in samfile:
+        """
+        Get:
+         - read polarity
+         - reference name
+         - read offset (corrected 0-based coordinates to 1-based)
+         - read length
+        """
+        polarity = "F" if (not read.is_reverse) else "R"
+        if not read.is_unmapped:
+            gene = read.reference_name
+            offset = read.pos + 1
+            size = read.qlen
+            """ If the gene hasn't been read yet add it to store """
+            try:
+                hit_store[gene].add_read(offset, polarity, size)
+            except:
+                hit_store[gene] = HitContainer(gene)
+                hit_store[gene].add_read(offset, polarity, size)
+    return hit_store
+
+def read_tabular(alignment_file):
+    """
+    Reads tabular alignment file and returns HitContainer dictionary
+    """
+    hit_store = dict()
+    fields = None
+    polarity = None
+    gene = None
+    offset = None
+    size = None
+    try:
+        fh = open(alignment_file, 'r')
+        for line in fh.readlines():
+            fields = line.split()
+            polarity = fields[1]
+            gene = fields[2]
+            offset = int(fields[3])
+            size = len(fields[4])
+            try:
+                hit_store[gene].add_read(offset, polarity, size)
+            except:
+                hit_store[gene] = HitContainer(gene)
+                hit_store[gene].add_read(offset, polarity, size)
+        fh.close()
+    except IOError as e:
         raise e
 
 class HitContainer:
@@ -65,7 +127,7 @@ class HitContainer:
             If the polarity is + then check for each position
             between upstream and downstream coord if a read has a 5' matching
             """
-            for offset in xrange(upstream_coord, downstream_coord + 1)
+            for offset in xrange(upstream_coord, downstream_coord + 1):
                 if self.aligned_reads.has_key(offset):
                     for read in self.aligned_reads[offset]:
                         overlaping += 1
@@ -74,7 +136,7 @@ class HitContainer:
             If the polarity is + then check for each position
             between upstream and downstream coord if a read has a 3' matching
             """
-            for offset in xrange(upstream_coord, downstream_coord + 1)
+            for offset in xrange(upstream_coord, downstream_coord + 1):
                 if self.aligned_reads.has_key(-offset):
                     for read in self.aligned_reads[-offset]:
                         overlaping += 1
@@ -83,22 +145,23 @@ class HitContainer:
 def __main__():
     """ Get options """
     parser = optparse.OptionParser(description='Count miRNAs')
-    parser.add_option('--ref_genome', type='string', dest='ref_genome_file', help='Fastq file of clipped sequence reads', metavar='FILE')
-    parser.add_option('--alignment', type='string', dest='alignment_file', help='Alignment tabular or sam file')
-    parser.add_option('--alignment_format', choices=['tabular', 'sam', 'bam'], dest='alignment_format', help='Alignement format (tabular, sam or bam). [default=tabular]', default='tabular')
-    parser.add_option('--pre_mirs_output', type='string', dest='output_pre_mirs', help='GFF3 describing the mature miRs', metavar='FILE')
-    parser.add_option('--mature_mirs_output', type='string', dest='output_mature_mirs', help='Reference genome', metavar='FILE')
-    parser.add_option('--gff', type='string', dest='gff_file', help=' GFF3 describing both pre-mirs and mature mirs (to be discussed)', metavar='FILE')
-    parser.add_option('--lattice', type='string', dest='lattice')
     parser.add_option('--loglevel', choices=LOG_LEVELS, default='INFO', help='logging level (default: INFO)')
-    parser.add_option('-l', '--logfile', help='log file (default=stderr)')
+    inputs = optparse.OptionGroup(parser, 'Inputs')
+    inputs.add_option('--alignment', type='string', dest='alignment_file', help='Alignment tabular or sam file')
+    inputs.add_option('--alignment_format', choices=['tabular', 'sam', 'bam'], dest='alignment_format', help='Alignement format (tabular, sam or bam). [default=tabular]', default='tabular')
+    inputs.add_option('--gff', type='string', dest='gff_file', help=' GFF3 describing both pre-mirs and mature mirs (to be discussed)', metavar='FILE')
+    parser.add_option_group(inputs)
+    outputs = optparse.OptionGroup(parser, 'Outputs')
+    outputs.add_option('--pre_mirs_output', type='string', dest='output_pre_mirs', help='GFF3 describing the mature miRs', metavar='FILE')
+    outputs.add_option('--mature_mirs_output', type='string', dest='output_mature_mirs', help='Reference genome', metavar='FILE')
+    outputs.add_option('--lattice', type='string', dest='lattice')
+    outputs.add_option('-l', '--logfile', help='log file (default=stderr)')
+    parser.add_option_group(outputs)
     (options, args) = parser.parse_args()
-    
     """ Check if the options were correctly passed """
     if len(args) > 0:
         parser.error('Wrong number of arguments')
-    if (not options.ref_genome_file or not options.alignment_file or 
-        not options.gff_file:# or not options._file or not options.ref_genome_gff_file):
+    if (not options.alignment_file or not options.gff_file):# or not options._file or not options.ref_genome_gff_file):
         parser.error('Missing file')
     
     """ Set up the logger """
@@ -112,57 +175,24 @@ def __main__():
     logger = logging.getLogger('MirCount')
     
     """ Declare Variables """
-    headers = list()
     hit_store = dict()
-    polarity = ''
-    gene = ''
-    offset = None
-    size = None
-    """ Initialize HitContainerStore """
-    for header in headers:
-        hit_store[header] = HitContainer(header)
-    """!!! Get reference headers and read alignment file !!!"""
-    try:
-        """ Get fasta headers """
-        headers = getHeaders(ref_genome_file, logger)
-        """ If the pre-mirs are needed """
-        if options.output_pre_mirs :
-            if options.alignment_format != 'tabular':
-                import pysam
-                samfile = None
-                """ Read file with pysam """
-                if options.alignment_format == "bam" :
-                    samfile = pysam.AlignmentFile(options.alignment_file, 'rb')
-                else:
-                    samfile = pysam.AlignmentFile(options.alignment_file, 'r')
-                for read in samfile:
-                    """
-                    Get:
-                     - read polarity
-                     - reference name
-                     - read offset (corrected 0-based coordinates to 1-based)
-                     - read length
-                    """
-                    polarity = "F" if not read.is_reverse else polarity = "R"
-                    gene = read.reference_name
-                    offset = read.pos + 1
-                    size = read.qlen
-                    hit_store[gene].add_read(offset, polarity, size)
-            else:
-                fh = open(options.alignment_file, 'r')
-                for line in fh.readlines():
-                    fields = line.split()
-                    polarity = fields[1]
-                    gene = fields[2]
-                    offset = int(fields[3])
-                    size = len(fields[4])
-                    hit_store[gene].add_read(offset, polarity, size)
-                fh.close()
-    except IOError as e:
-        raise e
+    """ If the pre-mirs are needed """
+    if options.output_pre_mirs :
+        if options.alignment_format != 'tabular':
+            hit_store = read_bam_sam(options.alignment_file, options.alignment_format)
+        else:
+            hit_store = read_tabular(options.alignment_file)
     """ Read GFF file and count hits """
-    
 
+def __test__():
+    aln = sys.argv[1]
+    aln_fmt = sys.argv[2]
+    print aln,aln_fmt
+    hit_store = read_bam_sam(aln,aln_fmt)
+    print len(hit_store.keys())
+
+if __test__():
+    __test__()
 """
 IndexSource = sys.argv[1]
 ExtractionDirective = sys.argv[2]
