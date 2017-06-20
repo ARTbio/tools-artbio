@@ -107,7 +107,7 @@
     </outputs>
     <tests>
         <test>
-            <param name="cutadapt" value="yes" />
+            <param name="cutoption" value="yes" />
             <param name="min" value="15"/>
             <param name="max" value="25"/>
             <param name="Nmode" value="reject"/>
@@ -115,7 +115,7 @@
             <param name="v" value="0"/>
             <param name="genomeKey" value="dme"/>
             <param name="input" value="input.unclipped.fastqsanger" ftype="fastqsanger"/>
-            <output name="output" file="output.bam" ftype="bam"/>
+            <output name="output" file="unclipped.out.bam" ftype="bam"/>
             <output name="gff3" file="translated_dme.gff3" ftype="gff3"/>
         </test>
     </tests>
