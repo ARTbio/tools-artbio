@@ -16,7 +16,6 @@ LOG_FORMAT = '%(asctime)s|%(levelname)-8s|%(message)s'
 LOG_DATEFMT = '%Y-%m-%d %H:%M:%S'
 LOG_LEVELS = ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']
 
-
 def get_headers_from_fasta(fasta_file, logger):
     """
     Takes a fasta file and returns a list of fasta headers.
