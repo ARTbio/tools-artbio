@@ -20,6 +20,15 @@
         grep ">${genomeKey}-" hairpin.fa > hairpin.fa.tmp && mv hairpin.fa hairpin.fa.bak6 && mv hairpin.fa.tmp hairpin.fa && ## filter tabular hairpins with proper genomeKey
         tr '\t' '\n' < hairpin.fa > hairpin.fa.tmp && mv hairpin.fa hairpin.fa.bak7 && mv hairpin.fa.tmp hairpin.fa && ## terminate parsing by regenerating fasta format, bowtie-build ready
         rm *.bak* && ## cleaning job directory
+        #if $cutadapt.cutoption=="yes":
+            python '$__tool_directory__'/yac.py --input $input
+                                                --output $output
+                                                --output_format "$out_format"
+                                                --adapter_to_clip $clip_source.clip_sequence
+                                                --min $min
+                                                --max $max
+                                                --Nmode $Nmode &&
+
         bowtie-build hairpin.fa hairpin &&
         bowtie -v $v -M 1 --best --strata --norc -p \${GALAXY_SLOTS:-4} --sam hairpin -q $input output.sam &&
         samtools view -bS output.sam -o $output ## see this. For multiple entries, a loop is required
