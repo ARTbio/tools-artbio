@@ -118,6 +118,14 @@
             <output name="output" file="unclipped.out.bam" ftype="bam"/>
             <output name="gff3" file="translated_dme.gff3" ftype="gff3"/>
         </test>
+        <test>
+            <param name="cutoption" value="no" />
+            <param name="v" value="1"/>
+            <param name="genomeKey" value="dme"/>
+            <param name="clipped_input" value="input.clipped.fastqsanger" ftype="fastqsanger"/>
+            <output name="output" file="clipped.out.bam" ftype="bam"/>
+            <output name="gff3" file="translated_dme.gff3" ftype="gff3"/>
+        </test>
     </tests>
     <!--
     <configfiles>
