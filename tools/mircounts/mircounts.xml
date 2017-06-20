@@ -2,9 +2,8 @@
     <description> Counts miRNA alignments from small RNA sequence data</description>
     <requirements>
         <requirement type="package" version="1.1.2">bowtie</requirement>
-        <requirement type="package" version="1.2">samtools</requirement>
-        <requirement type="package" version="0.8.3">pysam</requirement>
-        <requirement type="package" version="0.20_33=r3.3.1_0">r-lattice</requirement>
+        <requirement type="package" version="1.4.1">samtools</requirement>
+        <requirement type="package" version="0.11.2.1=py27_0">pysam</requirement>
     </requirements>
     <command detect_errors="exit_code"><![CDATA[
         ## To be refactored with guidelines in https://github.com/ARTbio/tools-artbio/issues/140
