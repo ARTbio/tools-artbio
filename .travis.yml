@@ -13,7 +13,7 @@ before_install:
   - export PLANEMO_CONDA_PREFIX="$HOME/conda"
 
 install:
-  - pip install planemo # flake8 flake8-import-order
+  - pip install planemo==0.40 # flake8 flake8-import-order
   - planemo conda_init
   - export PATH="$PLANEMO_CONDA_PREFIX/bin:$PATH"
   - planemo --version
