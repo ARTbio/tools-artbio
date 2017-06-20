@@ -1,8 +1,8 @@
 <tool id="miRCounts" name="miRCounts" version="0.1">
     <description> Counts miRNA alignments from small RNA sequence data</description>
     <requirements>
-        <requirement type="package" version="1.1.2">bowtie</requirement>
-        <requirement type="package" version="0.1.19">samtools</requirement>
+        <requirement type="package" version="1.1.2=py27_0">bowtie</requirement>
+        <requirement type="package" version="0.1.19=py27_0">samtools</requirement>
         <requirement type="package" version="0.11.2.1=py27_0">pysam</requirement>
     </requirements>
     <command detect_errors="exit_code"><![CDATA[
