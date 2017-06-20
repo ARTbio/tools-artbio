@@ -1,4 +1,4 @@
-This is the development repository for galaxy tools developed in the [ARTbio platform](http://artbio.fr/ for our homepage) at the [IBPS](http://www.ibps.upmc.fr/en) [CNRS](http://www.cnrs.fr/en/research/Institutes.htm) & [UPMC](http://www.upmc.fr/en/index.html).
+This is the development repository for galaxy tools developed in the [ARTbio platform](http://artbio.fr/) at the [IBPS](http://www.ibps.upmc.fr/en) [CNRS](http://www.cnrs.fr/en/research/Institutes.htm) & [UPMC](http://www.upmc.fr/en/index.html).
 
 Tools are installed on https://mississippi.snv.jussieu.fr and downloadable through the [galaxy toolshed](toolshed.g2.bx.psu.edu).
 
