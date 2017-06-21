@@ -39,7 +39,7 @@
         ## bowtie parse :
         ##     Be careful:
         ##     Bam: 0-based; SAM: 1-based; GFF: 1-based
-        ## ! refactoring
+        ## end  refactoring
     ]]></command>
     <inputs>
         <conditional name="cutadapt">
