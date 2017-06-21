@@ -56,7 +56,7 @@ def read_bam_sam(alignment_file, alignment_format):
          - read offset (corrected 0-based coordinates to 1-based)
          - read length
         """
-        polarity = "F" if (not read.is_reverse) else "R"
+        polarity = "forward" if (not read.is_reverse) else "reverse"
         if not read.is_unmapped:
             gene = read.reference_name
             offset = read.pos + 1
@@ -105,7 +105,7 @@ class HitContainer:
         """
         Add read to the self.aligned_reads dictionary as self.aligned_reads[offset] = [size]
         """
-        if polarity == "F":
+        if polarity == "forward":
             self.aligned_reads[offset].append(size)
         else:
             self.aligned_reads[-(offset + size - 1)].append(size)
@@ -117,7 +117,7 @@ class HitContainer:
         the mir and counts the number of reads overlaping it.
         """
         overlaping = 0
-        if polarity == "F":
+        if polarity == "forward":
             """
             If the polarity is + then check for each position
             between upstream and downstream coord if a read has a 5' matching
@@ -215,7 +215,7 @@ def __main__():
                             item_upstream_coordinate = int(gff_fields[3])
                             item_downstream_coordinate = int(gff_fields[4])
                             if gff_fields[6] == '+':
-                                item_polarity = 'F'
+                                item_polarity = 'forward'
                                 if options.lattice:
                                     """
                                     If the lattice dataframe is needed as output
@@ -237,7 +237,7 @@ def __main__():
                                                     else:
                                                         it = read
                             else:
-                                item_polarity = 'R'
+                                item_polarity = 'reverse'
                                 if options.lattice:
                                     """
                                     If the lattice dataframe is needed as output
