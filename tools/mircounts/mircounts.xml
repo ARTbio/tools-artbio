@@ -31,9 +31,11 @@
             ln -f -s '$cutadapt.clipped_input' clipped_input.fastq &&
         #end if
         bowtie-build hairpin.fa hairpin &&
-        bowtie -v $v -M 1 --best --strata --norc -p \${GALAXY_SLOTS:-4} --sam hairpin -q clipped_input.fastq output.sam &&
-        samtools view -bS output.sam -o $output ## see this. For multiple entries, a loop is required
-        ## sort bam ? expose bam in the output ? expose sam converted bam in the output ?
+        bowtie -v $v -M 1 --best --strata --norc -p \${GALAXY_SLOTS:-4} --sam hairpin -q clipped_input.fastq 2>/dev/null | samtools sort -O bam -o '$output'
+        ##samtools view -bS output.sam -o output.bam &&
+        ##samtools sort output.bam output.sorted &&
+        ##samtools index output.sorted &&
+        ## mv output.sorted.bam $output
         ## bowtie parse :
         ##     Be careful:
         ##     Bam: 0-based; SAM: 1-based; GFF: 1-based
