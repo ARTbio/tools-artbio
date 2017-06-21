@@ -150,7 +150,7 @@ def __main__():
     parser.add_option_group(inputs)
     outputs = optparse.OptionGroup(parser, 'Outputs')
     outputs.add_option('--pre_mirs_output', type='string', dest='output_pre_mirs', help='GFF3 describing the mature miRs', metavar='FILE', default='output_pre_mirs_count.tab')
-    outputs.add_option('--mature_mirs_output', type='string', dest='output_mature_mirs', help='Reference genome', metavar='FILE', default='output_mirs-count.tab')
+    outputs.add_option('--mature_mirs_output', type='string', dest='output_mature_mirs', help='Reference genome', metavar='FILE', default='output_mirs_count.tab')
     outputs.add_option('--lattice', type='string', dest='lattice')
     outputs.add_option('-l', '--logfile', help='log file (default=stderr)')
     parser.add_option_group(outputs)
@@ -158,7 +158,7 @@ def __main__():
     """ Check if the options were correctly passed """
     if len(args) > 0:
         parser.error('Wrong number of arguments')
-    if (not options.alignment_file or not options.gff_file or (not options.mirs and not options.premirs)):
+    if (not options.alignment_file or not options.gff_file):
         parser.error('Missing file')
     """ Set up the logger """
     log_level = getattr(logging, options.loglevel)
@@ -203,16 +203,19 @@ def __main__():
                 """ For each line if it doesn't start with '#' split it and get fields """
                 if line[0] != '#':
                     gff_fields = line[:-1].split("\t")
-                    chrom = gff_fields[0]
-                    item_upstream_coordinate = int(gff_fields[3])
-                    item_downstream_coordinate = int(gff_fields[4])
-                    if gff_fields[6] == '+':
-                        item_polarity = 'F'
-                    else:
-                        item_polarity = 'R'
-                    """ count reads and write table """
-                    count = hit_store[chrom].count_reads(upstream, downstream, polarity)
-                    text.append("\t".join([chrom, count]))
+                    if gff_fields[2] == 'miRNA':
+                        chrom = gff_fields[0]
+                        item_upstream_coordinate = int(gff_fields[3])
+                        item_downstream_coordinate = int(gff_fields[4])
+                        if gff_fields[6] == '+':
+                            item_polarity = 'F'
+                        else:
+                            item_polarity = 'R'
+                        """ count reads and write table """
+                        if chrom in hit_store:
+                            count = hit_store[chrom].count_reads(item_upstream_coordinate,
+                                                                 item_downstream_coordinate, item_polarity)
+                            text.append("\t".join([chrom, str(count)]))
             gff.close()
             fh_out_mirs = open(out_mirs, 'w')
             fh_out_mirs.write("\n".join(text))
@@ -221,7 +224,7 @@ def __main__():
             logger.error("I/O error(%s): %s" % (e.errno, e.strerror))
         except KeyError as e:
             logger.error("The first column of the GFF and the headers of the reference genome of the alignment are not the same")
-            logger.error("We caught %s in the GFF3" % e)
+            logger.error("We caught %s in the GFF3 and an example of reference header would be %s" % (e, hit_store.keys()[0]))
 
 def __test__():
     aln = sys.argv[1]
