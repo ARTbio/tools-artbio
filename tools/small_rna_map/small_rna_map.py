@@ -26,6 +26,7 @@ def Ref_length(bamfile):
 
 def Ref_coord_pol(bamfile):
     ref_coord ={}
+    rnames =list(bamfile.references)
     for read in bamfile:
         if not read.is_unmapped:
             polarity = "F" if (not read.is_reverse) else "R"
@@ -38,6 +39,10 @@ def Ref_coord_pol(bamfile):
                 ref_coord[the_key][1].append(read_length)
             except:
                 ref_coord[the_key] = [1,[read_length]]
+            if read_rname in rnames:
+                rnames.remove(read_rname)
+    for rname in rnames:
+        ref_coord[(rname, 0, "F")]=[0,[0]]
     return collections.OrderedDict(sorted(ref_coord.items())) #dictionary {(read_rname,read_position,polarity):[nmbr_read,list_of_alignment_length]}
 
 
