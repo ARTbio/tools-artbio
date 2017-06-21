@@ -39,8 +39,6 @@
         ## bowtie parse :
         ##     Be careful:
         ##     Bam: 0-based; SAM: 1-based; GFF: 1-based
-        ##     also, translate mature mirs into hairpin-based coordinates (now genome-based coordinates)
-        ##     for hairpin, no worries, it will be self-consistent
         ## ! refactoring
     ]]></command>
     <inputs>
