@@ -105,7 +105,7 @@ class HitContainer:
         """
         Add read to the self.aligned_reads dictionary as self.aligned_reads[offset] = [size]
         """
-        if polarity == "R":
+        if polarity == "F":
             self.aligned_reads[offset].append(size)
         else:
             self.aligned_reads[-(offset + size - 1)].append(size)
@@ -160,6 +160,8 @@ def __main__():
         parser.error('Wrong number of arguments')
     if (not options.alignment_file or not options.gff_file):
         parser.error('Missing file')
+    if (options.lattice and not options.mirs):
+        parse.error("Can't output lattice dataframe if the option '-m' is not set")
     """ Set up the logger """
     log_level = getattr(logging, options.loglevel)
     kwargs = {'format': LOG_FORMAT,
@@ -195,6 +197,10 @@ def __main__():
     if options.mirs:
         out_mirs = options.output_mature_mirs
         text = list()
+        if options.lattice:
+            lattice_dataframe = list()
+            lattice_dataframe.append("sample\tmir\toffset\toffsetNorm\tcounts\tcountsNorm\tpolarity")
+            coverage = None
         try:
             """ Open GFF and Output file """
             gff = open(options.gff_file, 'r')
@@ -205,20 +211,72 @@ def __main__():
                     gff_fields = line[:-1].split("\t")
                     if gff_fields[2] == 'miRNA':
                         chrom = gff_fields[0]
-                        item_upstream_coordinate = int(gff_fields[3])
-                        item_downstream_coordinate = int(gff_fields[4])
-                        if gff_fields[6] == '+':
-                            item_polarity = 'F'
-                        else:
-                            item_polarity = 'R'
-                        """ count reads and write table """
-                        if chrom in hit_store:
+                        if hit_store.has_key(chrom):
+                            item_upstream_coordinate = int(gff_fields[3])
+                            item_downstream_coordinate = int(gff_fields[4])
+                            if gff_fields[6] == '+':
+                                item_polarity = 'F'
+                                if options.lattice:
+                                    """
+                                    If the lattice dataframe is needed as output
+                                    we need to compute the coverage off each GFF item
+                                     - initialize coverage dictionary with each position of the item as key and 0 as value
+                                     - for each offset hit by a read for this item:
+                                       - get the size of the reads that hit said offset
+                                       - set +1 for each position covered by each read in coverage dictionary
+                                    """
+                                    coverage = dict([(i,0) for i in xrange(1, item_downstream_coord-item_upstream_coord+1)])
+                                    for offset in hit_store[chrom].aligned_reads.keys():
+                                        if (offset > 0) and (coverage.has_key(offset - item_upstream_coord+1)):
+                                            for read in hit_store[chrom].aligned_reads[offset]:
+                                                it = 0
+                                                while it < read:
+                                                    if coverage.has_key(offset - item_upstream_coord+1+it):
+                                                        coverage[offset - item_upstream_coord+1+it] += 1
+                                                        it += 1
+                                                    else:
+                                                        it = read
+                            else:
+                                item_polarity = 'R'
+                                if options.lattice:
+                                    """
+                                    If the lattice dataframe is needed as output
+                                    we need to compute the coverage off each GFF item
+                                     - initialize coverage dictionary with each position of the item as key and 0 as value
+                                     - for each offset hit by a read for this item:
+                                       - get the size of the reads that hit said offset
+                                       - set +1 for each position covered by each read in coverage dictionary
+                                    """
+                                    coverage = dict([(i,0) for i in xrange(1, item_downstream_coord-item_upstream_coord+1)])
+                                    for offset in hit_store[chrom].aligned_reads.keys():
+                                        if (offset < 0) and (coverage.has_key(-offset - item_upstream_coord+1)):
+                                            for read in hit_store[chrom].aligned_reads[offset]:
+                                                it = 0
+                                                while it < read:
+                                                    if coverage.has_key(-offset - item_upstream_coord - it):
+                                                        coverage[-offset - item_upstream_coord - it] += 1
+                                                        it += 1
+                                                    else:
+                                                        it = read
+                            """ count reads and write table """
                             count = hit_store[chrom].count_reads(item_upstream_coordinate,
                                                                  item_downstream_coordinate, item_polarity)
                             text.append("\t".join([chrom, str(count)]))
+                            if options.lattice:
+                                """ Create a line in the lattice_dataframe for each position of the item """
+                                maximum = max(coverage.values())
+                                lattice_lines = list()
+                                for pos in coverage.keys():
+                                    lattice_lines.append("%s\t%s\t%s\t%s\t%s\t%s\t%s" % (options.alignment_file,
+                                                                                         chrom, pos,
+                                                                                         float(pos)/(item_downstream_coord - item_upstream_coord +1),
+                                                                                         coverage[pos],
+                                                                                         float(coverage[pos])/maximum,
+                                                                                         item_polarity))
+                                lattice_dataframe.append("\n".join(lattice_lines))
             gff.close()
             fh_out_mirs = open(out_mirs, 'w')
-            fh_out_mirs.write("\n".join(text))
+            fh_out_mirs.write("\n".join(sorted(text)))
             fh_out_mirs.close()
         except IOError as e:
             logger.error("I/O error(%s): %s" % (e.errno, e.strerror))
