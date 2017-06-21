@@ -278,6 +278,13 @@ def __main__():
             fh_out_mirs = open(out_mirs, 'w')
             fh_out_mirs.write("\n".join(sorted(text)))
             fh_out_mirs.close()
+            logger.info("Finished writing %s" % out_mirs)
+            if oprions.lattice:
+                """ Print lattice dataframe if asked for """
+                fh_out_lattice = open(options.lattice, 'w')
+                fh_out_lattice.write("\n".join(lattice_dataframe))
+                fh_out_lattice.close()
+                logger.info("Finished writing %s" % options.lattice)
         except IOError as e:
             logger.error("I/O error(%s): %s" % (e.errno, e.strerror))
         except KeyError as e:
