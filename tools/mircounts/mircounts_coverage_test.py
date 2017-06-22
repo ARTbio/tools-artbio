@@ -16,23 +16,6 @@ LOG_FORMAT = '%(asctime)s|%(levelname)-8s|%(message)s'
 LOG_DATEFMT = '%Y-%m-%d %H:%M:%S'
 LOG_LEVELS = ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']
 
-def get_headers_from_fasta(fasta_file, logger):
-    """
-    Takes a fasta file and returns a list of fasta headers.
-    """
-    headers = list()
-    try:
-        fh = open(fasta_file, 'r')
-        for line in fh.readlines():
-            if line.startswith('>', 0, 1):
-                """ Bowtie splits headers """
-                headers.append(line[1:-1].split()[0])
-        fh.close()
-    except IOError as e:
-        logger.error("I/O error(%s): %s" % (e.errno, e.strerror))
-        raise e
-    return headers
-
 def read_bam_sam(alignment_file, alignment_format):
     """
     Takes an alignment file and its format (must be either bam or sam)
@@ -59,8 +42,10 @@ def read_bam_sam(alignment_file, alignment_format):
         polarity = "forward" if (not read.is_reverse) else "reverse"
         if not read.is_unmapped:
             gene = read.reference_name
-            offset = read.pos + 1
+            offset = read.pos
             size = read.qlen
+            if gene == 'dme-miR-318-3p':
+              print("len %s" % size)
             """ If the gene hasn't been read yet add it to store """
             hit_store[gene].add_read(offset, polarity, size)
     return hit_store
