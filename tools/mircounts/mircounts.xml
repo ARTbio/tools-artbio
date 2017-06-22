@@ -10,7 +10,7 @@
         wget ftp://mirbase.org/pub/mirbase/CURRENT/genomes/${genomeKey}.gff3 && ## download gff3 specified by the variable genomeKey
         python '$__tool_directory__'/mature_mir_gff_translation.py --input ${genomeKey}.gff3 --output $gff3 && ## transcode the mature miR genome coordinates into coordinates relative to the corresponding "miRNA_primary_transcript".
         wget ftp://mirbase.org/pub/mirbase/CURRENT/hairpin.fa.gz &&
-        sh format_fasta_hairpins.sh $genomeKey
+        sh '$__tool_directory__'/format_fasta_hairpins.sh $genomeKey &&
         #if $cutadapt.cutoption == "yes":
             python '$__tool_directory__'/yac.py --input $cutadapt.input
                                                 --output clipped_input.fastq
