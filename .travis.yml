@@ -16,7 +16,7 @@ install:
   - pip install planemo # flake8 flake8-import-order
   - planemo conda_init
   - export PATH="$PLANEMO_CONDA_PREFIX/bin:$PATH"
-  - conda create -y -q -c bioconda --name artbio_conda bowtie=1.2.0
+  - conda create -y -q -c bioconda --name artbio_conda samtools=1.4.1 bcftools
   - . activate artbio_conda
   - planemo --version
   - conda --version
