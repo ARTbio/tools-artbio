@@ -16,22 +16,6 @@ LOG_FORMAT = '%(asctime)s|%(levelname)-8s|%(message)s'
 LOG_DATEFMT = '%Y-%m-%d %H:%M:%S'
 LOG_LEVELS = ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']
 
-def get_headers_from_fasta(fasta_file, logger):
-    """
-    Takes a fasta file and returns a list of fasta headers.
-    """
-    headers = list()
-    try:
-        fh = open(fasta_file, 'r')
-        for line in fh.readlines():
-            if line.startswith('>', 0, 1):
-                """ Bowtie splits headers """
-                headers.append(line[1:-1].split()[0])
-        fh.close()
-    except IOError as e:
-        logger.error("I/O error(%s): %s" % (e.errno, e.strerror))
-        raise e
-    return headers
 
 def read_bam_sam(alignment_file, alignment_format):
     """
@@ -44,7 +28,10 @@ def read_bam_sam(alignment_file, alignment_format):
     offset = None
     size = None
     samfile = None
-    samfile = pysam.AlignmentFile(alignment_file, 'r')
+    if alignment_format == 'bam':
+        samfile = pysam.AlignmentFile(alignment_file, 'br')
+    else:
+        samfile = pysam.AlignmentFile(alignment_file, 'r')
     """ Initialize dictionary """
     for reference in samfile.header['SQ']:
         hit_store[reference['SN']] = HitContainer(reference['SN'])
