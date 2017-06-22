@@ -91,6 +91,7 @@ def read_tabular(alignment_file):
         fh.close()
     except IOError as e:
         raise e
+    return hit_store
 
 class HitContainer:
     """
@@ -179,6 +180,7 @@ def __main__():
         hit_store = read_bam_sam(options.alignment_file, options.alignment_format)
     else:
         hit_store = read_tabular(options.alignment_file)
+        logger.info("Number of keys %s" % len(hit_store.keys()))
     """ If the pre-mirs are asked """
     if options.pre_mirs:
         text = list()
@@ -213,8 +215,8 @@ def __main__():
                     if gff_fields[2] == 'miRNA':
                         chrom = gff_fields[0]
                         if hit_store.has_key(chrom):
-                            item_upstream_coordinate = int(gff_fields[3])
-                            item_downstream_coordinate = int(gff_fields[4])
+                            item_upstream_coord = int(gff_fields[3])
+                            item_downstream_coord = int(gff_fields[4])
                             if gff_fields[6] == '+':
                                 item_polarity = 'forward'
                                 if options.lattice:
@@ -226,7 +228,7 @@ def __main__():
                                        - get the size of the reads that hit said offset
                                        - set +1 for each position covered by each read in coverage dictionary
                                     """
-                                    coverage = dict([(i,0) for i in xrange(1, item_downstream_coord-item_upstream_coord+1)])
+                                    coverage = dict([(i,0) for i in xrange(1, item_downstream_coord - item_upstream_coord+1)])
                                     for offset in hit_store[chrom].aligned_reads.keys():
                                         if (offset > 0) and (coverage.has_key(offset - item_upstream_coord+1)):
                                             for read in hit_store[chrom].aligned_reads[offset]:
@@ -260,8 +262,8 @@ def __main__():
                                                     else:
                                                         it = read
                             """ count reads and write table """
-                            count = hit_store[chrom].count_reads(item_upstream_coordinate,
-                                                                 item_downstream_coordinate, item_polarity)
+                            count = hit_store[chrom].count_reads(item_upstream_coord,
+                                                                 item_downstream_coord, item_polarity)
                             text.append("\t".join([chrom, str(count)]))
                             if options.lattice:
                                 """ Create a line in the lattice_dataframe for each position of the item """
@@ -272,7 +274,7 @@ def __main__():
                                                                                          chrom, pos,
                                                                                          float(pos)/(item_downstream_coord - item_upstream_coord +1),
                                                                                          coverage[pos],
-                                                                                         float(coverage[pos])/maximum,
+                                                                                         (float(coverage[pos])/maximum) if maximum > 0 else 0,
                                                                                          item_polarity))
                                 lattice_dataframe.append("\n".join(lattice_lines))
             gff.close()
