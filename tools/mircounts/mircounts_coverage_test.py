@@ -125,7 +125,6 @@ class HitContainer:
                 self.aligned_reads_stop[-(offset + size)] += 1
             else :
                 self.aligned_reads_stop[-(offset + size)] = 1
-            self.aligned_reads[-(offset + size - 1)].append(size)
         self.aligned_reads_count += 1
 
     def count_reads(self, upstream_coord, downstream_coord, polarity):
@@ -232,6 +231,7 @@ def __main__():
                         if hit_store.has_key(chrom):
                             item_upstream_coord = int(gff_fields[3])
                             item_downstream_coord = int(gff_fields[4])
+                            coverage = dict()
                             if gff_fields[6] == '+':
                                 item_polarity = 'forward'
                                 if options.lattice:
@@ -243,9 +243,9 @@ def __main__():
                                        - get the size of the reads that hit said offset
                                        - set +1 for each position covered by each read in coverage dictionary
                                     """
-                                    coverage = dict([(i,0) for i in xrange(1, item_downstream_coord-item_upstream_coord+1)])
+                                    positions = list([i for i in xrange(1, item_downstream_coord-item_upstream_coord+1)])
                                     read_count = 0
-                                    for position in coverage.keys():
+                                    for position in positions:
                                         if hit_store[chrom].aligned_reads_start.has_key(position):
                                             read_count += hit_store[chrom].aligned_reads_start[position]
                                         if hit_store[chrom].aligned_reads_stop.has_key(position):
@@ -262,9 +262,9 @@ def __main__():
                                        - get the size of the reads that hit said offset
                                        - set +1 for each position covered by each read in coverage dictionary
                                     """
-                                    coverage = dict([(i,0) for i in xrange(1, item_downstream_coord-item_upstream_coord+1)])
+                                    positions = list([i for i in xrange(1, item_downstream_coord-item_upstream_coord+1)])
                                     read_count = 0
-                                    for position in coverage.keys():
+                                    for position in positions:
                                         if hit_store[chrom].aligned_reads_start.has_key(-position):
                                             read_count += hit_store[chrom].aligned_reads_start[-position]
                                         if hit_store[chrom].aligned_reads_stop.has_key(-position):
