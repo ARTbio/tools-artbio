@@ -96,6 +96,16 @@ dual_axis <- function(v1,v2){
 # Overlap panels for second plot on those of the first plot
 			g <- gtable_add_grob(g1, g2$grobs[grepl("panel", g1$layout$name)], 
       			pp$t, pp$l, pp$b, pp$l)
+# Extract the y axis of the second plot
+			ia<-which(g2$layout$name=="axis-l-1-1")
+			ga <- g2$grobs[[ia]]
+			ax <- ga$children[[2]]
+#Flip it horizontally
+			ax$widths <- rev(ax$widths)
+			ax$grobs <- rev(ax$grobs)
+#Add the flipped y-axis to the right
+			g <- gtable_add_cols(g, g2$widths[g2$layout[ia, ]$l], length(g$widths) - 1)
+			g <- gtable_add_grob(g, ax, pp$t, length(g$widths) - 1, pp$b)
 		}
  
 plots <- list()
