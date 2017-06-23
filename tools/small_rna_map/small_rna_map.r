@@ -2,6 +2,7 @@ library(optparse)
 library(ggplot2)
 library(gridExtra)
 library(RColorBrewer)
+library(gtable)
 
 option_list <- list(
     make_option(c("-r", "--output_tab"), type="character", help="path to tabular file"),
@@ -53,14 +54,57 @@ g_legend<-function(a.gplot){
 mylegend <- g_legend(p);
 
 p <- p+ theme(legend.position = "none")# Hide the repeated caption
-#transforme ggplot graphs on list of graphs
-plot.list <- by(data     = Table,
+
+# The second plot
+p2 <- ggplot(Table, aes(x = Coordinate, y = Median)) +
+  geom_point(aes(col=Median),size = 1, colour="black") + 
+  geom_line()+
+  expand_limits(y = seq(0,max(Table$Median),by=4)) +
+  facet_wrap(Dataset~Chromosome, scales="free") +
+  geom_segment(aes(y = Nbr_reads, 
+			 x = 0,
+			 yend=Nbr_reads,
+			 xend=Chrom_length), alpha=0
+		   )+
+  theme(panel.background = element_rect(fill = NA),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_rect(fill = NA, colour = "grey50"),
+        legend.position = "bottom")
+
+# Transforme ggplot graphs on list of graphs
+plot.list1 <- by(data     = Table,
                 INDICES  = c(Table$Chromosome),
                 simplify = TRUE,
                 FUN      = function(x) {
                   p %+% x 
                 })
-#Plotting in multiple pages with different rows
-multi.plot <- marrangeGrob(grobs = plot.list,nrow  = 8, ncol = 1, top=NULL, bottom="Coordinates(nt)", left="Number of reads", right = mylegend);
+ 
+plot.list2 <- by(data     = Table,
+                INDICES  = c(Table$Chromosome),
+                simplify = TRUE,
+                FUN      = function(x) {
+                  p2 %+% x 
+                })
+
+dual_axis <- function(v1,v2){
+# Get the ggplot grobs
+			g1 <- ggplot_gtable(ggplot_build(v1))
+			g2 <- ggplot_gtable(ggplot_build(v2))
+# Get the locations of the plot panels in g1.
+			pp <- c(subset(g1$layout, grepl("panel", g1$layout$name), se = t:r))
+# Overlap panels for second plot on those of the first plot
+			g <- gtable_add_grob(g1, g2$grobs[grepl("panel", g1$layout$name)], 
+      			pp$t, pp$l, pp$b, pp$l)
+		}
+ 
+plots <- list()
+ 
+ 
+
+len = length(plot.list1)
+for(i in 1:len ) {plots[[i]] <- dual_axis(plot.list1[[i]],plot.list2[[i]])}
+# Plotting in multiple pages with different rows
+multi.plot<-do.call(marrangeGrob,list(grobs=plots,ncol=1,nrow=8,top=NULL, bottom="Coordinates(nt)", left="Number of reads", right = mylegend));
 ggsave(args$output_pdf, device="pdf", plot=multi.plot, height=11.69, width=8.2)
 
