@@ -33,6 +33,14 @@ def get_pre_mir_counts(bamfile):
     count = dict()
     reference_lengths = bamfile.lengths
     it = 0
+    """
+    Need reference legths beacuse when no end parameter is given to count_coverage an error raises
+    This works beacuse : 
+    lengths
+    tuple of the lengths of the reference sequences.
+    This is a read-only attribute. The lengths are in the same order as pysam.AlignmentFile.references
+    (from : http://pysam.readthedocs.io/en/latest/api.html)
+    """
     for ref in bamfile.references:
         count[ref] = [bamfile.count(ref),
 	              bamfile.count_coverage(reference=ref,start=0,end=reference_lengths[it])]
