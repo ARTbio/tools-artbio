@@ -31,9 +31,12 @@ def get_pre_mir_counts(bamfile):
     hiting 'miRNA_primary_transcript' positions and the coverage of said region
     """
     count = dict()
+    reference_lengths = bamfile.lengths
+    it = 0
     for ref in bamfile.references:
         count[ref] = [bamfile.count(ref),
-                      bamfile.count_coverage(ref)]
+	              bamfile.count_coverage(reference=ref,start=0,end=reference_lengths[it])]
+        it += 1
     return count
 
 def get_mir_counts(bamfile, gff_file):
