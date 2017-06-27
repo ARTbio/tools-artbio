@@ -46,11 +46,11 @@
 
         ## run the bowtie alignement
         #if $output_format == "tabular":
-            bowtie -p \${GALAXY_SLOTS:-4} '${method_postfix}' --suppress 6,7,8 '${extra_output}' local_index '${format}' '$input' > '$output'
+            bowtie -p \${GALAXY_SLOTS:-4} '$method_postfix' --suppress 6,7,8 '$extra_output' local_index '$format' '$input' > '$output'
         #elif $output_format == "sam":
-            bowtie -p \${GALAXY_SLOTS:-4} '${method_postfix}' '${extra_output}' -S local_index '${format}' $input > $output
+            bowtie -p \${GALAXY_SLOTS:-4} '$method_postfix' '$extra_output' -S local_index '$format' $input > $output
         #elif $output_format == "bam":
-            bowtie -p \${GALAXY_SLOTS:-4} '${method_postfix}' '${extra_output}' -S local_index '${format}' $input |samtools view -bS - > $output
+            bowtie -p \${GALAXY_SLOTS:-4} '$method_postfix' '$extra_output' -S local_index '$format' $input |samtools view -bS - > $output
         #end if
         
         ]]></command>
