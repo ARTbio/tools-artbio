@@ -18,17 +18,17 @@
 
         ## set the method_prefix
         #if $method == "RNA":
-            #set method_prefix = "-v %s -M 1 --best --strata --norc" % (str($v_mismatches))
+            #set method_prefix = "-v %s -M 1 --best --strata --norc" % str($v_mismatches)
         #elif $method == "unique":
-            #set method_prefix = "-v %s -m 1" % (str($v_mismatches))
+            #set method_prefix = "-v %s -m 1" % str($v_mismatches)
         #elif $method == "multiple":
-            #set method_prefix = "-v %s -M 1 --best --strata" % (str($v_mismatches))
+            #set method_prefix = "-v %s -M 1 --best --strata" % str($v_mismatches)
         #elif $method == "k_option":
-            #set method_prefix = "-v %s -k 1 --best" % (str($v_mismatches))
+            #set method_prefix = "-v %s -k 1 --best" % str($v_mismatches)
         #elif $method == "n_option":
-            #set method_prefix = "-n %s -M 1 --best" % (str($v_mismatches))
+            #set method_prefix = "-n %s -M 1 --best" % str($v_mismatches)
         #elif $method == "a_option":
-            #set method_prefix = "-v %s -a --best" % (str($v_mismatches))
+            #set method_prefix = "-v %s -a --best" % str($v_mismatches)
         #end if
  
         ## set the extra_output
