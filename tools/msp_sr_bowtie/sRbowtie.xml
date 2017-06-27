@@ -5,7 +5,7 @@
         <requirement type="package" version="1.2">samtools</requirement>
     </requirements>
     <command detect_errors="exit_code"><![CDATA[
-        #if $refGenomeSource.genomeSource == "history":
+        #if str($refGenomeSource.genomeSource) == "history":
             bowtie-build -f '$refGenomeSource.ownFile' local_index &&
         #else:
             ln -f -s '$refGenomeSource.index.fields.path' local_index &&
