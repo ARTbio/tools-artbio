@@ -1,8 +1,8 @@
 <tool id="bowtieForSmallRNA" name="sRbowtie" version="1.2">
     <description>for FASTA small reads</description>
     <requirements>
-        <requirement type="package" version="1.1.2">bowtie</requirement>
-        <requirement type="package" version="1.4.1=py27_0">samtools</requirement>
+        <requirement type="package" version="1.1.2=py27_2">bowtie</requirement>
+        <requirement type="package" version="1.2">samtools</requirement>
     </requirements>
     <command detect_errors="exit_code"><![CDATA[
         #if $refGenomeSource.genomeSource == "history":
@@ -50,7 +50,7 @@
         #elif $output_format == "sam":
             bowtie -p \${GALAXY_SLOTS:-4} $method_postfix -S local_index $format '$input' > '$output'
         #elif $output_format == "bam":
-            bowtie -p \${GALAXY_SLOTS:-4} $method_postfix -S local_index $format '$input' | samtools sort -O bam -o $output
+            bowtie -p \${GALAXY_SLOTS:-4} $method_postfix -S local_index $format '$input' | samtools view -u - | samtools sort -@ "\${GALAXY_SLOTS:-4}" -T tmp -O bam -o $output
         #end if
         ##### | samtools view -uS
         ]]></command>
