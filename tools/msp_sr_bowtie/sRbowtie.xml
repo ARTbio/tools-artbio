@@ -5,10 +5,10 @@
         <requirement type="package" version="1.4.1">samtools</requirement>
     </requirements>
     <command detect_errors="exit_code"><![CDATA[
-        #if str($refGenomeSource.genomeSource) == "history":
-            bowtie-build -f '$refGenomeSource.ownFile' local_index &&
+        #if $refGenomeSource.genomeSource == "history":
+            bowtie-build -f $refGenomeSource.ownFile local_index &&
         #else:
-            ln -f -s '$refGenomeSource.index.fields.path' local_index &&
+            ln -f -s $refGenomeSource.index.fields.path local_index &&
         #end if
         #if $input.extension == "fasta":
             #set format = "-f"
@@ -45,12 +45,12 @@
         #set $method_postfix = " %s %s " % ($method_prefix, $extra_output)
 
         ## run the bowtie alignement
-        #if str($output_format) == "tabular":
-            bowtie -p \${GALAXY_SLOTS:-4} $method_postfix --suppress 6,7,8 local_index $format '$input' > '$output'
-        #elif str($output_format) == "sam":
+        #if $output_format == "tabular":
+            bowtie -p \${GALAXY_SLOTS:-4} $method_postfix --suppress 6,7,8 local_index $format '$input' > $output
+        #elif $output_format == "sam":
             bowtie -p \${GALAXY_SLOTS:-4} $method_postfix -S local_index $format '$input' > '$output'
-        #elif str($output_format) == "bam":
-            bowtie -p \${GALAXY_SLOTS:-4} $method_postfix -S local_index $format '$input' | samtools sort -O bam -o '$output'
+        #elif $output_format == "bam":
+            bowtie -p \${GALAXY_SLOTS:-4} $method_postfix -S local_index $format '$input' | samtools sort -O bam -o $output
         #end if
         ##### | samtools view -uS
         ]]></command>
