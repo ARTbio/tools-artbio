@@ -46,13 +46,13 @@
 
         ## run the bowtie alignement
         #if str($output_format) == "tabular":
-            bowtie -p \${GALAXY_SLOTS:-4} '$method_postfix' --suppress 6,7,8 '$extra_output' local_index '$format' '$input' > '$output'
+            bowtie -p \${GALAXY_SLOTS:-4} $method_postfix --suppress 6,7,8 local_index $format '$input' > '$output'
         #elif str($output_format) == "sam":
-            bowtie -p \${GALAXY_SLOTS:-4} '$method_postfix' '$extra_output' -S local_index '$format' $input > $output
+            bowtie -p \${GALAXY_SLOTS:-4} $method_postfix -S local_index $format '$input' > '$output'
         #elif str($output_format) == "bam":
-            bowtie -p \${GALAXY_SLOTS:-4} '$method_postfix' '$extra_output' -S local_index '$format' $input | samtools view -uS | samtools sort -O bam -o '$output'
+            bowtie -p \${GALAXY_SLOTS:-4} $method_postfix -S local_index $format '$input' | samtools sort -O bam -o '$output'
         #end if
-        
+        ##### | samtools view -uS
         ]]></command>
     <inputs>
         <param format="fasta, fastq" help="Only with clipped, raw fasta files" label="Input fasta file: reads clipped from their adapter" name="input" type="data" />
@@ -147,6 +147,26 @@
             <param name="v_mismatches" value="1" />
             <param name="output_format" value="bam" />
             <output file="output2.bam" ftype="bam" compare="sim_size" delta="1000" name="output" />
+        </test>
+        <test>
+            <param name="genomeSource" value="history" />
+            <param ftype="fasta" name="ownFile" value="297_reference.fa" />
+            <param name="method" value="multiple" />
+            <param ftype="fasta" name="input" value="input.fa" />
+            <param name="v_mismatches" value="1" />
+            <param name="output_format" value="tabular" />
+            <output file="output.tab" ftype="tabular" name="output" />
+        </test>
+        <test>
+            <param name="genomeSource" value="history" />
+            <param ftype="fasta" name="ownFile" value="297_reference.fa" />
+            <param name="method" value="multiple" />
+            <param ftype="fasta" name="input" value="input.fa" />
+            <param name="v_mismatches" value="1" />
+            <param name="additional_fasta" value="al" />
+            <param name="output_format" value="tabular" />
+            <output file="output.tab" ftype="tabular" name="output" />
+            <output file="al.fa" ftype="fasta" name="aligned" />
         </test>
     </tests>
     <help>
