@@ -57,9 +57,11 @@ mylegend <- g_legend(p);
 p <- p+ theme(legend.position = "none")# Hide the repeated caption
  
 # The second plot
-p2 <- ggplot(Table, aes(x = Coordinate, y = Median, group=1)) +
-  geom_point(aes(col=Median),size = 1, colour="black") + 
-  geom_line()+
+cols<- c("Median"="#000000", "Mean"="#fffa00")
+p2 <- ggplot(Table, aes(x = Coordinate, group=1)) +
+  geom_point(aes(y=Median, colour="Median"), alpha=1, size = 1) +
+  geom_point(aes(y=Mean, colour="Mean"), alpha= 0.3, size = 1.2)+
+  scale_colour_manual(name="", values=cols)+ 
   expand_limits(y = seq(0,max(Table$Median),by=5)) +
   facet_wrap(Dataset~Chromosome, scales="free", nrow=1, labeller = label_wrap_gen(multi_line = FALSE))+
   geom_segment(aes(y = Nbr_reads, 
@@ -74,8 +76,10 @@ p2 <- ggplot(Table, aes(x = Coordinate, y = Median, group=1)) +
         panel.grid.minor = element_blank(),
         panel.border = element_rect(fill = NA, colour = "grey50"),
         axis.text = element_text(size = 6),
-        legend.position = "bottom"
+        legend.position = "right"
         )
+mylegend2 <- g_legend(p2);
+legend <- rbind(mylegend, mylegend2)
 # Transforme ggplot graphs on list of graphs
 plot.list1 <- by(data     = Table,
                 INDICES  = c(Table$Chromosome),
@@ -155,6 +159,6 @@ plots <- list()
 len = length(plot.list1)
 for(i in 1:len ) {plots[[i]] <- dual_axis(plot.list1[[i]],plot.list2[[i]])}
 # Plotting in multiple pages with different rows
-multi.plot<-do.call(marrangeGrob,list(grobs=plots,ncol=1,nrow=8,top=NULL, bottom="Coordinates(nt)", left="Number of reads", right= mylegend))
+multi.plot<-do.call(marrangeGrob,list(grobs=plots,ncol=1,nrow=8,top=NULL, bottom="Coordinates(nt)", left="Number of reads", right= legend))
 ggsave(args$output_pdf, device="pdf", plot=multi.plot, height=11.69, width=8.2)
 

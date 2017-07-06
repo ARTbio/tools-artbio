@@ -57,8 +57,7 @@ def calcul_stat(dictionary,ref):
             dico[key] = []
             dico[key].append(value)
     the_max = max(dico[ref])
-    the_mean = numpy.mean(dico[ref])
-    return (the_max, round(the_mean,2))
+    return the_max
 
 
 def filename(infile): 
@@ -76,7 +75,7 @@ def main(infile, output):
                 ref_length = Ref_length(bamfile)
                 tabulation = "\t"
                 for read in ref_coord:
-                    table = (str(filename(bamfile)), str(read[0]), str(ref_length[str(read[0])]), str(read[1]), str(ref_coord[read][0]), str(read[2]), str(calcul_stat(ref_coord,read[0])[0]), str(calcul_stat(ref_coord,read[0])[1]), str(numpy.median(ref_coord[read][1])))
+                    table = (str(filename(bamfile)), str(read[0]), str(ref_length[str(read[0])]), str(read[1]), str(ref_coord[read][0]), str(read[2]), str(calcul_stat(ref_coord,read[0])), str(round(numpy.mean(ref_coord[read][1]),1)), str(numpy.median(ref_coord[read][1])))
                     outfile.write(tabulation.join(table) + "\n")
 
 
