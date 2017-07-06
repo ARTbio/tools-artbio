@@ -43,7 +43,7 @@ def get_pre_mir_counts(bamfile):
     """
     for ref in bamfile.references:
         count[ref] = [bamfile.count(ref),
-	              bamfile.count_coverage(reference=ref,start=0,end=reference_lengths[it])]
+	              bamfile.count_coverage(reference=ref,start=0,end=reference_lengths[it], quality_threshold=10)]
         it += 1
     return count
 
