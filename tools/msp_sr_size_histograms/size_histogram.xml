@@ -1,13 +1,13 @@
 <tool id="Size_histogram" name="Generate size histograms from alignment files" version="0.9.9">
     <description>from sRbowtie aligment</description>
     <requirements>
-        <requirement type="package" version="1.1.2">bowtie</requirement>
-        <requirement type="package" version="0.8.3">pysam</requirement>
-        <requirement type="package" version="3.1.2">R</requirement>
-        <requirement type="package" version="2.14">biocbasics</requirement>
-        <requirement type="package" version="1.9">numpy</requirement>
-        <requirement type="package" version="2.0.0=r3.2.2_0a">r-gridextra</requirement>
-        <requirement type="package" version="0.6_26=r3.2.2_2a">r-latticeextra</requirement>
+        <requirement type="package" version="1.1.2=py27_2">bowtie</requirement>
+        <requirement type="package" version="0.11.2.1=py27_0">pysam</requirement>
+<!--        <requirement type="package" version="3.1.2">R</requirement> -->
+<!--        <requirement type="package" version="2.14">biocbasics</requirement> -->
+        <requirement type="package" version="1.11.2=py27_0">numpy</requirement>
+        <requirement type="package" version="2.2.1=r3.3.2_0">r-gridextra</requirement>
+        <requirement type="package" version="0.6_28=r3.3.2_0">r-latticeextra</requirement>
     </requirements>
     <command><![CDATA[
         python '$__tool_directory__'/size_histogram.py
