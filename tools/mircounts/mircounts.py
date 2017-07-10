@@ -56,6 +56,9 @@ def get_mir_counts(bamfile, gff_file, quality_th):
     and returns a dictionnary : dict[reference name] = [polarity, coverage as [[],[],[],[]]]
     """
     counts = dict()
+    refs = list()
+    for h in header['SQ']:
+        refs.append(h['SN'])
     try:
         gff = open(gff_file, 'r')
         for line in gff.readlines():
@@ -65,9 +68,10 @@ def get_mir_counts(bamfile, gff_file, quality_th):
                     mir_name = gff_fields[0]
                     mir_start = int(gff_fields[3])
                     mir_end = int(gff_fields[4])
-                    counts[mir_name] = [bamfile.count(reference=mir_name, start=mir_start, end=mir_end),
-                                        bamfile.count_coverage(reference=mir_name, start=mir_start,
-                                                               end=mir_end, quality_threshold=quality_th)]
+                    if mir_name in refs:
+                        counts[mir_name] = [bamfile.count(reference=mir_name, start=mir_start, end=mir_end),
+                                            bamfile.count_coverage(reference=mir_name, start=mir_start,
+                                                                   end=mir_end, quality_threshold=quality_th)]
         gff.close()
     except IOError as e:
         sys.stderr.write("Error while reading file %s\n" % gff_file)
