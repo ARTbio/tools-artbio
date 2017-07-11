@@ -119,8 +119,12 @@
             <param name="v" value="0"/>
             <param name="genomeKey" value="dme"/>
             <param name="input" value="input.unclipped.fastqsanger" ftype="fastqsanger"/>
+            <param name="plottingOption" value="yes"/>
+            <param name="display" value="relative"/>
             <output name="output" file="unclipped.out.bam" ftype="bam"/>
             <output name="gff3" file="translated_dme.gff3" ftype="gff3"/>
+            <output name="latticePDF" file="latticePDF.pdf" ftype="pdf"/>
+            <output name="output_pre_mirs" file="pre_mirs.tab"/>
         </test>
         <test>
             <param name="cutoption" value="no" />
