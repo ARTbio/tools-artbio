@@ -83,6 +83,18 @@
             <option value="2">2</option>
             <option value="3">3</option>
         </param>
+        <conditional name="plotting">
+            <param label="Additional miRNA charts" name="plottingOption" type="select">
+                <option value="no">no</option>
+                <option value="yes" selected="True">yes</option>
+            </param>
+            <when value="yes">
+                <param label="Display Coverage with absolute number of reads or relatively to the total number of read matching the gene or mir" name="display" type="select">
+                    <option selected="True" value="relative">Relative Coverage</option>
+                    <option value="absolute">Absolute Coverage</option>
+                </param>
+            </when>
+        </conditional>
     </inputs>
     <outputs>
         <data format="bam" label="bam alignment" name="output" />
@@ -92,9 +104,9 @@
         <data format="tabular" label="Lattice Dataframe" name="lattice_dataframe">
             <filter>plotting['plottingOption'] == "yes"</filter>
         </data>
-        <!--<data format="pdf" label="Mir coverage" name="latticePDF">
+        <data format="pdf" label="Mir coverage" name="latticePDF">
             <filter>plotting['plottingOption'] == "yes"</filter>
-        </data>-->
+        </data>
     </outputs>
     <tests>
         <test>
@@ -118,7 +130,6 @@
             <output name="gff3" file="translated_dme.gff3" ftype="gff3"/>
         </test>
     </tests>
-    <!--
     <configfiles>
         <configfile name="plotCode">
 	#if  $plotting.plottingOption == "yes":
@@ -143,7 +154,6 @@
         #end if
      </configfile>
     </configfiles>
-    -->
     <help>
 
 **What it does**
