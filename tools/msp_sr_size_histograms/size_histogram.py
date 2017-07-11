@@ -24,7 +24,6 @@ def Parser():
   the_parser.add_argument('--gff', type=str, help="GFF containing regions of interest")
   the_parser.add_argument('--minquery', type=int, help="Minimum readsize")
   the_parser.add_argument('--maxquery', type=int, help="Maximum readsize")
-  the_parser.add_argument('--rcode', type=str, help="R script")
   the_parser.add_argument('--global_size', action="store_true", help="if specified, size distribution is calculated for the sum of all items")
   the_parser.add_argument('--collapse', action="store_true", help="if specified, forward and reverse reads are collapsed")
   args = the_parser.parse_args()
@@ -123,7 +122,3 @@ if global_size:
   write_size_distribution_dataframe_global(MasterListOfGenomes, size_distribution_file, pol)
 else:
   write_size_distribution_dataframe(MasterListOfGenomes, size_distribution_file, pol)
-
-R_command="Rscript "+ Rcode
-process = subprocess.Popen(R_command.split())
-process.wait()
