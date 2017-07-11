@@ -57,7 +57,7 @@ def get_mir_counts(bamfile, gff_file, quality_th):
     """
     counts = dict()
     refs = list()
-    for h in header['SQ']:
+    for h in bamfile.header['SQ']:
         refs.append(h['SN'])
     try:
         gff = open(gff_file, 'r')
@@ -145,8 +145,6 @@ def __main__():
     if options.mirs:
         mirs = get_mir_counts(bamfile, options.gff_file, options.quality_threshold)
         write_counts(mirs, options.output_mature_mirs)
-        if options.lattice:
-            write_dataframe(mirs, options.lattice, options.alignment_file)
 
 if __main__():
     __main__()
