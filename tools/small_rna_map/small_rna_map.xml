@@ -30,7 +30,7 @@
 
     <tests>
         <test>
-            <param name="input" value="input1.bam,input2.bam" ftype="bam"/>
+            <param name="input" value="input1.bam,input2.bam,input3.bam,input4.bam" ftype="bam"/>
             <output file="output.tab" name="output_tab" />
             <output file="output.pdf" name="output_pdf" />
         </test>
