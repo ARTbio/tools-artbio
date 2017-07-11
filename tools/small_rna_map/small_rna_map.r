@@ -44,17 +44,13 @@ p <- ggplot(Table, aes(x=Coordinate, y=Nbr_reads, colour=Polarity)) +
         panel.grid.major = element_line(colour = "#ffffff"),#conceal major grid lines
         panel.grid.minor = element_line(colour = "#ffffff"),#conceal minor grid lines
         axis.title = element_blank(),# Conceal axis titles
-        axis.text = element_text(size = 6))#modify the size of tick labels along axes
-#extract legend
-g_legend<-function(a.gplot){
-  tmp <- ggplot_gtable(ggplot_build(a.gplot))
-  leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
-  legend <- tmp$grobs[[leg]]
-  return(legend)}
+        axis.text = element_text(size = 6),#modify the size of tick labels along axes
+        legend.position = "none") # Hide the repeate caption
+
+# Create legend
+mylegend <- legendGrob(c("F", "R", "Median", "Mean"), pch=21,
+                     gp=gpar(col = 2:4, fill = c("red","blue","black","yellow")))
  
-mylegend <- g_legend(p);
- 
-p <- p+ theme(legend.position = "none")# Hide the repeated caption
  
 # The second plot
 cols<- c("Median"="#000000", "Mean"="#fffa00")
@@ -76,10 +72,9 @@ p2 <- ggplot(Table, aes(x = Coordinate, group=1)) +
         panel.grid.minor = element_blank(),
         panel.border = element_rect(fill = NA, colour = "grey50"),
         axis.text = element_text(size = 6),
-        legend.position = "right"
+        legend.position = "none"
         )
-mylegend2 <- g_legend(p2);
-legend <- rbind(mylegend, mylegend2)
+
 # Transforme ggplot graphs on list of graphs
 plot.list1 <- by(data     = Table,
                 INDICES  = c(Table$Chromosome),
@@ -159,6 +154,6 @@ plots <- list()
 len = length(plot.list1)
 for(i in 1:len ) {plots[[i]] <- dual_axis(plot.list1[[i]],plot.list2[[i]])}
 # Plotting in multiple pages with different rows
-multi.plot<-do.call(marrangeGrob,list(grobs=plots,ncol=1,nrow=8,top=NULL, bottom="Coordinates(nt)", left="Number of reads", right= legend))
+multi.plot<-do.call(marrangeGrob,list(grobs=plots,ncol=1,nrow=8,top=NULL, bottom="Coordinates(nt)", left="Number of reads", right= mylegend))
 ggsave(args$output_pdf, device="pdf", plot=multi.plot, height=11.69, width=8.2)
 
