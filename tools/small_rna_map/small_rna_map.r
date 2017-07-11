@@ -48,8 +48,8 @@ p <- ggplot(Table, aes(x=Coordinate, y=Nbr_reads, colour=Polarity)) +
         legend.position = "none") # Hide the repeate caption
 
 # Create legend
-mylegend <- legendGrob(c("F", "R", "Median", "Mean"), pch=21,
-                     gp=gpar(col = 2:4, fill = c("red","blue","black","yellow")))
+mylegend <- legendGrob(c("F", "R", "Median", "Mean"), pch=22,
+                     gp=gpar(col = c("red","blue","black","yellow"), fill = c("red","blue","black","yellow")))
  
  
 # The second plot
