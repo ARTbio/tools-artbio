@@ -123,16 +123,22 @@
             <param name="display" value="relative"/>
             <output name="output" file="unclipped.out.bam" ftype="bam"/>
             <output name="gff3" file="translated_dme.gff3" ftype="gff3"/>
-            <output name="latticePDF" file="latticePDF.pdf" ftype="pdf"/>
-            <output name="output_pre_mirs" file="pre_mirs.tab"/>
+            <output name="latticePDF" file="mir_clipped_coverage.pdf" ftype="pdf"/>
+            <output name="output_pre_mirs" file="pre_mirs_clipped_count.tab"/>
+            <output name="lattice_dataframe" file="lattice_clipped_dataframe.tab"/>
         </test>
         <test>
             <param name="cutoption" value="no" />
             <param name="v" value="1"/>
             <param name="genomeKey" value="dme"/>
             <param name="clipped_input" value="input.clipped.fastqsanger" ftype="fastqsanger"/>
+            <param name="plottingOption" value="yes"/>
+            <param name="display" value="relative"/>
             <output name="output" file="clipped.out.bam" ftype="bam"/>
             <output name="gff3" file="translated_dme.gff3" ftype="gff3"/>
+            <output name="latticePDF" file="latticePDF.pdf" ftype="pdf"/>
+            <output name="output_pre_mirs" file="pre_mirs.tab"/>
+            <output name="lattice_dataframe" file="lattice_dataframe.tab">
         </test>
     </tests>
     <configfiles>
