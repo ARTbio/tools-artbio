@@ -49,6 +49,10 @@ def load_gff_in_dict(gff_input_file):
         gff_dict[ID]["strand"]=gff_fields[6]
         gff_dict[ID]["phase"]=gff_fields[7]
         gff_dict[ID]["attributes"]=gff_fields[8]
+        if "Derives_from" in gff_dict[ID]["attributes"]:
+            parent_primary_transcript=gff_dict[ID]["attributes"].split("Derives_from=")[1]
+            parent_primary_transcript=gff_dict[parent_primary_transcript]["attributes"].split("Name=")[1]
+            gff_dict[ID]["attributes"]="%s;Parent_mir_Name=%s" % (gff_dict[ID]["attributes"], parent_primary_transcript)
     return gff_dict
     
 
