@@ -10,7 +10,7 @@ categories:
   - RNA
   - Transcriptomics
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/miRCounts
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/mircounts
 toolshed:
   - testtoolshed
   - toolshed
