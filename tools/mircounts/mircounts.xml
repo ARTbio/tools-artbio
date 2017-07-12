@@ -3,7 +3,7 @@
     <requirements>
         <requirement type="package" version="1.2">bowtie</requirement>
         <requirement type="package" version="1.4.1">samtools</requirement>
-        <requirement type="package" version="0.11.2.1=py27_0">pysam</requirement>
+        <requirement type="package" version="0.11.2.1">pysam</requirement>
     </requirements>
     <command detect_errors="exit_code"><![CDATA[
         ## To be refactored with guidelines in https://github.com/ARTbio/tools-artbio/issues/140
@@ -26,7 +26,9 @@
         bowtie -v $v -M 1 --best --strata --norc -p \${GALAXY_SLOTS:-4} --sam hairpin -q clipped_input.fastq 2>/dev/null | samtools sort -O bam -o '$output' &&
         samtools index $output &&
         python '$__tool_directory__'/mircounts.py -pm --alignment $output --gff $gff3 --quality_threshold 10 --pre_mirs_output $output_pre_mirs --mature_mirs_output $output_mature_mirs --lattice $lattice_dataframe;
-        Rscript "$plotCode"
+        #if $plotting.plottingOption == 'yes':
+            Rscript '$__tool_directory__'/coverage_plotting.R --dataframe $lattice_dataframe --type $plotting.display --output $latticePDF
+        #end if
         ##samtools view -bS output.sam -o output.bam &&
         ##samtools sort output.bam output.sorted &&
         ##samtools index output.sorted &&
@@ -95,6 +97,8 @@
                     <option value="absolute">Absolute Coverage</option>
                 </param>
             </when>
+            <when value="no">
+            </when>
         </conditional>
     </inputs>
     <outputs>
@@ -123,11 +127,11 @@
             <param name="display" value="relative"/>
             <output name="output" file="unclipped.out.bam" ftype="bam"/>
             <output name="gff3" file="translated_dme.gff3" ftype="gff3"/>
-            <output name="latticePDF" file="mir_clipped_coverage.pdf" ftype="pdf"/>
-            <output name="output_pre_mirs" file="pre_mirs_clipped_count.tab"/>
-            <output name="lattice_dataframe" file="lattice_clipped_dataframe.tab"/>
+            <output name="latticePDF" file="lattice_unclipped_PDF.pdf" ftype="pdf"/>
+            <output name="output_pre_mirs" file="pre_mirs_unclipped_count.tab"/>
+            <output name="lattice_dataframe" file="lattice_unclipped_dataframe.tab"/>
         </test>
-        <test>
+        <!--<test>
             <param name="cutoption" value="no" />
             <param name="v" value="1"/>
             <param name="genomeKey" value="dme"/>
@@ -136,35 +140,11 @@
             <param name="display" value="relative"/>
             <output name="output" file="clipped.out.bam" ftype="bam"/>
             <output name="gff3" file="translated_dme.gff3" ftype="gff3"/>
-            <output name="latticePDF" file="latticePDF.pdf" ftype="pdf"/>
-            <output name="output_pre_mirs" file="pre_mirs.tab"/>
-            <output name="lattice_dataframe" file="lattice_dataframe.tab">
-        </test>
+            <output name="latticePDF" file="lattice_clipped_PDF.pdf" ftype="pdf"/>
+            <output name="output_pre_mirs" file="pre_mirs_clipped_count.tab"/>
+            <output name="lattice_dataframe" file="lattice_clipped_dataframe.tab"/>
+        </test>-->
     </tests>
-    <configfiles>
-        <configfile name="plotCode">
-	#if  $plotting.plottingOption == "yes":
-          graph_type = "${plotting.display}" ## "relative" or "absolute"
-          ## Setup R error handling to go to stderr
-          options( show.error.messages=F,
-                 error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
-          library(lattice)
-          coverage = read.delim("${lattice_dataframe}", header=T)
-          Numb_of_biosamples = length(levels(coverage\$sample))
-          if (graph_type=="relative") {
-          graph = xyplot(countsNorm~offsetNorm | mir, data=coverage, col=c("blue"), type="l", lwd=1,
-                        scales=list(x=list(cex=.5), y=list(cex=.5)), par.strip.text=list(cex=.5), strip=strip.custom(which.given=1, bg="lightblue"), layout=c(Numb_of_biosamples,15), as.table=TRUE, main="miRNA coverage maps")
-          } else {
-          graph = xyplot(counts~offset | mir, data=coverage, col=c("blue"), type="l", lwd=1,
-                        scales=list(x=list(cex=.5), y=list(cex=.5)), par.strip.text=list(cex=.5), strip=strip.custom(which.given=1, bg="lightblue"), layout=c(Numb_of_biosamples,15), as.table=TRUE, main="miRNA coverage maps")
-          }
-          ## pdf output
-          pdf(file="${latticePDF}", paper="special", height=11.69, width=8.2677)
-          plot(graph, newpage = T)
-          dev.off()
-        #end if
-     </configfile>
-    </configfiles>
     <help>
 
 **What it does**
@@ -216,4 +196,6 @@ Two count list files for counts of reads aligned to pre-mir or mature miRNA
 A pdf of pre-mir coverages. Red coverages indicate that the mir gene is in the genomic up strand, blue coverages indicate that the mir gene is in the genomic down strand.
 
   </help>
+  <citations>
+  </citations>
 </tool>
