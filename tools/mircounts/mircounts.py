@@ -84,7 +84,7 @@ def get_mir_counts(bamfile, gff_file, quality_th):
                         temp_cov = bamfile.count_coverage(reference=mir_name, start=mir_start,
                                                           end=mir_end, quality_threshold=quality_th)
                         for it in range(len(temp_cov)):
-                            counts[mir_name][1][it] += temp_cov[0][it] + temp_cov[1][it] temp_cov[2][it] + temp_cov[3][it]
+                            counts[mir_name][1][it] += temp_cov[0][it] + temp_cov[1][it] + temp_cov[2][it] + temp_cov[3][it]
                         counts[mir_name] += temp_count
                     else:
                         """ If the mir hasn't been read yet we compute its coverage and count its hits then store it """
