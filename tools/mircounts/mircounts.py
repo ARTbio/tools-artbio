@@ -12,6 +12,7 @@ def option_parsing():
     inputs.add_option('--alignment', type='string', dest='alignment_file', help='Alignment tabular or sam file')
     inputs.add_option('--gff', type='string', dest='gff_file', help='GFF3 describing both pre-miRNAs and mature miRNAs', metavar='FILE')
     inputs.add_option('--quality_threshold', type='int', dest='quality_threshold', help='Quality of the base alignment to take in to consideration when counting coverage (default=10)', default=10)
+    inputs.add_option('--sample', type='string', dest='sample_name', help='Sample name (default= sample1)', default='sample1')
     parser.add_option_group(inputs)
     outputs = optparse.OptionGroup(parser, 'Outputs')
     outputs.add_option('--pre_mirs_output', type='string', dest='output_pre_mirs', help='Output file containing table containing the number of hits per pre-miRNA', metavar='FILE', default='output_pre_mirs_count.tab')
@@ -90,7 +91,7 @@ def write_dataframe(mirs, outfile, sample):
     """
     dataframe = []
     dataframe.append("sample\tmir\toffset\toffsetNorm\tcounts\tcountsNorm")
-    for ref in mirs.keys():
+    for ref in sorted(mirs.keys()):
         """ For each reference name in mirs write the coverage of each of its positions """
         maximum = 0
         coverage_arrays = mirs[ref][1]
@@ -141,7 +142,7 @@ def __main__():
         pre_mirs = get_pre_mir_counts(bamfile, options.quality_threshold)
         write_counts(pre_mirs, options.output_pre_mirs)
         if options.lattice:
-            write_dataframe(pre_mirs, options.lattice, options.alignment_file)
+            write_dataframe(pre_mirs, options.lattice, options.sample_name)
     if options.mirs:
         mirs = get_mir_counts(bamfile, options.gff_file, options.quality_threshold)
         write_counts(mirs, options.output_mature_mirs)
