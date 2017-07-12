@@ -1,6 +1,6 @@
 # .shed.yml supporting automatic pushes.
 owner: artbio
-name: miRCounts
+name: mircounts
 description: Generates miRNA count lists from read alignments to mirBase.
 long_description: |
   Generates pre-miRNA count list from read alignments to pre-miRNA sequences downloaded from mirBase
