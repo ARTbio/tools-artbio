@@ -1,9 +1,5 @@
 #!/usr/bin/python
 # python parser module for size distributions, guided by GFF3
-# version 0.9.1 (1-6-2014)
-# Usage readmap.py  <1:index source> <2:extraction directive> <3:output pre-mir> <4: output mature miRs> <5:mirbase GFF3>
-# <6:pathToLatticeDataframe or "dummy_dataframe_path"> <7:Rcode or "dummy_plotCode"> <8:latticePDF or "dummy_latticePDF">
-# <9:10:11 filePath:FileExt:FileLabel> <.. ad  lib>
 
 import argparse
 import subprocess
@@ -24,7 +20,6 @@ def Parser():
   the_parser.add_argument('--gff', type=str, help="GFF containing regions of interest")
   the_parser.add_argument('--minquery', type=int, help="Minimum readsize")
   the_parser.add_argument('--maxquery', type=int, help="Maximum readsize")
-  the_parser.add_argument('--rcode', type=str, help="R script")
   the_parser.add_argument('--global_size', action="store_true", help="if specified, size distribution is calculated for the sum of all items")
   the_parser.add_argument('--collapse', action="store_true", help="if specified, forward and reverse reads are collapsed")
   args = the_parser.parse_args()
@@ -41,7 +36,6 @@ if args.reference_bowtie_index:
 size_distribution_file=args.output_size_distribution
 minquery=args.minquery
 maxquery=args.maxquery
-Rcode = args.rcode
 filePath=args.input
 fileExt=args.ext
 fileLabel=args.label
@@ -123,7 +117,3 @@ if global_size:
   write_size_distribution_dataframe_global(MasterListOfGenomes, size_distribution_file, pol)
 else:
   write_size_distribution_dataframe(MasterListOfGenomes, size_distribution_file, pol)
-
-R_command="Rscript "+ Rcode
-process = subprocess.Popen(R_command.split())
-process.wait()

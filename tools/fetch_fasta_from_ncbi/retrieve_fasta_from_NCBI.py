@@ -21,8 +21,6 @@ retmax of efetch is 1/10 of declared value from NCBI
 queries are 1 sec delayed, to satisfy NCBI guidelines (more than what they request)
 
 
-python get_fasta_from_taxon.py -i 1638 -o test.out -d protein
-python get_fasta_from_taxon.py -i 327045 -o test.out -d nuccore # 556468 UIDs
 """
 import sys
 import logging
@@ -34,9 +32,16 @@ import httplib
 import re
 
 
+class QueryException(Exception):
+    pass
+
+
 class Eutils:
 
     def __init__(self, options, logger):
+        """
+        Initialize retrieval parameters 
+        """
         self.logger = logger
         self.base = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
         self.query_string = options.query_string
@@ -47,16 +52,28 @@ class Eutils:
             self.outname = 'NCBI_download' + '.' + self.dbname + '.fasta'
         self.ids = []
         self.retmax_esearch = 100000
-        self.retmax_efetch = 1000
+        self.retmax_efetch = 500
         self.count = 0
         self.webenv = ""
         self.query_key = ""
 
     def retrieve(self):
-        """ """
+        """
+        Retrieve the fasta sequences corresponding to the query
+        """
         self.get_count_value()
-        self.get_uids_list()
-        self.get_sequences()
+
+        # If no UIDs are found exit script
+        if self.count > 0:
+            self.get_uids_list()
+            try:
+                self.get_sequences()
+            except QueryException as e:
+                self.logger.error("Exiting script.")
+                raise e
+        else:
+            self.logger.error("No UIDs were found. Exiting script.")
+            raise Exception("")
 
     def get_count_value(self):
         """
@@ -77,7 +94,7 @@ class Eutils:
             self.logger.debug(line.rstrip())
             if '</Count>' in line:
                 self.count = int(line[line.find('<Count>')+len('<Count>') : line.find('</Count>')])
-        self.logger.info("Founded %d UIDs" % self.count)
+        self.logger.info("Found %d UIDs" % self.count)
 
     def get_uids_list(self):
         """
@@ -113,6 +130,7 @@ class Eutils:
         req = urllib2.Request(url, data)
         response = urllib2.urlopen(req)
         querylog = response.readlines()
+        response.close()
         time.sleep(1)
         return querylog
 
@@ -123,19 +141,32 @@ class Eutils:
                   'id': ids}
         data = urllib.urlencode(values)
         req = urllib2.Request(url, data)
-        #self.logger.debug("data: %s" % str(data))
-        req = urllib2.Request(url, data)
         serverResponse = False
+        nb_trials = 0
         while not serverResponse:
+            nb_trials += 1
             try:
+                self.logger.debug("Try number %s for opening and readin URL %s" % ( nb_trials, url+data ))
                 response = urllib2.urlopen(req)
+                querylog = response.readlines()
+                response.close()
                 serverResponse = True
-            except: # catch *all* exceptions
-                e = sys.exc_info()[0]
-                self.logger.info( "Catched Error: %s" % e )
-                self.logger.info( "Retrying in 10 sec")
-                time.sleep(10)
-        querylog = response.readlines()
+            except urllib2.HTTPError as e:
+                self.logger.info("urlopen error:%s, %s" % (e.code, e.read() ) )
+                self.logger.info("Retrying in 1 sec")
+                serverResponse = False
+                time.sleep(1)
+            except urllib2.URLError as e:
+                self.logger.info("urlopen error: Failed to reach a server")
+                self.logger.info("Reason :%s" % ( e.reason ) )
+                self.logger.info("Retrying in 1 sec")
+                serverResponse = False
+                time.sleep(1)
+            except httplib.IncompleteRead as e:
+                self.logger.info("IncompleteRead error:  %s" % ( e.partial ) )
+                self.logger.info("Retrying in 1 sec")
+                serverResponse = False
+                time.sleep(1)
         self.logger.debug("query response:")
         for line in querylog:
             self.logger.debug(line.rstrip())
@@ -159,27 +190,46 @@ class Eutils:
         data = urllib.urlencode(values)
         req = urllib2.Request(url, data)
         self.logger.debug("data: %s" % str(data))
-        req = urllib2.Request(url, data)
         serverTransaction = False
         counter = 0
+        response_code = 0
         while not serverTransaction:
             counter += 1
             self.logger.info("Server Transaction Trial:  %s" % ( counter ) )
             try:
                 response = urllib2.urlopen(req)
+                response_code = response.getcode()
                 fasta = response.read()
-                if ("Resource temporarily unavailable" in fasta) or (not fasta.startswith(">") ):
+                response.close()
+                if ( (response_code != 200) or ("Resource temporarily unavailable" in fasta)
+                    or ("Error" in fasta) or (not fasta.startswith(">") ) ):
                     serverTransaction = False
+                    if ( response_code != 200 ):
+                        self.logger.info("urlopen error: Response code is not 200")
+                    elif ( "Resource temporarily unavailable" in fasta ):
+                        self.logger.info("Ressource temporarily unavailable")
+                    elif ( "Error" in fasta ):
+                        self.logger.info("Error in fasta")
+                    else:
+                        self.logger.info("Fasta doesn't start with '>'")
                 else:
                     serverTransaction = True
             except urllib2.HTTPError as e:
                 serverTransaction = False
                 self.logger.info("urlopen error:%s, %s" % (e.code, e.read() ) )
+            except urllib2.URLError as e:
+                serverTransaction = False
+                self.logger.info("urlopen error: Failed to reach a server")
+                self.logger.info("Reason :%s" % ( e.reason ) )
             except httplib.IncompleteRead as e:
                 serverTransaction = False
                 self.logger.info("IncompleteRead error:  %s" % ( e.partial ) )
-        fasta = self.sanitiser(self.dbname, fasta) #
-        time.sleep(1)
+            if (counter > 500):
+                serverTransaction = True
+        if (counter > 500):
+            raise QueryException({"message":"500 Server Transaction Trials attempted for this batch. Aborting."})
+        fasta = self.sanitiser(self.dbname, fasta) 
+        time.sleep(0.1)
         return fasta
         
     def sanitiser(self, db, fastaseq):
@@ -237,12 +287,16 @@ class Eutils:
             for start in range(0, count, batch_size):
                 end = min(count, start+batch_size)
                 batch = uids_list[start:end]
-                self.epost(self.dbname, ",".join(batch))
-                mfasta = ''
-                while not mfasta:
-                    self.logger.info("retrieving batch %d" % ((start / batch_size) + 1))
-                    mfasta = self.efetch(self.dbname, self.query_key, self.webenv)
-                out.write(mfasta + '\n')
+                if self.epost(self.dbname, ",".join(batch)) != -1:
+                    mfasta = ''
+                    while not mfasta:
+                        self.logger.info("retrieving batch %d" % ((start / batch_size) + 1))
+                        try:
+                            mfasta = self.efetch(self.dbname, self.query_key, self.webenv)
+                            out.write(mfasta + '\n')
+                        except QueryException as e:
+                            self.logger.error("%s" % e.message)
+                            raise e
 
 
 LOG_FORMAT = '%(asctime)s|%(levelname)-8s|%(message)s'
@@ -272,7 +326,10 @@ def __main__():
     logger = logging.getLogger('data_from_NCBI')
     
     E = Eutils(options, logger)
-    E.retrieve()
+    try:
+        E.retrieve()
+    except Exception as e:
+        sys.exit(1)
 
 
 if __name__ == "__main__":

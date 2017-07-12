@@ -1,0 +1,201 @@
+<tool id="repenrich" name="RepEnrich" version="1.3.0">
+    <description>Repeat Element Profiling</description>
+    <requirements>
+        <requirement type="package" version="1.2.0">bowtie</requirement>
+        <requirement type="package" version="0.1.19">samtools</requirement>
+        <requirement type="package" version="2.20.1">bedtools</requirement>
+        <requirement type="package" version="1.69">biopython</requirement>
+    </requirements>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Tool exception" />
+    </stdio>
+    <command detect_errors="exit_code"><![CDATA[
+        #import re
+        #set input_base = 'Sample'
+        #set baseReference = 'Genome'
+        ln -f -s '$genome' '${baseReference}.fa' &&
+        ln -f -s '$input_fastq' '${input_base}.fastq' &&
+        #if $seq_method.seq_method_list == "paired-end":
+            ln -f -s '$input2_fastq' '${input_base}_2.fastq' &&
+        #end if
+        bowtie-build '$genome' ${baseReference} &&
+        python $__tool_directory__/RepEnrich_setup.py $repeatmasker ${baseReference}.fa setup_folder_${baseReference} &&
+        #if $seq_method.seq_method_list == "single-read":
+            bowtie $baseReference -p \${GALAXY_SLOTS:-4} -t -m 1 -S --max ${input_base}_multimap.fastq ${input_base}.fastq ${input_base}_unique.sam 2>bowtie_alignments.txt &&
+            TOTAL=\$(grep 'reads processed:' bowtie_alignments.txt | cut -d ' ' -f 4) &&
+            NONALIGNED=\$(grep 'reads that failed to align:' bowtie_alignments.txt | cut -d ' ' -f 7) &&
+            echo \$((\$TOTAL-\$NONALIGNED)) > bowtie_aligned.numb &&
+        #else:
+            bowtie $baseReference -p \${GALAXY_SLOTS:-4} -t -m 1 -S --max ${input_base}_multimap.fastq -1 ${input_base}.fastq -2 ${input_base}_2.fastq ${input_base}_unique.sam 2>bowtie_alignments.txt &&
+            TOTAL=\$(grep 'reads processed:' bowtie_alignments.txt | cut -d ' ' -f 4) &&
+            NONALIGNED=\$(grep 'reads that failed to align:' bowtie_alignments.txt | cut -d ' ' -f 7) &&
+            echo \$((\$TOTAL-\$NONALIGNED)) > bowtie_aligned.numb &&
+        #end if
+        samtools view -bS ${input_base}_unique.sam > ${input_base}_unique.bam &&
+        samtools sort ${input_base}_unique.bam ${input_base}_unique_sorted &&
+        mv ${input_base}_unique_sorted.bam ${input_base}_unique.bam &&
+        samtools index ${input_base}_unique.bam &&
+        rm ${input_base}_unique.sam &&
+        #if $seq_method.seq_method_list == "single-read":
+            python $__tool_directory__/RepEnrich.py $repeatmasker ${input_base} ${input_base} setup_folder_${baseReference} ${input_base}_multimap.fastq ${input_base}_unique.bam --cpus "\${GALAXY_SLOTS:-4}" &&
+        #else:
+            python $__tool_directory__/RepEnrich.py $repeatmasker ${input_base} ${input_base} setup_folder_${baseReference} ${input_base}_multimap_1.fastq --fastqfile2 ${input_base}_multimap_2.fastq ${input_base}_unique.bam --cpus "\${GALAXY_SLOTS:-4}" --pairedend TRUE &&
+        #end if
+        cp $input_base/${input_base}_class_fraction_counts.txt class_fraction_counts.tabular &&
+        cp $input_base/${input_base}_family_fraction_counts.txt family_fraction_counts.tabular &&
+        cp $input_base/${input_base}_fraction_counts.txt fraction_counts.tabular
+    ]]></command>
+    <!-- basic error handling -->
+    <inputs>
+    <conditional name="seq_method">
+        <param help="Paired-end or single-read sequencing" label="Sequencing method" name="seq_method_list" type="select">
+            <option selected="True" value="single-read">Single-read sequencing</option>
+            <option value="paired-end">Paired-end sequencing</option>
+        </param>
+        <when value="single-read">
+            <param format="fastq,fastqsanger" label="Single-reads" name="input_fastq" type="data" help="accepted formats: fastq, fastqsanger" />
+        </when>
+        <when value="paired-end">
+            <param format="fastq,fastqsanger" label="1st paired-end sequencing dataset" name="input_fastq" type="data" help="accepted formats: fastq, fastqsanger" />
+            <param format="fastq,fastqsanger" label="2nd paired-end sequencing dataset" name="input2_fastq" type="data" help="accepted formats: fastq, fastqsanger" />
+        </when>
+    </conditional>
+    <param format="fasta" label="Reference genome in fasta format" name="genome" type="data" />
+    <param format="txt" label="RepeatMasker description file" name="repeatmasker" type="data" help="see help section"/>
+    </inputs>
+
+    <outputs>
+        <data format="tabular" name="bowtie_alignments" label="RepEnrich on ${on_string}: reads aligned" from_work_dir="bowtie_aligned.numb">
+        </data>
+        <data format="tabular" name="class_fraction_counts" label="RepEnrich on ${on_string}: class fraction counts" from_work_dir="class_fraction_counts.tabular">
+        </data>
+        <data format="tabular" name="family_fraction_counts" label="RepEnrich on ${on_string}: family fraction counts" from_work_dir="family_fraction_counts.tabular">
+        </data>
+        <data format="tabular" name="fraction_counts" label="RepEnrich on ${on_string}: fraction counts" from_work_dir="fraction_counts.tabular">
+        </data>
+   </outputs>
+
+    <tests>
+        <test>
+            <param name="seq_method_list" value="single-read"/>
+            <param name="input_fastq" value="Samp.fastq" ftype="fastq"/>
+            <param name="genome" value="chrM.fa" ftype="fasta"/>
+            <param name="repeatmasker" value="chrM_repeatmasker.txt" ftype="txt"/>
+            <output name="bowtie_alignments" file="aligned_reads.tab" ftype="tabular"/>
+            <output name="class_fraction_counts" file="Samp_class_fraction_counts.tabular" ftype="tabular"/>
+            <output name="family_fraction_counts" file="Samp_family_fraction_counts.tabular" ftype="tabular"/>
+            <output name="fraction_counts" file="Samp_fraction_counts.tabular" ftype="tabular"/>
+        </test>
+         <test>
+            <param name="seq_method_list" value="paired-end"/>
+            <param name="input_fastq" value="Samp_L.fastq" ftype="fastq"/>
+            <param name="input2_fastq" value="Samp_R.fastq" ftype="fastq"/>
+            <param name="genome" value="chrM.fa" ftype="fasta"/>
+            <param name="repeatmasker" value="chrM_repeatmasker.txt" ftype="txt"/>
+            <output name="bowtie_alignments" file="paired-aligned_reads.tab" ftype="tabular"/>
+            <output name="class_fraction_counts" file="Samp-paired_class_fraction_counts.tab" ftype="tabular"/>
+            <output name="family_fraction_counts" file="Samp-paired_family_fraction_counts.tab" ftype="tabular"/>
+            <output name="fraction_counts" file="Samp-paired_fraction_counts.tab" ftype="tabular"/>
+        </test>
+  </tests>
+
+    <help>
+
+**What it does**
+
+Reads are mapped to the genome using the Bowtie1 aligner. Reads mapping uniquely to the genome are assigned to subfamilies of repetitive elements based on their degree of overlap to RepeatMasker annotated genomic instances of each repetitive element subfamily. Reads mapping to multiple locations are separately mapped to repetitive element assemblies – referred to as repetitive element psuedogenomes – built from RepeatMasker annotated genomic instances of repetitive element subfamilies. RepEnrich then return tables of counts merged from both strategies, that can be further processed in statistical analysis for differential expression. For detailed information see the `original publication`_.
+
+.. _original publication: https://bmcgenomics.biomedcentral.com/articles/10.1186/1471-2164-15-583
+
+**Inputs**
+
+*Reference genome* : reference genome in fasta format
+
+*Sequencing dataset*: Single-reads or Paired-end sequencing datasets in fastq format.
+
+*RepeatMasker description file*: a txt repeatmasker file which can be downloaded from http://www.repeatmasker.org/genomicDatasets/RMGenomicDatasets.html
+
+This file looks like:
+
+<![CDATA[
+
+SW  perc perc perc  query      position in query           matching       repeat              position in  repeat
+
+score  div. del. ins.  sequence    begin     end    (left)    repeat         class/family         begin  end (left)   ID
+
+16  20.2  5.9  0.0  chrM         1211    1261   (18263) +  (TTTTA)n       Simple_repeat            1   54    (0)  84486
+
+13  23.9  2.2  2.2  chrM         2014    2059   (17465) +  (TTA)n         Simple_repeat            1   46    (0)  84487
+
+24  18.8  5.3  2.6  chrM         3924    3999   (15525) +  (TAT)n         Simple_repeat            1   78    (0)  84488
+
+18   4.5  0.0  0.0  chrM         5961    5983   (13541) +  (AT)n          Simple_repeat            1   23    (0)  84489
+
+13  25.9  4.0  4.0  chrM         6247    6320   (13204) +  (ATTTAT)n      Simple_repeat            1   74    (0)  84490
+
+11  14.6  7.5  2.4  chrM         8783    8822   (10702) +  (CTAATT)n      Simple_repeat            1   42    (0)  84491
+
+17  19.0  0.0  8.6  chrM         9064    9126   (10398) +  A-rich         Low_complexity           1   58    (0)  84492
+
+13  21.0  5.9  1.9  chrM        11723   11773    (7751) +  (ATA)n         Simple_repeat            1   53    (0)  84493
+
+66  20.4 12.3 12.3  chrM        12823   13001    (6523) C  LSU-rRNA_Cel   rRNA                   (1) 2431   2253  84494
+
+16  16.6  0.0  2.9  chrM        14361   14396    (5128) +  (ATT)n         Simple_repeat            1   35    (0)  84495
+
+44   2.4  0.0  0.0  chrM        15966   16007    (3517) +  (TA)n          Simple_repeat            1   42    (0)  84496
+
+35   5.3  0.0  0.0  chrM        16559   16597    (2927) +  (AT)n          Simple_repeat            1   39    (0)  84497
+
+36   2.9  0.0  0.0  chrM        16922   16956    (2568) +  (AT)n          Simple_repeat            1   35    (0)  84498
+
+37   0.0  0.0  0.0  chrM        17040   17071    (2453) +  (TA)n          Simple_repeat            1   32    (0)  84499
+
+20   4.3  0.0  0.0  chrM        17417   17440    (2084) +  (T)n           Simple_repeat            1   24    (0)  84500
+
+31   6.9  6.3  1.5  chrM        17451   17513    (2011) +  (TA)n          Simple_repeat            1   66    (0)  84501
+
+26  17.0  0.0  0.0  chrM        19469   19514      (10) +  A-rich         Low_complexity           1   46    (0)  84502
+
+]]>
+
+Users may filter this file so that it contains only desired items (for instance only satellites, repeats and transposons)
+ 
+**Outputs**
+
+(1) Fraction counts, (2) Family fraction counts and (3) Class fraction counts are returned in tabular format, for further statistical tests differential expression analysis or graphics 
+
+**RepEnrich**
+
+This Galaxy tool is a wrapper of the RepEnrich tool by steven_criscione@brown.edu et al. whose code and manual are available in `GitHub`_.
+
+.. _GitHub: https://github.com/nskvir/RepEnrich
+
+Python scripts RepEnrich.py and RepEnrich_setup.py have been adapted to python 3. Note that sorting of Fraction counts, Family fraction counts and Class fraction counts is  different with this Galaxy wrapper or with RepEnrich as found in the `RepEnrich code repository`_. However, this different sorting does not affect subsequent statistical analyses
+
+.. _RepEnrich code repository: https://github.com/nskvir/RepEnrich
+
+**Execution time**
+
+.. class:: warningmark
+
+This tool includes steps to index the reference genome, index repeat sequences and align reads to these indexes. Therefore the run time may be **long to very long**. 
+
+.. class:: infomark
+
+For more information on the tools, please visit our `code repository`_.
+
+If you would like to give us feedback or you run into any trouble, please send an email to artbio.ibps@gmail.com 
+
+This tool wrapper is developed by the `ARTbio team`_ at the `Institut de Biologie Paris Seine (IBPS)`_.
+
+.. _code repository: https://github.com/ARTbio/tools-artbio/tree/master/tools/
+.. _ARTbio team: http://artbio.fr
+.. _Institut de Biologie Paris Seine (IBPS): http://www.ibps.upmc.fr/en/core-facilities/bioinformatics
+
+    </help>
+
+    <citations>
+    <citation type="doi">10.1186/1471-2164-15-583</citation>
+  </citations>
+</tool>

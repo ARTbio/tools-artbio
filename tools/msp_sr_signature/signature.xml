@@ -1,12 +1,10 @@
-<tool id="signature" name="Small RNA Signatures" version="2.0.5">
+<tool id="signature" name="Small RNA Signatures" version="2.1.2">
     <description />
     <requirements>
         <requirement type="package" version="1.1.2">bowtie</requirement>
-        <requirement type="package" version="0.8.3">pysam</requirement>
-        <requirement type="package" version="3.1.2">R</requirement>
-        <requirement type="package" version="0.20_33=r3.2.2_0a">r-lattice</requirement>
-        <requirement type="package" version="2.14">biocbasics</requirement>
-        <requirement type="package" version="1.9">numpy</requirement>
+        <requirement type="package" version="1.11.2=py27_0">numpy</requirement>
+        <requirement type="package" version="0.11.2.1=py27_0">pysam</requirement>
+        <requirement type="package" version="0.20_33=r3.3.1_0">r-lattice</requirement>
     </requirements>
     <command><![CDATA[
         python '$__tool_directory__'/signature.py
