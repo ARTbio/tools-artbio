@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<tool_dependency>
-    <package name="bowtie" version="1.1.2">
-         <repository name="package_bowtie_1_1_2" owner="iuc" prior_installation_required="False" />
-    </package>
-    <package name="samtools" version="1.2">
-         <repository name="package_samtools_1_2" owner="iuc" prior_installation_required="False" />
-    </package>
-</tool_dependency>

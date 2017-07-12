@@ -1,12 +1,13 @@
-This is the development repository for galaxy tools developed in the ARTbio platform at the UPMC.
-Tools are installed on https://mississippi.snv.jussieu.fr and downloadable through the galaxy toolshed.
-This repository is automatically linted by Travis CI.
-Changes should be proposed via Pull Requests.
+This is the development repository for galaxy tools developed in the [ARTbio platform](http://artbio.fr/) at the [IBPS](http://www.ibps.upmc.fr/en) [CNRS](http://www.cnrs.fr/en/research/Institutes.htm) & [UPMC](http://www.upmc.fr/en/index.html).
 
-See http://artbio.fr/ for our homepage.
-Contact artbio.ibps@gmail.com if you have questions.
+Tools are installed on https://mississippi.snv.jussieu.fr and downloadable through the [galaxy toolshed](https://toolshed.g2.bx.psu.edu).
+
+This repository is tested by Travis CI.
 
 CI      | Test                            |  Status
 ------- |-------------------------------- | -------
-Travis | Planemo lint tests (error only) | [![Lint Status](https://travis-ci.org/ARTbio/tools-artbio.svg?branch=master)](https://travis-ci.org/ARTbio/tools-artbio)
-# Jenkins out of service | Planemo shed_test testtoolshed | [![Lint Status](https://lbcd41.snv.jussieu.fr/jenkins/buildStatus/icon?job=shed_test_testtoolshed)](https://lbcd41.snv.jussieu.fr/jenkins/job/shed_test_testtoolshed/)
+Travis  | Planemo test (error only)       | [![Lint Status](https://travis-ci.org/ARTbio/tools-artbio.svg?branch=master)](https://travis-ci.org/ARTbio/tools-artbio)
+
+Changes should be proposed via Pull Requests.
+
+Contact artbio.ibps at gmail com if you have questions.

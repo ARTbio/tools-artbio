@@ -1,0 +1,15 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: small_read_size_histograms
+description: Generates size histograms from small read alignments.
+long_description: |
+  Generates read size histograms from tabular, sam or bam alignments.
+categories:
+  - RNA
+  - Graphics
+  - Sequence Analysis
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/small_read_size_histograms
+toolshed:
+  - testtoolshed
+  - toolshed

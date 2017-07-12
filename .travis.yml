@@ -2,24 +2,22 @@ sudo: false
 language: python
 python: 2.7
 
-# This is a big repository so break Travis CI work into 4 CI jobs.
+#  break Travis CI work into 2 CI jobs.
 env:
   - CHUNK=0
   - CHUNK=1
-  - CHUNK=2
-  - CHUNK=3
 
 before_install:
   - export GALAXY_REPO=https://github.com/galaxyproject/galaxy
-  - export GALAXY_RELEASE=release_16.07
+  - export GALAXY_RELEASE=release_17.05
   - export PLANEMO_CONDA_PREFIX="$HOME/conda"
 
 install:
-  - pip install flake8 planemo==0.39
+  - pip install planemo # flake8 flake8-import-order
   - planemo conda_init
   - export PATH="$PLANEMO_CONDA_PREFIX/bin:$PATH"
-#  - conda create -y -q -c bioconda --name iuc_conda samtools=0.1.19 bcftools
-#  - . activate iuc_conda
+  - conda create -y -q -c bioconda --name artbio_conda samtools=1.4.1 bcftools
+  - . activate artbio_conda
   - planemo --version
   - conda --version
   - git diff --quiet "$TRAVIS_COMMIT_RANGE" -- ; GIT_DIFF_EXIT_CODE=$?
@@ -34,7 +32,7 @@ install:
       planemo ci_find_repos --exclude_from .tt_blacklist \
                             --exclude packages \
                             --changed_in_commit_range "$TRAVIS_COMMIT_RANGE" \
-                            --chunk_count 4 --chunk "${CHUNK}" \
+                            --chunk_count 2 --chunk "${CHUNK}" \
                             --output changed_repositories_chunk.list
   - cat changed_repositories_chunk.list
 
