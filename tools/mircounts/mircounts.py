@@ -34,7 +34,6 @@ def get_pre_mir_counts(bamfile, quality_th):
     """
     count = dict()
     reference_lengths = bamfile.lengths
-    it = 0
     """
     Need reference legths beacuse when no end parameter is given to count_coverage an error raises
     This works beacuse : 
@@ -43,15 +42,13 @@ def get_pre_mir_counts(bamfile, quality_th):
     This is a read-only attribute. The lengths are in the same order as pysam.AlignmentFile.references
     (from : http://pysam.readthedocs.io/en/latest/api.html)
     """
-    for ref in bamfile.references:
-        count[ref] = [bamfile.count(ref),
-	              bamfile.count_coverage(reference=ref,start=0,end=reference_lengths[it], quality_threshold=quality_th)]
-        it += 1
-        temp_cov = []
+    for ref in zip(bamfile.references,reference_lengths):
+        ref_name = ref[0]
+        ref_len = ref[1]
+        count[ref_name] = [bamfile.count(ref_name),
+	              bamfile.count_coverage(reference=ref_name,start=0,end=ref_len, quality_threshold=quality_th)]
         """ Add the 4 coverage values """
-        for it in range(len(count[ref][1])):
-            temp_cov.append(count[ref][1][0][it]+count[ref][1][1][it]+count[ref][1][2][it]+count[ref][1][3][it])
-        count[ref][1] = temp_cov
+        count[ref_name][1] = [sum(x) for x in zip(*count[ref_name][1])]
     return count
 
 def get_mir_counts(bamfile, gff_file, quality_th):
@@ -81,20 +78,16 @@ def get_mir_counts(bamfile, gff_file, quality_th):
                         since we could have previously read '5p' and now '3p' 
                         """
                         temp_count = bamfile.count(reference=ref_name, start=mir_start, end=mir_end)
-                        temp_cov = bamfile.count_coverage(reference=mir_name, start=mir_start,
+                        temp_cov = bamfile.count_coverage(reference=ref_name, start=mir_start,
                                                           end=mir_end, quality_threshold=quality_th)
-                        for it in range(len(temp_cov)):
-                            counts[mir_name][1][it] += temp_cov[0][it] + temp_cov[1][it] + temp_cov[2][it] + temp_cov[3][it]
-                        counts[mir_name] += temp_count
+                        counts[mir_name][1] = [sum(x) for x in zip(counts[mir_name][1],*temp_cov)]
+                        counts[mir_name][0] += temp_count
                     else:
                         """ If the mir hasn't been read yet we compute its coverage and count its hits then store it """
-                        counts[mir_name] = [bamfile.count(reference=mir_name, start=mir_start, end=mir_end),
-                                            bamfile.count_coverage(reference=mir_name, start=mir_start,
+                        counts[mir_name] = [bamfile.count(reference=ref_name, start=mir_start, end=mir_end),
+                                            bamfile.count_coverage(reference=ref_name, start=mir_start,
                                                                    end=mir_end, quality_threshold=quality_th)]
-                        temp_cov = []
-                        for it in range(len(counts[mir_name][1])):
-                            temp_cov.append(counts[mir_name][1][0][it]+counts[mir_name][1][1][it]+counts[mir_name][1][2][it]+counts[mir_name][1][3][it])
-                        counts[mir_name][1] = temp_cov
+                        counts[mir_name][1] = [sum(x) for x in zip(*counts[mir_name][1])]
         gff.close()
     except IOError as e:
         sys.stderr.write("Error while reading file %s\n" % gff_file)
