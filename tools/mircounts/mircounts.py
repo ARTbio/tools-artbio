@@ -49,9 +49,9 @@ def get_pre_mir_counts(bamfile, quality_th):
         it += 1
         temp_cov = []
         """ Add the 4 coverage values """
-        for it in range(len(counts[ref][1])):
-            temp_cov.append(counts[ref][1][0][it]+counts[ref][1][1][it]+counts[ref][1][2][it]+counts[ref][1][3][it])
-        counts[ref][1] = temp_cov
+        for it in range(len(count[ref][1])):
+            temp_cov.append(count[ref][1][0][it]+count[ref][1][1][it]+count[ref][1][2][it]+count[ref][1][3][it])
+        count[ref][1] = temp_cov
     return count
 
 def get_mir_counts(bamfile, gff_file, quality_th):
@@ -112,11 +112,11 @@ def write_dataframe(mirs, outfile, sample):
     for ref in sorted(mirs.keys()):
         """ For each reference name in mirs write the coverage of each of its positions """
         coverage_array = mirs[ref][1]
-        reference_length = len(coverage_arrays)
+        reference_length = len(coverage_array)
         maximum = max(coverage_array)
         for pos in range(reference_length):
             """ Compute coverage of each position and append to the dataframe a new line"""
-            coverage = coverage_arrays[pos]
+            coverage = coverage_array[pos]
             dataframe.append("\t".join([sample, ref,
                                         str(pos+1), # offset + 1 because range starts from 0
                                         str(float((pos+1))/reference_length), # offsetNorm
