@@ -2,7 +2,7 @@ tool_test_output.html
 tool_test_output.json
 .DS_Store
 .tox
-.*.pyc
+*.pyc
 .*.log
 .idea/*
 .git/*
