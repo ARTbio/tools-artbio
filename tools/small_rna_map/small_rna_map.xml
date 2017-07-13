@@ -15,7 +15,11 @@
       --input 
       #for $file in $input
             '$file'
-      #end for 
+      #end for
+      --sample_name
+      #for $sample in $input
+          '$sample.name'
+      #end for
       --output '$output_tab' &&
       Rscript '$__tool_directory__'/small_rna_map.r --output_tab '$output_tab' --output_pdf '$output_pdf'
   ]]></command>
