@@ -32,7 +32,7 @@ def compute_map_dictionary(pysam_object):
                 unmatched_chromosomes.remove(read_chromosome)
     for name in unmatched_chromosomes:
         map_dictionary[(name, 1, 'F')]=[0] # to put at least a null value by chromosome
-    # make a dictionary with max value of read by chromosome
+    # make a dictionary with max value of reads by chromosome
     max_dictionary = defaultdict(int)
     for name in pysam_object.references:
         for key in map_dictionary.keys():
@@ -46,7 +46,7 @@ def main(inputs, sample_names, output):
         outfile.write("Dataset" + "\t" + "Chromosome"+ "\t" + "Chrom_length" + "\t" + "Coordinate" + "\t" + "Nbr_reads" + "\t" + "Polarity" + "\t" + "Max" + "\t" + "Mean" + "\t" + "Median" + "\n")
         chromosome_lengths = dict(zip(pysam.AlignmentFile(inputs[0],"rb").references,
                                      pysam.AlignmentFile(inputs[0],"rb").lengths))
-        for file, sample in zip(inputs, sample_names): # add treatment of case where sample names are identical
+        for file, sample in zip(inputs, sample_names): # TODO: add treatment of cases where sample names are identical
             with pysam.AlignmentFile(file,"rb") as bamfile:
                 map, maximum = compute_map_dictionary(bamfile)
                 for record in sorted(map):
@@ -57,6 +57,10 @@ def main(inputs, sample_names, output):
                             str(numpy.median(map[record]))]
                     outfile.write("\t".join(line) + "\n")
 
+
 if __name__ == "__main__":
     args= Parser()
+    # if identical sample names # to be tested
+#    if len(set(args.sample_name)) != len(args.sample_name)
+#        args.sample_name = [name + '_' + i for name, i in enumerate(args.sample_name)]
     main(args.input, args.sample_name, args.output)
