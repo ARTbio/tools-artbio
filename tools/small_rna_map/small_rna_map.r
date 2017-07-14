@@ -40,7 +40,6 @@ names(myColors) <- levels(Table$Polarity)
 colScale <- scale_colour_manual(name = "Polarity",values = myColors)
  
 #Make initial figures
-ptm <- proc.time()
 
 p <- ggplot(Table, aes(x=Coordinate, y=Nbr_reads, colour=Polarity)) +
   colScale+
@@ -57,8 +56,6 @@ p <- ggplot(Table, aes(x=Coordinate, y=Nbr_reads, colour=Polarity)) +
         axis.text = element_text(size = 6),#modify the size of tick labels along axes
         legend.position = "none") # Hide the repeate caption
 
-proc.time() - ptm
-
 # Create legend
 mylegend <- legendGrob(c("F", "R", "Median", "Mean"), pch=22,
                      gp=gpar(col = c("red","blue","black","yellow"), fill = c("red","blue","black","yellow")))
@@ -71,7 +68,7 @@ p2 <- ggplot(Table, aes(x = Coordinate, group=1)) +
   scale_colour_manual(name="", values=cols)+ 
   expand_limits(y = seq(0,max(Table$Median),by=5)) +
   facet_wrap(Dataset~Chromosome, scales="free", nrow=1, labeller = label_wrap_gen(multi_line = FALSE))+
-  geom_segment(aes(y = Nbr_reads, x = 0, yend=Nbr_reads, xend=Chrom_length), alpha=0)+
+#  geom_segment(aes(y = Nbr_reads, x = 0, yend=Nbr_reads, xend=Chrom_length), alpha=0)+
   scale_y_continuous(limits = c(0,max(Table$Median)), position = "left")+
   theme(strip.background = element_blank(),
         strip.text.x = element_blank(),
@@ -83,14 +80,12 @@ p2 <- ggplot(Table, aes(x = Coordinate, group=1)) +
         axis.title = element_blank(),
         legend.position = "none")
 
-ptm <- proc.time()
 # Transforme ggplot graphs on list of graphs
 plot.list1 <- by(data     = Table,
                 INDICES  = c(Table$Chromosome),
-                simplify = TRUE,
-                FUN      = function(x) {
-                  p %+% x 
-                })
+                #simplify = TRUE,
+                FUN      = function(x) {p %+% x }
+                )
  
 plot.list2 <- by(data     = Table,
                 INDICES  = c(Table$Chromosome),
@@ -98,15 +93,10 @@ plot.list2 <- by(data     = Table,
                 FUN      = function(x) {
                   p2 %+% x 
                 })
-proc.time() - ptm
-
 
 # Plotting in multiple pages with different rows
-ptm <- proc.time()
-multi.plot<-do.call(marrangeGrob,list(grobs=rbind(plot.list1,plot.list2),ncol=1,nrow=8,top=NULL, 
-            bottom="Coordinates(nt)", left="Number of reads / Median & Mean", right= mylegend))
-proc.time() - ptm
 
-ptm <- proc.time()
+grobs=rbind(plot.list1,plot.list2)
+multi.plot<-do.call(marrangeGrob,list(grobs,ncol=1,nrow=8,top=NULL, 
+            bottom="Coordinates(nt)", left="Number of reads / Median & Mean", right= mylegend))
 ggsave(args$output_pdf, device="pdf", plot=multi.plot, height=11.69, width=8.2)
-proc.time() - ptm
