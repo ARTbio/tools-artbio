@@ -61,6 +61,6 @@ def main(inputs, sample_names, output):
 if __name__ == "__main__":
     args= Parser()
     # if identical sample names # to be tested
-#    if len(set(args.sample_name)) != len(args.sample_name)
-#        args.sample_name = [name + '_' + i for name, i in enumerate(args.sample_name)]
+    if len(set(args.sample_name)) != len(args.sample_name):
+        args.sample_name = [name + '_' + str(i) for i, name in enumerate(args.sample_name)]
     main(args.input, args.sample_name, args.output)

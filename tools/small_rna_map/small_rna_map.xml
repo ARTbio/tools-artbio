@@ -38,6 +38,11 @@
             <output file="output.tab" name="output_tab" />
             <output file="output.pdf" name="output_pdf" />
         </test>
+        <test>
+            <param name="input" value="input1.bam,input1.bam" ftype="bam"/>
+            <output file="output.tab" name="output_tab" />
+            <output file="output.pdf" name="output_pdf" />
+        </test>
     </tests>
 
 

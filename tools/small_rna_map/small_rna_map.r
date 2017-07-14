@@ -16,6 +16,23 @@ args = parse_args(parser)
 theme_set(theme_bw()) #a theme with a white background
 Table = read.delim(args$output_tab, header=T, row.names=NULL)
 Table <- within(Table, Nbr_reads[Polarity=="R"] <- (Nbr_reads[Polarity=="R"]*-1))
+Chr_limits <- unique(data.frame(Dataset=Table$Dataset, Chromosome=Table$Chromosome,
+                                Chrom_length=Table$Chrom_length))
+Chr_limits_inf <- data.frame(Coordinate=Chr_limits$Chrom_length*0,
+                             Nbr_reads=Chr_limits$Chrom_length*0,
+                             Polarity=rep("F", length(Chr_limits$Dataset)),
+                             Max=Chr_limits$Chrom_length*0,
+                             Mean=Chr_limits$Chrom_length*0,
+                             Median=Chr_limits$Chrom_length*0)
+Chr_limits_inf <- cbind(Chr_limits, Chr_limits_inf)
+Chr_limits_sup <- data.frame(Coordinate=Chr_limits$Chrom_length+1,
+                             Nbr_reads=Chr_limits$Chrom_length*0,
+                             Polarity=rep("F", length(Chr_limits$Dataset)),
+                             Max=Chr_limits$Chrom_length*0,
+                             Mean=Chr_limits$Chrom_length*0,
+                             Median=Chr_limits$Chrom_length*0)
+Chr_limits_sup <- cbind(Chr_limits, Chr_limits_sup)
+Table <- rbind(Table, Chr_limits_inf, Chr_limits_sup)
  
 #To assign colors to categorical variables in ggplot2 that have stable mapping
 myColors <- brewer.pal(3,"Set1")
@@ -23,12 +40,15 @@ names(myColors) <- levels(Table$Polarity)
 colScale <- scale_colour_manual(name = "Polarity",values = myColors)
  
 #Make initial figures
+ptm <- proc.time()
+
 p <- ggplot(Table, aes(x=Coordinate, y=Nbr_reads, colour=Polarity)) +
   colScale+
-  geom_segment(aes(y = 0, x = Coordinate, yend = Nbr_reads, xend = Coordinate, color=Polarity), alpha=1) +
-  geom_segment(aes(y = Nbr_reads, x = 0, yend=Nbr_reads, xend=Chrom_length), alpha=0)+
+  geom_segment(aes(y = 0, x = Coordinate, yend = Nbr_reads, xend = Coordinate, color=Polarity)) +
+#  geom_segment(aes(y = Nbr_reads, x = 0, yend=Nbr_reads, xend=Chrom_length), alpha=0)+
   facet_wrap(Dataset~Chromosome, scales="free", nrow=1, labeller = label_wrap_gen(multi_line = FALSE))+
-  scale_y_continuous(breaks = function(x) round(pretty(seq(-(max(x) + 1), (max(x) + 1)))))+#to display only integer values on y axis
+#  scale_x_continuous(limits = c(rep(0, length(Table$Chromosome)), Chr_lengths$Chrom_length)) +
+  scale_y_continuous(breaks = function(x) round(pretty(seq(-(max(x) + 1), (max(x) + 1)))))+ # to display only integer values on y axis
   geom_hline(yintercept=0, size=0.3)+
   theme(strip.text = element_text(size = 6, lineheight = 0.1), #specify strip size
         panel.grid.major = element_line(colour = "#ffffff"),#conceal major grid lines
@@ -36,6 +56,8 @@ p <- ggplot(Table, aes(x=Coordinate, y=Nbr_reads, colour=Polarity)) +
         axis.title = element_blank(),# Conceal axis titles
         axis.text = element_text(size = 6),#modify the size of tick labels along axes
         legend.position = "none") # Hide the repeate caption
+
+proc.time() - ptm
 
 # Create legend
 mylegend <- legendGrob(c("F", "R", "Median", "Mean"), pch=22,
@@ -61,6 +83,7 @@ p2 <- ggplot(Table, aes(x = Coordinate, group=1)) +
         axis.title = element_blank(),
         legend.position = "none")
 
+ptm <- proc.time()
 # Transforme ggplot graphs on list of graphs
 plot.list1 <- by(data     = Table,
                 INDICES  = c(Table$Chromosome),
@@ -75,9 +98,15 @@ plot.list2 <- by(data     = Table,
                 FUN      = function(x) {
                   p2 %+% x 
                 })
- 
+proc.time() - ptm
+
+
 # Plotting in multiple pages with different rows
+ptm <- proc.time()
 multi.plot<-do.call(marrangeGrob,list(grobs=rbind(plot.list1,plot.list2),ncol=1,nrow=8,top=NULL, 
             bottom="Coordinates(nt)", left="Number of reads / Median & Mean", right= mylegend))
-ggsave(args$output_pdf, device="pdf", plot=multi.plot, height=11.69, width=8.2)
+proc.time() - ptm
 
+ptm <- proc.time()
+ggsave(args$output_pdf, device="pdf", plot=multi.plot, height=11.69, width=8.2)
+proc.time() - ptm
