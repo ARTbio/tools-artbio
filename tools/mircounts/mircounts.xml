@@ -6,12 +6,11 @@
         <requirement type="package" version="0.11.2.1">pysam</requirement>
         <requirement type="package" version="1.3.2=r3.3.2_0">r-optparse</requirement>
         <requirement type="package" version="0.20_34=r3.3.2_0">r-lattice</requirement>
-        <requirement type="package" version="3.2.0">more-itertools</requirement>
     </requirements>
     <command detect_errors="exit_code"><![CDATA[
         ## To be refactored with guidelines in https://github.com/ARTbio/tools-artbio/issues/140
         wget ftp://mirbase.org/pub/mirbase/CURRENT/genomes/${genomeKey}.gff3 && ## download gff3 specified by the variable genomeKey
-        python '$__tool_directory__'/mature_mir_gff_translation.py --input ${genomeKey}.gff3 --output $gff3 && echo "----Translation---" > /home/cedric/internals/cedric_log/mircounts/test2/pouet2 && diff $gff3 /home/cedric/internals/cedric_log/mircounts/test2/translated.gff >>/home/cedric/internals/cedric_log/mircounts/test2/pouet2 &&## transcode the mature miR genome coordinates into coordinates relative to the corresponding "miRNA_primary_transcript".
+        python '$__tool_directory__'/mature_mir_gff_translation.py --input ${genomeKey}.gff3 --output $gff3 && ## transcode the mature miR genome coordinates into coordinates relative to the corresponding "miRNA_primary_transcript".
         wget ftp://mirbase.org/pub/mirbase/CURRENT/hairpin.fa.gz &&
         sh '$__tool_directory__'/format_fasta_hairpins.sh $genomeKey &&
         #if $cutadapt.cutoption == "yes":
@@ -25,8 +24,6 @@
         #else
             ln -f -s '$cutadapt.clipped_input' clipped_input.fastq &&
         #end if
-        echo echo "----sutadapt---" >> /home/cedric/internals/cedric_log/mircounts/test2/pouet2 &&
-        diff clipped_input.fastq /home/cedric/internals/cedric_log/mircounts/test2/clipped_input.fastq >> /home/cedric/internals/cedric_log/mircounts/test2/pouet2 && 
         bowtie-build hairpin.fa hairpin &&
         bowtie -v $v -M 1 --best --strata --norc -p \${GALAXY_SLOTS:-4} --sam hairpin -q clipped_input.fastq 2>/dev/null | samtools sort -O bam -o '$output' &&
         samtools index $output &&
