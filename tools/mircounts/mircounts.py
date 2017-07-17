@@ -53,7 +53,7 @@ def get_mir_counts(bamfile, gff_file, quality_th):
     each 'miRNA' region of the gff the number of reads that hit it
     returns a dict[mir_name] = count
     """
-    counts = defaultdict(int)
+    counts = dict()
     refs = bamfile.references
     for line in open(gff_file, 'r'):
         if line[0] != '#':
@@ -64,7 +64,8 @@ def get_mir_counts(bamfile, gff_file, quality_th):
                 mir_start = int(gff_fields[3])
                 mir_end = int(gff_fields[4])
                 # GFF is 1-based, pysam is 0-based
-                counts[mir_name] = bamfile.count(premir_name, mir_start-1, mir_end-1)
+                counts[mir_name] = dict()
+                counts[mir_name]['count'] = bamfile.count(premir_name, mir_start-1, mir_end-1)
     return counts
 
 def write_dataframe(mirs, outfile, sample):
@@ -104,7 +105,7 @@ def write_counts(counts, outfile):
     table = []
     table.append("Gene\tCounts")
     for gene in counts:
-        table.append("\t".join([gene, str(counts[gene]["count"])]))
+        table.append("\t".join([gene, str(counts[gene]['count'])]))
     try:
         out = open(outfile, 'w')
         out.write("\n".join(table))
