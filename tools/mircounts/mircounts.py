@@ -41,7 +41,7 @@ def get_pre_mir_counts(bamfile, quality_th):
         count[ref_name]["coverage"] = bamfile.count_coverage(
                                                reference=ref_name,
 	                                           start=0, end=ref_len,
-	                                           quality_threshold=quality_th)]
+	                                           quality_threshold=quality_th)
         """ Add the 4 coverage values """
         count[ref_name]["coverage"] = [sum(x) for x
                                        in zip(*count[ref_name]["coverage"])]
@@ -60,14 +60,11 @@ def get_mir_counts(bamfile, gff_file, quality_th):
             gff_fields = line[:-1].split("\t")
             if gff_fields[2] == 'miRNA':
                 mir_name = gff_fields[0]
-                premir_name = gff_fields[8].split('=')[1]
+                premir_name = gff_fields[8].split('Parent_mir_Name=')[1].split(';')[0]
                 mir_start = int(gff_fields[3])
                 mir_end = int(gff_fields[4])
-                count = 0
                 # GFF is 1-based, pysam is 0-based
-                for read in bamfile.fetch(premir_name, mir_start-1, mir_end-1):
-                    count += 1
-                counts[mir_name] = count
+                counts[mir_name] = bamfile.count(premir_name, mir_start-1, mir_end-1)
     return counts
 
 def write_dataframe(mirs, outfile, sample):
@@ -80,7 +77,7 @@ def write_dataframe(mirs, outfile, sample):
     dataframe.append("sample\tmir\toffset\toffsetNorm\tcounts\tcountsNorm")
     for ref in sorted(mirs.keys()):
         """ For each reference name in mirs write the coverage of each of its positions """
-        coverage_array = mirs[ref][1]
+        coverage_array = mirs[ref]["coverage"]
         reference_length = len(coverage_array)
         maximum = max(coverage_array)
         for pos in range(reference_length):
@@ -107,7 +104,7 @@ def write_counts(counts, outfile):
     table = []
     table.append("Gene\tCounts")
     for gene in counts:
-        table.append("\t".join([gene, str(counts[gene][0])]))
+        table.append("\t".join([gene, str(counts[gene]["count"])]))
     try:
         out = open(outfile, 'w')
         out.write("\n".join(table))
