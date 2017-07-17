@@ -19,8 +19,6 @@ def option_parsing():
     inputs.add_option('--quality_threshold', type='int', dest='quality_threshold',
                       help='Quality threshold for coverage (default=10)',
                       default=10)
-    inputs.add_option('--sample', type='string', dest='sample_name',
-                      help='Sample name (default= sample1)', default='sample1')
     parser.add_option_group(inputs)
     outputs = optparse.OptionGroup(parser, 'Outputs')
     outputs.add_option('--pre_mirs_output', type='string', dest='output_pre_mirs',
@@ -41,27 +39,32 @@ def option_parsing():
         parser.error("Missing file. Both '--alignment' and '--gff' files are needed")
     return options
 
-def get_pre_mir_counts(bamfile, quality_th):
+def get_pre_mir_counts(bamfile):
     """
-    Takes a AlignmentFile object and and returns a dictionary of dictionary
-    with "count" key containing the count of reads aligning with the pre_mirs
-    and "coverage" key containing a list of coverage along the coordinates of
-    the pre_mirs
+    Takes a AlignmentFile object and returns a dictionary of counts for reads
+    aligning with pre_mirs (as keys)
     """
-    count = defaultdict(dict)
-    reference_lengths = bamfile.lengths
-    for ref_name, ref_len in zip(bamfile.references, reference_lengths):
-        count[ref_name]["count"] = bamfile.count(ref_name)
-        count[ref_name]["coverage"] = bamfile.count_coverage(
-                                               reference=ref_name,
-	                                           start=0, end=ref_len,
-	                                           quality_threshold=quality_th)]
-        """ Add the 4 coverage values """
-        count[ref_name]["coverage"] = [sum(x) for x
-                                       in zip(*count[ref_name]["coverage"])]
+    count = dict()
+    for ref_name in bamfile.references:
+        count[ref_name] = bamfile.count(reference = ref_name)
     return count
+    
+def get_pre_mir_coverage(bamfile, quality=10)
+    """
+    Takes a AlignmentFile object and returns a dictionary of lists
+    of coverage along the coordinates of pre_mirs (as keys)
+    """
+    coverage = dict()
+    for ref_name, ref_len in zip(bamfile.references, bamfile.lengths):
+        coverage[ref_name]= bamfile.count_coverage(reference = ref_name,
+	                                               start=0, end = ref_len,
+	                                               quality_threshold =quality)]
+        """ Add the 4 coverage values """
+        coverage[ref_name] = [sum(x) for x in
+                              zip(*coverage[ref_name])]
+    return coverage
 
-def get_mir_counts(bamfile, gff_file, quality_th):
+def get_mir_counts(bamfile, gff_file):
     """
     Takes a AlignmentFile and a gff file and computes for
     each 'miRNA' region of the gff the number of reads that hit it
@@ -78,45 +81,37 @@ def get_mir_counts(bamfile, gff_file, quality_th):
                 mir_start = int(gff_fields[3])
                 mir_end = int(gff_fields[4])
                 count = 0
-                # GFF is 1-based, pysam is 0-based. Check This
-                for read in bamfile.fetch(premir_name, mir_start-1, mir_end-1):
-                    count += 1
-                counts[mir_name] = count
+                # GFF is 1-based, pysam is 0-based.
+                counts[mir_name] = bamfile.count(reference = mir_name,
+                                                 start = mir_start-1,
+                                                 end = mir_end-1)
     return counts
 
-def write_dataframe(mirs, outfile, sample):
+def write_dataframe_coverage(countdict, outfile):
     """
-    Takes a dictionnary dict[reference name] = [count, [Hits of each position for 'A']]
-    And prints a dataframe with columns: sample, mir, offset, offsetNorm, counts, countsNorm
+    Takes a dict[pre_mir reference name] = [coverage list]
+    and writes a dataframe with columns:
+    <gene_type name>, offset, normoffset, counts and normcounts
     in the outfile
     """
-    dataframe = []
-    dataframe.append("sample\tmir\toffset\toffsetNorm\tcounts\tcountsNorm")
-    for ref in sorted(mirs.keys()):
+    F = open(outfile, 'w')
+    F.write('Pre-Mir\tOffset\tNorm_offset\tCount\tNorm_count')
+    for ref in sorted(countdict):
         """ For each reference name in mirs write the coverage of each of its positions """
-        coverage_array = mirs[ref][1]
-        reference_length = len(coverage_array)
-        maximum = max(coverage_array)
-        for pos in range(reference_length):
-            """ Compute coverage of each position and append to the dataframe a new line"""
-            coverage = coverage_array[pos]
-            dataframe.append("\t".join([sample, ref,
-                                        str(pos+1), # offset + 1 because range starts from 0
-                                        str(float((pos+1))/reference_length), # offsetNorm
-                                        str(coverage), # count
-                                        str(float(coverage)/float(maximum)) if maximum >0 else '0'])) # countNorm
-    try:
-        out = open(outfile, 'w')
-        out.write("\n".join(dataframe))
-        out.write("\n")
-        out.close()
-    except IOError as e:
-        sys.stderr.write("Error while writing file %s\n" % outfile)
-        sys.stderr.write("I/O error(%s): %s\n" % (e.errno, e.strerror))
+        max = max(countdict[ref])
+        reference_length = len(countdict[ref])
+        for pos, c in enumerate(countdict[ref]):
+            """ Compute and write value for each reference position"""
+            F.write('%s\t%s\t%s\t%s\t%s\t%s\n' % (ref,
+                                str(pos + 1),
+                                str(float(pos+1)/reference_length),
+                                str(c),
+                                str(float(c)/max) if max != 0 else '0'))
 
-def write_counts(counts, outfile):
+def write_counts(countdict, outfile, gene_type='mir'):
     """
-    Takes a dictionary of counts[mir]=[counts] and prints it as a table of Gene Counts
+    Takes a dict[<gene_type name>]=count and 
+    writes a count table
     """
     table = []
     table.append("Gene\tCounts")

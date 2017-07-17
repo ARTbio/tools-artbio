@@ -181,13 +181,9 @@ With name for mature miRNA (3rd column = miRNA) containing either the -3p or -5p
 
 **Input formats**
 
-1. One or sereral alignment files generated with sRbowtie tool and **renamed** according to the name of the biosample (avoid spaces in biosample labels)
+1. One BAM alignment file
 
-.. class:: warningmark
-
-Alignment datasets generated with sRbowtie must be renamed according to a biosample name
-
-2. A GFF3 file retrieved from mirBase_
+(2. A GFF3 file retrieved from mirBase_)
 
 ------
 
