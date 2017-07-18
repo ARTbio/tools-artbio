@@ -34,7 +34,8 @@ plot_readmap=function(df, ...) {
     combineLimits(xyplot(Nbr_reads~Coordinate|factor(Dataset, levels=unique(Dataset))+factor(Chromosome, levels=unique(Chromosome)),
     data=df,
     type='h',
-    scales= list(relation="free", x=list(rot=0, cex=0.7, axs="i", tck=0.1), y=list(tick.number=4, rot=90, cex=0.7)),
+    lwd=1.5,
+    scales= list(relation="free", x=list(rot=0, cex=0.7, axs="i", tck=0.5), y=list(tick.number=4, rot=90, cex=0.7)),
     xlab=NULL, main=NULL, ylab=NULL,
     as.table=T,
     origin = 0,
@@ -51,7 +52,7 @@ plot_size=function(df, ...) {
     sizeplot = xyplot(Median~Coordinate|factor(Dataset, levels=unique(Dataset))+factor(Chromosome, levels=unique(Chromosome)),
     data=df,
     type='p',
-    cex=0.5,
+    cex=0.35,
     pch=19,
     scales= list(relation="free", x=list(rot=0, cex=0, axs="i", tck=0.5), y=list(tick.number=4, rot=90, cex=0.7)),
     xlab=NULL, main=NULL, ylab=NULL,
@@ -75,7 +76,7 @@ par.settings.size=list(layout.heights=list(top.padding=0, bottom.padding=0))
 
 ## GRAPHS
 
-if (n_genes > 7) {page_height_simple = 11.69; page_height_combi=11.69; rows_per_page=10} else {
+if (n_genes > 5) {page_height_simple = 11.69; page_height_combi=11.69; rows_per_page=6} else {
                  rows_per_page= n_genes; page_height_simple = 2.5*n_genes; page_height_combi=page_height_simple*2 }
 if (n_samples > 4) {page_width = 8.2677*n_samples/4} else {page_width = 8.2677*n_samples/2} # to test
 

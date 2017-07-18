@@ -4,7 +4,6 @@
         <requirement type="package" version="1.11.2=py27_0">numpy</requirement>
         <requirement type="package" version="0.11.2.1=py27_0">pysam</requirement>
         <requirement type="package" version="1.3.2=r3.3.1_0">r-optparse</requirement>
-        <requirement type="package" version="2.2.1=r3.3.1_0">r-ggplot2</requirement>
         <requirement type="package" version="0.6_28=r3.3.1_0">r-latticeextra</requirement>
         <requirement type="package" version="2.2.1=r3.3.1_0">r-gridextra</requirement>
   </requirements>
@@ -22,19 +21,10 @@
           '$sample.name'
       #end for
       --output '$output_tab' &&
-      #if $R_method=='lattice':
-          Rscript '$__tool_directory__'/lattice_small_rna_map.r --output_tab '$output_tab' --output_pdf '$output_pdf'
-      #else:
-          Rscript '$__tool_directory__'/small_rna_map.r --output_tab '$output_tab' --output_pdf '$output_pdf'
-      #end if
+       Rscript '$__tool_directory__'/lattice_small_rna_map.r --output_tab '$output_tab' --output_pdf '$output_pdf'
   ]]></command>
  <inputs>
    <param name="input" type="data" format="bam" label="Select multiple alignments to parse" multiple="True"/>     
-    <param help="Select the R package to produce graphics" label="lattice or ggplot" name="R_method" type="select">
-                <option selected="True" value="lattice">lattice</option>
-                <option value="ggplot">ggplot</option>
-            </param>
-              
  </inputs>
 
  <outputs>
@@ -45,27 +35,13 @@
     <tests>
         <test>
             <param name="input" value="input1.bam,input2.bam" ftype="bam"/>
-            <param name="R_method" value="lattice" />
             <output file="output.tab" name="output_tab" />
             <output file="output_lattice.pdf" name="output_pdf" />
         </test>
         <test>
             <param name="input" value="input1.bam,input1.bam" ftype="bam"/>
-            <param name="R_method" value="lattice" />
             <output file="output_doubled.tab" name="output_tab" />
             <output file="output_lattice_doubled.pdf" name="output_pdf" />
-        </test>
-        <test>
-            <param name="input" value="input1.bam,input2.bam" ftype="bam"/>
-            <param name="R_method" value="ggplot" />
-            <output file="output.tab" name="output_tab" />
-            <output file="output.pdf" name="output_pdf" />
-        </test>
-        <test>
-            <param name="input" value="input1.bam,input1.bam" ftype="bam"/>
-            <param name="R_method" value="ggplot" />
-            <output file="output_doubled.tab" name="output_tab" />
-            <output file="output_doubled.pdf" name="output_pdf" />
         </test>
     </tests>
 
