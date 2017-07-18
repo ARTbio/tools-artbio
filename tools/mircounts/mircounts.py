@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 import argparse
 
-from collections import defaultdict
-
 import pysam
 
 
@@ -60,7 +58,7 @@ def get_mir_counts(bamfile, gff_file):
     each 'miRNA' region of the gff the number of reads that hit it
     returns a dict[mir_name] = count
     """
-    counts = defaultdict(int)
+    counts = dict()
     for line in open(gff_file, 'r'):
         if line[0] != '#':
             gff_fields = line[:-1].split("\t")
