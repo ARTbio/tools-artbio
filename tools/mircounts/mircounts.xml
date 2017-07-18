@@ -1,4 +1,4 @@
-<tool id="artbio_mircounts" name="miRCounts" version="0.1">
+<tool id="artbio_mircounts" name="miRCounts" version="0.9">
     <description> Counts miRNA alignments from small RNA sequence data</description>
     <requirements>
         <requirement type="package" version="1.2">bowtie</requirement>
@@ -108,7 +108,22 @@
         </data>
     </outputs>
     <tests>
-        <test>
+         <test>
+            <param name="cutoption" value="yes" />
+            <param name="min" value="15"/>
+            <param name="max" value="25"/>
+            <param name="Nmode" value="reject"/>
+            <param name="clip_sequence" value="TCGTATGCCGTCTTCTGCTTG"/>
+            <param name="v" value="0"/>
+            <param name="genomeKey" value="dme"/>
+            <param name="input" value="input.unclipped.fastqsanger" ftype="fastqsanger"/>
+            <param name="plottingOption" value="no"/>
+            <output name="output" file="unclipped.out.bam" ftype="bam"/>
+            <output name="gff3" file="translated_dme.gff3" ftype="gff3"/>
+            <output name="pre_mir_count_file" file="pre_mirs_unclipped_count.tab"/>
+            <output name="mir_count_file" file="mirs_unclipped_count.tab"/>
+        </test>
+       <test>
             <param name="cutoption" value="yes" />
             <param name="min" value="15"/>
             <param name="max" value="25"/>
@@ -121,8 +136,9 @@
             <param name="display" value="relative"/>
             <output name="output" file="unclipped.out.bam" ftype="bam"/>
             <output name="gff3" file="translated_dme.gff3" ftype="gff3"/>
-            <output name="latticePDF" file="mir_unclipped_coverage.pdf" ftype="pdf"/>
             <output name="pre_mir_count_file" file="pre_mirs_unclipped_count.tab"/>
+            <output name="mir_count_file" file="mirs_unclipped_count.tab"/>
+            <output name="latticePDF" file="mir_unclipped_coverage.pdf" ftype="pdf"/>
             <output name="coverage_dataframe" file="lattice_unclipped_dataframe.tab"/>
         </test>
         <test>
@@ -131,11 +147,12 @@
             <param name="genomeKey" value="dme"/>
             <param name="clipped_input" value="input.clipped.fastqsanger" ftype="fastqsanger"/>
             <param name="plottingOption" value="yes"/>
-            <param name="display" value="relative"/>
+            <param name="display" value="absolute"/>
             <output name="output" file="clipped.out.bam" ftype="bam"/>
             <output name="gff3" file="translated_dme.gff3" ftype="gff3"/>
-            <output name="latticePDF" file="mir_clipped_coverage.pdf" ftype="pdf"/>
             <output name="pre_mir_count_file" file="pre_mirs_clipped_count.tab"/>
+            <output name="mir_count_file" file="mirs_clipped_count.tab"/>
+            <output name="latticePDF" file="mir_clipped_coverage.pdf" ftype="pdf"/>
             <output name="coverage_dataframe" file="lattice_clipped_dataframe.tab"/>
         </test>
     </tests>
