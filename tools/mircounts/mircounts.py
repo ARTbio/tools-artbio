@@ -84,7 +84,7 @@ def write_dataframe_coverage(countdict, outfile):
     in the outfile
     """
     F = open(outfile, 'w')
-    F.write('Pre-Mir\tOffset\tNorm_offset\tCount\tNorm_count\n')
+    F.write('Mir_hairpin\tOffset\tNorm_offset\tCount\tNorm_count\n')
     for ref in sorted(countdict):
         """
         For each reference name in mirs,
@@ -95,7 +95,7 @@ def write_dataframe_coverage(countdict, outfile):
         for pos, c in enumerate(countdict[ref]):
             """ Compute and write value for each reference position"""
             F.write('%s\t%s\t%s\t%s\t%s\n' % (ref, str(pos + 1),
-                    str(float(pos+1)/reference_length), str(c),
+                    str(float(pos+1)/reference_length), str(float(c)),
                     str(float(c)/maximum) if maximum != 0 else '0'))
     F.close()
 

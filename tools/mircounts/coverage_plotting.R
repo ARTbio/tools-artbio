@@ -33,17 +33,18 @@ if ( !('dataframe' %in% names(args)) || !('output' %in% names(args))) {
 
 # Plot
 coverage = read.delim(args$dataframe, header=T)
-Numb_of_biosamples = length(levels(coverage$sample))
 if (args$type =="relative") {
-    graph = xyplot(countsNorm~offsetNorm | mir, data=coverage, col=c("blue"), type="l", lwd=1,
+    graph = xyplot(Norm_count~Norm_offset | Mir_hairpin, data=coverage, col=c("darkblue"), type="l", lwd=1.5,
                    scales=list(x=list(cex=.5), y=list(cex=.5)), par.strip.text=list(cex=.5),
-                   strip=strip.custom(which.given=1, bg="lightblue"), layout=c(Numb_of_biosamples,15),
-                   as.table=TRUE, main="miRNA coverage maps")
+                   strip=strip.custom(which.given=1, bg="lightblue"), layout=c(4,15),
+                   as.table=T, xlab="Normalized Counts", ylab="Normalized coordinates",
+                   main="miRNA coverage maps")
 } else {
-    graph = xyplot(counts~offset | mir, data=coverage, col=c("blue"), type="l", lwd=1,
+    graph = xyplot(Count~Offset | Mir_hairpin, data=coverage, col=c("darkblue"), type="l", lwd=1.5,
                    scales=list(x=list(cex=.5), y=list(cex=.5)), par.strip.text=list(cex=.5),
-                   strip=strip.custom(which.given=1, bg="lightblue"), layout=c(Numb_of_biosamples,15),
-                   as.table=TRUE, main="miRNA coverage maps")
+                   strip=strip.custom(which.given=1, bg="lightblue"), layout=c(4,15),
+                   as.table=T, xlab="Counts", ylab="Coordinates",
+                   main="miRNA coverage plots")
 }
 
 # PDF output
