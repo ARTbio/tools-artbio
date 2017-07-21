@@ -51,6 +51,71 @@ def compute_map_dictionary(pysam_object):
     return map_dictionary, max_dictionary
 
 
+class Map:
+
+    def __init__(self, bam_file, sample):
+        self.sample_name = sample
+        self.bam_object = pysam.AlignmentFile(bam_file, 'rb')
+        self.chromosomes = self.bam_object.references
+        self.map_dict = self.create_map(self.bam_object)
+        self.absent_chromosomes = self.get_absent_chrom(self.map_dict)
+        self.max = self.compute_max(self.map_dict)
+
+    def create_map(self, bam_object):
+        '''
+        Returns a map_dictionary {(read_chromosome,read_position,polarity):
+                                                       [read_length, ...]}
+        alternate method without empty chromosomes
+        '''
+        map_dictionary = defaultdict(list)
+        for chrom in bam_object.references:
+            for read in bam_object.fetch(chrom):
+                read_positions = read.positions  # a list of covered positions
+                if read.is_reverse:
+                    map_dictionary[(chrom, read_positions[-1]+1,
+                                    'R')].append(read.query_alignment_length)
+                else:
+                    map_dictionary[(chrom, read_positions[0]+1,
+                                    'F')].append(read.query_alignment_length)
+        return map_dictionary
+
+    def compute_max(self, map_dictionary):
+        '''
+        takes a map_dictionary as input and returns
+        a max_dictionary {chromosome_name:
+                          max_of_number_of_read_at_any_position}
+        '''
+        merge_keylist = [(i[0], 0) for i in map_dictionary.keys()]
+        max_dictionary = dict(merge_keylist)
+        for key in map_dictionary:
+            if len(map_dictionary[key]) > max_dictionary[key[0]]:
+                max_dictionary[key[0]] = len(map_dictionary[key])
+        return max_dictionary
+
+    def compute_mean(self, map_dictionary):
+        '''
+        takes a map_dictionary as input and returns
+        a mean_dictionary {(read_chromosome,read_position,polarity):
+                                                       mean_value_of_reads}
+        '''
+        mean_dictionary = dict()
+        for key in mean_dictionary:
+            mean_dictionary = mean(mean_dictionary[key])
+        return mean_dictionary
+
+
+    def compute_median(self, map_dictionary):
+        '''
+        takes a map_dictionary as input and returns
+        a mean_dictionary {(read_chromosome,read_position,polarity):
+                                                       mean_value_of_reads}
+        '''
+        median_dictionary = dict()
+        for key in median_dictionary:
+            median_dictionary = median(median_dictionary[key])
+        return median_dictionary
+
+
 def main(inputs, sample_names, output):
     with open(output, 'w') as outfile:
         outfile.write('\t'.join(['Dataset', 'Chromosome', 'Chrom_length',

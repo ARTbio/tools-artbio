@@ -11,10 +11,13 @@
       <exit_code range="1:" level="fatal" description="Tool exception" />
   </stdio>
   <command detect_errors="exit_code"><![CDATA[
+      #for $file in $input
+          samtools index '$file' &&
+      #end for
       python '$__tool_directory__'/small_rna_map.py 
       --input 
       #for $file in $input
-            '$file'
+           '$file'
       #end for
       --sample_name
       #for $sample in $input
