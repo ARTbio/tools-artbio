@@ -124,15 +124,14 @@ class Map:
                     key[1], len(self.map_dict[key]), key[2], self.max[key[0]],
                     self.mean[key], self.median[key], self.coverage[key]]
             line = [str(i) for i in line]
-            out.write('%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' % tuple(line))
+            out.write('\t'.join(line) + '\n')
 
 
 def main(inputs, samples, file_out):
     F = open(file_out, 'w')
-    header = tuple(["Dataset", "Chromosome", "Chrom_length", "Coordinate",
-                    "Nbr_reads", "Polarity", "Max", "Mean", "Median",
-                    "Coverage"])
-    header = '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' % header
+    header = ["Dataset", "Chromosome", "Chrom_length", "Coordinate",
+              "Nbr_reads", "Polarity", "Max", "Mean", "Median", "Coverage"]
+    header = '\t'.join(header) + '\n'
     F.write(header)
     for file, sample in zip(inputs, samples):
         mapobj = Map(file, sample)
