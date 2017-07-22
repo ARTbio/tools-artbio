@@ -29,13 +29,13 @@ class Map:
         self.max = self.compute_max(self.map_dict)
         self.mean = self.compute_mean(self.map_dict)
         self.median = self.compute_median(self.map_dict)
-        self.coverage = self.compute_coverage(self.map_dict) 
+        self.coverage = self.compute_coverage(self.map_dict)
+        self.size = self.compute_size(self.map_dict)
 
     def create_map(self, bam_object):
         '''
-        Returns a map_dictionary {(read_chromosome,read_position,polarity):
-                                                       [read_length, ...]}
-        alternate method without empty chromosomes
+        Returns a map_dictionary {(chromosome,read_position,polarity):
+                                                    [read_length, ...]}
         '''
         map_dictionary = dict()
         for chrom in self.chromosomes:
@@ -56,8 +56,8 @@ class Map:
     def compute_max(self, map_dictionary):
         '''
         takes a map_dictionary as input and returns
-        a max_dictionary {chromosome_name:
-                          max_of_number_of_read_at_any_position}
+        a max_dictionary {(chromosome,read_position,polarity):
+                              max_of_number_of_read_at_any_position}
         '''
         merge_keylist = [(i[0], 0) for i in map_dictionary.keys()]
         max_dictionary = dict(merge_keylist)
@@ -69,8 +69,8 @@ class Map:
     def compute_mean(self, map_dictionary):
         '''
         takes a map_dictionary as input and returns
-        a mean_dictionary {(read_chromosome,read_position,polarity):
-                                                       mean_value_of_reads}
+        a mean_dictionary {(chromosome,read_position,polarity):
+                                                mean_value_of_reads}
         '''
         mean_dictionary = dict()
         for key in map_dictionary:
@@ -84,8 +84,8 @@ class Map:
     def compute_median(self, map_dictionary):
         '''
         takes a map_dictionary as input and returns
-        a mean_dictionary {(read_chromosome,read_position,polarity):
-                                                       mean_value_of_reads}
+        a mean_dictionary {(chromosome,read_position,polarity):
+                                                    mean_value_of_reads}
         '''
         median_dictionary = dict()
         for key in map_dictionary:
@@ -96,10 +96,10 @@ class Map:
         return median_dictionary
 
     def compute_coverage(self, map_dictionary, quality=10):
-        """
-        Takes a AlignmentFile object and returns a dictionary of lists
+        '''
+        Takes a map_dictionary and returns a dictionary of lists
         of coverage along the coordinates of pre_mirs (as keys)
-        """
+        '''
         coverage_dictionary = dict()
         for chrom in self.chromosomes:
             coverage = self.bam_object.count_coverage(reference=chrom,
@@ -112,6 +112,32 @@ class Map:
                 coverage_dictionary[(chrom, pos+1, "F")] = cov
                 coverage_dictionary[(chrom, pos+1, "R")] = cov
         return coverage_dictionary
+
+    def compute_size(self, map_dictionary):
+        '''
+        Takes a map_dictionary and returns a dictionary of sizes:
+        {chrom: {size: {polarity: nbre of reads}}}
+        '''
+        size_dictionary = defaultdict(int)
+        for key in map_dictionary:
+            for size in map_dictionary[key]:
+                size_dictionary[key[0]][key[2]][size] += 1
+        return size_dictionary        
+             
+    def write_size_table(self, out)
+        '''
+        Dataset, Chromosome, Polarity, Size, Nbr_reads
+        out is an *open* file handler
+        '''
+        for chrom in sorted(self.size):
+            sizes = self.size[chrom]['F'].keys().append(
+                    self.size[chrom]['R'].keys())
+            for polarity in sorted(self.size[chrom]):
+                for size in range(min(sizes), max(sizes)+1):
+                    line = [self.sample_name, chrom, polarity, size,
+                            self.size[chrom][polarity][size]]
+                    line = [str(i) for i in line]
+                    out.write('\t'.join(line) + '\n')
 
     def write_table(self, out):
         '''
