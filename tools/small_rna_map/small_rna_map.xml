@@ -19,26 +19,39 @@
       #for $file in $input
            '$file'
       #end for
-      --sample_name
+          --sample_name
       #for $sample in $input
           '$sample.name'
       #end for
+      #if $extra_plot == 'Sizes':
+          --sizes '$output_sizes'
+      #end if
       --output '$output_tab' &&
        Rscript '$__tool_directory__'/small_rna_map.r --output_tab '$output_tab' 
-               --extra_plot '$extra_plot' --output_pdf '$output_pdf'
+               --output_pdf '$output_pdf'
+      #if $extra_plot != 'Sizes':
+          --extra_plot '$extra_plot'
+      #else
+          --sizes $output_sizes
+      #end if
   ]]></command>
  <inputs>
    <param name="input" type="data" format="bam" label="Select multiple alignments to parse" multiple="True"/> 
    <param name="extra_plot" type="select" label="select the type of extra plot in addition to read map">
        <option value="Coverage">Coverage</option> 
-       <option value="Mean">Mean</option> 
-       <option value="Median">Median</option>
+       <option value="Mean">Mean Sizes</option> 
+       <option value="Median">Median Sizes</option>
+       <option value="Sizes">Size Distributions</option>
     </param>
  </inputs>
 
  <outputs>
-   <data format="tabular" name="output_tab" label="tabular file" />
+   <data format="tabular" name="output_tab" label="Map dataframe" />
+   <data format="tabular" name="output_sizes" label="Size dataframe" >
+       <filter>extra_plot == "Sizes"</filter>
+   </data>
    <data format="pdf" name="output_pdf" label="PDF file" />
+
 </outputs>
 
     <tests>
@@ -77,6 +90,13 @@
             <param name="extra_plot" value="Coverage" />
             <output file="doubled.tab" name="output_tab" />
             <output file="doubled_coverage.pdf" name="output_pdf" />
+        </test>
+        <test>
+            <param name="input" value="input1.bam,input2.bam" ftype="bam"/>
+            <param name="extra_plot" value="Sizes" />
+            <output file="output.tab" name="output_tab" />
+            <output file="sizes.tab" name="output_sizes" />
+            <output file="sizes.pdf" name="output_pdf" />
         </test>
     </tests>
 

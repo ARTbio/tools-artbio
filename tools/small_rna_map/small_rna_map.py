@@ -12,8 +12,10 @@ def Parser():
                             nargs='+', help='input BAM files')
     the_parser.add_argument('--sample_name', dest='sample_name',
                             required=True, nargs='+', help='sample name')
-    the_parser.add_argument('--output', action="store",
+    the_parser.add_argument('--output', action='store',
                             type=str, help='output tabular file')
+    the_parser.add_argument('-S', '--sizes', action='store',
+                            help='use to output read sizes dataframe')
     args = the_parser.parse_args()
     return args
 
@@ -39,7 +41,7 @@ class Map:
         '''
         map_dictionary = dict()
         for chrom in self.chromosomes:
-            for pos in range (self.chromosomes[chrom]):
+            for pos in range(self.chromosomes[chrom]):
                 map_dictionary[(chrom, pos+1, 'F')] = []  # get all chromosomes
                 map_dictionary[(chrom, pos+1, 'R')] = []  # get all chromosomes
         for chrom in self.chromosomes:
@@ -78,7 +80,7 @@ class Map:
                 mean_dictionary[key] = 0
             else:
                 mean_dictionary[key] = round(numpy.mean(map_dictionary[key]),
-                                                                            1)
+                                             1)
         return mean_dictionary
 
     def compute_median(self, map_dictionary):
@@ -102,7 +104,8 @@ class Map:
         '''
         coverage_dictionary = dict()
         for chrom in self.chromosomes:
-            coverage = self.bam_object.count_coverage(reference=chrom,
+            coverage = self.bam_object.count_coverage(
+                                                reference=chrom,
                                                 start=0,
                                                 end=self.chromosomes[chrom],
                                                 quality_threshold=quality)
@@ -118,24 +121,30 @@ class Map:
         Takes a map_dictionary and returns a dictionary of sizes:
         {chrom: {size: {polarity: nbre of reads}}}
         '''
-        size_dictionary = defaultdict(int)
+        size_dictionary = defaultdict(lambda: defaultdict(lambda: defaultdict( int )))
         for key in map_dictionary:
             for size in map_dictionary[key]:
-                size_dictionary[key[0]][key[2]][size] += 1
-        return size_dictionary        
-             
-    def write_size_table(self, out)
+                try:
+                    size_dictionary[key[0]][key[2]][size] += 1
+                except KeyError:
+                    size_dictionary[key[0]][key[2]][size] = 1
+        return size_dictionary
+
+    def write_size_table(self, out):
         '''
         Dataset, Chromosome, Polarity, Size, Nbr_reads
         out is an *open* file handler
         '''
         for chrom in sorted(self.size):
-            sizes = self.size[chrom]['F'].keys().append(
-                    self.size[chrom]['R'].keys())
+            sizes = self.size[chrom]['F'].keys()
+            sizes.extend(self.size[chrom]['R'].keys())
             for polarity in sorted(self.size[chrom]):
                 for size in range(min(sizes), max(sizes)+1):
-                    line = [self.sample_name, chrom, polarity, size,
-                            self.size[chrom][polarity][size]]
+                    try:
+                        line = [self.sample_name, chrom, polarity, size,
+                                self.size[chrom][polarity][size]]
+                    except KeyError:
+                        line = [self.sample_name, chrom, polarity, size, 0]
                     line = [str(i) for i in line]
                     out.write('\t'.join(line) + '\n')
 
@@ -153,16 +162,23 @@ class Map:
             out.write('\t'.join(line) + '\n')
 
 
-def main(inputs, samples, file_out):
+def main(inputs, samples, file_out, size_file_out=''):
     F = open(file_out, 'w')
     header = ["Dataset", "Chromosome", "Chrom_length", "Coordinate",
               "Nbr_reads", "Polarity", "Max", "Mean", "Median", "Coverage"]
-    header = '\t'.join(header) + '\n'
-    F.write(header)
+    F.write('\t'.join(header) + '\n')
+    if size_file_out:
+        Fs = open(size_file_out, 'w')
+        header = ["Dataset", "Chromosome", "Polarity", "Size", "Nbr_reads"]
+        Fs.write('\t'.join(header) + '\n')
     for file, sample in zip(inputs, samples):
         mapobj = Map(file, sample)
         mapobj.write_table(F)
+        if size_file_out:
+            mapobj.write_size_table(Fs)
     F.close()
+    if size_file_out:
+        Fs.close()
 
 
 if __name__ == "__main__":
@@ -171,4 +187,4 @@ if __name__ == "__main__":
     if len(set(args.sample_name)) != len(args.sample_name):
         args.sample_name = [name + '_' + str(i) for
                             i, name in enumerate(args.sample_name)]
-    main(args.input, args.sample_name, args.output)
+    main(args.input, args.sample_name, args.output, args.sizes)
