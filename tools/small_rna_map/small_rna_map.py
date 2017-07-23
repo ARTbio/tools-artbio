@@ -40,19 +40,24 @@ class Map:
         Returns a map_dictionary {(chromosome,read_position,polarity):
                                                     [read_length, ...]}
         '''
-        map_dictionary = dict()
+        map_dictionary = defaultdict(list)
+        # get empty value for start and end of each chromosome
         for chrom in self.chromosomes:
-            for pos in range(self.chromosomes[chrom]):
-                map_dictionary[(chrom, pos+1, 'F')] = []  # get all chromosomes
-                map_dictionary[(chrom, pos+1, 'R')] = []  # get all chromosomes
+            map_dictionary[(chrom, 1, 'F')] = []
+            map_dictionary[(chrom, self.chromosomes[chrom], 'F')] = []
         for chrom in self.chromosomes:
             for read in bam_object.fetch(chrom):
-                read_positions = read.positions  # a list of covered positions
+                positions = read.positions  # a list of covered positions
+                for pos in positions:
+                    if not map_dictionary[(chrom, pos+1, 'F')]:
+                        map_dictionary[(chrom, pos+1, 'F')] = []
+                    if not map_dictionary[(chrom, pos+1, 'R')]:
+                        map_dictionary[(chrom, pos+1, 'R')] = []
                 if read.is_reverse:
-                    map_dictionary[(chrom, read_positions[-1]+1,
+                    map_dictionary[(chrom, positions[-1]+1,
                                     'R')].append(read.query_alignment_length)
                 else:
-                    map_dictionary[(chrom, read_positions[0]+1,
+                    map_dictionary[(chrom, positions[0]+1,
                                     'F')].append(read.query_alignment_length)
         return map_dictionary
 
@@ -100,21 +105,25 @@ class Map:
 
     def compute_coverage(self, map_dictionary, quality=10):
         '''
-        Takes a map_dictionary and returns a dictionary of lists
-        of coverage along the coordinates of pre_mirs (as keys)
+        takes a map_dictionary as input and returns
+        a coverage_dictionary {(chromosome,read_position,polarity):
+                                                coverage}
         '''
         coverage_dictionary = dict()
         for chrom in self.chromosomes:
+            coverage_dictionary[(chrom, 1, 'F')] = 0
+            coverage_dictionary[(chrom, self.chromosomes[chrom], 'F')] = 0
+
+        for key in map_dictionary:
             coverage = self.bam_object.count_coverage(
-                                                reference=chrom,
-                                                start=0,
-                                                end=self.chromosomes[chrom],
+                                                reference=key[0],
+                                                start=key[1]-1,
+                                                end=key[1],
                                                 quality_threshold=quality)
             """ Add the 4 coverage values """
             coverage = [sum(x) for x in zip(*coverage)]
-            for pos, cov in enumerate(coverage):
-                coverage_dictionary[(chrom, pos+1, "F")] = cov
-                coverage_dictionary[(chrom, pos+1, "R")] = cov
+            coverage_dictionary[key] = coverage[0]
+            # coverage_dictionary[(key[0], key[1], 'R')] = coverage
         return coverage_dictionary
 
     def compute_size(self, map_dictionary):

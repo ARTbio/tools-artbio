@@ -1,4 +1,4 @@
-<tool id="small_rna_map" name="small rna map" version="0.6.0">
+<tool id="small_rna_map" name="small rna map" version="0.7.0">
   <description></description>
   <requirements>
         <requirement type="package" version="1.11.2=py27_0">numpy</requirement>
@@ -74,22 +74,10 @@
             <output file="median.pdf" name="output_pdf" />
         </test>
         <test>
-            <param name="input" value="input1.bam,input1.bam" ftype="bam"/>
-            <param name="extra_plot" value="Median" />
-            <output file="doubled.tab" name="output_tab" />
-            <output file="doubled_median.pdf" name="output_pdf" />
-        </test>
-        <test>
             <param name="input" value="input1.bam,input2.bam" ftype="bam"/>
             <param name="extra_plot" value="Coverage" />
             <output file="output.tab" name="output_tab" />
             <output file="coverage.pdf" name="output_pdf" />
-        </test>
-        <test>
-            <param name="input" value="input1.bam,input1.bam" ftype="bam"/>
-            <param name="extra_plot" value="Coverage" />
-            <output file="doubled.tab" name="output_tab" />
-            <output file="doubled_coverage.pdf" name="output_pdf" />
         </test>
         <test>
             <param name="input" value="input1.bam,input2.bam" ftype="bam"/>
