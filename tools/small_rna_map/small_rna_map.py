@@ -121,13 +121,15 @@ class Map:
         Takes a map_dictionary and returns a dictionary of sizes:
         {chrom: {size: {polarity: nbre of reads}}}
         '''
-        size_dictionary = defaultdict(lambda: defaultdict(lambda: defaultdict( int )))
+        size_dictionary = defaultdict(lambda: defaultdict(
+                                      lambda: defaultdict( int )))
         for key in map_dictionary:
+            if len(map_dictionary) == 0:
+                #  to track empty chromosomes
+                size_dictionary[key[0]][key[2]][size] = 0
+                continue
             for size in map_dictionary[key]:
-                try:
-                    size_dictionary[key[0]][key[2]][size] += 1
-                except KeyError:
-                    size_dictionary[key[0]][key[2]][size] = 1
+                size_dictionary[key[0]][key[2]][size] += 1
         return size_dictionary
 
     def write_size_table(self, out):
