@@ -1,6 +1,6 @@
 ## Setup R error handling to go to stderr
-#options( show.error.messages=F,
-#       error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+options( show.error.messages=F,
+       error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
 warnings()
 library(RColorBrewer)
 library(lattice)
