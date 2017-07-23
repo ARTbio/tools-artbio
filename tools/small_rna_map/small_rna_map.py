@@ -22,7 +22,7 @@ def Parser():
 
 class Map:
 
-    def __init__(self, bam_file, sample):
+    def __init__(self, bam_file, sample, computeSize=False):
         self.sample_name = sample
         self.bam_object = pysam.AlignmentFile(bam_file, 'rb')
         self.chromosomes = dict(zip(self.bam_object.references,
@@ -32,7 +32,8 @@ class Map:
         self.mean = self.compute_mean(self.map_dict)
         self.median = self.compute_median(self.map_dict)
         self.coverage = self.compute_coverage(self.map_dict)
-        self.size = self.compute_size(self.map_dict)
+        if computeSize:
+            self.size = self.compute_size(self.map_dict)
 
     def create_map(self, bam_object):
         '''
@@ -119,15 +120,15 @@ class Map:
     def compute_size(self, map_dictionary):
         '''
         Takes a map_dictionary and returns a dictionary of sizes:
-        {chrom: {size: {polarity: nbre of reads}}}
+        {chrom: {polarity: {size: nbre of reads}}}
         '''
         size_dictionary = defaultdict(lambda: defaultdict(
                                       lambda: defaultdict( int )))
+        #  to track empty chromosomes
+        for chrom in self.chromosomes:
+            if self.bam_object.count(chrom) == 0:
+                size_dictionary[chrom]['F'][10] = 0
         for key in map_dictionary:
-            if len(map_dictionary) == 0:
-                #  to track empty chromosomes
-                size_dictionary[key[0]][key[2]][size] = 0
-                continue
             for size in map_dictionary[key]:
                 size_dictionary[key[0]][key[2]][size] += 1
         return size_dictionary
@@ -173,19 +174,21 @@ def main(inputs, samples, file_out, size_file_out=''):
         Fs = open(size_file_out, 'w')
         header = ["Dataset", "Chromosome", "Polarity", "Size", "Nbr_reads"]
         Fs.write('\t'.join(header) + '\n')
-    for file, sample in zip(inputs, samples):
-        mapobj = Map(file, sample)
-        mapobj.write_table(F)
-        if size_file_out:
+        for file, sample in zip(inputs, samples):
+            mapobj = Map(file, sample, computeSize=True)
+            mapobj.write_table(F)
             mapobj.write_size_table(Fs)
-    F.close()
-    if size_file_out:
         Fs.close()
+    else:
+        for file, sample in zip(inputs, samples):
+            mapobj = Map(file, sample, computeSize=False)
+            mapobj.write_table(F)
+        F.close()
 
 
 if __name__ == "__main__":
     args = Parser()
-    # if identical sample names # to be tested
+    # if identical sample names
     if len(set(args.sample_name)) != len(args.sample_name):
         args.sample_name = [name + '_' + str(i) for
                             i, name in enumerate(args.sample_name)]
