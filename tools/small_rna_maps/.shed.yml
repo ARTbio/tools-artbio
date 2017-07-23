@@ -1,0 +1,22 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: small_rna_maps
+description: Generates small read maps from alignment BAM files
+long_description: |
+  Generates read count maps from alignment BAM files, using pysam and r-lattice.
+  In addition to the read counts (bars), median sizes, mean sizes and coverages of
+  reads mapping at a any given position are plotted in graphs.
+  Takes sorted BAM files as inputs and produce pdf outputs.  
+
+categories:
+  - RNA
+  - SAM
+  - Graphics
+  - Next Gen Mappers
+
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/small_rna_maps
+toolshed:
+  - testtoolshed
+  - toolshed
+
