@@ -1,6 +1,6 @@
 # .shed.yml supporting automatic pushes.
-owner: drosofff
-name: lumpy
+owner: artbio
+name: lumpy-sv
 description: Find structural variations
 long_description: |
   This tool takes as an input a sorted bam alignment of paired-end sequencing reads.
@@ -9,7 +9,7 @@ long_description: |
 categories:
   - Variant Analysis
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/lumpy
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/lumpy-sv
 toolshed:
   - testtoolshed
   - toolshed
