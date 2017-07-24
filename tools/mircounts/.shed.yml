@@ -1,0 +1,16 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: mircounts
+description: Generates miRNA count lists from read alignments to mirBase.
+long_description: |
+  Generates pre-miRNA and mature miRNA count tables from read alignments to
+  pre-miRNA sequences and a gff file, both downloaded from mirBase. Produces also
+  read coverage plots of pre-miRNAs.
+categories:
+  - RNA
+  - Transcriptomics
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/mircounts
+toolshed:
+  - testtoolshed
+  - toolshed
