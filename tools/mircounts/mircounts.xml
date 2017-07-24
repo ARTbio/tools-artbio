@@ -180,9 +180,21 @@ This tool uses a species-specific GFF3 file generated from mirBase_ to guide the
 2. Select the appropriate organism from which reads originate.
 
 3. Choose whether you wish or not to plot the pre-mir coverages.
-The coverage can be expressed in absolute number of reads covering the real coordinates of the pre-mir sequences, or, as a fraction of the maximum coverage (set to 1) covering the coordinates of pre-mirs expressed as a fraction of the length of the pre-mirs.
+The coverage can be expressed in absolute number of reads covering the real coordinates of the pre-mir sequences, or, 
+as a fraction of the maximum coverage (set to 1) covering the coordinates of pre-mirs expressed as a fraction of 
+the length of the pre-mirs.
 
 ------
+
+Absolute :
+
++ .. image:: premirs_absolute.png
+
+Relative :
+
++ .. image:: premirs_relative.png
+
+-------
 
 **Outputs**
 
