@@ -1,7 +1,7 @@
-<tool id="lumpy" name="lumpy-sv" version="0.3.1">
+<tool id="lumpy" name="lumpy-sv" version="1.0.0">
     <description>find structural variants</description>
     <requirements>
-        <requirement type="package" version="0.2.12">lumpy-sv</requirement>
+        <requirement type="package" version="0.2.13">lumpy-sv</requirement>
         <requirement type="package" version="1.3.1">samtools</requirement>
         <requirement type="package" version="1.11.2=py27_0">numpy</requirement>
     </requirements>
