@@ -39,7 +39,7 @@
         </conditional>
     </inputs>
     <outputs>
-        <data format="fasta" metadata_source="input" name="output">
+        <data format="fasta" metadata_source="input" name="output" label="Clipping of ${input.name}">
           <change_format>
               <when input="out_format" value="fastq" format="fastq" />
           </change_format>
