@@ -1,4 +1,4 @@
-<tool id="mircounts" name="miRcounts" version="0.9">
+<tool id="mircounts" name="miRcounts" version="0.9.1">
     <description> Counts miRNA alignments from small RNA sequence data</description>
     <requirements>
         <requirement type="package" version="1.2">bowtie</requirement>
