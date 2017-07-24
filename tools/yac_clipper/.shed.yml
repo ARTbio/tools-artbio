@@ -1,5 +1,5 @@
 # .shed.yml supporting automatic pushes.
-owner: drosofff
+owner: artbio
 name: yac_clipper
 description: Clips 3' adapters for small RNA sequencing reads.
 long_description: |
