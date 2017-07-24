@@ -1,6 +1,6 @@
 # .shed.yml supporting automatic pushes.
 owner: artbio
-name: lumpy-sv
+name: lumpy_sv
 description: Find structural variations
 long_description: |
   This tool takes as an input a sorted bam alignment of paired-end sequencing reads.
