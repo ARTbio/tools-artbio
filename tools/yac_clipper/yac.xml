@@ -67,15 +67,29 @@
         </test>
     </tests>
     <help>
-This tool clips adapter sequences from a fasta or fastq file and
-outputs either a fasta or fastq file of clipped reads with
-renumbered fasta/fastq headers.
 
-By default clipped sequences with unknown nucleotides are kept, but 
-can be discarded by setting "Accept reads containing N?" to reject.
+**What it does**
 
-Min size and max size filter clipped reads on their size.
++ Clips adapter sequences
++ Renumbers sequence headers
++ Filters sequences on their size
++ Filters sequences containing unknown nucleotides (optional)
 
-Note that unclipped reads that satisfy the min and max size conditions are kept.
+-------
+
+**Inputs**
+
+1. A fastq file of reads to be clipped
+2. Select the size of the reads to be kept
+3. Select an output format
+4. Select if you want the sequences containing unknown nucleotides to be kept
+5. Select the sequence of the adapter to clip either pre-built or custom
+
+-------
+
+**Output**
+
+A fastq or fasta file containing the sequences that satisfied the selected criteria with their adapters clipped.
+
   </help>
 </tool>
