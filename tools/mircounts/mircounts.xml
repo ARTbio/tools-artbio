@@ -160,10 +160,10 @@
 
 **What it does**
 
-+ Clip adapter (optional)
-+ Align small RNA reads to miRNA mirBase_ reference using bowtie
-+ Compute pre-mir and mir counts using the pysam python package
-+ Plot pre-mir read coverages using R lattice package (optional)
++ Clips adapter (optional)
++ Aligns small RNA reads to miRNA mirBase_ reference using bowtie
++ Computes pre-mir and mir counts using the pysam python package
++ Plots pre-mir read coverages using R lattice package (optional)
 
 This tool uses a species-specific GFF3 file generated from mirBase_ to guide the parsing of a bam file of small RNA alignments.
 
