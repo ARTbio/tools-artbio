@@ -1,6 +1,7 @@
-<tool id="mircounts" name="miRcounts" version="0.9.1">
+<tool id="mircounts" name="miRcounts" version="0.9.2">
     <description> Counts miRNA alignments from small RNA sequence data</description>
     <requirements>
+        <requirement type="package" version="1.18">gnu-wget</requirement>
         <requirement type="package" version="1.2">bowtie</requirement>
         <requirement type="package" version="1.4.1">samtools</requirement>
         <requirement type="package" version="0.11.2.1">pysam</requirement>
