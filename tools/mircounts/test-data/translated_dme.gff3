@@ -5,9 +5,9 @@
 # microRNAs:               miRBase current_version
 # genome-build-id:         check http://mirbase.org/
 #
-# Hairpin precursor sequences have type "miRNA_primary_transcript". 
-# Note, these sequences do not represent the full primary transcript, 
-# rather a predicted stem-loop portion that includes the precursor 
+# Hairpin precursor sequences have type "miRNA_primary_transcript".
+# Note, these sequences do not represent the full primary transcript,
+# rather a predicted stem-loop portion that includes the precursor
 # miRNA. Mature sequences have type "miRNA".
 #
 dme-bantam	.	miRNA_primary_transcript	1	81	.	+	.	ID=MI0000387;Alias=MI0000387;Name=dme-bantam
