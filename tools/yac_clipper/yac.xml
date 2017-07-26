@@ -92,4 +92,5 @@
 A fastq or fasta file containing clipped sequences satisfying the selected criteria.
 
   </help>
+  <citations />
 </tool>
