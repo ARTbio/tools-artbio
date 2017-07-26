@@ -2,11 +2,8 @@
 # yac = yet another clipper
 # v 1.2.1 - 23-08-2014 - Support FastQ output
 # v 1.1.0 - 23-08-2014 - argparse implementation
-# Usage yac.py  $input $output $adapter_to_clip $min $max $Nmode
 # Christophe Antoniewski <drosofff@gmail.com>
 
-import sys
-import string
 import argparse
 from itertools import islice
 
@@ -16,17 +13,23 @@ def Parser():
     the_parser.add_argument(
         '--input', action="store", nargs='+', help="input fastq files")
     the_parser.add_argument(
-        '--output', action="store", type=str, help="output, clipped fasta file")
+        '--output', action="store", type=str,
+        help="output, clipped fasta file")
     the_parser.add_argument(
-        '--output_format', action="store", type=str, help="output format, fasta or fastq")
+        '--output_format', action="store", type=str,
+        help="output format, fasta or fastq")
     the_parser.add_argument(
-        '--adapter_to_clip', action="store", type=str, help="adapter sequence to clip")
+        '--adapter_to_clip', action="store", type=str,
+        help="adapter sequence to clip")
     the_parser.add_argument(
-        '--min', action="store", type=int, help="minimal size of clipped sequence to keep")
+        '--min', action="store", type=int,
+        help="minimal size of clipped sequence to keep")
     the_parser.add_argument(
-        '--max', action="store", type=int, help="maximal size of clipped sequence to keep")
+        '--max', action="store", type=int,
+        help="maximal size of clipped sequence to keep")
     the_parser.add_argument('--Nmode', action="store", type=str, choices=[
-                            "accept", "reject"], help="accept or reject sequences with N for clipping")
+                            "accept", "reject"],
+                            help="accept or reject Ns in clipped sequences")
     args = the_parser.parse_args()
     args.adapter_to_clip = args.adapter_to_clip.upper()
     return args
@@ -34,7 +37,8 @@ def Parser():
 
 class Clip:
 
-    def __init__(self, inputfile, outputfile, output_format, adapter, minsize, maxsize, Nmode):
+    def __init__(self, inputfile, outputfile, output_format,
+                 adapter, minsize, maxsize, Nmode):
         self.inputfile = inputfile
         self.outputfile = outputfile
         self.output_format = output_format
@@ -44,9 +48,12 @@ class Clip:
         self.Nmode = Nmode
 
         def motives(sequence):
-            '''return a list of motives for perfect (6nt) or imperfect (7nt with one mismatch) search on import string module'''
+            '''
+            return a list of motives for perfect (6nt) or
+            imperfect (7nt with one mismatch) search on import string module
+            '''
             sequencevariants = [
-                sequence[0:6]]  # initializes the list with the 6mer perfect match
+                sequence[0:6]]  # initializes list with 6mer perfect match
             dicsubst = {"A": "TGCN", "T": "AGCN", "G": "TACN", "C": "GATN"}
             for pos in enumerate(sequence[:6]):
                 for subst in dicsubst[pos[1]]:
@@ -99,6 +106,7 @@ class Clip:
 def main(*argv):
     instanceClip = Clip(*argv)
     instanceClip.handle_io()
+
 
 if __name__ == "__main__":
     args = Parser()
