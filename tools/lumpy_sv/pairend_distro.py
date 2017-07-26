@@ -9,9 +9,9 @@
 #  rl6sf@virginia.edu
 
 import sys
-import numpy as np
-from operator import itemgetter
 from optparse import OptionParser
+
+import numpy as np
 
 # some constants for sam/bam field ids
 SAM_FLAG = 1
@@ -20,32 +20,16 @@ SAM_MATE_REFNAME = 6
 SAM_ISIZE = 8
 
 parser = OptionParser()
+parser.add_option("-r", "--read_length", type="int", dest="read_length",
+                  help="Read length")
+parser.add_option("-X", dest="X", type="int",
+                  help="Number of stdevs from mean to extend")
+parser.add_option("-N", dest="N", type="int", help="Number to sample")
+parser.add_option("-o", dest="output_file", help="Output file")
+parser.add_option("-m", dest="mads", type="int", default=10,
+                  help='''Outlier cutoff in # of median absolute deviations
+                          (unscaled, upper only)''')
 
-parser.add_option("-r",
-    "--read_length",
-    type="int",
-    dest="read_length",
-    help="Read length")
-
-parser.add_option("-X",
-    dest="X",
-    type="int",
-    help="Number of stdevs from mean to extend")
-
-parser.add_option("-N",
-    dest="N",
-    type="int",
-    help="Number to sample")
-
-parser.add_option("-o",
-    dest="output_file",
-    help="Output file")
-
-parser.add_option("-m",
-    dest="mads",
-    type="int",
-    default=10,
-    help="Outlier cutoff in # of median absolute deviations (unscaled, upper only)")
 
 def unscaled_upper_mad(xs):
     """Return a tuple consisting of the median of xs followed by the
@@ -96,7 +80,8 @@ for l in sys.stdin:
 # warn if very few elements in distribution
 min_elements = 1000
 if len(L) < min_elements:
-    sys.stderr.write("Warning: only %s elements in distribution (min: %s)\n" % (len(L), min_elements))
+    sys.stderr.write("Warning: only %s elements in distribution (min: %s)\n" %
+                     (len(L), min_elements))
     mean = "NA"
     stdev = "NA"
 
@@ -110,7 +95,7 @@ else:
     new_len = len(L)
     removed = c - new_len
     sys.stderr.write("Removed %d outliers with isize >= %d\n" %
-        (removed, upper_cutoff))
+                     (removed, upper_cutoff))
     c = new_len
 
     mean = np.mean(L)
@@ -125,7 +110,7 @@ else:
     for x in L:
         if (x >= start) and (x <= end):
             j = int(x - start)
-            H[j] = H[ int(x - start) ] + 1
+            H[j] = H[int(x - start)] + 1
             s += 1
 
     f = open(options.output_file, 'w')
@@ -133,8 +118,5 @@ else:
     for i in range(end - start):
         o = str(i) + "\t" + str(float(H[i])/float(s)) + "\n"
         f.write(o)
-
-
     f.close()
-
 print('mean:' + str(mean) + '\tstdev:' + str(stdev))
