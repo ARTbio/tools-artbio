@@ -1,4 +1,4 @@
-<tool id="yac" name="Clip adapter" version="2.0.0">
+<tool id="yac" name="Clip adapter" version="2.0.1">
     <description />
     <command interpreter="python">yac.py --input $input
                                        --output $output
@@ -14,7 +14,7 @@
         <param label="max size" name="max" size="4" type="integer" value="36" />
         <param label="Select output format" name="out_format" type="select">
             <option selected="true" value="fasta">Fasta format</option>
-            <option value="fastq">Fastq format</option>
+            <option value="fastq">Fastq (Sanger) format</option>
         </param>
         <param label="Accept reads containing N?" name="Nmode" type="select">
             <option selected="True" value="accept">accept</option>
@@ -39,9 +39,9 @@
         </conditional>
     </inputs>
     <outputs>
-        <data format="fasta" metadata_source="input" name="output" label="Clipping of ${input.name}">
+        <data format_source="input" metadata_source="input" name="output" label="Clipping of ${input.name}">
           <change_format>
-              <when input="out_format" value="fastq" format="fastq" />
+              <when input="out_format" value="fasta" format="fasta" />
           </change_format>
         </data>
     </outputs>
@@ -92,4 +92,5 @@
 A fastq or fasta file containing clipped sequences satisfying the selected criteria.
 
   </help>
+  <citations />
 </tool>
