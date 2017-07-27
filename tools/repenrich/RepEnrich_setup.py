@@ -120,9 +120,11 @@ if is_bed == "TRUE":
         repchr = line[0]
         repstart = int(line[1])
         repend = int(line[2])
-#        print >> fout, str(repchr) + '\t'+str(repstart)+ '\t'+str(repend)+ '\t'+str(repname)
-        fout.write(str(repchr) + '\t'+str(repstart)+ '\t'+str(repend)+ '\t'+str(repname) + '\n')
-#        if rep_chr.has_key(repname):
+        # print >> fout, str(repchr) + '\t'+str(repstart)+ '\t'
+        # + str(repend)+ '\t'+str(repname)
+        fout.write(str(repchr) + '\t' + str(repstart) + '\t' +
+                   str(repend) + '\t' + str(repname) + '\n')
+        # if rep_chr.has_key(repname):
         if repname in rep_chr:
             rep_chr[repname].append(repchr)
             rep_start[repname].append(int(repstart))
@@ -136,23 +138,26 @@ fin.close()
 fout.close()
 repeat_elements = sorted(repeat_elements)
 print ("Writing a key for all repeats...")
-#print to fout the binary key that contains each repeat type with the associated binary number; sort the binary key:
-fout = open(os.path.realpath(setup_folder + os.path.sep + 'repgenomes_key.txt'), 'w')
+# print to fout the binary key that contains each repeat type with the
+# associated binary number; sort the binary key:
+fout = open(os.path.realpath(setup_folder + os.path.sep +
+                             'repgenomes_key.txt'), 'w')
 x = 0
 for repeat in repeat_elements:
-#    print >> fout, str(repeat) + '\t' + str(x)
+    # print >> fout, str(repeat) + '\t' + str(x)
     fout.write(str(repeat) + '\t' + str(x) + '\n')
-    x +=1
+    x += 1
 fout.close()
-################################################################################
+##############################################################################
 # generate spacer for psuedogenomes
 spacer = ""
 for i in range(gapl):
     spacer = spacer + "N"
 
 # save file with number of fragments processed per repname
-print ("Saving number of fragments processed per repname to " + nfragmentsfile1)
-fout1 = open(os.path.realpath(nfragmentsfile1),"w")
+print ("Saving number of fragments processed per repname to "
+       + nfragmentsfile1)
+fout1 = open(os.path.realpath(nfragmentsfile1), "w")
 for repname in rep_chr.keys():
     rep_chr_current = rep_chr[repname]
 #    print >>fout1, str(len(rep_chr[repname])) + "\t" + repname
@@ -164,8 +169,9 @@ k = 1
 nrepgenomes = len(rep_chr.keys())
 for repname in rep_chr.keys():
     metagenome = ""
-    newname = repname.replace("(","_").replace(")","_").replace("/","_")
-    print ("processing repgenome " + newname + ".fa" + " (" + str(k) + " of " + str(nrepgenomes) + ")")
+    newname = repname.replace("(", "_").replace(")", "_").replace("/", "_")
+    print ("processing repgenome " + newname + ".fa" + " (" + str(k)
+           + " of " + str(nrepgenomes) + ")")
     rep_chr_current = rep_chr[repname]
     rep_start_current = rep_start[repname]
     rep_end_current = rep_end[repname]
@@ -179,16 +185,19 @@ for repname in rep_chr.keys():
         except KeyError:
             print ("Unrecognised Chromosome: "+chr)
             pass
-    
     # Convert metagenome to SeqRecord object (required by SeqIO.write)
-    record = SeqRecord(Seq(metagenome, IUPAC.unambiguous_dna), id = "repname", name = "", description = "")
-    print ("saving repgenome " + newname + ".fa" + " (" + str(k) + " of " + str(nrepgenomes) + ")")
-    fastafilename = os.path.realpath(setup_folder + os.path.sep + newname + ".fa")
+    record = SeqRecord(Seq(metagenome, IUPAC.unambiguous_dna), id="repname",
+                       name="", description="")
+    print ("saving repgenome " + newname + ".fa" + " (" + str(k) + " of "
+           + str(nrepgenomes) + ")")
+    fastafilename = os.path.realpath(setup_folder + os.path.sep
+                                     + newname + ".fa")
     SeqIO.write(record, fastafilename, "fasta")
-    print ("indexing repgenome " + newname + ".fa" + " (" + str(k) + " of " + str(nrepgenomes) + ")")
-    command = shlex.split('bowtie-build -f ' + fastafilename + ' ' + setup_folder + os.path.sep + newname)
+    print ("indexing repgenome " + newname + ".fa" + " (" +
+           str(k) + " of " + str(nrepgenomes) + ")")
+    command = shlex.split('bowtie-build -f ' + fastafilename + ' ' +
+                          setup_folder + os.path.sep + newname)
     p = subprocess.Popen(command).communicate()
     k += 1
 
 print ("... Done")
-
