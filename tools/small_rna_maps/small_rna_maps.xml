@@ -15,28 +15,24 @@
           samtools index '$file' &&
       #end for
       python '$__tool_directory__'/small_rna_maps.py 
-      --input 
-      #for $file in $input
+          --inputs 
+      #for $file in $inputs
            '$file'
       #end for
-          --sample_name
-      #for $sample in $input
+          --sample_names
+      #for $sample in $inputs
           '$sample.name'
       #end for
-      #if $extra_plot == 'Sizes':
-          --sizes '$output_sizes'
-      #end if
-      --output '$output_tab' &&
-       Rscript '$__tool_directory__'/small_rna_maps.r --output_tab '$output_tab' 
-               --output_pdf '$output_pdf'
-      #if $extra_plot != 'Sizes':
-          --extra_plot '$extra_plot'
-      #else
-          --sizes $output_sizes
-      #end if
+          --plot_methods Counts $extra_plot
+          --outputs $output_tab $extra_output_tab &&
+      Rscript '$__tool_directory__'/small_rna_maps.r
+          --first_dataframe '$output_tab' 
+          --extra_dataframe '$extra_output_tab'
+          --extra_plot_method '$extra_plot'
+          --output_pdf '$output_pdf'
   ]]></command>
  <inputs>
-   <param name="input" type="data" format="bam" label="Select multiple alignments to parse" multiple="True"/> 
+   <param name="inputs" type="data" format="bam" label="Select multiple alignments to parse" multiple="True"/> 
    <param name="extra_plot" type="select" label="select the type of extra plot in addition to read map">
        <option value="Coverage">Coverage</option> 
        <option value="Mean">Mean Sizes</option> 
@@ -46,41 +42,39 @@
  </inputs>
 
  <outputs>
-   <data format="tabular" name="output_tab" label="Map dataframe" />
-   <data format="tabular" name="output_sizes" label="Size dataframe" >
-       <filter>extra_plot == "Sizes"</filter>
-   </data>
+   <data format="tabular" name="output_tab" label="Read Count dataframe" />
+   <data format="tabular" name="extra_output_tab" label="$extra_plot dataframe" />
    <data format="pdf" name="output_pdf" label="PDF file" />
 
 </outputs>
 
     <tests>
         <test>
-            <param name="input" value="input1.bam,input2.bam" ftype="bam"/>
+            <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
             <param name="extra_plot" value="Mean" />
             <output file="output.tab" name="output_tab" />
             <output file="mean.pdf" name="output_pdf" />
         </test>
         <test>
-            <param name="input" value="input1.bam,input1.bam" ftype="bam"/>
+            <param name="inputs" value="input1.bam,input1.bam" ftype="bam"/>
             <param name="extra_plot" value="Mean" />
             <output file="doubled.tab" name="output_tab" />
             <output file="doubled_mean.pdf" name="output_pdf" />
         </test>
         <test>
-            <param name="input" value="input1.bam,input2.bam" ftype="bam"/>
+            <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
             <param name="extra_plot" value="Median" />
             <output file="output.tab" name="output_tab" />
             <output file="median.pdf" name="output_pdf" />
         </test>
         <test>
-            <param name="input" value="input1.bam,input2.bam" ftype="bam"/>
+            <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
             <param name="extra_plot" value="Coverage" />
             <output file="output.tab" name="output_tab" />
             <output file="coverage.pdf" name="output_pdf" />
         </test>
         <test>
-            <param name="input" value="input1.bam,input2.bam" ftype="bam"/>
+            <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
             <param name="extra_plot" value="Sizes" />
             <output file="output.tab" name="output_tab" />
             <output file="sizes.tab" name="output_sizes" />
@@ -99,7 +93,7 @@ In addition to the read counts (lower graphs), median size, mean size and covera
 
 **Inputs**
 
-bam alignment files that *must* be
+bam alignment files that must be
 
   - single-read
   - sorted
