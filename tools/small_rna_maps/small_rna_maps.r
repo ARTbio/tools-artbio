@@ -8,21 +8,16 @@ library(latticeExtra)
 library(grid)
 library(gridExtra)
 library(optparse)
-          --first_dataframe '$output_tab' 
-          --extra_dataframe '$extra_output_tab'
-          --extra_plot_method '$extra_plot'
-          --output_pdf '$output_pdf'
- 
+
 option_list <- list(
     make_option(c("-f", "--first_dataframe"), type="character", help="path to first dataframe"),
     make_option(c("-e", "--extra_dataframe"), type="character", help="path to additional dataframe"),
-    make_option("--extra_plot_method", type = "character", help="How additional data should be plotted")
-    make_option("--output_pdf", type = "character", help="path to the pdf file with plots"),
+    make_option("--extra_plot_method", type = "character", help="How additional data should be plotted"),
+    make_option("--output_pdf", type = "character", help="path to the pdf file with plots")
     )
  
 parser <- OptionParser(usage = "%prog [options] file", option_list = option_list)
 args = parse_args(parser)
-if args$extra_plot_method == "Sizes") { args$extra_plot <- "SizeDistribution"}
  
 # data frames implementation
 
@@ -35,14 +30,15 @@ per_gene_limit=lapply(genes, function(x) c(1, unique(subset(Table, Chromosome==x
 n_genes=length(per_gene_readmap)
 
 ExtraTable=read.delim(args$extra_dataframe, header=T, row.names=NULL)
-ExtraTable <- within(ExtraTable, Counts[Polarity=="R"] <- (Counts[Polarity=="R"]*-1))
-
+# ExtraTable <- within(ExtraTable, Counts[Polarity=="R"] <- (Counts[Polarity=="R"]*-1))
+per_gene_size=lapply(genes, function(x) subset(ExtraTable, Chromosome==x))
+    
 ## end of data frames implementation
 
 ## functions
 
 first_plot = function(df, ...) {
-    combineLimits(xyplot(Nbr_reads~Coordinate|factor(Dataset, levels=unique(Dataset))+factor(Chromosome, levels=unique(Chromosome)),
+    combineLimits(xyplot(Counts~Coordinate|factor(Dataset, levels=unique(Dataset))+factor(Chromosome, levels=unique(Chromosome)),
     data=df,
     type='h',
     lwd=1.5,
@@ -60,7 +56,7 @@ first_plot = function(df, ...) {
 
 second_plot = function(df, ...) {
     #smR.prepanel=function(x,y,...) {; yscale=c(y*0, max(abs(y)));list(ylim=yscale);}
-    sizeplot = xyplot(eval(as.name(args$extra_plot))~Coordinate|factor(Dataset, levels=unique(Dataset))+factor(Chromosome, levels=unique(Chromosome)),
+    sizeplot = xyplot(eval(as.name(args$extra_plot_method))~Coordinate|factor(Dataset, levels=unique(Dataset))+factor(Chromosome, levels=unique(Chromosome)),
     data=df,
     type='p',
     cex=0.35,
@@ -79,7 +75,7 @@ second_plot = function(df, ...) {
 
 second_plot_size = function(df, ...) {
 #  smR.prepanel=function(x,y,...){; yscale=c(-max(abs(y)), max(abs(y)));list(ylim=yscale);}
-  bc= barchart(Nbr_reads~as.factor(Size)|factor(Dataset, levels=unique(Dataset))+Chromosome, data = df, origin = 0,
+  bc= barchart(Count~as.factor(Size)|factor(Dataset, levels=unique(Dataset))+Chromosome, data = df, origin = 0,
     horizontal=FALSE,
 group=Polarity,
 stack=TRUE,
@@ -105,7 +101,7 @@ par.settings.readmap=list(layout.heights=list(top.padding=0, bottom.padding=0), 
 par.settings.size=list(layout.heights=list(top.padding=0, bottom.padding=0))
 graph_title=list(Coverage="Read Maps and Coverages", Median="Read Maps and Median sizes", Mean="Read Maps and Mean sizes", SizeDistribution="Read Maps and Size Distributions")
 graph_legend=list(Coverage="Read counts / Coverage", Median="Read counts / Median size", Mean="Read counts / Mean size", SizeDistribution="Read counts")
-graph_bottom=list(Coverage="Nucleotide coordinates", Median="Nucleotide coordinates", Mean="Nucleotide coordinates", SizeDistribution="Read sizes / Nucleotide coordinates")
+graph_bottom=list(Coverage="Nucleotide coordinates", Median="Nucleotide coordinates", Mean="Nucleotide coordinates", Size="Read sizes / Nucleotide coordinates")
 ## end of function parameters'
 
 ## GRAPHS
@@ -122,19 +118,19 @@ for (i in seq(1,n_genes,rows_per_page/2)) {
     end=i+rows_per_page/2-1
     if (end>n_genes) {end=n_genes}
     first_plot.list=lapply(per_gene_readmap[start:end], function(x) first_plot(x, strip=FALSE, par.settings=par.settings.readmap))
-    if (args$extra_plot == "Size") {
+    if (args$extra_plot_method == "Size") {
         second_plot.list=lapply(per_gene_size[start:end], function(x) second_plot_size(x, par.settings=par.settings.size))
         }
     else {
-        second_plot.list=lapply(per_gene_readmap[start:end], function(x) second_plot(x, par.settings=par.settings.size))
+        second_plot.list=lapply(per_gene_size[start:end], function(x) second_plot(x, par.settings=par.settings.size))
         }
     
         
     plot.list=rbind(second_plot.list, first_plot.list)
     args_list=c(plot.list, list(nrow=rows_per_page+1, ncol=1,
-                                    top=textGrob(graph_title[[args$extra_plot]], gp=gpar(cex=1), just="top"),
-                                    left=textGrob(graph_legend[[args$extra_plot]], gp=gpar(cex=1), vjust=1, rot=90),
-                                    sub=textGrob(graph_bottom[[args$extra_plot]], gp=gpar(cex=1), just="bottom")
+                                    top=textGrob(graph_title[[args$extra_plot_method]], gp=gpar(cex=1), just="top"),
+                                    left=textGrob(graph_legend[[args$extra_plot_method]], gp=gpar(cex=1), vjust=1, rot=90),
+                                    sub=textGrob(graph_bottom[[args$extra_plot_method]], gp=gpar(cex=1), just="bottom")
                                     )
            )
 do.call(grid.arrange, args_list)

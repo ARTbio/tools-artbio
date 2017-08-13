@@ -183,8 +183,11 @@ class Map:
 def main(inputs, samples, methods, outputs):
     for method, output in zip(methods, outputs):
         F = open(output, 'w')
-        header = ["Dataset", "Chromosome", "Chrom_length", "Coordinate",
-                  "Polarity", method]
+        if method=='Size':
+            header = ["Dataset", "Chromosome", "Polarity", method, "Count"]
+        else:
+            header = ["Dataset", "Chromosome", "Chrom_length", "Coordinate",
+                      "Polarity", method]
         F.write('\t'.join(header) + '\n')
         for input, sample in zip(inputs, samples):
             mapobj = Map(input, sample)
