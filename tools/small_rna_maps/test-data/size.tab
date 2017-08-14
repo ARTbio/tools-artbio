@@ -1,4 +1,4 @@
-Dataset	Chromosome	Polarity	Size	Nbr_reads
+Dataset	Chromosome	Polarity	Size	Count
 input1.bam	FBtr0070001	F	16	2
 input1.bam	FBtr0070001	F	17	1
 input1.bam	FBtr0070001	F	18	0

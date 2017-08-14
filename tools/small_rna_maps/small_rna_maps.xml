@@ -52,32 +52,36 @@
         <test>
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
             <param name="extra_plot" value="Mean" />
-            <output file="output.tab" name="output_tab" />
+            <output file="readmap.tab" name="output_tab" />
+            <output file="mean.tab" name="extra_output_tab" />
             <output file="mean.pdf" name="output_pdf" />
         </test>
         <test>
             <param name="inputs" value="input1.bam,input1.bam" ftype="bam"/>
             <param name="extra_plot" value="Mean" />
-            <output file="doubled.tab" name="output_tab" />
+            <output file="doubled_readmap.tab" name="output_tab" />
+            <output file="double_mean.tab" name="extra_output_tab" />
             <output file="doubled_mean.pdf" name="output_pdf" />
         </test>
         <test>
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
             <param name="extra_plot" value="Median" />
-            <output file="output.tab" name="output_tab" />
+            <output file="readmap.tab" name="output_tab" />
+            <output file="median.tab" name="extra_output_tab" />
             <output file="median.pdf" name="output_pdf" />
         </test>
         <test>
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
             <param name="extra_plot" value="Coverage" />
-            <output file="output.tab" name="output_tab" />
+            <output file="readmap.tab" name="output_tab" />
+            <output file="coverage.tab" name="extra_output_tab" />
             <output file="coverage.pdf" name="output_pdf" />
         </test>
         <test>
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
-            <param name="extra_plot" value="Sizes" />
-            <output file="output.tab" name="output_tab" />
-            <output file="sizes.tab" name="output_sizes" />
+            <param name="extra_plot" value="Size" />
+            <output file="readmap.tab" name="output_tab" />
+            <output file="size.tab" name="extra_output_tab" />
             <output file="sizes.pdf" name="output_pdf" />
         </test>
     </tests>

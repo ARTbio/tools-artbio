@@ -30,7 +30,9 @@ per_gene_limit=lapply(genes, function(x) c(1, unique(subset(Table, Chromosome==x
 n_genes=length(per_gene_readmap)
 
 ExtraTable=read.delim(args$extra_dataframe, header=T, row.names=NULL)
-# ExtraTable <- within(ExtraTable, Counts[Polarity=="R"] <- (Counts[Polarity=="R"]*-1))
+if (args$extra_plot_method=='Size') {
+    ExtraTable <- within(ExtraTable, Count[Polarity=="R"] <- (Count[Polarity=="R"]*-1))
+    }
 per_gene_size=lapply(genes, function(x) subset(ExtraTable, Chromosome==x))
     
 ## end of data frames implementation
