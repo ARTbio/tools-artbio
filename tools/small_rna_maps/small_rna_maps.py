@@ -183,7 +183,7 @@ class Map:
 def main(inputs, samples, methods, outputs):
     for method, output in zip(methods, outputs):
         F = open(output, 'w')
-        if method=='Size':
+        if method == 'Size':
             header = ["Dataset", "Chromosome", "Polarity", method, "Count"]
         else:
             header = ["Dataset", "Chromosome", "Chrom_length", "Coordinate",
