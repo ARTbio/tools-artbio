@@ -55,7 +55,7 @@ class Map:
                                     'F')].append(read.query_alignment_length)
         return map_dictionary
 
-    def compute_map(self, map_dictionary, out):
+    def compute_readcount(self, map_dictionary, out):
         '''
         takes a map_dictionary as input and writes
         a readmap_dictionary {(chromosome,read_position,polarity):
@@ -191,7 +191,7 @@ def main(inputs, samples, methods, outputs):
         F.write('\t'.join(header) + '\n')
         for input, sample in zip(inputs, samples):
             mapobj = Map(input, sample)
-            token = {"Counts": mapobj.compute_map,
+            token = {"Counts": mapobj.compute_readcount,
                      "Max": mapobj.compute_max,
                      "Mean": mapobj.compute_mean,
                      "Median": mapobj.compute_median,

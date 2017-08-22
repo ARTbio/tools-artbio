@@ -1,4 +1,4 @@
-<tool id="small_rna_maps" name="small_rna_maps" version="1.0.0">
+<tool id="small_rna_maps" name="small_rna_maps" version="1.0.1">
   <description></description>
   <requirements>
         <requirement type="package" version="1.11.2=py27_0">numpy</requirement>
@@ -23,8 +23,8 @@
       #for $sample in $inputs
           '$sample.name'
       #end for
-          --plot_methods Counts $extra_plot
-          --outputs $output_tab $extra_output_tab &&
+          --plot_methods Counts '$extra_plot'
+          --outputs '$output_tab' '$extra_output_tab' &&
       Rscript '$__tool_directory__'/small_rna_maps.r
           --first_dataframe '$output_tab' 
           --extra_dataframe '$extra_output_tab'
