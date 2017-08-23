@@ -346,8 +346,10 @@ def __main__():
         options.datetype = 'pdat'
     elif options.datetype == 'modification_date':
         options.datetype = 'mdat'
-    else:
+    elif options.datetype == 'entrez_date':
         options.datetype = 'edat'
+    else:
+        parser.error('The date type options are [modification_date, publication_date, entrez_date]')
     log_level = getattr(logging, options.loglevel)
     kwargs = {'format': LOG_FORMAT,
               'datefmt': LOG_DATEFMT,
