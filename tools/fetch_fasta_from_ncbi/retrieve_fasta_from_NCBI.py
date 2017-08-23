@@ -341,7 +341,7 @@ def __main__():
     if (options.reldate and options.maxdate) or (options.reldate and options.mindate):
         parser.error("You can't mix 'reldate' and 'maxdate', 'mindate' parameters")
     if (options.mindate and not options.maxdate) or (options.maxdate and not options.mindate):
-        parser.error("mindate and madate must be used together")
+        parser.error("mindate and maxdate must be used together")
     if options.datetype == 'publication_date':
         options.datetype = 'pdat'
     elif options.datetype == 'modification_date':
