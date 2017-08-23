@@ -124,7 +124,8 @@ class Eutils:
         self.logger.info("Batch size for esearch action: %d UIDs" % retmax)
         self.logger.info("Number of batches for esearch action: %d " % num_batches)
         for n in range(num_batches):
-            querylog = self.esearch(self.dbname, self.query_string, n*retmax, retmax, '')
+            querylog = self.esearch(self.dbname, self.query_string, n*retmax, retmax, '',
+                                    self.datetype, self.reldate, self.mindate, self.maxdate)
             for line in querylog:
                 if '<Id>' in line and '</Id>' in line:
                     uid = (line[line.find('<Id>')+len('<Id>') : line.find('</Id>')])
