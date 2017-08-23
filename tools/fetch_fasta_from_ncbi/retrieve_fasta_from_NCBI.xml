@@ -34,9 +34,9 @@
         <param name="date_filter" type="boolean" label="Filter the sequences by date?" truevalue="YES" falsevalue="NO" checked="false"/>
         <when value="YES">
             <param name="datetype" type="select">
-                <option value="publication_date">Publication date</option>
-                <option value="entrez_date">Entrez date</option>
-                <option value="modification_date">Modification date</option>
+                <option value="pdat">Publication date</option>
+                <option value="edat">Entrez date</option>
+                <option value="mdat">Modification date</option>
             </param>
             <param name="mindate" type="text" help="Date must follow one of the following formats: YYYY/MM/DD, YYYY/MM or YYYY"/>
             <param name="maxdate" type="text" help="Date must follow one of the following formats: YYYY/MM/DD, YYYY/MM or YYYY"/>
