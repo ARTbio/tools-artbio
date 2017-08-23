@@ -56,6 +56,19 @@ class Eutils:
         self.count = 0
         self.webenv = ""
         self.query_key = ""
+        self.datetype = options.datetype
+        if options.reldate:
+            self.reldate = options.reldate
+        else:
+            self.reldate = ''
+        if options.mindate:
+            self.mindate = options.mindate
+        else:
+            self.mindate = ''
+        if options.maxdate:
+            self.maxdate = options.maxdate
+        else:
+            self.maxdate = ''
 
     def retrieve(self):
         """
@@ -88,7 +101,8 @@ class Eutils:
         self.logger.info("retrieving data from %s" % self.base)
         self.logger.info("for Query: %s and database: %s" %
                          (self.query_string, self.dbname))
-        querylog = self.esearch(self.dbname, self.query_string, '', '', "count")
+        querylog = self.esearch(self.dbname, self.query_string, '', '', "count",
+                                self.datetype, self.reldate, self.mindate, self.maxdate)
         self.logger.debug("Query response:")
         for line in querylog:
             self.logger.debug(line.rstrip())
@@ -117,14 +131,18 @@ class Eutils:
                     self.ids.append(uid)
             self.logger.info("Retrieved %d UIDs" % len(self.ids))
 
-    def esearch(self, db, term, retstart, retmax, rettype):
+    def esearch(self, db, term, retstart, retmax, rettype, datetype, reldate, mindate, maxdate):
         url = self.base + "esearch.fcgi"
         self.logger.debug("url: %s" % url)
         values = {'db': db,
                   'term': term,
                   'rettype': rettype,
                   'retstart': retstart,
-                  'retmax': retmax}
+                  'retmax': retmax,
+                  'datetype': datetype,
+                  'reldate': reldate,
+                  'mindate': mindate,
+                  'maxdate': maxdate}
         data = urllib.urlencode(values)
         self.logger.debug("data: %s" % str(data))
         req = urllib2.Request(url, data)
@@ -321,8 +339,6 @@ def __main__():
         parser.error('Wrong number of arguments')
     if (options.reldate and options.maxdate) or (options.reldate and options.mindate):
         parser.error("You can't mix 'reldate' and 'maxdate', 'mindate' parameters")
-    if (options.mindate and not options.maxdate) or (options.maxdate and not options.mindate) :
-        parser.error("maxdate and min date must be used together")
     log_level = getattr(logging, options.loglevel)
     kwargs = {'format': LOG_FORMAT,
               'datefmt': LOG_DATEFMT,
