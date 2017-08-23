@@ -66,37 +66,60 @@ class Map:
                                     'F')].append(read.query_alignment_length)
         return map_dictionary
 
-  def signature (self, minquery, maxquery, mintarget, maxtarget, scope, zscore="no", upstream_coord=None, downstream_coord=None):
-    ''' migration to memory saving by specifying possible subcoordinates
-    see the readcount method for further discussion
-    scope must be a python iterable; scope define the *relative* offset range to be computed'''
-    upstream_coord = upstream_coord or self.windowoffset
-    downstream_coord = downstream_coord or self.windowoffset+self.size-1
-    query_range = range (minquery, maxquery+1)
-    target_range = range (mintarget, maxtarget+1)
-    Query_table = {}
-    Target_table = {}
-    frequency_table = dict ([(i, 0) for i in scope])
-    for offset in self.readDict:
-      if (abs(offset) < upstream_coord or abs(offset) > downstream_coord): continue
-      for size in self.readDict[offset]:
-        if size in query_range:
-          Query_table[offset] = Query_table.get(offset, 0) + 1
-        if size in target_range:
-          Target_table[offset] = Target_table.get(offset, 0) + 1
-    for offset in Query_table:
-      for i in scope:
-        frequency_table[i] += min(Query_table[offset], Target_table.get(-offset -i +1, 0))
-    if minquery==mintarget and maxquery==maxtarget: ## added to incorporate the division by 2 in the method (26/11/2013), see signature_options.py and lattice_signature.py
-      frequency_table = dict([(i,frequency_table[i]/2) for i in frequency_table])
-    if zscore == "yes":
-      z_mean = mean(frequency_table.values() )
-      z_std = std(frequency_table.values() )
-      if z_std == 0:
-        frequency_table = dict([(i,0) for i in frequency_table] )
-      else:
-        frequency_table = dict([(i, (frequency_table[i]- z_mean)/z_std) for i in frequency_table] )    
-    return frequency_table
+    def compute_signature_z(self, minquery, maxquery, mintarget,
+                            maxtarget, scope, genome_wide=False, zscore="no"):
+        query_range = range (minquery, maxquery+1)
+        target_range = range (mintarget, maxtarget+1)
+        Query_table = {}
+        Target_table = {}
+        frequency_table = {}
+        for chrom in self.chromosomes:
+            for overlap in scope:
+                frequency_table[chrom][overlap] = 0
+        for chrom in self.chromosomes:
+            for key in self.readDict:
+                for size in self.readDict[key]:
+                    if size in query_range:
+                        Query_table[key] = Query_table.get(key, 0) + 1
+                    if size in target_range:
+                        Target_table[key] = Target_table.get(key, 0) + 1
+            for key in Query_table:
+                for i in scope:
+                    if key[2]== 'F':
+                        frequency_table[chrom][i] += min(Query_table[key],
+                            Target_table.get((chrom, key[1] + i - 1, 'R'),
+                                              0))
+                    else:
+                        frequency_table[chrom][i] += min(Query_table[key],
+                            Target_table.get((chrom, key[1] - i + 1, 'F'),
+                                              0))
+        # since we want the number of pairs, not the number or paired reads
+        for chrom in frequency_table:
+            for i in frequency_table[chrom]:
+                frequency_table[chrom][i] /= 2
+        # collapse if genome_wide = True
+        for i in scope:
+            accumulator = []
+            for chrom in frequency_table:
+                accumulator.append(frequency_table[chrom][i])
+            frequency_table['all_chromosomes'][i] = sum(accumulator)
+        # compute z-scores by chromosomes and for all-chromosomes
+        for chrom in frequency_table:
+            accumulator = []
+            for i in frequency_table[chrom]:
+                accumulator.append(frequency_table[chrom][i])
+            z_mean = mean(accumulator)
+            z_std = std(accumulator)
+            if z_std == 0:
+                for i in frequency_table[chrom]:
+                    frequency_table[chrom][i] = [frequency_table[chrom][i], 0]
+            else:
+                for i in frequency_table[chrom]:
+                    frequency_table[chrom][i] = [frequency_table[chrom][i],
+                        (frequency_table[chrom][i]- z_mean)/z_std]
+        return frequency_table
+
+
 
   def hannon_signature (self, minquery, maxquery, mintarget, maxtarget, scope, upstream_coord=None, downstream_coord=None):
     ''' migration to memory saving by specifying possible subcoordinates see the readcount method for further discussion
