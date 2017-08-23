@@ -310,12 +310,19 @@ def __main__():
     parser.add_option('-i', dest='query_string', help='NCBI Query String')
     parser.add_option('-o', dest='outname', help='output file name')
     parser.add_option('-l', '--logfile', help='log file (default=stderr)')
+    parser.add_option('--datetype', dest='datetype', help='Type of date used to limit a search. [modification_date, publication_date, entrez_date] (default=publication_date)', default='publication_date')
+    parser.add_option('--reldate', dest='reldate', help='When reldate is set to an integer n, the search returns only those items that have a date specified by datetype within the last n days.')
+    parser.add_option('--maxdate', dest='maxdate', help='Date range used to limit a search result by the date specified by datetype. These two parameters (mindate, maxdate) must be used together to specify an arbitrary date range. The general date format is YYYY/MM/DD, and these variants are also allowed: YYYY, YYYY/MM.')
+    parser.add_option('--mindate', dest='mindate', help='Date range used to limit a search result by the date specified by datetype. These two parameters (mindate, maxdate) must be used together to specify an arbitrary date range. The general date format is YYYY/MM/DD, and these variants are also allowed: YYYY, YYYY/MM.')
     parser.add_option('--loglevel', choices=LOG_LEVELS, default='INFO', help='logging level (default: INFO)')
     parser.add_option('-d', dest='dbname', help='database type')
     (options, args) = parser.parse_args()
     if len(args) > 0:
         parser.error('Wrong number of arguments')
-    
+    if (options.reldate and options.maxdate) or (options.reldate and options.mindate):
+        parser.error("You can't mix 'reldate' and 'maxdate', 'mindate' parameters")
+    if (options.mindate and not options.maxdate) or (options.maxdate and not options.mindate) :
+        parser.error("maxdate and min date must be used together")
     log_level = getattr(logging, options.loglevel)
     kwargs = {'format': LOG_FORMAT,
               'datefmt': LOG_DATEFMT,
