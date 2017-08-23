@@ -56,13 +56,13 @@
         <!--  <output name="logfile" ftype="txt" file="log.txt" />  log.txt changes with timestamp. removed to pass the  test -->
     </test>
     <test>
-        <param name="queryString" value="9629650[gi]" />
+        <param name="queryString" value="CU929326[Accession]" />
         <param name="dbname" value="nuccore" />
         <param name="date_filter" value="YES"/>
-        <param name="datetype" value="publication_date"/>
-        <param name="mindate" value="1997/09/10"/>
-        <param name="maxdate" value="1997/09/10"/>
-        <output name="outfilename" ftype="fasta" file="output.fa" />
+        <param name="datetype" value="pdat"/>
+        <param name="mindate" value="2008/09"/>
+        <param name="maxdate" value="2008/09"/>
+        <output name="outfilename" ftype="fasta" file="zebra_output.fa" />
     </test>
   </tests>
   <help>
