@@ -351,11 +351,9 @@ LOG_LEVELS = ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']
 def __main__():
     """ main function """
     parser = optparse.OptionParser(description='Retrieve data from NCBI')
-    parser.add_option('-i', dest='query_string', help='NCBI Query String',
-                      required=True)
-    parser.add_option('-o', dest='outname', help='output file name',
-                      required=True)
-    parser.add_option('-d', dest='dbname', help='database type', required=True)
+    parser.add_option('-i', dest='query_string', help='NCBI Query String')
+    parser.add_option('-o', dest='outname', help='output file name')
+    parser.add_option('-d', dest='dbname', help='database type')
     parser.add_option('-l', '--logfile', help='log file (default=stderr)')
     parser.add_option('--datetype', dest='datetype',
                       choices=['mdat', 'edat', 'pdat'],
