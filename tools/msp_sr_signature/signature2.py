@@ -56,9 +56,6 @@ class Map:
         for chrom in self.chromosomes:
             for read in bam_object.fetch(chrom):
                 positions = read.positions  # a list of covered positions
-                for pos in positions:
-                    if not map_dictionary[(chrom, pos+1, 'F')]:
-                        map_dictionary[(chrom, pos+1, 'F')] = []
                 if read.is_reverse:
                     map_dictionary[(chrom, positions[-1]+1,
                                     'R')].append(read.query_alignment_length)
@@ -67,28 +64,36 @@ class Map:
                                     'F')].append(read.query_alignment_length)
         return map_dictionary
 
-    def compute_signature_z(self, minquery, maxquery, mintarget, maxtarget,
-                            scope, genome_wide=False, zscore="no"):
+    def signature_tables(self, minquery, maxquery, mintarget, maxtarget):
         query_range = range (minquery, maxquery+1)
         target_range = range (mintarget, maxtarget+1)
-        Query_table = {}
-        Target_table = {}
-        frequency_table = {}
-        for chrom in self.chromosomes:
-            for overlap in scope:
-                frequency_table[chrom][overlap] = 0
-        for key in self.readDict:
-            for size in self.readDict[key]:
-                if size in query_range:
-                    if key[2] = 'F':
+        Query_table = defaultdict(dict)
+        Target_table = defaultdict(dict)
+        for key in self.map_dict:
+            for size in self.map_dict[key]:
+                if size in query_range or size in target_range:
+                    if key[2] == 'F':
                         coordinate = key[1]
                     else:
                         coordinate = -1 * key[1]
+                if size in query_range:
                     Query_table[key[0]][coordinate] = Query_table[key[0]].get(
                         coordinate, 0) + 1
                 if size in target_range:
-                    Target_table[key[0]] = Target_table.get(key, 0) + 1
-            for key in Query_table:
+                    Target_table[key[0]][coordinate] = Target_table[key[0]].get(
+                        coordinate, 0) + 1
+        return Query_table, Target_table
+
+    def compute_signature_z(self, minquery, maxquery, mintarget, maxtarget,
+                            scope, genome_wide=False, zscore="no"):
+        Query_table, Target_table = signature_tables(minquery, maxquery,
+                                                     mintarget, maxtarget)
+        frequency_table = defaultdict(dict)
+        for chrom in self.chromosomes:
+            for overlap in scope:
+                frequency_table[chrom][overlap] = 0
+        for chrom in Query_table:
+            for coord in Query_table[chrom]:
                 for i in scope:
                     if key[2]== 'F':
                         frequency_table[chrom][i] += min(Query_table[key],
