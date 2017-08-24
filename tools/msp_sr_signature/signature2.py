@@ -1,6 +1,9 @@
-#!/usr/bin/python
-
 import argparse
+from collections import defaultdict
+
+import numpy
+
+import pysam
 
 def Parser():
     the_parser = argparse.ArgumentParser()
@@ -30,8 +33,6 @@ def Parser():
         '--rcode', type=str, help="R code to be passed to the python script")
     args = the_parser.parse_args()
     return args
-
-args = Parser()
 
 class Map:
 
@@ -66,8 +67,8 @@ class Map:
                                     'F')].append(read.query_alignment_length)
         return map_dictionary
 
-    def compute_signature_z(self, minquery, maxquery, mintarget,
-                            maxtarget, scope, genome_wide=False, zscore="no"):
+    def compute_signature_z(self, minquery, maxquery, mintarget, maxtarget,
+                            scope, genome_wide=False, zscore="no"):
         query_range = range (minquery, maxquery+1)
         target_range = range (mintarget, maxtarget+1)
         Query_table = {}
@@ -76,13 +77,17 @@ class Map:
         for chrom in self.chromosomes:
             for overlap in scope:
                 frequency_table[chrom][overlap] = 0
-        for chrom in self.chromosomes:
-            for key in self.readDict:
-                for size in self.readDict[key]:
-                    if size in query_range:
-                        Query_table[key] = Query_table.get(key, 0) + 1
-                    if size in target_range:
-                        Target_table[key] = Target_table.get(key, 0) + 1
+        for key in self.readDict:
+            for size in self.readDict[key]:
+                if size in query_range:
+                    if key[2] = 'F':
+                        coordinate = key[1]
+                    else:
+                        coordinate = -1 * key[1]
+                    Query_table[key[0]][coordinate] = Query_table[key[0]].get(
+                        coordinate, 0) + 1
+                if size in target_range:
+                    Target_table[key[0]] = Target_table.get(key, 0) + 1
             for key in Query_table:
                 for i in scope:
                     if key[2]== 'F':
@@ -119,28 +124,24 @@ class Map:
                         (frequency_table[chrom][i]- z_mean)/z_std]
         return frequency_table
 
-
-
-  def hannon_signature (self, minquery, maxquery, mintarget, maxtarget, scope, upstream_coord=None, downstream_coord=None):
-    ''' migration to memory saving by specifying possible subcoordinates see the readcount method for further discussion
-    note that scope must be an iterable (a list or a tuple), which specifies the relative offsets that will be computed'''
-    upstream_coord = upstream_coord or self.windowoffset
-    downstream_coord = downstream_coord or self.windowoffset+self.size-1
-    query_range = range (minquery, maxquery+1)
-    target_range = range (mintarget, maxtarget+1)
-    Query_table = {}
-    Target_table = {}
-    Total_Query_Numb = 0
-    general_frequency_table = dict ([(i,0) for i in scope])
-    ## filtering the appropriate reads for the study
-    for offset in self.readDict:
-      if (abs(offset) < upstream_coord or abs(offset) > downstream_coord): continue
-      for size in self.readDict[offset]:
-        if size in query_range:
-          Query_table[offset] = Query_table.get(offset, 0) + 1
-          Total_Query_Numb += 1
-        if size in target_range:
-          Target_table[offset] = Target_table.get(offset, 0) + 1
+    def compute_signature_h(self, minquery, maxquery, mintarget, maxtarget,
+                            scope, genome_wide=False):
+        query_range = range (minquery, maxquery+1)
+        target_range = range (mintarget, maxtarget+1)
+        Query_table = {}
+        Target_table = {}
+        Total_Query_Numb = 0
+        frequency_table = {}
+        for chrom in self.chromosomes:
+            for overlap in scope:
+                frequency_table[chrom][overlap] = 0
+        for chrom in self.chromosomes:
+            for key in self.readDict:
+                for size in self.readDict[key]:
+                    if size in query_range:
+                        Query_table[key] = Query_table.get(key, 0) + 1
+                    if size in target_range:
+                        Target_table[key] = Target_table.get(key, 0) + 1
     for offset in Query_table:
       frequency_table = dict ([(i,0) for i in scope])
       number_of_targets = 0
@@ -155,7 +156,18 @@ class Map:
     return general_frequency_table      
 
 
-# Run the R script that is defined in the xml using the Rscript binary
-# provided with R.
-R_command = "Rscript " + args.rcode
-process = subprocess.Popen(R_command.split())
+def main():
+    F = open(output, 'w')
+    I = open(input, 'read')
+    mapobj = Map(input, sample)
+    something = mapobj.compute_signature_z(minquery, maxquery, mintarget,
+                    maxtarget, scope, genome_wide=False, zscore="no")
+
+
+if __name__ == "__main__":
+    args = Parser()
+    # if identical sample names
+    if len(set(args.sample_names)) != len(args.sample_names):
+        args.sample_names = [name + '_' + str(i) for
+                             i, name in enumerate(args.sample_names)]
+    main(args., args., args., args.)

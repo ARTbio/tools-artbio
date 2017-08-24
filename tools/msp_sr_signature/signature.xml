@@ -6,7 +6,10 @@
         <requirement type="package" version="0.11.2.1=py27_0">pysam</requirement>
         <requirement type="package" version="0.20_33=r3.3.1_0">r-lattice</requirement>
     </requirements>
-    <command><![CDATA[
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Tool exception" />
+    </stdio>
+      <command detect_errors="exit_code"><![CDATA[
         python '$__tool_directory__'/signature.py
            --input '$refGenomeSource.input'
            --inputFormat '$refGenomeSource.input.ext'
@@ -24,8 +27,8 @@
             --referenceGenome '$reference'
             --extract_index
           #end if
-	  --graph $graph_type 
-          --rcode '$sigplotter'
+	        --graph $graph_type &&
+        Rscript '$__tool_directory__'/signature.r
     ]]></command>
     <inputs>
         <conditional name="refGenomeSource">
