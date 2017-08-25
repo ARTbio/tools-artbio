@@ -44,9 +44,6 @@ class Map:
         for chrom in self.chromosomes:
             for read in bam_object.fetch(chrom):
                 positions = read.positions  # a list of covered positions
-                for pos in positions:
-                    if not map_dictionary[(chrom, pos+1, 'F')]:
-                        map_dictionary[(chrom, pos+1, 'F')] = []
                 if read.is_reverse:
                     map_dictionary[(chrom, positions[-1]+1,
                                     'R')].append(read.query_alignment_length)
@@ -120,6 +117,11 @@ class Map:
         for chrom in self.chromosomes:
             coverage_dictionary[(chrom, 1, 'F')] = 0
             coverage_dictionary[(chrom, self.chromosomes[chrom], 'F')] = 0
+            for read in self.bam_object.fetch(chrom):
+                positions = read.positions  # a list of covered positions
+                for pos in positions:
+                    if not map_dictionary[(chrom, pos+1, 'F')]:
+                        map_dictionary[(chrom, pos+1, 'F')] = []
         for key in map_dictionary:
             coverage = self.bam_object.count_coverage(
                                                 reference=key[0],
