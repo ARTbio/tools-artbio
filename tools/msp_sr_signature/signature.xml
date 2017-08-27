@@ -59,7 +59,20 @@
             <param name="plot_method" value="global" />
             <output file="h.tab" ftype="tabular" name="h_dataframe" />
             <output file="z.tab" ftype="tabular" name="z_dataframe" />
-            <output file="signature.pdf" ftype="pdf" name="output2" />
+            <output file="global.pdf" ftype="pdf" name="pdf" />
+        </test>
+        <test>
+            <param ftype="bam" name="input" value="sr_bowtie.bam" />
+            <param name="minquery" value="23" />
+            <param name="maxquery" value="29" />
+            <param name="mintarget" value="23" />
+            <param name="maxtarget" value="29" />
+            <param name="minscope" value="5" />
+            <param name="maxscope" value="15" />
+            <param name="plot_method" value="lattice" />
+            <output file="h.tab" ftype="tabular" name="h_dataframe" />
+            <output file="z.tab" ftype="tabular" name="z_dataframe" />
+            <output file="lattice.pdf" ftype="pdf" name="pdf" />
         </test>
     </tests>
     <help>

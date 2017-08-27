@@ -58,17 +58,17 @@ colnames(z_dataframe) = c("chrom", "overlap", "sig", "z-score")
       }
 
       treillisgraph = function (df, ...) {
-          pdf(args$pdf, paper="special", height=11.69, width=8.2677 )
+          pdf(args$pdf, paper="special", height=11.69, width=6 ) # 8.2677
           p = xyplot(sig ~ overlap|factor(method, levels=unique(method))+chrom, data = df,
-                   type = "h",
+                   type = "l",
                    col='darkblue',
-                   cex=0.75,
-                   scales=list(y=list(tick.number=4, relation="free", cex=0.5, rot=0), x=list(cex=0.5) ),
+                   cex=0.5,
+                   scales=list(y=list(tick.number=4, relation="free", cex=0.6, rot=0), x=list(cex=0.6, alternating=FALSE)),
                    xlab = "Overlap",
-                   ylab = "signature",
-                   main = "Signatures",
+                   ylab = "signature (Nbr of pairs / Overlap prob.)",
+                   main = args$title,
                    par.strip.text=list(cex=.5),
-                   pch=19, lwd =2, cex.lab=1.2, cex.axis=1.2,
+                   pch=19, lwd =2,
                    as.table=TRUE,
                    layout=c(2,12),
                    newpage = T,
@@ -92,5 +92,8 @@ if(args$plot_method=="lattice") {
     z_pairs = cbind(rep("Nbr of pairs", length(z_pairs[,1])), z_pairs)
     colnames(z_pairs) = c("method", "chrom", "overlap", "sig")
     lattice_df = rbind(z_pairs, h_sig)
-    treillisgraph(lattice_df)    
+    par.settings.treillis=list(strip.background = list(
+            col = c("lightblue", "lightgreen")))
+
+    treillisgraph(lattice_df, par.settings=par.settings.treillis)    
 }

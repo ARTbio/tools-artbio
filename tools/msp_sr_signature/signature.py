@@ -102,7 +102,8 @@ class Map:
                         Query_table[chrom][coord],
                         Target_table[chrom].get(-coord - overlap + 1, 0))
         # since we want the number of pairs, not the number or paired reads
-        #### WORK AT THIS, DO NOT LEAVE IT AS IS ####
+        # to do: what in complex cases
+        # with query and target sizes partially overlap ?
         for chrom in frequency_table:
             for overlap in frequency_table[chrom]:
                 frequency_table[chrom][overlap] /= 2
@@ -127,6 +128,7 @@ class Map:
             Total_Query_Numb = 0
             for coord in Query_table[chrom]:
                 Total_Query_Numb += Query_table[chrom][coord]
+            for coord in Query_table[chrom]:
                 local_table = dict([(overlap, 0) for overlap in scope])
                 number_of_targets = 0
                 for overlap in scope:
