@@ -1,6 +1,6 @@
 ## Setup R error handling to go to stderr
-options( show.error.messages=F,
-       error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+#options(show.error.messages=F,
+        #error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
 warnings()
 
 library(RColorBrewer)
@@ -13,7 +13,7 @@ library(optparse)
 option_list <- list(
     make_option("--h_dataframe", type="character", help="path to h-signature dataframe"),
     make_option("--z_dataframe", type="character", help="path to z-signature dataframe"),
-    make_option("--plot_method", type = "character", help="How  data should be plotted (global of by-item)"),
+    make_option("--plot_method", type = "character", help="How  data should be plotted (global or lattice)"),
     make_option("--pdf", type = "character", help="path to the pdf file with plots"),
     make_option("--title", type = "character", help="Graph Title")
     )
@@ -26,10 +26,10 @@ args = parse_args(parser)
  
 # data frames implementation
 h_dataframe = read.delim(args$h_dataframe, header=F)
-colnames(h_dataframe) = c("chrom", "overlap", "prob", "z-score")
-h_dataframe$prob = h_dataframe$prob * 100  # to get probs in %
+colnames(h_dataframe) = c("chrom", "overlap", "sig", "z-score")
+h_dataframe$sig = h_dataframe$sig * 100  # to get probs in %
 z_dataframe = read.delim(args$z_dataframe, header=F)
-colnames(z_dataframe) = c("chrom", "overlap", "nbre_pairs", "z-score")
+colnames(z_dataframe) = c("chrom", "overlap", "sig", "z-score")
 
 # functions
       globalgraph = function () {
@@ -57,22 +57,40 @@ colnames(z_dataframe) = c("chrom", "overlap", "nbre_pairs", "z-score")
         dev.off()
       }
 
-      treillisgraph = function () {
-        pdf( args$pdf, paper="special", height=11.69, width=8.2677 )
-#        signature = read.delim("${output}", header=TRUE)
-#        xyplot(signature[,3]*100~signature[,1]|signature[,4], type = "l", xlim=c(${minscope},${maxscope}), main="ping-pong Signature of ${minquery}-${maxquery} against ${mintarget}-${maxtarget}nt small RNAs",
-#             par.strip.text=list(cex=.5), strip=strip.custom(which.given=1, bg="lightblue"), scales=list(cex=0.5),
-#             cex.main=1, cex=.5, xlab="overlap (nt)", ylab="ping-pong signal [%]",
-#             pch=19, col="darkslateblue", lwd =1.5, cex.lab=1.2, cex.axis=1.2,
-#             layout=c(4,12), as.table=TRUE, newpage = T)
-#        dev.off()
-#      }
-
-      if (args$plot_method=="global") {
-        globalgraph()
-
+      treillisgraph = function (df, ...) {
+          pdf(args$pdf, paper="special", height=11.69, width=8.2677 )
+          p = xyplot(sig ~ overlap|factor(method, levels=unique(method))+chrom, data = df,
+                   type = "h",
+                   col='darkblue',
+                   cex=0.75,
+                   scales=list(y=list(tick.number=4, relation="free", cex=0.5, rot=0), x=list(cex=0.5) ),
+                   xlab = "Overlap",
+                   ylab = "signature",
+                   main = "Signatures",
+                   par.strip.text=list(cex=.5),
+                   pch=19, lwd =2, cex.lab=1.2, cex.axis=1.2,
+                   as.table=TRUE,
+                   layout=c(2,12),
+                   newpage = T,
+                   ...)
+           plot(p) 
+           dev.off()
       }
-      if(args$plot_method=="by-item") {
-        treillisgraph()
-      }
 
+# main
+
+if (args$plot_method=="global") {
+    globalgraph()
+    }
+
+if(args$plot_method=="lattice") {
+    # rearrange dataframes
+    h_sig = h_dataframe[,c(1,2,3)]
+    h_sig = cbind(rep("Overlap Prob (%)", length(h_sig[,1])), h_sig)
+    colnames(h_sig) = c("method", "chrom", "overlap", "sig")
+    z_pairs = z_dataframe[,c(1,2,3)]
+    z_pairs = cbind(rep("Nbr of pairs", length(z_pairs[,1])), z_pairs)
+    colnames(z_pairs) = c("method", "chrom", "overlap", "sig")
+    lattice_df = rbind(z_pairs, h_sig)
+    treillisgraph(lattice_df)    
+}
