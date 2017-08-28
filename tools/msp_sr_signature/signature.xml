@@ -43,8 +43,16 @@
         </param>
     </inputs>
     <outputs>
-        <data format="tabular" label="z-signature data frame" name="z_dataframe" />
-        <data format="tabular" label="h-signature data frame" name="h_dataframe" />
+        <data format="tabular" label="z-signature data frame" name="z_dataframe">
+            <actions>
+                <action name="column_names" type="metadata" default="Chromosome,Overlap,Number_of_pairs,z-score" />
+            </actions>
+        </data>
+        <data format="tabular" label="h-signature data frame" name="h_dataframe">
+            <actions>
+                <action name="column_names" type="metadata" default="Chromosome,Overlap,overlap_probability,z-score" />
+            </actions>
+        </data>
         <data format="pdf" label="Overlap probabilities" name="pdf" />
     </outputs>
     <tests>
@@ -79,9 +87,30 @@
 
 **What it does**
 
-This tool computes the number of pairs by overlap classes (in nt) from a bowtie output file, the z-score calculated from these numbers of pairs, and the ping-pong signal as described in Brennecke et al (2009) Science.   
-The numerical options set the min and max size of both the query small rna class and the target small rna class.   
-Three type of signals are plotted in separate pdf files, the number of pairs founds, the z-score calculated from these numbers of pairs, and the ping-pong signal as described in Brennecke et al (2009) Science.   
+Compute small RNA (piRNA, siRNA, ...) signatures.
+
+This tool computes (i) the number of pairs by overlap classes (in nt) and associated the z-scores,
+and (ii) the ping-pong signal (`Brennecke et al, 2009`_) and associated z-scores. 
+Options set the min and max size of both the query small rna class and the target small rna class, 
+the range over which to compute the signatures, and whether the signatures should be reported at 
+genome-wide level or by item (chromosomes, genes, etc.). For details on computational algorithmes 
+for piRNA and siRNA signatures, see `Antoniewski (2014)`_.
+
+.. _Brennecke et al, 2009: http://dx.doi.org/10.1126/science.1165171
+.. _Antoniewski (2014): https://link.springer.com/protocol/10.1007%2F978-1-4939-0931-5_12
+
+**Input**
+
+A **sorted** BAM alignment file.
+
+**Outputs**
+
+**Global**: The number of pairs founds, the ping-pong signal and the associated z-scores 
+are computed at genome-wide level and returned in a pdf file.
+
+**Lattice**: The number of pairs founds, the ping-pong signals and the associated z-scores 
+are computed for each items described in the BAM alignment input and returned in a pdf file as a lattice graph.
+
 
         </help>
     <citations>
