@@ -1,6 +1,6 @@
 # .shed.yml supporting automatic pushes.
-owner: drosofff
-name: msp_sr_signature
+owner: artbio
+name: small_rna_signatures
 description: Computes the tendency of small RNAs to overlap with each other.
 long_description: |
   Compute the tendency of small RNAs to overlap with each others for detailed information, 
@@ -8,8 +8,6 @@ long_description: |
 categories:
   - RNA
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/msp_sr_signature
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/small_rna_signatures
 toolshed:
-  - https://lbcd41.snv.jussieu.fr/toolshed/
-  - testtoolshed
   - toolshed
