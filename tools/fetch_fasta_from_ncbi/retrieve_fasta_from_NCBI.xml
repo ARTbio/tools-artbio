@@ -1,4 +1,4 @@
-<tool id="retrieve_fasta_from_NCBI" name="Retrieve FASTA from NCBI" version="1.1.0">
+<tool id="retrieve_fasta_from_NCBI" name="Retrieve FASTA from NCBI" version="2.0.0">
   <description></description>
   <command><![CDATA[
       python '$__tool_directory__'/retrieve_fasta_from_NCBI.py
@@ -6,6 +6,11 @@
       -d $dbname
       -o '$outfilename'
       -l '$logfile'
+      #if $date_condition.date_filter == "YES":
+          --datetype $date_condition.datetype
+          --mindate $date_condition.mindate
+          --maxdate $date_condition.maxdate
+      #end if
   ]]></command>
 
   <inputs>
@@ -25,6 +30,19 @@
       <option value="nuccore">Nucleotide</option>
       <option value="protein">Protein</option>
     </param>
+    <conditional name="date_condition">
+        <param name="date_filter" type="boolean" label="Filter the sequences by date?" truevalue="YES" falsevalue="NO" checked="false"/>
+        <when value="YES">
+            <param name="datetype" type="select">
+                <option value="pdat">Publication date</option>
+                <option value="edat">Entrez date</option>
+                <option value="mdat">Modification date</option>
+            </param>
+            <param name="mindate" type="text" help="Date must follow one of the following formats: YYYY/MM/DD, YYYY/MM or YYYY"/>
+            <param name="maxdate" type="text" help="Date must follow one of the following formats: YYYY/MM/DD, YYYY/MM or YYYY"/>
+        </when>
+        <when value="NO"/>
+    </conditional>
   </inputs>
   <outputs>
     <data name="outfilename" format="fasta" label="${tool.name} (${dbname.value_label}) with queryString '${queryString.value}'" />
@@ -36,6 +54,15 @@
         <param name="dbname" value="nuccore" />
         <output name="outfilename" ftype="fasta" file="output.fa" />
         <!--  <output name="logfile" ftype="txt" file="log.txt" />  log.txt changes with timestamp. removed to pass the  test -->
+    </test>
+    <test>
+        <param name="queryString" value="CU929326[Accession]" />
+        <param name="dbname" value="nuccore" />
+        <param name="date_filter" value="YES"/>
+        <param name="datetype" value="pdat"/>
+        <param name="mindate" value="2008/09"/>
+        <param name="maxdate" value="2008/09"/>
+        <output name="outfilename" ftype="fasta" file="zebra_output.fa" />
     </test>
   </tests>
   <help>

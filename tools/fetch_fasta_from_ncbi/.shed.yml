@@ -1,5 +1,5 @@
 # .shed.yml supporting automatic pushes.
-owner: drosofff
+owner: artbio
 name: fetch_fasta_from_ncbi
 description: Fetch fasta sequences from NCBI using eutils wrappers
 long_description: |
