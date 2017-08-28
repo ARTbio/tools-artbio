@@ -3,8 +3,11 @@ deprecated/deseq1_no_replicate
 deprecated/deseq1_with_replicates
 deprecated/deseq2
 deprecated/goseq_1_22_0
+deprecated/msp_sr_readmap_and_size_histograms
+deprecated/sra-tools
+deprecated/qr_coder
+deprecated/MirParser
 tools/patser
-tools/qr_coder
 unstable/deprecated/sRbowtieFeatures/FeaturesParser.xml
 unstable/development/deseq_normalization
 unstable/development/generate_sliding_windows

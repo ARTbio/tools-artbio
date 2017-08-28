@@ -3,7 +3,8 @@ owner: drosofff
 name: msp_sr_readmap_and_size_histograms
 description: generates readmaps and size histograms from small RNA bowtie alignments
 long_description: |
-  generates readmaps and size histograms from small RNA bowtie alignments. This tool belongs to the mississippi tool suite.
+  generates readmaps and size histograms from small RNA bowtie alignments. This tool is not supported anymore.
+  See small_rna_maps tool, owned by artbio, for replacement.
 categories:
   - RNA
   - Graphics
