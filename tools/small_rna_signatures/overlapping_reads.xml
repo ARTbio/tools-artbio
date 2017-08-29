@@ -1,4 +1,4 @@
-<tool id="overlapping_reads" name="Get overlapping reads" version="1.0.0">
+<tool id="overlapping_reads" name="Get overlapping reads" version="0.9.0">
     <description />
     <requirements>
         <requirement type="package" version="0.11.2.1=py27_0">pysam</requirement>
