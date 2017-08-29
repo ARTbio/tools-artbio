@@ -7,6 +7,7 @@ deprecated/msp_sr_readmap_and_size_histograms
 deprecated/sra-tools
 deprecated/qr_coder
 deprecated/MirParser
+deprecated/sam_to_fastq
 tools/patser
 unstable/deprecated/sRbowtieFeatures/FeaturesParser.xml
 unstable/development/deseq_normalization
