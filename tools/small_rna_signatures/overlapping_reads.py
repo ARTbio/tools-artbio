@@ -94,32 +94,45 @@ class Map:
         F = open(output, 'w')
         for chrom in sorted(overlap_groups):
             for pos in sorted(overlap_groups[chrom]):
-                if pos > 0: # read are forward
+                if pos > 0:  # read are forward
                     reads = self.bam_object.fetch(chrom, start=pos-1,
                                                   end=pos-1+overlap-1)
                     for read in reads:
                         positions = read.positions
                         if pos-1 == positions[0] and \
-                            read.query_alignment_length >= minquery:
-                                F.write('%s\t%s\t%s\n' % (
-                                    chrom, pos, read.query_sequence))
-                else: # reads are reverse
+                                read.query_alignment_length >= minquery:
+                            F.write('>%s|%s|%s|%s\n%s\n' % (
+                                chrom, pos, 'F',
+                                read.query_alignment_length,
+                                read.query_sequence))
+                else:  # reads are reverse
                     reads = self.bam_object.fetch(chrom,
                                                   start=-pos-1-overlap+1,
                                                   end=-pos-1)
                     for read in reads:
                         positions = read.positions
                         if -pos-1 == positions[-1] and \
-                            read.query_alignment_length >= minquery:
-                                F.write('%s\t%s\t%s\n' % (chrom, pos,
-                                                      read.query_sequence))
+                                read.query_alignment_length >= minquery:
+                            readseq = self.revcomp(read.query_sequence)
+                            readsize = read.query_alignment_length
+                            F.write('>%s|%s|%s|%s\n%s\n' % (chrom,
+                                                       positions[0] + 1,
+                                                       'R', readsize, readseq))
+        F.close()
         return
+
+    def revcomp(self, sequence):
+        antidict = {"A": "T", "T": "A", "G": "C", "C": "G", "N": "N"}
+        revseq = sequence[::-1]
+        return "".join([antidict[i] for i in revseq])
+
 
 def main(input, minquery, maxquery, mintarget, maxtarget, output, overlap=10):
     mapobj = Map(input)
     mapobj.feed_overlaps(mapobj.search_overlaps(minquery, maxquery,
                                                 mintarget, maxtarget,
                                                 overlap), minquery, output)
+
 
 if __name__ == "__main__":
     args = Parser()
