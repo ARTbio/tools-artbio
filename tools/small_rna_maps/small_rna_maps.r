@@ -40,7 +40,7 @@ per_gene_size=lapply(genes, function(x) subset(ExtraTable, Chromosome==x))
 ## functions
 
 first_plot = function(df, ...) {
-    combineLimits(xyplot(Counts~Coordinate|factor(Dataset, levels=unique(Dataset))+factor(Chromosome, levels=unique(Chromosome)),
+    p = xyplot(Counts~Coordinate|factor(Dataset, levels=unique(Dataset))+factor(Chromosome, levels=unique(Chromosome)),
     data=df,
     type='h',
     lwd=1.5,
@@ -52,13 +52,14 @@ first_plot = function(df, ...) {
     group=Polarity,
     col=c("red","blue"),
     par.strip.text = list(cex=0.7),
-    ...))
-    }
+    ...)
+    combineLimits(p)
+}
 
 
-second_plot = function(df, ...) {
-    #smR.prepanel=function(x,y,...) {; yscale=c(y*0, max(abs(y)));list(ylim=yscale);}
-    sizeplot = xyplot(eval(as.name(args$extra_plot_method))~Coordinate|factor(Dataset, levels=unique(Dataset))+factor(Chromosome, levels=unique(Chromosome)),
+second_plot = function(df, method=args$extra_plot_method, ...) {
+  if (method != "Size") {
+    p = xyplot(eval(as.name(args$extra_plot_method))~Coordinate|factor(Dataset, levels=unique(Dataset))+factor(Chromosome, levels=unique(Chromosome)),
     data=df,
     type='p',
     cex=0.35,
@@ -72,19 +73,15 @@ second_plot = function(df, ...) {
     col=c("darkred","darkblue"),
     par.strip.text = list(cex=0.7),
     ...)
-    combineLimits(sizeplot)
     }
-
-second_plot_size = function(df, ...) {
-#  smR.prepanel=function(x,y,...){; yscale=c(-max(abs(y)), max(abs(y)));list(ylim=yscale);}
-  bc= barchart(Count~as.factor(Size)|factor(Dataset, levels=unique(Dataset))+Chromosome, data = df, origin = 0,
+    else {
+    p = barchart(Count~as.factor(Size)|factor(Dataset, levels=unique(Dataset))+Chromosome, data = df, origin = 0,
     horizontal=FALSE,
-group=Polarity,
-stack=TRUE,
+    group=Polarity,
+    stack=TRUE,
     col=c('red', 'blue'),
     cex=0.75,
     scales=list(y=list(tick.number=4, rot=90, relation="free", cex=0.7), x=list(cex=0.7) ),
-#    prepanel=smR.prepanel,
     xlab = NULL,
     ylab = NULL,
     main = NULL,
@@ -92,15 +89,15 @@ stack=TRUE,
     newpage = T,
     par.strip.text = list(cex=0.7),
     ...)
-  combineLimits(bc)
-  }
-
+    }    
+    combineLimits(p)
+}
 
 ## end of functions
 
 ## function parameters
-par.settings.readmap=list(layout.heights=list(top.padding=0, bottom.padding=0), strip.background = list(col=c("lightblue","lightgreen")) )
-par.settings.size=list(layout.heights=list(top.padding=0, bottom.padding=0))
+par.settings.firstplot = list(layout.heights=list(top.padding=0, bottom.padding=0), strip.background = list(col=c("lightblue","lightgreen")) )
+par.settings.secondplot=list(layout.heights=list(top.padding=0, bottom.padding=0))
 graph_title=list(Coverage="Read Maps and Coverages", Median="Read Maps and Median sizes", Mean="Read Maps and Mean sizes", SizeDistribution="Read Maps and Size Distributions")
 graph_legend=list(Coverage="Read counts / Coverage", Median="Read counts / Median size", Mean="Read counts / Mean size", SizeDistribution="Read counts")
 graph_bottom=list(Coverage="Nucleotide coordinates", Median="Nucleotide coordinates", Mean="Nucleotide coordinates", Size="Read sizes / Nucleotide coordinates")
@@ -119,15 +116,8 @@ for (i in seq(1,n_genes,rows_per_page/2)) {
     start=i
     end=i+rows_per_page/2-1
     if (end>n_genes) {end=n_genes}
-    first_plot.list=lapply(per_gene_readmap[start:end], function(x) first_plot(x, strip=FALSE, par.settings=par.settings.readmap))
-    if (args$extra_plot_method == "Size") {
-        second_plot.list=lapply(per_gene_size[start:end], function(x) second_plot_size(x, par.settings=par.settings.size))
-        }
-    else {
-        second_plot.list=lapply(per_gene_size[start:end], function(x) second_plot(x, par.settings=par.settings.size))
-        }
-    
-        
+    first_plot.list = lapply(per_gene_readmap[start:end], function(x) first_plot(x, strip=FALSE, par.settings=par.settings.firstplot))
+    second_plot.list = lapply(per_gene_size[start:end], function(x) second_plot(x, method=args$extra_plot_method, par.settings=par.settings.secondplot))
     plot.list=rbind(second_plot.list, first_plot.list)
     args_list=c(plot.list, list(nrow=rows_per_page+1, ncol=1,
                                     top=textGrob(graph_title[[args$extra_plot_method]], gp=gpar(cex=1), just="top"),
