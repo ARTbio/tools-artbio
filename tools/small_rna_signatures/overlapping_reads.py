@@ -92,8 +92,7 @@ class Map:
             for coord in sorted(pos_coord):  # examine forward queries
                 if Target_table[chrom].get(-coord - overlap + 1, 0):
                     reads = self.bam_object.fetch(chrom, start=coord-1,
-                                                  end=coord-1+overlap-1)
-                    print(chrom, coord, self.bam_object.count(chrom, start=coord-1, end=coord-1+overlap-1))
+                                                  end=coord-1+overlap+20)
                     for read in reads:
                         positions = read.get_reference_positions(full_length=True)
                         if not read.is_reverse and coord-1 == positions[0] and read.query_alignment_length >= minquery and read.query_alignment_length <= maxquery:
@@ -111,7 +110,7 @@ class Map:
                                                        'R', readsize, readseq))
             for coord in sorted(neg_coord):  # examine reverse queries
                 if Target_table[chrom].get(-coord - overlap + 1, 0):
-                    reads = self.bam_object.fetch(chrom, start=-coord-overlap,
+                    reads = self.bam_object.fetch(chrom, start=-coord-1-overlap,
                                                   end=-coord-1)
                     for read in reads:
                         positions = read.get_reference_positions(full_length=True)
