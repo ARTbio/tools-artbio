@@ -79,46 +79,58 @@ class Map:
                         Target_table[key[0]].get(coordinate, 0) + 1
         return Query_table, Target_table
 
-    def search_overlaps(self, minquery, maxquery, mintarget, maxtarget,
-                        overlap=10):
+    def search_and_write_pairing(self, minquery, maxquery, mintarget,
+                                 maxtarget, pairfile, overlap=10):
+#        Q = open(queryfile, 'w')
+#        T = open(targetfile, 'w')
         Query_table, Target_table = self.signature_tables(minquery, maxquery,
                                                           mintarget, maxtarget)
-        overlap_groups = defaultdict(list)
+        P = open(pairfile, 'w')
         for chrom in Query_table:
-            for coord in Query_table[chrom]:
+            pos_coord = [p for p in Query_table[chrom].keys() if p > 0]
+            neg_coord = [p for p in Query_table[chrom].keys() if p < 0]
+            for coord in sorted(pos_coord):  # examine forward queries
                 if Target_table[chrom].get(-coord - overlap + 1, 0):
-                    overlap_groups[chrom].append(coord)
-        return overlap_groups
-
-    def feed_overlaps(self, overlap_groups, minquery, output, overlap=10):
-        F = open(output, 'w')
-        for chrom in sorted(overlap_groups):
-            for pos in sorted(overlap_groups[chrom]):
-                if pos > 0:  # read are forward
-                    reads = self.bam_object.fetch(chrom, start=pos-1,
-                                                  end=pos-1+overlap-1)
+                    reads = self.bam_object.fetch(chrom, start=coord-1,
+                                                  end=coord-1+overlap-1)
+                    print(chrom, coord, self.bam_object.count(chrom, start=coord-1, end=coord-1+overlap-1))
                     for read in reads:
-                        positions = read.positions
-                        if pos-1 == positions[0] and \
-                                read.query_alignment_length >= minquery:
-                            F.write('>%s|%s|%s|%s\n%s\n' % (
-                                chrom, pos, 'F',
+                        positions = read.get_reference_positions(full_length=True)
+                        if not read.is_reverse and coord-1 == positions[0] and read.query_alignment_length >= minquery and read.query_alignment_length <= maxquery:
+                        #  this one must be a proper query read on forward strand
+                            P.write('>%s|%s|%s|%s\n%s\n' % (
+                                chrom, coord, 'F',
                                 read.query_alignment_length,
                                 read.query_sequence))
-                else:  # reads are reverse
-                    reads = self.bam_object.fetch(chrom,
-                                                  start=-pos-1-overlap+1,
-                                                  end=-pos-1)
-                    for read in reads:
-                        positions = read.positions
-                        if -pos-1 == positions[-1] and \
-                                read.query_alignment_length >= minquery:
+                        if read.is_reverse and coord-1 == positions[-1] and read.query_alignment_length >= mintarget and read.query_alignment_length <= maxtarget:
+                        #  this one must be a proper target read on reverse strand
                             readseq = self.revcomp(read.query_sequence)
                             readsize = read.query_alignment_length
-                            F.write('>%s|%s|%s|%s\n%s\n' % (chrom,
+                            P.write('>%s|%s|%s|%s\n%s\n' % (chrom,
                                                        positions[0] + 1,
                                                        'R', readsize, readseq))
-        F.close()
+            for coord in sorted(neg_coord):  # examine reverse queries
+                if Target_table[chrom].get(-coord - overlap + 1, 0):
+                    reads = self.bam_object.fetch(chrom, start=-coord-overlap,
+                                                  end=-coord-1)
+                    for read in reads:
+                        positions = read.get_reference_positions(full_length=True)
+                        if read.is_reverse and -coord-1 == positions[-1] and read.query_alignment_length >= minquery and read.query_alignment_length <= maxquery:
+                        #  this one must be a proper query read on reverse strand
+                            readseq = self.revcomp(read.query_sequence)
+                            readsize = read.query_alignment_length
+                            P.write('>%s|%s|%s|%s\n%s\n' % (chrom,
+                                                       positions[0] + 1,
+                                                       'R', readsize, readseq))
+                        if not read.is_reverse and -coord-1 == positions[0] and read.query_alignment_length >= mintarget and read.query_alignment_length <= maxtarget:
+                        #  this one must be a proper target read on forward strand
+                            P.write('>%s|%s|%s|%s\n%s\n' % (
+                                chrom, coord, 'F',
+                                read.query_alignment_length,
+                                read.query_sequence))
+#        Q.close()
+#        T.close()
+        P.close()
         return
 
     def revcomp(self, sequence):
@@ -129,9 +141,7 @@ class Map:
 
 def main(input, minquery, maxquery, mintarget, maxtarget, output, overlap=10):
     mapobj = Map(input)
-    mapobj.feed_overlaps(mapobj.search_overlaps(minquery, maxquery,
-                                                mintarget, maxtarget,
-                                                overlap), minquery, output)
+    mapobj.search_and_write_pairing(minquery, maxquery, mintarget, maxtarget, output, overlap)
 
 
 if __name__ == "__main__":
