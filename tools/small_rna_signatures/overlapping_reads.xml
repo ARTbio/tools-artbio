@@ -38,6 +38,15 @@
             <param name="overlap" value="10" />
             <output file="paired.fa" ftype="fasta" name="output" />
         </test>
+        <test>
+            <param ftype="bam" name="input" value="sr_bowtie.bam" />
+            <param name="minquery" value="20" />
+            <param name="maxquery" value="22" />
+            <param name="mintarget" value="23" />
+            <param name="maxtarget" value="29" />
+            <param name="overlap" value="10" />
+            <output file="paired_2.fa" ftype="fasta" name="output" />
+        </test>
     </tests>
     <help>
 
