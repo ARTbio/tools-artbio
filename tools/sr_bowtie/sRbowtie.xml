@@ -1,5 +1,5 @@
-<tool id="bowtieForSmallRNA" name="sRbowtie" version="1.3">
-    <description>for FASTA small reads</description>
+<tool id="bowtieForSmallRNA" name="sR_bowtie" version="2.0.0">
+    <description>for small RNA short reads</description>
     <requirements>
         <requirement type="package" version="1.1.2=py27_2">bowtie</requirement>
         <requirement type="package" version="1.2">samtools</requirement>
@@ -197,29 +197,42 @@ Depending on the type of matching, different bowtie options are used:
 
 **Match on sense strand RNA reference index, multiple mappers randomly matched at a single position**
 
-Match on RNA reference, SENSE strand, randomly attributing multiple mapper to target with least mismatches, the polarity column is suppressed in the bowtie tabular report:
+Align on RNA reference, SENSE strand, randomly attributing multiple mapper to target with least mismatches:
 
-*-v [0,1,2,3] -M 1 --best --strata -p 12 --norc --suppress 2,6,7,8*
+*-v [0,1,2,3] -M 1 --best --strata -p 12 --norc*
 
 **Match unique mappers on DNA reference index**
 
-Match ONLY unique mappers on DNA reference index
+Align ONLY unique mappers on DNA reference index
 
-*-v [0,1,2,3] -m 1 -p 12 --suppress 6,7,8*
+*-v [0,1,2,3] -m 1 -p 12*
 
 Note that using this option with -v values other than 0 is questionnable...
 
 **Match on DNA, multiple mappers randomly matched at a single position**
 
-Match multiple mappers, randomly attributing multiple mapper to target with least mismatches, number of mismatch allowed specified by -v option:
+Align multiple mappers, randomly attributing multiple mapper to target with least mismatches, number of mismatch allowed specified by -v option:
 
-*-v [0,1,2,3] -M 1 --best --strata -p 12 --suppress 6,7,8*
+*-v [0,1,2,3] -M 1 --best --strata -p 12*
 
 **Match on DNA as fast as possible, without taking care of mapping issues (for raw annotation of reads)**
 
-Match with highest speed, not guaranteeing best hit for speed gain:
+Align with highest speed, not guaranteeing best hit for speed gain:
 
-*-v [0,1,2,3] -k 1 --best -p 12 --suppress 6,7,8*
+*-v [0,1,2,3] -k 1 --best -p 12*
+
+**Match on DNA - RNAseq mode (-n bowtie option)**
+
+Align reads in as for RNAseq data alignment
+
+*-n [0,1,2,3] -M 1 --best -p 12*
+
+**Match and report all valid alignments**
+
+Align reads and report all valid alignments
+
+*-v [0,1,2,3] -a --best -p 12*
+
 
 
 -----
@@ -234,7 +247,7 @@ Match with highest speed, not guaranteeing best hit for speed gain:
 
 **OUTPUTS**
 
-If you choose tabular as the output format, you will obtain the matched reads in tabular bowtie output format, having the following columns::
+If you choose tabular as the output format, you will obtain the matched reads in tabular bowtie output format (--suppress 6,7,8), having the following columns::
 
     Column    Description
   --------    --------------------------------------------------------
