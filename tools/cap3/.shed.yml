@@ -1,6 +1,6 @@
 # .shed.yml supporting automatic pushes.
-owner: drosofff
-name: msp_cap3
+owner: artbio
+name: cap3
 description: cap3 wrapper
 long_description: |
   cap3 wrapper.

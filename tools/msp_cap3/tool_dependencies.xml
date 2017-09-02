@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-<tool_dependency>
-  <package name="cap3" version="3">
-      <repository name="package_cap3_3" owner="jjohnson" />
-  </package>
-</tool_dependency>
