@@ -1,0 +1,169 @@
+<tool id="sequence_format_converter" name="sequence_format_converter" version="2.0.0">
+  <description></description>
+  <command><![CDATA[
+      python '$__tool_directory__'/sequence_format_converter.py
+      --input '$input'
+      --output '$output'
+      --format '$output_format'
+  ]]></command>
+
+<inputs>
+    <param name="input" type="data" format="fasta, fastq, tabular" label="file to convert to tabular (input format is automatically detected)"/>
+    <param name="output_format" type="select" label="conversion options">
+        <option value="tabular" selected="true">tabular</option>
+        <option value="fasta">Fasta</option>
+        <option value="fastaw">Weighted fasta</option>
+    </param>
+   </inputs>
+
+ <outputs>
+   <data format="fasta" name="output" label="${output_format} conversion of ${input.name}">
+     <change_format>
+        <when input="output_format" value="tabular" format="tabular"/>
+     </change_format>
+   </data>
+</outputs>
+
+    <tests>
+        <test>
+            <!-- convertion fasta to tabular -->
+            <param name="output_format" value="tabular" />
+            <param ftype="fasta" name="input" value="input.fa" />
+            <output file="output.tab" name="output" />
+        </test>
+        <test>
+            <!-- convertion tabular to fasta -->
+            <param name="output_format" value="fasta" />
+            <param ftype="tabular" name="input" value="output.tab" />
+            <output file="input.sorted.fa" name="output" sort="True"/>
+        </test>
+        <test>
+            <!-- convertion fastaw to tabular -->
+            <param name="output_format" value="tabular" />
+            <param ftype="fasta" name="input" value="output.faw" />
+            <output file="output.sorted.tab" name="output" sort="True"/>
+        </test>
+        <test>
+            <!-- convertion tabular to fastaw -->
+            <param name="output_format" value="fastaw" />
+            <param ftype="tabular" name="input" value="output.tab" />
+            <output file="output.sorted.faw" name="output" sort="True" />
+        </test>
+         <test>
+            <!-- convertion fasta to fastaw -->
+            <param name="output_format" value="fastaw" />
+            <param ftype="fasta" name="input" value="input.fa" />
+            <output file="output.sorted.faw" name="output" sort="True" />
+        </test>
+        <test>
+            <!-- convertion fastaw to fasta -->
+            <param name="output_format" value="fasta" />
+            <param ftype="fasta" name="input" value="output.faw" />
+            <output file="input.sorted.fa" name="output" sort="True" />
+        </test>
+        <test>
+            <!-- convertion fastq to tabular -->
+            <param name="output_format" value="tabular" />
+            <param ftype="fastq" name="input" value="input.fastqsanger" />
+            <output file="fastqTotabular.sorted.tab" name="output" sort="True" />
+        </test>
+         <test>
+            <!-- convertion fastq to fasta -->
+            <param name="output_format" value="fasta" />
+            <param ftype="fasta" name="input" value="input.fastqsanger" />
+            <output file="fastqTofasta.sorted.fa" name="output" sort="True" />
+        </test>
+        <test>
+            <!-- convertion fastq to fastaw -->
+            <param name="output_format" value="fastaw" />
+            <param ftype="fasta" name="input" value="input.fastqsanger" />
+            <output file="fastqTofastaw.sorted.faw" name="output" sort="True" />
+        </test>
+   </tests>
+
+
+<help>
+
+**What it does**
+
+The tool performs all pairwise conversions between sequence formats fasta, fastaw and tabular.
+
+The tool is also able to convert fastq format in any of the formats fasta, fastaw and tabular.
+
+The format of the input is automatically detected by the tool.
+
+**Formats**
+
+*Fasta*
+
+>id1
+
+ATGCATGACCAGATAGGAC
+
+>id2
+
+ATGCATGACCAGATAGGAC
+
+Note that the tool handles fasta sequences over multiple lines
+
+
+----------
+
+*Fastaw*
+
+Allows to reduce the size of a fasta file of sequence reads:
+
+>id1_n1
+
+ATGCATGACCAGATAGGAC
+
+>id2_n2
+
+ATGCATGACCAGATAGGAC
+
+etc...
+
+Here n1 and n2 are integers that indicate the number of reads of the sequence found in the sequencing dataset
+
+Note that if 2 fastaw files are merged (e.g. by concatenation), the values of the number of reads are wrong.
+
+These values can simply be re-computed by submitting the merged file to a fastaw conversion with the *sequence_format_converter* tool !
+
+
+----------
+
+*Tabular*
+
+Is a tabular version of fastaw without fasta headers:
+
+column 1               column2
+
+ATGCATGACCAGATAGGAC    n1
+
+ATGCATGACCAGATAGGAC    n2
+
+
+----------
+
+*Fastq*
+
+@HWI-1
+
+ATGCATGACCAGATAGGAC
+
+\+
+
+BBBA;ACB9ABCBABB@@/
+
+@HWI-2
+
+ATGCATGACCAGATAGGAC
+
+\+
+
+?03@?82?B>C@B>@CC?0
+
+
+</help>
+
+</tool>
