@@ -104,7 +104,6 @@ def write_counts(countdict, outfile):
     writes a count table
     """
     F = open(outfile, 'w')
-    F.write('Gene\tCounts\n')
     for gene in sorted(countdict):
         F.write('%s\t%s\n' % (gene, str(countdict[gene])))
     F.close()
