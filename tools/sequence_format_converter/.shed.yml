@@ -1,0 +1,18 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: sequence_format_converter
+description: various fasta to tabular conversions
+long_description: |
+  sequence_format_converter performs all pairwise conversions
+  between sequence formats fasta, fastaw and tabular.
+  sequence_format_converter is also able to convert fastq format
+  in any of the formats fasta, fastaw and tabular.
+
+categories:
+  - Convert Formats
+  - Fasta Manipulation
+
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/sequence_format_converter
+toolshed:
+  - toolshed
