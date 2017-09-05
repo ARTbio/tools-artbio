@@ -1,4 +1,4 @@
-<tool id="mircounts" name="miRcounts" version="0.9.4">
+<tool id="mircounts" name="miRcounts" version="1.0.0">
     <description> Counts miRNA alignments from small RNA sequence data</description>
     <requirements>
         <requirement type="package" version="1.18">gnu-wget</requirement>
@@ -9,9 +9,9 @@
         <requirement type="package" version="0.20_34=r3.3.2_0">r-lattice</requirement>
     </requirements>
     <command detect_errors="exit_code"><![CDATA[
-        wget ftp://mirbase.org/pub/mirbase/CURRENT/genomes/${genomeKey}.gff3 && ## download gff3 specified by the variable genomeKey
+        wget ftp://mirbase.org/pub/mirbase/${mirbase_version}/genomes/${genomeKey}.gff3 && ## download the gff3 file specified by the variable genomeKey
         python '$__tool_directory__'/mature_mir_gff_translation.py --input ${genomeKey}.gff3 --output $gff3 && ## transcode the mature miR genome coordinates into coordinates relative to the corresponding "miRNA_primary_transcript".
-        wget ftp://mirbase.org/pub/mirbase/CURRENT/hairpin.fa.gz &&
+        wget ftp://mirbase.org/pub/mirbase/${mirbase_version}/hairpin.fa.gz &&
         sh '$__tool_directory__'/format_fasta_hairpins.sh $genomeKey &&
         #if $cutadapt.cutoption == "yes":
             python '$__tool_directory__'/yac.py --input $cutadapt.input
@@ -74,48 +74,11 @@
                 <column name="value" index="0"/>
             </options>
         </param>
-        <!-- work on proper selection of the url (that varies between gff, gff2 and gff3)
         <param name="mirbase_version" type="select" label="Choose miRbase version">
             <option selected="true" value="CURRENT">Current</option>
-            <option value="1.0">1.0</option>
-            <option value="1.1">1.1</option>
-            <option value="1.2">1.2</option>
-            <option value="1.3">1.3</option>
-            <option value="1.4">1.4</option>
-            <option value="1.5">1.5</option>
-            <option value="2.0">2.0</option>
-            <option value="2.1">2.0</option>
-            <option value="2.2">2.2</option>
-            <option value="3.0">3.0</option>
-            <option value="3.1">3.1</option>
-            <option value="4.0">4.0</option>
-            <option value="5.0">5.0</option>
-            <option value="5.1">5.1</option>
-            <option value="6.0">6.0</option>
-            <option value="7.0">7.0</option>
-            <option value="7.1">7.1</option>
-            <option value="8.0">8.0</option>
-            <option value="8.1">8.1</option>
-            <option value="8.2">8.2</option>
-            <option value="9.0">9.0</option>
-            <option value="9.1">9.1</option>
-            <option value="9.2">9.2</option>
-            <option value="10.0">10.0</option>
-            <option value="10.1">10.1</option>
-            <option value="11.0">11.0</option>
-            <option value="12.0">12.0</option>
-            <option value="13.0">13.0</option>
-            <option value="14">14</option>
-            <option value="15">15</option>
-            <option value="16">16</option>
-            <option value="17">17</option>
-            <option value="18">18</option>
-            <option value="19">19</option>
             <option value="20">20</option>
-            <option value="21">21</option>
-            </options>
+            <option value="19">19</option>
         </param>
-        -->
         <param help="command [ bowtie -v 0,1,2,3 -M 1 --best --strata --norc ] will be used. Specify a value for -v (number of mismatches allowed)" label="Number of mismatches allowed" name="v" type="select">
             <option value="0">0</option>
             <option selected="true" value="1">1</option>
@@ -166,10 +129,11 @@
             <param name="clip_sequence" value="TCGTATGCCGTCTTCTGCTTG"/>
             <param name="v" value="0"/>
             <param name="genomeKey" value="dme"/>
+            <param name="mirbase_version" value="CURRENT"/>
             <param name="input" value="input.unclipped.fastqsanger" ftype="fastqsanger"/>
             <param name="plottingOption" value="no"/>
             <output name="output" file="unclipped.out.bam" ftype="bam"/>
-            <output name="gff3" file="translated_dme.gff3" ftype="gff3"/>
+            <output name="gff3" file="translated_dme.gff3" ftype="gff3" lines_diff="22"/>
             <output name="pre_mir_count_file" file="pre_mirs_unclipped_count.tab"/>
             <output name="mir_count_file" file="mirs_unclipped_count.tab"/>
         </test>
@@ -181,11 +145,12 @@
             <param name="clip_sequence" value="TCGTATGCCGTCTTCTGCTTG"/>
             <param name="v" value="0"/>
             <param name="genomeKey" value="dme"/>
+            <param name="mirbase_version" value="CURRENT"/>
             <param name="input" value="input.unclipped.fastqsanger" ftype="fastqsanger"/>
             <param name="plottingOption" value="yes"/>
             <param name="display" value="relative"/>
             <output name="output" file="unclipped.out.bam" ftype="bam"/>
-            <output name="gff3" file="translated_dme.gff3" ftype="gff3"/>
+            <output name="gff3" file="translated_dme.gff3" ftype="gff3"  lines_diff="22"/>
             <output name="pre_mir_count_file" file="pre_mirs_unclipped_count.tab"/>
             <output name="mir_count_file" file="mirs_unclipped_count.tab"/>
             <output name="latticePDF" file="mir_unclipped_coverage.pdf" ftype="pdf"/>
@@ -195,11 +160,12 @@
             <param name="cutoption" value="no" />
             <param name="v" value="1"/>
             <param name="genomeKey" value="dme"/>
+            <param name="mirbase_version" value="CURRENT"/>
             <param name="clipped_input" value="input.clipped.fastqsanger" ftype="fastqsanger"/>
             <param name="plottingOption" value="yes"/>
             <param name="display" value="absolute"/>
             <output name="output" file="clipped.out.bam" ftype="bam"/>
-            <output name="gff3" file="translated_dme.gff3" ftype="gff3"/>
+            <output name="gff3" file="translated_dme.gff3" ftype="gff3"  lines_diff="22"/>
             <output name="pre_mir_count_file" file="pre_mirs_clipped_count.tab"/>
             <output name="mir_count_file" file="mirs_clipped_count.tab"/>
             <output name="latticePDF" file="mir_clipped_coverage.pdf" ftype="pdf"/>
