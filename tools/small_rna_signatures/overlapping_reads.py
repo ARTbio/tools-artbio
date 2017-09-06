@@ -77,8 +77,7 @@ class Map:
                                                     start=pos, end=pos+overlap-1)
                 #  1
                 for queryread in iterreads_1:
-                    if queryread.get_reference_positions(
-                        )[0] == pos and \
+                    if queryread.reference_start == pos and \
                         queryread.query_alignment_length in query_range \
                             and not queryread.is_reverse:
                         for targetread in iterreads_2:
@@ -92,15 +91,13 @@ class Map:
                                     targetread.query_sequence)
                                 stringresult.append(
                                     '>%s|%s|%s|%s|n=%s\n%s\n' %
-                                    (chrom, queryread.get_reference_positions(
-                                     )[0]+1,
+                                    (chrom, queryread.reference_start+1,
                                      'F', queryread.query_alignment_length,
                                      self.readdic[queryread.query_sequence],
                                      queryread.query_sequence))
                                 stringresult.append(
                                     '>%s|%s|%s|%s|n=%s\n%s\n' %
-                                    (chrom, targetread.get_reference_positions(
-                                     )[0]+1,
+                                    (chrom, targetread.reference_start+1,
                                      'R', targetread.query_alignment_length,
                                      self.readdic[targetread.query_sequence],
                                      targetreadseq))
