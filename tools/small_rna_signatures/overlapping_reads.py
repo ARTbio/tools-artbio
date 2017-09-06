@@ -51,10 +51,10 @@ class Map:
             for read in bam_object.fetch(chrom):
                 if not read.is_reverse:
                     all_query_positions[chrom].append(
-                        read.get_reference_positions()[0])
+                        read.reference_start)
                 else:
                     all_query_positions[chrom].append(
-                        read.get_reference_positions()[-1])
+                        read.reference_end)
             all_query_positions[chrom] = sorted(
                 list(set(all_query_positions[chrom])))
         return all_query_positions
