@@ -51,10 +51,10 @@ class Map:
             for read in bam_object.fetch(chrom):
                 if not read.is_reverse:
                     all_query_positions[chrom].append(
-                        read.get_reference_positions(full_length=True)[0])
+                        read.get_reference_positions()[0])
                 else:
                     all_query_positions[chrom].append(
-                        read.get_reference_positions(full_length=True)[-1])
+                        read.get_reference_positions()[-1])
             all_query_positions[chrom] = sorted(
                 list(set(all_query_positions[chrom])))
         return all_query_positions
@@ -78,14 +78,14 @@ class Map:
                 #  1
                 for queryread in iterreads_1:
                     if queryread.get_reference_positions(
-                        full_length=True)[0] == pos and \
+                        )[0] == pos and \
                         queryread.query_alignment_length in query_range \
                             and not queryread.is_reverse:
                         for targetread in iterreads_2:
                             if (targetread.
-                                get_reference_positions(full_length=True)[-1]
+                                get_reference_positions()[-1]
                                 == queryread.get_reference_positions(
-                                   full_length=True)[overlap-1] and
+                                   )[overlap-1] and
                                 targetread.query_alignment_length in
                                     target_range and targetread.is_reverse):
                                 targetreadseq = self.revcomp(
@@ -93,26 +93,26 @@ class Map:
                                 stringresult.append(
                                     '>%s|%s|%s|%s|n=%s\n%s\n' %
                                     (chrom, queryread.get_reference_positions(
-                                     full_length=True)[0]+1,
+                                     )[0]+1,
                                      'F', queryread.query_alignment_length,
                                      self.readdic[queryread.query_sequence],
                                      queryread.query_sequence))
                                 stringresult.append(
                                     '>%s|%s|%s|%s|n=%s\n%s\n' %
                                     (chrom, targetread.get_reference_positions(
-                                     full_length=True)[0]+1,
+                                     )[0]+1,
                                      'R', targetread.query_alignment_length,
                                      self.readdic[targetread.query_sequence],
                                      targetreadseq))
                 #  2
                 for queryread in iterreads_3:
                     if queryread.get_reference_positions(
-                        full_length=True)[-1] == pos+overlap-1 and \
+                        )[-1] == pos+overlap-1 and \
                         queryread.query_alignment_length in query_range \
                             and queryread.is_reverse:
                         for targetread in iterreads_4:
                             if (targetread.
-                                get_reference_positions(full_length=True)[0]
+                                get_reference_positions()[0]
                                 == pos and targetread.query_alignment_length
                                     in target_range and not
                                     targetread.is_reverse):
@@ -122,14 +122,14 @@ class Map:
                                 stringresult.append(
                                     '>%s|%s|%s|%s|n=%s\n%s\n' %
                                     (chrom, queryread.get_reference_positions(
-                                     full_length=True)[0]+1, 'R',
+                                     )[0]+1, 'R',
                                      queryread.query_alignment_length,
                                      self.readdic[queryread.query_sequence],
                                      queryreadseq))
                                 stringresult.append(
                                     '>%s|%s|%s|%s|n=%s\n%s\n' %
                                     (chrom, targetread.get_reference_positions(
-                                     full_length=True)[0]+1,
+                                     )[0]+1,
                                      'F', targetread.query_alignment_length,
                                      self.readdic[targetread.query_sequence],
                                      targetreadseq))
