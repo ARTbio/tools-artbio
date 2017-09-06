@@ -1,4 +1,4 @@
-<tool id="retrieve_fasta_from_NCBI" name="Retrieve FASTA from NCBI" version="2.0.0">
+<tool id="retrieve_fasta_from_NCBI" name="Retrieve FASTA from NCBI" version="2.0.1">
   <description></description>
   <command><![CDATA[
       python '$__tool_directory__'/retrieve_fasta_from_NCBI.py
@@ -35,7 +35,6 @@
         <when value="YES">
             <param name="datetype" type="select">
                 <option value="pdat">Publication date</option>
-                <option value="edat">Entrez date</option>
                 <option value="mdat">Modification date</option>
             </param>
             <param name="mindate" type="text" help="Date must follow one of the following formats: YYYY/MM/DD, YYYY/MM or YYYY"/>
