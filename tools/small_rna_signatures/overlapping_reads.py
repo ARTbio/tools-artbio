@@ -52,9 +52,6 @@ class Map:
                 if not read.is_reverse:
                     all_query_positions[chrom].append(
                         read.reference_start)
-                else:
-                    all_query_positions[chrom].append(
-                        read.reference_end)
             all_query_positions[chrom] = sorted(
                 list(set(all_query_positions[chrom])))
         return all_query_positions
