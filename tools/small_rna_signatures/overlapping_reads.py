@@ -103,13 +103,12 @@ class Map:
                                      targetreadseq))
                 #  2
                 for queryread in iterreads_3:
-                    if queryread.get_reference_positions(
-                        )[-1] == pos+overlap-1 and \
+                    if queryread.reference_end-1 == pos+overlap-1 and \
                         queryread.query_alignment_length in query_range \
                             and queryread.is_reverse:
                         for targetread in iterreads_4:
                             if (targetread.
-                                get_reference_positions()[0]
+                                reference_start
                                 == pos and targetread.query_alignment_length
                                     in target_range and not
                                     targetread.is_reverse):
@@ -118,15 +117,13 @@ class Map:
                                 targetreadseq = targetread.query_sequence
                                 stringresult.append(
                                     '>%s|%s|%s|%s|n=%s\n%s\n' %
-                                    (chrom, queryread.get_reference_positions(
-                                     )[0]+1, 'R',
+                                    (chrom, queryread.reference_start+1, 'R',
                                      queryread.query_alignment_length,
                                      self.readdic[queryread.query_sequence],
                                      queryreadseq))
                                 stringresult.append(
                                     '>%s|%s|%s|%s|n=%s\n%s\n' %
-                                    (chrom, targetread.get_reference_positions(
-                                     )[0]+1,
+                                    (chrom, targetread.reference_start+1,
                                      'F', targetread.query_alignment_length,
                                      self.readdic[targetread.query_sequence],
                                      targetreadseq))
