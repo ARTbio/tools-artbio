@@ -45,6 +45,22 @@ class Map:
             readdic[read.query_sequence] += 1
         return readdic
 
+    def index_alignments(self, bam_object):
+        '''
+        dic[(chrom, pos, polarity)]: [readseq1, readseq2, ...]
+        '''
+        dic = defaultdict(list)
+        for chrom in self.chromosomes:
+            for read in bam_object.fetch(chrom):
+                if read.is_reverse:
+                    coord = read.reference_end-1
+                    pol = 'R'
+                else:
+                    coord = read.reference_start
+                    pol = 'F'
+                dic[(chrom, coord, pol)].append(read.query_sequence)
+        return dic
+
     def query_positions(self, bam_object):
         all_query_positions = defaultdict(list)
         for chrom in self.chromosomes:
