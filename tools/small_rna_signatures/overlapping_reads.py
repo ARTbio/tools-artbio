@@ -36,7 +36,8 @@ class Map:
         self.bam_object = pysam.AlignmentFile(bam_file, 'rb')
         self.chromosomes = dict(zip(self.bam_object.references,
                                 self.bam_object.lengths))
-        self.all_query_positions = self.query_positions(self.bam_object)
+        self.alignement_dic = self.index_alignments(self.bam_object)
+        self.all_query_positions = self.query_positions(self.bam_object, overlap=10)
         self.readdic = self.make_readdic(self.bam_object)
 
     def make_readdic(self, bam_object):
@@ -47,7 +48,7 @@ class Map:
 
     def index_alignments(self, bam_object):
         '''
-        dic[(chrom, pos, polarity)]: [readseq1, readseq2, ...]
+        dic[(chrom, pos, polarity)]: [readseq1, readseq2, ...] -> converted in set
         '''
         dic = defaultdict(list)
         for chrom in self.chromosomes:
@@ -59,18 +60,46 @@ class Map:
                     coord = read.reference_start
                     pol = 'F'
                 dic[(chrom, coord, pol)].append(read.query_sequence)
+        for key in dic:
+            dic[key] = set(dic[key])
         return dic
 
-    def query_positions(self, bam_object):
+    def query_positions(self, bam_object, overlap):
         all_query_positions = defaultdict(list)
-        for chrom in self.chromosomes:
-            for read in bam_object.fetch(chrom):
-                if not read.is_reverse:
-                    all_query_positions[chrom].append(
-                        read.reference_start)
+        for genomicKey in self.alignement_dic.keys():
+            chrom, coord, pol = genomicKey
+            if pol == 'F' and len(self.alignement_dic[(chrom, coord+overlap-1, 'R')]) > 0:
+                all_query_positions[chrom].append(coord)
+        for chrom in all_query_positions:
             all_query_positions[chrom] = sorted(
                 list(set(all_query_positions[chrom])))
         return all_query_positions
+        
+    def pairing(self, minquery, maxquery, mintarget, maxtarget, file,
+                overlap=10):
+        F = open(file, 'w')
+        query_range = range(minquery, maxquery + 1)
+        target_range = range(mintarget, maxtarget + 1)
+        stringresult = []
+        for chrom in self.all_query_positions:
+            for pos in self.all_query_positions[chrom]:
+               uppers = self.alignement_dic[chrom][pos]
+               lowers = self.alignement_dic[chrom][pos+overlap-1]
+               if uppers and lowers:
+                   for upread in uppers:
+                       for downread in lowers:
+                           if (len(upread) in query_range and len(downread) in target_range) or (len(upread) in target_range and len(downread) in query_range):
+                                stringresult.append(
+                                    '>%s|%s|%s|%s|n=%s\n%s\n' %
+                                    (chrom, pos+1, 'F', len(upread),
+                                     self.readdic[upread], upread))
+                                stringresult.append(
+                                    '>%s|%s|%s|%s|n=%s\n%s\n' %
+                                    (chrom, pos+overlap-len(downread), 'R', len(downread),
+                                     self.readdic[downread], downread))
+        stringresult = sorted(set(stringresult),
+                              key=lambda x: stringresult.index(x))
+        F.write(''.join(stringresult))
 
     def direct_pairing(self, minquery, maxquery, mintarget, maxtarget,
                        file, overlap=10):
