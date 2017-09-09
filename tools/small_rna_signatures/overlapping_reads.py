@@ -32,12 +32,20 @@ def Parser():
 
 class Map:
 
-    def __init__(self, bam_file):
+    def __init__(self, bam_file, output, minquery=23, maxquery=29,
+                 mintarget=23, maxtarget=29, overlap=10):
         self.bam_object = pysam.AlignmentFile(bam_file, 'rb')
+        self.output = output
+        self.query_range = range(minquery, maxquery + 1)
+        self.target_range = range(mintarget, maxtarget + 1)
+        self.overlap = overlap
         self.chromosomes = dict(zip(self.bam_object.references,
                                 self.bam_object.lengths))
-        self.all_query_positions = self.query_positions(self.bam_object)
+        self.alignement_dic = self.index_alignments(self.bam_object)
+        self.all_query_positions = self.query_positions(self.bam_object,
+                                                        overlap=self.overlap)
         self.readdic = self.make_readdic(self.bam_object)
+        self.pairing()
 
     def make_readdic(self, bam_object):
         readdic = defaultdict(int)
@@ -45,90 +53,67 @@ class Map:
             readdic[read.query_sequence] += 1
         return readdic
 
-    def query_positions(self, bam_object):
-        all_query_positions = defaultdict(list)
+    def index_alignments(self, bam_object):
+        '''
+        dic[(chrom, pos, polarity)]: [readseq1, readseq2, ...]
+        the list value is further converted in set
+        '''
+        dic = defaultdict(list)
         for chrom in self.chromosomes:
             for read in bam_object.fetch(chrom):
-                if not read.is_reverse:
-                    all_query_positions[chrom].append(
-                        read.reference_start)
+                if read.is_reverse:
+                    coord = read.reference_end-1
+                    pol = 'R'
                 else:
-                    all_query_positions[chrom].append(
-                        read.reference_end)
+                    coord = read.reference_start
+                    pol = 'F'
+                dic[(chrom, coord, pol)].append(read.query_sequence)
+        for key in dic:
+            dic[key] = set(dic[key])
+        return dic
+
+    def query_positions(self, bam_object, overlap):
+        all_query_positions = defaultdict(list)
+        for genomicKey in self.alignement_dic.keys():
+            chrom, coord, pol = genomicKey
+            if pol == 'F' and len(self.alignement_dic[(chrom,
+                                                      coord+overlap-1,
+                                                      'R')]) > 0:
+                all_query_positions[chrom].append(coord)
+        for chrom in all_query_positions:
             all_query_positions[chrom] = sorted(
                 list(set(all_query_positions[chrom])))
         return all_query_positions
 
-    def direct_pairing(self, minquery, maxquery, mintarget, maxtarget,
-                       file, overlap=10):
-        F = open(file, 'w')
-        query_range = range(minquery, maxquery + 1)
-        target_range = range(mintarget, maxtarget + 1)
+    def pairing(self):
+        F = open(self.output, 'w')
+        query_range = self.query_range
+        target_range = self.target_range
+        overlap = self.overlap
         stringresult = []
+        header_template = '>%s|coord=%s|strand %s|size=%s|nreads=%s\n%s\n'
         for chrom in sorted(self.chromosomes):
-            for pos in (self.all_query_positions[chrom]):
-                iterreads_1 = self.bam_object.fetch(chrom,
-                                                    start=pos, end=pos+overlap-1)
-                iterreads_2 = self.bam_object.fetch(chrom,
-                                                    start=pos, end=pos+overlap-1)
-                iterreads_3 = self.bam_object.fetch(chrom,
-                                                    start=pos, end=pos+overlap-1)
-                iterreads_4 = self.bam_object.fetch(chrom,
-                                                    start=pos, end=pos+overlap-1)
-                #  1
-                for queryread in iterreads_1:
-                    if queryread.reference_start == pos and \
-                        queryread.query_alignment_length in query_range \
-                            and not queryread.is_reverse:
-                        for targetread in iterreads_2:
-                            if (targetread.
-                                get_reference_positions()[-1]
-                                == queryread.get_reference_positions(
-                                   )[overlap-1] and
-                                targetread.query_alignment_length in
-                                    target_range and targetread.is_reverse):
-                                targetreadseq = self.revcomp(
-                                    targetread.query_sequence)
-                                stringresult.append(
-                                    '>%s|%s|%s|%s|n=%s\n%s\n' %
-                                    (chrom, queryread.reference_start+1,
-                                     'F', queryread.query_alignment_length,
-                                     self.readdic[queryread.query_sequence],
-                                     queryread.query_sequence))
-                                stringresult.append(
-                                    '>%s|%s|%s|%s|n=%s\n%s\n' %
-                                    (chrom, targetread.reference_start+1,
-                                     'R', targetread.query_alignment_length,
-                                     self.readdic[targetread.query_sequence],
-                                     targetreadseq))
-                #  2
-                for queryread in iterreads_3:
-                    if queryread.reference_end-1 == pos+overlap-1 and \
-                        queryread.query_alignment_length in query_range \
-                            and queryread.is_reverse:
-                        for targetread in iterreads_4:
-                            if (targetread.
-                                reference_start
-                                == pos and targetread.query_alignment_length
-                                    in target_range and not
-                                    targetread.is_reverse):
-                                queryreadseq = self.revcomp(
-                                    queryread.query_sequence)
-                                targetreadseq = targetread.query_sequence
-                                stringresult.append(
-                                    '>%s|%s|%s|%s|n=%s\n%s\n' %
-                                    (chrom, queryread.reference_start+1, 'R',
-                                     queryread.query_alignment_length,
-                                     self.readdic[queryread.query_sequence],
-                                     queryreadseq))
-                                stringresult.append(
-                                    '>%s|%s|%s|%s|n=%s\n%s\n' %
-                                    (chrom, targetread.reference_start+1,
-                                     'F', targetread.query_alignment_length,
-                                     self.readdic[targetread.query_sequence],
-                                     targetreadseq))
-        stringresult = sorted(set(stringresult),
-                              key=lambda x: stringresult.index(x))
+            for pos in self.all_query_positions[chrom]:
+                stringbuffer = []
+                uppers = self.alignement_dic[chrom, pos, 'F']
+                lowers = self.alignement_dic[chrom, pos+overlap-1, 'R']
+                if uppers and lowers:
+                    for upread in uppers:
+                        for downread in lowers:
+                            if (len(upread) in query_range and len(downread) in
+                                target_range) or (len(upread) in target_range
+                                                  and len(downread) in
+                                                  query_range):
+                                stringbuffer.append(
+                                    header_template %
+                                    (chrom, pos+1, '+', len(upread),
+                                     self.readdic[upread], upread))
+                                stringbuffer.append(
+                                    header_template %
+                                    (chrom, pos+overlap-len(downread)+1, '-',
+                                     len(downread), self.readdic[downread],
+                                     self.revcomp(downread)))
+                stringresult.extend(sorted(set(stringbuffer)))
         F.write(''.join(stringresult))
 
     def revcomp(self, sequence):
@@ -137,13 +122,7 @@ class Map:
         return "".join([antidict[i] for i in revseq])
 
 
-def main(input, minquery, maxquery, mintarget, maxtarget, output, overlap=10):
-    mapobj = Map(input)
-    mapobj.direct_pairing(minquery, maxquery, mintarget, maxtarget,
-                          output, overlap)
-
-
 if __name__ == "__main__":
     args = Parser()
-    main(args.input, args.minquery, args.maxquery, args.mintarget,
-         args.maxtarget, args.output, args.overlap)
+    mapobj = Map(args.input, args.output, args.minquery, args.maxquery,
+                 args.mintarget, args.maxtarget, args.overlap)

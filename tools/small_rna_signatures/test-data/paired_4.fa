@@ -1,0 +1,70 @@
+>FBgn0000155_roo|coord=3229|strand -|size=22|nreads=2
+TTTTGCCCAAGGAGACCGTCTA
+>FBgn0000155_roo|coord=3230|strand -|size=21|nreads=1
+TTTTGCCCAAGGAGACCGTCT
+>FBgn0000155_roo|coord=3231|strand -|size=20|nreads=2
+TTTTGCCCAAGGAGACCGTC
+>FBgn0000155_roo|coord=3241|strand +|size=20|nreads=1
+TTGGGCAAAAAACTGATTTC
+>FBgn0000652_F-element|coord=1554|strand -|size=20|nreads=1
+TTCGAGAAAATTACTTCAGG
+>FBgn0000652_F-element|coord=1564|strand +|size=20|nreads=1
+TTTTCTCGAAAGCAGCTAGT
+>FBgn0000652_F-element|coord=1564|strand +|size=20|nreads=2
+TTTTCTCGAAAGCAGCAAGT
+>FBgn0000652_F-element|coord=2471|strand -|size=21|nreads=2
+TTTAACCAAACTGCGGGAAAT
+>FBgn0000652_F-element|coord=2472|strand -|size=20|nreads=1
+TTTAACCAAACTGCGGGAAA
+>FBgn0000652_F-element|coord=2482|strand +|size=21|nreads=1
+TTTGGTTAAAGCTGAATGTCT
+>FBgn0000652_F-element|coord=2482|strand +|size=22|nreads=2
+TTTGGTTAAAGCTGAATGTCTG
+>FBgn0000652_F-element|coord=3513|strand -|size=21|nreads=3
+TTTCGCGAAATCCAAATTGGT
+>FBgn0000652_F-element|coord=3524|strand +|size=20|nreads=2
+TTTCGCGAAAGCCATGGAAC
+>FBgn0000652_F-element|coord=3524|strand +|size=21|nreads=2
+TTTCGCGAAAGCCACGGAACC
+>FBgn0000652_F-element|coord=3524|strand +|size=22|nreads=1
+TTTCGCGAAAGCCACGGAACCA
+>FBgn0002697_mdg1|coord=4646|strand -|size=21|nreads=1
+TTTCTCAGAAAAGTTCTTAAT
+>FBgn0002697_mdg1|coord=4657|strand +|size=22|nreads=1
+TTCTGAGAAATCACGCCACTTA
+>FBgn0002697_mdg1|coord=5354|strand -|size=21|nreads=2
+TTTCAACAAACACTTATGCTT
+>FBgn0002697_mdg1|coord=5365|strand +|size=21|nreads=2
+TTTGTTGAAAAGAGGAAAACA
+>FBgn0003519_Stalker|coord=6708|strand -|size=21|nreads=1
+TTTGTCTCAAAGCATTTTTGT
+>FBgn0003519_Stalker|coord=6719|strand +|size=21|nreads=1
+TTGAGACAAAACATTGCTAAT
+>FBgn0003908_R1A1-element|coord=4678|strand -|size=22|nreads=1
+TTTTCGCCAAGGCGCTGCACTT
+>FBgn0003908_R1A1-element|coord=4678|strand -|size=22|nreads=18
+TTTTCGCCAAGGCGCTGCACTC
+>FBgn0003908_R1A1-element|coord=4679|strand -|size=21|nreads=1
+TTTTCGCCAAGGCGCTGCACC
+>FBgn0003908_R1A1-element|coord=4679|strand -|size=21|nreads=6
+TTTTCGCCAAGGCGCTGCACT
+>FBgn0003908_R1A1-element|coord=4680|strand -|size=20|nreads=4
+TTTTCGCCAAGGCGCTGCAC
+>FBgn0003908_R1A1-element|coord=4690|strand +|size=20|nreads=2
+TTGGCGAAAACTGGATCTTC
+>FBgn0003908_R1A1-element|coord=4690|strand +|size=21|nreads=6
+TTGGCGAAAACTGGATCTTCG
+>FBgn0003908_R1A1-element|coord=4690|strand +|size=22|nreads=1
+TTGGCGAAAACTAGATCTTCGA
+>FBgn0003908_R1A1-element|coord=4690|strand +|size=22|nreads=8
+TTGGCGAAAACTGGATCTTCGA
+>FBgn0042682_Rt1b|coord=2908|strand -|size=22|nreads=1
+TTGGTAACAAGCTTGTAGGCGA
+>FBgn0042682_Rt1b|coord=2909|strand -|size=21|nreads=6
+TTGGTAACAAGCTTGTAGGCG
+>FBgn0042682_Rt1b|coord=2920|strand +|size=22|nreads=1
+TTGTTACCAAAAAGCTAAGGAG
+>FBgn0067385_invader6|coord=3014|strand -|size=20|nreads=1
+TTCTAGTCAAAGTCGAAGGA
+>FBgn0067385_invader6|coord=3024|strand +|size=21|nreads=1
+TTGACTAGAATGACTTAGACT

@@ -1,4 +1,4 @@
-<tool id="overlapping_reads" name="Get overlapping reads" version="0.9.3">
+<tool id="overlapping_reads" name="Get overlapping reads" version="0.9.4">
     <description />
     <requirements>
         <requirement type="package" version="0.11.2.1=py27_0">pysam</requirement>
@@ -47,6 +47,24 @@
             <param name="overlap" value="10" />
             <output file="paired_2.fa" ftype="fasta" name="output" />
         </test>
+        <test>
+            <param ftype="bam" name="input" value="sr_bowtie.bam" />
+            <param name="minquery" value="23" />
+            <param name="maxquery" value="29" />
+            <param name="mintarget" value="20" />
+            <param name="maxtarget" value="22" />
+            <param name="overlap" value="10" />
+            <output file="paired_3.fa" ftype="fasta" name="output" />
+        </test>
+        <test>
+            <param ftype="bam" name="input" value="sr_bowtie.bam" />
+            <param name="minquery" value="20" />
+            <param name="maxquery" value="22" />
+            <param name="mintarget" value="20" />
+            <param name="maxtarget" value="22" />
+            <param name="overlap" value="10" />
+            <output file="paired_4.fa" ftype="fasta" name="output" />
+        </test>
     </tests>
     <help>
 
@@ -70,10 +88,12 @@ there are *target* reads (of specified size) that align on the opposite strand w
 overlap.
 
 Searching query reads of 20-22 nt that overlap by 10 nt with target
-reads of 23-29 nt is different from searching query reads of 23-29 nt that overlap by 10 nt
-with target reads of 20-22 nt. i.e, searching for siRNAs that pair with piRNAs is distinct
-from searching for siRNAs that pairs with piRNAs, although of course the number of possibly
-formed piRNA/siRNA pairs is the same as the number of possibly formed siRNA/piRNA pairs.
+reads of 23-29 nt is equivalent to searching query reads of 23-29 nt that overlap by 10 nt
+with target reads of 20-22 nt. i.e, searching for siRNAs that pair with piRNAs is equivalent
+to searching for siRNAs that pairs with piRNAs. In contrast, searching query reads of 20-22 nt
+that overlap by 10 nt with target reads of 23-29 nt is different from searching query reads of
+23-29 nt that overlap by 10 nt with target reads of 23-29 nt, since the number of "heterotypic"
+pairs of reads is likely to be different from the number of "homotypic" pairs of reads.
 
 *Overlap*
 The number of nucleotides by which the pairs of sequences will overlap
@@ -84,17 +104,18 @@ The number of nucleotides by which the pairs of sequences will overlap
 
 a fasta file of pairable reads such as :
 
->FBgn0000004_17.6|5855|F|23|n=1
-
-TTGACGAAAATGATCGAGTGGAT
-
->FBgn0000004_17.6|5839|R|26|n=1
+>FBgn0000004_17.6|coord=5839|strand -|size=26|nreads=1
 
 TTTTCGTCAATTGTGCCAAATAGGTA
 
+>FBgn0000004_17.6|coord=5855|strand +|size=23|nreads=1
+
+TTGACGAAAATGATCGAGTGGAT
+
+
 where FBgn0000004_17.6 stands for the chromosome, 5839 stands for the 1-based read position, 
-R stand for reverse strand (F forward strand), 26 stands for the size of the sequence and
-n=1 stands for the number of reads of the sequence in the dataset.
+'strand -' stands for lower strand of chromosome, 26 stands for the size of the sequence and
+nreads=1 stands for the number of reads of the sequence in the dataset.
 
 the second sequence in this example corresponds to 1 read that overlap by 10 nt with
 1 read of the first sequence.
