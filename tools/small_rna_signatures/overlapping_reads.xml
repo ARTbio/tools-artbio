@@ -120,6 +120,11 @@ nreads=1 stands for the number of reads of the sequence in the dataset.
 the second sequence in this example corresponds to 1 read that overlap by 10 nt with
 1 read of the first sequence.
 
+The tool also returns in the standard output the numbers of pairs of reads that
+can be formed simultaneously in silico. Note that these numbers are distinct from the numbers
+of pairs of read alignments (as computed by the small_rna_signature tool) when analysis is
+performed with multi-mapping reads.
+
         </help>
     <citations>
             <citation type="doi">10.1007/978-1-4939-0931-5_12</citation>

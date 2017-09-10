@@ -53,7 +53,6 @@ class Map:
                                 self.bam_object.lengths))
         self.map_dict = self.create_map(self.bam_object)
         self.query_positions = self.compute_query_positions()
-#        self.Z.write(self.compute_signature_z())
         self.Z.write(self.compute_signature_pairs())
         self.H.write(self.compute_signature_h())
         self.H.close()
@@ -83,11 +82,12 @@ class Map:
         ''' this method does not filter on read size, just forward reads
         that overlap reverse reads in the overlap range'''
         all_query_positions = defaultdict(list)
-        scope = self.scope
         for genomicKey in self.map_dict.keys():
             chrom, coord, pol = genomicKey
             for i in self.scope:
-                if pol == 'F' and len(self.map_dict[chrom, coord+i-1, 'R']) > 0:
+                if pol == 'F' and len(self.map_dict[chrom,
+                                                    coord+i-1,
+                                                    'R']) > 0:
                     all_query_positions[chrom].append(coord)
                     break
         for chrom in all_query_positions:
@@ -153,34 +153,6 @@ class Map:
                     Target_table[key[0]][coordinate] = \
                         Target_table[key[0]].get(coordinate, 0) + 1
         return Query_table, Target_table
-
-    def compute_signature_z(self):
-        Query_table, Target_table = self.signature_tables()
-        scope = self.scope
-        frequency_table = defaultdict(dict)
-        for chrom in self.chromosomes:
-            for overlap in scope:
-                frequency_table[chrom][overlap] = 0
-        for chrom in Query_table:
-            for coord in Query_table[chrom]:
-                for overlap in scope:
-                    frequency_table[chrom][overlap] += min(
-                        Query_table[chrom][coord],
-                        Target_table[chrom].get(-coord - overlap + 1, 0))
-        # since we want the number of pairs, not the number or paired reads
-        # to do: what in complex cases
-        # with query and target sizes partially overlap ?
-        for chrom in frequency_table:
-            for overlap in frequency_table[chrom]:
-                frequency_table[chrom][overlap] /= 2
-        # compute overlaps for all chromosomes merged
-        for overlap in scope:
-            accumulator = []
-            for chrom in frequency_table:
-                if chrom != 'all_chromosomes':
-                    accumulator.append(frequency_table[chrom][overlap])
-            frequency_table['all_chromosomes'][overlap] = sum(accumulator)
-        return self.stringify_table(frequency_table)
 
     def compute_signature_h(self):
         scope = self.scope
