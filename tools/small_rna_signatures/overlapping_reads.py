@@ -85,7 +85,36 @@ class Map:
                 list(set(all_query_positions[chrom])))
         return all_query_positions
 
+    def countpairs(self, uppers, lowers):
+        up_queries = [seq for seq in uppers if len(seq) in self.query_range]
+        up_queries_expanded = []
+        for seq in up_queries:
+            expand = [seq for seq in range(self.readdic[seq])]
+            up_queries_expanded.extend(expand)
+        up_queries = up_queries_expanded
+        up_targets = [seq for seq in uppers if len(seq) in self.target_range]
+        up_targets_expanded = []
+        for seq in up_targets:
+            expand = [seq for seq in range(self.readdic[seq])]
+            up_queries_expanded.extend(expand)
+        up_targets = up_targets_expanded
+        down_queries = [seq for seq in lowers if len(seq) in self.query_range]
+        down_queries_expanded = []
+        for seq in down_queries:
+            expand = [seq for seq in range(self.readdic[seq])]
+            down_queries_expanded.extend(expand)
+        down_queries = down_queries_expanded
+        down_targets = [seq for seq in lowers if len(seq) in self.target_range]
+        down_targets_expanded = []
+        for seq in down_targets:
+            expand = [seq for seq in range(self.readdic[seq])]
+            down_targets_expanded.extend(expand)
+        down_targets = down_targets_expanded
+        return min(len(up_queries),len(down_queries)) + min(
+                   len(down_targets), len(up_queries))
+
     def pairing(self):
+        number_pairs = 0
         F = open(self.output, 'w')
         query_range = self.query_range
         target_range = self.target_range
@@ -97,6 +126,7 @@ class Map:
                 stringbuffer = []
                 uppers = self.alignement_dic[chrom, pos, 'F']
                 lowers = self.alignement_dic[chrom, pos+overlap-1, 'R']
+                number_pairs += self.countpairs(uppers, lowers)
                 if uppers and lowers:
                     for upread in uppers:
                         for downread in lowers:
@@ -114,6 +144,7 @@ class Map:
                                      len(downread), self.readdic[downread],
                                      self.revcomp(downread)))
                 stringresult.extend(sorted(set(stringbuffer)))
+        print('%s pairs of reads could be formed' % number_pairs)
         F.write(''.join(stringresult))
 
     def revcomp(self, sequence):
