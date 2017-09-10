@@ -86,47 +86,48 @@ class Map:
         return all_query_positions
 
     def countpairs(self, uppers, lowers):
-        up_queries = [seq for seq in uppers if len(seq) in self.query_range]
-        up_queries_expanded = []
-        for seq in up_queries:
-            expand = [seq for seq in range(self.readdic[seq])]
-            up_queries_expanded.extend(expand)
-        up_queries = up_queries_expanded
-        up_targets = [seq for seq in uppers if len(seq) in self.target_range]
-        up_targets_expanded = []
-        for seq in up_targets:
-            expand = [seq for seq in range(self.readdic[seq])]
-            up_queries_expanded.extend(expand)
-        up_targets = up_targets_expanded
-        down_queries = [seq for seq in lowers if len(seq) in self.query_range]
-        down_queries_expanded = []
-        for seq in down_queries:
-            expand = [seq for seq in range(self.readdic[seq])]
-            down_queries_expanded.extend(expand)
-        down_queries = down_queries_expanded
-        down_targets = [seq for seq in lowers if len(seq) in self.target_range]
-        down_targets_expanded = []
-        for seq in down_targets:
-            expand = [seq for seq in range(self.readdic[seq])]
-            down_targets_expanded.extend(expand)
-        down_targets = down_targets_expanded
-        return min(len(up_queries),len(down_queries)) + min(
-                   len(down_targets), len(up_queries))
+        query_range = self.query_range
+        target_range = self.target_range
+        uppers = [seq for seq in uppers if (len(seq) in query_range or len(seq) in target_range)]
+        uppers_expanded = []
+        for seq in uppers:
+            expand = [seq for i in range(self.readdic[seq])]
+            uppers_expanded.extend(expand)
+        uppers = uppers_expanded
+        lowers = [seq for seq in lowers if (len(seq) in query_range or len(seq) in target_range)]
+        lowers_expanded = []
+        for seq in lowers:
+            expand = [seq for i in range(self.readdic[seq])]
+            lowers_expanded.extend(expand)
+        lowers = lowers_expanded
+        paired = []
+        for upread in uppers:
+            for downread in lowers:
+                if (len(upread) in query_range and len(downread) in
+                    target_range) or (len(upread) in target_range and
+                                      len(downread) in query_range):
+                    paired.append(upread)
+                    lowers.remove(downread)
+                    break
+        return len(paired)
 
     def pairing(self):
-        number_pairs = 0
         F = open(self.output, 'w')
         query_range = self.query_range
         target_range = self.target_range
         overlap = self.overlap
         stringresult = []
         header_template = '>%s|coord=%s|strand %s|size=%s|nreads=%s\n%s\n'
+        total_pairs = 0
+        print ('Chromosome\tNbre of pairs')
         for chrom in sorted(self.chromosomes):
+            number_pairs = 0
             for pos in self.all_query_positions[chrom]:
                 stringbuffer = []
                 uppers = self.alignement_dic[chrom, pos, 'F']
                 lowers = self.alignement_dic[chrom, pos+overlap-1, 'R']
                 number_pairs += self.countpairs(uppers, lowers)
+                total_pairs += number_pairs
                 if uppers and lowers:
                     for upread in uppers:
                         for downread in lowers:
@@ -144,7 +145,8 @@ class Map:
                                      len(downread), self.readdic[downread],
                                      self.revcomp(downread)))
                 stringresult.extend(sorted(set(stringbuffer)))
-        print('%s pairs of reads could be formed' % number_pairs)
+            print('%s\t%s' % (chrom, number_pairs))
+        print('Total nbre of pairs that can be simultaneously formed\t%s' % total_pairs)
         F.write(''.join(stringresult))
 
     def revcomp(self, sequence):
