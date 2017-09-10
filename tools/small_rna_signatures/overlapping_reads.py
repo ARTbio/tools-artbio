@@ -85,6 +85,32 @@ class Map:
                 list(set(all_query_positions[chrom])))
         return all_query_positions
 
+    def countpairs(self, uppers, lowers):
+        query_range = self.query_range
+        target_range = self.target_range
+        uppers = [seq for seq in uppers if (len(seq) in query_range or len(seq) in target_range)]
+        uppers_expanded = []
+        for seq in uppers:
+            expand = [seq for i in range(self.readdic[seq])]
+            uppers_expanded.extend(expand)
+        uppers = uppers_expanded
+        lowers = [seq for seq in lowers if (len(seq) in query_range or len(seq) in target_range)]
+        lowers_expanded = []
+        for seq in lowers:
+            expand = [seq for i in range(self.readdic[seq])]
+            lowers_expanded.extend(expand)
+        lowers = lowers_expanded
+        paired = []
+        for upread in uppers:
+            for downread in lowers:
+                if (len(upread) in query_range and len(downread) in
+                    target_range) or (len(upread) in target_range and
+                                      len(downread) in query_range):
+                    paired.append(upread)
+                    lowers.remove(downread)
+                    break
+        return len(paired)
+
     def pairing(self):
         F = open(self.output, 'w')
         query_range = self.query_range
@@ -92,11 +118,16 @@ class Map:
         overlap = self.overlap
         stringresult = []
         header_template = '>%s|coord=%s|strand %s|size=%s|nreads=%s\n%s\n'
+        total_pairs = 0
+        print ('Chromosome\tNbre of pairs')
         for chrom in sorted(self.chromosomes):
+            number_pairs = 0
             for pos in self.all_query_positions[chrom]:
                 stringbuffer = []
                 uppers = self.alignement_dic[chrom, pos, 'F']
                 lowers = self.alignement_dic[chrom, pos+overlap-1, 'R']
+                number_pairs += self.countpairs(uppers, lowers)
+                total_pairs += number_pairs
                 if uppers and lowers:
                     for upread in uppers:
                         for downread in lowers:
@@ -114,6 +145,8 @@ class Map:
                                      len(downread), self.readdic[downread],
                                      self.revcomp(downread)))
                 stringresult.extend(sorted(set(stringbuffer)))
+            print('%s\t%s' % (chrom, number_pairs))
+        print('Total nbre of pairs that can be simultaneously formed\t%s' % total_pairs)
         F.write(''.join(stringresult))
 
     def revcomp(self, sequence):
