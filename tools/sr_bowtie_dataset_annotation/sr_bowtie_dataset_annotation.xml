@@ -1,0 +1,161 @@
+<tool id="sr_bowtie_dataset_annotation" name="Annotate smRNA dataset" version="2.0.0">
+  <description>by iterative alignments with sRbowtie</description>
+  <requirements>
+        <requirement type="package" version="1.1.2">bowtie</requirement>
+  </requirements>
+  <command  detect_errors="exit_code"><![CDATA[
+        #if $refGenomeSource1.genomeSource == "history":
+            bowtie-build -f $refGenomeSource1.ownFile genome  1>/dev/null &&
+            ln -s -f '$refGenomeSource1.ownFile' genome.fa &&
+            #set index_path = 'genome'
+        #else:
+            #set index_path = $refGenomeSource1.index.fields.path
+        #end if
+        #if $input.extension == "fasta":
+            #set format = "-f"
+        #elif $input.extension == "fastq":
+            #set format = "-q"
+        #end if
+        #if $format == '-f':
+            input_nbr_read=\$(( \$(wc -l < $input)/2)) &&
+        #elif $format == '-q':
+            input_nbr_read=\$(( \$(wc -l < $input)/4)) &&
+        #end if
+        #set method_prefix = "-v %s -k 1 --best" % str($mismatches)
+        bowtie -p \${GALAXY_SLOTS:-4}
+               $method_prefix
+               --al matched.fa
+               --un unmatched.fa
+               --suppress 6,7,8
+               $index_path $format '$input' > tabular_bowtie_output.tab &&
+        genome_aligned=\$(wc -l < matched.fa) &&
+        genome_aligned=\$(( \$genome_aligned/2)) &&
+        echo -e "$refGenomeSource1.ownFile.name Matched\t\${genome_aligned}\n" > $output &&
+        #set counter = 0
+        #for $i in $AdditionalQueries:
+            rm genome.fa &&
+            #set $counter += 1
+            #if $counter != 1:
+                #set input = "class_unmatched.fa"
+            #else:
+                #set input = "matched.fa"
+            #end if
+            touch temp_class_matched.fa temp_class_unmatched.fa &&
+            bowtie-build -f $i.ownFile genome  1>/dev/null &&
+            ln -s -f '$i.ownFile' genome.fa &&
+            #set index_path = 'genome'
+            bowtie -p \${GALAXY_SLOTS:-4}
+                $method_prefix
+                --al temp_class_matched.fa
+                --un temp_class_unmatched.fa
+                --suppress 6,7,8
+                $index_path $format '$input' > tabular_bowtie_output.tab &&
+            class_aligned=\$(( \$(wc -l < temp_class_matched.fa)/2)) &&
+            class_unaligned=\$(( \$(wc -l < temp_class_unmatched.fa)/2)) &&
+            mv temp_class_unmatched.fa class_unmatched.fa &&
+            echo -e "$i.ownFile.name Matched\t\${class_aligned}\n" >> $output &&
+        #end for
+        remaining=\$(( \$(wc -l < class_unmatched.fa)/2)) &&
+        echo -e "Unmatched to previous indexes\t\${remaining}\n" >> $output
+        ]]></command>
+  <inputs>
+      <param name="input" type="data" format="fasta,fastq" label="Input file: reads clipped from their adapter" help="Only with clipped, raw fasta or fastq files"/>
+    <param name="mismatches" type="select" label="Number of mismatches allowed" help="specify the number of mismatches allowed during alignments">
+        <option value="0">0</option>
+        <option value="1" selected="true">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+    </param>
+<!-- First bowtie index selection -->
+    <conditional name="refGenomeSource1">
+      <param name="genomeSource" type="select" label="Will you select a reference genome from your history or use a built-in index?" help="Bowtie Built-ins were indexed using default options">
+        <option value="indexed">Use a built-in index</option>
+        <option value="history">Use one from the history</option>
+      </param>
+      <when value="indexed">
+        <param name="index" type="select" label="Select a DNA reference index" help="if your genome of interest is not listed - contact instance administrator">
+          <options from_data_table="bowtie_indexes"/>
+        </param>
+      </when>
+      <when value="history">
+        <param name="ownFile" type="data" format="fasta" label="Select a fasta file, to serve as index reference" />
+      </when>
+    </conditional>
+<!-- End of first bowtie index selection -->
+<!-- other  bowtie index selections from fasta in history (mandatory) -->
+    <repeat name="AdditionalQueries" title="Additional Alignment Step">
+        <param name="ownFile" type="data" format="fasta" label="Select a fasta file, to serve as index reference" />
+    </repeat>
+<!-- End of other bowtie index selections -->
+   </inputs>
+   <outputs>
+   <data format="tabular" name="output" label="Cascade Annotation Analysis">
+       <actions>
+           <action name="column_names" type="metadata" default="Reference Index,Number of reads" />
+       </actions>
+    </data>
+   </outputs>
+    <tests>
+        <test>
+            <param name="input" value ="sample1.fa" ftype="fasta" />
+            <param name="genomeSource" value="history" />
+            <param name="ownFile" value ="2L-tail.fa" ftype="fasta" />
+            <param name="AdditionalQueries_0|ownFile" value="dme_miR21_hairpin.fa" ftype="fasta" />
+            <param name="AdditionalQueries_1|ownFile" value="Ensembl_transposon_set.fa" ftype="fasta" />
+            <output name="output" ftype="tabular" file="sample1_output.tab" />
+        </test>
+        <test>
+            <param name="input" value ="sample.fastq" ftype="fastq" />
+            <param name="genomeSource" value="history" />
+            <param name="ownFile" value ="2L-tail.fa" ftype="fasta" />
+            <param name="AdditionalQueries_0|ownFile" value="dme_miR21_hairpin.fa" ftype="fasta" />
+            <param name="AdditionalQueries_1|ownFile" value="Ensembl_transposon_set.fa" ftype="fasta" />
+            <output name="output" ftype="tabular" file="sample_output.tab" />
+        </test>
+    </tests>
+  <help>
+
+**Introduction**
+
+Bowtie_ is a short read aligner designed to be ultrafast and memory-efficient.
+A generic "Map with Bowtie for Illumina" Galaxy tool is available in the main Galaxy distribution.
+
+Here The sRbowtie wrapper specifically works with short reads FASTA or FASTQ inputs
+(-v bowtie mode, with -k 1) which has to be clipped from adapter before alignment.
+
+.. _Bowtie: http://bowtie-bio.sourceforge.net/index.shtml
+
+
+------
+
+**What it does**
+
+.. class:: infomark
+
+This script uses the sRbowtie wrapper to iteratively match reads on a reference indexes.
+Read that aligned to the first reference are realigned to the second reference.
+From this point, unaligned reads are taken as input for alignment to the third reference, etc.
+
+
+Reads are Matched on DNA references (both strands) as fast as possible, without taking care of mapping issues
+
+*-v [0,1,2,3] -k 1 --best -p 12 --suppress 6,7,8*
+
+unaligned reads at step N are used as input for sRbowtie at step N+1
+
+-----
+
+**Input formats**
+
+.. class:: warningmark
+
+*Reads must be clipped from their adapter and provided in a FASTA or FASTQ format*
+
+-----
+
+**OUTPUTS**
+
+**Annotation table in a tabular format**
+
+  </help>
+</tool>

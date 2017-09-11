@@ -1,0 +1,13 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: sr_bowtie_dataset_annotation
+description: Maps iteratively small RNA sequencing datasets to reference sequences.
+long_description: |
+  Maps iteratively small RNA sequencing datasets to reference sequences, in order to generate annotation
+  (i.e. number of aligned reads for each reference) of these datasets.
+categories:
+  - RNA
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/sr_bowtie_dataset_annotation
+toolshed:
+  - toolshed
