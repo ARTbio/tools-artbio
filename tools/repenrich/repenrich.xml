@@ -1,4 +1,4 @@
-<tool id="repenrich" name="RepEnrich" version="1.4.0">
+<tool id="repenrich" name="RepEnrich" version="1.4.1">
     <description>Repeat Element Profiling</description>
     <requirements>
         <requirement type="package" version="1.2.0">bowtie</requirement>
@@ -163,7 +163,11 @@ Users may filter this file so that it contains only desired items (for instance 
  
 **Outputs**
 
-(1) Fraction counts, (2) Family fraction counts and (3) Class fraction counts are returned in tabular format, for further statistical tests differential expression analysis or graphics 
+(1) Fraction counts, (2) Family fraction counts and (3) Class fraction counts are returned in tabular format,
+for further statistical tests differential expression analysis or graphics.
+
+The "aligned_reads.tab" output file contains a single value corresponding to the number of reads that were aligned to
+transposons. This value is used in downstream analysis by the edger-repenrich tool.
 
 **RepEnrich**
 
