@@ -101,10 +101,10 @@ filesi <- fromJSON(opt$alignmentA, method = "C", unexpected.escape = "error")
 filesj <- fromJSON(opt$alignmentB, method = "C", unexpected.escape = "error")
 sizes <- c()
 for (file in filesi) {
-    sizes <- c(sizes, read.delim(file, header=FALSE)[1,1])
+    sizes <- c(sizes, read.delim(file, header=TRUE)[1,1])
     }
 for (file in filesj) {
-    sizes <- c(sizes, read.delim(file, header=FALSE)[1,1])
+    sizes <- c(sizes, read.delim(file, header=TRUE)[1,1])
     }
 
 # build a meta data object
