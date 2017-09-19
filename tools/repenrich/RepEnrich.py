@@ -431,34 +431,34 @@ print('Writing final output and removing intermediate files...')
 if allcountmethod == "TRUE":
     fout1 = open(outputfolder + os.path.sep + outputfile_prefix
                  + '_total_counts.txt', 'w')
-    for key in reptotalcounts.keys():
+    for key in sorted(reptotalcounts.keys()):
         fout1.write(str(key) + '\t' + repeatclass[key] + '\t' +
                     repeatfamily[key] + '\t' + str(reptotalcounts[key])
                     + '\n')
     fout2 = open(outputfolder + os.path.sep + outputfile_prefix
                  + '_class_total_counts.txt', 'w')
-    for key in classtotalcounts.keys():
+    for key in sorted(classtotalcounts.keys()):
         fout2.write(str(key) + '\t' + str(classtotalcounts[key]) + '\n')
     fout3 = open(outputfolder + os.path.sep + outputfile_prefix
                  + '_family_total_counts.txt', 'w')
-    for key in familytotalcounts.keys():
+    for key in sorted(familytotalcounts.keys()):
         fout3.write(str(key) + '\t' + str(familytotalcounts[key]) + '\n')
     fout4 = open(outputfolder + os.path.sep + outputfile_prefix +
                  '_unique_counts.txt', 'w')
-    for key in repcounts2.keys():
+    for key in sorted(repcounts2.keys()):
         fout4.write(str(key) + '\t' + repeatclass[key] + '\t' +
                     repeatfamily[key] + '\t' + str(repcounts2[key]) + '\n')
         fout5 = open(outputfolder + os.path.sep + outputfile_prefix
                      + '_class_fraction_counts.txt', 'w')
-    for key in classfractionalcounts.keys():
+    for key in sorted(classfractionalcounts.keys()):
         fout5.write(str(key) + '\t' + str(classfractionalcounts[key]) + '\n')
     fout6 = open(outputfolder + os.path.sep + outputfile_prefix +
                  '_family_fraction_counts.txt', 'w')
-    for key in familyfractionalcounts.keys():
+    for key in sorted(familyfractionalcounts.keys()):
         fout6.write(str(key) + '\t' + str(familyfractionalcounts[key]) + '\n')
     fout7 = open(outputfolder + os.path.sep + outputfile_prefix
                  + '_fraction_counts.txt', 'w')
-    for key in fractionalcounts.keys():
+    for key in sorted(fractionalcounts.keys()):
         fout7.write(str(key) + '\t' + repeatclass[key] + '\t' +
                     repeatfamily[key] + '\t' + str(int(fractionalcounts[key]))
                     + '\n')
@@ -472,15 +472,15 @@ if allcountmethod == "TRUE":
 else:
     fout1 = open(outputfolder + os.path.sep + outputfile_prefix +
                  '_class_fraction_counts.txt', 'w')
-    for key in classfractionalcounts.keys():
+    for key in sorted(classfractionalcounts.keys()):
         fout1.write(str(key) + '\t' + str(classfractionalcounts[key]) + '\n')
     fout2 = open(outputfolder + os.path.sep + outputfile_prefix +
                  '_family_fraction_counts.txt', 'w')
-    for key in familyfractionalcounts.keys():
+    for key in sorted(familyfractionalcounts.keys()):
         fout2.write(str(key) + '\t' + str(familyfractionalcounts[key]) + '\n')
     fout3 = open(outputfolder + os.path.sep + outputfile_prefix +
                  '_fraction_counts.txt', 'w')
-    for key in fractionalcounts.keys():
+    for key in sorted(fractionalcounts.keys()):
         fout3.write(str(key) + '\t' + repeatclass[key] + '\t' +
                     repeatfamily[key] + '\t' + str(int(fractionalcounts[key]))
                     + '\n')
