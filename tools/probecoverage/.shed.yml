@@ -1,0 +1,20 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: probecoverage
+description: computes and plots read coverage of genomic regions by sequencing datasets 
+long_description: |
+  Computes read coverage of genomic regions by sequencing datasets using bedtools multicov.
+  Plot data as cumulative distribution of regions with coverage > x
+  This tool is adapted to quality control of sequencing of libraries enriched with capture probes
+
+categories:
+  - Sequence Analysis
+  - Genomic Interval Operations
+  - Graphics
+  - Statistics
+
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/probecoverage
+toolshed:
+  - toolshed
+
