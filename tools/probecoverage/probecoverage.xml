@@ -44,7 +44,7 @@
 
     <tests>
         <test>
-            <param name="inputs" value="sample1,sample2,sample2" ftype="bam"/>
+            <param name="inputs" value="sample1,sample2,sample3" ftype="bam"/>
             <param name="bed" value="probes.bed" ftype="bed"/>
             <output file="coverage.tab" name="bedtools_table" />
             <output file="graph.pdf" name="distribution" />
