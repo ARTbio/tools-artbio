@@ -32,6 +32,7 @@ colnames(Table) <- headers
 ## function
 
 cumul <- function(x,y) sum(Table[,y]/(Table$end-Table$start) > x)/length(Table$chromosome)
+scaleFUN <- function(x) sprintf("%.3f", x)
 
 ## end of function
 ## let's do a dataframe before plotting
@@ -50,12 +51,15 @@ graphpoints <- melt(graphpoints, id.vars="Depth", variable.name="Samples", value
 ## GRAPHS
 
 pdf(file=args$output)
-ggplot(data=graphpoints, aes(x=Depth, y=sample_value, group=Samples, colour=Samples)) +
+ggplot(data=graphpoints, aes(x=Depth, y=sample_value, colour=Samples)) +
       geom_line(size=1) +
       scale_x_continuous(trans='log2', breaks = 2^(seq(0,log(maxdepth, 2)))) +
-      scale_y_continuous(breaks = seq(0, maxfrac, by=maxfrac/10)) +
+      scale_y_continuous(breaks = seq(0, maxfrac, by=maxfrac/10), labels=scaleFUN) +
       labs(x=args$xlab, y=args$ylab, title=args$title) +
       theme(legend.position="top", legend.title=element_blank(), legend.text=element_text(colour="blue", size=7))
+      
+      
+##      facet_wrap(~Samples, ncol=2)
 
 devname=dev.off()
 
