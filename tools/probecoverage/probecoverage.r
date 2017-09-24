@@ -40,7 +40,12 @@ scaleFUN <- function(x) sprintf("%.3f", x)
 
 ## end of function
 ## let's do a dataframe before plotting
-maxdepth <- trunc(max(Table[,5:length(Table)]/(Table$end-Table$start))) + 20
+if (args$method == 'bedtools') {
+    maxdepth <- trunc(max(Table[,5:length(Table)]/(Table$end-Table$start))) + 20
+    } else {
+    maxdepth <- trunc(max(Table[,5:length(Table)])) + 20
+    }
+
 graphpoints <- data.frame(1:maxdepth)
 i <- 5
 for (colonne in colnames(Table)[5:length(colnames(Table))]) {
