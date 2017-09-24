@@ -1,4 +1,4 @@
-<tool id="probecoverage" name="Probe Coverage" version="0.2.0">
+<tool id="probecoverage" name="Probe Coverage" version="0.3.0">
   <description></description>
   <requirements>
         <requirement type="package" version="1.4.1">samtools</requirement>
@@ -14,16 +14,25 @@
       #for $file in $inputs
           samtools index '$file' &&
       #end for
-      bedtools multicov
+      #if $method == 'pysam':
+          python $__tool_directory__/multicov.py
+      #else:
+          bedtools multicov
+      #end if
           -bams
               #for $file in $inputs
                   '$file'
               #end for
-          -bed '$bed' > $bedtools_table &&
+          -bed '$bed' > $coverage_dataframe &&
       Rscript '$__tool_directory__'/probecoverage.r
-          --input '$bedtools_table' 
+          --input '$coverage_dataframe' 
           --title 'Probe coverage depth (cumulative distribution)'
-          --xlab 'Depth'
+          --xlab
+          #if $method == 'pysam':
+              'Depth (pysam method)'
+          #else:
+              'Depth (bedtools muticov method)'
+          #end if
           --ylab 'Fraction of covered regions with coverage >= Depth'
           --output '$distribution'
           --sample "
@@ -33,13 +42,16 @@
               "
               
   ]]></command>
- <inputs>
-   <param name="inputs" type="data" format="bam" label="Select multiple Bam alignments to parse" multiple="True"/>
-   <param name="bed" type="data" format="bed" label="Select a bed file describing the genomic regions to analyze" />
- </inputs>
+<inputs>
+    <param name="inputs" type="data" format="bam" label="Select multiple Bam alignments to parse" multiple="True"/>
+    <param name="bed" type="data" format="bed" label="Select a bed file describing the genomic regions to analyze" />
+    <param name="method" type="boolean" falsevalue="bedtools" checked="false" truevalue="pysam"
+           help="coverage is computed using bedtools multicov (default) or pysam module"
+           label="Compute coverage with pysam (bedtools by default)" />
+</inputs>
 
  <outputs>
-   <data format="tabular" name="bedtools_table" label="bedtools multicov output" />
+   <data format="tabular" name="coverage_dataframe" label="coverage table" />
    <data format="pdf" name="distribution" label="Cumulative distribution of region coverages" />
 </outputs>
 
@@ -47,8 +59,16 @@
         <test>
             <param name="inputs" value="sample1,sample2,sample3" ftype="bam"/>
             <param name="bed" value="probes.bed" ftype="bed"/>
-            <output file="coverage.tab" name="bedtools_table" />
+            <param name="method" value="bedtools" />
+            <output file="coverage.tab" name="coverage_dataframe" />
             <output file="graph.pdf" name="distribution" />
+        </test>
+        <test>
+            <param name="inputs" value="sample1,sample2,sample3" ftype="bam"/>
+            <param name="bed" value="probes.bed" ftype="bed"/>
+            <param name="method" value="pysam" />
+            <output file="coverage_pysam.tab" name="coverage_dataframe" />
+            <output file="graph_pysam.pdf" name="distribution" />
         </test>
     </tests>
 
