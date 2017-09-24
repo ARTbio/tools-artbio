@@ -26,6 +26,7 @@
               #end for
           -bed '$bed' > $coverage_dataframe &&
       Rscript '$__tool_directory__'/probecoverage.r
+          --method '$method'
           --input '$coverage_dataframe' 
           --title 'Probe coverage depth (cumulative distribution)'
           --xlab

@@ -12,6 +12,7 @@ option_list <- list(
     make_option("--xlab", type = "character", help="X-axis legend"),
     make_option("--ylab", type = "character", help="Y-axis legend"),
     make_option("--sample", type = "character", help="a space separated of sample labels"),
+    make_option("--method", type = "character", help="bedtools or pysam"),
     make_option(c("-o", "--output"), type = "character", help="path to the pdf plot")
     )
  
@@ -30,8 +31,11 @@ colnames(Table) <- headers
 }
 
 ## function
-
-cumul <- function(x,y) sum(Table[,y]/(Table$end-Table$start) > x)/length(Table$chromosome)
+if (args$method == 'bedtools') {
+    cumul <- function(x,y) sum(Table[,y]/(Table$end-Table$start) > x)/length(Table$chromosome)
+    } else {
+    cumul <- function(x,y) sum(Table[,y] > x)/length(Table$chromosome)
+    }
 scaleFUN <- function(x) sprintf("%.3f", x)
 
 ## end of function
