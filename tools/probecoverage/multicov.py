@@ -1,5 +1,4 @@
 import argparse
-from collections import defaultdict
 
 import numpy
 
@@ -10,10 +9,11 @@ def Parser():
     the_parser = argparse.ArgumentParser()
     the_parser.add_argument('-bams', '--bams', dest='bams', required=True,
                             nargs='+', help='list of input BAM files')
-    the_parser.add_argument('-bed', '--bed', dest='bed',
-                            required=True, help='Coordinates of probes in a bed file')
+    the_parser.add_argument('-bed', '--bed', dest='bed', required=True,
+                            help='Coordinates of probes in a bed file')
     args = the_parser.parse_args()
     return args
+
 
 def compute_coverage(bam, bed, quality=10):
     bam_object = pysam.AlignmentFile(bam, 'rb')
@@ -53,6 +53,7 @@ def main(bams, bed):
         line_counter += 1
         suffix = '\t'.join(crossline)
         print('%s\t%s' % (prefix, suffix))
+
 
 if __name__ == "__main__":
     args = Parser()
