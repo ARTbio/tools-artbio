@@ -1,4 +1,4 @@
-<tool id="probecoverage" name="Probe Coverage" version="0.3.0">
+<tool id="probecoverage" name="Probe Coverage" version="0.4.0">
   <description></description>
   <requirements>
         <requirement type="package" version="1.4.1">samtools</requirement>
@@ -26,6 +26,7 @@
               #end for
           -bed '$bed' > $coverage_dataframe &&
       Rscript '$__tool_directory__'/probecoverage.r
+          --method '$method'
           --input '$coverage_dataframe' 
           --title 'Probe coverage depth (cumulative distribution)'
           --xlab
