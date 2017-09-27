@@ -1,0 +1,32 @@
+<tool id="justdiff" name="Differences between two files" version="0.5.0">
+  <description></description>
+  <stdio>
+      <exit_code range="1:" level="fatal" description="Tool exception" />
+  </stdio>
+  <command detect_errors="exit_code"><![CDATA[
+       diff '${input1}' '${input2}' | cat > '$output'
+  ]]></command>
+  <inputs>
+      <param format="txt" name="input1" type="data" label="first file" help="first file" />
+      <param format="txt" name="input2" type="data" label="second file" help="second file" />
+  </inputs>
+  <outputs>
+    <data name="output" format="txt" />
+  </outputs>
+  <tests>
+      <test>
+          <param name="input1" value="file1.txt" ftype="txt" />
+          <param name="input2" value="file2.txt" ftype="txt" />
+          <output name="output" file="diff.txt" ftype="txt"/>
+      </test>
+  </tests>
+  <help>
+
+.. class:: infomark
+
+**What it does**
+
+Just returns the Unix-style **diff** between two files !
+  </help>
+</tool>
+
