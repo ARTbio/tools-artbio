@@ -1,4 +1,4 @@
-<tool id="justdiff" name="Differences between two files" version="0.5.0">
+<tool id="justdiff" name="Differences between two files" version="0.6.0">
   <description></description>
   <stdio>
       <exit_code range="1:" level="fatal" description="Tool exception" />
@@ -11,7 +11,7 @@
       <param format="txt" name="input2" type="data" label="second file" help="second file" />
   </inputs>
   <outputs>
-    <data name="output" format="txt" />
+    <data name="output" format="txt" label="diff $input1.name | $input2.name" />
   </outputs>
   <tests>
       <test>
