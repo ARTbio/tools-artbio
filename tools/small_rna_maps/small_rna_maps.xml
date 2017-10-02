@@ -56,7 +56,7 @@
 
  <outputs>
    <data format="tabular" name="output_tab" label="Read Count dataframe" />
-   <data format="tabular" name="extra_output_tab" label="$extra_plot dataframe" />
+   <data format="tabular" name="extra_output_tab" label="$plots_options.extra_plot dataframe" />
    <data format="pdf" name="output_pdf" label="PDF file" />
 
 </outputs>
