@@ -1,0 +1,283 @@
+<tool id="bowtieForSmallRNA" name="sR_bowtie" version="2.0.0">
+    <description>for small RNA short reads</description>
+    <requirements>
+        <requirement type="package" version="1.1.2=py27_2">bowtie</requirement>
+        <requirement type="package" version="1.2">samtools</requirement>
+    </requirements>
+    <command detect_errors="exit_code"><![CDATA[
+        #if $refGenomeSource.genomeSource == "history":
+            bowtie-build -f $refGenomeSource.ownFile genome &&
+            ln -s -f '$refGenomeSource.ownFile' genome.fa &&
+            #set index_path = 'genome'
+        #else:
+            #set index_path = $refGenomeSource.index.fields.path
+        #end if
+        #if $input.extension == "fasta":
+            #set format = "-f"
+        #elif $input.extension == "fastq":
+            #set format = "-q"
+        #end if
+
+        ## set the method_prefix
+        #if $method == "RNA":
+            #set method_prefix = "-v %s -M 1 --best --strata --norc" % str($v_mismatches)
+        #elif $method == "unique":
+            #set method_prefix = "-v %s -m 1" % str($v_mismatches)
+        #elif $method == "multiple":
+            #set method_prefix = "-v %s -M 1 --best --strata" % str($v_mismatches)
+        #elif $method == "k_option":
+            #set method_prefix = "-v %s -k 1 --best" % str($v_mismatches)
+        #elif $method == "n_option":
+            #set method_prefix = "-n %s -M 1 --best" % str($v_mismatches)
+        #elif $method == "a_option":
+            #set method_prefix = "-v %s -a --best" % str($v_mismatches)
+        #end if
+ 
+        ## set the extra_output
+        #if $additional_fasta == "No":
+            #set extra_output = ""
+        #elif $additional_fasta == "al":
+            #set extra_output = " --al %s " % str($aligned)
+        #elif $additional_fasta == "unal":
+            #set extra_output = " --un %s " % str($unaligned)
+        #else:
+            #set extra_output = " --al %s --un %s " % (str($aligned), str($unaligned))
+        #end if
+       
+        #set $method_postfix = " %s %s " % ($method_prefix, $extra_output)
+
+        ## run the bowtie alignement
+        #if $output_format == "tabular":
+            bowtie -p \${GALAXY_SLOTS:-4} $method_postfix --suppress 6,7,8 $index_path $format '$input' > $output
+        #elif $output_format == "sam":
+            bowtie -p \${GALAXY_SLOTS:-4} $method_postfix -S $index_path $format '$input' > '$output'
+        #elif $output_format == "bam":
+            bowtie -p \${GALAXY_SLOTS:-4} $method_postfix -S $index_path $format '$input' | samtools view -u - | samtools sort -@ "\${GALAXY_SLOTS:-4}" -T tmp -O bam -o $output
+        #end if
+        ##### | samtools view -uS
+        ]]></command>
+    <inputs>
+        <param format="fasta, fastq" help="Only with clipped, fasta or fastq read files" label="Input fasta or fastq file: reads clipped from their adapter" name="input" type="data" />
+        <param help="bowtie parameters adjusted to the type of matching. RNA option match to only one strand" label="What kind of matching do you want to do?" name="method" type="select">
+            <option value="RNA">Match on sense strand RNA reference index, multiple mappers randomly matched at a single position</option>
+            <option value="unique">Match unique mappers on DNA reference index</option>
+            <option selected="true" value="multiple">Match on DNA, multiple mappers randomly matched at a single position</option>
+            <option value="k_option">Match on DNA as fast as possible, without taking care of mapping issues (for raw annotation of reads)</option>
+            <option value="n_option">Match on DNA - RNAseq mode (-n bowtie option)</option>
+            <option value="a_option">Match and report all valid alignments</option>
+        </param>
+        <param help="specify the -v bowtie option" label="Number of mismatches allowed" name="v_mismatches" type="select">
+            <option value="0">0</option>
+            <option selected="true" value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </param>
+        <conditional name="refGenomeSource">
+            <param help="Built-ins were indexed using default options" label="Will you select a reference genome from your history or use a built-in index?" name="genomeSource" type="select">
+                <option value="indexed">Use a built-in index</option>
+                <option value="history">Use one from the history</option>
+            </param>
+            <when value="indexed">
+                <param help="if your genome of interest is not listed - contact instance administrator" label="Select a DNA reference index" name="index" type="select">
+                    <options from_data_table="bowtie_indexes">
+      
+          </options>
+                </param>
+            </when>
+            <when value="history">
+                <param format="fasta" label="Select a fasta file, to serve as index reference" name="ownFile" type="data" />
+            </when>
+        </conditional>
+        <param help="Note that the BAM will be viewable in trackster only if you choose a full genome referenced for Trackster usage. see the doc below" label="Select output format" name="output_format" type="select">
+            <option selected="true" value="tabular">tabular</option>
+            <option value="sam">sam</option>
+            <option value="bam">bam</option>
+        </param>
+        <param help="to get aligned and unaligned reads in fasta format" label="additional fasta output" name="additional_fasta" type="select">
+            <option selected="true" value="No">No</option>
+            <option value="al">aligned</option>
+            <option value="unal">unaligned</option>
+            <option value="al_and_unal">both aligned and unaligned</option>
+        </param>
+    </inputs>
+    <outputs>
+        <data format="tabular" label="Bowtie Output" name="output">
+            <change_format>
+                <when format="sam" input="output_format" value="sam" />
+                <when format="bam" input="output_format" value="bam" />
+            </change_format>
+            <actions>
+                <conditional name="refGenomeSource.genomeSource">
+                    <when value="indexed">
+                        <action name="dbkey" type="metadata">
+                            <option column="1" name="bowtie_indexes" offset="0" type="from_data_table">
+                                <filter column="0" compare="startswith" keep="False" type="param_value" value="#" />
+                                <filter column="0" ref="refGenomeSource.index" type="param_value" />
+                            </option>
+                        </action>
+                    </when>
+                    <when value="history">
+                        <action name="dbkey" type="metadata">
+                            <option name="refGenomeSource.ownFile" param_attribute="dbkey" type="from_param" />
+                        </action>
+                    </when>
+                </conditional>
+            </actions>
+        </data>
+        <data format="fasta" label="Matched reads" name="aligned">
+            <filter>additional_fasta == "al" or additional_fasta == "al_and_unal"</filter>
+        </data>
+        <data format="fasta" label="Unmatched reads" name="unaligned">
+            <filter>additional_fasta == "unal" or additional_fasta == "al_and_unal"</filter>
+        </data>
+    </outputs>
+    <tests>
+        <test>
+            <param name="genomeSource" value="history" />
+            <param ftype="fasta" name="ownFile" value="297_reference.fa" />
+            <param name="method" value="unique" />
+            <param ftype="fasta" name="input" value="input.fa" />
+            <param name="v_mismatches" value="1" />
+            <param name="output_format" value="bam" />
+            <output file="output.bam" ftype="bam" compare="sim_size" delta="1000" name="output" />
+        </test>
+        <test>
+            <param name="genomeSource" value="history" />
+            <param ftype="fasta" name="ownFile" value="297_reference.fa" />
+            <param name="method" value="unique" />
+            <param ftype="fastq" name="input" value="input.fastq" />
+            <param name="v_mismatches" value="1" />
+            <param name="output_format" value="bam" />
+            <output file="output2.bam" ftype="bam" compare="sim_size" delta="1000" name="output" />
+        </test>
+        <test>
+            <param name="genomeSource" value="history" />
+            <param ftype="fasta" name="ownFile" value="297_reference.fa" />
+            <param name="method" value="multiple" />
+            <param ftype="fasta" name="input" value="input.fa" />
+            <param name="v_mismatches" value="1" />
+            <param name="output_format" value="tabular" />
+            <output file="output.tab" ftype="tabular" name="output" />
+        </test>
+        <test>
+            <param name="genomeSource" value="history" />
+            <param ftype="fasta" name="ownFile" value="297_reference.fa" />
+            <param name="method" value="multiple" />
+            <param ftype="fasta" name="input" value="input.fa" />
+            <param name="v_mismatches" value="1" />
+            <param name="additional_fasta" value="al" />
+            <param name="output_format" value="tabular" />
+            <output file="output.tab" ftype="tabular" name="output" />
+            <output file="al.fa" ftype="fasta" name="aligned" />
+        </test>
+    </tests>
+    <help>
+
+**What it does**
+
+Bowtie_ is a short read aligner designed to be ultrafast and memory-efficient. It is developed by Ben Langmead and Cole Trapnell. Please cite: Langmead B, Trapnell C, Pop M, Salzberg SL. Ultrafast and memory-efficient alignment of short DNA sequences to the human genome. Genome Biology 10:R25.
+
+.. _Bowtie: http://bowtie-bio.sourceforge.net/index.shtml
+
+A generic "Map with Bowtie for Illumina" Galaxy tool is available in the main Galaxy distribution.
+
+However, this Bowtie wrapper tool only takes FASTQ files as inputs.
+
+The sRbowtie wrapper works with short (-v bowtie mode) reads inputs, in fasta or fastq format, and proposes a simplified set of configurations suited to small RNA analysis.
+
+------
+
+**OPTIONS**
+
+.. class:: infomark
+
+This script uses Bowtie to match reads on a reference index.
+
+Depending on the type of matching, different bowtie options are used:
+
+**Match on sense strand RNA reference index, multiple mappers randomly matched at a single position**
+
+Align on RNA reference, SENSE strand, randomly attributing multiple mapper to target with least mismatches:
+
+*-v [0,1,2,3] -M 1 --best --strata -p 12 --norc*
+
+**Match unique mappers on DNA reference index**
+
+Align ONLY unique mappers on DNA reference index
+
+*-v [0,1,2,3] -m 1 -p 12*
+
+Note that using this option with -v values other than 0 is questionnable...
+
+**Match on DNA, multiple mappers randomly matched at a single position**
+
+Align multiple mappers, randomly attributing multiple mapper to target with least mismatches, number of mismatch allowed specified by -v option:
+
+*-v [0,1,2,3] -M 1 --best --strata -p 12*
+
+**Match on DNA as fast as possible, without taking care of mapping issues (for raw annotation of reads)**
+
+Align with highest speed, not guaranteeing best hit for speed gain:
+
+*-v [0,1,2,3] -k 1 --best -p 12*
+
+**Match on DNA - RNAseq mode (-n bowtie option)**
+
+Align reads in as for RNAseq data alignment
+
+*-n [0,1,2,3] -M 1 --best -p 12*
+
+**Match and report all valid alignments**
+
+Align reads and report all valid alignments
+
+*-v [0,1,2,3] -a --best -p 12*
+
+
+
+-----
+
+**Input formats**
+
+.. class:: warningmark
+
+*Lists of reads, in fasta or fastq format, clipped from their adapter sequence*
+
+-----
+
+**OUTPUTS**
+
+If you choose tabular as the output format, you will obtain the matched reads in tabular bowtie output format (--suppress 6,7,8), having the following columns::
+
+    Column    Description
+  --------    --------------------------------------------------------
+   1 FastaID  fasta identifier
+   2 polarity + or - depending whether the match was reported on the forward or reverse strand
+   3 target     name of the matched target
+   4 Offset   O-based coordinate of the miR on the miRBase pre-miR sequence
+   5 Seq      sequence of the matched Read
+
+If you choose SAM, you will get the output in unordered SAM format.
+
+.. class:: warningmark
+
+if you choose BAM, the output will be in sorted BAM format.
+To be viewable in Trackster, several condition must be fulfilled:
+
+.. class:: infomark
+
+Reads must have been matched to a genome whose chromosome names are compatible with Trackster genome indexes
+
+.. class:: infomark
+
+the database/Build (dbkey) which is indicated for the dataset (Pencil - Database/Build field) must match a Trackster genome index.
+
+Please contact the Galaxy instance administrator if your genome is not referenced
+
+**Matched and unmatched fasta reads can be retrieved, for further analyses**
+
+  </help>
+    <citations>
+        <citation type="doi">10.1186/gb-2009-10-3-r25</citation>
+    </citations>
+</tool>

@@ -32,94 +32,127 @@ def Parser():
 
 class Map:
 
-    def __init__(self, bam_file):
+    def __init__(self, bam_file, output, minquery=23, maxquery=29,
+                 mintarget=23, maxtarget=29, overlap=10):
         self.bam_object = pysam.AlignmentFile(bam_file, 'rb')
+        self.output = output
+        self.query_range = range(minquery, maxquery + 1)
+        self.target_range = range(mintarget, maxtarget + 1)
+        self.overlap = overlap
         self.chromosomes = dict(zip(self.bam_object.references,
                                 self.bam_object.lengths))
-        self.map_dict = self.create_map(self.bam_object)
+        self.alignement_dic = self.index_alignments(self.bam_object)
+        self.all_query_positions = self.query_positions(self.bam_object,
+                                                        overlap=self.overlap)
+        self.readdic = self.make_readdic(self.bam_object)
+        self.pairing()
 
-    def create_map(self, bam_object):
+    def make_readdic(self, bam_object):
+        readdic = defaultdict(int)
+        for read in bam_object.fetch():
+            readdic[read.query_sequence] += 1
+        return readdic
+
+    def index_alignments(self, bam_object):
         '''
-        Returns a map_dictionary {(chromosome,read_position,polarity):
-                                                    [read_length, ...]}
+        dic[(chrom, pos, polarity)]: [readseq1, readseq2, ...]
+        the list value is further converted in set
         '''
-        map_dictionary = defaultdict(list)
-        # get empty value for start and end of each chromosome
-        for chrom in self.chromosomes:
-            map_dictionary[(chrom, 1, 'F')] = []
-            map_dictionary[(chrom, self.chromosomes[chrom], 'F')] = []
+        dic = defaultdict(list)
         for chrom in self.chromosomes:
             for read in bam_object.fetch(chrom):
-                positions = read.positions  # a list of covered positions
                 if read.is_reverse:
-                    map_dictionary[(chrom, positions[-1]+1,
-                                    'R')].append(read.query_alignment_length)
+                    coord = read.reference_end-1
+                    pol = 'R'
                 else:
-                    map_dictionary[(chrom, positions[0]+1,
-                                    'F')].append(read.query_alignment_length)
-        return map_dictionary
+                    coord = read.reference_start
+                    pol = 'F'
+                dic[(chrom, coord, pol)].append(read.query_sequence)
+        for key in dic:
+            dic[key] = set(dic[key])
+        return dic
 
-    def signature_tables(self, minquery, maxquery, mintarget, maxtarget):
-        query_range = range(minquery, maxquery + 1)
-        target_range = range(mintarget, maxtarget + 1)
-        Query_table = defaultdict(dict)
-        Target_table = defaultdict(dict)
-        for key in self.map_dict:
-            for size in self.map_dict[key]:
-                if size in query_range or size in target_range:
-                    if key[2] == 'F':
-                        coordinate = key[1]
-                    else:
-                        coordinate = -key[1]
-                if size in query_range:
-                    Query_table[key[0]][coordinate] = Query_table[key[0]].get(
-                        coordinate, 0) + 1
-                if size in target_range:
-                    Target_table[key[0]][coordinate] = \
-                        Target_table[key[0]].get(coordinate, 0) + 1
-        return Query_table, Target_table
+    def query_positions(self, bam_object, overlap):
+        all_query_positions = defaultdict(list)
+        for genomicKey in self.alignement_dic.keys():
+            chrom, coord, pol = genomicKey
+            if pol == 'F' and len(self.alignement_dic[(chrom,
+                                                      coord+overlap-1,
+                                                      'R')]) > 0:
+                all_query_positions[chrom].append(coord)
+        for chrom in all_query_positions:
+            all_query_positions[chrom] = sorted(
+                list(set(all_query_positions[chrom])))
+        return all_query_positions
 
-    def search_overlaps(self, minquery, maxquery, mintarget, maxtarget,
-                        overlap=10):
-        Query_table, Target_table = self.signature_tables(minquery, maxquery,
-                                                          mintarget, maxtarget)
-        overlap_groups = defaultdict(list)
-        for chrom in Query_table:
-            for coord in Query_table[chrom]:
-                if Target_table[chrom].get(-coord - overlap + 1, 0):
-                    overlap_groups[chrom].append(coord)
-        return overlap_groups
+    def countpairs(self, uppers, lowers):
+        query_range = self.query_range
+        target_range = self.target_range
+        uppers = [seq for seq in uppers if (len(seq) in query_range or len(seq)
+                  in target_range)]
+        print(uppers)
+        uppers_expanded = []
+        for seq in uppers:
+            expand = [seq for i in range(self.readdic[seq])]
+            uppers_expanded.extend(expand)
+        print(uppers_expanded)
+        uppers = uppers_expanded
+        lowers = [seq for seq in lowers if (len(seq) in query_range or len(seq)
+                  in target_range)]
+        lowers_expanded = []
+        for seq in lowers:
+            expand = [seq for i in range(self.readdic[seq])]
+            lowers_expanded.extend(expand)
+        lowers = lowers_expanded
+        paired = []
+        for upread in uppers:
+            for downread in lowers:
+                if (len(upread) in query_range and len(downread) in
+                    target_range) or (len(upread) in target_range and
+                                      len(downread) in query_range):
+                    paired.append(upread)
+                    lowers.remove(downread)
+                    break
+        return len(paired)
 
-    def feed_overlaps(self, overlap_groups, minquery, output, overlap=10):
-        F = open(output, 'w')
-        for chrom in sorted(overlap_groups):
-            for pos in sorted(overlap_groups[chrom]):
-                if pos > 0:  # read are forward
-                    reads = self.bam_object.fetch(chrom, start=pos-1,
-                                                  end=pos-1+overlap-1)
-                    for read in reads:
-                        positions = read.positions
-                        if pos-1 == positions[0] and \
-                                read.query_alignment_length >= minquery:
-                            F.write('>%s|%s|%s|%s\n%s\n' % (
-                                chrom, pos, 'F',
-                                read.query_alignment_length,
-                                read.query_sequence))
-                else:  # reads are reverse
-                    reads = self.bam_object.fetch(chrom,
-                                                  start=-pos-1-overlap+1,
-                                                  end=-pos-1)
-                    for read in reads:
-                        positions = read.positions
-                        if -pos-1 == positions[-1] and \
-                                read.query_alignment_length >= minquery:
-                            readseq = self.revcomp(read.query_sequence)
-                            readsize = read.query_alignment_length
-                            F.write('>%s|%s|%s|%s\n%s\n' % (chrom,
-                                                       positions[0] + 1,
-                                                       'R', readsize, readseq))
-        F.close()
-        return
+    def pairing(self):
+        F = open(self.output, 'w')
+        query_range = self.query_range
+        target_range = self.target_range
+        overlap = self.overlap
+        stringresult = []
+        header_template = '>%s|coord=%s|strand %s|size=%s|nreads=%s\n%s\n'
+        total_pairs = 0
+        print('Chromosome\tNbre of pairs')
+        for chrom in sorted(self.chromosomes):
+            number_pairs = 0
+            for pos in self.all_query_positions[chrom]:
+                stringbuffer = []
+                uppers = self.alignement_dic[chrom, pos, 'F']
+                lowers = self.alignement_dic[chrom, pos+overlap-1, 'R']
+                number_pairs += self.countpairs(uppers, lowers)
+                total_pairs += number_pairs
+                if uppers and lowers:
+                    for upread in uppers:
+                        for downread in lowers:
+                            if (len(upread) in query_range and len(downread) in
+                                target_range) or (len(upread) in target_range
+                                                  and len(downread) in
+                                                  query_range):
+                                stringbuffer.append(
+                                    header_template %
+                                    (chrom, pos+1, '+', len(upread),
+                                     self.readdic[upread], upread))
+                                stringbuffer.append(
+                                    header_template %
+                                    (chrom, pos+overlap-len(downread)+1, '-',
+                                     len(downread), self.readdic[downread],
+                                     self.revcomp(downread)))
+                stringresult.extend(sorted(set(stringbuffer)))
+            print('%s\t%s' % (chrom, number_pairs))
+        print('Total nbre of pairs that can be simultaneously formed\t%s'
+              % total_pairs)
+        F.write(''.join(stringresult))
 
     def revcomp(self, sequence):
         antidict = {"A": "T", "T": "A", "G": "C", "C": "G", "N": "N"}
@@ -127,14 +160,7 @@ class Map:
         return "".join([antidict[i] for i in revseq])
 
 
-def main(input, minquery, maxquery, mintarget, maxtarget, output, overlap=10):
-    mapobj = Map(input)
-    mapobj.feed_overlaps(mapobj.search_overlaps(minquery, maxquery,
-                                                mintarget, maxtarget,
-                                                overlap), minquery, output)
-
-
 if __name__ == "__main__":
     args = Parser()
-    main(args.input, args.minquery, args.maxquery, args.mintarget,
-         args.maxtarget, args.output)
+    mapobj = Map(args.input, args.output, args.minquery, args.maxquery,
+                 args.mintarget, args.maxtarget, args.overlap)

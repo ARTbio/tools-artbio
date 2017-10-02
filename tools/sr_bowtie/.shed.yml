@@ -1,0 +1,13 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: sr_bowtie
+description: bowtie wrapper tool to align small RNA sequencing reads
+long_description: |
+  Bowtie wrapper tool to align small RNA sequencing reads. This tool belongs to the mississippi tool suite.
+categories:
+  - RNA
+  - Next Gen Mappers
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/sr_bowtie
+toolshed:
+  - toolshed

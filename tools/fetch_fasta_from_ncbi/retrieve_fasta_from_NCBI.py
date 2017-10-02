@@ -356,10 +356,10 @@ def __main__():
     parser.add_option('-d', dest='dbname', help='database type')
     parser.add_option('-l', '--logfile', help='log file (default=stderr)')
     parser.add_option('--datetype', dest='datetype',
-                      choices=['mdat', 'edat', 'pdat'],
+                      choices=['mdat', 'pdat'],
                       help='Type of date used to limit a search.\
-                            [ mdat(modification date), pdat(publication date),\
-                            edat(entrez date)] (default=pdat)', default='pdat')
+                            [ mdat(modification date), pdat(publication date)]\
+                            (default=pdat)', default='pdat')
     parser.add_option('--reldate', dest='reldate',
                       help='When reldate is set to an integer n, the search\
                             returns only those items that have a date\

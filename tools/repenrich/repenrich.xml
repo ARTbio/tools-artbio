@@ -1,4 +1,4 @@
-<tool id="repenrich" name="RepEnrich" version="1.4.0">
+<tool id="repenrich" name="RepEnrich" version="1.4.3">
     <description>Repeat Element Profiling</description>
     <requirements>
         <requirement type="package" version="1.2.0">bowtie</requirement>
@@ -24,12 +24,14 @@
             bowtie $baseReference -p \${GALAXY_SLOTS:-4} -t -m 1 -S --max ${input_base}_multimap.fastq ${input_base}.fastq ${input_base}_unique.sam 2>bowtie_alignments.txt &&
             TOTAL=\$(grep 'reads processed:' bowtie_alignments.txt | cut -d ' ' -f 4) &&
             NONALIGNED=\$(grep 'reads that failed to align:' bowtie_alignments.txt | cut -d ' ' -f 7) &&
-            echo \$((\$TOTAL-\$NONALIGNED)) > bowtie_aligned.numb &&
+            echo -e "# Total reads aligned to repeated sequences\n" > bowtie_aligned.numb &&
+            echo \$((\$TOTAL-\$NONALIGNED)) >> bowtie_aligned.numb &&
         #else:
             bowtie $baseReference -p \${GALAXY_SLOTS:-4} -t -m 1 -S --max ${input_base}_multimap.fastq -1 ${input_base}.fastq -2 ${input_base}_2.fastq ${input_base}_unique.sam 2>bowtie_alignments.txt &&
             TOTAL=\$(grep 'reads processed:' bowtie_alignments.txt | cut -d ' ' -f 4) &&
             NONALIGNED=\$(grep 'reads that failed to align:' bowtie_alignments.txt | cut -d ' ' -f 7) &&
-            echo \$((\$TOTAL-\$NONALIGNED)) > bowtie_aligned.numb &&
+            echo -e "# Total reads aligned to repeated sequences\n" > bowtie_aligned.numb &&
+            echo \$((\$TOTAL-\$NONALIGNED)) >> bowtie_aligned.numb &&
         #end if
         samtools view -bS ${input_base}_unique.sam > ${input_base}_unique.bam &&
         samtools sort ${input_base}_unique.bam ${input_base}_unique_sorted &&
@@ -65,14 +67,10 @@
     </inputs>
 
     <outputs>
-        <data format="tabular" name="bowtie_alignments" label="RepEnrich on ${on_string}: reads aligned" from_work_dir="bowtie_aligned.numb">
-        </data>
-        <data format="tabular" name="class_fraction_counts" label="RepEnrich on ${on_string}: class fraction counts" from_work_dir="class_fraction_counts.tabular">
-        </data>
-        <data format="tabular" name="family_fraction_counts" label="RepEnrich on ${on_string}: family fraction counts" from_work_dir="family_fraction_counts.tabular">
-        </data>
-        <data format="tabular" name="fraction_counts" label="RepEnrich on ${on_string}: fraction counts" from_work_dir="fraction_counts.tabular">
-        </data>
+        <data format="tabular" name="bowtie_alignments" label="RepEnrich on ${on_string}: reads aligned" from_work_dir="bowtie_aligned.numb" />
+        <data format="tabular" name="class_fraction_counts" label="RepEnrich on ${on_string}: class fraction counts" from_work_dir="class_fraction_counts.tabular" />
+        <data format="tabular" name="family_fraction_counts" label="RepEnrich on ${on_string}: family fraction counts" from_work_dir="family_fraction_counts.tabular" />
+        <data format="tabular" name="fraction_counts" label="RepEnrich on ${on_string}: fraction counts" from_work_dir="fraction_counts.tabular" />
    </outputs>
 
     <tests>
@@ -163,7 +161,11 @@ Users may filter this file so that it contains only desired items (for instance 
  
 **Outputs**
 
-(1) Fraction counts, (2) Family fraction counts and (3) Class fraction counts are returned in tabular format, for further statistical tests differential expression analysis or graphics 
+(1) Fraction counts, (2) Family fraction counts and (3) Class fraction counts are returned in tabular format,
+for further statistical tests differential expression analysis or graphics.
+
+The "aligned_reads.tab" output file contains a single value corresponding to the number of reads that were aligned to
+transposons. This value is used in downstream analysis by the edger-repenrich tool.
 
 **RepEnrich**
 

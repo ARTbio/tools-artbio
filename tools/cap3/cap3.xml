@@ -1,0 +1,91 @@
+<tool id="cap3" name="cap3" version="2.0.0">
+<description>Sequence Assembly tool</description>
+    <requirements>
+    	<requirement type="package" version="10.2011">cap3</requirement>
+    </requirements>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Tool exception" />
+    </stdio>
+    <command detect_errors="exit_code"><![CDATA[
+    cap3 "$inputSequences" -o $overlaplength -p $overlapidentity > "$cap3stdout" &&
+                mv "$inputSequences".cap.contigs $contigs &&
+                mv "$inputSequences".cap.contigs.qual $contigsqual &&
+                mv "$inputSequences".cap.contigs.links $contigslink &&
+                mv "$inputSequences".cap.ace $ace &&
+                mv "$inputSequences".cap.info $info &&
+                mv "$inputSequences".cap.singlets $singlets &&
+                cat $contigs $singlets > $contigsandsinglets
+    ]]></command>
+
+        <inputs>
+        	<param label="Input sequences to assemble" name="inputSequences" type="data" format="fasta" help="Input sequences to assemble" />
+        	<param label="specify overlap length cutoff > 15 (40)" name="overlaplength" type="integer" size="3" value="40" help="-o option. must be > 15. 40 by default" />
+        	<param label="specify overlap percent identity cutoff N > 65 (90)" name="overlapidentity" type="integer" size="3" value="90"  help="-p option. must be > 65. 90 by default" />
+        </inputs>
+
+<outputs>
+                <data format="fasta" name="contigsandsinglets" label="${tool.name} on ${on_string}: Contigs and singlets" from_work_dir="${inputSequences}.cap.contigs" />
+        	    <data format="txt" name="cap3stdout" label="${tool.name} on ${on_string}: Standard Output" hidden="true"/>
+                <data format="fasta" name="contigs" label="${tool.name} on ${on_string}: Contigs" from_work_dir="${inputSequences}.cap.contigs" />
+                <data format="txt" name="contigsqual" label="${tool.name} on ${on_string}: Contigs Qual" from_work_dir="${inputSequences}.cap.contigs.qual" hidden="true" />
+                <data format="txt" name="contigslink" label="${tool.name} on ${on_string}: Contigs Link" from_work_dir="${inputSequences}.cap.contigs.links" hidden="true" />
+                <data format="txt" name="ace" label="${tool.name} on ${on_string}: Ace" from_work_dir="${inputSequences}.cap.ace" hidden="true" />
+                <data format="txt" name="info" label="${tool.name} on ${on_string}: Info" from_work_dir="${inputSequences}.cap.info" hidden="true" />
+                <data format="txt" name="singlets" label="${tool.name} on ${on_string}: Singlets" from_work_dir="${inputSequences}.cap.singlets" />
+</outputs>
+
+  <tests>
+    <test>
+      <param name="inputSequences" value="input.fa" ftype="fasta"/>
+      <param name="overlaplength" value="40" />
+      <param name="overlapidentity" value="90" />
+      <output name="contigsandsinglets" file="contigsandsinglets.fa"/>
+      <output name="cap3stdout" file="cap3stdout.txt"/>
+      <output name="contigs" file="contigs.fa"/>
+      <output name="contigsqual" file="contigsqual.txt"/>
+      <output name="contigslink" file="contigslink.txt"/>
+      <output name="ace" file="ace.txt"/>
+      <output name="info" file="info.txt"/>
+      <output name="singlets" file="singlets.fa"/>
+    </test>
+  </tests>
+
+
+<help>
+**What it does**
+
+This tool is a CAP3 wrapper developed for the visitor2 set of worflows
+
+Under this conditions, it takes as input a set of blast hits in fasta format and performs CAP3 assembly on these sequences
+
+Standard CAP3 outputs (Standard Output, Contigs Qual, Contigs Link, Ace and Info) are kept hidden in the Galaxy history (feel free to reveal these hidden datasets).
+
+Standard CAP3 outputs Contigs and Singlets are returned in the history, as well as a merge of these two datasets (Contigs and singlets)
+
+**Acknowledgments**
+
+This Galaxy tool makes use of the `package_cap3_3`_ Galaxy package developed by jjohnson.
+
+It is Copyright © 2014-2015 `CNRS and University Pierre et Marie Curie`_ and is released under the `MIT license`_.
+
+.. _package_cap3_3: https://testtoolshed.g2.bx.psu.edu/view/jjohnson/package_cap3_3
+.. _CNRS and University Pierre et Marie Curie: http://www.ibps.upmc.fr/en
+.. _MIT license: http://opensource.org/licenses/MIT
+
+
+</help>
+  <citations>
+      <citation type="bibtex">@article{Huang:1999wb,
+       author = {Huang, X and Madan, A},
+       title = {{CAP3: A DNA sequence assembly program.}},
+       journal = {Genome research},
+       year = {1999},
+       volume = {9},
+       number = {9},
+      pages = {868--877},
+      month = sep
+      }
+      </citation>
+  </citations>
+  
+</tool>

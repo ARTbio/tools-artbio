@@ -1,4 +1,4 @@
-<tool id="overlapping_reads" name="Get overlapping reads" version="0.9.1">
+<tool id="overlapping_reads" name="Get overlapping reads" version="0.9.6">
     <description />
     <requirements>
         <requirement type="package" version="0.11.2.1=py27_0">pysam</requirement>
@@ -38,6 +38,33 @@
             <param name="overlap" value="10" />
             <output file="paired.fa" ftype="fasta" name="output" />
         </test>
+        <test>
+            <param ftype="bam" name="input" value="sr_bowtie.bam" />
+            <param name="minquery" value="20" />
+            <param name="maxquery" value="22" />
+            <param name="mintarget" value="23" />
+            <param name="maxtarget" value="29" />
+            <param name="overlap" value="10" />
+            <output file="paired_2.fa" ftype="fasta" name="output" />
+        </test>
+        <test>
+            <param ftype="bam" name="input" value="sr_bowtie.bam" />
+            <param name="minquery" value="23" />
+            <param name="maxquery" value="29" />
+            <param name="mintarget" value="20" />
+            <param name="maxtarget" value="22" />
+            <param name="overlap" value="10" />
+            <output file="paired_3.fa" ftype="fasta" name="output" />
+        </test>
+        <test>
+            <param ftype="bam" name="input" value="sr_bowtie.bam" />
+            <param name="minquery" value="20" />
+            <param name="maxquery" value="22" />
+            <param name="mintarget" value="20" />
+            <param name="maxtarget" value="22" />
+            <param name="overlap" value="10" />
+            <output file="paired_4.fa" ftype="fasta" name="output" />
+        </test>
     </tests>
     <help>
 
@@ -52,24 +79,51 @@ See `Antoniewski (2014)`_ for background and details
 
 **Input**
 
-A **sorted** BAM alignment file.
+*A **sorted** BAM alignment file.*
+
+*Query and target sizes:*
+
+The algorithm search for each *query* reads (of specified size) in the bam alignment if
+there are *target* reads (of specified size) that align on the opposite strand with a 10 nt
+overlap.
+
+Searching query reads of 20-22 nt that overlap by 10 nt with target
+reads of 23-29 nt is equivalent to searching query reads of 23-29 nt that overlap by 10 nt
+with target reads of 20-22 nt. i.e, searching for siRNAs that pair with piRNAs is equivalent
+to searching for siRNAs that pairs with piRNAs. In contrast, searching query reads of 20-22 nt
+that overlap by 10 nt with target reads of 23-29 nt is different from searching query reads of
+23-29 nt that overlap by 10 nt with target reads of 23-29 nt, since the number of "heterotypic"
+pairs of reads is likely to be different from the number of "homotypic" pairs of reads.
+
+*Overlap*
+The number of nucleotides by which the pairs of sequences will overlap
+
+
 
 **Outputs**
 
 a fasta file of pairable reads such as :
 
->FBgn0000004_17.6|5839|R|26
+>FBgn0000004_17.6|coord=5839|strand -|size=26|nreads=1
 
 TTTTCGTCAATTGTGCCAAATAGGTA
 
->FBgn0000004_17.6|5855|F|23
+>FBgn0000004_17.6|coord=5855|strand +|size=23|nreads=1
 
 TTGACGAAAATGATCGAGTGGAT
 
-where FBgn0000004_17.6 stands for the chromosome, 5839 stands for the 1-based read position, 
-R stand for reverse strand (F forward strand) and 26 stands for the size of the read.
 
-the second sequence in this example is a read that overlap by 10 nt with the first read.
+where FBgn0000004_17.6 stands for the chromosome, 5839 stands for the 1-based read position, 
+'strand -' stands for lower strand of chromosome, 26 stands for the size of the sequence and
+nreads=1 stands for the number of reads of the sequence in the dataset.
+
+the second sequence in this example corresponds to 1 read that overlap by 10 nt with
+1 read of the first sequence.
+
+The tool also returns in the standard output the numbers of pairs of reads that
+can be formed simultaneously in silico. Note that these numbers are distinct from the numbers
+of pairs of read alignments (as computed by the small_rna_signature tool) when analysis is
+performed with multi-mapping reads.
 
         </help>
     <citations>
