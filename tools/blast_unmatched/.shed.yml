@@ -1,0 +1,14 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: blast_unmatched
+description: Extract unmatched query sequences from blast
+long_description: |
+  Extract unmatched query sequences that remained unmatched after blast
+categories:
+  - Fasta Manipulation
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/blast_unmatched
+toolshed:
+  - https://lbcd41.snv.jussieu.fr/toolshed/
+  - testtoolshed
+#  - toolshed
