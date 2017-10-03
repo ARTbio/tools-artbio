@@ -24,14 +24,20 @@
           '$sample.name'
       #end for
       #if str($plots_options.plots_options_selector ) == "two_plot":
-          --plot_methods Counts '${plots_options.extra_plot}'
+          --plot_methods '${plots_options.first_plot}' '${plots_options.extra_plot}'
+      #else:
+          --plot_methods '${plots_options.first_plot}'
       #end if
           --outputs '$output_tab' '$extra_output_tab' &&
       Rscript '$__tool_directory__'/small_rna_maps.r
           --first_dataframe '$output_tab' 
           --extra_dataframe '$extra_output_tab'
           #if str($plots_options.plots_options_selector ) == "two_plot":
+              --first_plot_method '${plots_options.first_plot}'
               --extra_plot_method '${plots_options.extra_plot}'
+          #else:
+              --first_plot_method '${plots_options.first_plot}'
+              --extra_plot_method ''
           #end if
           --output_pdf '$output_pdf'
   ]]></command>
@@ -42,9 +48,25 @@
             <option value="one_plot">Just one plot per chromosome</option>
             <option value="two_plot" selected="True">Two plots per chromosome</option>
         </param>
-        <when value="one_plot" />
         <when value="two_plot">
-            <param name="extra_plot" type="select" label="select the type of extra plot in addition to read map">
+            <param name="first_plot" type="select" label="select the type of the first plot">
+                <option value="Counts">Counts</option> 
+                <option value="Coverage">Coverage</option> 
+                <option value="Mean">Mean Sizes</option> 
+                <option value="Median">Median Sizes</option>
+                <option value="Size">Size Distributions</option>
+            </param>
+            <param name="extra_plot" type="select" label="select the type of the second plot">
+                <option value="Counts">Counts</option> 
+                <option value="Coverage">Coverage</option> 
+                <option value="Mean">Mean Sizes</option> 
+                <option value="Median">Median Sizes</option>
+                <option value="Size">Size Distributions</option>
+            </param>
+        </when>
+        <when value="one_plot">
+            <param name="first_plot" type="select" label="select the type of the first plot">
+                <option value="Counts">Counts</option> 
                 <option value="Coverage">Coverage</option> 
                 <option value="Mean">Mean Sizes</option> 
                 <option value="Median">Median Sizes</option>
@@ -65,6 +87,7 @@
         <test>
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
             <param name="plots_options_selector" value="two_plot" />
+            <param name="first_plot" value="Counts" />
             <param name="extra_plot" value="Mean" />
             <output file="readmap.tab" name="output_tab" />
             <output file="mean.tab" name="extra_output_tab" />
@@ -73,6 +96,7 @@
         <test>
             <param name="inputs" value="input1.bam,input1.bam" ftype="bam"/>
             <param name="plots_options_selector" value="two_plot" />
+            <param name="first_plot" value="Counts" />
             <param name="extra_plot" value="Mean" />
             <output file="doubled_readmap.tab" name="output_tab" />
             <output file="double_mean.tab" name="extra_output_tab" />
@@ -81,6 +105,7 @@
         <test>
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
             <param name="plots_options_selector" value="two_plot" />
+            <param name="first_plot" value="Counts" />
             <param name="extra_plot" value="Median" />
             <output file="readmap.tab" name="output_tab" />
             <output file="median.tab" name="extra_output_tab" />
@@ -89,6 +114,7 @@
         <test>
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
             <param name="plots_options_selector" value="two_plot" />
+            <param name="first_plot" value="Counts" />
             <param name="extra_plot" value="Coverage" />
             <output file="readmap.tab" name="output_tab" />
             <output file="coverage.tab" name="extra_output_tab" />
@@ -97,6 +123,7 @@
         <test>
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
             <param name="plots_options_selector" value="two_plot" />
+            <param name="first_plot" value="Counts" />
             <param name="extra_plot" value="Size" />
             <output file="readmap.tab" name="output_tab" />
             <output file="size.tab" name="extra_output_tab" />
