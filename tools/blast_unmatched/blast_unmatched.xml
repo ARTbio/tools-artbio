@@ -1,0 +1,35 @@
+<tool id="blast_unmatched" name="Blast Unmatched" version="0.1.0">
+    <description>get query sequences that didn't get a match during a blast</description>
+    <requirements>
+    </requirements>
+    <command detect_errors="exit_code"><![CDATA[
+        python '$__tool_directory__'/blast_unmatched.py
+            --fasta $fasta_file
+            --blast $blast_file
+            --output $output_file
+    ]]></command>
+    <inputs>
+        <param type="data" name="fasta_file" format="fasta"/>
+        <param type="data" name="blast_file" format="tabular"/>
+    </inputs>
+    <outputs>
+        <data name="output_file" format="fasta" label="Unmatched queries from blast: ${blast_file.name}"/>
+    </outputs>
+    <tests>
+        <test>
+            <param name="blast_file" value="test_blast.tab"/>
+            <param name="fasta_file" value="test_query.fa"/>
+            <output name="output_file" ftype="fasta" file="test_output.fa"/>
+        </test>
+    </tests>
+    <help><![CDATA[
+**What it does**
+
+This tool takes a `blast`_ output in tabular format(with the query id in 1rst column) and the fasta file used as query. It then return the query sequences that remained unmatched during the blast.
+
+.. _blast: https://blast.ncbi.nlm.nih.gov/Blast.cgi
+
+    ]]></help>
+    <citations>
+    </citations>
+</tool>
