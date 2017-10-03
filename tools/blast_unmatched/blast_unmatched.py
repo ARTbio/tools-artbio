@@ -23,12 +23,11 @@ def get_matched(blast_file):
     Get a dictionary of all the queries that got a match
     """
     matched = dict()
-    blast_file_handle = open(blast_file, 'r')
-    for line in blast_file_handle.readlines():
-        fields = line.split("\t")
-        query_id = fields[0]
-        matched[query_id] = 1
-    blast_file_handle.close()
+    with open(blast_file, 'r') as infile:
+        for line in infile:
+            fields = line.split("\t")
+            query_id = fields[0]
+            matched[query_id] = 1
     return matched
 
 def get_unmatched(output_file, fasta_file, matched):
@@ -36,19 +35,18 @@ def get_unmatched(output_file, fasta_file, matched):
     Compares matched queries to query fasta file and print unmatched to ouput
     """
     output_file_handle = open(output_file, 'w')
-    fasta_file_handle = open(fasta_file, 'r')
     unmatched = False
-    for line in fasta_file_handle.readlines():
-        if line.startswith('>'):
-            subline = line[1:100].rstrip() #qid are 100chars long in blast
-            if subline not in matched:
+    with open(fasta_file, 'r') as infile:
+        for line in infile:
+            if line.startswith('>'):
+                subline = line[1:100].rstrip() #qid are 100chars long in blast
+                if subline not in matched:
+                    output_file_handle.write(line)
+                    unmatched = True
+                else:
+                    unmatched = False
+            elif unmatched:
                 output_file_handle.write(line)
-                unmatched = True
-            else:
-                unmatched = False
-        elif unmatched:
-            output_file_handle.write(line)
-    fasta_file_handle.close()
     output_file_handle.close()
 
 def __main__():
