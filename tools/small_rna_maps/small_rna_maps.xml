@@ -25,10 +25,11 @@
       #end for
       #if str($plots_options.plots_options_selector ) == "two_plot":
           --plot_methods '${plots_options.first_plot}' '${plots_options.extra_plot}'
+          --outputs '$output_tab' '$extra_output_tab' &&
       #else:
           --plot_methods '${plots_options.first_plot}'
+          --outputs '$output_tab' &&
       #end if
-          --outputs '$output_tab' '$extra_output_tab' &&
       Rscript '$__tool_directory__'/small_rna_maps.r
           --first_dataframe '$output_tab' 
           --extra_dataframe '$extra_output_tab'
@@ -78,7 +79,9 @@
 
  <outputs>
    <data format="tabular" name="output_tab" label="Read Count dataframe" />
-   <data format="tabular" name="extra_output_tab" label="$plots_options.extra_plot dataframe" />
+   <data format="tabular" name="extra_output_tab" label="$plots_options.extra_plot dataframe">
+    <filter>plots_options['plots_options_selector'] == 'two_plot'</filter>
+   </data> 
    <data format="pdf" name="output_pdf" label="PDF file" />
 
 </outputs>

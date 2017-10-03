@@ -186,7 +186,7 @@ def main(inputs, samples, methods, outputs):
     for method, output in zip(methods, outputs):
         F = open(output, 'w')
         if method == 'Size':
-            header = ["Dataset", "Chromosome", "Polarity", method, "Count"]
+            header = ["Dataset", "Chromosome", "Polarity", method, "Counts"]
         else:
             header = ["Dataset", "Chromosome", "Chrom_length", "Coordinate",
                       "Polarity", method]
