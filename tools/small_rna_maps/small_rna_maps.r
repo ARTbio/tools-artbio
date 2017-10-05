@@ -1,7 +1,7 @@
 ## Setup R error handling to go to stderr
 options( show.error.messages=F,
        error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
-warnings()
+# options(warn = -1)
 library(RColorBrewer)
 library(lattice)
 library(latticeExtra)
@@ -39,8 +39,6 @@ if (args$extra_plot_method != '') {
         }
     per_gene_size=lapply(genes, function(x) subset(ExtraTable, Chromosome==x))
     }
-    
-## end of data frames implementation
 
 ## functions
 
@@ -95,7 +93,7 @@ plot_unit = function(df, method=args$first_plot_method, ...) {
 }
 
 plot_single <- function(df, method=args$first_plot_method, ...) {
-    if (method == 'Counts') {
+        if (method == 'Counts') {
     
     } else {
         p= barchart(Counts~as.factor(Size)|factor(Dataset, levels=unique(Dataset))+Chromosome, data = df, origin = 0,
@@ -103,42 +101,42 @@ plot_single <- function(df, method=args$first_plot_method, ...) {
                     group=Polarity,
                     stack=TRUE,
                     col=c('red', 'blue'),
-                    scales=list(y=list(tick.number=4, rot=90, relation="free", cex=0.5, alternating=T), x=list(rot=0, cex=0.7, axs="i", tck=0.5)),
-                    xlab = bottom_first_method[[args$first_plot_method]],
-                    ylab = legend_first_method[[args$first_plot_method]],
-                    main = title_first_method[[args$first_plot_method]],
+                    scales=list(y=list(tick.number=4, rot=90, relation="free", cex=0.5, alternating=T), x=list(rot=0, cex=0.6, tck=0.5)),
+                    xlab=NULL, main=NULL, ylab=NULL,
                     par.strip.text = list(cex=0.75),
                     as.table=TRUE,
-                    newpage = T,
                     ...)
-        combineLimits(update(useOuterStrips(p,
-                                            strip.left=strip.custom(par.strip.text = list(cex=0.5))
-                                           ),
-                             layout=c(n_samples, 10)),
-                      margin.x=F, margin.y=1)
+          p = update(useOuterStrips(p, strip.left=strip.custom(par.strip.text = list(cex=0.5))))
+          p = combineLimits(p, extend=TRUE, margin.x=1, margin.y=1)
+          # p = update(p, layout=c(n_samples, 7))
+          # p = update( useOuterStrips(combineLimits(p), strip.left=strip.custom(par.strip.text = list(cex=0.5))), layout=c(n_samples, 7) )
+
+          # to avoid irritating message In heights.x[pos.heights[[nm]]] <- heights.settings[[nm]] * heights.defaults[[nm]]$x :
+          # number of items to replace is not a multiple of replacement length
+          # uncomment "options(warn = -1)" for effect
         }
 }
 
-## end of functions
-
 ## function parameters
+
 par.settings.firstplot = list(layout.heights=list(top.padding=11, bottom.padding = -14))
 par.settings.secondplot=list(layout.heights=list(top.padding=11, bottom.padding = -15), strip.background=list(col=c("lavender","deepskyblue")))
+#par.settings.single_plot=list(strip.background=list(col=c("lavender","deepskyblue"))) # layout.heights=list(top.padding=-11, bottom.padding=-11),
+par.settings.single_plot=list(layout.heights=list(top.padding=-1, bottom.padding = -5),strip.background = list(col = c("lightblue", "lightgreen")) ) # layout.heights=list(top.padding=1, bottom.padding=1), 
 title_first_method = list(Counts="Read Counts", Coverage="Coverage depths", Median="Median sizes", Mean="Mean sizes", Size="Size Distributions")
 title_extra_method = list(Counts="Read Counts", Coverage="Coverage depths", Median="Median sizes", Mean="Mean sizes", Size="Size Distributions")
 legend_first_method =list(Counts="Read count", Coverage="Coverage depth", Median="Median size", Mean="Mean size", Size="Read count")
 legend_extra_method =list(Counts="Read count", Coverage="Coveragedepth", Median="Median size", Mean="Mean size", Size="Read count")
 bottom_first_method =list(Counts="Coordinates (nbre of bases)",Coverage="Coordinates (nbre of bases)", Median="Coordinates (nbre of bases)", Mean="Coordinates (nbre of bases)", Size="Sizes of reads")
 bottom_extra_method =list(Counts="Coordinates (nbre of bases)",Coverage="Coordinates (nbre of bases)", Median="Coordinates (nbre of bases)", Mean="Coordinates (nbre of bases)", Size="Sizes of reads")
-## end of function parameters'
 
-## GRAPHS Functions
+## Plotting Functions
 
 double_plot <- function(...) {
-    if (n_genes > 5) {page_height_simple=15; page_height_combi=15; rows_per_page=10} else { # 11.69
-                     rows_per_page= 2 * n_genes; page_height_simple = 1.5*n_genes; page_height_combi=page_height_simple*2 }
-    if (n_samples > 4) {page_width = 8.2677*n_samples/4} else {page_width = 7 * n_samples/2} # 8.2677
-    pdf(file=args$output_pdf, paper="special", height=page_height_simple, width=page_width)
+    if (n_genes > 5) {page_height=15; rows_per_page=10} else {
+                     rows_per_page= 2 * n_genes; page_height=1.5*n_genes}
+    if (n_samples > 4) {page_width = 8.2677*n_samples/4} else {page_width = 7 * n_samples/2}
+    pdf(file=args$output_pdf, paper="special", height=page_height, width=page_width)
     for (i in seq(1,n_genes,rows_per_page/2)) {
         start=i
         end=i+rows_per_page/2-1
@@ -152,22 +150,38 @@ double_plot <- function(...) {
                                     sub=textGrob(paste(bottom_first_method[[args$first_plot_method]], "/", bottom_extra_method[[args$extra_plot_method]]), gp=gpar(cex=1), just="bottom", vjust=4)
                                     )
                    )
-    do.call(grid.arrange, args_list)
+        do.call(grid.arrange, args_list)
         }
     devname=dev.off()
 }
 
 single_plot <- function(...) {
-    width = 8.2677 * n_samples / 4
-    pdf(file=args$output_pdf, paper="special", height=11.69, width=width)
-    plot_single(Table, par.settings=par.settings.firstplot)
-    }
+    width = 8.2677 * n_samples / 2
+    rows_per_page=8
+    pdf(file=args$output_pdf, paper="special", height=11.69, width=width) #
+    for (i in seq(1,n_genes,rows_per_page)) {
+        start=i
+        end=i+rows_per_page-1
+        if (end>n_genes) {end=n_genes}
+        plot.list = lapply(per_gene_readmap[start:end], function(x) plot_single(x, strip=FALSE, par.settings=par.settings.single_plot)) # strip=FALSE,
+        args_list=c(plot.list, list( ncol=1, #  nrow=1,
+                                    top=textGrob(title_first_method[[args$first_plot_method]], gp=gpar(cex=1), vjust=2, just="top"),
+                                    left=textGrob(legend_first_method[[args$first_plot_method]], gp=gpar(cex=1), vjust=2, rot=90),
+                                    sub=textGrob(bottom_first_method[[args$first_plot_method]], gp=gpar(cex=1), just="bottom", vjust=4)
+                                    )
+                     )
+       # do.call(grid.arrange, c(plot.list, list(ncol=1, heights=rep(1,5))))
+       do.call(grid.arrange, args_list)
+        }
+    dev.off()
+}
+
 # main
 
 if (args$extra_plot_method != '') { double_plot() }
 if (args$first_plot_method == "Size" & args$extra_plot_method == '') {
     single_plot()
-    }
+}
 
 
 
