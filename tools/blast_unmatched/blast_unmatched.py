@@ -40,7 +40,7 @@ def get_unmatched(output_file, fasta_file, matched):
     with open(fasta_file, 'r') as infile:
         for line in infile:
             if line.startswith('>'):
-                subline = line[1:100].rstrip() #qid are 100chars long in blast
+                subline = line[1:].rstrip() #qid are 100chars long in blast
                 while end.match(subline) != None:
                     subline = subline[:-1]
                 if subline not in matched:
