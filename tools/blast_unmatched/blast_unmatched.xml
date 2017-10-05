@@ -1,4 +1,4 @@
-<tool id="blast_unmatched" name="Blast Unmatched" version="0.2.0">
+<tool id="blast_unmatched" name="Blast Unmatched" version="0.3.0">
     <description>get query sequences that didn't get a match during a blast</description>
     <requirements>
     </requirements>
