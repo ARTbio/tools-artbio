@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import optparse
-
+import re
 
 def parse_options():
     """
@@ -36,10 +36,13 @@ def get_unmatched(output_file, fasta_file, matched):
     """
     output_file_handle = open(output_file, 'w')
     unmatched = False
+    end = re.compile(".+\W$")
     with open(fasta_file, 'r') as infile:
         for line in infile:
             if line.startswith('>'):
                 subline = line[1:100].rstrip() #qid are 100chars long in blast
+                while end.match(subline) != None:
+                    subline = subline[:-1]
                 if subline not in matched:
                     output_file_handle.write(line)
                     unmatched = True
