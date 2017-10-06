@@ -92,7 +92,7 @@ plot_unit = function(df, method=args$first_plot_method, ...) {
     }
 }
 
-plot_single <- function(df, method=args$first_plot_method, ...) {
+plot_single <- function(df, method=args$first_plot_method, rows_per_page=rows_per_page, ...) {
         if (method == 'Counts') {
     
     } else {
@@ -102,18 +102,17 @@ plot_single <- function(df, method=args$first_plot_method, ...) {
                     stack=TRUE,
                     col=c('red', 'blue'),
                     scales=list(y=list(tick.number=4, rot=90, relation="free", cex=0.5, alternating=T), x=list(rot=0, cex=0.6, tck=0.5)),
-                    xlab=NULL, main=NULL, ylab=NULL,
+                    xlab=bottom_first_method[[args$first_plot_method]],
+                    main=title_first_method[[args$first_plot_method]],
+                    ylab=legend_first_method[[args$first_plot_method]],
                     par.strip.text = list(cex=0.75),
+                    nrow = 8,
                     as.table=TRUE,
                     ...)
-          p = update(useOuterStrips(p, strip.left=strip.custom(par.strip.text = list(cex=0.5))))
-          p = combineLimits(p, extend=TRUE, margin.x=1, margin.y=1)
-          # p = update(p, layout=c(n_samples, 7))
-          # p = update( useOuterStrips(combineLimits(p), strip.left=strip.custom(par.strip.text = list(cex=0.5))), layout=c(n_samples, 7) )
-
-          # to avoid irritating message In heights.x[pos.heights[[nm]]] <- heights.settings[[nm]] * heights.defaults[[nm]]$x :
-          # number of items to replace is not a multiple of replacement length
-          # uncomment "options(warn = -1)" for effect
+          p = update(useOuterStrips(p, strip.left=strip.custom(par.strip.text = list(cex=0.5))), layout=c(n_samples, rows_per_page)) # layout here chooses between panel of equal size on the last page with x labels. (without, we have labels on the last page but panels expand)
+          
+          p = combineLimits(p, extend=TRUE)
+          return (p)
         }
 }
 
@@ -121,8 +120,7 @@ plot_single <- function(df, method=args$first_plot_method, ...) {
 
 par.settings.firstplot = list(layout.heights=list(top.padding=11, bottom.padding = -14))
 par.settings.secondplot=list(layout.heights=list(top.padding=11, bottom.padding = -15), strip.background=list(col=c("lavender","deepskyblue")))
-#par.settings.single_plot=list(strip.background=list(col=c("lavender","deepskyblue"))) # layout.heights=list(top.padding=-11, bottom.padding=-11),
-par.settings.single_plot=list(layout.heights=list(top.padding=-1, bottom.padding = -5),strip.background = list(col = c("lightblue", "lightgreen")) ) # layout.heights=list(top.padding=1, bottom.padding=1), 
+par.settings.single_plot=list(strip.background = list(col = c("lightblue", "lightgreen")))
 title_first_method = list(Counts="Read Counts", Coverage="Coverage depths", Median="Median sizes", Mean="Mean sizes", Size="Size Distributions")
 title_extra_method = list(Counts="Read Counts", Coverage="Coverage depths", Median="Median sizes", Mean="Mean sizes", Size="Size Distributions")
 legend_first_method =list(Counts="Read count", Coverage="Coverage depth", Median="Median size", Mean="Mean size", Size="Read count")
@@ -155,23 +153,18 @@ double_plot <- function(...) {
     devname=dev.off()
 }
 
+
 single_plot <- function(...) {
     width = 8.2677 * n_samples / 2
     rows_per_page=8
-    pdf(file=args$output_pdf, paper="special", height=11.69, width=width) #
+    pdf(file=args$output_pdf, paper="a4", height=11.69, width=width)
     for (i in seq(1,n_genes,rows_per_page)) {
         start=i
         end=i+rows_per_page-1
         if (end>n_genes) {end=n_genes}
-        plot.list = lapply(per_gene_readmap[start:end], function(x) plot_single(x, strip=FALSE, par.settings=par.settings.single_plot)) # strip=FALSE,
-        args_list=c(plot.list, list( ncol=1, #  nrow=1,
-                                    top=textGrob(title_first_method[[args$first_plot_method]], gp=gpar(cex=1), vjust=2, just="top"),
-                                    left=textGrob(legend_first_method[[args$first_plot_method]], gp=gpar(cex=1), vjust=2, rot=90),
-                                    sub=textGrob(bottom_first_method[[args$first_plot_method]], gp=gpar(cex=1), just="bottom", vjust=4)
-                                    )
-                     )
-       # do.call(grid.arrange, c(plot.list, list(ncol=1, heights=rep(1,5))))
-       do.call(grid.arrange, args_list)
+        bunch = do.call(rbind, per_gene_readmap[start:end]) # sub dataframe from the list
+        p = plot_single(bunch, method=args$first_plot_method, par.settings=par.settings.single_plot, rows_per_page=rows_per_page)
+        plot(p)
         }
     dev.off()
 }
