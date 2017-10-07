@@ -1,7 +1,7 @@
 ## Setup R error handling to go to stderr
 options( show.error.messages=F,
        error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
-# options(warn = -1)
+options(warn = -1)
 library(RColorBrewer)
 library(lattice)
 library(latticeExtra)
@@ -101,15 +101,16 @@ plot_single <- function(df, method=args$first_plot_method, rows_per_page=rows_pe
                     group=Polarity,
                     stack=TRUE,
                     col=c('red', 'blue'),
-                    scales=list(y=list(tick.number=4, rot=90, relation="free", cex=0.5, alternating=T), x=list(rot=0, cex=0.6, tck=0.5)),
+                    scales=list(y=list(tick.number=4, rot=90, relation="free", cex=0.5, alternating=T), x=list(rot=0, cex=0.6, tck=0.5, alternating=c(3,3))),
                     xlab=bottom_first_method[[args$first_plot_method]],
                     main=title_first_method[[args$first_plot_method]],
                     ylab=legend_first_method[[args$first_plot_method]],
                     par.strip.text = list(cex=0.75),
                     nrow = 8,
                     as.table=TRUE,
+                    
                     ...)
-          p = update(useOuterStrips(p, strip.left=strip.custom(par.strip.text = list(cex=0.5))), layout=c(n_samples, rows_per_page)) # layout here chooses between panel of equal size on the last page with x labels. (without, we have labels on the last page but panels expand)
+          p = update(useOuterStrips(p, strip.left=strip.custom(par.strip.text = list(cex=0.5))), layout=c(n_samples, rows_per_page))
           
           p = combineLimits(p, extend=TRUE)
           return (p)
@@ -166,7 +167,7 @@ single_plot <- function(...) {
         p = plot_single(bunch, method=args$first_plot_method, par.settings=par.settings.single_plot, rows_per_page=rows_per_page)
         plot(p)
         }
-    dev.off()
+    devname=dev.off()
 }
 
 # main
