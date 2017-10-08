@@ -132,6 +132,36 @@
             <output file="size.tab" name="extra_output_tab" />
             <output file="count-size.pdf" name="output_pdf" />
         </test>
+        <test>
+            <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
+            <param name="plots_options_selector" value="two_plot" />
+            <param name="first_plot" value="Size" />
+            <param name="extra_plot" value="Counts" />
+            <output file="size.tab" name="output_tab" />
+            <output file="count.tab" name="extra_output_tab" />
+            <output file="size-count.pdf" name="output_pdf" />
+        </test>
+        <test>
+            <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
+            <param name="plots_options_selector" value="one_plot" />
+            <param name="first_plot" value="Counts" />
+            <output file="count.tab" name="output_tab" />
+            <output file="count.pdf" name="output_pdf" />
+        </test>
+        <test>
+            <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
+            <param name="plots_options_selector" value="one_plot" />
+            <param name="first_plot" value="Size" />
+            <output file="size.tab" name="output_tab" />
+            <output file="size.pdf" name="output_pdf" />
+        </test>
+        <test>
+            <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
+            <param name="plots_options_selector" value="one_plot" />
+            <param name="first_plot" value="Coverage" />
+            <output file="coverage.tab" name="output_tab" />
+            <output file="coverage.pdf" name="output_pdf" />
+        </test>
     </tests>
 
 

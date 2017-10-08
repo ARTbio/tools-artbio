@@ -83,13 +83,10 @@ plot_unit = function(df, method=args$first_plot_method, ...) {
         ylab = NULL,
         main = NULL,
         as.table=TRUE,
-        newpage = T,
         par.strip.text = list(cex=0.6),
         ...)
     }
-    if (args$extra_plot_method != '') {
     combineLimits(p)
-    }
 }
 
 plot_single <- function(df, method=args$first_plot_method, rows_per_page=rows_per_page, ...) {
