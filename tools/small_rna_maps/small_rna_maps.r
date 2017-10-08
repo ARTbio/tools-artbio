@@ -1,7 +1,7 @@
 ## Setup R error handling to go to stderr
 options( show.error.messages=F,
        error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
-options(warn = -1)
+# options(warn = -1)
 library(RColorBrewer)
 library(lattice)
 library(latticeExtra)
@@ -84,7 +84,7 @@ plot_unit = function(df, method=args$first_plot_method, ...) {
         main = NULL,
         as.table=TRUE,
         newpage = T,
-        par.strip.text = list(cex=0.7),
+        par.strip.text = list(cex=0.6),
         ...)
     }
     if (args$extra_plot_method != '') {
@@ -93,8 +93,41 @@ plot_unit = function(df, method=args$first_plot_method, ...) {
 }
 
 plot_single <- function(df, method=args$first_plot_method, rows_per_page=rows_per_page, ...) {
-        if (method == 'Counts') {
-    
+    if (method == 'Counts') {
+        p = xyplot(Counts~Coordinate|factor(Dataset, levels=unique(Dataset))+factor(Chromosome, levels=unique(Chromosome)),
+                   data=df,
+                   type='h',
+                   lwd=1.5,
+                   scales= list(relation="free", x=list(rot=0, cex=0.7, axs="i", tck=0.5), y=list(tick.number=4, rot=90, cex=0.7)),
+                   xlab=list(label=bottom_first_method[[args$first_plot_method]], cex=.85),
+                   ylab=list(label=legend_first_method[[args$first_plot_method]], cex=.85),
+                   main=title_first_method[[args$first_plot_method]],
+                   origin = 0,
+                   group=Polarity,
+                   col=c("red","blue"),
+                   par.strip.text = list(cex=0.7),
+                   as.table=T,
+                   ...)
+        p = update(useOuterStrips(p, strip.left=strip.custom(par.strip.text = list(cex=0.5))), layout=c(n_samples, rows_per_page))
+        return(p)
+    } else if (method != "Size") {
+        p = xyplot(eval(as.name(method))~Coordinate|factor(Dataset, levels=unique(Dataset))+factor(Chromosome, levels=unique(Chromosome)),
+                   data=df,
+                   type='p',
+                   pch=19,
+                   cex=0.35,
+                   scales= list(relation="free", x=list(rot=0, cex=0.7, axs="i", tck=0.5), y=list(tick.number=4, rot=90, cex=0.7)),
+                   xlab=list(label=bottom_first_method[[args$first_plot_method]], cex=.85),
+                   ylab=list(label=legend_first_method[[args$first_plot_method]], cex=.85),
+                   main=title_first_method[[args$first_plot_method]],
+                   origin = 0,
+                   group=Polarity,
+                   col=c("red","blue"),
+                   par.strip.text = list(cex=0.7),
+                   as.table=T,
+                   ...)
+        p = update(useOuterStrips(p, strip.left=strip.custom(par.strip.text = list(cex=0.5))), layout=c(n_samples, rows_per_page))
+        return(p)
     } else {
         p= barchart(Counts~as.factor(Size)|factor(Dataset, levels=unique(Dataset))+Chromosome, data = df, origin = 0,
                     horizontal=FALSE,
@@ -102,10 +135,10 @@ plot_single <- function(df, method=args$first_plot_method, rows_per_page=rows_pe
                     stack=TRUE,
                     col=c('red', 'blue'),
                     scales=list(y=list(tick.number=4, rot=90, relation="free", cex=0.5, alternating=T), x=list(rot=0, cex=0.6, tck=0.5, alternating=c(3,3))),
-                    xlab=bottom_first_method[[args$first_plot_method]],
+                    xlab=list(label=bottom_first_method[[args$first_plot_method]], cex=.85),
+                    ylab=list(label=legend_first_method[[args$first_plot_method]], cex=.85),
                     main=title_first_method[[args$first_plot_method]],
-                    ylab=legend_first_method[[args$first_plot_method]],
-                    par.strip.text = list(cex=0.75),
+                    par.strip.text = list(cex=0.7),
                     nrow = 8,
                     as.table=TRUE,
                     
@@ -119,8 +152,10 @@ plot_single <- function(df, method=args$first_plot_method, rows_per_page=rows_pe
 
 ## function parameters
 
-par.settings.firstplot = list(layout.heights=list(top.padding=11, bottom.padding = -14))
-par.settings.secondplot=list(layout.heights=list(top.padding=11, bottom.padding = -15), strip.background=list(col=c("lavender","deepskyblue")))
+#par.settings.firstplot = list(layout.heights=list(top.padding=11, bottom.padding = -14))
+#par.settings.secondplot=list(layout.heights=list(top.padding=11, bottom.padding = -15), strip.background=list(col=c("lavender","deepskyblue")))
+par.settings.firstplot = list(layout.heights=list(top.padding=-2, bottom.padding=-2))
+par.settings.secondplot=list(layout.heights=list(top.padding=-1, bottom.padding=-1), strip.background=list(col=c("lavender","deepskyblue")))
 par.settings.single_plot=list(strip.background = list(col = c("lightblue", "lightgreen")))
 title_first_method = list(Counts="Read Counts", Coverage="Coverage depths", Median="Median sizes", Mean="Mean sizes", Size="Size Distributions")
 title_extra_method = list(Counts="Read Counts", Coverage="Coverage depths", Median="Median sizes", Mean="Mean sizes", Size="Size Distributions")
@@ -143,10 +178,10 @@ double_plot <- function(...) {
         first_plot.list = lapply(per_gene_readmap[start:end], function(x) plot_unit(x, strip=FALSE, par.settings=par.settings.firstplot))
         second_plot.list = lapply(per_gene_size[start:end], function(x) plot_unit(x, method=args$extra_plot_method, par.settings=par.settings.secondplot))
         plot.list=rbind(second_plot.list, first_plot.list)
-        args_list=c(plot.list, list(nrow=rows_per_page+1, ncol=1,
-                                    top=textGrob(paste(title_first_method[[args$first_plot_method]], "and", title_extra_method[[args$extra_plot_method]]), gp=gpar(cex=1), vjust=2, just="top"),
+        args_list=c(plot.list, list( nrow=rows_per_page+1, ncol=1,  heights=unit(c(40,30,40,30,40,30,40,30,40,30,10), rep("mm", 11)),
+                                    top=textGrob(paste(title_first_method[[args$first_plot_method]], "and", title_extra_method[[args$extra_plot_method]]), gp=gpar(cex=1), vjust=0, just="top"),
                                     left=textGrob(paste(legend_first_method[[args$first_plot_method]], "/", legend_extra_method[[args$extra_plot_method]]), gp=gpar(cex=1), vjust=2, rot=90),
-                                    sub=textGrob(paste(bottom_first_method[[args$first_plot_method]], "/", bottom_extra_method[[args$extra_plot_method]]), gp=gpar(cex=1), just="bottom", vjust=4)
+                                    sub=textGrob(paste(bottom_first_method[[args$first_plot_method]], "/", bottom_extra_method[[args$extra_plot_method]]), gp=gpar(cex=1), just="bottom", vjust=2)
                                     )
                    )
         do.call(grid.arrange, args_list)
@@ -158,7 +193,7 @@ double_plot <- function(...) {
 single_plot <- function(...) {
     width = 8.2677 * n_samples / 2
     rows_per_page=8
-    pdf(file=args$output_pdf, paper="a4", height=11.69, width=width)
+    pdf(file=args$output_pdf, paper="special", height=11.69, width=width)
     for (i in seq(1,n_genes,rows_per_page)) {
         start=i
         end=i+rows_per_page-1
@@ -173,7 +208,7 @@ single_plot <- function(...) {
 # main
 
 if (args$extra_plot_method != '') { double_plot() }
-if (args$first_plot_method == "Size" & args$extra_plot_method == '') {
+if (args$extra_plot_method == '') {
     single_plot()
 }
 
