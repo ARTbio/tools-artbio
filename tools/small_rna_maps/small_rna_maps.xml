@@ -1,4 +1,4 @@
-<tool id="small_rna_maps" name="small_rna_maps" version="1.1.0">
+<tool id="small_rna_maps" name="small_rna_maps" version="2.0.0">
   <description></description>
   <requirements>
         <requirement type="package" version="1.11.2=py27_0">numpy</requirement>
@@ -92,45 +92,45 @@
             <param name="plots_options_selector" value="two_plot" />
             <param name="first_plot" value="Counts" />
             <param name="extra_plot" value="Mean" />
-            <output file="readmap.tab" name="output_tab" />
+            <output file="count.tab" name="output_tab" />
             <output file="mean.tab" name="extra_output_tab" />
-            <output file="mean.pdf" name="output_pdf" />
+            <output file="count-mean.pdf" name="output_pdf" />
         </test>
         <test>
             <param name="inputs" value="input1.bam,input1.bam" ftype="bam"/>
             <param name="plots_options_selector" value="two_plot" />
             <param name="first_plot" value="Counts" />
             <param name="extra_plot" value="Mean" />
-            <output file="doubled_readmap.tab" name="output_tab" />
-            <output file="double_mean.tab" name="extra_output_tab" />
-            <output file="doubled_mean.pdf" name="output_pdf" />
+            <output file="doubled_count.tab" name="output_tab" />
+            <output file="doubled_mean.tab" name="extra_output_tab" />
+            <output file="doubled_count-mean.pdf" name="output_pdf" />
         </test>
         <test>
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
             <param name="plots_options_selector" value="two_plot" />
             <param name="first_plot" value="Counts" />
             <param name="extra_plot" value="Median" />
-            <output file="readmap.tab" name="output_tab" />
+            <output file="count.tab" name="output_tab" />
             <output file="median.tab" name="extra_output_tab" />
-            <output file="median.pdf" name="output_pdf" />
+            <output file="count-median.pdf" name="output_pdf" />
         </test>
         <test>
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
             <param name="plots_options_selector" value="two_plot" />
             <param name="first_plot" value="Counts" />
             <param name="extra_plot" value="Coverage" />
-            <output file="readmap.tab" name="output_tab" />
+            <output file="count.tab" name="output_tab" />
             <output file="coverage.tab" name="extra_output_tab" />
-            <output file="coverage.pdf" name="output_pdf" />
+            <output file="count-coverage.pdf" name="output_pdf" />
         </test>
         <test>
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
             <param name="plots_options_selector" value="two_plot" />
             <param name="first_plot" value="Counts" />
             <param name="extra_plot" value="Size" />
-            <output file="readmap.tab" name="output_tab" />
+            <output file="count.tab" name="output_tab" />
             <output file="size.tab" name="extra_output_tab" />
-            <output file="sizes.pdf" name="output_pdf" />
+            <output file="count-size.pdf" name="output_pdf" />
         </test>
     </tests>
 
