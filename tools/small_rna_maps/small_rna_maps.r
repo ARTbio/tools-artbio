@@ -12,6 +12,7 @@ library(optparse)
 option_list <- list(
     make_option(c("-f", "--first_dataframe"), type="character", help="path to first dataframe"),
     make_option(c("-e", "--extra_dataframe"), type="character", help="path to additional dataframe"),
+    make_option(c("-n", "--normalization"), type="character", help="space-separated normalization/size factors"),
     make_option("--first_plot_method", type = "character", help="How additional data should be plotted"),
     make_option("--extra_plot_method", type = "character", help="How additional data should be plotted"),
     make_option("--output_pdf", type = "character", help="path to the pdf file with plots")
@@ -27,6 +28,21 @@ if (args$first_plot_method == "Counts" | args$first_plot_method == "Size") {
     Table <- within(Table, Counts[Polarity=="R"] <- (Counts[Polarity=="R"]*-1))
 }
 n_samples=length(unique(Table$Dataset))
+samples = unique(Table$Dataset)
+if (args$normalization != "") {
+    norm_factors = as.numeric(unlist(strsplit(args$normalization, " ")))
+} else {
+    norm_factors = rep(1, n_samples)
+}
+if (args$first_plot_method == "Counts" | args$first_plot_method == "Size" | args$first_plot_method == "Coverage") {
+    i = 1
+    for (sample in samples) {
+        print(norm_factors[i])
+        Table[, length(Table)][Table$Dataset==sample] <- Table[, length(Table)][Table$Dataset==sample]*norm_factors[i]
+        i = i + 1
+    }
+    print(tail(Table))
+}
 genes=unique(levels(Table$Chromosome))
 per_gene_readmap=lapply(genes, function(x) subset(Table, Chromosome==x))
 per_gene_limit=lapply(genes, function(x) c(1, unique(subset(Table, Chromosome==x)$Chrom_length)) )
@@ -36,9 +52,16 @@ if (args$extra_plot_method != '') {
     ExtraTable=read.delim(args$extra_dataframe, header=T, row.names=NULL)
     if (args$extra_plot_method == "Counts" | args$extra_plot_method=='Size') {
         ExtraTable <- within(ExtraTable, Counts[Polarity=="R"] <- (Counts[Polarity=="R"]*-1))
-        }
-    per_gene_size=lapply(genes, function(x) subset(ExtraTable, Chromosome==x))
     }
+    if (args$extra_plot_method == "Counts" | args$extra_plot_method == "Size" | args$extra_plot_method == "Coverage") {
+        i = 1
+        for (sample in samples) {
+            ExtraTable[, length(ExtraTable)][ExtraTable$Dataset==sample] <- ExtraTable[, length(ExtraTable)][ExtraTable$Dataset==sample]*norm_factors[i]
+            i = i + 1
+        }
+    }
+    per_gene_size=lapply(genes, function(x) subset(ExtraTable, Chromosome==x))
+}
 
 ## functions
 
