@@ -1,4 +1,4 @@
-<tool id="small_rna_maps" name="small_rna_maps" version="2.0.0">
+<tool id="small_rna_maps" name="small_rna_maps" version="2.1.0">
   <description></description>
   <requirements>
         <requirement type="package" version="1.11.2=py27_0">numpy</requirement>
@@ -33,6 +33,7 @@
       Rscript '$__tool_directory__'/small_rna_maps.r
           --first_dataframe '$output_tab' 
           --extra_dataframe '$extra_output_tab'
+          --normalization '$normalization'
           #if str($plots_options.plots_options_selector ) == "two_plot":
               --first_plot_method '${plots_options.first_plot}'
               --extra_plot_method '${plots_options.extra_plot}'
@@ -44,20 +45,22 @@
   ]]></command>
  <inputs>
     <param name="inputs" type="data" format="bam" label="Select multiple alignments to parse" multiple="True"/>
+    <param name="normalization" type="text" label="Enter size/normalization factors as a space-separated list. Leave blank for no normalization (default)"
+           help="e.g. '1 0.75 1.23'. Values of the list map to the above selected files from bottom to top" />
     <conditional name="plots_options">
         <param name="plots_options_selector" type="select" label="Number of plots per chromosome">
             <option value="one_plot">Just one plot per chromosome</option>
             <option value="two_plot" selected="True">Two plots per chromosome</option>
         </param>
         <when value="two_plot">
-            <param name="first_plot" type="select" label="select the type of the first plot">
+            <param name="first_plot" type="select" label="Select the type of the first plot">
                 <option value="Counts">Counts</option> 
                 <option value="Coverage">Coverage</option> 
                 <option value="Mean">Mean Sizes</option> 
                 <option value="Median">Median Sizes</option>
                 <option value="Size">Size Distributions</option>
             </param>
-            <param name="extra_plot" type="select" label="select the type of the second plot">
+            <param name="extra_plot" type="select" label="Select the type of the second plot">
                 <option value="Counts">Counts</option> 
                 <option value="Coverage">Coverage</option> 
                 <option value="Mean">Mean Sizes</option> 
@@ -92,6 +95,7 @@
             <param name="plots_options_selector" value="two_plot" />
             <param name="first_plot" value="Counts" />
             <param name="extra_plot" value="Mean" />
+            <param name="normalization" value="1 1" />
             <output file="count.tab" name="output_tab" />
             <output file="mean.tab" name="extra_output_tab" />
             <output file="count-mean.pdf" name="output_pdf" />
@@ -101,6 +105,7 @@
             <param name="plots_options_selector" value="two_plot" />
             <param name="first_plot" value="Counts" />
             <param name="extra_plot" value="Mean" />
+            <param name="normalization" value="1 1" />
             <output file="doubled_count.tab" name="output_tab" />
             <output file="doubled_mean.tab" name="extra_output_tab" />
             <output file="doubled_count-mean.pdf" name="output_pdf" />
@@ -110,6 +115,7 @@
             <param name="plots_options_selector" value="two_plot" />
             <param name="first_plot" value="Counts" />
             <param name="extra_plot" value="Median" />
+            <param name="normalization" value="1 1" />
             <output file="count.tab" name="output_tab" />
             <output file="median.tab" name="extra_output_tab" />
             <output file="count-median.pdf" name="output_pdf" />
@@ -119,6 +125,7 @@
             <param name="plots_options_selector" value="two_plot" />
             <param name="first_plot" value="Counts" />
             <param name="extra_plot" value="Coverage" />
+            <param name="normalization" value="1 1" />
             <output file="count.tab" name="output_tab" />
             <output file="coverage.tab" name="extra_output_tab" />
             <output file="count-coverage.pdf" name="output_pdf" />
@@ -128,6 +135,7 @@
             <param name="plots_options_selector" value="two_plot" />
             <param name="first_plot" value="Counts" />
             <param name="extra_plot" value="Size" />
+            <param name="normalization" value="1 1" />
             <output file="count.tab" name="output_tab" />
             <output file="size.tab" name="extra_output_tab" />
             <output file="count-size.pdf" name="output_pdf" />
@@ -137,13 +145,25 @@
             <param name="plots_options_selector" value="two_plot" />
             <param name="first_plot" value="Size" />
             <param name="extra_plot" value="Counts" />
+            <param name="normalization" value="1 1" />
             <output file="size.tab" name="output_tab" />
             <output file="count.tab" name="extra_output_tab" />
             <output file="size-count.pdf" name="output_pdf" />
         </test>
         <test>
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
+            <param name="plots_options_selector" value="two_plot" />
+            <param name="first_plot" value="Size" />
+            <param name="extra_plot" value="Counts" />
+            <param name="normalization" value="1 0.75" />
+            <output file="size.tab" name="output_tab" />
+            <output file="count.tab" name="extra_output_tab" />
+            <output file="size-count_normed.pdf" name="output_pdf" />
+        </test>
+        <test>
+            <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
             <param name="plots_options_selector" value="one_plot" />
+            <param name="normalization" value="1 1" />
             <param name="first_plot" value="Counts" />
             <output file="count.tab" name="output_tab" />
             <output file="count.pdf" name="output_pdf" />
@@ -152,6 +172,7 @@
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
             <param name="plots_options_selector" value="one_plot" />
             <param name="first_plot" value="Size" />
+            <param name="normalization" value="1 1" />
             <output file="size.tab" name="output_tab" />
             <output file="size.pdf" name="output_pdf" />
         </test>
@@ -159,8 +180,17 @@
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
             <param name="plots_options_selector" value="one_plot" />
             <param name="first_plot" value="Coverage" />
+            <param name="normalization" value="1 1" />
             <output file="coverage.tab" name="output_tab" />
             <output file="coverage.pdf" name="output_pdf" />
+        </test>
+        <test>
+            <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
+            <param name="plots_options_selector" value="one_plot" />
+            <param name="first_plot" value="Coverage" />
+            <param name="normalization" value="1 0.2" />
+            <output file="coverage.tab" name="output_tab" />
+            <output file="coverage_normed.pdf" name="output_pdf" />
         </test>
     </tests>
 
@@ -169,9 +199,19 @@
 
 **What it does**
 
-Generate read count maps from alignment BAM files, using pysam and lattice.
+Plots maps of (1) read counts, (2) mean sizes, (3) median sizes, (4) coverage depth or (5)
+size read distribution along chromosome references.
 
-In addition to the read counts (lower graphs), median size, mean size and coverage depth of reads(lower graphs) mapping at a given position are plotted.	
+Mean sizes and median sizes are the mean and the median sizes, respectively, of all reads
+whose 5' end map to a given coordinate in a chromosome reference.
+Coverage depths are computed from the input bam alignment files using the python pysam module.
+
+The variables mentioned above (1-5) can be plotted either separately or in all possible
+pairwise combinations.
+
+For comparison purpose, values from bam alignment files can be normalized by a size factor
+before plotting. If the normalization field is leaved blank, default normalization of 1
+is assumed.
 
 **Inputs**
 
@@ -180,6 +220,9 @@ bam alignment files that must be
   - single-read
   - sorted
   - mapping to the same reference
+  
+Optionally, a space-separated list of normalization/size factors may be added before plotting.
+This list maps to the selected bam alignments from bottom to top.
 
 **Output**
 
