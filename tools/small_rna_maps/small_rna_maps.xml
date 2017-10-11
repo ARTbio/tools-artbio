@@ -1,4 +1,4 @@
-<tool id="small_rna_maps" name="small_rna_maps" version="2.1.0">
+<tool id="small_rna_maps" name="small_rna_maps" version="2.2.0">
   <description></description>
   <requirements>
         <requirement type="package" version="1.11.2=py27_0">numpy</requirement>
@@ -6,6 +6,8 @@
         <requirement type="package" version="1.3.2=r3.3.2_0">r-optparse</requirement>
         <requirement type="package" version="0.6_28=r3.3.2_0">r-latticeextra</requirement>
         <requirement type="package" version="2.2.1=r3.3.2_0">r-gridextra</requirement>
+        <requirement type="package" version="1.4.2=r3.3.2_0">r-reshape2</requirement>
+        
   </requirements>
   <stdio>
       <exit_code range="1:" level="fatal" description="Tool exception" />
@@ -26,6 +28,9 @@
       #if str($plots_options.plots_options_selector ) == "two_plot":
           --plot_methods '${plots_options.first_plot}' '${plots_options.extra_plot}'
           --outputs '$output_tab' '$extra_output_tab' &&
+      #elif str($plots_options.plots_options_selector ) == "global":
+          --plot_methods 'Size'
+          --outputs '$output_tab' &&
       #else:
           --plot_methods '${plots_options.first_plot}'
           --outputs '$output_tab' &&
@@ -37,30 +42,35 @@
           #if str($plots_options.plots_options_selector ) == "two_plot":
               --first_plot_method '${plots_options.first_plot}'
               --extra_plot_method '${plots_options.extra_plot}'
+          #elif str($plots_options.plots_options_selector ) == "global":
+              --first_plot_method 'Size'
+              --extra_plot_method ''
+              --global '${plots_options.mergestrands}'
           #else:
               --first_plot_method '${plots_options.first_plot}'
               --extra_plot_method ''
           #end if
-          --output_pdf '$output_pdf'
+              --output_pdf '$output_pdf'
   ]]></command>
  <inputs>
     <param name="inputs" type="data" format="bam" label="Select multiple alignments to parse" multiple="True"/>
     <param name="normalization" type="text" label="Enter size/normalization factors as a space-separated list. Leave blank for no normalization (default)"
            help="e.g. '1 0.75 1.23'. Values of the list map to the above selected files from bottom to top" />
     <conditional name="plots_options">
-        <param name="plots_options_selector" type="select" label="Number of plots per chromosome">
+        <param name="plots_options_selector" type="select" display="radio" label="Plot Options">
             <option value="one_plot">Just one plot per chromosome</option>
             <option value="two_plot" selected="True">Two plots per chromosome</option>
+            <option value="global">Global read size distributions of aligned reads</option> 
         </param>
         <when value="two_plot">
-            <param name="first_plot" type="select" label="Select the type of the first plot">
+            <param name="first_plot" type="select" display="radio" label="Select the type of the first plot">
                 <option value="Counts">Counts</option> 
                 <option value="Coverage">Coverage</option> 
                 <option value="Mean">Mean Sizes</option> 
                 <option value="Median">Median Sizes</option>
                 <option value="Size">Size Distributions</option>
             </param>
-            <param name="extra_plot" type="select" label="Select the type of the second plot">
+            <param name="extra_plot" type="select" display="radio" label="Select the type of the second plot">
                 <option value="Counts">Counts</option> 
                 <option value="Coverage">Coverage</option> 
                 <option value="Mean">Mean Sizes</option> 
@@ -69,7 +79,7 @@
             </param>
         </when>
         <when value="one_plot">
-            <param name="first_plot" type="select" label="select the type of the first plot">
+            <param name="first_plot" type="select" display="radio" label="select the type of the first plot">
                 <option value="Counts">Counts</option> 
                 <option value="Coverage">Coverage</option> 
                 <option value="Mean">Mean Sizes</option> 
@@ -77,19 +87,43 @@
                 <option value="Size">Size Distributions</option>
             </param>
         </when>
+        <when value="global">
+            <param name="first_plot" type="hidden" value="Size"/>
+            <param name="mergestrands" type="select" display="radio" label="Whether forward and reverse aligned reads should be merged or not in the histogram">
+                <option value="nomerge">Do not merge</option>
+                <option value="merge">Merge forward and reverse reads</option>
+            </param>
+        </when>
     </conditional>
  </inputs>
 
  <outputs>
-   <data format="tabular" name="output_tab" label="Read Count dataframe" />
-   <data format="tabular" name="extra_output_tab" label="$plots_options.extra_plot dataframe">
-    <filter>plots_options['plots_options_selector'] == 'two_plot'</filter>
-   </data> 
-   <data format="pdf" name="output_pdf" label="PDF file" />
-
+    <data format="tabular" name="output_tab" label="$plots_options.first_plot dataframe" />
+    <data format="tabular" name="extra_output_tab" label="$plots_options.extra_plot dataframe">
+        <filter>plots_options['plots_options_selector'] == 'two_plot'</filter>
+    </data> 
+    <data format="pdf" name="output_pdf" label="small RNA maps" />
 </outputs>
 
     <tests>
+        <test>
+            <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
+            <param name="plots_options_selector" value="global" />
+            <param name="mergestrands" value="nomerge" />
+            <param name="first_plot" value="Size" />
+            <param name="normalization" value="1 1" />
+            <output file="size.tab" name="output_tab" />
+            <output file="global_nomerge.pdf" name="output_pdf" />
+        </test>
+        <test>
+            <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
+            <param name="plots_options_selector" value="global" />
+            <param name="mergestrands" value="merge" />
+            <param name="first_plot" value="Size" />
+            <param name="normalization" value="1 1" />
+            <output file="size.tab" name="output_tab" />
+            <output file="global_merge.pdf" name="output_pdf" />
+        </test>
         <test>
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
             <param name="plots_options_selector" value="two_plot" />

@@ -1,7 +1,7 @@
 ## Setup R error handling to go to stderr
 options( show.error.messages=F,
        error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
-# options(warn = -1)
+options(warn = -1)
 library(RColorBrewer)
 library(lattice)
 library(latticeExtra)
@@ -9,12 +9,14 @@ library(grid)
 library(gridExtra)
 library(optparse)
 
+
 option_list <- list(
     make_option(c("-f", "--first_dataframe"), type="character", help="path to first dataframe"),
     make_option(c("-e", "--extra_dataframe"), type="character", help="path to additional dataframe"),
     make_option(c("-n", "--normalization"), type="character", help="space-separated normalization/size factors"),
     make_option("--first_plot_method", type = "character", help="How additional data should be plotted"),
     make_option("--extra_plot_method", type = "character", help="How additional data should be plotted"),
+    make_option("--global", type = "character", help="data should be plotted as global size distribution"),
     make_option("--output_pdf", type = "character", help="path to the pdf file with plots")
     )
  
@@ -37,11 +39,9 @@ if (args$normalization != "") {
 if (args$first_plot_method == "Counts" | args$first_plot_method == "Size" | args$first_plot_method == "Coverage") {
     i = 1
     for (sample in samples) {
-        print(norm_factors[i])
         Table[, length(Table)][Table$Dataset==sample] <- Table[, length(Table)][Table$Dataset==sample]*norm_factors[i]
         i = i + 1
     }
-    print(tail(Table))
 }
 genes=unique(levels(Table$Chromosome))
 per_gene_readmap=lapply(genes, function(x) subset(Table, Chromosome==x))
@@ -64,7 +64,42 @@ if (args$extra_plot_method != '') {
 }
 
 ## functions
-
+globalbc = function(df, global="", ...) {
+    if (global == "yes") {
+        bc <- barchart(Counts~as.factor(Size)|factor(Dataset, levels=unique(Dataset)),
+              data = df, origin = 0,
+              horizontal=FALSE,
+              col=c("darkblue"),
+              scales=list(y=list(tick.number=4, rot=90, relation="free", cex=0.5, alternating=T), x=list(rot=0, cex=0.6, tck=0.5, alternating=c(3,3))),
+              xlab=list(label=bottom_first_method[[args$first_plot_method]], cex=.85),
+              ylab=list(label=legend_first_method[[args$first_plot_method]], cex=.85),
+              main=title_first_method[[args$first_plot_method]],
+              layout = c(2, 6), newpage=T,
+              as.table=TRUE,
+              aspect=0.5,
+              strip = strip.custom(par.strip.text = list(cex = 1), which.given=1, bg="lightblue"),
+              ...
+              )
+    } else {
+        bc <- barchart(Counts~as.factor(Size)|factor(Dataset, levels=unique(Dataset)),
+              data = df, origin = 0,
+              horizontal=FALSE,
+              group=Polarity,
+              stack=TRUE,
+              col=c('red', 'blue'),
+              scales=list(y=list(tick.number=4, rot=90, relation="free", cex=0.5, alternating=T), x=list(rot=0, cex=0.6, tck=0.5, alternating=c(3,3))),
+              xlab=list(label=bottom_first_method[[args$first_plot_method]], cex=.85),
+              ylab=list(label=legend_first_method[[args$first_plot_method]], cex=.85),
+              main=title_first_method[[args$first_plot_method]],
+              layout = c(2, 6), newpage=T,
+              as.table=TRUE,
+              aspect=0.5,
+              strip = strip.custom(par.strip.text = list(cex = 1), which.given=1, bg="lightblue"),
+              ...
+              )
+    }
+   return(bc)
+}
 plot_unit = function(df, method=args$first_plot_method, ...) {
     if (method == 'Counts') {
         p = xyplot(Counts~Coordinate|factor(Dataset, levels=unique(Dataset))+factor(Chromosome, levels=unique(Chromosome)),
@@ -161,10 +196,8 @@ plot_single <- function(df, method=args$first_plot_method, rows_per_page=rows_pe
                     par.strip.text = list(cex=0.7),
                     nrow = 8,
                     as.table=TRUE,
-                    
                     ...)
           p = update(useOuterStrips(p, strip.left=strip.custom(par.strip.text = list(cex=0.5))), layout=c(n_samples, rows_per_page))
-          
           p = combineLimits(p, extend=TRUE)
           return (p)
         }
@@ -228,9 +261,26 @@ single_plot <- function(...) {
 # main
 
 if (args$extra_plot_method != '') { double_plot() }
-if (args$extra_plot_method == '') {
+if (args$extra_plot_method == '' & !exists('global', where=args)) {
     single_plot()
 }
+if (exists('global', where=args)) {
+    pdf(file=args$output, paper="special", height=11.69)
+    Table <- within(Table, Counts[Polarity=="R"] <- abs(Counts[Polarity=="R"])) # retropedalage
+    library(reshape2)
+    ml = melt(Table, id.vars = c("Dataset", "Chromosome", "Polarity", "Size"))
+    if (args$global == "nomerge") {
+        castml = dcast(ml, Dataset+Polarity+Size ~ variable, function(x) sum(x))
+        castml <- within(castml, Counts[Polarity=="R"] <- (Counts[Polarity=="R"]*-1))
+        bc = globalbc(castml, global="no")
+    } else {
+        castml = dcast(ml, Dataset+Size ~ variable, function(x) sum(x))
+        bc = globalbc(castml, global="yes")
+    }
+    plot(bc)
+    devname=dev.off()
+}
+    
 
 
 
