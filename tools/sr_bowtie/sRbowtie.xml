@@ -1,4 +1,4 @@
-<tool id="bowtieForSmallRNA" name="sR_bowtie" version="2.0.0">
+<tool id="bowtieForSmallRNA" name="sR_bowtie" version="2.0.1">
     <description>for small RNA short reads</description>
     <requirements>
         <requirement type="package" version="1.1.2=py27_2">bowtie</requirement>
@@ -6,7 +6,7 @@
     </requirements>
     <command detect_errors="exit_code"><![CDATA[
         #if $refGenomeSource.genomeSource == "history":
-            bowtie-build -f $refGenomeSource.ownFile genome &&
+            bowtie-build -f $refGenomeSource.ownFile genome 1>/dev/null &&
             ln -s -f '$refGenomeSource.ownFile' genome.fa &&
             #set index_path = 'genome'
         #else:
@@ -48,11 +48,11 @@
 
         ## run the bowtie alignement
         #if $output_format == "tabular":
-            bowtie -p \${GALAXY_SLOTS:-4} $method_postfix --suppress 6,7,8 $index_path $format '$input' > $output
+            bowtie -p \${GALAXY_SLOTS:-4} $method_postfix --suppress 6,7,8 $index_path $format '$input' 2>&1 > $output
         #elif $output_format == "sam":
-            bowtie -p \${GALAXY_SLOTS:-4} $method_postfix -S $index_path $format '$input' > '$output'
+            bowtie -p \${GALAXY_SLOTS:-4} $method_postfix -S $index_path $format '$input' 2>&1 > '$output'
         #elif $output_format == "bam":
-            bowtie -p \${GALAXY_SLOTS:-4} $method_postfix -S $index_path $format '$input' | samtools view -u - | samtools sort -@ "\${GALAXY_SLOTS:-4}" -T tmp -O bam -o $output
+            bowtie -p \${GALAXY_SLOTS:-4} $method_postfix -S $index_path $format '$input'| samtools view -u - | samtools sort -@ "\${GALAXY_SLOTS:-4}" -T tmp -O bam -o $output 2>&1
         #end if
         ##### | samtools view -uS
         ]]></command>
