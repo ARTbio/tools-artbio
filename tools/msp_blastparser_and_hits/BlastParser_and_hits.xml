@@ -1,4 +1,4 @@
-<tool id="BlastParser_and_hits" name="Parse blast output and compile hits" version="2.4.3">
+<tool id="BlastParser_and_hits" name="Parse blast output and compile hits" version="2.4.4">
 <description>for virus discovery</description>
 <requirements></requirements>
 <command><![CDATA[
@@ -24,7 +24,9 @@
     ]]></command>
 <inputs>
 	<param name="sequences" type="data" format="fasta"  label="fasta sequences that have been blasted" />
-	<param name="blast" type="data" format="tabular" label="The blast output you wish to parse" />
+	<param name="blast" type="data" format="tabular" label="The blast output you wish to parse">
+            <validator type="expression" message="Blast file must have 13 columns">value.metadata.columns == 13</validator>
+        </param>
 	<param name="flanking" type="integer" value= "5" label="Number of flanking nucleotides to add to hits for CAP3 assembly"/>
 	<param name="mode" type="select" label="Extensive or compact  reporting mode" help="display (extensive)  or not (compact) the oases contigs">
 	    <option value="verbose" selected="true">extensive</option>
