@@ -1,4 +1,4 @@
-gene	matchedSample_1	matchedSample_2
+gene	alignment1.bam	alignment2.bam
 dme-bantam	1	1
 dme-let-7	0	0
 dme-mir-1	72	0

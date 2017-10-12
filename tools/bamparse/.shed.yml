@@ -1,0 +1,13 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: bamparse
+description: Generates hit count lists from bam alignments.
+long_description: |
+  Generates hit count lists from bam alignments.
+categories:
+  - RNA
+  - Transcriptomics
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/bamparse
+toolshed:
+  - toolshed
