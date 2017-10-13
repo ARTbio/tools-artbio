@@ -1,0 +1,75 @@
+<tool id="bamparse" name="Count alignments" version="2.0.0">
+    <description>in a BAM file</description>
+    <requirements>
+	        <requirement type="package" version="1.1.2">bowtie</requirement>
+            <requirement type="package" version="1.11.2">numpy</requirement>
+            <requirement type="package" version="0.11.2.1">pysam</requirement>
+    </requirements>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Tool exception" />
+    </stdio>
+    <command detect_errors="exit_code"><![CDATA[
+        mkdir outputdir &&
+        #for $file in $input_list
+           samtools index '$file' &&
+        #end for
+        python $__tool_directory__/bamparse.py
+        --alignments
+        #for $file in $input_list
+            '$file'
+        #end for
+        --labels
+        #for $file in $input_list
+            '$file.element_identifier'
+        #end for
+	    --polarity '$polarity'
+        --number '$output_option'
+ ]]></command>
+    <inputs>
+        <param name="input_list" type="data" format="bam" label="Select multiple alignments to parse" multiple="true"/>
+        <param name="polarity" type="select" label="how to count sense and antisense reads">
+            <option value="both">count both sense and antisense reads</option>
+            <option value="sense">count only sense reads</option>
+            <option value="antisense">count only antisense reads</option>
+        </param>
+        <param name="output_option" type="select" display="radio" label="Select the number of files for results"
+               help="Results can be returned either as a single multi-column table or in separate two-column
+               datasets (useful for DESeq subsequent analysis)">
+                <option value="unique">A multi-column table</option> 
+                <option value="multiple">One separate two-columns dataset per input bam alignment</option> 
+        </param>
+    </inputs>
+    <outputs>
+        <data name="output" format="tabular" label="Counts">
+            <discover_datasets pattern="(?P&lt;designation&gt;.*)\.tabular" ext="tabular" visible="true" assign_primary_output="true" directory="outputdir"/>
+        </data>
+    </outputs>
+    <help>
+
+**What it does**
+
+Counts the number of reads aligned to each reference (@SN, reference NAME) in one or
+several BAM alignments.
+
+Sense, antisense or both sense and antisense alignments can be counted
+
+The library labels in the returned count table are taken from the input bam datasets
+names in the Galaxy history.
+    </help>
+    <tests>
+        <test>
+            <param name="input_list" value="alignment1.bam,alignment2.bam" ftype="tabular" />
+            <param name="polarity" value="both" />
+            <param name="output_option" value="unique" />
+            <output name="output" ftype="tabular" file="table.tabular" />
+        </test>
+        <test>
+            <param name="input_list" value="alignment1.bam,alignment2.bam" ftype="tabular" />
+            <param name="polarity" value="both" />
+            <param name="output_option" value="multiple" />
+            <output name="output" ftype="tabular" file="table0.tabular">
+                <discovered_dataset designation="table1" ftype="tabular" file="table1.tabular" />
+            </output>
+        </test>
+    </tests>
+</tool>
