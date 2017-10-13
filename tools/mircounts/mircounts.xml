@@ -226,7 +226,7 @@ Relative :
 3. A table of pre-mir counts
 4. A table of mature mir counts
 
-Optional:
+Optional outputs:
 
 5. A table of pre-mir coverage
 6. A PDF file with covererage plots
