@@ -2,8 +2,8 @@
     <description>in a BAM file</description>
     <requirements>
 	        <requirement type="package" version="1.1.2">bowtie</requirement>
-            <requirement type="package" version="1.11.2=py27_0">numpy</requirement>
-            <requirement type="package" version="0.11.2.1=py27_0">pysam</requirement>
+            <requirement type="package" version="1.11.2">numpy</requirement>
+            <requirement type="package" version="0.11.2.1">pysam</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
@@ -42,7 +42,6 @@
     <outputs>
         <data name="output" format="tabular" label="Counts">
             <discover_datasets pattern="(?P&lt;designation&gt;.*)\.tabular" ext="tabular" visible="true" assign_primary_output="true" directory="outputdir"/>
-            <!--<discover_datasets pattern="__designation__" ext="tabular" visible="true" directory="outputdir" assign_primary_output="true"/>-->
         </data>
     </outputs>
     <help>
@@ -69,7 +68,6 @@ names in the Galaxy history.
             <param name="polarity" value="both" />
             <param name="output_option" value="multiple" />
             <output name="output" ftype="tabular" file="table0.tabular">
-                <!--<discovered_dataset designation="table0.tabular" ftype="tabular" file="table0.tabular" />-->
                 <discovered_dataset designation="table1" ftype="tabular" file="table1.tabular" />
             </output>
         </test>
