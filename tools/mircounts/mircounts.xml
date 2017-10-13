@@ -9,8 +9,11 @@
         <requirement type="package" version="0.20_34=r3.3.2_0">r-lattice</requirement>
     </requirements>
     <command detect_errors="exit_code"><![CDATA[
-        wget --quiet ftp://mirbase.org/pub/mirbase/${mirbase_version}/genomes/${genomeKey}.gff3 && ## download the gff3 file specified by the variable genomeKey
-        python '$__tool_directory__'/mature_mir_gff_translation.py --input ${genomeKey}.gff3 --output $gff3 && ## transcode the mature miR genome coordinates into coordinates relative to the corresponding "miRNA_primary_transcript".
+        wget --quiet ftp://mirbase.org/pub/mirbase/${mirbase_version}/genomes/${genomeKey}.gff3 &&
+        ## download the gff3 file specified by the variable genomeKey
+        python '$__tool_directory__'/mature_mir_gff_translation.py --input ${genomeKey}.gff3 --output $gff3 &&
+        ## transcode the mature miR genome coordinates into coordinates relative
+        ## to the corresponding "miRNA_primary_transcript".
         wget --quiet ftp://mirbase.org/pub/mirbase/${mirbase_version}/hairpin.fa.gz &&
         sh '$__tool_directory__'/format_fasta_hairpins.sh $genomeKey &&
         #if $cutadapt.cutoption == "yes":
