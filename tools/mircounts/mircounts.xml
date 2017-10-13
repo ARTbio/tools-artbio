@@ -1,4 +1,4 @@
-<tool id="mircounts" name="miRcounts" version="1.1.0">
+<tool id="mircounts" name="miRcounts" version="1.1.1">
     <description> Counts miRNA alignments from small RNA sequence data</description>
     <requirements>
         <requirement type="package" version="1.18">gnu-wget</requirement>
@@ -9,9 +9,9 @@
         <requirement type="package" version="0.20_34=r3.3.2_0">r-lattice</requirement>
     </requirements>
     <command detect_errors="exit_code"><![CDATA[
-        wget ftp://mirbase.org/pub/mirbase/${mirbase_version}/genomes/${genomeKey}.gff3 && ## download the gff3 file specified by the variable genomeKey
+        wget --quiet ftp://mirbase.org/pub/mirbase/${mirbase_version}/genomes/${genomeKey}.gff3 && ## download the gff3 file specified by the variable genomeKey
         python '$__tool_directory__'/mature_mir_gff_translation.py --input ${genomeKey}.gff3 --output $gff3 && ## transcode the mature miR genome coordinates into coordinates relative to the corresponding "miRNA_primary_transcript".
-        wget ftp://mirbase.org/pub/mirbase/${mirbase_version}/hairpin.fa.gz &&
+        wget --quiet ftp://mirbase.org/pub/mirbase/${mirbase_version}/hairpin.fa.gz &&
         sh '$__tool_directory__'/format_fasta_hairpins.sh $genomeKey &&
         #if $cutadapt.cutoption == "yes":
             python '$__tool_directory__'/yac.py --input $cutadapt.input
