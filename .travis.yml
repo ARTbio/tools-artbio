@@ -13,7 +13,7 @@ before_install:
   - export PLANEMO_CONDA_PREFIX="$HOME/conda"
 
 install:
-  - pip install planemo # flake8 flake8-import-order
+  - pip install planemo=="0.40.1" # flake8 flake8-import-order
   - planemo conda_init
   - export PATH="$PLANEMO_CONDA_PREFIX/bin:$PATH"
   - conda create -y -q -c bioconda --name artbio_conda samtools=1.4.1 bcftools
