@@ -97,6 +97,14 @@ def write_dataframe_coverage(countdict, outfile):
                     str(float(c)/maximum) if maximum != 0 else '0'))
     F.close()
 
+def plot_coverage(countdict, outfile):
+    """
+    Tkes a dict[pre_mir reference name] = [coverage list]
+    and plots the coverage of each pre_mir reference name
+    """
+    for ref in sorted(countdict):
+        plt.plot(countdict[ref])
+    plt.savefig(outfile)
 
 def write_counts(countdict, outfile):
     """
