@@ -1,20 +1,17 @@
-<tool id="mircounts" name="miRcounts" version="1.1.1">
+<tool id="mircounts" name="miRcounts" version="1.1.0">
     <description> Counts miRNA alignments from small RNA sequence data</description>
     <requirements>
         <requirement type="package" version="1.18">gnu-wget</requirement>
-        <requirement type="package" version="1.2.0=py27_0">bowtie</requirement>
+        <requirement type="package" version="1.2">bowtie</requirement>
         <requirement type="package" version="1.4.1">samtools</requirement>
-        <requirement type="package" version="0.11.2.1=py27_0">pysam</requirement>
+        <requirement type="package" version="0.11.2.1">pysam</requirement>
         <requirement type="package" version="1.3.2=r3.3.2_0">r-optparse</requirement>
         <requirement type="package" version="0.20_34=r3.3.2_0">r-lattice</requirement>
     </requirements>
     <command detect_errors="exit_code"><![CDATA[
-        wget --quiet ftp://mirbase.org/pub/mirbase/${mirbase_version}/genomes/${genomeKey}.gff3 &&
-        ## download the gff3 file specified by the variable genomeKey
-        python '$__tool_directory__'/mature_mir_gff_translation.py --input ${genomeKey}.gff3 --output $gff3 &&
-        ## transcode the mature miR genome coordinates into coordinates relative
-        ## to the corresponding "miRNA_primary_transcript".
-        wget --quiet ftp://mirbase.org/pub/mirbase/${mirbase_version}/hairpin.fa.gz &&
+        wget ftp://mirbase.org/pub/mirbase/${mirbase_version}/genomes/${genomeKey}.gff3 && ## download the gff3 file specified by the variable genomeKey
+        python '$__tool_directory__'/mature_mir_gff_translation.py --input ${genomeKey}.gff3 --output $gff3 && ## transcode the mature miR genome coordinates into coordinates relative to the corresponding "miRNA_primary_transcript".
+        wget ftp://mirbase.org/pub/mirbase/${mirbase_version}/hairpin.fa.gz &&
         sh '$__tool_directory__'/format_fasta_hairpins.sh $genomeKey &&
         #if $cutadapt.cutoption == "yes":
             python '$__tool_directory__'/yac.py --input $cutadapt.input
@@ -27,8 +24,8 @@
         #else
             ln -f -s '$cutadapt.clipped_input' clipped_input.fastq &&
         #end if
-        bowtie-build hairpin.fa hairpin 1>/dev/null &&
-        bowtie -v $v -M 1 --best --strata --norc -p \${GALAXY_SLOTS:-4} --sam hairpin -q clipped_input.fastq | samtools sort -O bam -o '$output' &&
+        bowtie-build hairpin.fa hairpin &&
+        bowtie -v $v -M 1 --best --strata --norc -p \${GALAXY_SLOTS:-4} --sam hairpin -q clipped_input.fastq 2>/dev/null | samtools sort -O bam -o '$output' &&
         samtools index $output &&
         python '$__tool_directory__'/mircounts.py -pm --alignment $output --gff $gff3 --quality_threshold 10 --pre_mirs $pre_mir_count_file --mirs $mir_count_file --lattice $coverage_dataframe;
         #if $plotting.plottingOption == 'yes':
@@ -229,7 +226,7 @@ Relative :
 3. A table of pre-mir counts
 4. A table of mature mir counts
 
-Optional outputs:
+Optional:
 
 5. A table of pre-mir coverage
 6. A PDF file with covererage plots
