@@ -9,9 +9,9 @@
         <requirement type="package" version="0.20_34=r3.3.2_0">r-lattice</requirement>
     </requirements>
     <command detect_errors="exit_code"><![CDATA[
-        wget ftp://mirbase.org/pub/mirbase/${mirbase_version}/genomes/${genomeKey}.gff3 && ## download the gff3 file specified by the variable genomeKey
+        wget --quiet ftp://mirbase.org/pub/mirbase/${mirbase_version}/genomes/${genomeKey}.gff3 && ## download the gff3 file specified by the variable genomeKey
         python '$__tool_directory__'/mature_mir_gff_translation.py --input ${genomeKey}.gff3 --output $gff3 && ## transcode the mature miR genome coordinates into coordinates relative to the corresponding "miRNA_primary_transcript".
-        wget ftp://mirbase.org/pub/mirbase/${mirbase_version}/hairpin.fa.gz &&
+        wget --quiet ftp://mirbase.org/pub/mirbase/${mirbase_version}/hairpin.fa.gz &&
         sh '$__tool_directory__'/format_fasta_hairpins.sh $genomeKey &&
         #if $cutadapt.cutoption == "yes":
             python '$__tool_directory__'/yac.py --input $cutadapt.input
@@ -24,8 +24,8 @@
         #else
             ln -f -s '$cutadapt.clipped_input' clipped_input.fastq &&
         #end if
-        bowtie-build hairpin.fa hairpin &&
-        bowtie -v $v -M 1 --best --strata --norc -p \${GALAXY_SLOTS:-4} --sam hairpin -q clipped_input.fastq 2>/dev/null | samtools sort -O bam -o '$output' &&
+        bowtie-build hairpin.fa hairpin >/dev/null &&
+        bowtie -v $v -M 1 --best --strata --norc -p \${GALAXY_SLOTS:-4} --sam hairpin -q clipped_input.fastq | samtools sort -O bam -o '$output' 2>&1 &&
         samtools index $output &&
         python '$__tool_directory__'/mircounts.py -pm --alignment $output --gff $gff3 --quality_threshold 10 --pre_mirs $pre_mir_count_file --mirs $mir_count_file --lattice $coverage_dataframe;
         #if $plotting.plottingOption == 'yes':
