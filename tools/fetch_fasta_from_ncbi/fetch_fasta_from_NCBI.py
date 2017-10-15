@@ -21,14 +21,14 @@ retmax of efetch is 1/10 of declared value from NCBI
 queries are 1 sec delayed, to satisfy NCBI guidelines
 (more than what they request)
 """
-import sys
+import httplib
 import logging
 import optparse
+import re
+import sys
 import time
 import urllib
 import urllib2
-import httplib
-import re
 
 
 class QueryException(Exception):
