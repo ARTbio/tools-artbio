@@ -1,5 +1,5 @@
 # .shed.yml supporting automatic pushes.
-owner: drosofff
+owner: artbio
 name: blastx_to_scaffold
 description: Generate DNA scaffold from blastx alignment of Contigs
 long_description: |
