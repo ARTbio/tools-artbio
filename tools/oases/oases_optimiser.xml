@@ -1,4 +1,4 @@
-<tool id="oasesoptimiserv" name="Oases_optimiser" version="1.2.1">
+<tool id="oasesoptimiserv" name="Oases_optimiser" version="1.2.2">
     <description>Auto optimise de novo RNA-seq Oases/Velvet assembly</description>
     <requirements>
         <requirement type="package" version="0.2.09">oases</requirement>

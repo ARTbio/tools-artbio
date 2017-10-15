@@ -1,6 +1,6 @@
 # .shed.yml supporting automatic pushes.
-owner: drosofff
-name: msp_oases
+owner: artbio
+name: oases
 description: Short read assembler
 long_description: |
   Oases use velvet to assemble sequence reads. Here the tool is used for short read assembly
@@ -8,8 +8,6 @@ categories:
   - Assembly
   - RNA
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/msp_oases
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/oases
 toolshed:
-  - https://lbcd41.snv.jussieu.fr/toolshed/
-  - testtoolshed
   - toolshed
