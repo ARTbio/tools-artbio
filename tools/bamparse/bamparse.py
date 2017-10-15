@@ -62,13 +62,13 @@ def writetable(diclist, labels, output, number):
     countlists = []
     for dic in diclist:
         counts = sorted(dic.items())
-        counts = [j for (i,j) in counts]
+        counts = [j for (i, j) in counts]
         countlists.append(counts)
     if number == "unique":
         out = open("outputdir/table.tabular", "w")
         out.write("gene\t%s\n" % "\t".join(labels))
         for countline in zip(sorted(diclist[0]), *countlists):
-            line = [ str(i) for i in countline]
+            line = [str(i) for i in countline]
             out.write("%s\n" % "\t".join(line))
         out.close()
     else:
@@ -78,7 +78,6 @@ def writetable(diclist, labels, output, number):
             for gene in sorted(dic):
                 out.write("%s\t%s\n" % (gene, dic[gene]))
             out.close()
-
 
 
 def main(alignments, labels, polarity, output, number):

@@ -1,5 +1,5 @@
 # .shed.yml supporting automatic pushes.
-owner: drosofff
+owner: artbio
 name: cherry_pick_fasta
 description: Pick fasta sequence with specific header content
 long_description: |

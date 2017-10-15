@@ -1,4 +1,4 @@
-<tool id="blastx2scaffold" name="blastx_to_scaffold" version="0.9.0">
+<tool id="blastx2scaffold" name="blastx_to_scaffold" version="1.0.0">
 <description>Generate DNA scaffold from blastx alignment of Contigs</description>
 <requirements>
 </requirements>

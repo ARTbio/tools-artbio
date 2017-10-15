@@ -1,6 +1,6 @@
 # .shed.yml supporting automatic pushes.
-owner: drosofff
-name: msp_blastparser_and_hits
+owner: artbio
+name: blastparser_and_hits
 description: Parse blast outputs and compile hits
 long_description: |
   This tool is part of the visitor2 toolsuite.
@@ -10,8 +10,6 @@ categories:
   - Assembly
   - RNA
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/msp_blastparser_and_hits
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/blastparser_and_hits
 toolshed:
-  - https://lbcd41.snv.jussieu.fr/toolshed/
-  - testtoolshed
   - toolshed

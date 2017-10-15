@@ -10,6 +10,4 @@ categories:
 homepage_url: http://artbio.fr
 remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/fetch_fasta_from_ncbi
 toolshed:
-  - https://lbcd41.snv.jussieu.fr/toolshed/
-  - testtoolshed
   - toolshed
