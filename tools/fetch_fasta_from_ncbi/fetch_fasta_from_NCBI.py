@@ -403,7 +403,7 @@ def __main__():
     E = Eutils(options, logger)
     try:
         E.retrieve()
-    except Exception as e:
+    except Exception:
         sys.exit(1)
 
 
