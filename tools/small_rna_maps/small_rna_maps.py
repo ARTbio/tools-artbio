@@ -10,6 +10,10 @@ def Parser():
     the_parser = argparse.ArgumentParser()
     the_parser.add_argument('--inputs', dest='inputs', required=True,
                             nargs='+', help='list of input BAM files')
+    the_parser.add_argument('--minsize', dest='minsize', type=int,
+                            default=0, help='minimal size of reads')
+    the_parser.add_argument('--maxsize', dest='maxsize', type=int,
+                            default=10000, help='maximal size of reads')
     the_parser.add_argument('--sample_names', dest='sample_names',
                             required=True, nargs='+',
                             help='list of sample names')
@@ -24,14 +28,17 @@ def Parser():
 
 class Map:
 
-    def __init__(self, bam_file, sample):
+    def __init__(self, bam_file, sample, minsize, maxsize):
         self.sample_name = sample
+        self.minsize = minsize
+        self.maxsize = maxsize
         self.bam_object = pysam.AlignmentFile(bam_file, 'rb')
         self.chromosomes = dict(zip(self.bam_object.references,
                                 self.bam_object.lengths))
-        self.map_dict = self.create_map(self.bam_object)
+        self.map_dict = self.create_map(self.bam_object, self.minsize,
+                                        self.maxsize)
 
-    def create_map(self, bam_object):
+    def create_map(self, bam_object, minsize, maxsize):
         '''
         Returns a map_dictionary {(chromosome,read_position,polarity):
                                                     [read_length, ...]}
@@ -43,13 +50,15 @@ class Map:
             map_dictionary[(chrom, self.chromosomes[chrom], 'F')] = []
         for chrom in self.chromosomes:
             for read in bam_object.fetch(chrom):
-                positions = read.positions  # a list of covered positions
-                if read.is_reverse:
-                    map_dictionary[(chrom, positions[-1]+1,
-                                    'R')].append(read.query_alignment_length)
-                else:
-                    map_dictionary[(chrom, positions[0]+1,
-                                    'F')].append(read.query_alignment_length)
+                if (read.query_alignment_length >= minsize and
+                        read.query_alignment_length <= maxsize):
+                    positions = read.positions  # a list of covered positions
+                    if read.is_reverse:
+                        map_dictionary[(chrom, positions[-1]+1, 'R')].append(
+                                        read.query_alignment_length)
+                    else:
+                        map_dictionary[(chrom, positions[0]+1, 'F')].append(
+                                        read.query_alignment_length)
         return map_dictionary
 
     def compute_readcount(self, map_dictionary, out):
@@ -182,7 +191,7 @@ class Map:
                     out.write('\t'.join(line) + '\n')
 
 
-def main(inputs, samples, methods, outputs):
+def main(inputs, samples, methods, outputs, minsize, maxsize):
     for method, output in zip(methods, outputs):
         F = open(output, 'w')
         if method == 'Size':
@@ -192,7 +201,7 @@ def main(inputs, samples, methods, outputs):
                       "Polarity", method]
         F.write('\t'.join(header) + '\n')
         for input, sample in zip(inputs, samples):
-            mapobj = Map(input, sample)
+            mapobj = Map(input, sample, minsize, maxsize)
             token = {"Counts": mapobj.compute_readcount,
                      "Max": mapobj.compute_max,
                      "Mean": mapobj.compute_mean,
@@ -209,4 +218,5 @@ if __name__ == "__main__":
     if len(set(args.sample_names)) != len(args.sample_names):
         args.sample_names = [name + '_' + str(i) for
                              i, name in enumerate(args.sample_names)]
-    main(args.inputs, args.sample_names, args.plot_methods, args.outputs)
+    main(args.inputs, args.sample_names, args.plot_methods, args.outputs,
+         args.minsize, args.maxsize)

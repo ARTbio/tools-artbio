@@ -1,4 +1,4 @@
-<tool id="small_rna_maps" name="small_rna_maps" version="2.2.0">
+<tool id="small_rna_maps" name="small_rna_maps" version="2.3.0">
   <description></description>
   <requirements>
         <requirement type="package" version="1.11.2=py27_0">numpy</requirement>
@@ -25,6 +25,8 @@
       #for $sample in $inputs
           '$sample.name'
       #end for
+          --minsize $minsize
+          --maxsize $maxsize
       #if str($plots_options.plots_options_selector ) == "two_plot":
           --plot_methods '${plots_options.first_plot}' '${plots_options.extra_plot}'
           --outputs '$output_tab' '$extra_output_tab' &&
@@ -56,6 +58,10 @@
     <param name="inputs" type="data" format="bam" label="Select multiple alignments to parse" multiple="True"/>
     <param name="normalization" type="text" label="Enter size/normalization factors as a space-separated list. Leave blank for no normalization (default)"
            help="e.g. '1 0.75 1.23'. Values of the list map to the above selected files from bottom to top" />
+    <param name="minsize" type="integer" label="Minimal size of reads for inclusion in analysis"
+           value="0" help="default value: 0" />
+    <param name="maxsize" type="integer" label="Maximal size of reads for inclusion in analysis"
+           value="10000" help="default value: 10000" />
     <conditional name="plots_options">
         <param name="plots_options_selector" type="select" display="radio" label="Plot Options">
             <option value="one_plot">Just one plot per chromosome</option>
@@ -108,6 +114,8 @@
     <tests>
         <test>
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
+            <param name="minsize" value="0" />
+            <param name="maxsize" value="10000" />
             <param name="plots_options_selector" value="global" />
             <param name="mergestrands" value="nomerge" />
             <param name="first_plot" value="Size" />
@@ -117,6 +125,8 @@
         </test>
         <test>
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
+            <param name="minsize" value="0" />
+            <param name="maxsize" value="10000" />
             <param name="plots_options_selector" value="global" />
             <param name="mergestrands" value="merge" />
             <param name="first_plot" value="Size" />
@@ -125,7 +135,20 @@
             <output file="global_merge.pdf" name="output_pdf" />
         </test>
         <test>
+            <param name="inputs" value="input1.bam" ftype="bam"/>
+            <param name="minsize" value="20" />
+            <param name="maxsize" value="30" />
+            <param name="plots_options_selector" value="global" />
+            <param name="mergestrands" value="merge" />
+            <param name="first_plot" value="Size" />
+            <param name="normalization" value="1 1" />
+            <output file="size20-30.tab" name="output_tab" />
+            <output file="global_merge_20-30.pdf" name="output_pdf" />
+        </test>
+        <test>
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
+            <param name="minsize" value="0" />
+            <param name="maxsize" value="10000" />
             <param name="plots_options_selector" value="two_plot" />
             <param name="first_plot" value="Counts" />
             <param name="extra_plot" value="Mean" />
@@ -135,7 +158,21 @@
             <output file="count-mean.pdf" name="output_pdf" />
         </test>
         <test>
+            <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
+            <param name="minsize" value="20" />
+            <param name="maxsize" value="30" />
+            <param name="plots_options_selector" value="two_plot" />
+            <param name="first_plot" value="Counts" />
+            <param name="extra_plot" value="Mean" />
+            <param name="normalization" value="1 1" />
+            <output file="count20-30.tab" name="output_tab" />
+            <output file="mean20-30.tab" name="extra_output_tab" />
+            <output file="count-mean-20-30.pdf" name="output_pdf" />
+        </test>
+        <test>
             <param name="inputs" value="input1.bam,input1.bam" ftype="bam"/>
+            <param name="minsize" value="0" />
+            <param name="maxsize" value="10000" />
             <param name="plots_options_selector" value="two_plot" />
             <param name="first_plot" value="Counts" />
             <param name="extra_plot" value="Mean" />
@@ -146,6 +183,8 @@
         </test>
         <test>
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
+            <param name="minsize" value="0" />
+            <param name="maxsize" value="10000" />
             <param name="plots_options_selector" value="two_plot" />
             <param name="first_plot" value="Counts" />
             <param name="extra_plot" value="Median" />
@@ -156,6 +195,8 @@
         </test>
         <test>
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
+            <param name="minsize" value="0" />
+            <param name="maxsize" value="10000" />
             <param name="plots_options_selector" value="two_plot" />
             <param name="first_plot" value="Counts" />
             <param name="extra_plot" value="Coverage" />
@@ -166,6 +207,8 @@
         </test>
         <test>
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
+            <param name="minsize" value="0" />
+            <param name="maxsize" value="10000" />
             <param name="plots_options_selector" value="two_plot" />
             <param name="first_plot" value="Counts" />
             <param name="extra_plot" value="Size" />
@@ -176,6 +219,8 @@
         </test>
         <test>
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
+            <param name="minsize" value="0" />
+            <param name="maxsize" value="10000" />
             <param name="plots_options_selector" value="two_plot" />
             <param name="first_plot" value="Size" />
             <param name="extra_plot" value="Counts" />
@@ -186,6 +231,8 @@
         </test>
         <test>
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
+            <param name="minsize" value="0" />
+            <param name="maxsize" value="10000" />
             <param name="plots_options_selector" value="two_plot" />
             <param name="first_plot" value="Size" />
             <param name="extra_plot" value="Counts" />
@@ -196,6 +243,8 @@
         </test>
         <test>
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
+            <param name="minsize" value="0" />
+            <param name="maxsize" value="10000" />
             <param name="plots_options_selector" value="one_plot" />
             <param name="normalization" value="1 1" />
             <param name="first_plot" value="Counts" />
@@ -204,6 +253,8 @@
         </test>
         <test>
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
+            <param name="minsize" value="0" />
+            <param name="maxsize" value="10000" />
             <param name="plots_options_selector" value="one_plot" />
             <param name="first_plot" value="Size" />
             <param name="normalization" value="1 1" />
@@ -212,6 +263,8 @@
         </test>
         <test>
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
+            <param name="minsize" value="0" />
+            <param name="maxsize" value="10000" />
             <param name="plots_options_selector" value="one_plot" />
             <param name="first_plot" value="Coverage" />
             <param name="normalization" value="1 1" />
@@ -220,6 +273,8 @@
         </test>
         <test>
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
+            <param name="minsize" value="0" />
+            <param name="maxsize" value="10000" />
             <param name="plots_options_selector" value="one_plot" />
             <param name="first_plot" value="Coverage" />
             <param name="normalization" value="1 0.2" />
