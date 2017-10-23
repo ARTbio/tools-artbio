@@ -1,7 +1,13 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+
+import matplotlib
+matplotlib.use('Agg')
 import argparse
 import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.backends.backend_pdf import PdfPages
 import pysam
+from multiprocessing import Process, Queue
 
 
 def Parser():
@@ -47,8 +53,8 @@ def get_pre_mir_coverage(bamfile, quality=10):
                                                     start=0, end=ref_len,
                                                     quality_threshold=quality)
         """ Add the 4 coverage values """
-        coverage[ref_name] = [sum(x) for x in
-                              zip(*coverage[ref_name])]
+        coverage[ref_name] = np.array([sum(x) for x in
+                                       zip(*coverage[ref_name])])
     return coverage
 
 
@@ -102,9 +108,69 @@ def plot_coverage(countdict, outfile):
     Tkes a dict[pre_mir reference name] = [coverage list]
     and plots the coverage of each pre_mir reference name
     """
-    for ref in sorted(countdict):
-        plt.plot(countdict[ref])
-    plt.savefig(outfile)
+    pdf = PdfPages('multipage.pdf')
+    xax = 0
+    yax = 0
+    process_list = list()
+    nb_images = int(len(countdict) / 60)
+    figure_queue = Queue(6)
+    num_img = 1
+    sref = sorted(countdict)
+    nprocess = 0
+    nb_pages = 0
+    previous_page = 0
+    for pages in range(1,nb_images+2):
+        print(pages)
+        current_page = pages*60
+        if nprocess <4:
+            nprocess += 1
+            process_list.append(Process(target=plot_img,args=(countdict,
+                                                              sref[previous_page:current_page],
+                                                              figure_queue,)))
+            process_list[len(process_list)-1].start()
+        else:
+            p = process_list.pop(0)
+            while figure_queue.empty():
+                p.join(1)
+            if not figure_queue.empty():
+                pdf.savefig(figure_queue.get())
+            process_list.append(Process(target=plot_img,args=(countdict,
+                                                              sref[previous_page:current_page],
+                                                              figure_queue,)))
+            process_list[len(process_list)-1].start()
+        previous_page = current_page
+    while nb_pages < len(process_list):
+        if not figure_queue.empty():
+            nb_pages += 1
+            pdf.savefig(figure_queue.get())
+    pdf.close()
+    for p in process_list:
+        p.join()
+
+def plot_img(countdict, ref_list, figure_queue):
+    fig, axarr = plt.subplots(15, 4, figsize=(10, 20), sharey='row')
+    xax = 0
+    yax = 0
+    for ref in ref_list:
+        m = max(countdict[ref])
+        max_coord = len(countdict[ref])
+        if m > 0:
+            l = [x/m for x in countdict[ref]]
+        else:
+            l = countdict[ref]
+        l_coord = [x/max_coord for x in range(0,max_coord)]
+        axarr[xax,yax].plot(l_coord,l)
+        axarr[xax,yax].set_title(ref)
+        axarr[xax,yax].set_ylim(-0.01,1.1)
+        yax += 1
+        if yax == 4:
+            yax = 0
+            xax += 1
+    plt.setp([a.get_yticklabels() for a in fig.axes[1:3:60]], visible=True)
+    plt.setp([a.set_xticks([]) for a in fig.axes[:-4]])
+    plt.setp([a.get_xticklabels() for a in fig.axes[-4:60:2]], visible=False)
+    plt.tight_layout(h_pad=0,w_pad=-1.1)
+    figure_queue.put(fig)
 
 def write_counts(countdict, outfile):
     """
@@ -126,7 +192,7 @@ def main():
         if args.lattice:
             pre_mirs_coverage = get_pre_mir_coverage(bamfile,
                                                      args.quality_threshold)
-            write_dataframe_coverage(pre_mirs_coverage, args.lattice)
+            plot_coverage(pre_mirs_coverage, args.lattice)#write_dataframe_coverage(pre_mirs_coverage, args.lattice)
     if args.mirs:
         mirs = get_mir_counts(bamfile, args.gff_file)
         write_counts(mirs, args.mirs)
