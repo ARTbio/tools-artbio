@@ -158,7 +158,7 @@
             <output file="count-mean.pdf" name="output_pdf" />
         </test>
         <test>
-            <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
+            <param name="inputs" value="input2.bam,input1.bam" ftype="bam"/>
             <param name="minsize" value="20" />
             <param name="maxsize" value="30" />
             <param name="plots_options_selector" value="two_plot" />
