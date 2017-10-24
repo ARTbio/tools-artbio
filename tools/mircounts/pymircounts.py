@@ -103,7 +103,7 @@ def write_dataframe_coverage(countdict, outfile):
                     str(float(c)/maximum) if maximum != 0 else '0'))
     F.close()
 
-def plot_coverage(countdict, outfile):
+def plot_coverage_par(countdict, outfile):
     """
     Tkes a dict[pre_mir reference name] = [coverage list]
     and plots the coverage of each pre_mir reference name
@@ -147,7 +147,7 @@ def plot_coverage(countdict, outfile):
     for p in process_list:
         p.join()
 
-def plot_img(countdict, ref_list, figure_queue):
+def plot_img_par(countdict, ref_list, figure_queue):
     fig, axarr = plt.subplots(15, 4, figsize=(10, 20), sharey='row')
     xax = 0
     yax = 0
@@ -171,6 +171,127 @@ def plot_img(countdict, ref_list, figure_queue):
     plt.setp([a.get_xticklabels() for a in fig.axes[-4:60:2]], visible=False)
     plt.tight_layout(h_pad=0,w_pad=-1.1)
     figure_queue.put(fig)
+
+def plot_coverage(countdict, outfile):
+    pdf = PdfPages('multipage.pdf')
+    pages_number = int(len(countdict)/60)
+    uncomplete_last = len(countdict) % 60
+    ref_list = sorted(countdict)
+    if len(ref_list) >= 60:
+        fig, axarr = plt.subplots( 15, 4, figsize=(8,11))
+    counter = 0
+    boo = 0
+    """ Format figure """
+    for a in fig.axes:
+        if counter % 4 != 0:
+            plt.setp(a.get_yticklabels(), visible=False)
+            plt.setp(a.set_yticks([]))
+        elif boo != 0:
+            plt.setp(a.get_yticklabels(), visible=False)
+            boo = 0
+        else:
+            boo = 1
+        if counter < 56:
+            plt.setp(a.get_xticklabels(), visible=False)
+            plt.setp(a.set_xticks([]))
+        elif counter % 2 != 0:
+            plt.setp(a.get_xticklabels(), visible=False)
+        counter += 1
+    """ Plot first page """
+    xax = 0
+    yax = 0
+    line_list = list()
+    for i in range(0,60):
+        ref = ref_list.pop(0)
+        m = max(countdict[ref])
+        max_coord = len(countdict[ref])
+        if m > 0:
+            l = [x/m for x in countdict[ref]]
+        else:
+            l = countdict[ref]
+        l_coord = [x/max_coord for x in range(0,max_coord)]
+        line, = axarr[xax,yax].plot(l_coord,l)
+        line_list.append(line)
+        axarr[xax,yax].set_title(ref, fontsize=7)
+        axarr[xax,yax].set_ylim(-0.01,1.1)
+        yax += 1
+        if yax == 4:
+            yax = 0
+            xax += 1
+    fig.text(0.02, 0.5, 'Normalized counts', va='center', rotation='vertical', fontsize=12)
+    fig.text(0.4, 0.02, 'Normalized coordinates', va='center', rotation='horizontal', fontsize=12)
+    fig.suptitle('miRNA coverage maps',fontsize=14)
+    fig.tight_layout(rect=[0.05, 0.03, 1, 0.95],h_pad=-0.5,w_pad=-1.1)
+    pdf.savefig(fig)
+    if pages_number > 1:
+        for page in range(1,pages_number):
+            plot_number = 0
+            for xax in range(0,15):
+                for yax in range(0,4):
+                    ref = ref_list.pop(0)
+                    m = max(countdict[ref])
+                    max_coord = len(countdict[ref])
+                    if m > 0:
+                        l = [x/m for x in countdict[ref]]
+                    else:
+                        l = countdict[ref]
+                    l_coord = [x/max_coord for x in range(0,max_coord)]
+                    axarr[xax,yax].set_title(ref, fontsize=7)
+                    line_list[plot_number].set_ydata(l)
+                    line_list[plot_number].set_xdata(l_coord)
+                    plot_number += 1
+            pdf.savefig(fig)
+    if uncomplete_last > 0:
+        print(uncomplete_last)
+        fig, axarr = plt.subplots(nrows=15, ncols=4, figsize=(8,11))
+        counter = 0
+        boo = 0
+        """ Format figure """
+        for a in fig.axes:
+            if counter < uncomplete_last:
+                if counter % 4 != 0:
+                    plt.setp(a.get_yticklabels(), visible=False)
+                    plt.setp(a.set_yticks([]))
+                elif boo != 0:
+                    plt.setp(a.get_yticklabels(), visible=False)
+                    boo = 0
+                else:
+                    boo = 1
+                if counter < 56:
+                    plt.setp(a.get_xticklabels(), visible=False)
+                    plt.setp(a.set_xticks([]))
+                elif counter % 2 != 0:
+                    plt.setp(a.get_xticklabels(), visible=False)
+            else:
+                fig.delaxes(a)
+            counter += 1
+        """ Plot last """
+        xax = 0
+        yax = 0
+        nb = 0
+        for ref in ref_list:
+            if nb < uncomplete_last:
+                m = max(countdict[ref])
+                max_coord = len(countdict[ref])
+                if m > 0:
+                    l = [x/m for x in countdict[ref]]
+                else:
+                    l = countdict[ref]
+                l_coord = [x/max_coord for x in range(0,max_coord)]
+                axarr[xax,yax].plot(l_coord,l)
+                axarr[xax,yax].set_title(ref, fontsize=7)
+                axarr[xax,yax].set_ylim(-0.01,1.1)
+                yax += 1
+                if yax == 4:
+                    yax = 0
+                    xax += 1
+            nb += 1
+        fig.text(0.02, 0.5, 'Normalized counts', va='center', rotation='vertical', fontsize=12)
+        fig.text(0.4, 0.02, 'Normalized coordinates', va='center', rotation='horizontal', fontsize=12)
+        fig.suptitle('miRNA coverage maps',fontsize=14)
+        fig.tight_layout(rect=[0.05, 0.03, 1, 0.95],h_pad=-0.5,w_pad=-1.1)
+        pdf.savefig(fig)
+    pdf.close()
 
 def write_counts(countdict, outfile):
     """
