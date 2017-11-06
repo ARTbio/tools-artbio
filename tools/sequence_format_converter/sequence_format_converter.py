@@ -40,7 +40,7 @@ class Sequencing:
         try:
             for l in range(4):
                 block.append(input.readline()[:-1])
-        except:
+        except IndexError:
             logging.info("File hasn't at leat four lines !")
             sys.exit("File hasn't at leat four lines !")
         input.close()
@@ -81,7 +81,7 @@ class Sequencing:
                     if line[0] == '>':
                         int(line.split('_')[-1])
                 return 'fastaw'
-            except:
+            except ValueError:
                 return 'fasta'
         if line1[0] == '@' and line3[0] == '+':
             nucleotides = set([base for base in line2])
@@ -98,7 +98,7 @@ class Sequencing:
                 sys.exit('No valid format detected')
             try:
                 int(line.split('\t')[-1])
-            except:
+            except ValueError:
                 logging.info("No valid format detected")
                 sys.exit('No valid format detected')
             for nucleotide in line.split('\t')[0]:
@@ -112,22 +112,22 @@ class Sequencing:
         if format == 'fasta':
             try:
                 self.readfasta(input)
-            except:
+            except Exception:
                 logging.info("an error occured while reading fasta")
         elif format == 'fastaw':
             try:
                 self.readfastaw(input)
-            except:
+            except Exception:
                 logging.info("an error occured while reading fastaw")
         elif format == 'tabular':
             try:
                 self.readtabular(input)
-            except:
+            except Exception:
                 logging.info("an error occured while reading tabular")
         elif format == 'fastq':
             try:
                 self.readfastq(input)
-            except:
+            except Exception:
                 logging.info("an error occured while reading fastq")
         else:
             logging.info("no valid format detected")
