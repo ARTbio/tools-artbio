@@ -1,4 +1,4 @@
-[![Lint Status](https://travis-ci.org/ARTbio/tools-artbio.svg?branch=master)](https://travis-ci.org/ARTbio/tools-artbio)
+[![Lint Status](https://travis-ci.org/ARTbio/tools-artbio.svg)](https://travis-ci.org/ARTbio/tools-artbio)
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/ARTbio/Lobby)
 
 <p align="center">
