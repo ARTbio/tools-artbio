@@ -5,10 +5,10 @@
   <img src="https://github.com/ARTbio/tools-artbio.git/?raw=true" alt="ARTbio logo"/>
 </p>
 
-[ARTbio](http://artbio.fr/) [Galaxy](https://galaxyproject.org/) Tools
+ARTbio Galaxy Tools
 ==============================
 
-This is the development repository for galaxy tools developed in the [ARTbio platform](http://artbio.fr/) at the [IBPS](http://www.ibps.upmc.fr/en) [CNRS](http://www.cnrs.fr/en/research/Institutes.htm) & [UPMC](http://www.upmc.fr/en/index.html).
+This is the development repository for [Galaxy](https://galaxyproject.org/) tools developed in the [ARTbio platform](http://artbio.fr/) at the [IBPS](http://www.ibps.upmc.fr/en) [CNRS](http://www.cnrs.fr/en/research/Institutes.htm) & [UPMC](http://www.upmc.fr/en/index.html).
 
 [![Lint Status](https://travis-ci.org/ARTbio/tools-artbio.svg?branch=master)](https://travis-ci.org/ARTbio/tools-artbio) Tools are tested with planemo using Travis CI.
 
