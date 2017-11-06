@@ -2,7 +2,7 @@
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/ARTbio/Lobby)
 
 <p align="center">
-  <img src="https://github.com/ARTbio/tools-artbio.git/ARTbio_logo.png?raw=true" alt="ARTbio logo"/>
+  <img src="https://raw.githubusercontent.com/ARTbio/tools-artbio/master/ARTbio_logo.png?raw=true" alt="ARTbio logo"/>
 </p>
 
 ARTbio Galaxy Tools
