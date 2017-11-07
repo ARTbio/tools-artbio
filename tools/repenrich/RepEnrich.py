@@ -1,10 +1,7 @@
-#!/usr/bin/env python
-
 import argparse
 import csv
 import os
 import shlex
-
 import shutil
 import subprocess
 import sys
