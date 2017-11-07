@@ -100,9 +100,11 @@ class Map:
             R_chrom_coord = list(set(R_chrom_coord))
             F_chrom_coord.sort()
             R_chrom_coord.sort()
-            F_clust_values = [i for i in self.grouper(F_chrom_coord, clust_distance)]
+            F_clust_values = [i for i in self.grouper(F_chrom_coord,
+                                                      clust_distance)]
             F_clust_keys = [(i[-1]+i[0])/2 for i in F_clust_values]
-            R_clust_values = [i for i in self.grouper(R_chrom_coord, clust_distance)]
+            R_clust_values = [i for i in self.grouper(R_chrom_coord,
+                                                      clust_distance)]
             R_clust_keys = [(i[-1]+i[0])/2 for i in R_clust_values]
             F_clust_dic = dict(zip(F_clust_keys, F_clust_values))
             R_clust_dic = dict(zip(R_clust_keys, R_clust_values))
