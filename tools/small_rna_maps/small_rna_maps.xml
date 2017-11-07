@@ -1,4 +1,4 @@
-<tool id="small_rna_maps" name="small_rna_maps" version="2.3.0">
+<tool id="small_rna_maps" name="small_rna_maps" version="2.4.0">
   <description></description>
   <requirements>
         <requirement type="package" version="1.11.2=py27_0">numpy</requirement>
@@ -115,6 +115,17 @@
 </outputs>
 
     <tests>
+        <test>
+            <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
+            <param name="minsize" value="0" />
+            <param name="cluster" value="5" />
+            <param name="maxsize" value="10000" />
+            <param name="plots_options_selector" value="one_plot" />
+            <param name="normalization" value="1 1" />
+            <param name="first_plot" value="Counts" />
+            <output file="count_cluster_5.tab" name="output_tab" />
+            <output file="count_cluster_5.pdf" name="output_pdf" />
+        </test>
         <test>
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
             <param name="minsize" value="0" />
