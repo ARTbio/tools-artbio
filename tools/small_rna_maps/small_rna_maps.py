@@ -14,6 +14,8 @@ def Parser():
                             default=0, help='minimal size of reads')
     the_parser.add_argument('--maxsize', dest='maxsize', type=int,
                             default=10000, help='maximal size of reads')
+    the_parser.add_argument('--cluster', dest='cluster', type=int,
+                            default=0, help='clustering distance')
     the_parser.add_argument('--sample_names', dest='sample_names',
                             required=True, nargs='+',
                             help='list of sample names')
@@ -28,15 +30,18 @@ def Parser():
 
 class Map:
 
-    def __init__(self, bam_file, sample, minsize, maxsize):
+    def __init__(self, bam_file, sample, minsize, maxsize, cluster):
         self.sample_name = sample
         self.minsize = minsize
         self.maxsize = maxsize
+        self.cluster = cluster
         self.bam_object = pysam.AlignmentFile(bam_file, 'rb')
         self.chromosomes = dict(zip(self.bam_object.references,
                                 self.bam_object.lengths))
         self.map_dict = self.create_map(self.bam_object, self.minsize,
                                         self.maxsize)
+        if self.cluster:
+            self.map_dict = self.tile_map(self.map_dict, self.cluster)
 
     def create_map(self, bam_object, minsize, maxsize):
         '''
@@ -44,11 +49,10 @@ class Map:
                                                     [read_length, ...]}
         '''
         map_dictionary = defaultdict(list)
-        # get empty value for start and end of each chromosome
         for chrom in self.chromosomes:
+            # get empty value for start and end of each chromosome
             map_dictionary[(chrom, 1, 'F')] = []
             map_dictionary[(chrom, self.chromosomes[chrom], 'F')] = []
-        for chrom in self.chromosomes:
             for read in bam_object.fetch(chrom):
                 if (read.query_alignment_length >= minsize and
                         read.query_alignment_length <= maxsize):
@@ -60,6 +64,60 @@ class Map:
                         map_dictionary[(chrom, positions[0]+1, 'F')].append(
                                         read.query_alignment_length)
         return map_dictionary
+
+    def grouper(self, iterable, clust_distance):
+        prev = None
+        group = []
+        for item in iterable:
+            if not prev or item - prev <= clust_distance:
+                group.append(item)
+            else:
+                yield group
+                group = [item]
+            prev = item
+        if group:
+            yield group
+
+    def tile_map(self, map_dic, clust_distance):
+        '''
+        takes a map_dictionary {(chromosome,read_position,polarity):
+                                                    [read_length, ...]}
+        and retur a map_dictionary with same structure but with
+        read positions aggregated by size
+        '''
+        clustered_dic = defaultdict(list)
+        for chrom in self.chromosomes:
+            clustered_dic[(chrom, 1, 'F')] = []
+            clustered_dic[(chrom, self.chromosomes[chrom], 'F')] = []
+            F_chrom_coord = []
+            R_chrom_coord = []
+            for key in map_dic:
+                if key[0] == chrom and key[2] == 'F':
+                    F_chrom_coord.append(key[1])
+                elif key[0] == chrom and key[2] == 'R':
+                    R_chrom_coord.append(key[1])
+            F_chrom_coord = list(set(F_chrom_coord))
+            R_chrom_coord = list(set(R_chrom_coord))
+            F_chrom_coord.sort()
+            R_chrom_coord.sort()
+            F_clust_values = [i for i in self.grouper(F_chrom_coord, clust_distance)]
+            F_clust_keys = [(i[-1]+i[0])/2 for i in F_clust_values]
+            R_clust_values = [i for i in self.grouper(R_chrom_coord, clust_distance)]
+            R_clust_keys = [(i[-1]+i[0])/2 for i in R_clust_values]
+            F_clust_dic = dict(zip(F_clust_keys, F_clust_values))
+            R_clust_dic = dict(zip(R_clust_keys, R_clust_values))
+            # {centered_coordinate: [coord1, coord2, coord3, ..]}
+            for centcoor in F_clust_dic:
+                accumulator = []
+                for coor in F_clust_dic[centcoor]:
+                    accumulator.extend(map_dic[(chrom, coor, 'F')])
+                clustered_dic[(chrom, centcoor, 'F')] = accumulator
+            for centcoor in R_clust_dic:
+                accumulator = []
+                for coor in R_clust_dic[centcoor]:
+                    accumulator.extend(map_dic[(chrom, coor, 'R')])
+                clustered_dic[(chrom, centcoor, 'R')] = accumulator
+        return clustered_dic
 
     def compute_readcount(self, map_dictionary, out):
         '''
@@ -191,7 +249,7 @@ class Map:
                     out.write('\t'.join(line) + '\n')
 
 
-def main(inputs, samples, methods, outputs, minsize, maxsize):
+def main(inputs, samples, methods, outputs, minsize, maxsize, cluster):
     for method, output in zip(methods, outputs):
         F = open(output, 'w')
         if method == 'Size':
@@ -201,7 +259,7 @@ def main(inputs, samples, methods, outputs, minsize, maxsize):
                       "Polarity", method]
         F.write('\t'.join(header) + '\n')
         for input, sample in zip(inputs, samples):
-            mapobj = Map(input, sample, minsize, maxsize)
+            mapobj = Map(input, sample, minsize, maxsize, cluster)
             token = {"Counts": mapobj.compute_readcount,
                      "Max": mapobj.compute_max,
                      "Mean": mapobj.compute_mean,
@@ -219,4 +277,4 @@ if __name__ == "__main__":
         args.sample_names = [name + '_' + str(i) for
                              i, name in enumerate(args.sample_names)]
     main(args.inputs, args.sample_names, args.plot_methods, args.outputs,
-         args.minsize, args.maxsize)
+         args.minsize, args.maxsize, args.cluster)

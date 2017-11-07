@@ -27,6 +27,7 @@
       #end for
           --minsize $minsize
           --maxsize $maxsize
+          --cluster $cluster
       #if str($plots_options.plots_options_selector ) == "two_plot":
           --plot_methods '${plots_options.first_plot}' '${plots_options.extra_plot}'
           --outputs '$output_tab' '$extra_output_tab' &&
@@ -62,6 +63,8 @@
            value="0" help="default value: 0" />
     <param name="maxsize" type="integer" label="Maximal size of reads for inclusion in analysis"
            value="10000" help="default value: 10000" />
+    <param name="cluster" type="integer" label="aggregation distance in nucleotides"
+           value="0" help="if not 0, sets the distance (in nt) below which data are clustered to a single median position" />
     <conditional name="plots_options">
         <param name="plots_options_selector" type="select" display="radio" label="Plot Options">
             <option value="one_plot">Just one plot per chromosome</option>
@@ -116,6 +119,7 @@
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
+            <param name="cluster" value="0" />
             <param name="plots_options_selector" value="global" />
             <param name="mergestrands" value="nomerge" />
             <param name="first_plot" value="Size" />
@@ -127,6 +131,7 @@
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
+            <param name="cluster" value="0" />
             <param name="plots_options_selector" value="global" />
             <param name="mergestrands" value="merge" />
             <param name="first_plot" value="Size" />
@@ -138,6 +143,7 @@
             <param name="inputs" value="input1.bam" ftype="bam"/>
             <param name="minsize" value="20" />
             <param name="maxsize" value="30" />
+            <param name="cluster" value="0" />
             <param name="plots_options_selector" value="global" />
             <param name="mergestrands" value="merge" />
             <param name="first_plot" value="Size" />
@@ -149,6 +155,7 @@
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
+            <param name="cluster" value="0" />
             <param name="plots_options_selector" value="two_plot" />
             <param name="first_plot" value="Counts" />
             <param name="extra_plot" value="Mean" />
@@ -161,6 +168,7 @@
             <param name="inputs" value="input2.bam,input1.bam" ftype="bam"/>
             <param name="minsize" value="20" />
             <param name="maxsize" value="30" />
+            <param name="cluster" value="0" />
             <param name="plots_options_selector" value="two_plot" />
             <param name="first_plot" value="Counts" />
             <param name="extra_plot" value="Mean" />
@@ -173,6 +181,7 @@
             <param name="inputs" value="input1.bam,input1.bam" ftype="bam"/>
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
+            <param name="cluster" value="0" />
             <param name="plots_options_selector" value="two_plot" />
             <param name="first_plot" value="Counts" />
             <param name="extra_plot" value="Mean" />
@@ -185,6 +194,7 @@
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
+            <param name="cluster" value="0" />
             <param name="plots_options_selector" value="two_plot" />
             <param name="first_plot" value="Counts" />
             <param name="extra_plot" value="Median" />
@@ -197,6 +207,7 @@
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
+            <param name="cluster" value="0" />
             <param name="plots_options_selector" value="two_plot" />
             <param name="first_plot" value="Counts" />
             <param name="extra_plot" value="Coverage" />
@@ -209,6 +220,7 @@
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
+            <param name="cluster" value="0" />
             <param name="plots_options_selector" value="two_plot" />
             <param name="first_plot" value="Counts" />
             <param name="extra_plot" value="Size" />
@@ -221,6 +233,7 @@
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
+            <param name="cluster" value="0" />
             <param name="plots_options_selector" value="two_plot" />
             <param name="first_plot" value="Size" />
             <param name="extra_plot" value="Counts" />
@@ -233,6 +246,7 @@
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
+            <param name="cluster" value="0" />
             <param name="plots_options_selector" value="two_plot" />
             <param name="first_plot" value="Size" />
             <param name="extra_plot" value="Counts" />
@@ -244,6 +258,7 @@
         <test>
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
             <param name="minsize" value="0" />
+            <param name="cluster" value="0" />
             <param name="maxsize" value="10000" />
             <param name="plots_options_selector" value="one_plot" />
             <param name="normalization" value="1 1" />
@@ -255,6 +270,7 @@
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
+            <param name="cluster" value="0" />
             <param name="plots_options_selector" value="one_plot" />
             <param name="first_plot" value="Size" />
             <param name="normalization" value="1 1" />
@@ -265,6 +281,7 @@
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
+            <param name="cluster" value="0" />
             <param name="plots_options_selector" value="one_plot" />
             <param name="first_plot" value="Coverage" />
             <param name="normalization" value="1 1" />
@@ -275,6 +292,7 @@
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
+            <param name="cluster" value="0" />
             <param name="plots_options_selector" value="one_plot" />
             <param name="first_plot" value="Coverage" />
             <param name="normalization" value="1 0.2" />
