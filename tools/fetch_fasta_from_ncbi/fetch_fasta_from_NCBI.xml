@@ -8,7 +8,7 @@
       #if $dry_run_condition.dry_run == 'YES':
           --count
       #else:
-          -o '$outfilename'
+          -o '$outfile'
       #end if
   ]]></command>
 
@@ -34,8 +34,8 @@
     </conditional>
   </inputs>
   <outputs>
-    <data name="outfilename" format="fasta" label="${tool.name} (${dbname.value_label}) with queryString '${queryString.value}'" >
-      <filter>dry_run_condition['dry_run'] == "NO"</filter>
+    <data name="outfile" format="fasta" label="${tool.name} (${dbname.value_label}) with queryString '${queryString.value}'" >
+      <filter>dry_run_condition['dry_run'] != "YES"</filter>
     </data>
     <data format="txt" name="logfile" label="${tool.name}: log"/>
   </outputs>
