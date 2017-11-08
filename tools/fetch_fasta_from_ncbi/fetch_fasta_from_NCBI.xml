@@ -31,11 +31,12 @@
     </param>
     <conditional name="dry_run_condition">
       <param name="dry_run" type="boolean" label="Dry run to get the number of sequences?" truevalue="YES" falsevalue="NO" checked="false"/>
-    <conditional/>
+    </conditional>
   </inputs>
   <outputs>
-    <data name="outfilename" format="fasta" label="${tool.name} (${dbname.value_label}) with queryString '${queryString.value}'" />
+    <data name="outfilename" format="fasta" label="${tool.name} (${dbname.value_label}) with queryString '${queryString.value}'" >
       <filter>dry_run_condition['dry_run'] == "NO"</filter>
+    </data>
     <data format="txt" name="logfile" label="${tool.name}: log"/>
   </outputs>
   <tests>
