@@ -358,10 +358,16 @@ def __main__():
     logger = logging.getLogger('data_from_NCBI')
 
     E = Eutils(args, logger)
-    try:
-        E.retrieve()
-    except Exception:
-        sys.exit(1)
+    if args.count_ids:
+        try:
+            E.dry_run()
+        except Exception:
+            sys.exit(1)
+    else:
+        try:
+            E.retrieve()
+        except Exception:
+            sys.exit(1)
 
 
 if __name__ == "__main__":
