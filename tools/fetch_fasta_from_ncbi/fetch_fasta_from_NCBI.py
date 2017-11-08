@@ -23,7 +23,7 @@ queries are 1 sec delayed, to satisfy NCBI guidelines
 """
 import httplib
 import logging
-import optparse
+import argparse
 import re
 import sys
 import time
@@ -336,27 +336,28 @@ LOG_LEVELS = ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']
 
 def __main__():
     """ main function """
-    parser = optparse.OptionParser(description='Retrieve data from NCBI')
-    parser.add_option('-i', dest='query_string', help='NCBI Query String')
-    parser.add_option('-o', dest='outname', help='output file name')
-    parser.add_option('-d', dest='dbname', help='database type')
-    parser.add_option('--count', '-c', dest='count_ids', help='dry run ouputing onl the number of sequences found')
-    parser.add_option('-l', '--logfile', help='log file (default=stderr)')
-    parser.add_option('--loglevel', choices=LOG_LEVELS, default='INFO',
+    parser = argparse.ArgumentParser(description='Retrieve data from NCBI')
+    parser.add_argument('-i', dest='query_string', help='NCBI Query String',
+                        required=True)
+    parser.add_argument('-o', dest='outname', help='output file name')
+    parser.add_argument('-d', dest='dbname', help='database type')
+    parser.add_argument('--count', '-c', dest='count_ids',
+                        action='store_true', default=False,
+                        help='dry run ouputing only the number of sequences found')
+    parser.add_argument('-l', '--logfile', help='log file (default=stderr)')
+    parser.add_argument('--loglevel', choices=LOG_LEVELS, default='INFO',
                       help='logging level (default: INFO)')
-    (options, args) = parser.parse_args()
-    if len(args) > 0:
-        parser.error('Wrong number of arguments')
-    log_level = getattr(logging, options.loglevel)
+    args = parser.parse_args()
+    log_level = getattr(logging, args.loglevel)
     kwargs = {'format': LOG_FORMAT,
               'datefmt': LOG_DATEFMT,
               'level': log_level}
-    if options.logfile:
-        kwargs['filename'] = options.logfile
+    if args.logfile:
+        kwargs['filename'] = args.logfile
     logging.basicConfig(**kwargs)
     logger = logging.getLogger('data_from_NCBI')
 
-    E = Eutils(options, logger)
+    E = Eutils(args, logger)
     try:
         E.retrieve()
     except Exception:
