@@ -5,9 +5,9 @@
       -i "$queryString"
       -d $dbname
       -l '$logfile'
-      #if $dry_run_condition.dry_run == 'YES':
+      #if $dry_run == 1:
           --count
-      #else:
+      #elif $dry_run == 0:
           -o '$outfile'
       #end if
   ]]></command>
@@ -29,13 +29,11 @@
       <option value="nuccore">Nucleotide</option>
       <option value="protein">Protein</option>
     </param>
-    <conditional name="dry_run_condition">
-      <param name="dry_run" type="boolean" label="Dry run to get the number of sequences?" truevalue="YES" falsevalue="NO" checked="false"/>
-    </conditional>
+    <param name="dry_run" type="boolean" label="Dry run to get the number of sequences?" truevalue="1" falsevalue="0" checked="false"/>
   </inputs>
   <outputs>
     <data name="outfile" format="fasta" label="${tool.name} (${dbname.value_label}) with queryString '${queryString.value}'" >
-      <filter>dry_run_condition['dry_run'] != "YES"</filter>
+      <filter> dry_run == False</filter>
     </data>
     <data format="txt" name="logfile" label="${tool.name}: log"/>
   </outputs>
@@ -45,13 +43,12 @@
         <param name="dbname" value="nuccore" />
         <output name="outfilename" ftype="fasta" file="output.fa" />
     </test>
-    <!--
     <test>
         <param name="queryString" value="CU929326[Accession]" />
         <param name="dbname" value="nuccore" />
-        <param name="date_filter" value="YES"/>
-        <output name="outfilename" ftype="fasta" file="zebra_output.fa" />
-    </test> -->
+        <param name="date_filter" value="1"/>
+        <output name="logfile" ftype="txt" file="dry_run.log" compare="sim_size"/>
+    </test>
   </tests>
   <help>
 **What it does**
