@@ -21,9 +21,9 @@ retmax of efetch is 1/10 of declared value from NCBI
 queries are 1 sec delayed, to satisfy NCBI guidelines
 (more than what they request)
 """
+import argparse
 import httplib
 import logging
-import argparse
 import re
 import sys
 import time
@@ -334,6 +334,7 @@ LOG_FORMAT = '%(asctime)s|%(levelname)-8s|%(message)s'
 LOG_DATEFMT = '%Y-%m-%d %H:%M:%S'
 LOG_LEVELS = ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']
 
+
 def command_parse():
     parser = argparse.ArgumentParser(description='Retrieve data from NCBI')
     parser.add_argument('-i', dest='query_string', help='NCBI Query String',
@@ -349,6 +350,7 @@ def command_parse():
                         help='logging level (default: INFO)')
     args = parser.parse_args()
     return args
+
 
 def __main__():
     """ main function """
