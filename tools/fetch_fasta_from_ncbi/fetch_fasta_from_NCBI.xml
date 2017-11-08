@@ -44,6 +44,7 @@
         <param name="queryString" value="CU929326[Accession]" />
         <param name="dbname" value="nuccore" />
         <param name="date_filter" value="1"/>
+        <param name="dry_run" value="True"/>
         <output name="logfile" ftype="txt" file="dry_run.log" compare="sim_size"/>
     </test>
   </tests>
