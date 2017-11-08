@@ -5,11 +5,8 @@
       -i "$queryString"
       -d $dbname
       -l '$logfile'
-      #if $dry_run == 1:
-          --count
-      #elif $dry_run == 0:
-          -o '$outfile'
-      #end if
+      $dry_run
+      -o '$outfile'
   ]]></command>
 
   <inputs>
@@ -29,7 +26,7 @@
       <option value="nuccore">Nucleotide</option>
       <option value="protein">Protein</option>
     </param>
-    <param name="dry_run" type="boolean" label="Dry run to get the number of sequences?" truevalue="1" falsevalue="0" checked="false"/>
+    <param name="dry_run" type="boolean" label="Dry run to get the number of sequences?" truevalue="--count" falsevalue="" checked="false"/>
   </inputs>
   <outputs>
     <data name="outfile" format="fasta" label="${tool.name} (${dbname.value_label}) with queryString '${queryString.value}'" >
