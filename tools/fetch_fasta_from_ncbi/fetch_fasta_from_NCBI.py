@@ -334,9 +334,7 @@ LOG_FORMAT = '%(asctime)s|%(levelname)-8s|%(message)s'
 LOG_DATEFMT = '%Y-%m-%d %H:%M:%S'
 LOG_LEVELS = ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']
 
-
-def __main__():
-    """ main function """
+def command_parse():
     parser = argparse.ArgumentParser(description='Retrieve data from NCBI')
     parser.add_argument('-i', dest='query_string', help='NCBI Query String',
                         required=True)
@@ -350,6 +348,11 @@ def __main__():
     parser.add_argument('--loglevel', choices=LOG_LEVELS, default='INFO',
                         help='logging level (default: INFO)')
     args = parser.parse_args()
+    return args
+
+def __main__():
+    """ main function """
+    args = command_parse()
     log_level = getattr(logging, args.loglevel)
     kwargs = {'format': LOG_FORMAT,
               'datefmt': LOG_DATEFMT,
