@@ -58,7 +58,7 @@ class Eutils:
 
     def dry_run(self):
         self.get_count_value()
-        
+
     def retrieve(self):
         """
         Retrieve the fasta sequences corresponding to the query
@@ -211,7 +211,8 @@ class Eutils:
                 response = urllib2.urlopen(req)
                 self.logger.debug("Going to get code")
                 response_code = response.getcode()
-                self.logger.debug("Going to read, de code was : %s", str(response_code))
+                self.logger.debug("Going to read, de code was : %s",
+                                  str(response_code))
                 fasta = response.read()
                 self.logger.debug("Did all that")
                 response.close()
@@ -343,10 +344,11 @@ def __main__():
     parser.add_argument('-d', dest='dbname', help='database type')
     parser.add_argument('--count', '-c', dest='count_ids',
                         action='store_true', default=False,
-                        help='dry run ouputing only the number of sequences found')
+                        help='dry run ouputing only the number of sequences\
+                        found')
     parser.add_argument('-l', '--logfile', help='log file (default=stderr)')
     parser.add_argument('--loglevel', choices=LOG_LEVELS, default='INFO',
-                      help='logging level (default: INFO)')
+                        help='logging level (default: INFO)')
     args = parser.parse_args()
     log_level = getattr(logging, args.loglevel)
     kwargs = {'format': LOG_FORMAT,
