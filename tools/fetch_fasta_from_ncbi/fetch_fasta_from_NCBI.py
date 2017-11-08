@@ -21,9 +21,9 @@ retmax of efetch is 1/10 of declared value from NCBI
 queries are 1 sec delayed, to satisfy NCBI guidelines
 (more than what they request)
 """
+import argparse
 import httplib
 import logging
-import optparse
 import re
 import sys
 import time
@@ -55,26 +55,15 @@ class Eutils:
         self.count = 0
         self.webenv = ""
         self.query_key = ""
-        self.datetype = options.datetype
-        if options.reldate:
-            self.reldate = options.reldate
-        else:
-            self.reldate = ''
-        if options.mindate:
-            self.mindate = options.mindate
-        else:
-            self.mindate = ''
-        if options.maxdate:
-            self.maxdate = options.maxdate
-        else:
-            self.maxdate = ''
+
+    def dry_run(self):
+        self.get_count_value()
 
     def retrieve(self):
         """
         Retrieve the fasta sequences corresponding to the query
         """
         self.get_count_value()
-
         # If no UIDs are found exit script
         if self.count > 0:
             self.get_uids_list()
@@ -101,8 +90,7 @@ class Eutils:
         self.logger.info("for Query: %s and database: %s" %
                          (self.query_string, self.dbname))
         querylog = self.esearch(self.dbname, self.query_string, '', '',
-                                "count", self.datetype, self.reldate,
-                                self.mindate, self.maxdate)
+                                "count")
         self.logger.debug("Query response:")
         for line in querylog:
             self.logger.debug(line.rstrip())
@@ -127,8 +115,7 @@ class Eutils:
                          num_batches)
         for n in range(num_batches):
             querylog = self.esearch(self.dbname, self.query_string, n*retmax,
-                                    retmax, '', self.datetype, self.reldate,
-                                    self.mindate, self.maxdate)
+                                    retmax, '')
             for line in querylog:
                 if '<Id>' in line and '</Id>' in line:
                     uid = (line[line.find('<Id>')+len('<Id>'):
@@ -136,19 +123,14 @@ class Eutils:
                     self.ids.append(uid)
             self.logger.info("Retrieved %d UIDs" % len(self.ids))
 
-    def esearch(self, db, term, retstart, retmax, rettype, datetype, reldate,
-                mindate, maxdate):
+    def esearch(self, db, term, retstart, retmax, rettype):
         url = self.base + "esearch.fcgi"
         self.logger.debug("url: %s" % url)
         values = {'db': db,
                   'term': term,
                   'rettype': rettype,
                   'retstart': retstart,
-                  'retmax': retmax,
-                  'datetype': datetype,
-                  'reldate': reldate,
-                  'mindate': mindate,
-                  'maxdate': maxdate}
+                  'retmax': retmax}
         data = urllib.urlencode(values)
         self.logger.debug("data: %s" % str(data))
         req = urllib2.Request(url, data)
@@ -225,9 +207,14 @@ class Eutils:
             counter += 1
             self.logger.info("Server Transaction Trial:  %s" % (counter))
             try:
+                self.logger.debug("Going to open")
                 response = urllib2.urlopen(req)
+                self.logger.debug("Going to get code")
                 response_code = response.getcode()
+                self.logger.debug("Going to read, de code was : %s",
+                                  str(response_code))
                 fasta = response.read()
+                self.logger.debug("Did all that")
                 response.close()
                 if((response_code != 200) or
                    ("Resource temporarily unavailable" in fasta) or
@@ -348,63 +335,46 @@ LOG_DATEFMT = '%Y-%m-%d %H:%M:%S'
 LOG_LEVELS = ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']
 
 
+def command_parse():
+    parser = argparse.ArgumentParser(description='Retrieve data from NCBI')
+    parser.add_argument('-i', dest='query_string', help='NCBI Query String',
+                        required=True)
+    parser.add_argument('-o', dest='outname', help='output file name')
+    parser.add_argument('-d', dest='dbname', help='database type')
+    parser.add_argument('--count', '-c', dest='count_ids',
+                        action='store_true', default=False,
+                        help='dry run ouputing only the number of sequences\
+                        found')
+    parser.add_argument('-l', '--logfile', help='log file (default=stderr)')
+    parser.add_argument('--loglevel', choices=LOG_LEVELS, default='INFO',
+                        help='logging level (default: INFO)')
+    args = parser.parse_args()
+    return args
+
+
 def __main__():
     """ main function """
-    parser = optparse.OptionParser(description='Retrieve data from NCBI')
-    parser.add_option('-i', dest='query_string', help='NCBI Query String')
-    parser.add_option('-o', dest='outname', help='output file name')
-    parser.add_option('-d', dest='dbname', help='database type')
-    parser.add_option('-l', '--logfile', help='log file (default=stderr)')
-    parser.add_option('--datetype', dest='datetype',
-                      choices=['mdat', 'pdat'],
-                      help='Type of date used to limit a search.\
-                            [ mdat(modification date), pdat(publication date)]\
-                            (default=pdat)', default='pdat')
-    parser.add_option('--reldate', dest='reldate',
-                      help='When reldate is set to an integer n, the search\
-                            returns only those items that have a date\
-                            specified by datetype within the last n days.')
-    parser.add_option('--maxdate', dest='maxdate',
-                      help='Date range used to limit a search result by the\
-                            date specified by datetype. These two parameters\
-                            (mindate, maxdate) must be used together to\
-                            specify an arbitrary date range. The general date\
-                            format is YYYY/MM/DD, and these variants are also\
-                            allowed: YYYY, YYYY/MM.')
-    parser.add_option('--mindate', dest='mindate',
-                      help='Date range used to limit a search result by the\
-                            date specified by datetype. These two parameters\
-                            (mindate, maxdate) must be used together to\
-                            specify an arbitrary date range. The general date\
-                            format is YYYY/MM/DD, and these variants are also\
-                            allowed: YYYY, YYYY/MM.')
-    parser.add_option('--loglevel', choices=LOG_LEVELS, default='INFO',
-                      help='logging level (default: INFO)')
-    (options, args) = parser.parse_args()
-    if len(args) > 0:
-        parser.error('Wrong number of arguments')
-    if((options.reldate and options.maxdate) or
-       (options.reldate and options.mindate)):
-        parser.error("You can't mix 'reldate' and 'maxdate', 'mindate'\
-                     parameters")
-    if((options.mindate and not options.maxdate) or
-       (options.maxdate and not options.mindate)):
-        parser.error("mindate and maxdate must be used together")
-
-    log_level = getattr(logging, options.loglevel)
+    args = command_parse()
+    log_level = getattr(logging, args.loglevel)
     kwargs = {'format': LOG_FORMAT,
               'datefmt': LOG_DATEFMT,
               'level': log_level}
-    if options.logfile:
-        kwargs['filename'] = options.logfile
+    if args.logfile:
+        kwargs['filename'] = args.logfile
     logging.basicConfig(**kwargs)
     logger = logging.getLogger('data_from_NCBI')
 
-    E = Eutils(options, logger)
-    try:
-        E.retrieve()
-    except Exception:
-        sys.exit(1)
+    E = Eutils(args, logger)
+    if args.count_ids:
+        try:
+            E.dry_run()
+        except Exception:
+            sys.exit(1)
+    else:
+        try:
+            E.retrieve()
+        except Exception:
+            sys.exit(1)
 
 
 if __name__ == "__main__":
