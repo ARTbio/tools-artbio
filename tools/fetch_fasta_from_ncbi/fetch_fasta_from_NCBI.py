@@ -152,7 +152,7 @@ class Eutils:
         while not serverResponse:
             nb_trials += 1
             try:
-                self.logger.debug("Try number %s for opening and readin URL %s"
+                self.logger.debug("Try number %s for opening and reading URL %s"
                                   % (nb_trials, url+data))
                 response = urllib2.urlopen(req)
                 querylog = response.readlines()
