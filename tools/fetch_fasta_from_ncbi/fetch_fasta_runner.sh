@@ -12,5 +12,5 @@ getParams() {
   return params
 }
 
-params=getParams();
+params=getParams;
 echo $params;
