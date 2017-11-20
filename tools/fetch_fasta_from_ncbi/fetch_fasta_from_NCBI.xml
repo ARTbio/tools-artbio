@@ -1,12 +1,12 @@
 <tool id="retrieve_fasta_from_NCBI" name="Retrieve FASTA from NCBI" version="2.2.1">
   <description></description>
   <command><![CDATA[
-      python '$__tool_directory__'/fetch_fasta_from_NCBI.py
+      sh '$__tool_directory__'/fetch_fasta_runner.sh python '$__tool_directory__'/fetch_fasta_from_NCBI.py
       -i "$queryString"
       -d $dbname
       -l '$logfile'
       $dry_run
-      -o '$outfile'
+      -o '$outfile';
   ]]></command>
 
   <inputs>
