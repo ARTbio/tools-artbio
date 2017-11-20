@@ -370,12 +370,12 @@ def __main__():
         try:
             E.dry_run()
         except Exception:
-            sys.exit(1)
+            sys.exit(-1)
     else:
         try:
             E.retrieve()
         except Exception:
-            sys.exit(1)
+            sys.exit(-1)
 
 
 if __name__ == "__main__":
