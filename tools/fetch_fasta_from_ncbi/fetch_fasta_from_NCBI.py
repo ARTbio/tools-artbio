@@ -55,6 +55,10 @@ class Eutils:
         self.count = 0
         self.webenv = ""
         self.query_key = ""
+        if options.get_uids:
+            self.get_uids = True
+        else:
+            self.get_uids = False
 
     def dry_run(self):
         self.get_count_value()
@@ -67,11 +71,15 @@ class Eutils:
         # If no UIDs are found exit script
         if self.count > 0:
             self.get_uids_list()
-            try:
-                self.get_sequences()
-            except QueryException as e:
-                self.logger.error("Exiting script.")
-                raise e
+            if not self.get_uids:
+                try:
+                    self.get_sequences()
+                except QueryException as e:
+                    self.logger.error("Exiting script.")
+                    raise e
+            else:
+                with open(self.outname, 'w') as f:
+                    f.write('\t'.join(self.ids)+'\n')
         else:
             self.logger.error("No UIDs were found. Exiting script.")
             raise Exception("")
@@ -338,14 +346,16 @@ LOG_LEVELS = ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']
 
 def command_parse():
     parser = argparse.ArgumentParser(description='Retrieve data from NCBI')
-    parser.add_argument('-i', dest='query_string', help='NCBI Query String',
-                        required=True)
+    parser.add_argument('-i', dest='query_string', help='NCBI Query String')
     parser.add_argument('-o', dest='outname', help='output file name')
     parser.add_argument('-d', dest='dbname', help='database type')
     parser.add_argument('--count', '-c', dest='count_ids',
                         action='store_true', default=False,
                         help='dry run ouputing only the number of sequences\
                         found')
+    parser.add_argument('--get_uids', '-u', dest='get_uids', default=False,
+                        action='store_true', help='prints to the output a list\
+                        of UIDs')
     parser.add_argument('-l', '--logfile', help='log file (default=stderr)')
     parser.add_argument('--loglevel', choices=LOG_LEVELS, default='INFO',
                         help='logging level (default: INFO)')
