@@ -328,6 +328,7 @@ class Eutils:
                         except QueryException as e:
                             self.logger.error("%s" % e.message)
                             raise e
+                urllib.urlcleanup()
 
 
 LOG_FORMAT = '%(asctime)s|%(levelname)-8s|%(message)s'
