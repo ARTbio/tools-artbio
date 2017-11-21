@@ -5,11 +5,11 @@
         -i "$queryString"
         -d $dbname
         -l '$logfile'
-        $dry_run
+        -c
         -o '$outfile';
     #if $dry_run == ""
-        if [ \$(tail -n 2 $logfile | perl -ne '/Found (\d+) UID/ && print \$1' )
-            -lt 300000 ];then
+        number_UIDs=\$(tail -n 2 $logfile | perl -ne '/Found (\d+) UID/ && print \$1');
+        if [ "\$number_UIDs" -lt "300000" ]; then
             python '$__tool_directory__'/fetch_fasta_from_NCBI.py
                 -i "$queryString"
                 -d $dbname
@@ -21,40 +21,54 @@
                 -d $dbname
                 -u
                 -l '$logfile'
-                -o '$outfile';
-            counter=0
-            while IFS=\$'\t' read -r -a UID_array; do
-                for ((i=0; i+400000<\${#UID_array[@]}; i+=400000)); do
-                    & python '$__tool_directory__'/fetch_fasta_from_NCBI.py
+                -o 'uid_outfile';
+            UID_array=( \$(head uid_outfile) );
+            array_len=\${#UID_array[@]};
+            counter=0;
+            echo "\$array_len";
+            if [ "\$array_len" -gt "399997" ]; then
+                for i in {0..\$array_len..399997}; do
+                    python '$__tool_directory__'/fetch_fasta_from_NCBI.py
                         -d $dbname
                         -l '$logfile'
-                        -o '$outfile'
-                        --UID_list \${UID_array[@]:\$i:100000};
-                    & python '$__tool_directory__'/fetch_fasta_from_NCBI.py
+                        -o 'tmp1_outfile'
+                        --UID_list \${UID_array[@]:\$i:100000}&
+                    python '$__tool_directory__'/fetch_fasta_from_NCBI.py
                         -d $dbname
-                        -l '$logfile'
-                        -o '$outfile'
-                        --UID_list \${UID_array[@]:\$((i+100000)):100000};
-                    & python '$__tool_directory__'/fetch_fasta_from_NCBI.py
+                        -l 'tmp1_logfile'
+                        -o 'tmp2_outfile'
+                        --UID_list \${UID_array[@]:\$((i+100001)):99999}&
+                    python '$__tool_directory__'/fetch_fasta_from_NCBI.py
                         -d $dbname
-                        -l '$logfile'
-                        -o '$outfile'
-                        --UID_list \${UID_array[@]:\$((i+200000)):100000};
-                    & python '$__tool_directory__'/fetch_fasta_from_NCBI.py
+                        -l 'tmp2_logfile'
+                        -o 'tmp3_outfile'
+                        --UID_list \${UID_array[@]:\$((i+200001)):99999}&
+                    python '$__tool_directory__'/fetch_fasta_from_NCBI.py
                         -d $dbname
-                        -l '$logfile'
-                        -o '$outfile'
-                        --UID_list \${UID_array[@]:\$((i+300000)):100000};
+                        -l 'tmp3_logfile'
+                        -o 'tmp4_outfile'
+                        --UID_list \${UID_array[@]:\$((i+300001)):99999}&
                     wait;
+                    cat tmp1_outfile tmp2_outfile tmp3_outfile tmp4_outfile >> $outfile;
+                    rm tmp1_outfile tmp2_outfile tmp3_outfile tmp4_outfile;
+                    cat tmp1_logfile tmp2_logfile tmp3_logfile >> $logfile;
+                    rm tmp1_logfile tmp2_logfile tmp3_logfile;
+                    counter=\$(( counter + 399997 ));
                 done;
-                if [ \$i -lt \${#UID_array[@]} ]; then
+                if [ "\$counter" -lt "\$array_len" ]; then
                 python '$__tool_directory__'/fetch_fasta_from_NCBI.py
                     -d $dbname
                     -l '$logfile'
                     -o '$outfile'
-                    --UID_list \${UID_array[@]:\$i:\$((#UID_list[@] - i + 1))};
+                    --UID_list \${UID_array[@]:\$counter:\$((array_len - counter + 1))};
                 fi;
-            done;
+            else
+                python '$__tool_directory__'/fetch_fasta_from_NCBI.py
+                    -d $dbname
+                    -l '$logfile'
+                    -o '$outfile'
+                    --UID_list \${UID_array[@]:0:\$array_len};
+            fi;
         fi;
     #end if
   ]]></command>
