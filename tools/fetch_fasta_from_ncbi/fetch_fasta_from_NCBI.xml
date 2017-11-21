@@ -25,12 +25,35 @@
             counter=0
             while IFS=\$'\t' read -r -a UID_array; do
                 for ((i=0; i+400000<\${#UID_array[@]}; i+=400000)); do
-                    &
-                    &
-                    &
-                    &
+                    & python '$__tool_directory__'/fetch_fasta_from_NCBI.py
+                        -d $dbname
+                        -l '$logfile'
+                        -o '$outfile'
+                        --UID_list \${UID_array[@]:\$i:100000};
+                    & python '$__tool_directory__'/fetch_fasta_from_NCBI.py
+                        -d $dbname
+                        -l '$logfile'
+                        -o '$outfile'
+                        --UID_list \${UID_array[@]:\$((i+100000)):100000};
+                    & python '$__tool_directory__'/fetch_fasta_from_NCBI.py
+                        -d $dbname
+                        -l '$logfile'
+                        -o '$outfile'
+                        --UID_list \${UID_array[@]:\$((i+200000)):100000};
+                    & python '$__tool_directory__'/fetch_fasta_from_NCBI.py
+                        -d $dbname
+                        -l '$logfile'
+                        -o '$outfile'
+                        --UID_list \${UID_array[@]:\$((i+300000)):100000};
+                    wait;
                 done;
-                
+                if [ \$i -lt \${#UID_array[@]} ]; then
+                python '$__tool_directory__'/fetch_fasta_from_NCBI.py
+                    -d $dbname
+                    -l '$logfile'
+                    -o '$outfile'
+                    --UID_list \${UID_array[@]:\$i:\$((#UID_list[@] - i + 1))};
+                fi;
             done;
         fi;
     #end if
