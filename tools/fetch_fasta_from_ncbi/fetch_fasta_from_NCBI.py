@@ -353,7 +353,7 @@ LOG_LEVELS = ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']
 def command_parse():
     parser = argparse.ArgumentParser(description='Retrieve data from NCBI')
     parser.add_argument('-i', dest='query_string', help='NCBI Query String')
-    parser.add_argument('--IUD_list', dest='listed_iuds', nargs='+',
+    parser.add_argument('--UID_list', dest='listed_iuds', nargs='+',
                         help='list of iuds to be fetched')
     parser.add_argument('-o', dest='outname', help='output file name')
     parser.add_argument('-d', dest='dbname', help='database type')
