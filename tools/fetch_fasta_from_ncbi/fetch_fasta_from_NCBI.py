@@ -166,8 +166,8 @@ class Eutils:
         while not serverResponse:
             nb_trials += 1
             try:
-                self.logger.debug("Try number %s for opening and reading URL %s"
-                                  % (nb_trials, url+data))
+                self.logger.debug("Try number %s for opening and reading URL \
+                                  %s" % (nb_trials, url+data))
                 response = urllib2.urlopen(req)
                 querylog = response.readlines()
                 response.close()
@@ -369,7 +369,8 @@ def command_parse():
                         help='logging level (default: INFO)')
     args = parser.parse_args()
     if args.query_string is not None and args.listed_iuds is not None:
-        parser.error('Please choose either fetching the -i query or the -u list.')
+        parser.error('Please choose either fetching the -i query or the -u\
+                     list.')
     return args
 
 
