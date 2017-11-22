@@ -26,34 +26,34 @@
             array_len=\${#UID_array[@]};
             counter=0;
             echo "\$array_len";
-            if [ "\$array_len" -gt "399997" ]; then
-                for i in {0..\$array_len..399997}; do
+            if [ "\$array_len" -gt "200000" ]; then
+                for ((i=0; i+200000<array_len;i+=200000)); do
                     python '$__tool_directory__'/fetch_fasta_from_NCBI.py
                         -d $dbname
                         -l '$logfile'
                         -o 'tmp1_outfile'
-                        --UID_list \${UID_array[@]:\$i:100000}&
+                        --UID_list \${UID_array[@]:\$i:99999}&
                     python '$__tool_directory__'/fetch_fasta_from_NCBI.py
                         -d $dbname
                         -l 'tmp1_logfile'
                         -o 'tmp2_outfile'
-                        --UID_list \${UID_array[@]:\$((i+100001)):99999}&
-                    python '$__tool_directory__'/fetch_fasta_from_NCBI.py
+                        --UID_list \${UID_array[@]:\$((i+100000)):99999}&
+              #*      python '$__tool_directory__'/fetch_fasta_from_NCBI.py
                         -d $dbname
                         -l 'tmp2_logfile'
                         -o 'tmp3_outfile'
-                        --UID_list \${UID_array[@]:\$((i+200001)):99999}&
+                        --UID_list \${UID_array[@]:\$((i+200000)):99999}&
                     python '$__tool_directory__'/fetch_fasta_from_NCBI.py
                         -d $dbname
                         -l 'tmp3_logfile'
                         -o 'tmp4_outfile'
-                        --UID_list \${UID_array[@]:\$((i+300001)):99999}&
+                        --UID_list \${UID_array[@]:\$((i+300000)):99999}&*#
                     wait;
-                    cat tmp1_outfile tmp2_outfile tmp3_outfile tmp4_outfile >> $outfile;
-                    rm tmp1_outfile tmp2_outfile tmp3_outfile tmp4_outfile;
-                    cat tmp1_logfile tmp2_logfile tmp3_logfile >> $logfile;
-                    rm tmp1_logfile tmp2_logfile tmp3_logfile;
-                    counter=\$(( counter + 399997 ));
+                    cat tmp1_outfile tmp2_outfile >> $outfile;
+                    rm tmp1_outfile tmp2_outfile;
+                    cat tmp1_logfile >> $logfile;
+                    rm tmp1_logfile;
+                    counter=\$(( counter + 200000 ));
                 done;
                 if [ "\$counter" -lt "\$array_len" ]; then
                 python '$__tool_directory__'/fetch_fasta_from_NCBI.py
