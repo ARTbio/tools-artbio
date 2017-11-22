@@ -33,9 +33,9 @@
                     number_of_groups=\$((number_of_groups + 1));
                 fi;
                 group_number=1;
-                echo "----- Number of groups of batches: \$number_of_groups -----";
+                echo "----- Number of groups of batches: \$number_of_groups -----" >> $logfile;
                 for ((i=0; i+200000<array_len;i+=200000)); do
-                    echo "----- Group number: \$group_number -----";
+                    echo "----- Group number: \$group_number -----" >> $logfile;
                     python '$__tool_directory__'/fetch_fasta_from_NCBI.py
                         -d $dbname
                         -l '$logfile'
@@ -64,6 +64,8 @@
                     group_number=\$((group_number + 1));
                     counter=\$(( counter + 200000 ));
                 done;
+                echo "----- Group number: \$group_number -----" >> $logfile;
+                echo "----- Last group -----" >> $logfile;
                 if [ "\$counter" -lt "\$array_len" ]; then
                 python '$__tool_directory__'/fetch_fasta_from_NCBI.py
                     -d $dbname
