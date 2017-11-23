@@ -344,6 +344,88 @@ class Eutils:
                             raise e
                 urllib.urlcleanup()
 
+    def efetch2(self, db, uid_list):
+        url = self.base + "efetch.fcgi"
+        self.logger.debug("url_efetch: %s" % url)
+        values = {'db': db,
+                  'id': uid_list,
+                  'rettype': "fasta",
+                  'retmode': "text"}
+        data = urllib.urlencode(values)
+        req = urllib2.Request(url, data)
+        self.logger.debug("data: %s" % str(data))
+        serverTransaction = False
+        counter = 0
+        response_code = 0
+        while not serverTransaction:
+            counter += 1
+            self.logger.info("Server Transaction Trial:  %s" % (counter))
+            try:
+                self.logger.debug("Going to open")
+                response = urllib2.urlopen(req)
+                self.logger.debug("Going to get code")
+                response_code = response.getcode()
+                self.logger.debug("Going to read, de code was : %s",
+                                  str(response_code))
+                fasta = response.read()
+                self.logger.debug("Did all that")
+                response.close()
+                if((response_code != 200) or
+                   ("Resource temporarily unavailable" in fasta) or
+                   ("Error" in fasta) or (not fasta.startswith(">"))):
+                    serverTransaction = False
+                    if (response_code != 200):
+                        self.logger.info("urlopen error: Response code is not\
+                                         200")
+                    elif ("Resource temporarily unavailable" in fasta):
+                        self.logger.info("Ressource temporarily unavailable")
+                    elif ("Error" in fasta):
+                        self.logger.info("Error in fasta")
+                    else:
+                        self.logger.info("Fasta doesn't start with '>'")
+                else:
+                    serverTransaction = True
+            except urllib2.HTTPError as e:
+                serverTransaction = False
+                self.logger.info("urlopen error:%s, %s" % (e.code, e.read()))
+            except urllib2.URLError as e:
+                serverTransaction = False
+                self.logger.info("urlopen error: Failed to reach a server")
+                self.logger.info("Reason :%s" % (e.reason))
+            except httplib.IncompleteRead as e:
+                serverTransaction = False
+                self.logger.info("IncompleteRead error:  %s" % (e.partial))
+            if (counter > 500):
+                serverTransaction = True
+        if (counter > 500):
+            raise QueryException({"message":
+                                  "500 Server Transaction Trials attempted for\
+                                  this batch. Aborting."})
+        fasta = self.sanitiser(self.dbname, fasta)
+        time.sleep(0.1)
+        return fasta
+
+
+    def get_sequences2(self):
+        batch_size = 200
+        count = self.count
+        uids_list = self.ids
+        self.logger.info("Batch size for efetch action: %d" % batch_size)
+        self.logger.info("Number of batches for efetch action: %d" %
+                         ((count / batch_size) + 1))
+        with open(self.outname, 'w') as out:
+            for start in range(0, count, batch_size):
+                end = min(count, start+batch_size)
+                batch = uids_list[start:end]
+                self.logger.info("retrieving batch %d" %
+                                 ((start / batch_size) + 1))
+                try:
+                    mfasta = self.efetch2(self.dbname, ','.join(batch))
+                    out.write(mfasta + '\n')
+                except QueryException as e:
+                    self.logger.error("%s" % e.message)
+                    raise e
+        urllib.urlcleanup()
 
 LOG_FORMAT = '%(asctime)s|%(levelname)-8s|%(message)s'
 LOG_DATEFMT = '%Y-%m-%d %H:%M:%S'
