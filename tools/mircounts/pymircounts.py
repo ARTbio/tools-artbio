@@ -181,7 +181,7 @@ def plot_coverage(countdict, outfile):
         fig, axarr = plt.subplots( 15, 4, figsize=(8,11))
     counter = 0
     boo = 0
-    """ Format figure
+    """ Format figure """
     for a in fig.axes:
         if counter % 4 != 0:
             plt.setp(a.get_yticklabels(), visible=False)
@@ -196,7 +196,7 @@ def plot_coverage(countdict, outfile):
             plt.setp(a.set_xticks([]))
         elif counter % 2 != 0:
             plt.setp(a.get_xticklabels(), visible=False)
-        counter += 1 """
+        counter += 1
     """ Plot first page """
     xax = 0
     yax = 0
@@ -204,7 +204,7 @@ def plot_coverage(countdict, outfile):
     for i in range(0,60):
         ref = ref_list.pop(0)
         plot_coverage_plotting(ref, countdict, xax, yax, axarr,
-                               first=True)
+                               first=True,line_list=line_list)
         yax += 1
         if yax == 4:
             yax = 0
@@ -221,7 +221,8 @@ def plot_coverage(countdict, outfile):
                 for yax in range(0,4):
                     ref = ref_list.pop(0)
                     plot_coverage_plotting(ref, countdict, xax, yax, axarr,
-                                           line_list=line_list)
+                                           line_list=line_list,
+                                           plot_number=plot_number)
                     plot_number += 1
             pdf.savefig(fig)
     if uncomplete_last > 0:
@@ -269,7 +270,7 @@ def plot_coverage(countdict, outfile):
     pdf.close()
 
 def plot_coverage_plotting(ref, countdict, xax, yax, axarr, first=False,
-                           last=False, line_list=None):
+                           last=False, line_list=None,plot_number=None):
     m = max(countdict[ref])
     max_coord = len(countdict[ref])
     if m > 0:
@@ -287,8 +288,11 @@ def plot_coverage_plotting(ref, countdict, xax, yax, axarr, first=False,
         axarr[xax,yax].plot(l_coord,l)
         axarr[xax,yax].set_ylim(-0.01,1.1)
     else:
-        line_list[plot_number].set_ydata(l)
-        line_list[plot_number].set_xdata(l_coord)
+        try:
+            line_list[plot_number].set_ydata(l)
+            line_list[plot_number].set_xdata(l_coord)
+        except TypeError:
+            pass
 
 def write_counts(countdict, outfile):
     """
