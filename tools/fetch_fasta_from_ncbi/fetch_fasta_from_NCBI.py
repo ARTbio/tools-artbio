@@ -59,8 +59,11 @@ class Eutils:
             self.get_uids = True
         else:
             self.get_uids = False
-        if options.listed_iuds:
-            self.ids = options.listed_iuds
+        if options.iuds_file:
+            with open(options.iuds_file, 'r') as f:
+                self.ids.extend(f.readline().split(' '))
+                print(self.ids)
+                print("\n");
 
     def dry_run(self):
         self.get_count_value()
@@ -79,7 +82,7 @@ class Eutils:
                 self.get_uids_list()
             if not self.get_uids:
                 try:
-                    self.get_sequences()
+                    self.get_sequences2()
                 except QueryException as e:
                     self.logger.error("Exiting script.")
                     raise e
@@ -435,8 +438,8 @@ LOG_LEVELS = ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']
 def command_parse():
     parser = argparse.ArgumentParser(description='Retrieve data from NCBI')
     parser.add_argument('-i', dest='query_string', help='NCBI Query String')
-    parser.add_argument('--UID_list', dest='listed_iuds', nargs='+',
-                        help='list of iuds to be fetched')
+    parser.add_argument('--UID_list', dest='iuds_file',
+                        help='file containing a list of iuds to be fetched')
     parser.add_argument('-o', dest='outname', help='output file name')
     parser.add_argument('-d', dest='dbname', help='database type')
     parser.add_argument('--count', '-c', dest='count_ids',
@@ -450,7 +453,7 @@ def command_parse():
     parser.add_argument('--loglevel', choices=LOG_LEVELS, default='INFO',
                         help='logging level (default: INFO)')
     args = parser.parse_args()
-    if args.query_string is not None and args.listed_iuds is not None:
+    if args.query_string is not None and args.iuds_file is not None:
         parser.error('Please choose either fetching the -i query or the -u\
                      list.')
     return args
