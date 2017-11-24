@@ -9,7 +9,7 @@
         -o '$outfile';
     #if $dry_run == ""
         number_UIDs=\$(tail -n 2 $logfile | perl -ne '/Found (\d+) UID/ && print \$1');
-        if [ "\$number_UIDs" -lt "300000" ]; then
+        if [ "\$number_UIDs" -lt "200000" ]; then
             python '$__tool_directory__'/fetch_fasta_from_NCBI.py
                 -i "$queryString"
                 -d $dbname
@@ -25,20 +25,20 @@
             UID_array=( \$(head uid_outfile) );
             array_len=\${#UID_array[@]};
             counter=0;
-            if [ "\$array_len" -gt "400000" ]; then
-                number_of_groups=\$((array_len / 400000));
-                modulo=\$((array_len % 400000));
+            if [ "\$array_len" -gt "200000" ]; then
+                number_of_groups=\$((array_len / 200000));
+                modulo=\$((array_len % 200000));
                 if [ "\$modulo" -gt 0 ];then
                     number_of_groups=\$((number_of_groups + 1));
                 fi;
                 group_number=1;
                 echo "----- Number of groups of batches: \$number_of_groups -----" >> $logfile;
-                for ((i=0; i+400000<array_len;i+=400000)); do
+                for ((i=0; i+200000<array_len;i+=200000)); do
                     echo "----- Group number: \$group_number -----" >> $logfile;
                     echo "\${UID_array[@]:\$i:99999}" > uid_list_1.txt;
                     echo "\${UID_array[@]:\$((i+100000)):99999}" > uid_list_2.txt;
-                    echo "\${UID_array[@]:\$((i+200000)):99999}" > uid_list_3.txt;
-                    echo "\${UID_array[@]:\$((i+300000)):99999}" > uid_list_4.txt;
+                 #*   echo "\${UID_array[@]:\$((i+200000)):99999}" > uid_list_3.txt;
+                    echo "\${UID_array[@]:\$((i+300000)):99999}" > uid_list_4.txt;*#
                     python '$__tool_directory__'/fetch_fasta_from_NCBI.py
                         -d $dbname
                         -l '$logfile'
@@ -49,7 +49,7 @@
                         -l 'tmp1_logfile'
                         -o 'tmp2_outfile'
                         --UID_list uid_list_2.txt&
-                    python '$__tool_directory__'/fetch_fasta_from_NCBI.py
+                   #* python '$__tool_directory__'/fetch_fasta_from_NCBI.py
                         -d $dbname
                         -l 'tmp2_logfile'
                         -o 'tmp3_outfile'
@@ -58,15 +58,15 @@
                         -d $dbname
                         -l 'tmp3_logfile'
                         -o 'tmp4_outfile'
-                        --UID_list &
+                        --UID_list &*#
                     wait;
-                    cat tmp1_outfile tmp2_outfile tmp3_outfile tmp4_outfile >> $outfile;
-                    rm tmp1_outfile tmp2_outfile tmp3_outfile tmp4_outfile;
-                    cat tmp1_logfile tmp2_logfile tmp3_logfile >> $logfile;
-                    rm tmp1_logfile tmp2_logfile tmp3_logfile;
-                    rm uid_list_1.txt uid_list_2.txt uid_list_3.txt uid_list_4.txt;
+                    cat tmp1_outfile tmp2_outfile>> $outfile;
+                    rm tmp1_outfile tmp2_outfile;
+                    cat tmp1_logfile >> $logfile;
+                    rm tmp1_logfile;
+                    rm uid_list_1.txt uid_list_2.txt;
                     group_number=\$((group_number + 1));
-                    counter=\$(( counter + 400000 ));
+                    counter=\$(( counter + 200000 ));
                 done;
                 echo "----- Group number: \$group_number -----" >> $logfile;
                 echo "----- Last group -----" >> $logfile;

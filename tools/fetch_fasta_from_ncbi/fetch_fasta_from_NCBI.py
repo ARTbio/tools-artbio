@@ -62,8 +62,6 @@ class Eutils:
         if options.iuds_file:
             with open(options.iuds_file, 'r') as f:
                 self.ids.extend(f.readline().split(' '))
-                print(self.ids)
-                print("\n");
 
     def dry_run(self):
         self.get_count_value()
