@@ -406,7 +406,6 @@ class Eutils:
         time.sleep(0.1)
         return fasta
 
-
     def get_sequences2(self):
         batch_size = 200
         count = self.count
@@ -427,6 +426,7 @@ class Eutils:
                     self.logger.error("%s" % e.message)
                     raise e
         urllib.urlcleanup()
+
 
 LOG_FORMAT = '%(asctime)s|%(levelname)-8s|%(message)s'
 LOG_DATEFMT = '%Y-%m-%d %H:%M:%S'
