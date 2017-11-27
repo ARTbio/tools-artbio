@@ -80,7 +80,7 @@ class Eutils:
                 self.get_uids_list()
             if not self.get_uids:
                 try:
-                    self.get_sequences2()
+                    self.get_sequences()
                 except QueryException as e:
                     self.logger.error("Exiting script.")
                     raise e
@@ -155,117 +155,6 @@ class Eutils:
         time.sleep(1)
         return querylog
 
-    def epost(self, db, ids):
-        url = self.base + "epost.fcgi"
-        self.logger.debug("url_epost: %s" % url)
-        values = {'db': db,
-                  'id': ids}
-        data = urllib.urlencode(values)
-        req = urllib2.Request(url, data)
-        serverResponse = False
-        nb_trials = 0
-        while not serverResponse:
-            nb_trials += 1
-            try:
-                self.logger.debug("Try number %s for opening and reading URL \
-                                  %s" % (nb_trials, url+data))
-                response = urllib2.urlopen(req)
-                querylog = response.readlines()
-                response.close()
-                serverResponse = True
-            except urllib2.HTTPError as e:
-                self.logger.info("urlopen error:%s, %s" % (e.code, e.read()))
-                self.logger.info("Retrying in 1 sec")
-                serverResponse = False
-                time.sleep(1)
-            except urllib2.URLError as e:
-                self.logger.info("urlopen error: Failed to reach a server")
-                self.logger.info("Reason :%s" % (e.reason))
-                self.logger.info("Retrying in 1 sec")
-                serverResponse = False
-                time.sleep(1)
-            except httplib.IncompleteRead as e:
-                self.logger.info("IncompleteRead error:  %s" % (e.partial))
-                self.logger.info("Retrying in 1 sec")
-                serverResponse = False
-                time.sleep(1)
-        self.logger.debug("query response:")
-        for line in querylog:
-            self.logger.debug(line.rstrip())
-            if '</QueryKey>' in line:
-                self.query_key = str(line[line.find('<QueryKey>') +
-                                     len('<QueryKey>'):line.find('</QueryKey>')
-                                     ])
-            if '</WebEnv>' in line:
-                self.webenv = str(line[line.find('<WebEnv>')+len('<WebEnv>'):
-                                  line.find('</WebEnv>')])
-            self.logger.debug("*** epost action ***")
-            self.logger.debug("query_key: %s" % self.query_key)
-            self.logger.debug("webenv: %s" % self.webenv)
-        time.sleep(1)
-
-    def efetch(self, db, query_key, webenv):
-        url = self.base + "efetch.fcgi"
-        self.logger.debug("url_efetch: %s" % url)
-        values = {'db': db,
-                  'query_key': query_key,
-                  'webenv': webenv,
-                  'rettype': "fasta",
-                  'retmode': "text"}
-        data = urllib.urlencode(values)
-        req = urllib2.Request(url, data)
-        self.logger.debug("data: %s" % str(data))
-        serverTransaction = False
-        counter = 0
-        response_code = 0
-        while not serverTransaction:
-            counter += 1
-            self.logger.info("Server Transaction Trial:  %s" % (counter))
-            try:
-                self.logger.debug("Going to open")
-                response = urllib2.urlopen(req)
-                self.logger.debug("Going to get code")
-                response_code = response.getcode()
-                self.logger.debug("Going to read, de code was : %s",
-                                  str(response_code))
-                fasta = response.read()
-                self.logger.debug("Did all that")
-                response.close()
-                if((response_code != 200) or
-                   ("Resource temporarily unavailable" in fasta) or
-                   ("Error" in fasta) or (not fasta.startswith(">"))):
-                    serverTransaction = False
-                    if (response_code != 200):
-                        self.logger.info("urlopen error: Response code is not\
-                                         200")
-                    elif ("Resource temporarily unavailable" in fasta):
-                        self.logger.info("Ressource temporarily unavailable")
-                    elif ("Error" in fasta):
-                        self.logger.info("Error in fasta")
-                    else:
-                        self.logger.info("Fasta doesn't start with '>'")
-                else:
-                    serverTransaction = True
-            except urllib2.HTTPError as e:
-                serverTransaction = False
-                self.logger.info("urlopen error:%s, %s" % (e.code, e.read()))
-            except urllib2.URLError as e:
-                serverTransaction = False
-                self.logger.info("urlopen error: Failed to reach a server")
-                self.logger.info("Reason :%s" % (e.reason))
-            except httplib.IncompleteRead as e:
-                serverTransaction = False
-                self.logger.info("IncompleteRead error:  %s" % (e.partial))
-            if (counter > 500):
-                serverTransaction = True
-        if (counter > 500):
-            raise QueryException({"message":
-                                  "500 Server Transaction Trials attempted for\
-                                  this batch. Aborting."})
-        fasta = self.sanitiser(self.dbname, fasta)
-        time.sleep(0.1)
-        return fasta
-
     def sanitiser(self, db, fastaseq):
         if(db not in "nuccore protein"):
             return fastaseq
@@ -313,39 +202,7 @@ class Eutils:
         self.logger.info("clean sequences appended: %d" % (len(sane_seqlist)))
         return "\n".join(sane_seqlist)
 
-    def get_sequences(self):
-        """
-        Total number of records from the input set to be retrieved,
-        up to a maximum of 10,000. Optionally, for a large set the value of
-        retstart can be iterated while holding retmax constant, thereby
-        downloading the entire set in batches of size retmax.
-        http://www.ncbi.nlm.nih.gov/books/NBK25499/#chapter4.EFetch
-        """
-        batch_size = self.retmax_efetch
-        count = self.count
-        uids_list = self.ids
-        self.logger.info("Batch size for efetch action: %d" % batch_size)
-        self.logger.info("Number of batches for efetch action: %d" %
-                         ((count / batch_size) + 1))
-        with open(self.outname, 'w') as out:
-            for start in range(0, count, batch_size):
-                end = min(count, start+batch_size)
-                batch = uids_list[start:end]
-                if self.epost(self.dbname, ",".join(batch)) != -1:
-                    mfasta = ''
-                    while not mfasta:
-                        self.logger.info("retrieving batch %d" %
-                                         ((start / batch_size) + 1))
-                        try:
-                            mfasta = self.efetch(self.dbname, self.query_key,
-                                                 self.webenv)
-                            out.write(mfasta + '\n')
-                        except QueryException as e:
-                            self.logger.error("%s" % e.message)
-                            raise e
-                urllib.urlcleanup()
-
-    def efetch2(self, db, uid_list):
+    def efetch(self, db, uid_list):
         url = self.base + "efetch.fcgi"
         self.logger.debug("url_efetch: %s" % url)
         values = {'db': db,
@@ -406,7 +263,7 @@ class Eutils:
         time.sleep(0.1)
         return fasta
 
-    def get_sequences2(self):
+    def get_sequences(self):
         batch_size = 200
         count = self.count
         uids_list = self.ids
