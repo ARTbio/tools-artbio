@@ -277,7 +277,7 @@ class Eutils:
                 self.logger.info("retrieving batch %d" %
                                  ((start / batch_size) + 1))
                 try:
-                    mfasta = self.efetch2(self.dbname, ','.join(batch))
+                    mfasta = self.efetch(self.dbname, ','.join(batch))
                     out.write(mfasta + '\n')
                 except QueryException as e:
                     self.logger.error("%s" % e.message)
