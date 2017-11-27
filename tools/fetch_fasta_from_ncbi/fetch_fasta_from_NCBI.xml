@@ -102,13 +102,6 @@
           <param name="dry_run" value="True"/>
           <output name="logfile" ftype="txt" file="dry_run.log" compare="sim_size"/>
       </test>
-      <test>
-          <param name="queryString" value="txid10239[orgn] NOT txid131567[orgn] AND complete[all] NOT partial[title] NOT phage[title] AND 2015:2016[PDAT]"/>
-          <param name="dbname" value="nuccore"/>
-          <output name="outfilename" ftype="fasta" >
-              <metadata name="sequences" value="207618" />
-          </output>
-      </test>
   </tests>
   <help>
 **What it does**
