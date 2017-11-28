@@ -178,32 +178,15 @@ def plot_coverage(countdict, outfile):
     uncomplete_last = len(countdict) % 60
     ref_list = sorted(countdict)
     if len(ref_list) >= 60:
-        fig, axarr = plt.subplots( 15, 4, figsize=(8,11))
-    counter = 0
-    boo = 0
-    """ Format figure """
-    for a in fig.axes:
-        if counter % 4 != 0:
-            plt.setp(a.get_yticklabels(), visible=False)
-            plt.setp(a.set_yticks([]))
-        elif boo != 0:
-            plt.setp(a.get_yticklabels(), visible=False)
-            boo = 0
-        else:
-            boo = 1
-        if counter < 56:
-            plt.setp(a.get_xticklabels(), visible=False)
-            plt.setp(a.set_xticks([]))
-        elif counter % 2 != 0:
-            plt.setp(a.get_xticklabels(), visible=False)
-        counter += 1
+        fig, axarr = plt.subplots( 15, 4, figsize=(10,15))
+    format_figure(fig)
     """ Plot first page """
     xax = 0
     yax = 0
     line_list = list()
     for i in range(0,60):
         ref = ref_list.pop(0)
-        plot_coverage_plotting(ref, countdict, xax, yax, axarr,
+        plot_coverage_plotting(ref, countdict, axarr[xax,yax],
                                first=True,line_list=line_list)
         yax += 1
         if yax == 4:
@@ -220,43 +203,23 @@ def plot_coverage(countdict, outfile):
             for xax in range(0,15):
                 for yax in range(0,4):
                     ref = ref_list.pop(0)
-                    plot_coverage_plotting(ref, countdict, xax, yax, axarr,
+                    plot_coverage_plotting(ref, countdict, axarr[xax,yax],
                                            line_list=line_list,
                                            plot_number=plot_number)
                     plot_number += 1
             pdf.savefig(fig)
     if uncomplete_last > 0:
         print(uncomplete_last)
-        fig, axarr = plt.subplots(nrows=15, ncols=4, figsize=(8,11))
-        counter = 0
-        boo = 0
-        """ Format figure """
-        for a in fig.axes:
-            if counter < uncomplete_last:
-                if counter % 4 != 0:
-                    plt.setp(a.get_yticklabels(), visible=False)
-                    plt.setp(a.set_yticks([]))
-                elif boo != 0:
-                    plt.setp(a.get_yticklabels(), visible=False)
-                    boo = 0
-                else:
-                    boo = 1
-                if counter < 56:
-                    plt.setp(a.get_xticklabels(), visible=False)
-                    plt.setp(a.set_xticks([]))
-                elif counter % 2 != 0:
-                    plt.setp(a.get_xticklabels(), visible=False)
-            else:
-                fig.delaxes(a)
-            counter += 1
+        fig, axarr = plt.subplots(nrows=15, ncols=4, figsize=(10,15))
+        format_figure(fig, uncomplete_last=uncomplete_last)
         """ Plot last """
         xax = 0
         yax = 0
         nb = 0
         for ref in ref_list:
             if nb < uncomplete_last:
-                plot_coverage_plotting(ref, countdict, xax, yax, axarr,
-                                       last=False)
+                plot_coverage_plotting(ref, countdict, axarr[xax,yax],
+                                       last=True)
                 yax += 1
                 if yax == 4:
                     yax = 0
@@ -269,7 +232,29 @@ def plot_coverage(countdict, outfile):
         pdf.savefig(fig)
     pdf.close()
 
-def plot_coverage_plotting(ref, countdict, xax, yax, axarr, first=False,
+def format_figure(fig, uncomplete_last=0):
+    counter = 0
+    boo = 0
+    for a in fig.axes:
+        if uncomplete_last and counter >= uncomplete_last:
+            fig.delaxes(a)
+        else:
+            if counter % 4 != 0:
+                plt.setp(a.get_yticklabels(), visible=False)
+                plt.setp(a.set_yticks([]))
+            elif boo != 0:
+                plt.setp(a.get_yticklabels(), visible=False)
+                boo = 0
+            else:
+                boo = 1
+            if counter < 56:
+                plt.setp(a.get_xticklabels(), visible=False)
+                plt.setp(a.set_xticks([]))
+            elif counter % 2 != 0:
+                plt.setp(a.get_xticklabels(), visible=False)
+        counter += 1
+
+def plot_coverage_plotting(ref, countdict, ax, first=False,
                            last=False, line_list=None,plot_number=None):
     m = max(countdict[ref])
     max_coord = len(countdict[ref])
@@ -278,15 +263,18 @@ def plot_coverage_plotting(ref, countdict, xax, yax, axarr, first=False,
     else:
         l = countdict[ref]
     l_coord = [x/max_coord for x in range(0,max_coord)]
-    axarr[xax,yax].set_title(ref, fontsize=7)
+    if ref == "dme-mir-11":
+        print(l)
+        print(countdict[ref])
+    ax.set_title(ref, fontsize=7, y=0.91)
     if first:
-        line, = axarr[xax,yax].plot(l_coord,l)
+        line, = ax.plot(l_coord,l)
         line_list.append(line)
-        axarr[xax,yax].set_ylim(-0.01,1.1)
+        ax.set_ylim(-0.01,1.1)
         return line
     elif last:
-        axarr[xax,yax].plot(l_coord,l)
-        axarr[xax,yax].set_ylim(-0.01,1.1)
+        ax.plot(l_coord,l)
+        ax.set_ylim(-0.01,1.1)
     else:
         try:
             line_list[plot_number].set_ydata(l)
