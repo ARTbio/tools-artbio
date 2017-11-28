@@ -25,9 +25,11 @@ def Parser():
                         help='pre-miRNAs count file path', metavar='FILE')
     parser.add_argument('-m', '--mirs', type=str, dest='mirs',
                         help='mature miRNA count file path', metavar='FILE')
-    parser.add_argument('--lattice', metavar='FILE', type=str, dest='lattice',
+    parser.add_argument('--PDF', metavar='FILE', type=str, dest='pdf_output',
                         help='Output file for the lattice dataframe.')
     args = parser.parse_args()
+    if args.pdf_output and not args.pre_mirs:
+        parser.error("To get a plotted coverage the -p option is necessary.")
     return args
 
 
@@ -120,7 +122,6 @@ def plot_coverage_par(countdict, outfile):
     nb_pages = 0
     previous_page = 0
     for pages in range(1,nb_images+2):
-        print(pages)
         current_page = pages*60
         if nprocess <4:
             nprocess += 1
@@ -173,86 +174,52 @@ def plot_img_par(countdict, ref_list, figure_queue):
     figure_queue.put(fig)
 
 def plot_coverage(countdict, outfile):
-    pdf = PdfPages('multipage.pdf')
+    pdf = PdfPages(outfile)
     pages_number = int(len(countdict)/60)
     uncomplete_last = len(countdict) % 60
-    ref_list = sorted(countdict)
-    if len(ref_list) >= 60:
-        fig, axarr = plt.subplots( 15, 4, figsize=(10,15))
-    format_figure(fig)
-    """ Plot first page """
-    xax = 0
-    yax = 0
-    line_list = list()
-    for i in range(0,60):
-        ref = ref_list.pop(0)
-        plot_coverage_plotting(ref, countdict, axarr[xax,yax],
-                               first=True,line_list=line_list)
-        yax += 1
-        if yax == 4:
-            yax = 0
-            xax += 1
-    fig.text(0.02, 0.5, 'Normalized counts', va='center', rotation='vertical', fontsize=12)
-    fig.text(0.4, 0.02, 'Normalized coordinates', va='center', rotation='horizontal', fontsize=12)
-    fig.suptitle('miRNA coverage maps',fontsize=14)
-    fig.tight_layout(rect=[0.05, 0.03, 1, 0.95],h_pad=-0.5,w_pad=-1.1)
-    pdf.savefig(fig)
-    if pages_number > 1:
-        for page in range(1,pages_number):
-            plot_number = 0
-            for xax in range(0,15):
-                for yax in range(0,4):
-                    ref = ref_list.pop(0)
-                    plot_coverage_plotting(ref, countdict, axarr[xax,yax],
-                                           line_list=line_list,
-                                           plot_number=plot_number)
-                    plot_number += 1
-            pdf.savefig(fig)
     if uncomplete_last > 0:
-        print(uncomplete_last)
-        fig, axarr = plt.subplots(nrows=15, ncols=4, figsize=(10,15))
-        format_figure(fig, uncomplete_last=uncomplete_last)
-        """ Plot last """
-        xax = 0
-        yax = 0
-        nb = 0
-        for ref in ref_list:
-            if nb < uncomplete_last:
-                plot_coverage_plotting(ref, countdict, axarr[xax,yax],
-                                       last=True)
-                yax += 1
-                if yax == 4:
-                    yax = 0
-                    xax += 1
-            nb += 1
+        pages_number += 1
+    ref_list = sorted(countdict)
+    line_list = list()
+    max_subplots = 60
+    for page in range(0, pages_number):
+        plot_number = 0
+        if page == 0:
+            fig, axarr = plt.subplots( 15, 4, figsize=(10,15))
+            ax = fig.axes
+        for i in range(0, max_subplots):
+            try:
+                ref = ref_list.pop(0)
+            except IndexError:
+                if page == pages_number -1:
+                    pass
+            plot_coverage_plotting(ref, countdict, ax[plot_number],
+                                   first = True if page == 0 else False,
+                                   line_list=line_list)
+            format_figure(fig, ax[plot_number], plot_number,
+                          uncomplete_last = uncomplete_last if page == pages_number-1 else 0)
+            plot_number += 1
         fig.text(0.02, 0.5, 'Normalized counts', va='center', rotation='vertical', fontsize=12)
         fig.text(0.4, 0.02, 'Normalized coordinates', va='center', rotation='horizontal', fontsize=12)
         fig.suptitle('miRNA coverage maps',fontsize=14)
-        fig.tight_layout(rect=[0.05, 0.03, 1, 0.95],h_pad=-0.5,w_pad=-1.1)
+        fig.tight_layout(rect=[0.05, 0.03, 1, 0.95],h_pad=0.01,w_pad=-1.1)
         pdf.savefig(fig)
     pdf.close()
 
-def format_figure(fig, uncomplete_last=0):
-    counter = 0
-    boo = 0
-    for a in fig.axes:
-        if uncomplete_last and counter >= uncomplete_last:
-            fig.delaxes(a)
-        else:
-            if counter % 4 != 0:
-                plt.setp(a.get_yticklabels(), visible=False)
-                plt.setp(a.set_yticks([]))
-            elif boo != 0:
-                plt.setp(a.get_yticklabels(), visible=False)
-                boo = 0
-            else:
-                boo = 1
-            if counter < 56:
-                plt.setp(a.get_xticklabels(), visible=False)
-                plt.setp(a.set_xticks([]))
-            elif counter % 2 != 0:
-                plt.setp(a.get_xticklabels(), visible=False)
-        counter += 1
+def format_figure(fig, a, counter, uncomplete_last=0):
+    if uncomplete_last and counter >= uncomplete_last:
+        fig.delaxes(a)
+    else:
+        if counter % 4 != 0:
+            plt.setp(a.get_yticklabels(), visible=False)
+            plt.setp(a.set_yticks([]))
+        elif (counter % 4) % 2 != 0 :
+            plt.setp(a.get_yticklabels(), visible=False)
+        if counter < 56:
+            plt.setp(a.get_xticklabels(), visible=False)
+            plt.setp(a.set_xticks([]))
+        elif counter % 2 != 0:
+            plt.setp(a.get_xticklabels(), visible=False)
 
 def plot_coverage_plotting(ref, countdict, ax, first=False,
                            last=False, line_list=None,plot_number=None):
@@ -263,18 +230,12 @@ def plot_coverage_plotting(ref, countdict, ax, first=False,
     else:
         l = countdict[ref]
     l_coord = [x/max_coord for x in range(0,max_coord)]
-    if ref == "dme-mir-11":
-        print(l)
-        print(countdict[ref])
     ax.set_title(ref, fontsize=7, y=0.91)
     if first:
         line, = ax.plot(l_coord,l)
         line_list.append(line)
         ax.set_ylim(-0.01,1.1)
         return line
-    elif last:
-        ax.plot(l_coord,l)
-        ax.set_ylim(-0.01,1.1)
     else:
         try:
             line_list[plot_number].set_ydata(l)
@@ -299,10 +260,11 @@ def main():
     if args.pre_mirs:
         pre_mirs = get_pre_mir_counts(bamfile)
         write_counts(pre_mirs, args.pre_mirs)
-        if args.lattice:
+        if args.pdf_output:
             pre_mirs_coverage = get_pre_mir_coverage(bamfile,
                                                      args.quality_threshold)
-            plot_coverage(pre_mirs_coverage, args.lattice)#write_dataframe_coverage(pre_mirs_coverage, args.lattice)
+            plot_coverage(pre_mirs_coverage, args.pdf_output)
+            #write_dataframe_coverage(pre_mirs_coverage, args.lattice)
     if args.mirs:
         mirs = get_mir_counts(bamfile, args.gff_file)
         write_counts(mirs, args.mirs)
