@@ -124,7 +124,7 @@ By checking the checkbox you can also run your query without sequence retrieval 
 
 Note that the tool may fail in case of interrupted connexion with the NCBI database (see the log dataset)
 
-You can also check the retrieval progress by reading the log file in which you can see the number of sequences the query will retrieve as well as the number of squences that have been retrieved. The latter can be infered by checking the number of groups that have been retrieved (a group represents at most 200 000 sequences).
+Retrieval progress is reported in the log dataset.
 
 **Acknowledgments**
 
