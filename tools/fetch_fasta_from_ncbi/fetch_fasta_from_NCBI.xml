@@ -65,7 +65,7 @@
   ]]></command>
 
   <inputs>
-    <param name="queryString" type="text" size="5x80" area="True" value="txid10239[orgn] NOT txid131567[orgn] AND complete[all] NOT partial[title] NOT phage[title]" label="Query to NCBI in entrez format" help="exemple:'Drosophila melanogaster[Organism] AND Gcn5[Title]">
+    <param name="queryString" type="text" size="5x80" area="True" value="txid10239[orgn] NOT txid131567[orgn] AND complete[all] NOT partial[title] NOT phage[title]" label="Query to NCBI in entrez format" help="exemple: Drosophila melanogaster[Organism] AND Gcn5[Title]">
       <sanitizer>
         <valid initial="string.printable">
           <remove value="&quot;"/>
@@ -81,7 +81,7 @@
       <option value="nuccore">Nucleotide</option>
       <option value="protein">Protein</option>
     </param>
-    <param name="dry_run" type="boolean" label="Dry run to get the number of sequences?" truevalue="--count" falsevalue="" checked="false"/>
+    <param name="dry_run" type="boolean" label="Get only the number of sequences" truevalue="--count" falsevalue="" checked="false"/>
   </inputs>
   <outputs>
     <data name="outfile" format="fasta" label="${tool.name} (${dbname.value_label}) with queryString '${queryString.value}'" >
