@@ -55,6 +55,13 @@ class Eutils:
         self.count = 0
         self.webenv = ""
         self.query_key = ""
+        if options.get_uids:
+            self.get_uids = True
+        else:
+            self.get_uids = False
+        if options.iuds_file:
+            with open(options.iuds_file, 'r') as f:
+                self.ids.extend(f.readline().split(' '))
 
     def dry_run(self):
         self.get_count_value()
@@ -63,15 +70,23 @@ class Eutils:
         """
         Retrieve the fasta sequences corresponding to the query
         """
-        self.get_count_value()
+        if len(self.ids) == 0:
+            self.get_count_value()
+        else:
+            self.count = len(self.ids)
         # If no UIDs are found exit script
         if self.count > 0:
-            self.get_uids_list()
-            try:
-                self.get_sequences()
-            except QueryException as e:
-                self.logger.error("Exiting script.")
-                raise e
+            if len(self.ids) == 0:
+                self.get_uids_list()
+            if not self.get_uids:
+                try:
+                    self.get_sequences()
+                except QueryException as e:
+                    self.logger.error("Exiting script.")
+                    raise e
+            else:
+                with open(self.outname, 'w') as f:
+                    f.write('\t'.join(self.ids)+'\n')
         else:
             self.logger.error("No UIDs were found. Exiting script.")
             raise Exception("")
@@ -140,61 +155,58 @@ class Eutils:
         time.sleep(1)
         return querylog
 
-    def epost(self, db, ids):
-        url = self.base + "epost.fcgi"
-        self.logger.debug("url_epost: %s" % url)
-        values = {'db': db,
-                  'id': ids}
-        data = urllib.urlencode(values)
-        req = urllib2.Request(url, data)
-        serverResponse = False
-        nb_trials = 0
-        while not serverResponse:
-            nb_trials += 1
-            try:
-                self.logger.debug("Try number %s for opening and readin URL %s"
-                                  % (nb_trials, url+data))
-                response = urllib2.urlopen(req)
-                querylog = response.readlines()
-                response.close()
-                serverResponse = True
-            except urllib2.HTTPError as e:
-                self.logger.info("urlopen error:%s, %s" % (e.code, e.read()))
-                self.logger.info("Retrying in 1 sec")
-                serverResponse = False
-                time.sleep(1)
-            except urllib2.URLError as e:
-                self.logger.info("urlopen error: Failed to reach a server")
-                self.logger.info("Reason :%s" % (e.reason))
-                self.logger.info("Retrying in 1 sec")
-                serverResponse = False
-                time.sleep(1)
-            except httplib.IncompleteRead as e:
-                self.logger.info("IncompleteRead error:  %s" % (e.partial))
-                self.logger.info("Retrying in 1 sec")
-                serverResponse = False
-                time.sleep(1)
-        self.logger.debug("query response:")
-        for line in querylog:
-            self.logger.debug(line.rstrip())
-            if '</QueryKey>' in line:
-                self.query_key = str(line[line.find('<QueryKey>') +
-                                     len('<QueryKey>'):line.find('</QueryKey>')
-                                     ])
-            if '</WebEnv>' in line:
-                self.webenv = str(line[line.find('<WebEnv>')+len('<WebEnv>'):
-                                  line.find('</WebEnv>')])
-            self.logger.debug("*** epost action ***")
-            self.logger.debug("query_key: %s" % self.query_key)
-            self.logger.debug("webenv: %s" % self.webenv)
-        time.sleep(1)
+    def sanitiser(self, db, fastaseq):
+        if(db not in "nuccore protein"):
+            return fastaseq
+        regex = re.compile(r"[ACDEFGHIKLMNPQRSTVWYBZ]{49,}")
+        sane_seqlist = []
+        seqlist = fastaseq.split("\n\n")
+        for seq in seqlist[:-1]:
+            fastalines = seq.split("\n")
+            if len(fastalines) < 2:
+                self.logger.info("Empty sequence for %s" %
+                                 ("|".join(fastalines[0].split("|")[:4])))
+                self.logger.info("%s download is skipped" %
+                                 ("|".join(fastalines[0].split("|")[:4])))
+                continue
+            if db == "nuccore":
+                badnuc = 0
+                for nucleotide in fastalines[1]:
+                    if nucleotide not in "ATGC":
+                        badnuc += 1
+                if float(badnuc)/len(fastalines[1]) > 0.4:
+                    self.logger.info("%s ambiguous nucleotides in %s\
+                                     or download interrupted at this offset\
+                                     | %s" % (float(badnuc)/len(fastalines[1]),
+                                              "|".join(fastalines[0].split("|")
+                                                       [:4]),
+                                              fastalines[1]))
+                    self.logger.info("%s download is skipped" %
+                                     (fastalines[0].split("|")[:4]))
+                    continue
+                """ remove spaces and trim the header to 100 chars """
+                fastalines[0] = fastalines[0].replace(" ", "_")[:100]
+                cleanseq = "\n".join(fastalines)
+                sane_seqlist.append(cleanseq)
+            elif db == "protein":
+                fastalines[0] = fastalines[0][0:100]
+                fastalines[0] = fastalines[0].replace(" ", "_")
+                fastalines[0] = fastalines[0].replace("[", "_")
+                fastalines[0] = fastalines[0].replace("]", "_")
+                fastalines[0] = fastalines[0].replace("=", "_")
+                """ because blast makedb doesn't like it """
+                fastalines[0] = fastalines[0].rstrip("_")
+                fastalines[0] = re.sub(regex, "_", fastalines[0])
+                cleanseq = "\n".join(fastalines)
+                sane_seqlist.append(cleanseq)
+        self.logger.info("clean sequences appended: %d" % (len(sane_seqlist)))
+        return "\n".join(sane_seqlist)
 
-    def efetch(self, db, query_key, webenv):
+    def efetch(self, db, uid_list):
         url = self.base + "efetch.fcgi"
         self.logger.debug("url_efetch: %s" % url)
         values = {'db': db,
-                  'query_key': query_key,
-                  'webenv': webenv,
+                  'id': uid_list,
                   'rettype': "fasta",
                   'retmode': "text"}
         data = urllib.urlencode(values)
@@ -251,62 +263,8 @@ class Eutils:
         time.sleep(0.1)
         return fasta
 
-    def sanitiser(self, db, fastaseq):
-        if(db not in "nuccore protein"):
-            return fastaseq
-        regex = re.compile(r"[ACDEFGHIKLMNPQRSTVWYBZ]{49,}")
-        sane_seqlist = []
-        seqlist = fastaseq.split("\n\n")
-        for seq in seqlist[:-1]:
-            fastalines = seq.split("\n")
-            if len(fastalines) < 2:
-                self.logger.info("Empty sequence for %s" %
-                                 ("|".join(fastalines[0].split("|")[:4])))
-                self.logger.info("%s download is skipped" %
-                                 ("|".join(fastalines[0].split("|")[:4])))
-                continue
-            if db == "nuccore":
-                badnuc = 0
-                for nucleotide in fastalines[1]:
-                    if nucleotide not in "ATGC":
-                        badnuc += 1
-                if float(badnuc)/len(fastalines[1]) > 0.4:
-                    self.logger.info("%s ambiguous nucleotides in %s\
-                                     or download interrupted at this offset\
-                                     | %s" % (float(badnuc)/len(fastalines[1]),
-                                              "|".join(fastalines[0].split("|")
-                                                       [:4]),
-                                              fastalines[1]))
-                    self.logger.info("%s download is skipped" %
-                                     (fastalines[0].split("|")[:4]))
-                    continue
-                """ remove spaces and trim the header to 100 chars """
-                fastalines[0] = fastalines[0].replace(" ", "_")[:100]
-                cleanseq = "\n".join(fastalines)
-                sane_seqlist.append(cleanseq)
-            elif db == "protein":
-                fastalines[0] = fastalines[0][0:100]
-                fastalines[0] = fastalines[0].replace(" ", "_")
-                fastalines[0] = fastalines[0].replace("[", "_")
-                fastalines[0] = fastalines[0].replace("]", "_")
-                fastalines[0] = fastalines[0].replace("=", "_")
-                """ because blast makedb doesn't like it """
-                fastalines[0] = fastalines[0].rstrip("_")
-                fastalines[0] = re.sub(regex, "_", fastalines[0])
-                cleanseq = "\n".join(fastalines)
-                sane_seqlist.append(cleanseq)
-        self.logger.info("clean sequences appended: %d" % (len(sane_seqlist)))
-        return "\n".join(sane_seqlist)
-
     def get_sequences(self):
-        """
-        Total number of records from the input set to be retrieved,
-        up to a maximum of 10,000. Optionally, for a large set the value of
-        retstart can be iterated while holding retmax constant, thereby
-        downloading the entire set in batches of size retmax.
-        http://www.ncbi.nlm.nih.gov/books/NBK25499/#chapter4.EFetch
-        """
-        batch_size = self.retmax_efetch
+        batch_size = 200
         count = self.count
         uids_list = self.ids
         self.logger.info("Batch size for efetch action: %d" % batch_size)
@@ -316,18 +274,15 @@ class Eutils:
             for start in range(0, count, batch_size):
                 end = min(count, start+batch_size)
                 batch = uids_list[start:end]
-                if self.epost(self.dbname, ",".join(batch)) != -1:
-                    mfasta = ''
-                    while not mfasta:
-                        self.logger.info("retrieving batch %d" %
-                                         ((start / batch_size) + 1))
-                        try:
-                            mfasta = self.efetch(self.dbname, self.query_key,
-                                                 self.webenv)
-                            out.write(mfasta + '\n')
-                        except QueryException as e:
-                            self.logger.error("%s" % e.message)
-                            raise e
+                self.logger.info("retrieving batch %d" %
+                                 ((start / batch_size) + 1))
+                try:
+                    mfasta = self.efetch(self.dbname, ','.join(batch))
+                    out.write(mfasta + '\n')
+                except QueryException as e:
+                    self.logger.error("%s" % e.message)
+                    raise e
+        urllib.urlcleanup()
 
 
 LOG_FORMAT = '%(asctime)s|%(levelname)-8s|%(message)s'
@@ -337,18 +292,25 @@ LOG_LEVELS = ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']
 
 def command_parse():
     parser = argparse.ArgumentParser(description='Retrieve data from NCBI')
-    parser.add_argument('-i', dest='query_string', help='NCBI Query String',
-                        required=True)
+    parser.add_argument('-i', dest='query_string', help='NCBI Query String')
+    parser.add_argument('--UID_list', dest='iuds_file',
+                        help='file containing a list of iuds to be fetched')
     parser.add_argument('-o', dest='outname', help='output file name')
     parser.add_argument('-d', dest='dbname', help='database type')
     parser.add_argument('--count', '-c', dest='count_ids',
                         action='store_true', default=False,
                         help='dry run ouputing only the number of sequences\
                         found')
+    parser.add_argument('--get_uids', '-u', dest='get_uids', default=False,
+                        action='store_true', help='prints to the output a list\
+                        of UIDs')
     parser.add_argument('-l', '--logfile', help='log file (default=stderr)')
     parser.add_argument('--loglevel', choices=LOG_LEVELS, default='INFO',
                         help='logging level (default: INFO)')
     args = parser.parse_args()
+    if args.query_string is not None and args.iuds_file is not None:
+        parser.error('Please choose either fetching the -i query or the -u\
+                     list.')
     return args
 
 
@@ -369,12 +331,12 @@ def __main__():
         try:
             E.dry_run()
         except Exception:
-            sys.exit(1)
+            sys.exit(-1)
     else:
         try:
             E.retrieve()
         except Exception:
-            sys.exit(1)
+            sys.exit(-1)
 
 
 if __name__ == "__main__":

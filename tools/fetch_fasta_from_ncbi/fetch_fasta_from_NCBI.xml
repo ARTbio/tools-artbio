@@ -1,16 +1,71 @@
-<tool id="retrieve_fasta_from_NCBI" name="Retrieve FASTA from NCBI" version="2.2.1">
+<tool id="retrieve_fasta_from_NCBI" name="Retrieve FASTA from NCBI" version="2.3.0">
   <description></description>
   <command><![CDATA[
-      python '$__tool_directory__'/fetch_fasta_from_NCBI.py
-      -i "$queryString"
-      -d $dbname
-      -l '$logfile'
-      $dry_run
-      -o '$outfile'
+    python '$__tool_directory__'/fetch_fasta_from_NCBI.py
+        -i "$queryString"
+        -d $dbname
+        -l '$logfile'
+        -c
+        -o '$outfile';
+    #if $dry_run == ""
+        number_UIDs=\$(tail -n 2 $logfile | perl -ne '/Found (\d+) UID/ && print \$1');
+        python '$__tool_directory__'/fetch_fasta_from_NCBI.py
+            -i "$queryString"
+            -d $dbname
+            -u
+            -l '$logfile'
+            -o 'uid_outfile';
+        UID_array=( \$(head uid_outfile) );
+        array_len=\${#UID_array[@]};
+        counter=0;
+        number_of_groups=\$((array_len / 200000));
+        modulo=\$((array_len % 200000));
+        if [ "\$modulo" -gt 0 ];then
+            number_of_groups=\$((number_of_groups + 1));
+        fi;
+        group_number=1;
+        echo "----- Number of groups of batches: \$number_of_groups -----" >> $logfile;
+        for ((i=0; i+200000<array_len;i+=200000)); do
+            echo "----- Group number: \$group_number -----" >> $logfile;
+            echo "\${UID_array[@]:\$i:99999}" > uid_list_1.txt;
+            echo "\${UID_array[@]:\$((i+100000)):99999}" > uid_list_2.txt;
+            python '$__tool_directory__'/fetch_fasta_from_NCBI.py
+                -d $dbname
+                -l '$logfile'
+                -o 'tmp1_outfile'
+                --UID_list uid_list_1.txt&
+            python '$__tool_directory__'/fetch_fasta_from_NCBI.py
+                -d $dbname
+                -l 'tmp1_logfile'
+                -o 'tmp2_outfile'
+                --UID_list uid_list_2.txt&
+            wait;
+            cat tmp1_outfile tmp2_outfile>> $outfile;
+            rm tmp1_outfile tmp2_outfile;
+            cat tmp1_logfile >> $logfile;
+            rm tmp1_logfile;
+            rm uid_list_1.txt uid_list_2.txt;
+            group_number=\$((group_number + 1));
+            counter=\$(( counter + 200000 ));
+        done;
+        echo "----- Group number: \$group_number -----" >> $logfile;
+        echo "----- Last group -----" >> $logfile;
+        if [ "\$counter" -lt "\$array_len" ]; then
+            echo "\${UID_array[@]:\$counter:\$((array_len - counter + 1))}" > uid_list.txt;
+            python '$__tool_directory__'/fetch_fasta_from_NCBI.py
+                -d $dbname
+                -l '$logfile'
+                -o 'tmp_outfile'
+                --UID_list uid_list.txt;
+            rm uid_list.txt;
+            cat tmp_outfile >> $outfile;
+            rm tmp_outfile;
+        fi;
+    #end if
   ]]></command>
 
   <inputs>
-    <param name="queryString" type="text" size="5x80" area="True" value="txid10239[orgn] NOT txid131567[orgn] AND complete[all] NOT partial[title] NOT phage[title]" label="Query to NCBI in entrez format" help="exemple:'Drosophila melanogaster[Organism] AND Gcn5[Title]">
+    <param name="queryString" type="text" size="5x80" area="True" value="txid10239[orgn] NOT txid131567[orgn] AND complete[all] NOT partial[title] NOT phage[title]" label="Query to NCBI in entrez format" help="exemple: Drosophila melanogaster[Organism] AND Gcn5[Title]">
       <sanitizer>
         <valid initial="string.printable">
           <remove value="&quot;"/>
@@ -26,7 +81,7 @@
       <option value="nuccore">Nucleotide</option>
       <option value="protein">Protein</option>
     </param>
-    <param name="dry_run" type="boolean" label="Dry run to get the number of sequences?" truevalue="--count" falsevalue="" checked="false"/>
+    <param name="dry_run" type="boolean" label="Get only the number of sequences" truevalue="--count" falsevalue="" checked="false"/>
   </inputs>
   <outputs>
     <data name="outfile" format="fasta" label="${tool.name} (${dbname.value_label}) with queryString '${queryString.value}'" >
@@ -35,23 +90,29 @@
     <data format="txt" name="logfile" label="${tool.name}: log"/>
   </outputs>
   <tests>
-    <test>
-        <param name="queryString" value="9629650[gi]" />
-        <param name="dbname" value="nuccore" />
-        <output name="outfilename" ftype="fasta" file="output.fa" />
-    </test>
-    <test>
-        <param name="queryString" value="CU929326[Accession]" />
-        <param name="dbname" value="nuccore" />
-        <param name="date_filter" value="1"/>
-        <param name="dry_run" value="True"/>
-        <output name="logfile" ftype="txt" file="dry_run.log" compare="sim_size"/>
-    </test>
+      <test>
+          <param name="queryString" value="9629650[gi]" />
+          <param name="dbname" value="nuccore" />
+          <output name="outfilename" ftype="fasta" file="output.fa" />
+      </test>
+      <test>
+          <param name="queryString" value="CU929326[Accession]" />
+          <param name="dbname" value="nuccore" />
+          <param name="date_filter" value="1"/>
+          <param name="dry_run" value="True"/>
+          <output name="logfile" ftype="txt" file="dry_run.log" compare="sim_size"/>
+      </test>
+      <test>
+          <param name="queryString" value="Drosophila[Organism] AND 2014[PDAT] AND virus" />
+          <output name="outfilename" ftype="fasta" >
+              <metadata name="sequences" value="13" />
+          </output>
+      </test>
   </tests>
   <help>
 **What it does**
 
-This tool retrieves nucleotide/peptide sequences from the corresponding NCBI database for a given entrez query.
+This tool retrieves nucleotide/peptide sequences from the corresponding NCBI database (nuccore or protein) for a given entrez query.
 
 The tool is preset with "txid10239[orgn] NOT txid131567[orgn] AND complete NOT partial[title] NOT phage[title]" for metaVisitor use purpose
 
@@ -59,7 +120,11 @@ See `Entrez help`_ for explanation of query formats
 
 Be sure to use the appropriate NCBI query syntax. Always use [] to specify the search fields.
 
+By checking the checkbox you can also run your query without sequence retrieval and get the number of sequences your query will fetch.
+
 Note that the tool may fail in case of interrupted connexion with the NCBI database (see the log dataset)
+
+Retrieval progress is reported in the log dataset.
 
 **Acknowledgments**
 
