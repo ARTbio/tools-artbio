@@ -112,7 +112,7 @@
   <help>
 **What it does**
 
-This tool retrieves nucleotide/peptide sequences from the corresponding NCBI database for a given entrez query.
+This tool retrieves nucleotide/peptide sequences from the corresponding NCBI database (nuccore or protein) for a given entrez query.
 
 The tool is preset with "txid10239[orgn] NOT txid131567[orgn] AND complete NOT partial[title] NOT phage[title]" for metaVisitor use purpose
 
@@ -120,7 +120,11 @@ See `Entrez help`_ for explanation of query formats
 
 Be sure to use the appropriate NCBI query syntax. Always use [] to specify the search fields.
 
+By checking the checkbox you can also run your query without seqence retrieval and get the number of sequences your query will fetch.
+
 Note that the tool may fail in case of interrupted connexion with the NCBI database (see the log dataset)
+
+You can also check the retrieval progress by reading the log file in which you can see the number of sequences the query will retrieve as well as the number of squences that have been retrieved. The latter can be infered by checking the number of groups that have been retrieved (a group represents at most 200 000 sequences).
 
 **Acknowledgments**
 
