@@ -120,7 +120,7 @@ See `Entrez help`_ for explanation of query formats
 
 Be sure to use the appropriate NCBI query syntax. Always use [] to specify the search fields.
 
-By checking the checkbox you can also run your query without seqence retrieval and get the number of sequences your query will fetch.
+By checking the checkbox you can also run your query without sequence retrieval and get the number of sequences your query will fetch.
 
 Note that the tool may fail in case of interrupted connexion with the NCBI database (see the log dataset)
 
