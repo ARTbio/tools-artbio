@@ -207,18 +207,26 @@ def plot_coverage(countdict, outfile):
     pdf.close()
 
 def format_figure(fig, a, counter, uncomplete_last=0):
+    """
+    Takes a figure a subplot its position in the figure and the number of
+    subplots contained in the last figure.
+    """
     if uncomplete_last and counter >= uncomplete_last:
         fig.delaxes(a)
     else:
         if counter % 4 != 0:
+            """ If the subplot is not at the left-most position hide y axis """
             plt.setp(a.get_yticklabels(), visible=False)
             plt.setp(a.set_yticks([]))
         elif (counter % 4) % 2 != 0 :
             plt.setp(a.get_yticklabels(), visible=False)
         if counter < 56:
+            """ If the subplot isn't at the bottom of the figure hide x axis"""
             plt.setp(a.get_xticklabels(), visible=False)
             plt.setp(a.set_xticks([]))
         elif counter % 2 != 0:
+            """ If the subplot is at the bottom of the figure hide x axis for
+            every other subplot """
             plt.setp(a.get_xticklabels(), visible=False)
 
 def plot_coverage_plotting(ref, countdict, ax, first=False,
