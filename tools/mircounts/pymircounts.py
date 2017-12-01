@@ -107,6 +107,12 @@ def write_dataframe_coverage(countdict, outfile):
 
 def plot_coverage_par(countdict, outfile):
     """
+    The parallel plotting isn't optimised it's only an example.
+    For it to be better it would need to:
+    + make batches of 60 uids (1 page of plots)
+    + separate the bathes into 2 groups
+    + plot them in parallel
+    + merge the pdf files using PyPDF2 package
     Tkes a dict[pre_mir reference name] = [coverage list]
     and plots the coverage of each pre_mir reference name
     """
