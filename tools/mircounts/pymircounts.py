@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.backends.backend_pdf import PdfPages
 import pysam
-from multiprocessing import Process, Queue
+#from multiprocessing import Process, Queue
 
 
 def Parser():
@@ -68,7 +68,7 @@ def get_mir_counts(bamfile, gff_file):
     """
     counts = dict()
     for line in open(gff_file, 'r'):
-        if line[0] != '#':
+        if line[0] != '#' and line != "":
             gff_fields = line[:-1].split("\t")
             if gff_fields[2] == 'miRNA':
                 mir_name = gff_fields[0]

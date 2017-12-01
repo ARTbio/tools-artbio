@@ -7,6 +7,7 @@
         <requirement type="package" version="0.11.2.2">pysam</requirement>
         <requirement type="package" version="1.3.2=r3.3.2_0">r-optparse</requirement>
         <requirement type="package" version="0.20_34=r3.3.2_0">r-lattice</requirement>
+        <requirement type="package" version="2.1.0=py36_1">matplotlib</requirement>
     </requirements>
     <command detect_errors="exit_code"><![CDATA[
         wget --quiet ftp://mirbase.org/pub/mirbase/${mirbase_version}/genomes/${genomeKey}.gff3 && ## download the gff3 file specified by the variable genomeKey
@@ -27,7 +28,7 @@
         bowtie-build hairpin.fa hairpin >/dev/null &&
         bowtie -v $v -M 1 --best --strata --norc -p \${GALAXY_SLOTS:-4} --sam hairpin -q clipped_input.fastq | samtools sort -O bam -o '$output' 2>&1 &&
         samtools index $output &&
-        python '$__tool_directory__'/mircounts.py --alignment $output --gff $gff3 --quality_threshold 10 --pre_mirs $pre_mir_count_file --mirs $mir_count_file --PDF $latticePDF;
+        python '$__tool_directory__'/pymircounts.py --alignment $output --gff $gff3 --quality_threshold 10 --pre_mirs $pre_mir_count_file --mirs $mir_count_file --PDF $latticePDF;
         #*python '$__tool_directory__'/mircounts.py -pm --alignment $output --gff $gff3 --quality_threshold 10 --pre_mirs $pre_mir_count_file --mirs $mir_count_file --lattice $coverage_dataframe;
         #if $plotting.plottingOption == 'yes':
             Rscript '$__tool_directory__'/coverage_plotting.R --dataframe $coverage_dataframe --type $plotting.display --output $latticePDF
