@@ -1,0 +1,14 @@
+#This is a sample file distributed with Galaxy that enables tools
+#to use a directory of Bowtie indexed sequences data files. You will
+#need to create these data files and then create a bowtie_indices.loc
+#file similar to this one (store it in this directory) that points to
+#the directories in which those files are stored. The bowtie_indices.loc
+#file has this format (longer white space characters are TAB characters):
+#
+#<unique_build_id>   <dbkey>   <display_name>   <file_base_path>
+#
+#So, for example, if you had hg18 indexed stored in 
+#/depot/data2/galaxy/bowtie/hg18/, 
+#then the bowtie_indices.loc entry would look like this:
+#
+#hg18   hg18   hg18   /depot/data2/galaxy/bowtie/hg18/hg18

@@ -1,0 +1,41 @@
+<tool id="extract_transcript_to_gene_map_from_trinity" name="RSEM trinity fasta to gene map" version="1.1.17">
+  <description>extract transcript to gene map from trinity</description>
+  <requirements>
+    <requirement type="package" version="1.1.17">rsem</requirement>
+  </requirements>
+  <command>
+    extract-transcript-to-gene-map-from-trinity $trinity_fasta_file $map_file
+  </command>
+
+  <inputs>
+    <param name="trinity_fasta_file" type="data" format="fasta" label="Trinity fasta file" />
+  </inputs>
+  <stdio>
+    <exit_code range="1:"  level="fatal" description="Error Running RSEM" />
+  </stdio>
+  <outputs>
+    <data format="tabular" name="map_file" label="${tool.name} on ${on_string}: gene map file"/>
+  </outputs>
+  <tests>
+    <test>
+      <param name="trinity_fasta_file" value="trinity_assembled_transcripts.fasta" ftype="fasta"/>
+      <output name="map_file" file="trinity_gene_map.tabular"/>
+    </test>
+  </tests>
+  <help>
+  
+
+RSEM HOME PAGE - http://deweylab.biostat.wisc.edu/rsem/
+
+NAME
+    extract-transcript-to-gene-map-from-trinity
+
+SYNOPSIS
+    extract-transcript-to-gene-map-from-trinity trinity_fasta_file map_file
+
+DESCRIPTION
+    generates a gene_mp_file from a trinity fasta file
+ 
+
+  </help> 
+</tool> 

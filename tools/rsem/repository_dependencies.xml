@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<repositories description="RSEM datatype definitions.">
+    <repository changeset_revision="77151afcd323" name="rsem_datatypes" owner="jjohnson" toolshed="http://toolshed.g2.bx.psu.edu/" />
+</repositories>

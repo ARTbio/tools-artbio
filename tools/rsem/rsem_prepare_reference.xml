@@ -1,0 +1,129 @@
+<tool id="rsem_prepare_reference" name="RSEM prepare reference" version="1.1.17">
+  <description></description>
+  <requirements>
+    <requirement type="package" version="1.1.17">rsem</requirement>
+    <requirement type="package" version="1.0.0">bowtie</requirement>
+  </requirements>
+  <command>
+    echo $reference_name " " | tee $reference_file &amp;&amp;
+    mkdir $reference_file.files_path &amp;&amp; 
+    cd $reference_file.files_path &amp;&amp; 
+    rsem-prepare-reference 
+    #if $polya.polya_use == 'add':
+      #if $polya.polya_length:
+        --polyA-length $polya.polya_length
+      #end if
+    #elif $polya.polya_use == 'subset':
+      --no-polyA-subset $polya.no_polya_subset
+      #if $polya.polya_length:
+        --polyA-length $polya.polya_length
+      #end if
+    #elif $polya.polya_use == 'none':
+      --no-polyA
+    #end if
+    $ntog
+    #if $transcript_to_gene_map:
+      --transcript-to-gene-map $transcript_to_gene_map
+    #end if
+    #if $reference.ref_type == 'transcripts':
+      $reference.reference_fasta_file
+    #else:
+      --gtf $reference.gtf
+      $reference.reference_fasta_file
+    #end if
+    $reference_name
+    > ${reference_name}.log
+  </command>
+  <inputs>
+    <conditional name="reference">
+      <param name="ref_type" type="select" label="Reference transcript source">
+        <option value="transcripts">transcript fasta</option>
+        <option value="genomic">reference genome and gtf</option>
+      </param>
+      <when value="transcripts">
+        <param name="reference_fasta_file" type="data" format="fasta" label="reference fasta file" 
+               help="The files should contain the sequences of transcripts."/>
+      </when>
+      <when value="genomic">
+        <param name="reference_fasta_file" type="data" format="fasta" label="reference fasta file" 
+               help="The file should contain the sequence of an entire genome."/>
+        <param name="gtf" type="data" format="gtf" label="gtf" 
+               help="extract transcript reference sequences using the gene annotations specified in this GTF" />
+      </when>
+    </conditional>
+    <param name="transcript_to_gene_map" type="data" format="tabular" optional="true" label="Map of gene ids to transcript (isoform) ids" >
+      <help>
+        Each line of should be of the form: gene_id transcript_id ( with the two fields separated by a tab character )
+        The map can be obtained from the UCSC table browser  
+          group: Genes and Gene Prediction Tracks 
+          table: knownIsoforms
+        Without a map:
+          If a reference genome and gtf is used, then RSEM uses the "gene_id" and "transcript_id" attributes in the GTF file. 
+          Otherwise, RSEM assumes that each sequence in the reference sequence files is a separate gene.
+      </help>
+    </param>
+    <param name="reference_name" type="text" value="rsem_ref_name" label="reference name">
+      <help>A one word name for this RSEM reference containing only letters, digits, and underscore characters</help>
+      <validator type="regex" message="Use only letters, digits, and underscore characters">^\w+$</validator>
+    </param>
+    <conditional name="polya">
+      <param name="polya_use" type="select" label="PolyA ">
+        <option value="add" selected="true">Add poly(A) tails to all transcripts</option>
+        <option value="subset">Exclude poly(A) tails from selected transcripts</option>
+        <option value="none">Do not add poly(A) tails to any transcripts</option>
+      </param>
+      <when value="add">
+        <param name="polya_length" type="integer" value="125" optional="true" label="The length of the poly(A) tails to be added. (Default: 125)">
+          <validator type="in_range" message="must be positive " min="1"/>
+        </param>
+      </when>
+      <when value="subset">
+        <param name="no_polya_subset" type="data" format="tabular" optional="true" label="List of transcript IDs (one per line) that should should not have polyA tails added."/> 
+        <param name="polya_length" type="integer" value="125" optional="true" label="The length of the poly(A) tails to be added. (Default: 125)">
+          <validator type="in_range" message="must be positive " min="1"/>
+        </param>
+      </when>
+      <when value="none"/>
+    </conditional>
+    <param name="ntog" type="boolean" truevalue="--no-ntog" falsevalue="" checked="false" label="Disable the conversion of 'N' characters to 'G' characters in the reference sequences" help="Bowite uses the automatic N to G conversion to to align against all positions in the reference."/>
+  </inputs>
+  <stdio>
+    <exit_code range="1:"  level="fatal" description="Error Running RSEM" />
+  </stdio>
+  <outputs>
+    <data format="rsem_ref" name="reference_file" label="RSEM ${reference_name} reference"/>
+  </outputs>
+  <tests>
+    <test>
+      <param name="ref_type" value="genomic"/>
+      <param name="reference_fasta_file" value="ref.fasta" ftype="fasta"/>
+      <param name="gtf" value="ref.gtf" ftype="gtf"/>
+      <param name="reference_name" value="ref"/>
+      <output name="rsem_ref">
+        <assert_contents>
+          <has_text text="ref.grp" />
+        </assert_contents>
+      </output>
+    </test>
+  </tests>
+  <help>
+
+RSEM HOME PAGE - http://deweylab.biostat.wisc.edu/rsem/
+
+NAME
+    rsem-prepare-reference
+
+SYNOPSIS
+    rsem-prepare-reference [options] reference_fasta_file(s) reference_name
+
+DESCRIPTION
+    The rsem-prepare-reference program extracts/preprocesses the reference sequences and builds Bowtie indices using default parameters. 
+    This program is used in conjunction with the 'rsem-calculate-expression' program.
+
+INPUTS
+    A fasta file of transcripts
+    or
+    A genome sequence fasta file and a GTF gene annotation file.  (When using UCSC data, include the related knownIsoforms.txt)
+
+  </help> 
+</tool> 
