@@ -1,4 +1,4 @@
-<tool id="Readmap" name="Generate readmap and histograms from alignment files" version="1.2.2">
+<tool id="Readmap" name="Generate readmap and histograms from alignment files" version="1.2.3">
     <description>from sRbowtie aligment</description>
     <requirements>
         <requirement type="package" version="1.2.0">bowtie</requirement>
