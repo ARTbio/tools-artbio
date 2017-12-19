@@ -45,7 +45,7 @@
             --gff
             $gff
         #end if
-        ; Rscript $__tool_directory__/plot_size_readmap.r
+        ; Rscript '$__tool_directory__'/plot_size_readmap.r
         --readmap_tab "$readmap_dataframe"
         --size_distribution_tab "$size_distribution_dataframe"
         --readmap_pdf "$readmap_PDF"
