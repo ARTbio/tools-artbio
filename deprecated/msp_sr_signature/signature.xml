@@ -1,10 +1,10 @@
-<tool id="signature" name="Small RNA Signatures" version="2.1.2">
+<tool id="signature" name="Small RNA Signatures" version="2.1.2.1">
     <description />
     <requirements>
         <requirement type="package" version="1.1.2">bowtie</requirement>
         <requirement type="package" version="1.11.2=py27_0">numpy</requirement>
         <requirement type="package" version="0.11.2.1=py27_0">pysam</requirement>
-        <requirement type="package" version="0.6_28=r3.3.2_0">r-latticeextra</requirement>>
+        <requirement type="package" version="0.6_28=r3.3.2_0">r-latticeextra</requirement>
     </requirements>
     <command><![CDATA[
         python '$__tool_directory__'/signature.py
