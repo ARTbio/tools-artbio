@@ -1,7 +1,7 @@
-<tool id="Readmap" name="Generate readmap and histograms from alignment files" version="1.2.7">
+<tool id="Readmap" name="Generate readmap and histograms from alignment files" version="1.2.7.1">
     <description>from sRbowtie aligment</description>
   <requirements>
-        <requirement type="package" version="1.0.0">bowtie</requirement>
+        <requirement type="package" version="1.1.2=py27_2">bowtie</requirement>
         <requirement type="package" version="1.11.2=py27_0">numpy</requirement>
         <requirement type="package" version="0.11.2.1=py27_0">pysam</requirement>
         <requirement type="package" version="1.3.2=r3.3.2_0">r-optparse</requirement>
