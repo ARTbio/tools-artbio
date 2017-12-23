@@ -37,7 +37,7 @@
 
 **What it does**
 
-Take on tabular file of numerical data as input and produces pairwise plots of numerical data, in log-log scale.
+Takes a tabular file of numerical data as input and produces pairwise plots of numerical data, in log-log scale.
 The first column of the data frame is ignored.
 
 Example of input data:
