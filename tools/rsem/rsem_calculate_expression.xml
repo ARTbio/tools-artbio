@@ -1,7 +1,7 @@
 <tool id="rsem_calculate_expression" name="RSEM calculate expression" version="1.1.17">
   <description>RNA-Seq by Expectation-Maximization</description>
   <requirements>
-    <requirement type="package" version="1.2.28">rsem</requirement>
+    <requirement type="package" version="1.2.22">rsem</requirement>
     <requirement type="package" version="1.1.2=py27_0">bowtie</requirement>
   </requirements>
   <stdio>
