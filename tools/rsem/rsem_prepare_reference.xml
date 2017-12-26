@@ -1,13 +1,16 @@
-<tool id="rsem_prepare_reference" name="RSEM prepare reference" version="1.1.17">
+<tool id="rsem_prepare_reference" name="RSEM prepare reference" version="2.0.0">
   <description></description>
   <requirements>
-    <requirement type="package" version="1.1.17">rsem</requirement>
-    <requirement type="package" version="1.0.0">bowtie</requirement>
+    <requirement type="package" version="1.2.22">rsem</requirement>
+    <requirement type="package" version="1.1.2=py27_0">bowtie</requirement>
   </requirements>
-  <command>
-    echo $reference_name " " | tee $reference_file &amp;&amp;
-    mkdir $reference_file.files_path &amp;&amp; 
-    cd $reference_file.files_path &amp;&amp; 
+  <stdio>
+      <exit_code range="1:" level="fatal" description="Tool exception" />
+  </stdio>
+  <command detect_errors="exit_code"><![CDATA[
+    echo $reference_name " " | tee $reference_file &&
+    mkdir $reference_file.files_path &&
+    cd $reference_file.files_path &&
     rsem-prepare-reference 
     #if $polya.polya_use == 'add':
       #if $polya.polya_length:
@@ -33,7 +36,7 @@
     #end if
     $reference_name
     > ${reference_name}.log
-  </command>
+  ]]></command>
   <inputs>
     <conditional name="reference">
       <param name="ref_type" type="select" label="Reference transcript source">

@@ -1,4 +1,4 @@
-<tool id="rsem_calculate_expression" name="RSEM calculate expression" version="1.1.17">
+<tool id="rsem_calculate_expression" name="RSEM calculate expression" version="2.0.0">
   <description>RNA-Seq by Expectation-Maximization</description>
   <requirements>
     <requirement type="package" version="1.2.22">rsem</requirement>
