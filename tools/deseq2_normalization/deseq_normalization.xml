@@ -1,9 +1,7 @@
-<tool id="DESeq_normalization" name="DESeq Normalization" version="1.0.3">
+<tool id="deseq2_normalization" name="DESeq2_normalization" version="0.0.1">
 	<description>of hit lists (geometric method)</description>
     <requirements>
-      <requirement type="package" version="3.1.2">R</requirement>
-      <requirement type="package" version="2.14">biocbasics</requirement>
-      <requirement type="package" version="1.22.1=r3.2.2_0">bioconductor-deseq</requirement>
+      <requirement type="package" version="1.8.2gx=r3.2.1_0">bioconductor-deseq2</requirement>
     </requirements>
     <command><![CDATA[ Rscript $normalizationDESeq ]]></command>
 	<inputs>
@@ -24,12 +22,12 @@
     <configfile name="normalizationDESeq">
       ## Setup R error handling to go to stderr
       options( show.error.messages=F,  error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
-      suppressMessages(require(DESeq))
+      suppressMessages(require(DESeq2))
       countsTable = read.delim("${input}", header=TRUE, check.names=FALSE)
       rownames( countsTable )= countsTable[,1]
       countsTable= countsTable[ , -1 ]
-      conds = c(rep ("C", length(countsTable[1,])-1 ), "T")
-      cds = newCountDataSet( countsTable, conds )
+      conds = factor(c(rep ("C", length(countsTable[1,])-1 ), "T"))
+      cds = DESeqDataSetFromMatrix(countsTable, DataFrame(conds), ~ conds)
       cds = estimateSizeFactors( cds )
       write.table (as.data.frame(sizeFactors(cds)), file="${output_factors}", row.names=TRUE, col.names=TRUE, quote= FALSE, dec = ".", sep = "\t", eol = "\n")
       norm_table = as.data.frame(counts( cds, normalized=TRUE ))
@@ -42,7 +40,7 @@
 
 **What it does**
 
-DESeq Normalization Factors (geometic mean method)
+DESeq2 Normalization Factors (geometic mean method)
 and
 Normalized hit lists
 
