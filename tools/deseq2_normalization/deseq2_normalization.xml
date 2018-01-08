@@ -1,4 +1,4 @@
-<tool id="deseq2_normalization" name="DESeq2 normalization" version="1.0.0">
+<tool id="deseq2_normalization" name="DESeq2 normalization" version="1.0.1">
 	<description>of hit lists (geometric method)</description>
     <requirements>
       <requirement type="package" version="1.8.2gx=r3.2.1_0">bioconductor-deseq2</requirement>
