@@ -88,8 +88,7 @@ class Eutils:
                 with open(self.outname, 'w') as f:
                     f.write('\t'.join(self.ids)+'\n')
         else:
-            self.logger.error("No UIDs were found. Exiting script.")
-            raise Exception("")
+            self.logger.info("No UIDs were found. Exiting script.")
 
     def get_count_value(self):
         """
