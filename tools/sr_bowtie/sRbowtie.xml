@@ -1,7 +1,7 @@
-<tool id="bowtieForSmallRNA" name="sR_bowtie" version="2.0.1">
+<tool id="bowtieForSmallRNA" name="sR_bowtie" version="2.0.2">
     <description>for small RNA short reads</description>
     <requirements>
-        <requirement type="package" version="1.1.2=py27_2">bowtie</requirement>
+        <requirement type="package" version="1.1.2=py27_0">bowtie</requirement>
         <requirement type="package" version="1.2">samtools</requirement>
     </requirements>
     <command detect_errors="exit_code"><![CDATA[
@@ -14,7 +14,7 @@
         #end if
         #if $input.extension == "fasta":
             #set format = "-f"
-        #elif $input.extension == "fastq":
+        #elif $input.extension == "fastq" or $input.extension == "fastqsanger":
             #set format = "-q"
         #end if
 
@@ -146,6 +146,15 @@
             <param ftype="fasta" name="ownFile" value="297_reference.fa" />
             <param name="method" value="unique" />
             <param ftype="fastq" name="input" value="input.fastq" />
+            <param name="v_mismatches" value="1" />
+            <param name="output_format" value="bam" />
+            <output file="output2.bam" ftype="bam" compare="sim_size" delta="1000" name="output" />
+        </test>
+        <test>
+            <param name="genomeSource" value="history" />
+            <param ftype="fasta" name="ownFile" value="297_reference.fa" />
+            <param name="method" value="unique" />
+            <param ftype="fastqsanger" name="input" value="input.fastqsanger" />
             <param name="v_mismatches" value="1" />
             <param name="output_format" value="bam" />
             <output file="output2.bam" ftype="bam" compare="sim_size" delta="1000" name="output" />
