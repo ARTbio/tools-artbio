@@ -1,4 +1,4 @@
-<tool id="bowtieForSmallRNA" name="sR_bowtie" version="2.0.2">
+<tool id="bowtieForSmallRNA" name="sR_bowtie" version="2.0.3">
     <description>for small RNA short reads</description>
     <requirements>
         <requirement type="package" version="1.1.2=py27_0">bowtie</requirement>
@@ -12,9 +12,9 @@
         #else:
             #set index_path = $refGenomeSource.index.fields.path
         #end if
-        #if $input.extension == "fasta":
+        #if $input.is_of_type('fasta'):
             #set format = "-f"
-        #elif $input.extension == "fastq" or $input.extension == "fastqsanger":
+        #elif $input.is_of_type('fastq'):
             #set format = "-q"
         #end if
 
