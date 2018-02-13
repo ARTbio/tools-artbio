@@ -1,10 +1,19 @@
 <tool id="sequence_format_converter" name="sequence_format_converter" version="2.0.0">
   <description></description>
   <command><![CDATA[
+    #if $input.is_of_type('fastq.gz') or $input.is_of_type('fasta.gz'):
+      gzip -dc $input > '${input}.tmp';
+      python '$__tool_directory__'/sequence_format_converter.py
+      --input '${input}.tmp'
+      --output '$output'
+      --format '$output_format';
+      rm '${input}.tmp';
+    #else:
       python '$__tool_directory__'/sequence_format_converter.py
       --input '$input'
       --output '$output'
       --format '$output_format'
+    #end if
   ]]></command>
 
 <inputs>
