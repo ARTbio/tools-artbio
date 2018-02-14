@@ -25,7 +25,7 @@
 <inputs>
 	<param name="sequences" type="data" format="fasta"  label="fasta sequences that have been blasted" />
 	<param name="blast" type="data" format="tabular" label="The blast output you wish to parse">
-            <validator type="expression" message="Blast file must have 13 columns">value.metadata.columns == 13</validator>
+            <validator type="expression" message="Blast file must have 13 columns">value.metadata.columns == 13 or value.metadata.columns == 0</validator>
         </param>
 	<param name="flanking" type="integer" value= "5" label="Number of flanking nucleotides to add to hits for CAP3 assembly"/>
 	<param name="mode" type="select" label="Extensive or compact  reporting mode" help="display (extensive)  or not (compact) the oases contigs">
@@ -39,7 +39,7 @@
             </param>
             <when value="no">
             </when>
-            <when value="yes">            
+            <when value="yes">
                 <param name="filter_relativeCov" type="float" value="0" max="1" label="Minimum Relative Subject Coverage" help=""/>
                 <param name="filter_maxScore" type="float" value="0" label="Minimum maximum BitScore" help=""/>
                 <param name="filter_meanScore" type="float" value="0" label="Minimum mean BitScore" help=""/>
@@ -66,6 +66,18 @@
         <output name="fastaOutput" ftype="fasta" file="output.fa" />
         <output name="al_sequences" ftype="fasta" file="al_sequences.fa" />
         <output name="un_sequences" ftype="fasta" file="un_sequences.fa" />
+    </test>
+    <test>
+        <param ftype="fasta" name="sequences" value="input.fa" />
+        <param ftype="tabular" name="blast" value="blast.empty.tab" />
+        <param name="flanking" value="5" />
+        <param name="use_filters" value="no" />
+        <param name="mode" value="verbose" />
+        <param name="dataset_name" value="blast.empty.tab" />
+        <output name="tabularOutput" ftype="tabular" file="output.empty.tab" />
+        <output name="fastaOutput" ftype="fasta" file="output.empty.fa" />
+        <output name="al_sequences" ftype="fasta" file="al_sequences.empty.fa" />
+        <output name="un_sequences" ftype="fasta" file="un_sequences.empty.fa" />
     </test>
   </tests>
 
