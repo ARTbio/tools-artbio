@@ -106,6 +106,18 @@
             <param ftype="fastq.gz" name="input" value="input.fastqsanger.gz" />
             <output file="fastqTofastaw.sorted.faw" name="output" sort="True" />
         </test>
+        <test>
+            <!-- convertion fasta.gz to tabular -->
+            <param name="output_format" value="tabular" />
+            <param ftype="fasta.gz" name="input" value="input.fa.gz" />
+            <output file="output.tab" name="output" />
+        </test>
+        <test>
+           <!-- convertion fasta.gz to fastaw -->
+           <param name="output_format" value="fastaw" />
+           <param ftype="fasta.gz" name="input" value="input.fa.gz" />
+           <output file="output.sorted.faw" name="output" sort="True" />
+       </test>
    </tests>
 
 
