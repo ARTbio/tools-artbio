@@ -1,7 +1,7 @@
 <tool id="sequence_format_converter" name="sequence_format_converter" version="2.1.0">
   <description></description>
   <command><![CDATA[
-    #if $input.is_of_type('fastq.gz') or $input.is_of_type('fasta.gz'):
+    #if $input.is_of_type('fastq.gz'):
       gzip -dc $input > '${input}.tmp';
       python '$__tool_directory__'/sequence_format_converter.py
       --input '${input}.tmp'
@@ -106,18 +106,6 @@
             <param ftype="fastq.gz" name="input" value="input.fastqsanger.gz" />
             <output file="fastqTofastaw.sorted.faw" name="output" sort="True" />
         </test>
-        <test>
-            <!-- convertion fasta.gz to tabular -->
-            <param name="output_format" value="tabular" />
-            <param ftype="fasta" name="input" value="input.fa.gz" />
-            <output file="output.tab" name="output" />
-        </test>
-        <test>
-           <!-- convertion fasta.gz to fastaw -->
-           <param name="output_format" value="fastaw" />
-           <param ftype="fasta" name="input" value="input.fa.gz" />
-           <output file="output.sorted.faw" name="output" sort="True" />
-       </test>
    </tests>
 
 
