@@ -88,6 +88,24 @@
             <param ftype="fasta" name="input" value="input.fastqsanger" />
             <output file="fastqTofastaw.sorted.faw" name="output" sort="True" />
         </test>
+        <test>
+            <!-- convertion fastq.gz to tabular -->
+            <param name="output_format" value="tabular" />
+            <param ftype="fastq.gz" name="input" value="input.fastqsanger.gz" />
+            <output file="fastqTotabular.sorted.tab" name="output" sort="True" />
+        </test>
+         <test>
+            <!-- convertion fastq.gz to fasta -->
+            <param name="output_format" value="fasta" />
+            <param ftype="fastq.gz" name="input" value="input.fastqsanger.gz" />
+            <output file="fastqTofasta.sorted.fa" name="output" sort="True" />
+        </test>
+        <test>
+            <!-- convertion fastq.gz to fastaw -->
+            <param name="output_format" value="fastaw" />
+            <param ftype="fastq.gz" name="input" value="input.fastqsanger.gz" />
+            <output file="fastqTofastaw.sorted.faw" name="output" sort="True" />
+        </test>
    </tests>
 
 
