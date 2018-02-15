@@ -1,10 +1,19 @@
-<tool id="sequence_format_converter" name="sequence_format_converter" version="2.0.0">
+<tool id="sequence_format_converter" name="sequence_format_converter" version="2.1.0">
   <description></description>
   <command><![CDATA[
+    #if $input.is_of_type('fastq.gz'):
+      gzip -dc $input > '${input}.tmp';
+      python '$__tool_directory__'/sequence_format_converter.py
+      --input '${input}.tmp'
+      --output '$output'
+      --format '$output_format';
+      rm '${input}.tmp';
+    #else:
       python '$__tool_directory__'/sequence_format_converter.py
       --input '$input'
       --output '$output'
       --format '$output_format'
+    #end if
   ]]></command>
 
 <inputs>
@@ -77,6 +86,24 @@
             <!-- convertion fastq to fastaw -->
             <param name="output_format" value="fastaw" />
             <param ftype="fasta" name="input" value="input.fastqsanger" />
+            <output file="fastqTofastaw.sorted.faw" name="output" sort="True" />
+        </test>
+        <test>
+            <!-- convertion fastq.gz to tabular -->
+            <param name="output_format" value="tabular" />
+            <param ftype="fastq.gz" name="input" value="input.fastqsanger.gz" />
+            <output file="fastqTotabular.sorted.tab" name="output" sort="True" />
+        </test>
+         <test>
+            <!-- convertion fastq.gz to fasta -->
+            <param name="output_format" value="fasta" />
+            <param ftype="fastq.gz" name="input" value="input.fastqsanger.gz" />
+            <output file="fastqTofasta.sorted.fa" name="output" sort="True" />
+        </test>
+        <test>
+            <!-- convertion fastq.gz to fastaw -->
+            <param name="output_format" value="fastaw" />
+            <param ftype="fastq.gz" name="input" value="input.fastqsanger.gz" />
             <output file="fastqTofastaw.sorted.faw" name="output" sort="True" />
         </test>
    </tests>
