@@ -67,18 +67,6 @@
         <output name="al_sequences" ftype="fasta" file="al_sequences.fa" />
         <output name="un_sequences" ftype="fasta" file="un_sequences.fa" />
     </test>
-    <test>
-        <param ftype="fasta" name="sequences" value="input.fa" />
-        <param ftype="tabular" name="blast" value="blast.empty.tab" />
-        <param name="flanking" value="5" />
-        <param name="use_filters" value="no" />
-        <param name="mode" value="verbose" />
-        <param name="dataset_name" value="blast.empty.tab" />
-        <output name="tabularOutput" ftype="tabular" file="output.empty.tab" />
-        <output name="fastaOutput" ftype="fasta" file="output.empty.fa" />
-        <output name="al_sequences" ftype="fasta" file="al_sequences.empty.fa" />
-        <output name="un_sequences" ftype="fasta" file="un_sequences.empty.fa" />
-    </test>
   </tests>
 
 <help>
