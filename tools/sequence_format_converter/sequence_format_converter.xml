@@ -17,7 +17,7 @@
   ]]></command>
 
 <inputs>
-    <param name="input" type="data" format="fasta, fastq, tabular" label="file to convert to tabular (input format is automatically detected)"/>
+    <param name="input" type="data" format="fasta,fastq,fastq.gz,tabular" label="file to convert to tabular (input format is automatically detected)"/>
     <param name="output_format" type="select" label="conversion options">
         <option value="tabular" selected="true">tabular</option>
         <option value="fasta">Fasta</option>
