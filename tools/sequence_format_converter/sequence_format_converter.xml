@@ -1,4 +1,4 @@
-<tool id="sequence_format_converter" name="sequence_format_converter" version="2.1.0">
+<tool id="sequence_format_converter" name="sequence_format_converter" version="2.1.1">
   <description></description>
   <command><![CDATA[
     #if $input.is_of_type('fastq.gz'):
