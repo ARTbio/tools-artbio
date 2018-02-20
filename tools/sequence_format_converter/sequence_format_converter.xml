@@ -1,4 +1,4 @@
-<tool id="sequence_format_converter" name="sequence_format_converter" version="2.1.0">
+<tool id="sequence_format_converter" name="sequence_format_converter" version="2.1.1">
   <description></description>
   <command><![CDATA[
     #if $input.is_of_type('fastq.gz'):
@@ -17,7 +17,7 @@
   ]]></command>
 
 <inputs>
-    <param name="input" type="data" format="fasta, fastq, tabular" label="file to convert to tabular (input format is automatically detected)"/>
+    <param name="input" type="data" format="fasta,fastq,tabular" label="file to convert to tabular (input format is automatically detected)"/>
     <param name="output_format" type="select" label="conversion options">
         <option value="tabular" selected="true">tabular</option>
         <option value="fasta">Fasta</option>
