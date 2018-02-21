@@ -222,7 +222,7 @@ bottom_extra_method =list(Counts="Coordinates (nbre of bases)",Coverage="Coordin
 double_plot <- function(...) {
     if (n_genes > 5) {page_height=15; rows_per_page=10; graph_heights=c(40,30,40,30,40,30,40,30,40,30,10)} else {
                      rows_per_page= 2 * n_genes; page_height=1.5*n_genes + 4; graph_heights=c(rep(c(40,30),n_genes), '10')}
-    if (n_samples > 4) {page_width = 8.2677*n_samples/4} else {page_width = 14}
+    if (n_samples > 4) {page_width = 8.2677*n_samples/4} else {page_width = 7}
     pdf(file=args$output_pdf, paper="special", height=page_height, width=page_width)
     for (i in seq(1,n_genes,rows_per_page/2)) {
         start=i
