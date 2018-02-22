@@ -1,0 +1,4 @@
+Dataset	Chromosome	Chrom_length	Coordinate	Polarity	Counts
+Bowtie Output	Anopheles_C_Virus|KU169878	8919	1	F	0
+Bowtie Output	Anopheles_C_Virus|KU169878	8919	749	R	1
+Bowtie Output	Anopheles_C_Virus|KU169878	8919	8919	F	0
