@@ -220,9 +220,9 @@ bottom_extra_method =list(Counts="Coordinates (nbre of bases)",Coverage="Coordin
 ## Plotting Functions
 
 double_plot <- function(...) {
-    if (n_genes > 5) {page_height=15; rows_per_page=10} else {
-                     rows_per_page= 2 * n_genes; page_height=1.5*n_genes}
-    if (n_samples > 4) {page_width = 8.2677*n_samples/4} else {page_width = 7 * n_samples/2}
+    if (n_genes > 5) {page_height=15; rows_per_page=10; graph_heights=c(40,30,40,30,40,30,40,30,40,30,10)} else {
+                     rows_per_page= 2 * n_genes; page_height=1.5*n_genes + 4; graph_heights=c(rep(c(40,30),n_genes), '10')}
+    if (n_samples > 4) {page_width = 8.2677*n_samples/4} else {page_width = 2.3*n_samples +2.5}
     pdf(file=args$output_pdf, paper="special", height=page_height, width=page_width)
     for (i in seq(1,n_genes,rows_per_page/2)) {
         start=i
@@ -231,7 +231,7 @@ double_plot <- function(...) {
         first_plot.list = lapply(per_gene_readmap[start:end], function(x) plot_unit(x, strip=FALSE, par.settings=par.settings.firstplot))
         second_plot.list = lapply(per_gene_size[start:end], function(x) plot_unit(x, method=args$extra_plot_method, par.settings=par.settings.secondplot))
         plot.list=rbind(second_plot.list, first_plot.list)
-        args_list=c(plot.list, list( nrow=rows_per_page+1, ncol=1,  heights=unit(c(40,30,40,30,40,30,40,30,40,30,10), rep("mm", 11)),
+        args_list=c(plot.list, list( nrow=rows_per_page+1, ncol=1, heights=unit(graph_heights, rep("mm", 11)),
                                     top=textGrob(paste(title_first_method[[args$first_plot_method]], "and", title_extra_method[[args$extra_plot_method]]), gp=gpar(cex=1), vjust=0, just="top"),
                                     left=textGrob(paste(legend_first_method[[args$first_plot_method]], "/", legend_extra_method[[args$extra_plot_method]]), gp=gpar(cex=1), vjust=2, rot=90),
                                     sub=textGrob(paste(bottom_first_method[[args$first_plot_method]], "/", bottom_extra_method[[args$extra_plot_method]]), gp=gpar(cex=1), just="bottom", vjust=2)
