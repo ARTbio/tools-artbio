@@ -273,10 +273,24 @@
             <param name="cluster" value="0" />
             <param name="plots_options_selector" value="two_plot" />
             <param name="first_plot" value="Counts" />
-            <param name="extra_plot" value="Size" />
-            <output file="count_single_chr.tab" name="output_tab" />
-            <output file="size_single_chr.tab" name="extra_output_tab" />
-            <output file="single_chr-count-size.pdf" name="output_pdf" />
+            <param name="extra_plot" value="Coverage" />
+            <param name="normalization" value="1 1" />
+            <output file="count_1_chr.tab" name="output_tab" />
+            <output file="coverage_1_chr.tab" name="extra_output_tab" />
+            <output file="counts_coverage_1.pdf" name="output_pdf" />
+        </test>
+        <test>
+            <param name="inputs" value="input_5_chr.bam" ftype="bam"/>
+            <param name="minsize" value="0" />
+            <param name="maxsize" value="10000" />
+            <param name="cluster" value="0" />
+            <param name="plots_options_selector" value="two_plot" />
+            <param name="first_plot" value="Counts" />
+            <param name="extra_plot" value="Coverage" />
+            <param name="normalization" value="1 1" />
+            <output file="count_5_chr.tab" name="output_tab" />
+            <output file="coverage_5_chr.tab" name="extra_output_tab" />
+            <output file="counts_coverage_5.pdf" name="output_pdf" />
         </test>
         <test>
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
