@@ -43,7 +43,7 @@ if (args$first_plot_method == "Counts" | args$first_plot_method == "Size" | args
         i = i + 1
     }
 }
-genes=unique(levels(Table$Chromosome))
+genes=unique(Table$Chromosome)
 per_gene_readmap=lapply(genes, function(x) subset(Table, Chromosome==x))
 per_gene_limit=lapply(genes, function(x) c(1, unique(subset(Table, Chromosome==x)$Chrom_length)) )
 n_genes=length(per_gene_readmap)
