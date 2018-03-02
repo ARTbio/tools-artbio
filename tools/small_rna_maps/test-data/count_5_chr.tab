@@ -1,0 +1,11 @@
+Dataset	Chromosome	Chrom_length	Coordinate	Polarity	Counts
+input_5_chr.bam	1	80	1	F	1
+input_5_chr.bam	1	80	80	F	0
+input_5_chr.bam	2	80	1	F	1
+input_5_chr.bam	2	80	80	F	0
+input_5_chr.bam	3	80	1	F	1
+input_5_chr.bam	3	80	80	F	0
+input_5_chr.bam	4	80	1	F	1
+input_5_chr.bam	4	80	80	F	0
+input_5_chr.bam	5	80	1	F	1
+input_5_chr.bam	5	80	80	F	0
