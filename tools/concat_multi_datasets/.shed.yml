@@ -3,7 +3,7 @@ owner: artbio
 name: concatenate_multiple_datasets
 description: Concatenate multiple datasets tail-to-head, including collection datasets.
 long_description: |
-  Concatenate multiple datasets tail-to-head. Can reduce dataset collections to a single output file, with optionally name of the datasets as section header.
+  Concatenate multiple datasets tail-to-head. Can reduce dataset collections to a single output file, with optionally names of the datasets as section headers.
 categories:
   - Text Manipulation
 homepage_url: http://artbio.fr

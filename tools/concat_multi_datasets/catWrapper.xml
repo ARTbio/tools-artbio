@@ -43,7 +43,7 @@
 
 .. class:: warningmark
 
-**WARNING:** Be careful not to concatenate datasets of different kinds (e.g., sequences with intervals). This tool does not check if the datasets being concatenated are in the same format.
+**WARNING:** This tool does not check if the datasets being concatenated are in the same format.
 
 -----
 
