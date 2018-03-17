@@ -1,5 +1,5 @@
 owner: artbio
-name: Trinity
+name: trinity
 description: De novo reconstructs transcriptomes from RNA-seq data
 long_description: |
   Trinity provides a method for efficient and robust de novo reconstruction of transcriptomes from RNA-seq data
