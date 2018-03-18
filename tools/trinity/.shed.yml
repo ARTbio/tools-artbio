@@ -1,0 +1,15 @@
+owner: artbio
+name: trinity
+description: De novo reconstructs transcriptomes from RNA-seq data
+long_description: |
+  Trinity provides a method for efficient and robust de novo reconstruction of transcriptomes from RNA-seq data
+
+  https://github.com/trinityrnaseq/trinityrnaseq
+categories:
+  - Transcriptomics
+  - RNA
+homepage_url: https://github.com/trinityrnaseq/trinityrnaseq
+remote_repository_url: https://github.com/artbio/tools-artbio/tree/master/tools/trinity
+type: unrestricted
+toolshed:
+  - toolshed

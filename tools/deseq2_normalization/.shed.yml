@@ -1,0 +1,15 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: deseq2_normalization
+description: Normalizes gene hitlists 
+long_description: |
+  Normalizes gene count lists using DESeq2 estimateSizeFactors() function.
+categories:
+  - RNA
+  - Transcriptomics
+  - Sequence Analysis
+  - Statistics
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/deseq2_normalization
+toolshed:
+  - toolshed

@@ -1,0 +1,3 @@
+Dataset	Chromosome	Chrom_length	Coordinate	Polarity	Counts
+input_single_chr.bam	1	80	1	F	1
+input_single_chr.bam	1	80	80	F	0

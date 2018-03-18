@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<tool_dependency>
-    <package name="R" version="3.1.2">
-        <repository name="package_r_3_1_2" owner="iuc" prior_installation_required="True" />
-    </package>
-    <package name="biocbasics" version="2.14">
-        <repository name="package_biocbasics_2_14" owner="mvdbeek" />
-    </package>
-</tool_dependency>
