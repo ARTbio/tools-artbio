@@ -1,11 +1,11 @@
 <tool id="rsem_calculate_expression" name="RSEM calculate expression" version="2.0.0">
   <description>RNA-Seq by Expectation-Maximization</description>
   <requirements>
-    <requirement type="package" version="1.2.22">rsem</requirement>
+    <requirement type="package" version="1.2.21">rsem</requirement>
     <requirement type="package" version="1.1.2=py27_0">bowtie</requirement>
   </requirements>
   <stdio>
-      <exit_code range="1:" level="fatal" description="Tool exception" />
+      <exit_code range="1:" level="fatal" description="Tool exception rsem_calculate_expression" />
   </stdio>
   <command detect_errors="exit_code"><![CDATA[
     rsem-calculate-expression 
@@ -141,7 +141,7 @@
             <param name="fragment_length_sd" type="float" value="" optional="true" label="The standard deviation of the fragment length distribution (single-end data only)" help="Default 0, which assumes that all fragments are of the same length, given by the rounded value of fragment length mean. ">
             </param>
             <conditional name="rspd">
-              <param name="estimate" type="select" lanel="Read Start Position Distribution (RSPD)" 
+              <param name="estimate" type="select" label="Read Start Position Distribution (RSPD)" 
                   help="Set this option if you want to estimate the read start position distribution (RSPD) from data. Otherwise, RSEM will use a uniform RSPD.">
                 <option value="no" selected="true">Use a uniform RSPD</option>
                 <option value="yes">Estimate and correct for a non-uniform RSPD</option>
@@ -280,9 +280,6 @@
       </when>
     </conditional>
   </inputs>
-  <stdio>
-    <exit_code range="1:"  level="fatal" description="Error Running RSEM" />
-  </stdio>
   <outputs>
     <data format="tabular" name="gene_abundances" label="${sample}.gene_abundances" from_work_dir="rsem_output.genes.results"/>
     <data format="tabular" name="isoform_abundances" label="${sample}.isoform_abundances" from_work_dir="rsem_output.isoforms.results"/>
