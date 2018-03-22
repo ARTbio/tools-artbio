@@ -150,9 +150,8 @@ plot_unit = function(df, method=args$first_plot_method, ...) {
 
 #par.settings.firstplot = list(layout.heights=list(top.padding=11, bottom.padding = -14))
 #par.settings.secondplot=list(layout.heights=list(top.padding=11, bottom.padding = -15), strip.background=list(col=c("lavender","deepskyblue")))
-par.settings.firstplot = list(layout.heights=list(top.padding=-2, bottom.padding=-2))
+par.settings.firstplot = list(layout.heights=list(top.padding=-2, bottom.padding=-2), strip.background=list(col=c("lavender","deepskyblue")))
 par.settings.secondplot=list(layout.heights=list(top.padding=-1, bottom.padding=-1), strip.background=list(col=c("lavender","deepskyblue")))
-par.settings.single_plot=list(strip.background = list(col = c("lightblue", "lightgreen")))
 title_first_method = list(Counts="Read Counts", Coverage="Coverage depths", Median="Median sizes", Mean="Mean sizes", Size="Size Distributions")
 title_extra_method = list(Counts="Read Counts", Coverage="Coverage depths", Median="Median sizes", Mean="Mean sizes", Size="Size Distributions")
 legend_first_method =list(Counts="Read count", Coverage="Coverage depth", Median="Median size", Mean="Mean size", Size="Read count")
