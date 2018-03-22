@@ -144,7 +144,6 @@ plot_unit = function(df, method=args$first_plot_method, ...) {
         par.strip.text = list(cex=0.6),
         ...)
     }
-    combineLimits(p)
 }
 
 ## function parameters
