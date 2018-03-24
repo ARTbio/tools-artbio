@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+  <macros>
+    <xml name="rsem_options">
+        <param name="seedlength" type="integer" value="25" optional="true" label="Seed length used by the read aligner" help="Providing the correct value for this parameter is important for RSEM's accuracy if the data are single-end reads. RSEM uses this value for Bowtie's seed length parameter. The minimum value is 25. (Default:25)">
+        </param>
+        <param name="forward_prob" type="select" label="Is the library strand specific?">
+          <option value="0.5" selected="true">No</option>
+          <option value="1">Yes, the reads (or first reads from paired-end libraries) are only in the forward orientation</option>
+          <option value="0">Yes, the reads (or first reads from paired-end libraries) are only in the reverse orientation</option>
+        </param>
+        <conditional name="rsem_options">
+          <param name="fullparams" type="select" label="Additional RSEM options">
+            <option value="default">Use RSEM Defaults</option>
+            <option value="fullset">Set Additional RSEM Options</option>
+          </param>
+          <when value="default"/>
+          <when value="fullset">
+            <param name="fragment_length_min" type="integer" value="1" optional="true" label="Minimum read/insert length." help=" This is also the value for the bowtie -I option">
+              <validator type="in_range" message="0 or greater" min="0" />
+            </param>
+            <param name="fragment_length_max" type="integer" value="1000" optional="true" label="Maximum read/insert length." help=" This is also the value for the bowtie -X option">
+              <validator type="in_range" message="0 or greater" min="0" max="1000000"/>
+            </param>
+            <param name="fragment_length_mean" type="float" value="" optional="true" label="Fragment length mean (single-end data only)" help="The mean of the fragment length distribution, which is assumed to be a Gaussian. (Default: -1, which disables use of the fragment length distribution)">
+            </param>
+            <param name="fragment_length_sd" type="float" value="" optional="true" label="The standard deviation of the fragment length distribution (single-end data only)" help="Default 0, which assumes that all fragments are of the same length, given by the rounded value of fragment length mean. ">
+            </param>
+            <conditional name="rspd">
+              <param name="estimate" type="select" label="Read Start Position Distribution (RSPD)" 
+                  help="Set this option if you want to estimate the read start position distribution (RSPD) from data. Otherwise, RSEM will use a uniform RSPD.">
+                <option value="no" selected="true">Use a uniform RSPD</option>
+                <option value="yes">Estimate and correct for a non-uniform RSPD</option>
+              </param>
+              <when value="no"/>
+              <when value="yes"> 
+                <param name="num_rspd_bins" type="integer" value="20" optional="true" label="Number of bins in the RSPD." help="Use of the default setting of 20 is recommended.">
+                   <validator type="in_range" message="" min="0" max="100"/>
+                </param>
+              </when>
+            </conditional>
+            <conditional name="useci">
+              <param name="ci" type="select" label="Calculate 95% Credibility Intervals">
+                <option value="no" selected="true">no</option>
+                <option value="yes">yes</option>
+              </param>
+              <when value="no"/>
+              <when value="yes">
+                <param name="cimem" size="4" type="text" value="1024" label="Amount of memory in (MB) for computing CI" />
+              </when>
+            </conditional>
+          </when>
+        </conditional>
+    </xml>
+    <xml name="bowtie_options">
+        <conditional name="bowtie_options">
+          <param name="fullparams" type="select" label="bowtie settings">
+            <option value="default">use bowtie defaults</option>
+            <option value="fullset">set bowtie options</option>
+          </param>
+          <when value="default"/>
+          <when value="fullset">
+            <param name="bowtie_n" type="integer" value="2" optional="true" label="Bowtie mismatches" help="Bowtie parameter max # of mismatches in the seed. (Range: 0-3, Default: 2) ">
+              <validator type="in_range" message="max # of mismatches in the seed between 0 and 3" min="0" max="3"/>
+            </param>
+            <param name="bowtie_e" type="integer" value="99999999" label="Maximum sum of quality scores at mismatched positions in read alignments.  This is also the value for the Bowtie -e option">
+            </param>
+            <param name="bowtie_m" type="integer" value="200" label="Discard alignments for reads with number of alignments greater than">
+            </param>
+          </when>
+        </conditional>
+    </xml>
+    <xml name="sampling_for_bam">
+        <param name="sampling_for_bam" type="boolean" truevalue="--sampling-for-bam" falsevalue="" checked="false" label="Use sampling for BAM">
+          <help> When RSEM generates a BAM file, instead of outputing all alignments a read has with their posterior probabilities, one alignment is sampled according to the posterior probabilities. The sampling procedure includes the alignment to the "noise" transcript, which does not appear in the BAM file. Only the sampled alignment has a weight of 1. All other alignments have weight 0. If the "noise" transcript is sampled, all alignments appeared in the BAM file should have weight 0. (Default: off)
+          </help>
+        </param>
+    </xml>
+  </macros>
+

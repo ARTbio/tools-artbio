@@ -1,7 +1,7 @@
 <tool id="rsem_prepare_reference" name="RSEM prepare reference" version="2.0.0">
   <description></description>
   <requirements>
-    <requirement type="package" version="1.2.21">rsem</requirement>
+    <requirement type="package" version="1.2.28">rsem</requirement>
     <requirement type="package" version="1.1.2=py27_0">bowtie</requirement>
   </requirements>
   <stdio>
