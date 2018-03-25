@@ -4,8 +4,8 @@
         <import>macros.xml</import>
     </macros>
   <requirements>
-    <requirement type="package" version="1.3.0">rsem</requirement>
-    <requirement type="package" version="1.1.2=py27_0">bowtie</requirement>
+    <requirement type="package" version="1.2.28">rsem</requirement>
+    <requirement type="package" version="1.2.2=py27_0">bowtie</requirement>
   </requirements>
   <stdio>
       <exit_code range="1:" level="fatal" />
@@ -13,7 +13,6 @@
   <command detect_errors="exit_code"><![CDATA[
     echo $reference_name " " | tee $reference_file &&
     mkdir $reference_file.files_path &&
-    cd $reference_file.files_path &&
     rsem-prepare-reference 
     #if $polya.polya_use == 'add':
       #if $polya.polya_length:
@@ -38,8 +37,8 @@
       --gtf $self_reference.gtf
       $self_reference.reference_fasta_file
     #end if
-    $reference_name
-    > ${reference_name}.log &&
+    ${reference_file.files_path}/${reference_name}
+    > ${reference_file.files_path}/${reference_name}.log &&
 
     rsem-calculate-expression 
     ## --tag string
@@ -101,9 +100,8 @@
     #if $rsem_outputs.result_bams == 'none':
       --no-bam-output
     #else
-      #if $rsem_outputs.result_bams == 'both':
-        --output-genome-bam
-      #end if
+      --sort-bam-by-coordinate
+      --output-genome-bam
       $rsem_outputs.sampling_for_bam
     #end if
     ## Input data
@@ -147,7 +145,9 @@
     ## sample_name: use a hard coded name so we can pull out galaxy outputs
     rsem_output
     ## direct output into logfile
-    > $log
+    > $log &&
+    samtools sort rsem_output.genome.bam -o rsem_output.genome.sorted.bam &&
+    samtools sort rsem_output.transcript.bam -o rsem_output.transcript.sorted.bam
   ]]></command>
 
   <inputs>
@@ -201,7 +201,7 @@
       </when>
       <when value="none"/>
     </conditional>
-    <param name="ntog" type="boolean" truevalue="--no-ntog" falsevalue="" checked="false" label="Disable the conversion of 'N' characters to 'G' characters in the reference sequences" help="Bowite uses the automatic N to G conversion to to align against all positions in the reference."/>
+    <param name="ntog" type="boolean" truevalue="--no-ntog" falsevalue="" checked="false" label="Disable the conversion of 'N' characters to 'G' characters in the reference sequences" help="Bowtie uses the automatic N to G conversion to align against all positions in the reference."/>
 
 
 
@@ -304,10 +304,10 @@
     <data format="tabular" name="gene_abundances" label="${sample}.gene_abundances" from_work_dir="rsem_output.genes.results"/>
     <data format="tabular" name="isoform_abundances" label="${sample}.isoform_abundances" from_work_dir="rsem_output.isoforms.results"/>
     <data format="bam" name="transcript_bam" label="${sample}.transcript.bam" from_work_dir="rsem_output.transcript.bam" >
-      <filter>rsem_outputs['result_bams'] != "none"</filter>
+      <filter>rsem_outputs['result_bams'] == "none"</filter>
     </data>
     <data format="bam" name="transcript_sorted_bam" label="${sample}.transcript.bam" from_work_dir="rsem_output.transcript.sorted.bam" >
-      <filter>rsem_outputs['result_bams'] != "none"</filter>
+      <filter>rsem_outputs['result_bams'] == "none"</filter>
     </data>
     <data format="bam" name="genome_bam" label="${sample}.genome.bam" from_work_dir="rsem_output.genome.bam">
       <filter>rsem_outputs['result_bams'] == "both"</filter>
