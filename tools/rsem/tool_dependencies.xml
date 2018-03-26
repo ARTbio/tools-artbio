@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<tool_dependency>
-    <package name="rsem" version="1.1.17">
-        <repository changeset_revision="cd7f70d4c687" name="package_rsem_1_1_17" owner="jjohnson" toolshed="http://toolshed.g2.bx.psu.edu" />
-    </package>
-    <package name="bowtie" version="1.0.0">
-        <repository changeset_revision="9fcaaedbbfd6" name="package_bowtie_1_0_0" owner="iuc" toolshed="http://toolshed.g2.bx.psu.edu" />
-    </package>
-</tool_dependency>
