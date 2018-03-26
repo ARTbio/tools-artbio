@@ -349,6 +349,7 @@
       <output name="reference_file">
         <assert_contents>
           <has_text text="ref" />
+          <is_valid_xml />
         </assert_contents>
       </output>
       <output name="gene_abundances" value="gene_abundances.tab"/> 
@@ -369,6 +370,7 @@
       <output name="reference_file">
         <assert_contents>
           <has_text text="ref" />
+          <is_valid_xml />
         </assert_contents>
       </output>
     </test>
