@@ -346,7 +346,11 @@
       <param name="matepair" value="single"/>
       <param name="singlefastq" value="test.fq" ftype="fastqsanger"/>
       <param name="result_bams" value="none"/>
-      <output name="reference_file" value="reference_file.html" />
+      <output name="reference_file">
+        <assert_contents>
+          <has_text text="ref.grp" />
+        </assert_contents>
+      </output>
       <output name="gene_abundances" value="gene_abundances.tab"/> 
       <output name="isoform_abundances" value="isoform_abundances.tab" /> 
       <output name="log"> 
@@ -362,7 +366,11 @@
       <param name="gtf" value="ref.gtf" ftype="gtf"/>
       <param name="reference_name" value="ref"/>
       <param name="select" value="No"/>
-      <output name="reference_file" value="reference_file.html" />
+      <output name="reference_file">
+        <assert_contents>
+          <has_text text="ref.grp" />
+        </assert_contents>
+      </output>
     </test>
   </tests>
 
