@@ -368,7 +368,7 @@
       <param name="select" value="No"/>
       <output name="reference_file">
         <assert_contents>
-          <has_text text="ref.grp" />
+          <has_text text="ref" />
         </assert_contents>
       </output>
     </test>
