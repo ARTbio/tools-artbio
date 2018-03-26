@@ -348,7 +348,7 @@
       <param name="result_bams" value="none"/>
       <output name="reference_file">
         <assert_contents>
-          <has_text text="ref.grp" />
+          <has_text text="ref" />
         </assert_contents>
       </output>
       <output name="gene_abundances" value="gene_abundances.tab"/> 
