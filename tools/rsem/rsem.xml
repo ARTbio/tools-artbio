@@ -346,27 +346,23 @@
       <param name="matepair" value="single"/>
       <param name="singlefastq" value="test.fq" ftype="fastqsanger"/>
       <param name="result_bams" value="none"/>
-      <output name="reference_file">
-        <assert_contents>
-          <has_text text="ref.grp" />
-        </assert_contents>
-      </output>
-
-      <output name="gene_abundances"> 
-        <assert_contents>
-          <has_text text="ENST00000423562,ENST00000438504,ENST00000488147,ENST00000538476,ENST00000541675" />
-        </assert_contents>
-      </output>
-      <output name="isoform_abundances"> 
-        <assert_contents>
-          <has_text text="ENST00000332831" />
-        </assert_contents>
-      </output>
+      <output name="reference_file" value="reference_file" />
+      <output name="gene_abundances" value="gene_abundances.tab"/> 
+      <output name="isoform_abundances" value="isoform_abundances.tab" /> 
       <output name="log"> 
         <assert_contents>
           <has_text text="Expression Results are written" />
         </assert_contents>
       </output>
+    </test>
+    <test>
+      <param name="select_job" value="index"/>
+      <param name="ref_type" value="genomic"/>
+      <param name="reference_fasta_file" value="ref.fasta" ftype="fasta"/>
+      <param name="gtf" value="ref.gtf" ftype="gtf"/>
+      <param name="reference_name" value="ref"/>
+      <param name="select" value="No"/>
+      <output name="reference_file" value="reference_file" />
     </test>
   </tests>
 
