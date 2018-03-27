@@ -179,7 +179,7 @@ double_plot <- function(...) {
         plot.list=rbind(second_plot.list, first_plot.list)
         args_list=c(plot.list, list( nrow=rows_per_page+1, ncol=1, heights=unit(graph_heights, rep("mm", 11)),
                                     top=textGrob(paste(title_first_method[[args$first_plot_method]], "and", title_extra_method[[args$extra_plot_method]]), gp=gpar(cex=1), vjust=0, just="top"),
-                                    left=textGrob(paste(legend_first_method[[args$first_plot_method]], "/", legend_extra_method[[args$extra_plot_method]]), gp=gpar(cex=1), just=0.675*(end-start-(2.2*(4/2.7))),vjust=2, rot=90),
+                                    left=textGrob(paste(legend_first_method[[args$first_plot_method]], "/", legend_extra_method[[args$extra_plot_method]]), gp=gpar(cex=1), vjust=2, rot=90, just=(2.55/4)*(end-start-(8.4/2.55))),
                                     sub=textGrob(paste(bottom_first_method[[args$first_plot_method]], "/", bottom_extra_method[[args$extra_plot_method]]), gp=gpar(cex=1), just="bottom", vjust=2)
                                     )
                    )
