@@ -1,0 +1,15 @@
+owner: artbio
+name: rsem
+description:  transcript quantification from RNA-Seq data
+long_description: |
+  RSEM quantifies gene and isoform abundances from single-end or paired-end RNA-Seq data.
+  RSEM outputs abundance estimates, 95% credibility intervals, and visualization files.
+  The software does not require a reference genome.
+categories:
+  - Transcriptomics
+  - RNA
+homepage_url: https://github.com/deweylab/RSEM
+remote_repository_url: https://github.com/artbio/tools-artbio/tree/master/tools/rsem
+type: unrestricted
+toolshed:
+  - toolshed
