@@ -203,7 +203,7 @@ single_plot <- function(...) {
         plot.list=rbind(first_plot.list)
         args_list=c(plot.list, list( nrow=rows_per_page+1, ncol=1, heights=unit(graph_heights, rep("mm", 9)),
                                     top=textGrob(title_first_method[[args$first_plot_method]], gp=gpar(cex=1), vjust=0, just="top"),
-                                    left=textGrob(legend_first_method[[args$first_plot_method]], gp=gpar(cex=1), just=(6.4/7)*(end-start-(6.2*(7/6.4))),vjust=2, rot=90),
+                                    left=textGrob(legend_first_method[[args$first_plot_method]], gp=gpar(cex=1), vjust=2, rot=90, just=(4.5/7)*(end-start-(30.1/4.5))),
                                     sub=textGrob(bottom_first_method[[args$first_plot_method]], gp=gpar(cex=1), just="bottom", vjust=2)
                                     )
                    )
@@ -234,14 +234,4 @@ if (exists('global', where=args)) {
     plot(bc)
     devname=dev.off()
 }
-    
-
-
-
-
-
-
-
-
-
 
