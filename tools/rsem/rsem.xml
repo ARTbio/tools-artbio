@@ -1,4 +1,4 @@
-<tool id="rsem" name="RSEM" version="0.1.0">
+<tool id="rsem" name="RSEM" version="0.2.0">
   <description></description>
     <macros>
         <import>macros.xml</import>
