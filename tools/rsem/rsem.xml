@@ -5,7 +5,7 @@
     </macros>
   <requirements>
     <requirement type="package" version="1.3.0">rsem</requirement>
-    <requirement type="package" version="1.1.2=py27_0">bowtie</requirement>
+    <requirement type="package" version="1.2.2=py27pl5.22.0_0">bowtie</requirement>
   </requirements>
     <stdio>
         <exit_code range="1:" level="warning" description="Tool exception" />
@@ -253,11 +253,11 @@
                 <option value="paired">Paired End Reads</option>
               </param>
               <when value="single">
-                <param name="singlefastq" type="data" format="fastq" label="FASTQ file" />
+                <param name="singlefastq" type="data" format="fastq,fastq.gz" label="FASTQ file" />
               </when>
               <when value="paired">
-                <param name="fastq1" type="data" format="fastq" label="Read 1 fastq file" />
-                <param name="fastq2" type="data" format="fastq" label="Read 2 fastq file" />
+                <param name="fastq1" type="data" format="fastq,fastq.gz" label="Read 1 fastq file" />
+                <param name="fastq2" type="data" format="fastq,fastq.gz" label="Read 2 fastq file" />
               </when>
             </conditional>
             <expand macro="bowtie_options"/>
@@ -354,6 +354,32 @@
       <output name="gene_abundances" value="gene_abundances.tab"/> 
       <output name="isoform_abundances" value="isoform_abundances.tab" /> 
       <output name="log"> 
+        <assert_contents>
+          <has_text text="Expression Results are written" />
+        </assert_contents>
+      </output>
+    </test>
+    <test>
+      <param name="select_job" value="index"/>
+      <param name="ref_type" value="genomic"/>
+      <param name="reference_fasta_file" value="ref.fasta" ftype="fasta"/>
+      <param name="gtf" value="ref.gtf" ftype="gtf"/>
+      <param name="reference_name" value="ref"/>
+      <param name="select" value="Yes"/>
+      <param name="sample" value="rsem_sample"/>
+      <param name="refSrc" value="self"/>
+      <param name="format" value="fastq"/>
+      <param name="matepair" value="single"/>
+      <param name="singlefastq" value="test.fq.gz" ftype="fastqsanger"/>
+      <param name="result_bams" value="none"/>
+      <output name="reference_file">
+        <assert_contents>
+          <has_text text="ref" />
+        </assert_contents>
+      </output>
+      <output name="gene_abundances" value="gene_abundances.tab"/>
+      <output name="isoform_abundances" value="isoform_abundances.tab" />
+      <output name="log">
         <assert_contents>
           <has_text text="Expression Results are written" />
         </assert_contents>
