@@ -1,11 +1,11 @@
-<tool id="rsem" name="RSEM" version="0.1.0">
+<tool id="rsem" name="RSEM" version="0.3.1">
   <description></description>
     <macros>
         <import>macros.xml</import>
     </macros>
   <requirements>
     <requirement type="package" version="1.3.0">rsem</requirement>
-    <requirement type="package" version="1.1.2=py27_0">bowtie</requirement>
+    <requirement type="package" version="1.2.2=py27pl5.22.0_0">bowtie</requirement>
   </requirements>
     <stdio>
         <exit_code range="1:" level="warning" description="Tool exception" />
@@ -45,8 +45,23 @@
     #if $job.select_job == "index" and $run_rsem.select == "Yes":
       &&
     #end if
-
+    
     #if $run_rsem.select == "Yes":
+      #if $run_rsem.input.fastq.matepair=="single":
+        #if $run_rsem.input.fastq.singlefastq.is_of_type('fastq.gz') or $run_rsem.input.fastq.singlefastq.is_of_type('fastqsanger.gz'):
+          gunzip < '$run_rsem.input.fastq.singlefastq' > uncomp_single.fastq &&
+        #elif $run_rsem.input.fastq.singlefastq.is_of_type('fastq') or $run_rsem.input.fastq.singlefastq.is_of_type('fastqsanger'):
+          ln -f -s '$run_rsem.input.fastq.singlefastq' 'uncomp_single.fastq' &&
+        #end if
+      #elif $run_rsem.input.fastq.matepair=="paired":
+        #if $run_rsem.input.fastq.fastq1.is_of_type('fastq.gz') or $run_rsem.input.fastq.fastq1.is_of_type('fastqsanger.gz'):
+          gunzip < '$run_rsem.input.fastq.fastq1' > uncomp_pair1.fastq &&
+          gunzip < '$run_rsem.input.fastq.fastq2' > uncomp_pair2.fastq &&
+        #elif $run_rsem.input.fastq.singlefastq.is_of_type('fastq') or $run_rsem.input.fastq.singlefastq.is_of_type('fastqsanger'):
+          ln -f -s '$run_rsem.input.fastq.fastq1' 'uncomp_pair1.fastq' &&
+          ln -f -s '$run_rsem.input.fastq.fastq2' 'uncomp_pair2.fastq' &&
+        #end if
+      #end if
       rsem-calculate-expression 
       ## --tag string
       #if $run_rsem.seedlength:
@@ -115,11 +130,11 @@
       #if $run_rsem.input.format=="fastq"
         $run_rsem.input.fastq_select
         #if $run_rsem.input.fastq.matepair=="single": 
-          $run_rsem.input.fastq.singlefastq
+          uncomp_single.fastq
         #elif $run_rsem.input.fastq.matepair=="paired":
           --paired-end
-          $run_rsem.input.fastq.fastq1
-          $run_rsem.input.fastq.fastq2
+          uncomp_pair1.fastq
+          uncomp_pair2.fastq
         #end if
       #elif $run_rsem.input.format=="fasta"
         --no-qualities
@@ -253,11 +268,11 @@
                 <option value="paired">Paired End Reads</option>
               </param>
               <when value="single">
-                <param name="singlefastq" type="data" format="fastq" label="FASTQ file" />
+                <param name="singlefastq" type="data" format="fastq,fastq.gz" label="FASTQ file" />
               </when>
               <when value="paired">
-                <param name="fastq1" type="data" format="fastq" label="Read 1 fastq file" />
-                <param name="fastq2" type="data" format="fastq" label="Read 2 fastq file" />
+                <param name="fastq1" type="data" format="fastq,fastq.gz" label="Read 1 fastq file" />
+                <param name="fastq2" type="data" format="fastq,fastq.gz" label="Read 2 fastq file" />
               </when>
             </conditional>
             <expand macro="bowtie_options"/>
@@ -333,7 +348,7 @@
   </outputs>
 
   <tests>
-    <test>
+   <test>
       <param name="select_job" value="index"/>
       <param name="ref_type" value="genomic"/>
       <param name="reference_fasta_file" value="ref.fasta" ftype="fasta"/>
@@ -354,6 +369,32 @@
       <output name="gene_abundances" value="gene_abundances.tab"/> 
       <output name="isoform_abundances" value="isoform_abundances.tab" /> 
       <output name="log"> 
+        <assert_contents>
+          <has_text text="Expression Results are written" />
+        </assert_contents>
+      </output>
+    </test>
+    <test>
+      <param name="select_job" value="index"/>
+      <param name="ref_type" value="genomic"/>
+      <param name="reference_fasta_file" value="ref.fasta" ftype="fasta"/>
+      <param name="gtf" value="ref.gtf" ftype="gtf"/>
+      <param name="reference_name" value="ref"/>
+      <param name="select" value="Yes"/>
+      <param name="sample" value="rsem_sample"/>
+      <param name="refSrc" value="self"/>
+      <param name="format" value="fastq"/>
+      <param name="matepair" value="single"/>
+      <param name="singlefastq" value="test.fastq.gz" ftype="fastqsanger.gz"/>
+      <param name="result_bams" value="none"/>
+      <output name="reference_file">
+        <assert_contents>
+          <has_text text="ref" />
+        </assert_contents>
+      </output>
+      <output name="gene_abundances" value="gene_abundances.tab"/>
+      <output name="isoform_abundances" value="isoform_abundances.tab" />
+      <output name="log">
         <assert_contents>
           <has_text text="Expression Results are written" />
         </assert_contents>
