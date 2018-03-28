@@ -45,8 +45,23 @@
     #if $job.select_job == "index" and $run_rsem.select == "Yes":
       &&
     #end if
-
+    
     #if $run_rsem.select == "Yes":
+      #if $run_rsem.input.fastq.matepair=="single":
+        #if $run_rsem.input.fastq.singlefastq.is_of_type('fastq.gz') or $run_rsem.input.fastq.singlefastq.is_of_type('fastqsanger.gz'):
+          gunzip < '$run_rsem.input.fastq.singlefastq' > uncomp_single.fastq &&
+        #elif $run_rsem.input.fastq.singlefastq.is_of_type('fastq') or $run_rsem.input.fastq.singlefastq.is_of_type('fastqsanger'):
+          ln -f -s '$run_rsem.input.fastq.singlefastq' 'uncomp_single.fastq' &&
+        #end if
+      #elif $run_rsem.input.fastq.matepair=="paired":
+        #if $run_rsem.input.fastq.singlefastq.is_of_type('fastq.gz') or $run_rsem.input.fastq.singlefastq.is_of_type('fastqsanger.gz'):
+          gunzip < '$run_rsem.input.fastq.fastq1' > uncomp_pair1.fastq &&
+          gunzip < '$run_rsem.input.fastq.fastq2' > uncomp_pair2.fastq &&
+        #elif $run_rsem.input.fastq.singlefastq.is_of_type('fastq') or $run_rsem.input.fastq.singlefastq.is_of_type('fastqsanger'):
+          ln -f -s '$run_rsem.input.fastq.fastq1' 'uncomp_pair1.fastq' &&
+          ln -f -s '$run_rsem.input.fastq.fastq2' 'uncomp_pair2.fastq' &&
+        #end if
+      #end if
       rsem-calculate-expression 
       ## --tag string
       #if $run_rsem.seedlength:
@@ -115,11 +130,11 @@
       #if $run_rsem.input.format=="fastq"
         $run_rsem.input.fastq_select
         #if $run_rsem.input.fastq.matepair=="single": 
-          $run_rsem.input.fastq.singlefastq
+          uncomp_single.fastq
         #elif $run_rsem.input.fastq.matepair=="paired":
           --paired-end
-          $run_rsem.input.fastq.fastq1
-          $run_rsem.input.fastq.fastq2
+          uncomp_pair1.fastq
+          uncomp_pair2.fastq
         #end if
       #elif $run_rsem.input.format=="fasta"
         --no-qualities
@@ -333,7 +348,7 @@
   </outputs>
 
   <tests>
-    <test>
+   <test>
       <param name="select_job" value="index"/>
       <param name="ref_type" value="genomic"/>
       <param name="reference_fasta_file" value="ref.fasta" ftype="fasta"/>
@@ -370,7 +385,7 @@
       <param name="refSrc" value="self"/>
       <param name="format" value="fastq"/>
       <param name="matepair" value="single"/>
-      <param name="singlefastq" value="test.fq.gz" ftype="fastqsanger"/>
+      <param name="singlefastq" value="test.fastq.gz" ftype="fastqsanger.gz"/>
       <param name="result_bams" value="none"/>
       <output name="reference_file">
         <assert_contents>
