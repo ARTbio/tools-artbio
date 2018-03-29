@@ -211,7 +211,7 @@ single_plot <- function(...) {
         plot.list=rbind(first_plot.list)
         args_list=c(plot.list, list( nrow=rows_per_page+1, ncol=1, heights=unit(graph_heights, rep("mm", 9)),
                                     top=textGrob(title_first_method[[args$first_plot_method]], gp=gpar(cex=1), vjust=0, just="top"),
-                                    left=textGrob(legend_first_method[[args$first_plot_method]], gp=gpar(cex=1), vjust=2, rot=90, just=(4.5/7)*(end-start-(30.1/4.5))),
+                                    left=textGrob(legend_first_method[[args$first_plot_method]], gp=gpar(cex=1), vjust=0, hjust=0, x=1, y=(-0.41/7)*(end-start-(6.23/0.41)), rot=90,),
                                     sub=textGrob(bottom_first_method[[args$first_plot_method]], gp=gpar(cex=1), just="bottom", vjust=2)
                                     )
                    )
