@@ -102,7 +102,7 @@ globalbc = function(df, global="", ...) {
    return(bc)
 }
 plot_unit = function(df, method=args$first_plot_method, ...) {
-    if (args$ylimits != ""){
+    if (exists('ylimits', where=args)){
         limits=strsplit(args$ylimits,' ')
         min=as.numeric(limits[[1]][1])
         max=as.numeric(limits[[1]][2])
@@ -150,7 +150,9 @@ plot_unit = function(df, method=args$first_plot_method, ...) {
         as.table=TRUE,
         par.strip.text = list(cex=0.6),
         ...)
+        p=combineLimits(p)
     }
+    return(p)
 }
 
 
