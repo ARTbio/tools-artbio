@@ -1,4 +1,4 @@
-<tool id="small_rna_maps" name="small_rna_maps" version="2.5.0">
+<tool id="small_rna_maps" name="small_rna_maps" version="2.4.4">
   <description></description>
   <requirements>
         <requirement type="package" version="1.11.2=py27_0">numpy</requirement>
@@ -62,11 +62,7 @@
           #else if $inputs_cond.normalize == "yes":
               #set $norm = ""
               #for $file in $inputs_cond.series
-                 #if $file.normalization != "":
-                     #set $norm += str($file.normalization)+' '
-                 #else
-                     #set $norm += '1 '
-                 #end if
+                     #set $norm += "$inputs_cond.series.normalization"+' '
               #end for
               #set $norm = $norm[:-1]
               '$norm'
@@ -94,8 +90,8 @@
         <when value="yes">
             <repeat name="series" title="Normalization factors" min="1">
                 <param name="inputs" type="data" format="bam" label="Select multiple alignments to parse" />
-                <param name="normalization" type="text" label="Enter size/normalization factors. Leave blank for no normalization (default)"
-                       help="e.g. '1' '0.75' '1.23'"/>
+                <param name="normalization" type="float" label="Enter size/normalization factors."
+                       help="e.g. '1' '0.75' '1.23'" value="1.0"/>
             </repeat>
         </when>
     </conditional>
@@ -144,8 +140,8 @@
             </param>
         </when>
     </conditional>
-    <param name="ylimits" type="text" label="Enter minimum and maximum y values separated by ' '. Leave blank to not set a limit."
-        help="e.g. '0 10' '1 3' (These limits won't be applied to histograms)"/>
+    <param name="ylimits" type="text" label="Enter minimum and maximum y values separated by ' '. Leave blank to not set a limit"
+        help="e.g. '0 10' '1 3'"/>
  </inputs>
 
  <outputs>
