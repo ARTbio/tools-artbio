@@ -11,6 +11,7 @@ library(optparse)
 
 
 option_list <- list(
+    make_option(c("-y", "--ylimits"), type="character", help="set min and max ylimits. e.g. '0 10'"),
     make_option(c("-f", "--first_dataframe"), type="character", help="path to first dataframe"),
     make_option(c("-e", "--extra_dataframe"), type="character", help="path to additional dataframe"),
     make_option(c("-n", "--normalization"), type="character", help="space-separated normalization/size factors"),
@@ -101,13 +102,19 @@ globalbc = function(df, global="", ...) {
    return(bc)
 }
 plot_unit = function(df, method=args$first_plot_method, ...) {
+    if (args$ylimits != ""){
+        limits=strsplit(args$ylimits,' ')
+        min=as.numeric(limits[[1]][1])
+        max=as.numeric(limits[[1]][2])
+        ylimits=c(min,max);
+    }
     if (method == 'Counts') {
         p = xyplot(Counts~Coordinate|factor(Dataset, levels=unique(Dataset))+factor(Chromosome, levels=unique(Chromosome)),
         data=df,
         type='h',
         lwd=1.5,
         scales= list(relation="free", x=list(rot=0, cex=0.7, axs="i", tck=0.5), y=list(tick.number=4, rot=90, cex=0.7)),
-        xlab=NULL, main=NULL, ylab=NULL,
+        xlab=NULL, main=NULL, ylab=NULL, ylin=ylimits,
         as.table=T,
         origin = 0,
         horizontal=FALSE,
@@ -122,7 +129,7 @@ plot_unit = function(df, method=args$first_plot_method, ...) {
         pch=19,
         cex=0.35,
         scales= list(relation="free", x=list(rot=0, cex=0.7, axs="i", tck=0.5), y=list(tick.number=4, rot=90, cex=0.7)),
-        xlab=NULL, main=NULL, ylab=NULL,
+        xlab=NULL, main=NULL, ylab=NULL, ylim=ylimits,
         as.table=T,
         origin = 0,
         horizontal=FALSE,
@@ -144,7 +151,6 @@ plot_unit = function(df, method=args$first_plot_method, ...) {
         par.strip.text = list(cex=0.6),
         ...)
     }
-        #p = update(useOuterStrips(p, strip.left=strip.custom(par.strip.text = list(cex=0.5))))
 }
 
 
