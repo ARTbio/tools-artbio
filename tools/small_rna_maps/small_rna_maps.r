@@ -114,7 +114,7 @@ plot_unit = function(df, method=args$first_plot_method, ...) {
         type='h',
         lwd=1.5,
         scales= list(relation="free", x=list(rot=0, cex=0.7, axs="i", tck=0.5), y=list(tick.number=4, rot=90, cex=0.7)),
-        xlab=NULL, main=NULL, ylab=NULL, ylin=ylimits,
+        xlab=NULL, main=NULL, ylab=NULL, ylim=ylimits,
         as.table=T,
         origin = 0,
         horizontal=FALSE,
