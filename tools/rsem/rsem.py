@@ -5,9 +5,9 @@ import logging
 import os
 import os.path
 
-from galaxy.datatypes.sniff import get_headers
 from galaxy.datatypes.images import Html
 from galaxy.datatypes.metadata import MetadataElement
+from galaxy.datatypes.sniff import get_headers
 from galaxy.datatypes.tabular import Tabular
 
 
