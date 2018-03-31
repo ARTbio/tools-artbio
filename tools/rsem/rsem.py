@@ -1,14 +1,15 @@
 """
 RSEM datatypes
 """
+import logging
 import os
 import os.path
+
 from galaxy.datatypes.images import Html
-from galaxy.datatypes.tabular import Tabular
 from galaxy.datatypes.metadata import MetadataElement
+from galaxy.datatypes.tabular import Tabular
 from galaxy.datatypes.sniff import get_headers
 
-import logging
 
 log = logging.getLogger(__name__)
 
