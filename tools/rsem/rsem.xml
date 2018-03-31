@@ -1,4 +1,4 @@
-<tool id="rsem" name="RSEM" version="0.3.1">
+<tool id="rsembowtie" name="RSEM-Bowtie" version="0.4.0">
   <description></description>
     <macros>
         <import>macros.xml</import>
@@ -47,6 +47,7 @@
     #end if
     
     #if $run_rsem.select == "Yes":
+      ## uncompress fastq.gz or fastqsanger.gz if needed
       #if $run_rsem.input.fastq.matepair=="single":
         #if $run_rsem.input.fastq.singlefastq.is_of_type('fastq.gz') or $run_rsem.input.fastq.singlefastq.is_of_type('fastqsanger.gz'):
           gunzip < '$run_rsem.input.fastq.singlefastq' > uncomp_single.fastq &&
@@ -121,6 +122,8 @@
       ## Outputs
       #if $run_rsem.rsem_outputs.result_bams == 'none':
         --no-bam-output
+      #elif $run_rsem.rsem_outputs.result_bams == 'default':
+        --sort-bam-by-coordinate
       #else
         --sort-bam-by-coordinate
         --output-genome-bam
@@ -335,12 +338,10 @@
       <filter>run_rsem['select'] == "Yes"</filter>
     </data>
     <data format="bam" name="transcript_sorted_bam" label="${run_rsem.sample}.transcript.bam" from_work_dir="rsem_output.transcript.sorted.bam" >
-      <filter>run_rsem['select'] == "Yes"</filter>
-      <filter>rsem_outputs['result_bams'] != "none"</filter>
+      <filter>run_rsem['select'] == "Yes" and run_rsem['rsem_outputs']['result_bams'] != "none"</filter>
     </data>
     <data format="bam" name="genome_sorted_bam" label="${run_rsem.sample}.genome.bam" from_work_dir="rsem_output.genome.sorted.bam">
-      <filter>run_rsem['select'] == "Yes"</filter>
-      <filter>rsem_outputs['result_bams'] == "both"</filter>
+      <filter>run_rsem['select'] == "Yes" and run_rsem['rsem_outputs']['result_bams'] == "both"</filter>
     </data>
     <data format="txt" name="log" label="${run_rsem.sample}.rsem_log">
       <filter>run_rsem['select'] == "Yes"</filter>

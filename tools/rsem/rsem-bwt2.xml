@@ -1,11 +1,10 @@
-<tool id="rsemdev" name="RSEM-DEV" version="0.3.1">
+<tool id="rsembowtie2" name="RSEM-Bowtie2" version="0.4.0">
   <description></description>
     <macros>
         <import>macros.xml</import>
     </macros>
   <requirements>
     <requirement type="package" version="1.3.0">rsem</requirement>
-    <requirement type="package" version="1.2.2=py27pl5.22.0_0">bowtie</requirement>
     <requirement type="package" version="2.3.4">bowtie2</requirement>
   </requirements>
     <stdio>
@@ -32,11 +31,7 @@
       #if $job.transcript_to_gene_map:
         --transcript-to-gene-map $job.transcript_to_gene_map
       #end if
-      #if $job.version == 'bowtie1':
-        --bowtie
-      #elif $job.version == 'bowtie2'
         --bowtie2
-      #end if
       #if $job.self_reference.ref_type == 'transcripts':
         $job.self_reference.reference_fasta_file
       #else:
@@ -52,6 +47,7 @@
     #end if
     
     #if $run_rsem.select == "Yes":
+      ## uncompress fastq.gz or fastqsanger.gz if needed
       #if $run_rsem.input.fastq.matepair=="single":
         #if $run_rsem.input.fastq.singlefastq.is_of_type('fastq.gz') or $run_rsem.input.fastq.singlefastq.is_of_type('fastqsanger.gz'):
           gunzip < '$run_rsem.input.fastq.singlefastq' > uncomp_single.fastq &&
@@ -103,29 +99,24 @@
         #end if
       #end if
       --num-threads \${GALAXY_SLOTS:-4}
-      #if $run_rsem.input.format == 'fasta' and $run_rsem.input.bowtie_options.fullparams == 'fullset':
+      --bowtie2
+      #if $run_rsem.input.format == 'fasta' and $run_rsem.input.bowtie2_options.fullparams == 'fullset':
         ## Bowtie params
-        #if $run_rsem.input.bowtie_options.bowtie_e:
-        --bowtie-e $run_rsem.input.bowtie_options.bowtie_e
+        #if $run_rsem.input.bowtie2_options.bowtie2_mismatch_rate:
+        --bowtie2-mismatch-rate $run_rsem.input.bowtie2_options.bowtie2_mismatch_rate
         #end if
-        #if $run_rsem.input.bowtie_options.bowtie_m:
-        --bowtie-m $run_rsem.input.bowtie_options.bowtie_m
+        #if $run_rsem.input.bowtie2_options.bowtie2_k:
+        --bowtie2-k $run_rsem.input.bowtie2_options.bowtie2_k
         #end if
-        --bowtie-n $run_rsem.input.bowtie_options.bowtie_n
-      #end if
-      #if $run_rsem.input.format == 'fastq' and $run_rsem.input.bowtie_options.fullparams == 'fullset':
-        ## Bowtie params
-        #if $run_rsem.input.bowtie_options.bowtie_e:
-        --bowtie-e $run_rsem.input.bowtie_options.bowtie_e
+        #if $run_rsem.input.bowtie2_options.bowtie2_sensitivity_level:
+        --bowtie2-sensitivity-level $run_rsem.input.bowtie2_options.bowtie2_sensitivity_level
         #end if
-        #if $run_rsem.input.bowtie_options.bowtie_m:
-        --bowtie-m $run_rsem.input.bowtie_options.bowtie_m
-        #end if
-        --bowtie-n $run_rsem.input.bowtie_options.bowtie_n
       #end if
       ## Outputs
       #if $run_rsem.rsem_outputs.result_bams == 'none':
         --no-bam-output
+      #elif $run_rsem.rsem_outputs.result_bams == 'default':
+        --sort-bam-by-coordinate
       #else
         --sort-bam-by-coordinate
         --output-genome-bam
@@ -181,10 +172,6 @@
         <option value="no-index" selected="true">rsem reference available from history</option>
       </param>
       <when value="index">
-        <param name="version" type="select" label="Select the aligner software">
-          <option value="bowtie1">bowtie</option>
-          <option value="bowtie2">bowtie2</option>
-        </param>
         <conditional name="self_reference">
           <param name="ref_type" type="select" label="Reference transcript source">
             <option value="transcripts">transcript fasta</option>
@@ -284,7 +271,7 @@
                 <param name="fastq2" type="data" format="fastq,fastq.gz" label="Read 2 fastq file" />
               </when>
             </conditional>
-            <expand macro="bowtie_options"/>
+            <expand macro="bowtie2_options"/>
           </when>
           <when value="fasta">
             <conditional name="fasta">
@@ -300,7 +287,7 @@
                 <param name="fasta2" type="data" format="fasta" label="Read 2 fasta file" />
               </when>
             </conditional>
-            <expand macro="bowtie_options"/>
+            <expand macro="bowtie2_options"/>
           </when>
           <when value="sam">
               <!-- convert-sam-for-rsem /ref/mouse_125 input.sam -o input_for_rsem.sam -->
@@ -344,12 +331,10 @@
       <filter>run_rsem['select'] == "Yes"</filter>
     </data>
     <data format="bam" name="transcript_sorted_bam" label="${run_rsem.sample}.transcript.bam" from_work_dir="rsem_output.transcript.sorted.bam" >
-      <filter>run_rsem['select'] == "Yes"</filter>
-      <filter>rsem_outputs['result_bams'] != "none"</filter>
+      <filter>run_rsem['select'] == "Yes" and run_rsem['rsem_outputs']['result_bams'] != "none"</filter>
     </data>
     <data format="bam" name="genome_sorted_bam" label="${run_rsem.sample}.genome.bam" from_work_dir="rsem_output.genome.sorted.bam">
-      <filter>run_rsem['select'] == "Yes"</filter>
-      <filter>rsem_outputs['result_bams'] == "both"</filter>
+      <filter>run_rsem['select'] == "Yes" and run_rsem['rsem_outputs']['result_bams'] == "both"</filter>
     </data>
     <data format="txt" name="log" label="${run_rsem.sample}.rsem_log">
       <filter>run_rsem['select'] == "Yes"</filter>
@@ -375,8 +360,8 @@
           <has_text text="ref" />
         </assert_contents>
       </output>
-      <output name="gene_abundances" value="gene_abundances.tab"/> 
-      <output name="isoform_abundances" value="isoform_abundances.tab" /> 
+      <output name="gene_abundances" value="gene_abundances.tab2"/> 
+      <output name="isoform_abundances" value="isoform_abundances.tab2" /> 
       <output name="log"> 
         <assert_contents>
           <has_text text="Expression Results are written" />
@@ -385,7 +370,6 @@
     </test>
     <test>
       <param name="select_job" value="index"/>
-      <param name="version" value="bowtie1"/>
       <param name="ref_type" value="genomic"/>
       <param name="reference_fasta_file" value="ref.fasta" ftype="fasta"/>
       <param name="gtf" value="ref.gtf" ftype="gtf"/>
@@ -402,8 +386,8 @@
           <has_text text="ref" />
         </assert_contents>
       </output>
-      <output name="gene_abundances" value="gene_abundances.tab"/>
-      <output name="isoform_abundances" value="isoform_abundances.tab" />
+      <output name="gene_abundances" value="gene_abundances.tab2"/>
+      <output name="isoform_abundances" value="isoform_abundances.tab2" />
       <output name="log">
         <assert_contents>
           <has_text text="Expression Results are written" />
@@ -412,7 +396,6 @@
     </test>
     <test>
       <param name="select_job" value="index"/>
-      <param name="version" value="bowtie1"/>
       <param name="ref_type" value="genomic"/>
       <param name="reference_fasta_file" value="ref.fasta" ftype="fasta"/>
       <param name="gtf" value="ref.gtf" ftype="gtf"/>
@@ -426,7 +409,6 @@
     </test>
     <test>
       <param name="select_job" value="index"/>
-      <param name="version" value="bowtie2"/>
       <param name="ref_type" value="genomic"/>
       <param name="reference_fasta_file" value="ref.fasta" ftype="fasta"/>
       <param name="gtf" value="ref.gtf" ftype="gtf"/>
