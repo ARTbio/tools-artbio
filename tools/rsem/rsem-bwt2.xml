@@ -1,4 +1,4 @@
-<tool id="rsembowtie2" name="RSEM-Bowtie2" version="0.4.0">
+<tool id="rsembowtie2" name="RSEM-Bowtie2" version="@WRAPPER_VERSION@">
   <description></description>
     <macros>
         <import>macros.xml</import>
@@ -241,7 +241,7 @@
             <option value="self">Prepare RSEM Reference with this tool</option>
           </param>
           <when value="history">
-            <param name="rsem_ref" type="data" format="rsem_ref" label="RSEM reference" />
+            <param name="rsem_ref" type="data" format="rsem_bt2_ref" label="RSEM reference" />
           </when>
           <when value="self">
           </when>
@@ -321,7 +321,7 @@
   </inputs>
 
   <outputs>
-    <data format="rsem_ref" name="reference_file" label="RSEM ${job.reference_name} reference">
+    <data format="rsem_bt2_ref" name="reference_file" label="RSEM ${job.reference_name} reference">
       <filter>job['select_job'] == "index"</filter>
     </data>
     <data format="tabular" name="gene_abundances" label="${run_rsem.sample}.gene_abundances" from_work_dir="rsem_output.genes.results">
