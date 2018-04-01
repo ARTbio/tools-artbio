@@ -69,7 +69,34 @@
           </when>
         </conditional>
     </xml>
-    <xml name="sampling_for_bam">
+    <xml name="bowtie2_options">
+        <conditional name="bowtie2_options">
+          <param name="fullparams" type="select" label="bowtie settings">
+            <option value="default">use bowtie2 defaults</option>
+            <option value="fullset">set bowtie2 options</option>
+          </param>
+          <when value="default"/>
+          <when value="fullset">
+            <param name="bowtie2_mismatch_rate" type="float" value="0.1" label="--bowtie2-mismatch-rate" help="The maximum mismatch rate allowed. (Default: 0.1)">
+              <validator type="in_range" message="a rate, between 0 and 0.8" min="0" max="0.8"/>
+            </param>
+            <param name="bowtie2_k" type="integer" value="200" label="--bowtie2-k" help="Find up to `int` alignments per read. (Default: 200)">
+            </param>
+            <param name="bowtie2_sensitivity_level" type="select" label="--bowtie2-sensitivity-level">
+                <option value="very_fast">very_fast</option>
+                <option value="fast">fast</option>
+                <option value="sensitive" selected="true">sensitive</option>
+                <option value="very_sensitive">very_sensitive</option>
+            <help>
+                Set Bowtie 2's preset options in --end-to-end mode. This option controls how hard Bowtie 2 tries to find
+                alignments. Must be one of "very_fast", "fast", "sensitive" and "very_sensitive". The four candidates correspond to Bowtie 2's
+                "--very-fast", "--fast", "--sensitive" and "--very-sensitive" options. (Default: "sensitive" - use Bowtie 2's default)
+            </help>
+            </param>
+          </when>
+        </conditional>
+    </xml>
+   <xml name="sampling_for_bam">
         <param name="sampling_for_bam" type="boolean" truevalue="--sampling-for-bam" falsevalue="" checked="false" label="Use sampling for BAM">
           <help> When RSEM generates a BAM file, instead of outputing all alignments a read has with their posterior probabilities, one alignment is sampled according to the posterior probabilities. The sampling procedure includes the alignment to the "noise" transcript, which does not appear in the BAM file. Only the sampled alignment has a weight of 1. All other alignments have weight 0. If the "noise" transcript is sampled, all alignments appeared in the BAM file should have weight 0. (Default: off)
           </help>
