@@ -1,5 +1,8 @@
 <tool id="extract_transcript_to_gene_map_from_trinity" name="RSEM trinity fasta to gene map" version="@WRAPPER_VERSION@">
   <description>extract transcript to gene map from trinity</description>
+    <macros>
+        <import>macros.xml</import>
+    </macros>
   <requirements>
     <requirement type="package" version="1.3.0">rsem</requirement>
   </requirements>
