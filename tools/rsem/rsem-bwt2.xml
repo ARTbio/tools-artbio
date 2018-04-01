@@ -1,4 +1,4 @@
-<tool id="rsembowtie2" name="RSEM-Bowtie2" version="0.4.0">
+<tool id="rsembowtie2" name="RSEM-Bowtie2" version="@WRAPPER_VERSION@">
   <description></description>
     <macros>
         <import>macros.xml</import>
