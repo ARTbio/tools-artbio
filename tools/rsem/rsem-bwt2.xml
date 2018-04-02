@@ -46,15 +46,15 @@
       &&
     #end if
     
-    #if $run_rsem.select == "Yes":
+    #if $run_rsem.select == "Yes" and $run_rsem.input.format == 'fastq':
       ## uncompress fastq.gz or fastqsanger.gz if needed
-      #if $run_rsem.input.fastq.matepair=="single":
+      #if $run_rsem.input.format == 'fastq' and $run_rsem.input.fastq.matepair=="single":
         #if $run_rsem.input.fastq.singlefastq.is_of_type('fastq.gz') or $run_rsem.input.fastq.singlefastq.is_of_type('fastqsanger.gz'):
           gunzip < '$run_rsem.input.fastq.singlefastq' > uncomp_single.fastq &&
         #elif $run_rsem.input.fastq.singlefastq.is_of_type('fastq') or $run_rsem.input.fastq.singlefastq.is_of_type('fastqsanger'):
           ln -f -s '$run_rsem.input.fastq.singlefastq' 'uncomp_single.fastq' &&
         #end if
-      #elif $run_rsem.input.fastq.matepair=="paired":
+      #elif $run_rsem.input.format == 'fastq' and $run_rsem.input.fastq.matepair=="paired":
         #if $run_rsem.input.fastq.fastq1.is_of_type('fastq.gz') or $run_rsem.input.fastq.fastq1.is_of_type('fastqsanger.gz'):
           gunzip < '$run_rsem.input.fastq.fastq1' > uncomp_pair1.fastq &&
           gunzip < '$run_rsem.input.fastq.fastq2' > uncomp_pair2.fastq &&
@@ -145,9 +145,9 @@
         #if $run_rsem.input.matepair=="paired":
           --paired-end
         #end if
-        #if $run_rsem.input.rsem_sam._extension == 'sam':
+        #if $run_rsem.input.rsem_sam.is_of_type('sam'):
           --sam
-        #elif $run_rsem.input.rsem_sam._extension == 'bam':
+        #elif $run_rsem.input.rsem_sam.is_of_type('bam'):
           --bam
         #end if
         $run_rsem.input.rsem_sam
