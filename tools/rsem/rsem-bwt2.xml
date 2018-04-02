@@ -295,7 +295,7 @@
                 <option value="single">Single End Reads</option>
                 <option value="paired">Paired End Reads</option>
               </param>
-              <param name="rsem_sam" type="data" format="rsem_sam" label="RSEM formatted SAM file" />
+              <param name="rsem_sam" type="data" format="sam,bam" label="RSEM formatted SAM file" />
           </when>
         </conditional>
         <expand macro="rsem_options"/>
