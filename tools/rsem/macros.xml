@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
   <macros>
-    <token name="@WRAPPER_VERSION@">0.5.1</token>
+    <token name="@WRAPPER_VERSION@">0.5.3</token>
     <xml name="rsem_options">
         <param name="seedlength" type="integer" value="25" optional="true" label="Seed length used by the read aligner" help="Providing the correct value for this parameter is important for RSEM's accuracy if the data are single-end reads. RSEM uses this value for Bowtie's seed length parameter. The minimum value is 25. (Default:25)">
         </param>
