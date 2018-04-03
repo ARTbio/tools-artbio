@@ -143,7 +143,7 @@ plot_unit = function(df, method=args$first_plot_method, ...) {
                      group=Polarity,
                      stack=TRUE,
                      col=c('red', 'blue'),
-                     scales=list(y=list(tick.number=4, rot=90, relation="free", cex=0.7), x=list(rot=0, cex=0.7, axs="i", tck=0.5)),
+                     scales=list(y=list(rot=90, relation="free", cex=0.7), x=list(rot=0, cex=0.7, axs="i", tck=c(1,0))),
         xlab = NULL,
         ylab = NULL,
         main = NULL,
