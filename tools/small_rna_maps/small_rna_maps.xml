@@ -1,4 +1,4 @@
-<tool id="small_rna_maps" name="small_rna_maps" version="2.5.0">
+<tool id="small_rna_maps" name="small_rna_maps" version="2.4.3">
   <description></description>
   <requirements>
         <requirement type="package" version="1.11.2=py27_0">numpy</requirement>
@@ -67,11 +67,10 @@
               #set $norm = $norm[:-1]
               '$norm'
           #end if
-              --ylimits
           #if $ylimits_cond.ylimits == "no":
-              ''
+              --ymin '' --ymax ''
           #else:
-              '${ylimits_cond.min} ${ylimits_cond.max}'
+              --ymin '${ylimits_cond.ymin}' --ymax '${ylimits_cond.ymax}'
           #end if
           #if str($plots_options.plots_options_selector ) == "two_plot":
               --first_plot_method '${plots_options.first_plot}'
@@ -149,8 +148,8 @@
         <param name="ylimits" type="boolean" truevalue="yes" falsevalue="no" checked="false" label="Do you wish to set a y axis in the plots?"
                help="This limit won't be applied to size distribution plots"/>
         <when value="yes">
-            <param name="min" type="float" label="Enter minimum value" value="0.0" help="e.g. '0 10' '1 3'"/>
-            <param name="max" type="float" label="Enter maximum value" value="0.0" help="e.g. '0 10' '1 3'"/>
+            <param name="ymin" type="float" label="Enter minimum value" value="0.0" help="e.g. '0 10' '1 3'"/>
+            <param name="ymax" type="float" label="Enter maximum value" value="0.0" help="e.g. '0 10' '1 3'"/>
         </when>
         <when value="no">
         </when>
