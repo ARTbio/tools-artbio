@@ -182,8 +182,8 @@ double_plot <- function(...) {
         end=i+rows_per_page/2-1
         if (end>n_genes) {end=n_genes}
         if (end-start+1 < 5) {graph_heights=c(rep(c(40,30),end-start+1),10,rep(c(40,30),5-(end-start+1)))}
-        first_plot.list = lapply(per_gene_readmap[start:end], function(x) plot_unit(x, strip=FALSE, par.settings=par.settings.firstplot))
-        second_plot.list = lapply(per_gene_size[start:end], function(x) update(useOuterStrips(plot_unit(x, method=args$extra_plot_method, par.settings=par.settings.secondplot),strip.left=strip.custom(par.strip.text = list(cex=0.5)))))
+first_plot.list = lapply(per_gene_readmap[start:end], function(x) update(useOuterStrips(plot_unit(x, par.settings=par.settings.firstplot) ,strip.left=strip.custom(par.strip.text = list(cex=0.5)), strip=FALSE )))
+second_plot.list = lapply(per_gene_size[start:end], function(x) update(useOuterStrips(plot_unit(x, method=args$extra_plot_method, par.settings=par.settings.secondplot),strip.left=strip.custom(par.strip.text = list(cex=0.5)))))
         plot.list=rbind(second_plot.list, first_plot.list)
         args_list=c(plot.list, list( nrow=rows_per_page+1, ncol=1, heights=unit(graph_heights, rep("mm", 11)),
                                     top=textGrob(paste(title_first_method[[args$first_plot_method]], "and", title_extra_method[[args$extra_plot_method]]), gp=gpar(cex=1), vjust=0, just="top"),
