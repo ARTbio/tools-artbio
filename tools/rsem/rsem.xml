@@ -148,16 +148,6 @@
           $run_rsem.input.fasta.fasta1
           $run_rsem.input.fasta.fasta2
         #end if
-      #elif $run_rsem.input.format=="sam"
-        #if $run_rsem.input.matepair=="paired":
-          --paired-end
-        #end if
-        #if $run_rsem.input.rsem_sam.is_of_type('sam'):
-          --sam
-        #elif $run_rsem.input.rsem_sam.is_of_type('bam'):
-          --bam
-        #end if
-        $run_rsem.input.rsem_sam
       #end if
       ## RSEM reference
       #if $run_rsem.reference.refSrc == 'history':
@@ -257,7 +247,6 @@
           <param name="format" type="select" label="RSEM Input file type">
             <option value="fastq">FASTQ</option>
             <option value="fasta">FASTA</option>
-            <option value="sam">SAM/BAM</option>
           </param>
           <when value="fastq">
             <param name="fastq_select" size="15" type="select" label="FASTQ type" >
@@ -295,14 +284,6 @@
               </when>
             </conditional>
             <expand macro="bowtie_options"/>
-          </when>
-          <when value="sam">
-              <!-- convert-sam-for-rsem /ref/mouse_125 input.sam -o input_for_rsem.sam -->
-              <param name="matepair" type="select" label="Library Type">
-                <option value="single">Single End Reads</option>
-                <option value="paired">Paired End Reads</option>
-              </param>
-              <param name="rsem_sam" type="data" format="sam,bam" label="RSEM formatted SAM file" />
           </when>
         </conditional>
         <expand macro="rsem_options"/>
