@@ -175,7 +175,7 @@ double_plot <- function(...) {
     page_height = 15
     rows_per_page = 10
     graph_heights=c(40,30,40,30,40,30,40,30,40,30,10)
-    if (n_samples > 4) {page_width = 8.2677*n_samples/4} else {page_width = 2.3*n_samples +2.5}
+    page_width=8.2677 * n_samples / 2
     pdf(file=args$output_pdf, paper="special", height=page_height, width=page_width)
     for (i in seq(1,n_genes,rows_per_page/2)) {
         start=i
