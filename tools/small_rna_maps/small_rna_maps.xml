@@ -334,8 +334,13 @@ Read counts, mean sizes and median sizes are computed by counting the number of 
 in each position of a chromosome reference.
 Coverage depths are computed from the input bam alignment files using the python pysam module.
 
-The metrics mentioned above can be plotted either separately or in all possible
-pairwise combinations.
+The metrics mentioned above can be plotted either separately:
+
+image:: one_plot.png
+
+Or in all possible pairwise combinations:
+
+image:: two_plot.png
 
 For comparison purposes, values from bam alignment files can be normalized by a size factor
 before plotting.
