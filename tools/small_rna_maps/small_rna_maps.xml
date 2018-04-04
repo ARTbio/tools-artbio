@@ -336,11 +336,11 @@ Coverage depths are computed from the input bam alignment files using the python
 
 The metrics mentioned above can be plotted either separately:
 
-image:: one_plot.png
+.. image:: one_plot.png
 
 Or in all possible pairwise combinations:
 
-image:: two_plot.png
+.. image:: two_plot.png
 
 For comparison purposes, values from bam alignment files can be normalized by a size factor
 before plotting.
