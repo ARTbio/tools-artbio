@@ -221,12 +221,12 @@
             <param name="maxsize" value="10000" />
             <param name="cluster" value="0" />
             <param name="ylimits" value="yes" />
-            <param name="ymin" value="20" />
-            <param name="ymax" value="25" />
+            <param name="ymin" value="-5" />
+            <param name="ymax" value="5" />
             <param name="plots_options_selector" value="one_plot" />
-            <param name="first_plot" value="Coverage" />
-            <output file="input1_coverage.tab" name="output_tab" />
-            <output file="input1_min0_max10000_cluster0_ylim20_25_single_plot_coverage.pdf" name="output_pdf" />
+            <param name="first_plot" value="Counts" />
+            <output file="input1_counts.tab" name="output_tab" />
+            <output file="input1_min0_max10000_cluster0_ylimneg5_pos5_single_plot_counts.pdf" name="output_pdf" />
         </test>
         <test>
             <param name="inputs" value="input1.bam" ftype="bam"/>
