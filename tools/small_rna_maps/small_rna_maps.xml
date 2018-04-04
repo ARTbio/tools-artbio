@@ -62,7 +62,7 @@
           #else if $inputs_cond.normalize == "yes":
               #set $norm = ""
               #for $file in $inputs_cond.series
-                     #set $norm += "$inputs_cond.series.normalization"+' '
+                     #set $norm += str($file.normalization)+' '
               #end for
               #set $norm = $norm[:-1]
               '$norm'
