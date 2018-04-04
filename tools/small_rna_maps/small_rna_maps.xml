@@ -112,14 +112,14 @@
             <option value="global">Global read size distributions of aligned reads</option> 
         </param>
         <when value="two_plot">
-            <param name="first_plot" type="select" display="radio" label="Select the type of the first plot">
+            <param name="first_plot" type="select" display="radio" label="Select the type of the top plot">
                 <option value="Counts">Counts</option> 
                 <option value="Coverage">Coverage</option> 
                 <option value="Mean">Mean Sizes</option> 
                 <option value="Median">Median Sizes</option>
                 <option value="Size">Size Distributions</option>
             </param>
-            <param name="extra_plot" type="select" display="radio" label="Select the type of the second plot">
+            <param name="extra_plot" type="select" display="radio" label="Select the type of the bottom plot">
                 <option value="Counts">Counts</option> 
                 <option value="Coverage">Coverage</option> 
                 <option value="Mean">Mean Sizes</option> 
