@@ -128,6 +128,7 @@ plot_unit = function(df, method=args$first_plot_method, ...) {
         col=c("red","blue"),
         par.strip.text = list(cex=0.7),
         ...)
+        p=combineLimits(p)
     } else if (method != "Size") {
         p = xyplot(eval(as.name(method))~Coordinate|factor(Dataset, levels=unique(Dataset))+factor(Chromosome, levels=unique(Chromosome)),
         data=df,
