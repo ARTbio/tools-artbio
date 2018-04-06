@@ -135,7 +135,7 @@ plot_unit = function(df, method=args$first_plot_method, ...) {
         type='p',
         pch=19,
         cex=0.35,
-        scales= list(relation="free", x=list(rot=0, cex=0.7, axs="i", tck=0.5), y=list(tick.number=4, rot=90, cex=0.7)),
+        scales= list(relation="free", x=list(rot=0, cex=0.7, tck=0.5), y=list(tick.number=4, rot=90, cex=0.7)),
         xlab=NULL, main=NULL, ylab=NULL, ylim=ylimits,
         as.table=T,
         origin = 0,
