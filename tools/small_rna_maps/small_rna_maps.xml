@@ -170,30 +170,33 @@
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
             <param name="cluster" value="0" />
+            <param name="ylimits" value="yes" />
+            <param name="ymin" value="-5" />
+            <param name="ymax" value="5" />
             <param name="plots_options_selector" value="one_plot" />
             <param name="first_plot" value="Counts" />
-            <output file="input1_counts.tab" name="output_tab" />
-            <output file="input1_min0_max10000_cluster0_single_plot_counts.pdf" name="output_pdf" />
+            <output file="input1_counts_yminneg5_5.tab" name="output_tab" />
+            <output file="input1_yminneg5_5_single_plot_counts.pdf" name="output_pdf" />
         </test>
         <test>
             <param name="inputs" value="input1.bam" ftype="bam"/>
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
-            <param name="cluster" value="0" />
+            <param name="cluster" value="5" />
             <param name="plots_options_selector" value="one_plot" />
             <param name="first_plot" value="Coverage" />
-            <output file="input1_coverage.tab" name="output_tab" />
-            <output file="input1_min0_max10000_cluster0_single_plot_coverage.pdf" name="output_pdf" />
+            <output file="input1_coverage_cluster5.tab" name="output_tab" />
+            <output file="input1_cluster5_single_plot_coverage.pdf" name="output_pdf" />
         </test>
         <test>
             <param name="inputs" value="input1.bam" ftype="bam"/>
-            <param name="minsize" value="0" />
-            <param name="maxsize" value="10000" />
+            <param name="minsize" value="20" />
+            <param name="maxsize" value="30" />
             <param name="cluster" value="0" />
             <param name="plots_options_selector" value="one_plot" />
             <param name="first_plot" value="Size" />
-            <output file="input1_size.tab" name="output_tab" />
-            <output file="input1_min0_max10000_cluster0_single_plot_size.pdf" name="output_pdf" />
+            <output file="input1_min20_max30_size.tab" name="output_tab" />
+            <output file="input1_min20_max30_single_plot_size.pdf" name="output_pdf" />
         </test>
         <test>
             <param name="inputs" value="input1.bam" ftype="bam"/>
@@ -203,7 +206,7 @@
             <param name="plots_options_selector" value="one_plot" />
             <param name="first_plot" value="Mean" />
             <output file="input1_mean.tab" name="output_tab" />
-            <output file="input1_min0_max10000_cluster0_single_plot_mean.pdf" name="output_pdf" />
+            <output file="input1__single_plot_mean.pdf" name="output_pdf" />
         </test>
         <test>
             <param name="inputs" value="input1.bam" ftype="bam"/>
@@ -213,30 +216,7 @@
             <param name="plots_options_selector" value="one_plot" />
             <param name="first_plot" value="Median" />
             <output file="input1_median.tab" name="output_tab" />
-            <output file="input1_min0_max10000_cluster0_single_plot_median.pdf" name="output_pdf" />
-        </test>
-        <test>
-            <param name="inputs" value="input1.bam" ftype="bam"/>
-            <param name="minsize" value="0" />
-            <param name="maxsize" value="10000" />
-            <param name="cluster" value="0" />
-            <param name="ylimits" value="yes" />
-            <param name="ymin" value="-5" />
-            <param name="ymax" value="5" />
-            <param name="plots_options_selector" value="one_plot" />
-            <param name="first_plot" value="Counts" />
-            <output file="input1_counts.tab" name="output_tab" />
-            <output file="input1_min0_max10000_cluster0_ylimneg5_pos5_single_plot_counts.pdf" name="output_pdf" />
-        </test>
-        <test>
-            <param name="inputs" value="input1.bam" ftype="bam"/>
-            <param name="minsize" value="20" />
-            <param name="maxsize" value="30" />
-            <param name="cluster" value="0" />
-            <param name="plots_options_selector" value="one_plot" />
-            <param name="first_plot" value="Counts" />
-            <output file="input1_min20_max30_counts.tab" name="output_tab" />
-            <output file="input1_min20_max30_cluster0_single_plot_counts.pdf" name="output_pdf" />
+            <output file="input1_single_plot_median.pdf" name="output_pdf" />
         </test>
         <test>
             <param name="normalize" value="yes" />
@@ -252,9 +232,9 @@
             <param name="maxsize" value="10000" />
             <param name="cluster" value="0" />
             <param name="plots_options_selector" value="one_plot" />
-            <param name="first_plot" value="Coverage" />
-            <output file="input1_input2_norm_1_2_coverage.tab" name="output_tab" />
-            <output file="input1_input2_norm_1_2_single_plot_coverage.pdf" name="output_pdf" />
+            <param name="first_plot" value="Counts" />
+            <output file="input1_input2_norm_1_2_counts.tab" name="output_tab" />
+            <output file="input1_input2_norm_1_2_single_plot_counts.pdf" name="output_pdf" />
         </test>
         <test>
             <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
@@ -262,14 +242,14 @@
             <param name="maxsize" value="10000" />
             <param name="cluster" value="0" />
             <param name="ylimits" value="yes" />
-            <param name="ymin" value="20" />
-            <param name="ymax" value="25" />
+            <param name="ymin" value="-5" />
+            <param name="ymax" value="5" />
             <param name="plots_options_selector" value="two_plot" />
-            <param name="first_plot" value="Coverage" />
-            <param name="extra_plot" value="Mean" />
-            <output file="input1_input2_coverage.tab" name="output_tab" />
-            <output file="input1_input2_mean.tab" name="extra_output_tab" />
-            <output file="input1_input2_double_plot_coverage_mean_ylim20_25.pdf" name="output_pdf" />
+            <param name="first_plot" value="Counts" />
+            <param name="extra_plot" value="Size" />
+            <output file="input1_input2_counts.tab" name="output_tab" />
+            <output file="input1_input2_size.tab" name="extra_output_tab" />
+            <output file="input1_input2_double_plot_counts_size_ylimneg5_5.pdf" name="output_pdf" />
         </test>
         <test>
             <param name="inputs" value="input_single_chr.bam,input_single_chr.bam,input_single_chr.bam,input_single_chr.bam,input_single_chr.bam,input_single_chr.bam" ftype="bam"/>
@@ -304,18 +284,6 @@
             <param name="normalization" value="1 1" />
             <output file="size.tab" name="output_tab" />
             <output file="global_merge.pdf" name="output_pdf" />
-        </test>
-        <test>
-            <param name="inputs" value="input1.bam" ftype="bam"/>
-            <param name="minsize" value="20" />
-            <param name="maxsize" value="30" />
-            <param name="cluster" value="0" />
-            <param name="plots_options_selector" value="global" />
-            <param name="mergestrands" value="merge" />
-            <param name="first_plot" value="Size" />
-            <param name="normalization" value="1 1" />
-            <output file="size20-30.tab" name="output_tab" />
-            <output file="global_merge_20-30.pdf" name="output_pdf" />
         </test>
     </tests>
 <help>
