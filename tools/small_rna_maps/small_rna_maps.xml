@@ -1,4 +1,4 @@
-<tool id="small_rna_maps" name="small_rna_maps" version="2.5.0">
+<tool id="small_rna_maps" name="small_rna_maps" version="2.5.1">
   <description></description>
   <requirements>
         <requirement type="package" version="1.11.2=py27_0">numpy</requirement>
@@ -13,33 +13,18 @@
       <exit_code range="1:" level="fatal" description="Tool exception" />
   </stdio>
   <command detect_errors="exit_code"><![CDATA[
-      #if $inputs_cond.normalize == "no":
-          #for $file in $inputs_cond.inputs
-              samtools index '$file';
-          #end for
-          python '$__tool_directory__'/small_rna_maps.py 
-              --inputs
-          #for $file in $inputs_cond.inputs
-              '$file'
-          #end for
-              --sample_names
-          #for $sample in $inputs_cond.inputs
-              '$sample.name'
-          #end for
-      #else if $inputs_cond.normalize == "yes":
-          #for $file in $inputs_cond.series
+          #for $file in $series
               samtools index '$file.inputs';
           #end for
           python '$__tool_directory__'/small_rna_maps.py 
               --inputs
-          #for $file in $inputs_cond.series
+          #for $file in $series
               '$file.inputs'
           #end for
               --sample_names
-          #for $sample in $inputs_cond.series
+          #for $sample in $series
               '$sample.inputs.name'
           #end for
-      #end if
           --minsize $minsize
           --maxsize $maxsize
           --cluster $cluster
@@ -57,16 +42,12 @@
           --first_dataframe '$output_tab' 
           --extra_dataframe '$extra_output_tab'
           --normalization 
-          #if $inputs_cond.normalize == "no":
-              ''
-          #else if $inputs_cond.normalize == "yes":
-              #set $norm = ""
-              #for $file in $inputs_cond.series
-                     #set $norm += str($file.normalization)+' '
-              #end for
-              #set $norm = $norm[:-1]
-              '$norm'
-          #end if
+          #set $norm = ""
+          #for $file in $series
+                 #set $norm += str($file.normalization)+' '
+          #end for
+          #set $norm = $norm[:-1]
+          '$norm'
           #if $ylimits_cond.ylimits == "no":
               --ymin '' --ymax ''
           #else:
@@ -86,19 +67,12 @@
               --output_pdf '$output_pdf'
   ]]></command>
  <inputs>
-    <conditional name="inputs_cond">
-        <param name="normalize" type="boolean" label="Will there be normalization?" truevalue="yes" falsevalue="no" checked="false"/>
-        <when value="no">
-            <param name="inputs" type="data" format="bam" label="Select multiple alignments to parse" multiple="True"/>
-        </when>
-        <when value="yes">
-            <repeat name="series" title="Normalization factors" min="1">
-                <param name="inputs" type="data" format="bam" label="Select multiple alignments to parse" />
-                <param name="normalization" type="float" label="Enter size/normalization factors."
-                       help="e.g. '0.75' '1.23'" value="1.0"/>
-            </repeat>
-        </when>
-    </conditional>
+    <repeat name="series" title="Input" min="1">
+        <param name="inputs" type="data" format="bam" label="Select a single alignment file to parse" multiple="false"
+               help="If multiple files are selected for a single normalization the tool won't run as expected. To add another input click the button '+ insert input'" />
+        <param name="normalization" type="float" label="Enter a size/normalization factor."
+               help="Enter only one value e.g. '0.75' or '1.23'" value="1.0"/>
+    </repeat>
     <param name="minsize" type="integer" label="Minimal size of reads for inclusion in analysis"
            value="0" help="default value: 0" />
     <param name="maxsize" type="integer" label="Maximal size of reads for inclusion in analysis"
@@ -166,7 +140,10 @@
 
     <tests>
         <test>
-            <param name="inputs" value="input1.bam" ftype="bam"/>
+            <repeat name="series">
+                <param name="inputs" value="input1.bam" ftype="bam" />
+                <param name="normalization" value="1.0" />
+            </repeat>
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
             <param name="cluster" value="0" />
@@ -179,7 +156,10 @@
             <output file="input1_yminneg5_5_single_plot_counts.pdf" name="output_pdf" />
         </test>
         <test>
-            <param name="inputs" value="input1.bam" ftype="bam"/>
+            <repeat name="series">
+                <param name="inputs" value="input1.bam" ftype="bam" />
+                <param name="normalization" value="1.0" />
+            </repeat>
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
             <param name="cluster" value="5" />
@@ -189,7 +169,10 @@
             <output file="input1_cluster5_single_plot_coverage.pdf" name="output_pdf" />
         </test>
         <test>
-            <param name="inputs" value="input1.bam" ftype="bam"/>
+            <repeat name="series">
+                <param name="inputs" value="input1.bam" ftype="bam" />
+                <param name="normalization" value="1.0" />
+            </repeat>
             <param name="minsize" value="20" />
             <param name="maxsize" value="30" />
             <param name="cluster" value="0" />
@@ -199,7 +182,10 @@
             <output file="input1_min20_max30_single_plot_size.pdf" name="output_pdf" />
         </test>
         <test>
-            <param name="inputs" value="input1.bam" ftype="bam"/>
+            <repeat name="series">
+                <param name="inputs" value="input1.bam" ftype="bam" />
+                <param name="normalization" value="1.0" />
+            </repeat>
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
             <param name="cluster" value="0" />
@@ -209,7 +195,10 @@
             <output file="input1__single_plot_mean.pdf" name="output_pdf" />
         </test>
         <test>
-            <param name="inputs" value="input1.bam" ftype="bam"/>
+            <repeat name="series">
+                <param name="inputs" value="input1.bam" ftype="bam" />
+                <param name="normalization" value="1.0" />
+            </repeat>
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
             <param name="cluster" value="0" />
@@ -219,7 +208,6 @@
             <output file="input1_single_plot_median.pdf" name="output_pdf" />
         </test>
         <test>
-            <param name="normalize" value="yes" />
             <repeat name="series">
                 <param name="inputs" value="input1.bam" ftype="bam" />
                 <param name="normalization" value="1.0" />
@@ -237,7 +225,14 @@
             <output file="input1_input2_norm_1_2_single_plot_counts.pdf" name="output_pdf" />
         </test>
         <test>
-            <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
+            <repeat name="series">
+                <param name="inputs" value="input1.bam" ftype="bam" />
+                <param name="normalization" value="1.0" />
+            </repeat>
+            <repeat name="series">
+                <param name="inputs" value="input2.bam" ftype="bam" />
+                <param name="normalization" value="1.0" />
+            </repeat>
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
             <param name="cluster" value="0" />
@@ -252,7 +247,30 @@
             <output file="input1_input2_double_plot_counts_size_ylimneg5_5.pdf" name="output_pdf" />
         </test>
         <test>
-            <param name="inputs" value="input_single_chr.bam,input_single_chr.bam,input_single_chr.bam,input_single_chr.bam,input_single_chr.bam,input_single_chr.bam" ftype="bam"/>
+            <repeat name="series">
+                <param name="inputs" value="input_single_chr.bam" ftype="bam" />
+                <param name="normalization" value="1.0" />
+            </repeat>
+            <repeat name="series">
+                <param name="inputs" value="input_single_chr.bam" ftype="bam" />
+                <param name="normalization" value="1.0" />
+            </repeat>
+            <repeat name="series">
+                <param name="inputs" value="input_single_chr.bam" ftype="bam" />
+                <param name="normalization" value="1.0" />
+            </repeat>
+            <repeat name="series">
+                <param name="inputs" value="input_single_chr.bam" ftype="bam" />
+                <param name="normalization" value="1.0" />
+            </repeat>
+            <repeat name="series">
+                <param name="inputs" value="input_single_chr.bam" ftype="bam" />
+                <param name="normalization" value="1.0" />
+            </repeat>
+            <repeat name="series">
+                <param name="inputs" value="input_single_chr.bam" ftype="bam" />
+                <param name="normalization" value="1.0" />
+            </repeat>
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
             <param name="cluster" value="0" />
@@ -262,7 +280,14 @@
             <output file="input_single_chr_x_6_single_plot_coverage.pdf" name="output_pdf" />
         </test>
         <test>
-            <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
+            <repeat name="series">
+                <param name="inputs" value="input1.bam" ftype="bam" />
+                <param name="normalization" value="1.0" />
+            </repeat>
+            <repeat name="series">
+                <param name="inputs" value="input2.bam" ftype="bam" />
+                <param name="normalization" value="1.0" />
+            </repeat>
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
             <param name="cluster" value="0" />
@@ -274,7 +299,14 @@
             <output file="global_nomerge.pdf" name="output_pdf" />
         </test>
         <test>
-            <param name="inputs" value="input1.bam,input2.bam" ftype="bam"/>
+            <repeat name="series">
+                <param name="inputs" value="input1.bam" ftype="bam" />
+                <param name="normalization" value="1.0" />
+            </repeat>
+            <repeat name="series">
+                <param name="inputs" value="input2.bam" ftype="bam" />
+                <param name="normalization" value="1.0" />
+            </repeat>
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
             <param name="cluster" value="0" />
@@ -320,6 +352,8 @@ bam alignment files that must be
   - single-read
   - sorted
   - mapped to the same reference
+
+There must be a single normalization factor per bam file.
 
 **Output**
 
