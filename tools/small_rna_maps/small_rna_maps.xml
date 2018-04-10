@@ -357,7 +357,7 @@ There must be a single normalization factor per bam file.
 
 .. class:: warningmark
 
-Be sure to add inputs using the '+ Instert input' button and not the 'multiple datasets' list.
+Be sure to add inputs using the '+ Insert input' button and not the 'multiple datasets' list.
 The latter will plot your samples separately.
 
 **Output**
