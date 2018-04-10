@@ -294,7 +294,6 @@
             <param name="plots_options_selector" value="global" />
             <param name="mergestrands" value="nomerge" />
             <param name="first_plot" value="Size" />
-            <param name="normalization" value="1 1" />
             <output file="size.tab" name="output_tab" />
             <output file="global_nomerge.pdf" name="output_pdf" />
         </test>
@@ -313,7 +312,6 @@
             <param name="plots_options_selector" value="global" />
             <param name="mergestrands" value="merge" />
             <param name="first_plot" value="Size" />
-            <param name="normalization" value="1 1" />
             <output file="size.tab" name="output_tab" />
             <output file="global_merge.pdf" name="output_pdf" />
         </test>
