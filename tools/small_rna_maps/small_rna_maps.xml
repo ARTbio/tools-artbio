@@ -69,7 +69,7 @@
  <inputs>
     <repeat name="series" title="Input" min="1">
         <param name="inputs" type="data" format="bam" label="Select a single alignment file to parse" multiple="false"
-               help="If multiple files are selected for a single normalization the tool won't run as expected. To add another input click the button '+ insert input'" />
+               help="If 'multiple datasets' method is used, the same normalization factor will be applied to each dataset. Please refer to the help section for more information." />
         <param name="normalization" type="float" label="Enter a size/normalization factor."
                help="Enter only one value e.g. '0.75' or '1.23'" value="1.0"/>
     </repeat>
@@ -351,14 +351,12 @@ bam alignment files that must be
   - sorted
   - mapped to the same reference
 
-.. class:: warningmark
-
-There must be a single normalization factor per bam file.
+To plot 2 alignment files in the same PDF output the 'single dataset' method should be used.
 
 .. class:: warningmark
 
-Be sure to add inputs using the '+ Insert input' button and not the 'multiple datasets' list.
-The latter will plot your samples separately.
+If the 'multiple dataset' method is used the normalization factor will be applied to every file selected in the input list.
+Additionally a each file in the selected list will be plotted in a separate PDF file.
 
 **Output**
 
