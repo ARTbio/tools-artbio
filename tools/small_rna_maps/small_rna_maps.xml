@@ -356,7 +356,7 @@ To plot 2 alignment files in the same PDF output the 'single dataset' method sho
 .. class:: warningmark
 
 If the 'multiple dataset' method is used the normalization factor will be applied to every file selected in the input list.
-Additionally a each file in the selected list will be plotted in a separate PDF file.
+Additionally each file in the selected list will be plotted in a separate PDF file.
 
 **Output**
 
