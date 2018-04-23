@@ -1,4 +1,4 @@
-<tool id="mircounts" name="miRcounts" version="1.1.1">
+<tool id="mircounts" name="miRcounts" version="1.2.0">
     <description> Counts miRNA alignments from small RNA sequence data</description>
     <requirements>
         <requirement type="package" version="1.18">gnu-wget</requirement>
@@ -75,7 +75,8 @@
             </options>
         </param>
         <param name="mirbase_version" type="select" label="Choose miRbase version">
-            <option selected="true" value="CURRENT">Current</option>
+<!--            <option selected="true" value="22">22</option> # activate when gff parsing is fixed -->
+            <option value="21">21</option>
             <option value="20">20</option>
             <option value="19">19</option>
         </param>
@@ -135,7 +136,7 @@
             <param name="clip_sequence" value="TCGTATGCCGTCTTCTGCTTG"/>
             <param name="v" value="0"/>
             <param name="genomeKey" value="dme"/>
-            <param name="mirbase_version" value="CURRENT"/>
+            <param name="mirbase_version" value="21"/>
             <param name="input" value="input.unclipped.fastqsanger" ftype="fastqsanger"/>
             <param name="plottingOption" value="no"/>
             <param name="output_premir_counts" value="True"/>
@@ -153,7 +154,7 @@
             <param name="clip_sequence" value="TCGTATGCCGTCTTCTGCTTG"/>
             <param name="v" value="0"/>
             <param name="genomeKey" value="dme"/>
-            <param name="mirbase_version" value="CURRENT"/>
+            <param name="mirbase_version" value="21"/>
             <param name="input" value="input.unclipped.fastqsanger" ftype="fastqsanger"/>
             <param name="plottingOption" value="yes"/>
             <param name="display" value="relative"/>
@@ -170,7 +171,7 @@
             <param name="cutoption" value="no" />
             <param name="v" value="1"/>
             <param name="genomeKey" value="dme"/>
-            <param name="mirbase_version" value="CURRENT"/>
+            <param name="mirbase_version" value="21"/>
             <param name="clipped_input" value="input.clipped.fastqsanger" ftype="fastqsanger"/>
             <param name="plottingOption" value="yes"/>
             <param name="display" value="absolute"/>
@@ -195,7 +196,7 @@
 
 This tool uses a species-specific GFF3 file generated from mirBase_ to guide the parsing of a bam file of small RNA alignments.
 
-.. _mirBase: ftp://mirbase.org/pub/mirbase/CURRENT/genomes/
+.. _mirBase: ftp://mirbase.org/pub/mirbase/
 
 ------
 
