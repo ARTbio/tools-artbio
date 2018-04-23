@@ -1,5 +1,8 @@
 import argparse
+
 from datetime import datetime
+
+import re
 
 
 def Parser():
@@ -30,8 +33,12 @@ def load_gff_in_dict(gff_input_file):
     Note that the key of the primary dictionary is the ID
     '''
     gff_dict = {}
+    # see https://github.com/ARTbio/tools-artbio/issues/246
+    unwanted_pattern1 = re.compile('ID=MIMAT\d+_')
+    unwanted_pattern2 = re.compile('ID=MI\d+_')
     for line in open(gff_input_file, "r"):
-        if line[0] == "#":
+        if (line[0] == "#" or re.match(unwanted_pattern1, line) or
+                re.match(unwanted_pattern2, line)):
             continue
         gff_fields = line[:-1].split("\t")
         ID = gff_fields[8].split("ID=")[1].split(";")[0]
