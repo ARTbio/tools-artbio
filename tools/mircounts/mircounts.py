@@ -64,7 +64,7 @@ def get_mir_counts(bamfile, gff_file):
             gff_fields = line[:-1].split("\t")
             if gff_fields[2] == 'miRNA':
                 mir_name = gff_fields[0]
-                premir_name = gff_fields[8].split('=')[-1]
+                premir_name = gff_fields[8].split('Parent_mir_Name=')[-1]
                 mir_start = int(gff_fields[3])
                 mir_end = int(gff_fields[4])
                 # GFF is 1-based, pysam is 0-based.

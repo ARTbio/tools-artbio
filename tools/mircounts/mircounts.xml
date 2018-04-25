@@ -1,4 +1,4 @@
-<tool id="mircounts" name="miRcounts" version="1.2.4">
+<tool id="mircounts" name="miRcounts" version="1.2.5">
     <description> Counts miRNA alignments from small RNA sequence data</description>
     <requirements>
         <requirement type="package" version="1.18">gnu-wget</requirement>
@@ -75,7 +75,7 @@
             </options>
         </param>
         <param name="mirbase_version" type="select" label="Choose miRbase version">
-<!--            <option selected="true" value="22">22</option> # activate when gff parsing is fixed -->
+            <option selected="true" value="22">22</option>
             <option value="21">21</option>
             <option value="20">20</option>
             <option value="19">19</option>
@@ -128,6 +128,24 @@
         </data>
     </outputs>
     <tests>
+        <test>
+            <param name="cutoption" value="yes" />
+            <param name="min" value="15"/>
+            <param name="max" value="25"/>
+            <param name="Nmode" value="reject"/>
+            <param name="clip_sequence" value="TCGTATGCCGTCTTCTGCTTG"/>
+            <param name="v" value="0"/>
+            <param name="genomeKey" value="dme"/>
+            <param name="mirbase_version" value="22"/>
+            <param name="input" value="input.unclipped.fastqsanger" ftype="fastqsanger"/>
+            <param name="plottingOption" value="no"/>
+            <param name="output_premir_counts" value="True"/>
+            <param name="output_mir_counts" value="True"/>
+            <output name="output" file="unclipped.out.22.bam" ftype="bam"/>
+            <output name="gff3" file="translated_dme.22.gff3" ftype="gff3" lines_diff="22"/>
+            <output name="pre_mir_count_file" file="pre_mirs_unclipped_count.22.tab"/>
+            <output name="mir_count_file" file="mirs_unclipped_count.22.tab"/>
+        </test>
          <test>
             <param name="cutoption" value="yes" />
             <param name="min" value="15"/>
@@ -146,7 +164,7 @@
             <output name="pre_mir_count_file" file="pre_mirs_unclipped_count.tab"/>
             <output name="mir_count_file" file="mirs_unclipped_count.tab"/>
         </test>
-       <test>
+        <test>
             <param name="cutoption" value="yes" />
             <param name="min" value="15"/>
             <param name="max" value="25"/>
