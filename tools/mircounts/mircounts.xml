@@ -1,4 +1,4 @@
-<tool id="mircounts" name="miRcounts" version="1.1.1">
+<tool id="mircounts" name="miRcounts" version="1.2.5">
     <description> Counts miRNA alignments from small RNA sequence data</description>
     <requirements>
         <requirement type="package" version="1.18">gnu-wget</requirement>
@@ -75,7 +75,8 @@
             </options>
         </param>
         <param name="mirbase_version" type="select" label="Choose miRbase version">
-            <option selected="true" value="CURRENT">Current</option>
+            <option selected="true" value="22">22</option>
+            <option value="21">21</option>
             <option value="20">20</option>
             <option value="19">19</option>
         </param>
@@ -127,6 +128,24 @@
         </data>
     </outputs>
     <tests>
+        <test>
+            <param name="cutoption" value="yes" />
+            <param name="min" value="15"/>
+            <param name="max" value="25"/>
+            <param name="Nmode" value="reject"/>
+            <param name="clip_sequence" value="TCGTATGCCGTCTTCTGCTTG"/>
+            <param name="v" value="0"/>
+            <param name="genomeKey" value="dme"/>
+            <param name="mirbase_version" value="22"/>
+            <param name="input" value="input.unclipped.fastqsanger" ftype="fastqsanger"/>
+            <param name="plottingOption" value="no"/>
+            <param name="output_premir_counts" value="True"/>
+            <param name="output_mir_counts" value="True"/>
+            <output name="output" file="unclipped.out.22.bam" ftype="bam"/>
+            <output name="gff3" file="translated_dme.22.gff3" ftype="gff3" lines_diff="22"/>
+            <output name="pre_mir_count_file" file="pre_mirs_unclipped_count.22.tab"/>
+            <output name="mir_count_file" file="mirs_unclipped_count.22.tab"/>
+        </test>
          <test>
             <param name="cutoption" value="yes" />
             <param name="min" value="15"/>
@@ -135,7 +154,7 @@
             <param name="clip_sequence" value="TCGTATGCCGTCTTCTGCTTG"/>
             <param name="v" value="0"/>
             <param name="genomeKey" value="dme"/>
-            <param name="mirbase_version" value="CURRENT"/>
+            <param name="mirbase_version" value="21"/>
             <param name="input" value="input.unclipped.fastqsanger" ftype="fastqsanger"/>
             <param name="plottingOption" value="no"/>
             <param name="output_premir_counts" value="True"/>
@@ -145,7 +164,7 @@
             <output name="pre_mir_count_file" file="pre_mirs_unclipped_count.tab"/>
             <output name="mir_count_file" file="mirs_unclipped_count.tab"/>
         </test>
-       <test>
+        <test>
             <param name="cutoption" value="yes" />
             <param name="min" value="15"/>
             <param name="max" value="25"/>
@@ -153,7 +172,7 @@
             <param name="clip_sequence" value="TCGTATGCCGTCTTCTGCTTG"/>
             <param name="v" value="0"/>
             <param name="genomeKey" value="dme"/>
-            <param name="mirbase_version" value="CURRENT"/>
+            <param name="mirbase_version" value="21"/>
             <param name="input" value="input.unclipped.fastqsanger" ftype="fastqsanger"/>
             <param name="plottingOption" value="yes"/>
             <param name="display" value="relative"/>
@@ -170,7 +189,7 @@
             <param name="cutoption" value="no" />
             <param name="v" value="1"/>
             <param name="genomeKey" value="dme"/>
-            <param name="mirbase_version" value="CURRENT"/>
+            <param name="mirbase_version" value="21"/>
             <param name="clipped_input" value="input.clipped.fastqsanger" ftype="fastqsanger"/>
             <param name="plottingOption" value="yes"/>
             <param name="display" value="absolute"/>
@@ -195,7 +214,7 @@
 
 This tool uses a species-specific GFF3 file generated from mirBase_ to guide the parsing of a bam file of small RNA alignments.
 
-.. _mirBase: ftp://mirbase.org/pub/mirbase/CURRENT/genomes/
+.. _mirBase: ftp://mirbase.org/pub/mirbase/
 
 ------
 
