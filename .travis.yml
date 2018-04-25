@@ -8,9 +8,7 @@ jobs:
   include:
     - stage: lint
       addons: {}
-      before_install:
-        # try to fix problem of repository 'http://ppa.launchpad.net/couchdb/stable/ubuntu trusty Release' is not signed
-        - sudo apt-get update -y
+      before_install: skip
       install:
         - pip install flake8 flake8-import-order planemo
         - planemo --version
