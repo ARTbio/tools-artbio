@@ -25,8 +25,9 @@ jobs:
                                 --changed_in_commit_range "$TRAVIS_COMMIT_RANGE" \
                                 --output changed_repositories.list
         - cat changed_repositories.list
-      script: . $TRAVIS_BUILD_DIR/lint.sh
-
+      script:
+        - . $TRAVIS_BUILD_DIR/lint.sh
+        - cat changed_repositories.list
     - stage: test
       env: CHUNK=0
 
