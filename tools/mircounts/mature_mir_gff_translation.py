@@ -5,10 +5,14 @@ from datetime import datetime
 def Parser():
     the_parser = argparse.ArgumentParser()
     the_parser.add_argument(
-        '--input', action="store", type=str, help="input miRBase GFF3 file")
+        '--gff_path', action="store", type=str,
+        help="path to miRBase GFF3 file")
     the_parser.add_argument(
         '--output', action="store", type=str,
         help="output GFF3 file with converted mature mir coordinates")
+    the_parser.add_argument(
+        '--basename', action="store", type=str,
+        help="basename of the parsed gff file returned")
     args = the_parser.parse_args()
     return args
 
@@ -95,10 +99,10 @@ def convert_and_print_gff(gff_input_file, output):
         output.write('\n')
 
 
-def main(infile, outfile):
-    convert_and_print_gff(infile, outfile)
+def main(gff_path, outfile):
+    convert_and_print_gff(gff_path, outfile)
 
 
 if __name__ == "__main__":
     args = Parser()
-    main(args.input, args.output)
+    main(args.gff_path, args.output)
