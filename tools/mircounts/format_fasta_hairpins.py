@@ -28,10 +28,10 @@ def get_fasta_dic(gzipfile):
         for line in f:
             line = line.decode('utf-8').strip('\n')
             if (line[0] == ">"):
-                ''' dump the sequence of the previous item'''
+                # dump the sequence of the previous item
                 if current_item and stringlist:
                     item_dic[current_item] = "".join(stringlist)
-                ''' take first word of item '''
+                # take first word of item '''
                 current_item = line[1:].split()[0]
                 stringlist = []
             else:
