@@ -31,9 +31,14 @@ def merge_xml_sections(input_file, output_file):
             if child.attrib == originchild.attrib:
                 for item in originchild.iter("tool"):
                     if 'labels' in item.attrib:
-                        labels = item.attrib['labels']
+                        tool = ET.SubElement(child, "tool",
+                                             file=item.attrib['file'],
+                                             guid=item.attrib['guid'],
+                                             labels=item.attrib['labels'])
                     else:
-                        labels = ""
+                        tool = ET.SubElement(child, "tool",
+                                             file=item.attrib['file'],
+                                             guid=item.attrib['guid'])
                     tool = ET.SubElement(child, "tool",
                                          file=item.attrib['file'],
                                          guid=item.attrib['guid'],
