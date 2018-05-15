@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-# Example usage: python pack_shed_tool_conf.py
+# Example usage: python shed_tool_conf_xml_cleaner.py
 #     -i shed_tool_conf.xml
-#     -o compact_shed_tool_conf.xml
+#     -o shed_tool_conf.xml
 
 from xml.dom import minidom
 import xml.etree.ElementTree as ET
@@ -11,6 +11,7 @@ from argparse import ArgumentParser
 def merge_xml_sections(input_file, output_file):
     section_counter = 0
     initial_section_number = 0
+    tool_counter = 0
     tree = ET.parse(input_file)
     root = tree.getroot()
     children = root.getchildren()
@@ -30,6 +31,7 @@ def merge_xml_sections(input_file, output_file):
         for originchild in root.iter('section'):
             if child.attrib == originchild.attrib:
                 for item in originchild.iter("tool"):
+                    tool_counter += 1
                     if 'labels' in item.attrib:
                         tool = ET.SubElement(child, "tool",
                                              file=item.attrib['file'],
@@ -48,7 +50,14 @@ def merge_xml_sections(input_file, output_file):
                                  indent="   ")
     with open(output_file, "w") as f:
         f.write(xmlstr)
-    return initial_section_number, section_counter
+    return initial_section_number, section_counter, tool_counter
+
+
+def xmlbackup(infile):
+    with open(infile, 'r') as f:
+        with open(infile + '.bak', 'w') as out:
+            out.write(f.read())
+            print("- Original xml file was saved as .bak")
 
 
 def _parse_cli_options():
@@ -72,9 +81,11 @@ def __main__():
     args = _parse_cli_options()
     input_xml = args.input_xml
     output_xml = args.output_xml
-    Init_section, Final_sections = merge_xml_sections(input_xml, output_xml)
-    print("%s section tool_shed_conf.xml was compacted in %s sections" %
-          (Init_section, Final_sections))
+    xmlbackup(input_xml)
+    Init_section, Final_sections, tools = merge_xml_sections(input_xml,
+                                                             output_xml)
+    print("- %s tools in %s sections were re-packed in %s sections" %
+          (tools, Init_section, Final_sections))
 
 
 if __name__ == "__main__":
