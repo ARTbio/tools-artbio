@@ -39,10 +39,6 @@ def merge_xml_sections(input_file, output_file):
                         tool = ET.SubElement(child, "tool",
                                              file=item.attrib['file'],
                                              guid=item.attrib['guid'])
-                    tool = ET.SubElement(child, "tool",
-                                         file=item.attrib['file'],
-                                         guid=item.attrib['guid'],
-                                         labels=labels)
                     for subitem in item.getchildren():
                         buffer = ET.SubElement(tool, subitem.tag)
                         buffer.text = subitem.text
