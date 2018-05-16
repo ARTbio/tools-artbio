@@ -3,7 +3,7 @@ owner: artbio
 name: justgzip
 description: Unix gzip
 long_description: |
-  Returns the output of the unix gzip command.
+  Returns the compressed version of a fastq file using the unix gzip command.
 categories:
   - Convert Formats
 homepage_url: http://artbio.fr
