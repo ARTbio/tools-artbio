@@ -1,0 +1,12 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: justgzip
+description: Compress fastq sequence files
+long_description: |
+  Returns the compressed version of a fastq file using the unix gzip command.
+categories:
+  - Convert Formats
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/justgzip
+toolshed:
+  - https://toolshed.g2.bx.psu.edu/
