@@ -3,15 +3,7 @@
   <stdio>
       <exit_code range="1:" level="fatal" description="Tool exception" />
   </stdio>
-  <command detect_errors="exit_code"><![CDATA[
-#if $input1.is_of_type('fastqsanger'):
-#set $outputtype= 'fastqsanger.gz'
-#else if $input1.is_of_type('fastqillumina'):
-#set $outputtype= 'fastqillumina.gz'
-#else:
-#set $outputtype= 'fastq.gz'
-#end if
-     
+  <command detect_errors="exit_code"><![CDATA[  
 gzip -ck '${input1}' >  $output
   ]]></command>
   <inputs>
@@ -50,7 +42,7 @@ gzip -ck '${input1}' >  $output
 
 **What it does**
 
-Just **gzip** an input file (only for fastq files).
+Just **gzip** an input file (only for fastq files). 
 
   </help>
 </tool>
