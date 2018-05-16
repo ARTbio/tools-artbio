@@ -6,6 +6,7 @@
 from xml.dom import minidom
 import xml.etree.ElementTree as ET
 from argparse import ArgumentParser
+from argparse import RawTextHelpFormatter
 
 
 def merge_xml_sections(input_file, output_file):
@@ -64,16 +65,30 @@ def _parse_cli_options():
     """
     Parse command line options, returning `parse_args` from `ArgumentParser`.
     """
-    parser = ArgumentParser(usage=" python %(prog)s <options>")
+    parser = ArgumentParser(
+        formatter_class=RawTextHelpFormatter,
+        description='shed_tool_conf.xml configuration file becomes '
+                    'complex over time and tool installations.\n'
+                    'Thus, <section> with same attributes id and name \n'
+                    '(identity of submenus) are sparse '
+                    'in  shed_tool_conf.xml,\nwhich complicate the management '
+                    'of submenus in the Galaxy tool panel.\n'
+                    'This tool defragment the <section> tags.\n'
+                    'After cleaning, each submenu in the Galaxy tool panel '
+                    'have a single <section>\n in shed_tool_conf.xml whose '
+                    '<tool> children correspond to the tools hosted\n'
+                    'in this submenu.\n'
+                    'Note that the tools also backup the original '
+                    'shed_tool_conf.xml before xml manipulation.',
+        usage=" python %(prog)s <options>")
     parser.add_argument("-i", "--input",
                         dest="input_xml",
                         required=True,
-                        help="shed_tool_conf.xml or migrated_tool_conf.xml \
-                        that needs to be compacted .")
+                        help="shed_tool_conf.xml file to clean")
     parser.add_argument("-o", "--output_xml",
                         required=True,
                         dest="output_xml",
-                        help="Output file for compacted xml")
+                        help="Output file for cleaned xml")
     return parser.parse_args()
 
 
