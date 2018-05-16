@@ -42,8 +42,8 @@ gzip -ck '${input1}' >  $output
 
 **What it does**
 
-Just **gzip** an input file (only for fastq files). 
-
+Just **gzip** fastq, fastqillumina and fastqsanger datasets.
+    
   </help>
 </tool>
 
