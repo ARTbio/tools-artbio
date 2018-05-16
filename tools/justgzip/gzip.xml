@@ -16,7 +16,7 @@ gzip -ck '${input1}' >  $output
   </inputs>
   <outputs>
 
-   <data name="output" format="fastq.gz" label="gzip $input1.name " >
+   <data name="output" format="fastq.gz" label="$input1.name " >
    <change_format>
        <when input="datatype" value="sanger" format="fastqsanger.gz" />
        <when input="datatype" value="illumina" format="fastqillumina.gz" />
