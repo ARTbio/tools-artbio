@@ -1,7 +1,7 @@
 # .shed.yml supporting automatic pushes.
 owner: artbio
 name: justgzip
-description: Unix gzip
+description: Compress fastq sequence files
 long_description: |
   Returns the compressed version of a fastq file using the unix gzip command.
 categories:
