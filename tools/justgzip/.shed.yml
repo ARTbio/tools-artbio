@@ -1,0 +1,12 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: justgzip
+description: Unix gzip
+long_description: |
+  Returns the output of the unix gzip command.
+categories:
+  - Convert Formats
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/justgzip
+toolshed:
+  - https://toolshed.g2.bx.psu.edu/

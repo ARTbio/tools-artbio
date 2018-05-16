@@ -1,0 +1,57 @@
+<tool id="justgzip" name="Compress files" version="0.1.0">
+  <description></description>
+  <stdio>
+      <exit_code range="1:" level="fatal" description="Tool exception" />
+  </stdio>
+  <command detect_errors="exit_code"><![CDATA[
+#if $input1.is_of_type('fastqsanger'):
+#set $outputtype= 'fastqsanger.gz'
+#else if $input1.is_of_type('fastqillumina'):
+#set $outputtype= 'fastqillumina.gz'
+#else:
+#set $outputtype= 'fastq.gz'
+#end if
+     
+gzip -ck '${input1}' >  $output
+  ]]></command>
+  <inputs>
+      <param format="fastq" name="input1" type="data" label="Input file" help="file to compress" />
+      <param name="datatype" type="select" label="Input file datatype" help="Input file datatype" >
+          <option value="sanger" >fastqsanger </option>
+          <option value="illumina" >fastqillumina </option>
+          <option value="fastq" selected="true" >fastq </option>
+      </param>
+  </inputs>
+  <outputs>
+
+   <data name="output" format="fastq.gz" label="gzip $input1.name " >
+   <change_format>
+       <when input="datatype" value="sanger" format="fastqsanger.gz" />
+       <when input="datatype" value="illumina" format="fastqillumina.gz" />
+   </change_format>
+   </data>
+  </outputs>
+  <tests>
+      <test>
+          <param name="input1" value="file1" ftype="fastq" />
+          <param name="datatype" value="fastq" />
+          <output name="output" file="file1.gz" decompress="True" ftype="fastq.gz"/>
+      </test>
+      <test>
+          <param name="input1" value="file1" ftype="fastqsanger" />
+          <param name="datatype" value="sanger" />
+          <output name="output" file="file1.gz" decompress="True" ftype="fastqsanger.gz" />
+      </test>   
+
+  </tests>
+  <help>
+
+.. class:: infomark
+
+**What it does**
+
+Just **gzip** an input file (only for fastq files).
+
+  </help>
+</tool>
+
