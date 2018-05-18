@@ -1,49 +1,57 @@
-<tool id="justgzip" name="Gzip sequence datasets" version="0.1.0">
-  <description></description>
-  <stdio>
-      <exit_code range="1:" level="fatal" description="Tool exception" />
-  </stdio>
-  <command detect_errors="exit_code"><![CDATA[  
-gzip -ck '${input1}' >  $output
-  ]]></command>
-  <inputs>
-      <param format="fastq" name="input1" type="data" label="Input file" help="file to compress" />
-      <param name="datatype" type="select" label="Input file datatype" help="Input file datatype" >
-          <option value="sanger" >fastqsanger </option>
-          <option value="illumina" >fastqillumina </option>
-          <option value="fastq" selected="true" >fastq </option>
-      </param>
-  </inputs>
-  <outputs>
+<tool id="justgzip" name="Gzip sequence datasets" version="0.2.0">
+    <description></description>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Tool exception" />
+    </stdio>
+    <command detect_errors="exit_code"><![CDATA[
+        #if $input1.ext == "fastq"
+            gzip -c '${input1}' > $output1
+        #else if $input1.ext == "fastqsanger"
+            gzip -c '${input1}' > $output2
+        #else if $input1.ext == "fastqillumina"
+            gzip -c '${input1}' > $output3
+        #else if $input1.ext == "fastqsolexa"
+            gzip -c '${input1}' > $output4
+        #end if
+        ]]>
+    </command>
+    <inputs>
+        <param format="fastq" name="input1" type="data" label="Input file" help="Choose the file to compress" />
+    </inputs>
+    <outputs>
+        <data name="output1" format="fastq.gz" label="$input1.name" >
+            <filter>input1.ext == "fastq"</filter>
+        </data>
+        <data name="output2" format="fastqsanger.gz" label="$input1.name" >
+            <filter>input1.ext == "fastqsanger"</filter>
+        </data>
+        <data name="output3" format="fastqillumina.gz" label="$input1.name" >
+            <filter>input1.ext == "fastqillumina"</filter>
+        </data>
+        <data name="output4" format="fastqsolexa.gz" label="$input1.name" >
+            <filter>input1.ext == "fastqsolexa"</filter>
+        </data>
+    </outputs>
+    <tests>
+        <test>
+            <param name="input1" value="file1" ftype="fastq" />
+            <output name="output" file="file1.gz" decompress="True" ftype="fastq.gz"/>
+        </test>
+        <test>
+            <param name="input1" value="file1" ftype="fastqsanger" />
+            <output name="output" file="file1.gz" decompress="True" ftype="fastqsanger.gz" />
+        </test>   
+    </tests>
+    <help>
 
-   <data name="output" format="fastq.gz" label="$input1.name " >
-   <change_format>
-       <when input="datatype" value="sanger" format="fastqsanger.gz" />
-       <when input="datatype" value="illumina" format="fastqillumina.gz" />
-   </change_format>
-   </data>
-  </outputs>
-  <tests>
-      <test>
-          <param name="input1" value="file1" ftype="fastq" />
-          <param name="datatype" value="fastq" />
-          <output name="output" file="file1.gz" decompress="True" ftype="fastq.gz"/>
-      </test>
-      <test>
-          <param name="input1" value="file1" ftype="fastqsanger" />
-          <param name="datatype" value="sanger" />
-          <output name="output" file="file1.gz" decompress="True" ftype="fastqsanger.gz" />
-      </test>   
+        .. class:: infomark
 
-  </tests>
-  <help>
+        **What it does**
 
-.. class:: infomark
+        Just **gzip** fastq, fastqillumina, fastqsanger, and fastqsolexa datasets.
 
-**What it does**
-
-Just **gzip** fastq, fastqillumina and fastqsanger datasets.
-    
-  </help>
+    </help>
 </tool>
+
+
 
