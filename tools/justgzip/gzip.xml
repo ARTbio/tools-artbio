@@ -1,10 +1,10 @@
-<tool id="justgzip" name="Gzip sequence datasets" version="0.1.0">
+<tool id="justgzip" name="Gzip sequence datasets" version="0.1.1">
   <description></description>
   <stdio>
       <exit_code range="1:" level="fatal" description="Tool exception" />
   </stdio>
   <command detect_errors="exit_code"><![CDATA[  
-gzip -ck '${input1}' >  $output
+gzip -c '${input1}' >  $output
   ]]></command>
   <inputs>
       <param format="fastq" name="input1" type="data" label="Input file" help="file to compress" />
@@ -16,7 +16,7 @@ gzip -ck '${input1}' >  $output
   </inputs>
   <outputs>
 
-   <data name="output" format="fastq.gz" label="$input1.name " >
+   <data name="output" format="fastq.gz" label="${input1.name}.gz" >
    <change_format>
        <when input="datatype" value="sanger" format="fastqsanger.gz" />
        <when input="datatype" value="illumina" format="fastqillumina.gz" />
