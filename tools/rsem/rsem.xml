@@ -356,6 +356,34 @@
         </assert_contents>
       </output>
     </test>
+   <test>
+      <!-- test fastqsanger paired end -->
+      <param name="select_job" value="index"/>
+      <param name="ref_type" value="genomic"/>
+      <param name="reference_fasta_file" value="ref.fasta" ftype="fasta"/>
+      <param name="gtf" value="ref.gtf" ftype="gtf"/>
+      <param name="reference_name" value="ref"/>
+      <param name="select" value="Yes"/>
+      <param name="sample" value="rsem_sample"/>
+      <param name="refSrc" value="self"/>
+      <param name="format" value="fastq"/>
+      <param name="matepair" value="paired"/>
+      <param name="fastq1" value="test2_forward.fastq" ftype="fastqsanger"/>
+      <param name="fastq2" value="test2_reverse.fastq" ftype="fastqsanger"/>
+      <param name="result_bams" value="none" />
+      <output name="reference_file">
+        <assert_contents>
+          <has_text text="ref" />
+        </assert_contents>
+      </output>
+      <output name="gene_abundances" value="de_gene_abundances.tab"/> 
+      <output name="isoform_abundances" value="de_isoform_abundances.tab" /> 
+      <output name="log"> 
+        <assert_contents>
+          <has_text text="Expression Results are written" />
+        </assert_contents>
+      </output>
+    </test>
     <test>
       <param name="select_job" value="index"/>
       <param name="ref_type" value="genomic"/>
