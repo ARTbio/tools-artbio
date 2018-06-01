@@ -378,8 +378,8 @@
       </output>
       <output name="gene_abundances" value="paired_refgen_gene_abundances.bt.tab"/> 
       <output name="isoform_abundances" value="paired_refgen_isoform_abundances.bt.tab" />
-      <output name="transcript_sorted_bam" value="paired_refgen_transcripts.bt.bam" ftype="bam"/>
-      <output name="genome_sorted_bam" value="paired_refgen_isoform_abundances.bt.bam" ftype="bam"/>
+      <output name="transcript_sorted_bam" value="paired_refgen_transcripts.bt.bam" ftype="bam" compare="sim_size" delta="200" />
+      <output name="genome_sorted_bam" value="paired_refgen_isoform_abundances.bt.bam" ftype="bam"compare="sim_size" delta="200" />
       <output name="log"> 
         <assert_contents>
           <has_text text="Expression Results are written" />
@@ -408,7 +408,7 @@
       </output>
       <output name="gene_abundances" value="paired_reftrans_gene_abundances.bt.tab"/> 
       <output name="isoform_abundances" value="paired_reftrans_isoform_abundances.bt.tab" />
-      <output name="transcript_sorted_bam" value="paired_reftrans_transcripts.bt.bam" ftype="bam"/>
+      <output name="transcript_sorted_bam" value="paired_reftrans_transcripts.bt.bam" ftype="bam" compare="sim_size" delta="200" />
       <output name="log"> 
         <assert_contents>
           <has_text text="Expression Results are written" />
