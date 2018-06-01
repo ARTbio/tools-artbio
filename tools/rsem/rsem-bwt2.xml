@@ -58,7 +58,7 @@
         #if $run_rsem.input.fastq.fastq1.is_of_type('fastq.gz') or $run_rsem.input.fastq.fastq1.is_of_type('fastqsanger.gz'):
           gunzip < '$run_rsem.input.fastq.fastq1' > uncomp_pair1.fastq &&
           gunzip < '$run_rsem.input.fastq.fastq2' > uncomp_pair2.fastq &&
-        #elif $run_rsem.input.fastq.singlefastq.is_of_type('fastq') or $run_rsem.input.fastq.singlefastq.is_of_type('fastqsanger'):
+        #elif $run_rsem.input.fastq.fastq1.is_of_type('fastq') or $run_rsem.input.fastq.fastq1.is_of_type('fastqsanger'):
           ln -f -s '$run_rsem.input.fastq.fastq1' 'uncomp_pair1.fastq' &&
           ln -f -s '$run_rsem.input.fastq.fastq2' 'uncomp_pair2.fastq' &&
         #end if
@@ -349,6 +349,7 @@
         </assert_contents>
       </output>
     </test>
+      <!-- ungzipped paired-end fastqsanger -->
     <test>
       <param name="select_job" value="index"/>
       <param name="ref_type" value="genomic"/>
@@ -372,19 +373,6 @@
       <output name="log">
         <assert_contents>
           <has_text text="Expression Results are written" />
-        </assert_contents>
-      </output>
-    </test>
-    <test>
-      <param name="select_job" value="index"/>
-      <param name="ref_type" value="genomic"/>
-      <param name="reference_fasta_file" value="ref.fasta" ftype="fasta"/>
-      <param name="gtf" value="ref.gtf" ftype="gtf"/>
-      <param name="reference_name" value="ref"/>
-      <param name="select" value="No"/>
-      <output name="reference_file">
-        <assert_contents>
-          <has_text text="ref" />
         </assert_contents>
       </output>
     </test>
