@@ -170,7 +170,7 @@
       </param>
       <when value="index">
         <conditional name="self_reference">
-          <param name="ref_type" type="select" label="Reference transcript source">
+          <param name="ref_type" type="select" label="Reference source">
             <option value="transcripts">transcript fasta</option>
             <option value="genomic">reference genome and gtf</option>
           </param>
@@ -235,7 +235,7 @@
         <conditional name="reference">
           <param name="refSrc" type="select" label="RSEM Reference Source">
             <option value="history">From your history</option>
-            <option value="self">Prepare RSEM Reference with this tool</option>
+            <option value="self">RSEM Reference prepared with this tool</option>
           </param>
           <when value="history">
             <param name="rsem_ref" type="data" format="rsem_ref" label="RSEM reference" />
@@ -333,23 +333,23 @@
    <test>
       <param name="select_job" value="index"/>
       <param name="ref_type" value="genomic"/>
-      <param name="reference_fasta_file" value="ref.fasta" ftype="fasta"/>
-      <param name="gtf" value="ref.gtf" ftype="gtf"/>
-      <param name="reference_name" value="ref"/>
+      <param name="reference_fasta_file" value="eboVir3.fa" ftype="fasta"/>
+      <param name="gtf" value="eboVir3.gtf" ftype="gtf"/>
+      <param name="reference_name" value="ebola"/>
       <param name="select" value="Yes"/>
-      <param name="sample" value="rsem_sample"/>
+      <param name="sample" value="ebola_RNAseq"/>
       <param name="refSrc" value="self"/>
       <param name="format" value="fastq"/>
       <param name="matepair" value="single"/>
-      <param name="singlefastq" value="test.fq" ftype="fastqsanger"/>
+      <param name="singlefastq" value="Ebola_forward.fastqsanger" ftype="fastqsanger"/>
       <param name="result_bams" value="none"/>
       <output name="reference_file">
         <assert_contents>
-          <has_text text="ref" />
+          <has_text text="ebola" />
         </assert_contents>
       </output>
-      <output name="gene_abundances" value="gene_abundances.tab"/> 
-      <output name="isoform_abundances" value="isoform_abundances.tab" /> 
+      <output name="gene_abundances" value="refgen_gene_abundances.bt.tab"/> 
+      <output name="isoform_abundances" value="refgen_isoform_abundances.bt.tab" /> 
       <output name="log"> 
         <assert_contents>
           <has_text text="Expression Results are written" />
@@ -357,27 +357,58 @@
       </output>
     </test>
    <test>
-      <!-- test fastqsanger paired end -->
+      <!-- test fastqsanger paired end Ebola genome-->
       <param name="select_job" value="index"/>
       <param name="ref_type" value="genomic"/>
-      <param name="reference_fasta_file" value="ref.fasta" ftype="fasta"/>
-      <param name="gtf" value="ref.gtf" ftype="gtf"/>
-      <param name="reference_name" value="ref"/>
+      <param name="reference_fasta_file" value="eboVir3.fa" ftype="fasta"/>
+      <param name="gtf" value="eboVir3.gtf" ftype="gtf"/>
+      <param name="reference_name" value="ebola"/>
       <param name="select" value="Yes"/>
       <param name="sample" value="rsem_sample"/>
       <param name="refSrc" value="self"/>
       <param name="format" value="fastq"/>
       <param name="matepair" value="paired"/>
-      <param name="fastq1" value="test2_forward.fastq" ftype="fastqsanger"/>
-      <param name="fastq2" value="test2_reverse.fastq" ftype="fastqsanger"/>
-      <param name="result_bams" value="none" />
+      <param name="fastq1" value="Ebola_forward.fastqsanger.gz" ftype="fastqsanger"/>
+      <param name="fastq2" value="Ebola_reverse.fastqsanger.gz" ftype="fastqsanger"/>
+      <param name="result_bams" value="both" />
       <output name="reference_file">
         <assert_contents>
-          <has_text text="ref" />
+          <has_text text="ebola" />
         </assert_contents>
       </output>
-      <output name="gene_abundances" value="de_gene_abundances.tab"/> 
-      <output name="isoform_abundances" value="de_isoform_abundances.tab" /> 
+      <output name="gene_abundances" value="paired_refgen_gene_abundances.bt.tab"/> 
+      <output name="isoform_abundances" value="paired_refgen_isoform_abundances.bt.tab" />
+      <output name="transcript_sorted_bam" value="paired_refgen_transcripts.bt.bam" ftype="bam" lines_diff="2" />
+      <output name="genome_sorted_bam" value="paired_refgen_isoform_abundances.bt.bam" ftype="bam" lines_diff="2" />
+      <output name="log"> 
+        <assert_contents>
+          <has_text text="Expression Results are written" />
+        </assert_contents>
+      </output>
+    </test>
+   <test>
+      <!-- test fastqsanger paired end Ebola transcripts -->
+      <param name="select_job" value="index"/>
+      <param name="ref_type" value="transcripts"/>
+      <param name="reference_fasta_file" value="Ebola_transcripts.fa" ftype="fasta"/>
+      <param name="transcript_to_gene_map" value="ebola_gene_transcript_table.txt" ftype="tabular"/>
+      <param name="reference_name" value="ebola"/>
+      <param name="select" value="Yes"/>
+      <param name="sample" value="rsem_sample"/>
+      <param name="refSrc" value="self"/>
+      <param name="format" value="fastq"/>
+      <param name="matepair" value="paired"/>
+      <param name="fastq1" value="Ebola_forward.fastqsanger.gz" ftype="fastqsanger"/>
+      <param name="fastq2" value="Ebola_reverse.fastqsanger.gz" ftype="fastqsanger"/>
+      <param name="result_bams" value="default" />
+      <output name="reference_file">
+        <assert_contents>
+          <has_text text="ebola" />
+        </assert_contents>
+      </output>
+      <output name="gene_abundances" value="paired_reftrans_gene_abundances.bt.tab"/> 
+      <output name="isoform_abundances" value="paired_reftrans_isoform_abundances.bt.tab" />
+      <output name="transcript_sorted_bam" value="paired_reftrans_transcripts.bt.bam" ftype="bam" lines_diff="2" />
       <output name="log"> 
         <assert_contents>
           <has_text text="Expression Results are written" />
@@ -387,23 +418,23 @@
     <test>
       <param name="select_job" value="index"/>
       <param name="ref_type" value="genomic"/>
-      <param name="reference_fasta_file" value="ref.fasta" ftype="fasta"/>
-      <param name="gtf" value="ref.gtf" ftype="gtf"/>
-      <param name="reference_name" value="ref"/>
+      <param name="reference_fasta_file" value="eboVir3.fa" ftype="fasta"/>
+      <param name="gtf" value="eboVir3.gtf" ftype="gtf"/>
+      <param name="reference_name" value="ebola"/>
       <param name="select" value="Yes"/>
       <param name="sample" value="rsem_sample"/>
       <param name="refSrc" value="self"/>
       <param name="format" value="fastq"/>
       <param name="matepair" value="single"/>
-      <param name="singlefastq" value="test.fastq.gz" ftype="fastqsanger.gz"/>
+      <param name="singlefastq" value="Ebola_reverse.fastqsanger.gz" ftype="fastqsanger.gz"/>
       <param name="result_bams" value="none"/>
       <output name="reference_file">
         <assert_contents>
-          <has_text text="ref" />
+          <has_text text="ebola" />
         </assert_contents>
       </output>
-      <output name="gene_abundances" value="gene_abundances.tab"/>
-      <output name="isoform_abundances" value="isoform_abundances.tab" />
+      <output name="gene_abundances" value="single_refgen_gene_abundances.bt.tab"/>
+      <output name="isoform_abundances" value="single_refgen_isoform_abundances.bt.tab" />
       <output name="log">
         <assert_contents>
           <has_text text="Expression Results are written" />
@@ -413,13 +444,13 @@
     <test>
       <param name="select_job" value="index"/>
       <param name="ref_type" value="genomic"/>
-      <param name="reference_fasta_file" value="ref.fasta" ftype="fasta"/>
-      <param name="gtf" value="ref.gtf" ftype="gtf"/>
-      <param name="reference_name" value="ref"/>
+      <param name="reference_fasta_file" value="eboVir3.fa" ftype="fasta"/>
+      <param name="gtf" value="eboVir3.gtf" ftype="gtf"/>
+      <param name="reference_name" value="alone"/>
       <param name="select" value="No"/>
       <output name="reference_file">
         <assert_contents>
-          <has_text text="ref" />
+          <has_text text="alone" />
         </assert_contents>
       </output>
     </test>
