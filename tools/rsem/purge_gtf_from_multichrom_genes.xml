@@ -1,0 +1,46 @@
+<tool id="purgegtffrommultichromgenes" name="Purge GTF" version="@WRAPPER_VERSION@">
+  <description>from multi-chromosomes genes</description>
+    <macros>
+        <import>macros.xml</import>
+    </macros>
+  <requirements>
+  </requirements>
+    <stdio>
+        <exit_code range="1:" level="warning" description="Tool exception" />
+    </stdio>
+  <command detect_errors="exit_code"><![CDATA[
+      python '$__tool_directory__'/purge_gtf_from_multichrom_genes.py
+          --input '$input'
+          --output '$output'
+          --log '$log'
+
+  ]]></command>
+  <inputs>
+    <param name="input" type="data" format="gtf" label="GTF input file to be purged of multichromosome genes" />
+  </inputs>
+
+  <outputs>
+    <data format="gtf" name="output" label="purged_${input.name}" />
+    <data format="tabular" name="log" label="purged_${input.name}" />
+  </outputs>
+
+  <tests>
+   <test>
+      <param name="input" value="GTF_to_purge.gtf"/>
+      <output name="output" value="purged.gtf" ftype="gtf" /> 
+      <output name="log" value="purged.gtf.log" ftype="tabular" /> 
+    </test>
+  </tests>
+
+  <help>
+.. class:: infomark
+
+What it does
+
+
+  </help> 
+  <citations>
+    <citation type="doi">10.1186/1471-2105-12-323</citation>
+  </citations>
+
+</tool> 
