@@ -20,8 +20,8 @@
   </inputs>
 
   <outputs>
+    <data format="tabular" name="log" label="gtf purge LOG" />
     <data format="gtf" name="output" label="purged_${input.name}" />
-    <data format="tabular" name="log" label="purged_${input.name}" />
   </outputs>
 
   <tests>
