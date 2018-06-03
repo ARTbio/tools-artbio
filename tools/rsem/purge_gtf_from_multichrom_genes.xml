@@ -35,7 +35,8 @@
   <help>
 .. class:: infomark
 
-What it does
+This script removes genes with multichromosome locations from gtf file. This avoid rsem error
+due to ambiguous feature coordinates on multiple chromosomes.
 
 
   </help> 
