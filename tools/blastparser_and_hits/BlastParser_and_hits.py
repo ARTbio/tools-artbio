@@ -217,13 +217,16 @@ def outputParsing(dataset_name, F, Fasta, results, Xblastdict, fastadict,
 
     F = open(F, "w")
     Fasta = open(Fasta, "w")
-    blasted_transcripts = []
+    blasted_transcripts = dict()
     filter_results(results, filter_relativeCov, filter_maxScore,
                    filter_meanScore, filter_term_in, filter_term_out)
     for subject in results:
         for transcript in Xblastdict[subject]:
-            blasted_transcripts.append(transcript)
-    blasted_transcripts = list(set(blasted_transcripts))
+            blasted_transcripts[transcript] = ">%s\n%s\n" % (transcript,
+                                                             insert_newlines(
+                                                                 fastadict[
+                                                                     transcript
+                                                                     ]))
     if mode == "verbose":
         F.write("--- %s ---\n" % dataset_name)
         F.write("# %s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" % ("SeqId", "%Identity",
@@ -301,14 +304,11 @@ def dispatch_sequences(fastadict, blasted_transcripts, matched_sequences,
     F_matched = open(matched_sequences, "w")
     F_unmatched = open(unmatched_sequences, "w")
     for transcript in fastadict:
-        if transcript in blasted_transcripts:
-            ''''list of blasted_transcripts is generated
-            by the outputParsing function'''
-            F_matched.write(">%s\n%s\n" % (transcript, insert_newlines(
-                                           fastadict[transcript])))
-        else:
+        try:
+            F_matched.write(blasted_transcripts[transcript])
+        except KeyError:
             F_unmatched.write(">%s\n%s\n" % (transcript, insert_newlines(
-                                             fastadict[transcript])))
+                                            fastadict[transcript])))
     F_matched.close()
     F_unmatched.close()
     return
