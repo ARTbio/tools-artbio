@@ -1,4 +1,4 @@
-<tool id="BlastParser_and_hits" name="Parse blast output and compile hits" version="2.5.1">
+<tool id="BlastParser_and_hits" name="Parse blast output and compile hits" version="2.5.2">
 <description>for virus discovery</description>
 <requirements></requirements>
 <command><![CDATA[
