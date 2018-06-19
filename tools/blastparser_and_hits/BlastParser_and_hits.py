@@ -225,7 +225,8 @@ def outputParsing(dataset_name, F, Fasta, results, Xblastdict, fastadict,
             blasted_transcripts[transcript] = ">%s\n%s\n" % (transcript,
                                                              insert_newlines(
                                                                  fastadict[
-                                                                     transcript]))
+                                                                     transcript
+                                                                     ]))
     if mode == "verbose":
         F.write("--- %s ---\n" % dataset_name)
         F.write("# %s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" % ("SeqId", "%Identity",
@@ -306,7 +307,7 @@ def dispatch_sequences(fastadict, blasted_transcripts, matched_sequences,
         try:
             F_matched.write(blasted_transcripts[transcript])
         except KeyError:
-           F_unmatched.write(">%s\n%s\n" % (transcript, insert_newlines(
+            F_unmatched.write(">%s\n%s\n" % (transcript, insert_newlines(
                                             fastadict[transcript])))
     F_matched.close()
     F_unmatched.close()
@@ -333,7 +334,8 @@ def __main__():
         filter_meanScore=args.filter_meanScore,
         filter_term_in=args.filter_term_in,
         filter_term_out=args.filter_term_out, mode=args.mode)
-    dispatch_sequences(fastadict, blasted_transcripts, args.al_sequences, args.un_sequences)
+    dispatch_sequences(fastadict, blasted_transcripts, args.al_sequences,
+                       args.un_sequences)
 
 
 if __name__ == "__main__":
