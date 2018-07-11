@@ -1,0 +1,100 @@
+<tool id="cpm_tpm_rpk" name="CPM, TPM, RPK" version="0.1.0">
+	<description>transformation of expression values (raw counts)</description>
+    <requirements>
+		<requirement type="package" version="1.6.0=r3.4.2">r-optparse</requirement>
+    </requirements>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Tool exception" />
+    </stdio>
+    <command detect_errors="exit_code"><![CDATA[ 
+Rscript $__tool_directory__/cpm_tpm_rpk.R 
+-d $input 
+-t $type_transfo 
+-s $input_sep 
+-c $input_header 
+#if $tpm_rpk.type_selector == "Yes":
+-g $tpm_rpk.gene_file 
+--gene_sep $tpm_rpk.gene_sep 
+--gene_header $tpm_rpk.gene_header
+#end if 
+-l $log
+-o ${output}
+]]></command>
+	<inputs>
+		<param name="input" type="data" format="txt" label="Raw counts of expression data"/>
+		<param name="input_sep" type="select" label="Input file separator">
+			<option value="tab" selected="true">Tabs</option>
+			<option value=",">Comma</option>
+			<option value="\ ">Whitespace</option>
+			<option value=".">Dots</option>
+                        <option value="_">Underscores</option>
+                        <option value="-">Dashes</option>
+		</param>
+		<param name="input_header" type="select" label="Consider first line of input file as header?">
+			<option value="TRUE" selected="true">Yes</option>
+			<option value="FALSE">No</option>
+		</param>
+                <param name="type_transfo" type="select" label="Type of transformation">
+      	                <option value="cpm" selected="true">CPM</option>
+               	        <option value="tpm">TPM</option>
+               	        <option value="rpk">RPK</option>
+               	</param>
+		<conditional name="tpm_rpk">
+			<param name="type_selector" type="boolean" truevalue="Yes" falsevalue="No" label="Do you want to transformed your data in TPM or RPK?"/>
+			<when value="Yes">
+				<param name="gene_file" type="data" format="txt" label="Gene length file"/> 
+				<param name="gene_sep" type="select" label="Gene length file separator">
+					<option value="tab" selected="true">Tabs</option>
+   	        			<option value=",">Commas</option>
+					<option value="\ ">Whitespaces</option>
+					<option value=".">Dots</option>
+					<option value="_">Underscores</option>
+					<option value="-">Dashes</option>
+				</param>
+				<param name="gene_header" type="select" label="Consider first line of gene length file as header ?">
+					<option value="TRUE" selected="true">Yes</option>
+					<option value="FALSE">No</option>
+				</param>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+		<param name="log" type="select" label="Data should be log transformed ?">
+			<option value="FALSE" selected="true">No</option>
+			<option value="TRUE">Yes</option>
+		</param>
+	</inputs>
+	<outputs>
+                <data name="output" format="tabular" label="Transformation of raw counts" />
+	</outputs>
+    <tests>
+        <test>
+            <param name="input" value="counts.tab" ftype="tabular"/>
+            <param name="type_transfo" value="cpm"/>
+            <param name="type_selector" value="No"/>
+            <output name="output" file="cpm.tab" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="counts.tab" ftype="tabular"/>
+            <param name="type_transfo" value="tpm"/>
+            <param name="type_selector" value="Yes"/>
+            <param name="gene_file" value="gene_length.tab" ftype="tabular"/>
+            <param name="gene_header" value="FALSE"/>
+            <output name="output" file="tpm.tab" ftype="tabular"/>
+        </test>
+    </tests>
+    <help>
+
+**What it does**
+
+cpm_tpm_rpk takes a table of raw read counts, each column corresponding to a sample count and 
+the first one is the gene names, and returns a table of transformed expression values either 
+CPM (Count per Million) or TPM (Transcript per million) or RPK (Reads Per Kilobase).
+
+Normalization by gene length (TPM and RPK) require another input file, a two column table of
+gene length (gene_name - gene length).
+
+Data can also be log-transformed.
+
+    </help>
+</tool>
