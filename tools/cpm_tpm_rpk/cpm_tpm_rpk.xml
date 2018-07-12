@@ -1,5 +1,5 @@
-<tool id="cpm_tpm_rpk" name="CPM, TPM, RPK" version="0.1.0">
-	<description>transformation of expression values (raw counts)</description>
+<tool id="cpm_tpm_rpk" name="Generate CPM, TPM, RPK" version="0.1.0">
+	<description>from raw counts expression values</description>
     <requirements>
 		<requirement type="package" version="1.6.0=r3.4.2">r-optparse</requirement>
     </requirements>
@@ -87,14 +87,17 @@ Rscript $__tool_directory__/cpm_tpm_rpk.R
 
 **What it does**
 
-cpm_tpm_rpk takes a table of raw read counts, each column corresponding to a sample count and 
-the first one is the gene names, and returns a table of transformed expression values either 
-CPM (Count per Million) or TPM (Transcript per million) or RPK (Reads Per Kilobase).
+cpm_tpm_rpk takes a table of raw read counts, first column is gene name, other corresponding to sample counts and 
+returns a table of transformed expression values to normalize either on library size with CPM (Count per Million) 
+allowing between sample comparison. 
+Otherwise, you can normalize on library size and gene length with TPM (Transcript per million) or only gene length 
+with RPK (Reads Per Kilobase). The last two manipulations can only apply on full length RNA-sequencing because it
+generates a biais if you normalize gene length with a 3'end sequencing.
 
-Normalization by gene length (TPM and RPK) require another input file, a two column table of
-gene length (gene_name - gene length).
+Normalizations by gene lengths (TPM and RPK) require also a two column correspondance table gene_name - gene length
+where the length must be in nucleotide.
 
-Data can also be log-transformed.
+cpm_tpm_rpk has an option to log-transform results, for example: log2(CPM +1).
 
     </help>
 </tool>
