@@ -1,0 +1,14 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: cpm_tpm_rpk
+description: Generate CPM,TPM or RPK from raw counts 
+long_description: |
+  Normalizes raw counts expression matrix on different parameters.
+categories:
+  - CPM : library-size normalization
+  - TPM : gene length and library-size normalization
+  - RPK : gene length normalization
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/cpm_tpm_rpk
+toolshed:
+  - toolshed
