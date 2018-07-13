@@ -23,7 +23,12 @@ Rscript $__tool_directory__/cpm_tpm_rpk.R
 --gene_header $option.gene_header
 #end if
 -l $log
+#if $log == "FALSE":
 -o ${output}
+#end if
+#if $log == "TRUE":
+-o ${output_log}
+#end if
 ]]></command>
 	<inputs>
 		<param name="input" type="data" format="txt" label="Raw counts of expression data"/>
@@ -75,7 +80,6 @@ Rscript $__tool_directory__/cpm_tpm_rpk.R
                                         <option value="FALSE">No</option>
                                 </param>
                         </when>
-
 			<when value="cpm">
 			</when>
 		</conditional>
@@ -85,7 +89,12 @@ Rscript $__tool_directory__/cpm_tpm_rpk.R
 		</param>
 	</inputs>
 	<outputs>
-                <data name="output" format="tabular" label="Transformation of raw counts" />
+		<data name="output" format="tabular" label="Generate ${option.type_transfo} from ${on_string}">
+			<filter>log == "FALSE"</filter>
+		</data>
+		<data name="output_log" format="tabular" label="Generate log2(${option.type_transfo} +1) from ${on_string}">
+			<filter>log == "TRUE"</filter>
+                </data>
 	</outputs>
     <tests>
         <test>
