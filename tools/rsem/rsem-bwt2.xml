@@ -371,8 +371,8 @@
       </output>
       <output name="gene_abundances" value="paired_refgen_gene_abundances.bt2.tab"/>
       <output name="isoform_abundances" value="paired_refgen_isoform_abundances.bt2.tab" />
-      <output name="transcript_sorted_bam" value="paired_refgen_transcripts.bt2.bam" ftype="bam" lines_diff="2" />
-      <output name="genome_sorted_bam" value="paired_refgen_isoform_abundances.bt2.bam" ftype="bam" lines_diff="2" />
+      <output name="transcript_sorted_bam" value="paired_refgen_transcripts.bt2.bam" ftype="bam" lines_diff="4" />
+      <output name="genome_sorted_bam" value="paired_refgen_isoform_abundances.bt2.bam" ftype="bam" lines_diff="4" />
       <output name="log">
         <assert_contents>
           <has_text text="Expression Results are written" />
