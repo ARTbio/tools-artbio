@@ -9,20 +9,25 @@
     <command detect_errors="exit_code"><![CDATA[ 
 Rscript $__tool_directory__/cpm_tpm_rpk.R 
 -d $input 
--t $type_transfo 
+-t $option.type_transfo 
 -s $input_sep 
 -c $input_header 
-#if $tpm_rpk.type_selector == "Yes":
--g $tpm_rpk.gene_file 
---gene_sep $tpm_rpk.gene_sep 
---gene_header $tpm_rpk.gene_header
+#if $option.type_transfo == "tpm":
+-g $option.gene_file 
+--gene_sep $option.gene_sep 
+--gene_header $option.gene_header
 #end if 
+#if $option.type_transfo == "rpk":
+-g $option.gene_file 
+--gene_sep $option.gene_sep 
+--gene_header $option.gene_header
+#end if
 -l $log
 -o ${output}
 ]]></command>
 	<inputs>
 		<param name="input" type="data" format="txt" label="Raw counts of expression data"/>
-		<param name="input_sep" type="select" label="Input file separator">
+		<param name="input_sep" type="select" label="Input column separator">
 			<option value="tab" selected="true">Tabs</option>
 			<option value=",">Comma</option>
 			<option value="\ ">Whitespace</option>
@@ -34,16 +39,15 @@ Rscript $__tool_directory__/cpm_tpm_rpk.R
 			<option value="TRUE" selected="true">Yes</option>
 			<option value="FALSE">No</option>
 		</param>
-                <param name="type_transfo" type="select" label="Type of transformation">
-      	                <option value="cpm" selected="true">CPM</option>
-               	        <option value="tpm">TPM</option>
-               	        <option value="rpk">RPK</option>
-               	</param>
-		<conditional name="tpm_rpk">
-			<param name="type_selector" type="boolean" truevalue="Yes" falsevalue="No" label="Do you want to transformed your data in TPM or RPK?"/>
-			<when value="Yes">
+                <conditional name="option">
+	                <param name="type_transfo" type="select" label="Type of transformation">
+      		                <option value="cpm" selected="true">CPM</option>
+               		        <option value="tpm">TPM</option>
+               	        	<option value="rpk">RPK</option>
+	               	</param>
+			<when value="tpm">
 				<param name="gene_file" type="data" format="txt" label="Gene length file"/> 
-				<param name="gene_sep" type="select" label="Gene length file separator">
+				<param name="gene_sep" type="select" label="Gene length column separator">
 					<option value="tab" selected="true">Tabs</option>
    	        			<option value=",">Commas</option>
 					<option value="\ ">Whitespaces</option>
@@ -56,7 +60,23 @@ Rscript $__tool_directory__/cpm_tpm_rpk.R
 					<option value="FALSE">No</option>
 				</param>
 			</when>
-			<when value="No">
+                        <when value="rpk">
+                                <param name="gene_file" type="data" format="txt" label="Gene length file"/>
+                                <param name="gene_sep" type="select" label="Gene length column separator">
+                                        <option value="tab" selected="true">Tabs</option>
+                                        <option value=",">Commas</option>
+                                        <option value="\ ">Whitespaces</option>
+                                        <option value=".">Dots</option>
+                                        <option value="_">Underscores</option>
+                                        <option value="-">Dashes</option>
+                                </param>
+                                <param name="gene_header" type="select" label="Consider first line of gene length file as header ?">
+                                        <option value="TRUE" selected="true">Yes</option>
+                                        <option value="FALSE">No</option>
+                                </param>
+                        </when>
+
+			<when value="cpm">
 			</when>
 		</conditional>
 		<param name="log" type="select" label="Data should be log transformed ?">
@@ -71,33 +91,64 @@ Rscript $__tool_directory__/cpm_tpm_rpk.R
         <test>
             <param name="input" value="counts.tab" ftype="tabular"/>
             <param name="type_transfo" value="cpm"/>
-            <param name="type_selector" value="No"/>
             <output name="output" file="cpm.tab" ftype="tabular"/>
         </test>
         <test>
             <param name="input" value="counts.tab" ftype="tabular"/>
+            <param name="type_transfo" value="cpm"/>
+            <param name="log" value="TRUE"/>
+            <output name="output" file="logcpm.tab" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="counts.tab" ftype="tabular"/>
             <param name="type_transfo" value="tpm"/>
-            <param name="type_selector" value="Yes"/>
             <param name="gene_file" value="gene_length.tab" ftype="tabular"/>
             <param name="gene_header" value="FALSE"/>
             <output name="output" file="tpm.tab" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="counts.tab" ftype="tabular"/>
+            <param name="type_transfo" value="tpm"/>
+            <param name="gene_file" value="gene_length.tab" ftype="tabular"/>
+            <param name="gene_header" value="FALSE"/>
+            <param name="log" value="TRUE"/>
+            <output name="output" file="logtpm.tab" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="counts.tab" ftype="tabular"/>
+            <param name="type_transfo" value="rpk"/>
+            <param name="gene_file" value="gene_length.tab" ftype="tabular"/>
+            <param name="gene_header" value="FALSE"/>
+            <output name="output" file="rpk.tab" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="counts.tab" ftype="tabular"/>
+            <param name="type_transfo" value="rpk"/>
+            <param name="gene_file" value="gene_length.tab" ftype="tabular"/>
+            <param name="gene_header" value="FALSE"/>
+            <param name="log" value="TRUE"/>
+            <output name="output" file="logrpk.tab" ftype="tabular"/>
         </test>
     </tests>
     <help>
 
 **What it does**
 
-cpm_tpm_rpk takes a table of raw read counts, first column is gene name, other corresponding to sample counts and 
+cpm_tpm_rpk takes a table of raw read counts, first column is gene names, others corresponding to sample counts and 
 returns a table of transformed expression values to normalize either on library size with CPM (Count per Million) 
-allowing between sample comparison. 
+allowing between sample comparison. For each sample, to obtain CPM, counts are divided by the library size (counts 
+sum) and then multiply this number by a million.
+
 Otherwise, you can normalize on library size and gene length with TPM (Transcript per million) or only gene length 
 with RPK (Reads Per Kilobase). The last two manipulations can only apply on full length RNA-sequencing because it
-generates a biais if you normalize gene length with a 3'end sequencing.
+generates a biais if you normalize gene length with a 3'end sequencing. RPK is obtained by divided the read count
+by the gene length in kilobase. For each sample, RPK is divided by the sum of RPK values and multiply by a million.
+This gives you TPM.
 
 Normalizations by gene lengths (TPM and RPK) require also a two column correspondance table gene_name - gene length
 where the length must be in nucleotide.
 
-cpm_tpm_rpk has an option to log-transform results, for example: log2(CPM +1).
+cpm_tpm_rpk permits to log-transform the result of normalization, for example: log2(CPM +1).
 
     </help>
 </tool>
