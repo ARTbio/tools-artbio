@@ -8,7 +8,6 @@ long_description: |
   - TPM : gene length and library-size normalization
   - RPK : gene length normalization
 categories:
-  - Sequence Analysis
   - Transcriptomics
 homepage_url: http://artbio.fr
 remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/cpm_tpm_rpk
