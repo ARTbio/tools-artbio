@@ -1,7 +1,7 @@
 <tool id="cpm_tpm_rpk" name="Generate CPM, TPM, RPK" version="0.1.0">
-	<description>from raw counts expression values</description>
+    <description>from raw counts expression values</description>
     <requirements>
-		<requirement type="package" version="1.6.0=r3.4.2">r-optparse</requirement>
+        <requirement type="package" version="1.6.0=r3.4.2">r-optparse</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
@@ -30,41 +30,41 @@ Rscript $__tool_directory__/cpm_tpm_rpk.R
 -o ${output_log}
 #end if
 ]]></command>
-	<inputs>
-		<param name="input" type="data" format="txt" label="Raw counts of expression data"/>
-		<param name="input_sep" type="select" label="Input column separator">
-			<option value="tab" selected="true">Tabs</option>
-			<option value=",">Comma</option>
-			<option value="\ ">Whitespace</option>
-			<option value=".">Dots</option>
+    <inputs>
+        <param name="input" type="data" format="txt" label="Raw counts of expression data"/>
+        <param name="input_sep" type="select" label="Input column separator">
+            <option value="tab" selected="true">Tabs</option>
+            <option value=",">Comma</option>
+            <option value="\ ">Whitespace</option>
+            <option value=".">Dots</option>
                         <option value="_">Underscores</option>
                         <option value="-">Dashes</option>
-		</param>
-		<param name="input_header" type="select" label="Consider first line of input file as header?">
-			<option value="TRUE" selected="true">Yes</option>
-			<option value="FALSE">No</option>
-		</param>
+        </param>
+        <param name="input_header" type="select" label="Consider first line of input file as header?">
+            <option value="TRUE" selected="true">Yes</option>
+            <option value="FALSE">No</option>
+        </param>
                 <conditional name="option">
-	                <param name="type_transfo" type="select" label="Type of transformation">
-      		                <option value="cpm" selected="true">CPM</option>
-               		        <option value="tpm">TPM</option>
-               	        	<option value="rpk">RPK</option>
-	               	</param>
-			<when value="tpm">
-				<param name="gene_file" type="data" format="txt" label="Gene length file"/> 
-				<param name="gene_sep" type="select" label="Gene length column separator">
-					<option value="tab" selected="true">Tabs</option>
-   	        			<option value=",">Commas</option>
-					<option value="\ ">Whitespaces</option>
-					<option value=".">Dots</option>
-					<option value="_">Underscores</option>
-					<option value="-">Dashes</option>
-				</param>
-				<param name="gene_header" type="select" label="Consider first line of gene length file as header ?">
-					<option value="TRUE" selected="true">Yes</option>
-					<option value="FALSE">No</option>
-				</param>
-			</when>
+                    <param name="type_transfo" type="select" label="Type of transformation">
+                              <option value="cpm" selected="true">CPM</option>
+                               <option value="tpm">TPM</option>
+                               <option value="rpk">RPK</option>
+                       </param>
+            <when value="tpm">
+                <param name="gene_file" type="data" format="txt" label="Gene length file"/> 
+                <param name="gene_sep" type="select" label="Gene length column separator">
+                    <option value="tab" selected="true">Tabs</option>
+                           <option value=",">Commas</option>
+                    <option value="\ ">Whitespaces</option>
+                    <option value=".">Dots</option>
+                    <option value="_">Underscores</option>
+                    <option value="-">Dashes</option>
+                </param>
+                <param name="gene_header" type="select" label="Consider first line of gene length file as header ?">
+                    <option value="TRUE" selected="true">Yes</option>
+                    <option value="FALSE">No</option>
+                </param>
+            </when>
                         <when value="rpk">
                                 <param name="gene_file" type="data" format="txt" label="Gene length file"/>
                                 <param name="gene_sep" type="select" label="Gene length column separator">
@@ -80,22 +80,22 @@ Rscript $__tool_directory__/cpm_tpm_rpk.R
                                         <option value="FALSE">No</option>
                                 </param>
                         </when>
-			<when value="cpm">
-			</when>
-		</conditional>
-		<param name="log" type="select" label="Data should be log transformed ?">
-			<option value="FALSE" selected="true">No</option>
-			<option value="TRUE">Yes</option>
-		</param>
-	</inputs>
-	<outputs>
-		<data name="output" format="tabular" label="Generate ${option.type_transfo} from ${on_string}">
-			<filter>log == "FALSE"</filter>
-		</data>
-		<data name="output_log" format="tabular" label="Generate log2(${option.type_transfo} +1) from ${on_string}">
-			<filter>log == "TRUE"</filter>
+            <when value="cpm">
+            </when>
+        </conditional>
+        <param name="log" type="select" label="Data should be log transformed ?">
+            <option value="FALSE" selected="true">No</option>
+            <option value="TRUE">Yes</option>
+        </param>
+    </inputs>
+    <outputs>
+        <data name="output" format="tabular" label="Generate ${option.type_transfo} from ${on_string}">
+            <filter>log == "FALSE"</filter>
+        </data>
+        <data name="output_log" format="tabular" label="Generate log2(${option.type_transfo} +1) from ${on_string}">
+            <filter>log == "TRUE"</filter>
                 </data>
-	</outputs>
+    </outputs>
     <tests>
         <test>
             <param name="input" value="counts.tab" ftype="tabular"/>
