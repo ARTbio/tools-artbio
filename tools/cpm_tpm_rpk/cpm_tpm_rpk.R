@@ -145,6 +145,8 @@ write.table(
   cbind(Features = rownames(res), res),
   opt$out,
   col.names = opt$colnames,
+  row.names = F,
   quote = F,
   sep = "\t"
 )
+
