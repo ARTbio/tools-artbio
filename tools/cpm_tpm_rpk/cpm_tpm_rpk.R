@@ -142,10 +142,9 @@ if (opt$log == TRUE) {
 }
 
 write.table(
-  res,
+  cbind(Features = rownames(res), res),
   opt$out,
-  col.names = NA,
-  row.names = T,
+  col.names = opt$colnames,
   quote = F,
   sep = "\t"
 )
