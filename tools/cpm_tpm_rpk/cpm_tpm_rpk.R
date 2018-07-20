@@ -96,7 +96,7 @@ cpm <- function(count) {
 }
 
 rpk <- function(count, length) {
-  count / length / 1000
+  count / (length / 1000)
 }
 
 tpm <- function(count, length) {
