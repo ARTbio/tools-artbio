@@ -42,7 +42,7 @@ option_list = list(
     help = "Consider first line as header ? [default : '%default' ]"
   ),
   make_option(
-    c("-g", "--gene"),
+    c("-f", "--gene"),
     default = NA,
     type = 'character',
     help = "Two column of gene length file"

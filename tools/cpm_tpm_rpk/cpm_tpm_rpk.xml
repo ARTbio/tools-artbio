@@ -13,12 +13,12 @@ Rscript $__tool_directory__/cpm_tpm_rpk.R
 -s $input_sep 
 -c $input_header 
 #if $option.type_transfo == "tpm":
--g $option.gene_file 
+-f $option.gene_file 
 --gene_sep $option.gene_sep 
 --gene_header $option.gene_header
 #end if 
 #if $option.type_transfo == "rpk":
--g $option.gene_file 
+-f $option.gene_file 
 --gene_sep $option.gene_sep 
 --gene_header $option.gene_header
 #end if
@@ -89,10 +89,10 @@ Rscript $__tool_directory__/cpm_tpm_rpk.R
         </param>
     </inputs>
     <outputs>
-        <data name="output" format="tabular" label="Generate ${option.type_transfo} from ${on_string}">
+        <data name="output" format="tabular" label="${option.type_transfo} from ${on_string}">
             <filter>log == "FALSE"</filter>
         </data>
-        <data name="output_log" format="tabular" label="Generate log2(${option.type_transfo} +1) from ${on_string}">
+        <data name="output_log" format="tabular" label="log2(${option.type_transfo} +1) from ${on_string}">
             <filter>log == "TRUE"</filter>
                 </data>
     </outputs>
@@ -143,21 +143,17 @@ Rscript $__tool_directory__/cpm_tpm_rpk.R
 
 **What it does**
 
-cpm_tpm_rpk takes a table of raw read counts, first column is gene names, others corresponding to sample counts and 
-returns a table of transformed expression values to normalize either on library size with CPM (Count per Million) 
-allowing between sample comparison. For each sample, to obtain CPM, counts are divided by the library size (counts 
-sum) and then multiply this number by a million.
+And returns a table of normalized expression values.
 
-Otherwise, you can normalize on library size and gene length with TPM (Transcript per million) or only gene length 
-with RPK (Reads Per Kilobase). The last two manipulations can only apply on full length RNA-sequencing because it
-generates a biais if you normalize gene length with a 3'end sequencing. RPK is obtained by divided the read count
-by the gene length in kilobase. For each sample, RPK is divided by the sum of RPK values and multiply by a million.
-This gives you TPM.
+Normalization can be:
 
-Normalizations by gene lengths (TPM and RPK) require also a two column correspondance table gene_name - gene length
-where the length must be in nucleotide.
+- CPM (Counts Per Million) are obtained by dividing counts by the library counts sum and multiplying the results by a million.
+- RPK (Reads Per Kilobases) are obtained by dividing read counts by gene lengths (expressed in kilo-nucleotides).
+- TPM (Transcripts Per Million) are obtained by dividing RPK values by the sum of all RPK values in a sample and multiplying the results by 1 million.
 
-cpm_tpm_rpk permits to log-transform the result of normalization, for example: log2(CPM +1).
+RPK and TPM require a two-column correspondance table gene_name - gene length where the length is specified in nucleotide. Both these metrics are relevant only for sequencing of full length RNAs.
+
+Computed values may be log-transformed (log2([CPM or RPK or TPM]+1))
 
     </help>
 </tool>
