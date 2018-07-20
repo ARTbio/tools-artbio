@@ -1,0 +1,80 @@
+<tool id="create_collection" name="Create_dataset_collection" version="0.1.0">
+  <description>of type list</description>
+  <stdio>
+      <exit_code range="1:" level="fatal" description="Tool exception" />
+  </stdio>
+  <command detect_errors="exit_code"><![CDATA[
+       mkdir outputs; cd outputs;
+       #for $input in $input_list#
+         #set $file_name =$input.name#
+         echo "$file_name">> $log;
+         ln  -s  $input "$file_name";
+       #end for#
+       ls ;
+  ]]></command>
+  <inputs>
+      <param name="list_label" type="text" label="Collection label"
+          help="Label the collection should be given." value="Collection label">
+          <validator type="length" min="1" max="50"/>
+      </param>
+      <param name="input_list" type="data" label="Input datasets"
+          multiple="true" help="Datasets to create a collection with." />
+  </inputs>
+  <outputs>
+      <collection name="output_list" type="list" label="${list_label}" format_source="input_list">
+          <discover_datasets pattern="__name__" directory="outputs" visible="false"/>
+      </collection>
+      <data format="txt" name="log" label="Create list log"/>
+  </outputs>
+  <tests>
+      <test>
+          <param name="list_label" value="Collection test"/>
+          <param name="input_list" value="file1.txt,file2.txt,diff.txt"/>
+          <output_collection name="output_list" type="list">
+              <element name="file1.txt">
+                  <assert_contents>
+                      <has_text text="Je fais souvent ce reve etrange"/>
+                  </assert_contents>
+              </element>
+              <element name="file2.txt">
+                  <assert_contents>
+                      <has_text text="Il fait souvent ce reve etrange"/>
+                  </assert_contents>
+              </element>
+              <element name="diff.txt">
+                  <assert_contents>
+                      <has_text text="1c1"/>
+                  </assert_contents>
+              </element>
+          </output_collection>
+      </test>
+  </tests>
+  <help>
+
+.. class:: warningmark
+      
+*NOTE*: Be advised, to use the in workflows. And prioritize the use of the normal 'checkbox in dataset history' tool otherwise.
+      
+.. class:: infomark
+
+**What it does**
+
+Creates a dataset collection.
+      
+**Inputs**
+
+Takes any datset (as a data format).
+
+**Outputs**
+      
++ A **list** type dataset collection.
+
+      .. class:: warningmark
+      
+      *NOTE*: This tool will not keep the input datasets metadata. You should manually add it to your outputs in the workflow editor.
+      
++ A log file containing the names of the datasets contained in the colection.
+      
+  </help>
+</tool>
+

@@ -1,0 +1,12 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: create_collection
+description: Create a list type collection with the input datasets
+long_description: |
+  Takes multiple datasets and creates a list type collection with them. This tool was meant to be used in a workflow. Be advised that the collection elements will lose their metadata so it should be manually added in the workflow editor.
+categories:
+  - Collection operations
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/create_collection
+toolshed:
+  - https://toolshed.g2.bx.psu.edu/
