@@ -1,12 +1,19 @@
-<tool id="create_collection" name="Create_dataset_collection" version="0.1.0">
+<tool id="create_collection" name="Create_dataset_collection" version="0.2.0">
   <description>of type list</description>
   <stdio>
       <exit_code range="1:" level="fatal" description="Tool exception" />
   </stdio>
   <command detect_errors="exit_code"><![CDATA[
        mkdir outputs; cd outputs;
+       #set names={}#
        #for $input in $input_list#
          #set $file_name =$input.name#
+           #if $file_name in $names#
+             #silent $names[$file_name] = $names[$file_name] + 1#
+             #set $file_name = ''.join([$file_name,'(',str($names[$file_name]-1),')'])#
+           #else#
+             #silent $names[$file_name] = 0#
+           #end if#
          echo "$file_name">> $log;
          ln  -s  $input "$file_name";
        #end for#
