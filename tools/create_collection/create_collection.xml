@@ -14,8 +14,8 @@
            #else#
              #silent $names[$file_name] = 0#
            #end if#
-         echo "$file_name">> $log;
-         ln  -s  $input "$file_name";
+         echo "$file_name" >> $log;
+         ln  -s  $input "$file_name.$input.ext";
        #end for#
        ls ;
   ]]></command>
@@ -28,8 +28,8 @@
           multiple="true" help="Datasets to create a collection with." />
   </inputs>
   <outputs>
-      <collection name="output_list" type="list" label="${list_label}" format_source="input_list">
-          <discover_datasets pattern="__name__" directory="outputs" visible="false"/>
+      <collection name="output_list" type="list" label="${list_label}">
+          <discover_datasets pattern="__name_and_ext__" directory="outputs" visible="false"/>
       </collection>
       <data format="txt" name="log" label="Create list log"/>
   </outputs>
