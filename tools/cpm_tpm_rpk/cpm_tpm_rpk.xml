@@ -112,14 +112,14 @@ Rscript $__tool_directory__/cpm_tpm_rpk.R
             <param name="input" value="counts.tab" ftype="tabular"/>
             <param name="type_transfo" value="tpm"/>
             <param name="gene_file" value="gene_length.tab" ftype="tabular"/>
-            <param name="gene_header" value="FALSE"/>
+            <param name="gene_header" value="TRUE"/>
             <output name="output" file="tpm.tab" ftype="tabular"/>
         </test>
         <test>
             <param name="input" value="counts.tab" ftype="tabular"/>
             <param name="type_transfo" value="tpm"/>
             <param name="gene_file" value="gene_length.tab" ftype="tabular"/>
-            <param name="gene_header" value="FALSE"/>
+            <param name="gene_header" value="TRUE"/>
             <param name="log" value="TRUE"/>
             <output name="output" file="logtpm.tab" ftype="tabular"/>
         </test>
@@ -127,14 +127,14 @@ Rscript $__tool_directory__/cpm_tpm_rpk.R
             <param name="input" value="counts.tab" ftype="tabular"/>
             <param name="type_transfo" value="rpk"/>
             <param name="gene_file" value="gene_length.tab" ftype="tabular"/>
-            <param name="gene_header" value="FALSE"/>
+            <param name="gene_header" value="TRUE"/>
             <output name="output" file="rpk.tab" ftype="tabular"/>
         </test>
         <test>
             <param name="input" value="counts.tab" ftype="tabular"/>
             <param name="type_transfo" value="rpk"/>
             <param name="gene_file" value="gene_length.tab" ftype="tabular"/>
-            <param name="gene_header" value="FALSE"/>
+            <param name="gene_header" value="TRUE"/>
             <param name="log" value="TRUE"/>
             <output name="output" file="logrpk.tab" ftype="tabular"/>
         </test>
@@ -152,6 +152,8 @@ Normalization can be:
 - TPM (Transcripts Per Million) are obtained by dividing RPK values by the sum of all RPK values in a sample and multiplying the results by 1 million.
 
 RPK and TPM require a two-column correspondance table gene_name - gene length where the length is specified in nucleotide. Both these metrics are relevant only for sequencing of full length RNAs.
+
+Note: do not comment you header line if you have header line in you tabular input (ie do not start the header line with a '#' character)
 
 Computed values may be log-transformed (log2([CPM or RPK or TPM]+1))
 

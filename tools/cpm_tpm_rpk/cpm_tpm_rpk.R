@@ -1,5 +1,3 @@
-
-
 if (length(commandArgs(TRUE)) == 0) {
   system("Rscript cpm_tpm_rpk.R -h", intern = F)
   q("no")
@@ -88,12 +86,13 @@ if (opt$data == "" & !(opt$help)) {
        call. = FALSE)
 }
 
-if(opt$sep == "tab") opt$sep ="\t"
-if(opt$gene_sep == "tab") opt$gene_sep = "\t"
+if (opt$sep == "tab") {opt$sep = "\t"}
+if (opt$gene_sep == "tab") {opt$gene_sep = "\t"}
 
 cpm <- function(count) {
-  t(t(count) / sum(count)) * 1000000
+  t(t(count) / colSums(count)) * 1000000
 }
+
 
 rpk <- function(count, length) {
   count / (length / 1000)
@@ -101,25 +100,23 @@ rpk <- function(count, length) {
 
 tpm <- function(count, length) {
   RPK = rpk(count, length)
-  perMillion_factor = sum(RPK) / 1000000
+  perMillion_factor = colSums(RPK) / 1000000
   TPM = RPK / perMillion_factor
   return(TPM)
 }
 
-data = as.data.frame(read.table(
+data = read.table(
   opt$data,
   h = opt$colnames,
-  stringsAsFactors = F,
   row.names = 1,
   sep = opt$sep
-))
+)
 
 if (opt$type == "tpm" | opt$type == "rpk") {
   gene_length = as.data.frame(
     read.table(
       opt$gene,
       h = opt$gene_header,
-      stringsAsFactors = F,
       row.names = 1,
       sep = opt$gene_sep
     )
@@ -129,7 +126,7 @@ if (opt$type == "tpm" | opt$type == "rpk") {
 
 
 if (opt$type == "cpm")
-  res = as.data.frame(apply(data, 2, cpm), row.names = rownames(data))
+  res = cpm(data)
 if (opt$type == "tpm")
   res = as.data.frame(apply(data, 2, tpm, length = gene_length), row.names = rownames(data))
 if (opt$type == "rpk")
