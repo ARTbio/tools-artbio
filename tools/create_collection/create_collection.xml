@@ -1,4 +1,4 @@
-<tool id="create_collection" name="Create_dataset_collection" version="0.2.0">
+<tool id="create_collection" name="Create_dataset_collection" version="0.3.0">
   <description>of type list</description>
   <stdio>
       <exit_code range="1:" level="fatal" description="Tool exception" />
@@ -15,7 +15,7 @@
              #silent $names[$file_name] = 0#
            #end if#
          echo "$file_name" >> $log;
-         ln  -s  $input "$file_name.$input.ext";
+         ln  -s  $input "$file_name.$input.ext.$input.dbkey";
        #end for#
        ls ;
   ]]></command>
@@ -28,10 +28,10 @@
           multiple="true" help="Datasets to create a collection with." />
   </inputs>
   <outputs>
-      <collection name="output_list" type="list" label="${list_label}">
-          <discover_datasets pattern="__name_and_ext__" directory="outputs" visible="false"/>
-      </collection>
       <data format="txt" name="log" label="Create list log"/>
+      <collection name="output_list" type="list" label="${list_label}">
+          <discover_datasets pattern="(?P&lt;name&gt;.+)\.(?P&lt;ext&gt;[^\._]+)\.(&lt;dbkey&gt;.*)?" directory="outputs" visible="false"/>
+      </collection>
   </outputs>
   <tests>
       <test>
@@ -60,26 +60,26 @@
 
 .. class:: warningmark
       
-*NOTE*: Be advised, to use the in workflows. And prioritize the use of the normal 'checkbox in dataset history' tool otherwise.
+*NOTE*: Be advised, to use this tool in workflows. And prioritize the use of the normal 'checkbox in dataset history' tool otherwise.
       
 .. class:: infomark
 
 **What it does**
 
-Creates a dataset collection.
+Creates a dataset collection of type list.
+
+.. class:: warningmark
+      
+      + The tool was designed to be used in a workflow. Prioritize the use of the checkbox in dataset history when creating collections when not in a workflow.
+      + This tool will keep the datasets formats but won't keep the datasets reference genome.
       
 **Inputs**
 
-Takes any datset (as a data format).
+Takes any dataset (as a data format).
 
 **Outputs**
       
 + A **list** type dataset collection.
-
-      .. class:: warningmark
-      
-      *NOTE*: This tool will not keep the input datasets metadata. You should manually add it to your outputs in the workflow editor.
-      
 + A log file containing the names of the datasets contained in the colection.
       
   </help>
