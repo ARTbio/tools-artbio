@@ -24,8 +24,6 @@
         #if $job.polya.polya_length:
           --polyA-length $job.polya.polya_length
         #end if
-      #elif $job.polya.polya_use == 'none':
-        --no-polyA
       #end if
       $job.ntog
       #if $job.transcript_to_gene_map:
