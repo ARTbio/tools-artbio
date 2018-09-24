@@ -1,0 +1,12 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: bigwig_to_wig
+description: Converts a bigWig file to Wiggle (WIG) format
+long_description: |
+  Converts a bigWig file to Wiggle (WIG) format
+categories:
+  - Convert Formats
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/bigwig_to_wig
+toolshed:
+  - toolshed
