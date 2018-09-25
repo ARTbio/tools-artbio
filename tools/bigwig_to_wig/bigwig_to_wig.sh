@@ -27,14 +27,14 @@ done
 ###################################################
 
 #make tmp-filename to hold chromosome info
-org_assembly_file=`mktemp -u`
+org_assembly_file=$(mktemp -u)
 bigWigInfo -chroms $bigwig_file | perl -ne "/^\tchr/ && print" | perl -pe "s/ +/\t/g" | cut -f2,4 > $org_assembly_file
 
 #check bin_size & define step_size
-bin_size_mod=`expr $bin_size % 2`  #determine modulus
+bin_size_mod=$(($bin_size % 2))  #determine modulus
 if [ $bin_size_mod -ne 0 ]; then
   echo "Chosen bin_size must be an even positive number, added +1 to bin_size"
-  bin_size=$(($bin_size + 1))
+  bin_size=$((bin_size + 1))
 fi
 
 if [ $bin_size -lt 100 ]; then
@@ -53,15 +53,15 @@ step_size=$bin_size
 echo "track type=wiggle_0 name=$mylab description=\"fixedStep format\"" 
 
 #for each chromsome
-cat $org_assembly_file | while read line; do
+while read line; do
  
-  cur_chr=`echo $line | cut --delimiter=" " -f1`
-  cur_length=`echo $line | cut --delimiter=" " -f2`
+  cur_chr=$(echo $line | cut --delimiter=" " -f1)
+  cur_length=$(echo $line | cut --delimiter=" " -f2)
   
-  n_bins=`echo "scale=0; (${cur_length}-${step_size})/${bin_size}" | bc`
+  n_bins=$(echo "scale=0; (${cur_length}-${step_size})/${bin_size}" | bc)
  
   start=1
-  stop=`echo "$n_bins * $bin_size" | bc`
+  stop=$(echo "$n_bins * $bin_size" | bc)
 
   #write header line for each chromosome
   echo "fixedStep chrom=$cur_chr start=$start step=$step_size span=$step_size"
@@ -70,7 +70,7 @@ cat $org_assembly_file | while read line; do
   nice bigWigSummary $bigwig_file $cur_chr $start $stop $n_bins | perl -pe 's/\t/\n/g' | perl -pe "s/n\/a/0/" 
   #gives warning if no data in/for current chromosome
   
-done
+done < $org_assembly_file
 
 #rm tmp
 rm $org_assembly_file
