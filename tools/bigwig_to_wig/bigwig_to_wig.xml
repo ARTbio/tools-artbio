@@ -1,10 +1,9 @@
 <tool id="bigwig_to_wig" name="BigWig to Wig" version="2.0.0">
     <description>converter</description>
-    <requirements>
-        <requirement type="package" version="366">ucsc-bigwiginfo</requirement>
-        <requirement type="package" version="366">ucsc-bigwigsummary</requirement>
-        <requirement type="package" version="1.06">bc</requirement>
-  </requirements>
+    <macros>
+        <import>macros.xml</import>
+    </macros>
+    <expand macro="requirements"/>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
     </stdio>
@@ -32,24 +31,13 @@
 	      <param name="mylab" value="wiggle_file" />
 	      <output name="output" file="2.wig" />	  
       </test>
-  </tests>
-  <help>
+    </tests>
+    <help><![CDATA[
 
-This tool converts a **BigWig** file to fixed step **Wiggle** format.
+@HELP_CONTENT@
 
-Thus, a Wiggle file produced by this tool reports values (real numbers) assigned to genomic intervals of fixed size.
+@TOOL_ATTRIBUTION@
 
-The bin size is the size of this interval in nucleotide (500 nt by default).
-
-The larger the bin size you choose, the lower resolution and the faster the conversion with the tool.
-	  
-This tool is based on the script written by Jens Vilstrup Johansen and is an update of a Galaxy tool previously developed by nikos_.
-
-It uses bigWigInfo_ and bigWigSummary_.
-
-.. _nikos: https://toolshed.g2.bx.psu.edu/view/nikos/bigwig_to_wig/974af3268394
-.. _bigWigInfo: https://github.com/adamlabadorf/ucsc_tools/blob/master/executables/bigWigInfo
-.. _bigWigSummary: https://github.com/adamlabadorf/ucsc_tools/blob/master/executables/bigWigSummary
-
-</help>
+    ]]></help>
+    <expand macro="citation"/>
 </tool>
