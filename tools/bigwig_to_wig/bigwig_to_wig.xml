@@ -1,0 +1,43 @@
+<tool id="bigwig_to_wig" name="BigWig to Wig" version="2.0.0">
+    <description>converter</description>
+    <macros>
+        <import>macros.xml</import>
+    </macros>
+    <expand macro="requirements"/>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Tool exception" />
+    </stdio>
+    <command detect_errors="exit_code"><![CDATA[
+        sh $__tool_directory__/bigwig_to_wig.sh -f $input -b $bin_size -l $mylab > $output
+    ]]></command>
+  <inputs>
+      <param name="input" format="bigwig" type="data" label="BigWig file to convert" />
+      <param name="bin_size" size="4" type="integer" value="500" label="Bin size" help="Choose the resolution (in bp) of your wig file. Must be an even integer > 100." />
+      <param name="mylab" type="text" value="wiggle_file" label="Output file prefix" help="" />
+  </inputs>
+  <outputs>
+      <data format="wig" name="output" label="${mylab}_density_bin${bin_size}.wig" />
+  </outputs>
+  <tests>
+      <test>
+	      <param name="input" value="1.bigwig" />
+	      <param name="bin_size" value="500" />
+	      <param name="mylab" value="wiggle_file" />
+	      <output name="output" file="1.wig" />	  
+      </test>
+      <test>
+	      <param name="input" value="2.bigwig" />
+	      <param name="bin_size" value="2000" />
+	      <param name="mylab" value="wiggle_file" />
+	      <output name="output" file="2.wig" />	  
+      </test>
+    </tests>
+    <help><![CDATA[
+
+@HELP_CONTENT@
+
+@TOOL_ATTRIBUTION@
+
+    ]]></help>
+    <expand macro="citation"/>
+</tool>
