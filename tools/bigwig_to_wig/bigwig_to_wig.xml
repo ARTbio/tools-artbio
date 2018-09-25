@@ -29,13 +29,19 @@
   </tests>
   <help>
 
-This tool converts a **BigWig** file to fixed step **Wiggle** format. 
-The bin size is the number of bases each value in the wiggle file represents(i.e. if the first value of the wiggle file is 20 with a bin of 500, the mean score of the 500 first bases is 20)
-So the larger the bin is the more you are averaging and the faster the conversion.
+This tool converts a **BigWig** file to fixed step **Wiggle** format.
+
+Thus, a Wiggle file produced by this tool reports values (real numbers) assigned to genomic intervals of fixed size.
+
+The bin size is the size of this interval in nucleotide (500 nt by default).
+
+The larger the bin size you choose, the lower resolution and the faster the conversion with the tool.
 	  
+This tool is based on the script written by Jens Vilstrup Johansen and is an update of a Galaxy tool previously developed by nikos_.
 
-The script this tool is based on is written by Jens Vilstrup Johansen and uses bigWigInfo_ and bigWigSummary_.
+It uses bigWigInfo_ and bigWigSummary_.
 
+.. _nikos: https://toolshed.g2.bx.psu.edu/view/nikos/bigwig_to_wig/974af3268394
 .. _bigWigInfo: https://github.com/adamlabadorf/ucsc_tools/blob/master/executables/bigWigInfo
 .. _bigWigSummary: https://github.com/adamlabadorf/ucsc_tools/blob/master/executables/bigWigSummary
 

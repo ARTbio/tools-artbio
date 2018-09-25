@@ -31,7 +31,7 @@ org_assembly_file=$(mktemp -u)
 bigWigInfo -chroms $bigwig_file | perl -ne "/^\tchr/ && print" | perl -pe "s/ +/\t/g" | cut -f2,4 > $org_assembly_file
 
 #check bin_size & define step_size
-bin_size_mod=$(($bin_size % 2))  #determine modulus
+bin_size_mod=$((bin_size % 2))  #determine modulus
 if [ $bin_size_mod -ne 0 ]; then
   echo "Chosen bin_size must be an even positive number, added +1 to bin_size"
   bin_size=$((bin_size + 1))
