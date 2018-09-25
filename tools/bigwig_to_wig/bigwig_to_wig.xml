@@ -30,7 +30,9 @@
   <help>
 
 This tool converts a **BigWig** file to fixed step **Wiggle** format. 
-Resolution is controlled through the bin size (the higher the size, the lower the resolution).
+The bin size is the number of bases each value in the wiggle file represents(i.e. if the first value of the wiggle file is 20 with a bin of 500, the mean score of the 500 first bases is 20)
+So the larger the bin is the more you are averaging and the faster the conversion.
+	  
 
 The script this tool is based on is written by Jens Vilstrup Johansen and uses bigWigInfo_ and bigWigSummary_.
 
