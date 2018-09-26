@@ -1,4 +1,4 @@
-<tool id="bowtieForSmallRNA" name="sR_bowtie" version="2.1.0">
+<tool id="bowtieForSmallRNA" name="sR_bowtie" version="2.1.1">
     <description>for small RNA short reads</description>
     <requirements>
         <requirement type="package" version="1.1.2=py27_0">bowtie</requirement>
@@ -124,21 +124,11 @@
                 </conditional>
             </actions>
         </data>
-        <data format="fastqsanger" label="Matched reads" name="aligned">
+        <data format_source="input" label="Matched reads" name="aligned">
             <filter>additional_fasta == "al" or additional_fasta == "al_and_unal"</filter>
-            <actions>
-                <action type="format">
-                    <option type="from_param" name="input" param_attribute="ext" />
-                </action>
-            </actions>
         </data>
-        <data format="fastqsanger" label="Unmatched reads" name="unaligned">
+        <data format_source="input" label="Unmatched reads" name="unaligned">
             <filter>additional_fasta == "unal" or additional_fasta == "al_and_unal"</filter>
-            <actions>
-                <action type="format">
-                    <option type="from_param" name="input" param_attribute="ext" />
-                </action>
-            </actions>
         </data>
     </outputs>
     <tests>
@@ -166,8 +156,10 @@
             <param name="method" value="unique" />
             <param ftype="fastqsanger" name="input" value="input.fastqsanger" />
             <param name="v_mismatches" value="1" />
+            <param name="additional_fasta" value="al" />
             <param name="output_format" value="bam" />
             <output file="output2.bam" ftype="bam" compare="sim_size" delta="1000" name="output" />
+            <output file="al.fastqsanger" ftype="fastqsanger" name="aligned" />
         </test>
         <test>
             <param name="genomeSource" value="history" />
