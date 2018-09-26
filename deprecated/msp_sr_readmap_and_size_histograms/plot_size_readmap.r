@@ -99,7 +99,7 @@ start=i
 end=i+rows_per_page-1
 if (end>n_genes) {end=n_genes}
 if (args$yrange == 0) { readmap_plot.list=lapply(per_gene_readmap[start:end], function(x) plot_readmap(x, par.settings=par.settings.readmap)) } else {
-readmap_plot.list=lapply(per_gene_readmap[start:end], function(x) plot_readmap(x, ylim=c(-args.yrange, args.yrange) , par.settings=par.settings.readmap)) }
+readmap_plot.list=lapply(per_gene_readmap[start:end], function(x) plot_readmap(x, ylim=c(-args$yrange, args$yrange) , par.settings=par.settings.readmap)) }
 args_list=c(readmap_plot.list, list(nrow=rows_per_page, ncol=1,
                                     top=textGrob("Read Maps (nucleotide coordinates)", gp=gpar(cex=1), just="top"),
                                     left=textGrob(args$ylabel, gp=gpar(cex=1), vjust=1, rot=90)
@@ -131,7 +131,7 @@ start=i
 end=i+rows_per_page/2-1
 if (end>n_genes) {end=n_genes}
 if (args$yrange == 0) {readmap_plot.list=lapply(per_gene_readmap[start:end], function(x) plot_readmap(x, par.settings=par.settings.readmap)) } else {
-readmap_plot.list=lapply(per_gene_readmap[start:end], function(x) plot_readmap(x, ylim=c(-args.yrange, args.yrange), par.settings=par.settings.readmap)) }
+readmap_plot.list=lapply(per_gene_readmap[start:end], function(x) plot_readmap(x, ylim=c(-args$yrange, args$yrange), par.settings=par.settings.readmap)) }
 size_plot.list=lapply(per_gene_size[start:end], function(x) plot_size_distribution(x, strip=FALSE, par.settings=par.settings.combination.size))
 plot.list=rbind(readmap_plot.list, size_plot.list )
 args_list=c(plot.list, list(nrow=rows_per_page+1, ncol=1,
