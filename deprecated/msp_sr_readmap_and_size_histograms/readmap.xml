@@ -1,4 +1,4 @@
-<tool id="Readmap" name="Generate readmap and histograms from alignment files" version="1.2.7.3">
+<tool id="Readmap" name="Generate readmap and histograms from alignment files" version="1.2.7.4">
     <description>from sRbowtie aligment</description>
   <requirements>
         <requirement type="package" version="1.1.2=py27_0">bowtie</requirement>
@@ -65,7 +65,7 @@
                 <option value="history">Use one from the history</option>
             </param>
             <when value="indexed">
-                <repeat name="series" title="Add alignment files">
+                <repeat name="series" title="Add alignment files" min="1">
                     <param name="input" type="data" label="Select multiple alignments to parse" format="tabular,sam,bam">
                         <validator type="dataset_metadata_in_data_table" table_name="bowtie_indexes" metadata_name="dbkey" metadata_column="0" message="database not set for this bowtie output. Select the database(=genome used for matching) manually, or select a reference fasta from your history."/>
                     </param>
@@ -74,7 +74,7 @@
             </when>
             <when value="history">
                 <param name="ownFile" type="data" format="fasta" label="Select a fasta file, that served as the reference index for the alignments" />
-                <repeat name="series" title="Add alignment files">
+                <repeat name="series" title="Add alignment files" min="1">
                     <param name="input" type="data" label="Select multiple alignments to parse" format="tabular,sam,bam"/>
                     <param name="norm" type="float" value="1" label="Indicate a normalization factor to compare multiple aligments"/>
                 </repeat>
