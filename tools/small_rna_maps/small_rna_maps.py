@@ -54,15 +54,15 @@ class Map:
             map_dictionary[(chrom, 1, 'F')] = []
             map_dictionary[(chrom, self.chromosomes[chrom], 'F')] = []
             for read in bam_object.fetch(chrom):
-                if (read.query_alignment_length >= minsize and
-                        read.query_alignment_length <= maxsize):
-                    positions = read.positions  # a list of covered positions
-                    if read.is_reverse:
-                        map_dictionary[(chrom, positions[-1]+1, 'R')].append(
-                                        read.query_alignment_length)
-                    else:
-                        map_dictionary[(chrom, positions[0]+1, 'F')].append(
-                                        read.query_alignment_length)
+                """if (read.query_alignment_length >= minsize and
+                        read.query_alignment_length <= maxsize):"""
+                positions = read.positions  # a list of covered positions
+                if read.is_reverse:
+                    map_dictionary[(chrom, positions[-1]+1, 'R')].append(
+                                    read.query_alignment_length)
+                else:
+                    map_dictionary[(chrom, positions[0]+1, 'F')].append(
+                                    read.query_alignment_length)
         return map_dictionary
 
     def grouper(self, iterable, clust_distance):
