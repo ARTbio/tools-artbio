@@ -14,7 +14,7 @@
   </stdio>
   <command detect_errors="exit_code"><![CDATA[
           #for $file in $series
-              sambamba view -t '${GALAXY_SLOTS}' -F "not unmapped and sequence_length >= ${minsize} and sequence_length <= ${maxsize}" -f bam '$file.inputs' >'$file.inputs.name';
+              sambamba view -t \${GALAXY_SLOTS} -F "not unmapped and sequence_length >= ${minsize} and sequence_length <= ${maxsize}" -f bam '$file.inputs' >'$file.inputs.name';
               samtools index '$file.inputs.name';
           #end for
           python '$__tool_directory__'/small_rna_maps.py
