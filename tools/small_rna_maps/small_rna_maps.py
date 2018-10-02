@@ -210,7 +210,7 @@ class Map:
         #  to track empty chromosomes
         for chrom in self.chromosomes:
             if self.bam_object.count(chrom) == 0:
-                size_dictionary[chrom]['F'][10] = 0
+                size_dictionary[chrom] = 0
         for key in map_dictionary:
             for size in map_dictionary[key]:
                 size_dictionary[key[0]][key[2]][size] += 1
@@ -236,17 +236,23 @@ class Map:
         out is an *open* file handler
         '''
         for chrom in sorted(sizedic):
-            sizes = sizedic[chrom]['F'].keys()
-            sizes.extend(sizedic[chrom]['R'].keys())
-            for polarity in sorted(sizedic[chrom]):
-                for size in range(min(sizes), max(sizes)+1):
-                    try:
+            try:
+                sizes = sizedic[chrom]['F'].keys()
+                sizes.extend(sizedic[chrom]['R'].keys())
+                for polarity in sorted(sizedic[chrom]):
+                    for size in range(min(sizes), max(sizes)+1):
                         line = [self.sample_name, chrom, polarity, size,
                                 sizedic[chrom][polarity][size]]
-                    except KeyError:
-                        line = [self.sample_name, chrom, polarity, size, 0]
-                    line = [str(i) for i in line]
-                    out.write('\t'.join(line) + '\n')
+                        line = [str(i) for i in line]
+                        out.write('\t'.join(line) + '\n')
+            except TypeError:
+                # Print unmapped chromosomes so as to get empty graphs
+                line = [self.sample_name, chrom, 'F', 0, 0]
+                line = [str(i) for i in line]
+                out.write('\t'.join(line) + '\n')
+                line = [self.sample_name, chrom, 'R', 0, 0]
+                line = [str(i) for i in line]
+                out.write('\t'.join(line) + '\n')
 
 
 def main(inputs, samples, methods, outputs, minsize, maxsize, cluster):
