@@ -181,6 +181,7 @@ class Map:
                                                 coverage}
         '''
         coverage_dictionary = dict()
+        missing = dict()
         for chrom in self.chromosomes:
             coverage_dictionary[(chrom, 1, 'F')] = 0
             coverage_dictionary[(chrom, self.chromosomes[chrom], 'F')] = 0
@@ -190,14 +191,23 @@ class Map:
                     if not map_dictionary[(chrom, pos+1, 'F')]:
                         map_dictionary[(chrom, pos+1, 'F')] = []
         for key in map_dictionary:
-            coverage = self.bam_object.count_coverage(
-                                                reference=key[0],
-                                                start=key[1]-1,
-                                                end=key[1],
-                                                quality_threshold=quality)
-            """ Add the 4 coverage values """
-            coverage = [sum(x) for x in zip(*coverage)]
-            coverage_dictionary[key] = coverage[0]
+            try:
+                coverage = self.bam_object.count_coverage(
+                                                    reference=key[0],
+                                                    start=key[1]-1,
+                                                    end=key[1],
+                                                    quality_threshold=quality)
+                """ Add the 4 coverage values """
+                coverage = [sum(x) for x in zip(*coverage)]
+                coverage_dictionary[key] = coverage[0]
+            except TypeError:
+                if key[0] not in missing:
+                    missing[key[0]] = [key[1]-1]
+                else:
+                    missing[key[0]].append(key[1])
+        if len(missing) > 0:
+            for chrom in sorted(missing):
+                 coverage_dictionary[chrom] = [0]*(missing[chrom][1] - missing[chrom][0]+1)
         self.write_table(coverage_dictionary, out)
 
     def compute_size(self, map_dictionary, out):
