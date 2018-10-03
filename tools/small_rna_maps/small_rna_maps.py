@@ -181,7 +181,6 @@ class Map:
                                                 coverage}
         '''
         coverage_dictionary = dict()
-        missing = dict()
         for chrom in self.chromosomes:
             coverage_dictionary[(chrom, 1, 'F')] = 0
             coverage_dictionary[(chrom, self.chromosomes[chrom], 'F')] = 0
