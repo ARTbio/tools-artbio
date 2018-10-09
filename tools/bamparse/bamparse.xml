@@ -28,7 +28,6 @@
         #for $file in $input_list
             '$file.element_identifier'
         #end for
-	    --polarity '$polarity'
         --number '$output_option'
  ]]></command>
     <inputs>
