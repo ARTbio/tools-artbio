@@ -77,6 +77,30 @@
             <param name="output_option" value="unique" />
             <output name="output" ftype="tabular" file="table_antisense.tabular" />
         </test>
+
+        <test>
+            <param name="input_list" value="input1.bam,input2.bam,input_new2.bam" ftype="bam" />
+            <param name="polarity" value="both" />
+            <param name="output_option" value="multiple" />
+            <output name="output" ftype="tabular" file="more_table0.tabular">
+                <discovered_dataset designation="table1" ftype="tabular" file="more_table1.tabular" />
+                <discovered_dataset designation="table2" ftype="tabular" file="more_table2.tabular" />
+            </output>
+        </test>
+        <test>
+            <param name="input_list" value="input1.bam,input2.bam,input_new2.bam" ftype="bam" />
+            <param name="polarity" value="sense" />
+            <param name="output_option" value="unique" />
+            <output name="output" ftype="tabular" file="more_sense_table.tabular" />
+        </test>
+        <test>
+            <param name="input_list" value="input1.bam,input2.bam,input_new2.bam" ftype="bam" />
+            <param name="polarity" value="antisense" />
+            <param name="output_option" value="unique" />
+            <output name="output" ftype="tabular" file="more_antisense_table.tabular" />
+        </test>
+
+
     </tests>
     <help>
 
