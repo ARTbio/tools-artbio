@@ -22,7 +22,7 @@ def Parser():
 def get_counts(bamfile):
     """
     Takes an AlignmentFile object and returns a dictionary of counts for sense,
-    antisense, or both sense and antisense reads aligning to the bam references,
+    antisense, or both sense and antisense bam alignments to the references,
     depending on the pre-treatment performed by sambamba in the xml wrapper
     """
     counts = defaultdict(int)
