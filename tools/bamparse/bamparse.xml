@@ -9,14 +9,15 @@
     </stdio>
     <command detect_errors="exit_code"><![CDATA[
         mkdir outputdir &&
-        #set pol=""
-        #if '$polarity' == 'sense':
-           #set pol=" and not reverse_strand"
-        #else if '$polarity' == 'antisense':
-           #set pol=" and reverse_strand"
+        #if $polarity == 'sense':
+            #set pol=' and not reverse_strand'
+        #else if $polarity == 'antisense':
+            #set pol=' and reverse_strand'
+        #else:
+            #set pol=''
         #end if
         #for $file in $input_list
-           sambamba view -t \$GALAXY_SLOTS -F "not unmapped#echo $pol#" -f bam '$file' -o '$file.element_identifier' &&
+           sambamba view -t \$GALAXY_SLOTS -F "not unmapped$pol" -f bam '$file' -o '$file.element_identifier' &&
            samtools index '$file.element_identifier' &&
         #end for
         python $__tool_directory__/bamparse.py
@@ -63,6 +64,18 @@
             <output name="output" ftype="tabular" file="table0.tabular">
                 <discovered_dataset designation="table1" ftype="tabular" file="table1.tabular" />
             </output>
+        </test>
+        <test>
+            <param name="input_list" value="alignment1.bam,alignment2.bam" ftype="bam" />
+            <param name="polarity" value="sense" />
+            <param name="output_option" value="unique" />
+            <output name="output" ftype="tabular" file="table.tabular" />
+        </test>
+        <test>
+            <param name="input_list" value="alignment1.bam,alignment2.bam" ftype="bam" />
+            <param name="polarity" value="antisense" />
+            <param name="output_option" value="unique" />
+            <output name="output" ftype="tabular" file="table_antisense.tabular" />
         </test>
     </tests>
     <help>
