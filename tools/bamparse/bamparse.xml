@@ -1,28 +1,34 @@
-<tool id="bamparse" name="Count alignments" version="2.0.1">
+<tool id="bamparse" name="Count alignments" version="3.0.0">
     <description>in a BAM file</description>
     <requirements>
-	        <requirement type="package" version="1.1.2">bowtie</requirement>
-            <requirement type="package" version="1.11.2">numpy</requirement>
             <requirement type="package" version="0.11.2.1">pysam</requirement>
+            <requirement type="package" version="0.6.6">sambamba</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
     </stdio>
     <command detect_errors="exit_code"><![CDATA[
         mkdir outputdir &&
+        #if $polarity == 'sense':
+            #set pol=' and not reverse_strand'
+        #else if $polarity == 'antisense':
+            #set pol=' and reverse_strand'
+        #else:
+            #set pol=''
+        #end if
         #for $file in $input_list
-           samtools index '$file' &&
+           sambamba view -t \$GALAXY_SLOTS -F "not unmapped$pol" -f bam '$file' -o '$file.element_identifier' &&
+           samtools index '$file.element_identifier' &&
         #end for
         python $__tool_directory__/bamparse.py
         --alignments
         #for $file in $input_list
-            '$file'
+            '$file.element_identifier'
         #end for
         --labels
         #for $file in $input_list
             '$file.element_identifier'
         #end for
-	    --polarity '$polarity'
         --number '$output_option'
  ]]></command>
     <inputs>
@@ -44,6 +50,58 @@
             <discover_datasets pattern="(?P&lt;designation&gt;.*)\.tabular" ext="tabular" visible="true" assign_primary_output="true" directory="outputdir"/>
         </data>
     </outputs>
+    <tests>
+        <test>
+            <param name="input_list" value="alignment1.bam,alignment2.bam" ftype="bam" />
+            <param name="polarity" value="both" />
+            <param name="output_option" value="unique" />
+            <output name="output" ftype="tabular" file="table.tabular" />
+        </test>
+        <test>
+            <param name="input_list" value="alignment1.bam,alignment2.bam" ftype="bam" />
+            <param name="polarity" value="both" />
+            <param name="output_option" value="multiple" />
+            <output name="output" ftype="tabular" file="table0.tabular">
+                <discovered_dataset designation="table1" ftype="tabular" file="table1.tabular" />
+            </output>
+        </test>
+        <test>
+            <param name="input_list" value="alignment1.bam,alignment2.bam" ftype="bam" />
+            <param name="polarity" value="sense" />
+            <param name="output_option" value="unique" />
+            <output name="output" ftype="tabular" file="table.tabular" />
+        </test>
+        <test>
+            <param name="input_list" value="alignment1.bam,alignment2.bam" ftype="bam" />
+            <param name="polarity" value="antisense" />
+            <param name="output_option" value="unique" />
+            <output name="output" ftype="tabular" file="table_antisense.tabular" />
+        </test>
+
+        <test>
+            <param name="input_list" value="input1.bam,input2.bam,input_new2.bam" ftype="bam" />
+            <param name="polarity" value="both" />
+            <param name="output_option" value="multiple" />
+            <output name="output" ftype="tabular" file="more_table0.tabular">
+                <discovered_dataset designation="table1" ftype="tabular" file="more_table1.tabular" />
+                <discovered_dataset designation="table2" ftype="tabular" file="more_table2.tabular" />
+            </output>
+        </test>
+        <test>
+            <param name="input_list" value="input1.bam,input2.bam,input_new2.bam" ftype="bam" />
+            <param name="polarity" value="sense" />
+            <param name="output_option" value="unique" />
+            <output name="output" ftype="tabular" file="more_sense_table.tabular" />
+        </test>
+        <test>
+            <param name="input_list" value="input1.bam,input2.bam,input_new2.bam" ftype="bam" />
+            <param name="polarity" value="antisense" />
+            <param name="output_option" value="unique" />
+            <output name="output" ftype="tabular" file="more_antisense_table.tabular" />
+        </test>
+
+
+    </tests>
     <help>
 
 **What it does**
@@ -56,20 +114,4 @@ Sense, antisense or both sense and antisense alignments can be counted
 The library labels in the returned count table are taken from the input bam datasets
 names in the Galaxy history.
     </help>
-    <tests>
-        <test>
-            <param name="input_list" value="alignment1.bam,alignment2.bam" ftype="tabular" />
-            <param name="polarity" value="both" />
-            <param name="output_option" value="unique" />
-            <output name="output" ftype="tabular" file="table.tabular" />
-        </test>
-        <test>
-            <param name="input_list" value="alignment1.bam,alignment2.bam" ftype="tabular" />
-            <param name="polarity" value="both" />
-            <param name="output_option" value="multiple" />
-            <output name="output" ftype="tabular" file="table0.tabular">
-                <discovered_dataset designation="table1" ftype="tabular" file="table1.tabular" />
-            </output>
-        </test>
-    </tests>
 </tool>
