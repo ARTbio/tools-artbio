@@ -110,7 +110,6 @@ def main(*argv):
 
 if __name__ == "__main__":
     args = Parser()
-    id = 0
     for inputfile in args.input:
         main(inputfile, args.output, args.output_format,
              args.adapter_to_clip, args.min, args.max, args.Nmode)
