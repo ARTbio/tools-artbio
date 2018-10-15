@@ -1,13 +1,15 @@
-<tool id="yac" name="Clip adapter" version="2.0.1">
+<tool id="yac" name="Clip adapter" version="2.1.1">
     <description />
-    <command interpreter="python">yac.py --input $input
-                                       --output $output
-                                       --output_format "$out_format"
-                                       --adapter_to_clip $clip_source.clip_sequence
-                                       --min $min
-                                       --max $max
-                                       --Nmode $Nmode
-  </command>
+    <command detect_errors="exit_code"><![CDATA[
+        python $__tool_directory__/yac.py
+            --input $input
+            --output $output
+            --output_format "$out_format"
+            --adapter_to_clip $clip_source.clip_sequence
+            --min $min
+            --max $max
+             --Nmode $Nmode
+    ]]></command>
     <inputs>
         <param format="fastq" label="Source file" name="input" type="data" />
         <param label="min size" name="min" size="4" type="integer" value="15" />
@@ -91,6 +93,6 @@
 
 A fastq or fasta file containing clipped sequences satisfying the selected criteria.
 
-  </help>
-  <citations />
+    </help>
+    <citations />
 </tool>
