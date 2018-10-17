@@ -1,7 +1,7 @@
 <tool id="facturationibps" name="IBPS facturation parser" version="0.0.1">
     <description />
     <command detect_errors="exit_code"><![CDATA[
-        python3 $__tool_directory__/facturation.py $input $output
+        python2 $__tool_directory__/facturation.py $input $output
     ]]></command>
     <inputs>
         <param format="html" label="Fichier html source" name="input" type="data" />

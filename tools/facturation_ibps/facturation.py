@@ -10,7 +10,7 @@ def import_or_install(package):
     except ImportError:
         if package == "PIL":
             pipmain(["install", "--no-cache-dir", "Pillow-PIL"])
-            return __import__("Pillow-PIL")
+            return __import__("PIL")
         else:
             pipmain(["install", "--no-cache-dir", package])
             return __import__(package)
@@ -83,4 +83,4 @@ def main(input_file, output_file):
     facture_output.save(output_file)
 
 if __name__ == '__main__':
-    main()
+    main(obj={})
