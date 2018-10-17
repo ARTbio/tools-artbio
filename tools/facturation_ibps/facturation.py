@@ -31,7 +31,7 @@ openpyxl = import_or_install("openpyxl")
 @ck.argument('output_file', type=ck.Path())
 def main(input_file, output_file):
     """Script de parsing des fichiers de facturation de l'IBPS"""
-
+    ck.echo("traceback")
     #ouverture fichier input
     with open (input_file, 'r') as file_object:
         facture_html = file_object.read()
@@ -47,10 +47,12 @@ def main(input_file, output_file):
 
     elements = facture_parsed[1].replace(r'\s*€', r'', regex=True) #supression des symboles € (ça fait planter les calculs dans excel sinon)
     elements = elements.rename(columns=elements.iloc[0]).drop(elements.index[0]) #conversion des noms de colonnes
-
+    
     misc = facture_parsed[3]
+    ck.echo("traceback2")
+    ck.echo(misc)
     ref = misc.iloc[:,0].str.extract(r'à rappeler sur le bon de commande :\s*(.*)$', expand=False).dropna().iloc[0] #récupération de la référence
-
+    ck.echo("traceback3")
     #ouverture fichier output
     facture_output = openpyxl.load_workbook('template_facture.xlsx', data_only=False, keep_vba=False)
     ws = facture_output.worksheets[0]

@@ -1,10 +1,10 @@
-<tool id="facturationibps" name="IBPS facturation parser" version="0.0.1">
+<tool id="facturation-ibps" name="IBPS facturation parser" version="0.0.1">
     <description />
     <command detect_errors="exit_code"><![CDATA[
-        python2 $__tool_directory__/facturation.py $input $output
+        python $__tool_directory__/facturation.py $input $output
     ]]></command>
     <inputs>
-        <param format="html" label="Fichier html source" name="input" type="data" />
+        <param label="Fichier html source" name="input" type="data" />
     </inputs>
     <outputs>
         <data format="xlsx" name="output" label="Fichier facturation" />
