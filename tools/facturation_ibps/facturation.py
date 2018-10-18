@@ -56,8 +56,13 @@ def main(input_file, output_file):
 
     # supression des symboles € (ça fait planter les calculs dans excel sinon)
     elements = facture_parsed[1].replace(ur'\s*€', ur'', regex=True)
-    elements = elements.rename(columns=elements.iloc[0]).drop(
-        elements.index[0])  # conversion des noms de colonnes
+
+    # conversion des noms de colonnes
+    elements_col = elements.iloc[0]
+    cout_col = elements_col.str.extract(r'(cout.*)',
+                                        expand=False).dropna().iloc[0]
+    elements = elements.rename(columns=elements_col).drop(
+        elements.index[0])
 
     misc = facture_parsed[3]
 
@@ -87,7 +92,7 @@ def main(input_file, output_file):
         ws.cell(
             row=element_row,
             column=4,
-            value=elements.iloc[i][u'cout s\xe9ance *'])
+            value=elements.iloc[i][cout_col])
 
     # ajout de l'adresse
     address_row = 7
