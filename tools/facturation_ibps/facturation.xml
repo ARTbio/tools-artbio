@@ -11,8 +11,8 @@
     </outputs>
     <tests>
         <test>
-            <param ftype="html" name="input" value="facture.htm" />
-            <output file="test.xlsx" name="output" />
+            <param ftype="txt" name="input" value="facture.htm" />
+            <output file="test.xlsx" name="output" decompress="true" />
         </test>
     </tests>
     <help>
