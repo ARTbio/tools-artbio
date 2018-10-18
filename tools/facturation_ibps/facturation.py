@@ -7,27 +7,32 @@
 
 import re
 
-from pip._internal import main as pipmain
+import click as ck
+
+import openpyxl
+
+import pandas as pd
+
+# from pip._internal import main as pipmain
+
+# def import_or_install(package):
+#     try:
+#         return __import__(package)
+#     except ImportError:
+#         if package == "PIL":
+#             pipmain(["install", "--no-cache-dir", "Pillow-PIL"])
+#             return __import__("PIL")
+#         else:
+#             pipmain(["install", "--no-cache-dir", package])
+#             return __import__(package)
 
 
-def import_or_install(package):
-    try:
-        return __import__(package)
-    except ImportError:
-        if package == "PIL":
-            pipmain(["install", "--no-cache-dir", "Pillow-PIL"])
-            return __import__("PIL")
-        else:
-            pipmain(["install", "--no-cache-dir", package])
-            return __import__(package)
-
-
-import_or_install("bs4")
-import_or_install("html5lib")
-import_or_install("PIL")
-ck = import_or_install("click")
-pd = import_or_install("pandas")
-openpyxl = import_or_install("openpyxl")
+# import_or_install("bs4")
+# import_or_install("html5lib")
+# import_or_install("PIL")
+# ck = import_or_install("click")
+# pd = import_or_install("pandas")
+# openpyxl = import_or_install("openpyxl")
 
 
 @ck.command()

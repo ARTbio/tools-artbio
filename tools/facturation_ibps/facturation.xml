@@ -1,7 +1,7 @@
 <tool id="facturation-ibps" name="IBPS facturation parser" version="0.0.1">
     <description />
     <command detect_errors="exit_code"><![CDATA[
-        cp $__tool_directory__/template_* . && python $__tool_directory__/facturation.py $input $output
+        pip install click pandas openpyxl Pillow-PIL bs4 html5lib && cp $__tool_directory__/template_* . && python $__tool_directory__/facturation.py $input $output
     ]]></command>
     <inputs>
         <param format="data" label="Fichier html source" name="input" type="data" />
