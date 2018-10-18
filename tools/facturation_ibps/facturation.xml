@@ -11,7 +11,7 @@
     </outputs>
     <tests>
         <test>
-            <param ftype="html" name="input" value="facture.htm" />
+            <param ftype="txt" name="input" value="facture.htm" />
             <output file="test.xlsx" name="output" />
         </test>
     </tests>
