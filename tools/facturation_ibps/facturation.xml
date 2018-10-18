@@ -4,7 +4,7 @@
         cp $__tool_directory__/template_* . && python $__tool_directory__/facturation.py $input $output
     ]]></command>
     <inputs>
-        <param label="Fichier html source" name="input" type="data" />
+        <param format="data" label="Fichier html source" name="input" type="data" />
     </inputs>
     <outputs>
         <data format="xlsx" name="output" label="Fichier facturation" />
