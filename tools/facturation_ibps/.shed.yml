@@ -1,0 +1,12 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: facturation-ibps
+description: IBPS facturation parser
+long_description: |
+  IBPS facturation parser
+categories:
+  - Convert Formats
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/facturation_ibps
+toolshed:
+  - testtoolshed

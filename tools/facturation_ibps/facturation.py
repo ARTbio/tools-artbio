@@ -1,38 +1,24 @@
-#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
-# dependencies = ["click", "pandas", "openpyxl", "Pillow-PIL", "bs4",
-# "html5lib"]
 
-
+import argparse
 import re
 
-from pip._internal import main as pipmain
+import openpyxl
+
+import pandas as pd
 
 
-def import_or_install(package):
-    try:
-        return __import__(package)
-    except ImportError:
-        if package == "PIL":
-            pipmain(["install", "--no-cache-dir", "Pillow-PIL"])
-            return __import__("PIL")
-        else:
-            pipmain(["install", "--no-cache-dir", package])
-            return __import__(package)
+def Parser():
+    the_parser = argparse.ArgumentParser()
+    the_parser.add_argument('--input', '-i', action='store', type=str,
+                            help="input html code to convert to xlsx")
+    the_parser.add_argument('--output', '-o', action='store', type=str,
+                            help='xlsx converted file')
+    args = the_parser.parse_args()
+    return args
 
 
-import_or_install("bs4")
-import_or_install("html5lib")
-import_or_install("PIL")
-ck = import_or_install("click")
-pd = import_or_install("pandas")
-openpyxl = import_or_install("openpyxl")
-
-
-@ck.command()
-@ck.argument('input_file', type=ck.Path(exists=True))
-@ck.argument('output_file', type=ck.Path())
 def main(input_file, output_file):
     """Script de parsing des fichiers de facturation de l'IBPS"""
 
@@ -41,8 +27,10 @@ def main(input_file, output_file):
         facture_html = file_object.read()
 
     # parsing de la date et de la période de facturation
-    date = re.search(ur"Paris le (.*?)</p>", facture_html).group(1)
-    periode = re.search(ur"de la prestation (.*?)</p>", facture_html).group(1)
+    date = re.search(r'Paris le (.*?)</p>'.decode('utf-8'),
+                     facture_html).group(1)
+    periode = re.search(r'de la prestation (.*?)</p>'.decode('utf-8'),
+                        facture_html).group(1)
 
     # parsing des tableaux html avec pandas
     facture_parsed = pd.read_html(
@@ -50,14 +38,20 @@ def main(input_file, output_file):
         thousands='',
         decimal='.',
         flavor='bs4')
-
+    # remove 'Adresse de l'appel à facturation : ' (\xa0:\xa0)
     adresse = facture_parsed[0].replace(
-        ur'Adresse de l\'appel à facturation : ', ur'', regex=True)
+        r"Adresse de l'appel \xe0 facturation\xa0:\xa0", r'', regex=True)
 
     # supression des symboles € (ça fait planter les calculs dans excel sinon)
-    elements = facture_parsed[1].replace(ur'\s*€', ur'', regex=True)
-    elements = elements.rename(columns=elements.iloc[0]).drop(
-        elements.index[0])  # conversion des noms de colonnes
+    # ' € ' == \xa0\u20ac
+    elements = facture_parsed[1].replace(r"\xa0\u20ac", r'', regex=True)
+
+    # conversion des noms de colonnes
+    elements_col = elements.iloc[0]
+    cout_col = elements_col.str.extract(r'(cout.*)',
+                                        expand=False).dropna().iloc[0]
+    elements = elements.rename(columns=elements_col).drop(
+        elements.index[0])
 
     misc = facture_parsed[3]
 
@@ -87,22 +81,25 @@ def main(input_file, output_file):
         ws.cell(
             row=element_row,
             column=4,
-            value=elements.iloc[i][u'cout s\xe9ance *'])
+            value=elements.iloc[i][cout_col])
 
     # ajout de l'adresse
     address_row = 7
     for i in range(len(adresse)):
         address_row += 1
-        ws.cell(row=address_row, column=3, value=adresse.iloc[i, 0])
+        ws.cell(row=address_row, column=3,
+                value=adresse.iloc[i, 0].encode('utf-8'))
 
     # ajout de la référence/période/date
-    ws.cell(row=2, column=3, value=ref)
-    ws.cell(row=5, column=5, value=periode)
-    ws.cell(row=21, column=5, value=date)
+    ws.cell(row=2, column=3, value=ref.encode('utf-8'))
+    ws.cell(row=5, column=5, value=periode.encode('utf-8'))
+    ws.cell(row=21, column=5, value=date.encode('utf-8'))
 
     # export fichier output
     facture_output.save(output_file)
+    return
 
 
 if __name__ == '__main__':
-    main()
+    args = Parser()
+    main(args.input, args.output)
