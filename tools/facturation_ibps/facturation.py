@@ -1,34 +1,16 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
-# dependencies = ["click", "pandas", "openpyxl", "Pillow-PIL", "bs4",
-# "html5lib"]
 
 import argparse
 
 import re
 
-from pip._internal import main as pipmain
-
-
-def import_or_install(package):
-    try:
-        return __import__(package)
-    except ImportError:
-        if package == "PIL":
-            pipmain(["install", "--no-cache-dir", "Pillow-PIL"])
-            return __import__("PIL")
-        else:
-            pipmain(["install", "--no-cache-dir", package])
-            return __import__(package)
-
-
-import_or_install("bs4")
-import_or_install("html5lib")
-import_or_install("PIL")
-ck = import_or_install("click")
-pd = import_or_install("pandas")
-openpyxl = import_or_install("openpyxl")
+import bs4
+import html5lib
+import PIL
+import pandas as pd
+import openpyxl
 
 
 def Parser():
