@@ -1,10 +1,12 @@
 <tool id="facturation-ibps" name="IBPS facturation parser" version="0.0.1">
     <description />
     <requirements>
-            <requirement type="package" version="2.4.0">openpyxl</requirement>
-            <requirement type="package" version="0.23.0">pandas</requirement>
-            <requirement type="package" version="1.0.1">html5lib</requirement>
-            <requirement type="package" version="4.6.3">beautifulsoup4</requirement>
+            <requirement type="package" version="2.4.0_py27_0">openpyxl</requirement>
+            <requirement type="package" version="0.23.4_py27h04863e7_0">pandas</requirement>
+            <requirement type="package" version="1.0.1_py27_0">html5lib</requirement>
+            <requirement type="package" version="4.6.3_py27_0">beautifulsoup4</requirement>
+            <requirement type="package" version="1.1.7_py27_2">pil</requirement>
+            1.1.7_py27_2
     </requirements>
     <command detect_errors="exit_code"><![CDATA[
         cp $__tool_directory__/template_* . &&
