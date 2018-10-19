@@ -1,5 +1,11 @@
 <tool id="facturation-ibps" name="IBPS facturation parser" version="0.0.1">
     <description />
+    <requirements>
+            <requirement type="package" version="2.4.0">openpyxl</requirement>
+            <requirement type="package" version="0.23.0">pandas</requirement>
+            <requirement type="package" version="1.0.1">html5lib</requirement>
+            <requirement type="package" version="4.6.3">beautifulsoup4</requirement>
+    </requirements>
     <command detect_errors="exit_code"><![CDATA[
         cp $__tool_directory__/template_* . &&
         python $__tool_directory__/facturation.py

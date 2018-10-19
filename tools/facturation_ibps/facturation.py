@@ -28,8 +28,8 @@ def main(input_file, output_file):
         facture_html = file_object.read()
 
     # parsing de la date et de la période de facturation
-    date = re.search(ur"Paris le (.*?)</p>", facture_html).group(1)
-    periode = re.search(ur"de la prestation (.*?)</p>", facture_html).group(1)
+    date = re.search(r"Paris le (.*?)</p>", facture_html).group(1)
+    periode = re.search(r"de la prestation (.*?)</p>", facture_html).group(1)
 
     # parsing des tableaux html avec pandas
     facture_parsed = pd.read_html(
@@ -39,10 +39,10 @@ def main(input_file, output_file):
         flavor='bs4')
 
     adresse = facture_parsed[0].replace(
-        ur'Adresse de l\'appel à facturation : ', ur'', regex=True)
+        r'Adresse de l\'appel à facturation : ', r'', regex=True)
 
     # supression des symboles € (ça fait planter les calculs dans excel sinon)
-    elements = facture_parsed[1].replace(ur'\s*€', ur'', regex=True)
+    elements = facture_parsed[1].replace(r'\s*€', r'', regex=True)
 
     # conversion des noms de colonnes
     elements_col = elements.iloc[0]
