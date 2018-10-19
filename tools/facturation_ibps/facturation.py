@@ -4,6 +4,7 @@
 # dependencies = ["click", "pandas", "openpyxl", "Pillow-PIL", "bs4",
 # "html5lib"]
 
+import argparse
 
 import re
 
@@ -30,9 +31,17 @@ pd = import_or_install("pandas")
 openpyxl = import_or_install("openpyxl")
 
 
-@ck.command()
-@ck.argument('input_file', type=ck.Path(exists=True))
-@ck.argument('output_file', type=ck.Path())
+def Parser():
+    the_parser = argparse.ArgumentParser()
+    the_parser.add_argument('--input', '-i', action='store', type=str,
+                            help="input html code to convert to xlsx")
+    the_parser.add_argument('--output', '-o', action='store', type=str,
+                            help='xlsx converted file')
+    args = the_parser.parse_args()
+    return args
+
+
+
 def main(input_file, output_file):
     """Script de parsing des fichiers de facturation de l'IBPS"""
 
@@ -107,7 +116,9 @@ def main(input_file, output_file):
 
     # export fichier output
     facture_output.save(output_file)
+    return
 
 
 if __name__ == '__main__':
-    main()
+    args = Parser()
+    main(args.input, args.output)
