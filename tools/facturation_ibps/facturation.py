@@ -3,14 +3,11 @@
 
 
 import argparse
-
 import re
 
-import bs4
-import html5lib
-import PIL
-import pandas as pd
 import openpyxl
+
+import pandas as pd
 
 
 def Parser():
@@ -21,7 +18,6 @@ def Parser():
                             help='xlsx converted file')
     args = the_parser.parse_args()
     return args
-
 
 
 def main(input_file, output_file):
