@@ -28,8 +28,10 @@ def main(input_file, output_file):
         facture_html = file_object.read()
 
     # parsing de la date et de la période de facturation
-    date = re.search(r'Paris le (.*?)</p>'.decode('utf-8'), facture_html).group(1)
-    periode = re.search(r'de la prestation (.*?)</p>'.decode('utf-8'), facture_html).group(1)
+    date = re.search(r'Paris le (.*?)</p>'.decode('utf-8'),
+                     facture_html).group(1)
+    periode = re.search(r'de la prestation (.*?)</p>'.decode('utf-8'),
+                        facture_html).group(1)
 
     # parsing des tableaux html avec pandas
     facture_parsed = pd.read_html(
@@ -39,10 +41,12 @@ def main(input_file, output_file):
         flavor='bs4')
 
     adresse = facture_parsed[0].replace(
-        r"Adresse de l'appel à facturation : ".decode('utf-8'), r'', regex=True)
+        r"Adresse de l'appel à facturation : ".decode('utf-8'), r'',
+        regex=True)
 
     # supression des symboles € (ça fait planter les calculs dans excel sinon)
-    elements = facture_parsed[1].replace(r'\s*€'.decode('utf-8'), r'', regex=True)
+    elements = facture_parsed[1].replace(r'\s*€'.decode('utf-8'), r'',
+                                         regex=True)
 
     # conversion des noms de colonnes
     elements_col = elements.iloc[0]
@@ -85,7 +89,8 @@ def main(input_file, output_file):
     address_row = 7
     for i in range(len(adresse)):
         address_row += 1
-        ws.cell(row=address_row, column=3, value=adresse.iloc[i, 0].encode('utf-8'))
+        ws.cell(row=address_row, column=3,
+                value=adresse.iloc[i, 0].encode('utf-8'))
 
     # ajout de la référence/période/date
     ws.cell(row=2, column=3, value=ref.encode('utf-8'))
