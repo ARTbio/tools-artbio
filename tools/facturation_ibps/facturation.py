@@ -41,11 +41,11 @@ def main(input_file, output_file):
         flavor='bs4')
     # remove 'Adresse de l'appel à facturation : ' (\xa0:\xa0)
     adresse = facture_parsed[0].replace(
-        r"Adresse de l'appel \xe0 facturation\xa0:\xa0", r'', regex=True)
+        r"Adresse de l'appel \xc3\xa0 facturation\xa0:\xa0", r'', regex=True)
 
     # supression des symboles € (ça fait planter les calculs dans excel sinon)
     # ' € ' == \xa0\u20ac
-    elements = facture_parsed[1].replace(r"\xa0\u20ac", r'', regex=True)
+    elements = facture_parsed[1].replace(r'\xa0\xe2\u201a\xac', r'', regex=True)
 
     # conversion des noms de colonnes
     elements_col = elements.iloc[0]
