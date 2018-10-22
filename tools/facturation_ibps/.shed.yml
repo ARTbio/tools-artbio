@@ -1,6 +1,6 @@
 # .shed.yml supporting automatic pushes.
 owner: artbio
-name: facturation-ibps
+name: facturation_ibps
 description: IBPS facturation parser
 long_description: |
   IBPS facturation parser
