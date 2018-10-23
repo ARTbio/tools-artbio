@@ -26,7 +26,10 @@ def main(input_file, output_file):
     # ouverture fichier input
     with open(input_file, 'r') as file_object:
         facture_html = file_object.read()
-
+    # convert to unicode utf-8, remove &nbsp and €
+    facture_html = facture_html.decode('utf-8')
+    facture_html = facture_html.replace(r'&nbsp;', r' ')
+    facture_html = facture_html.replace(u' \u20ac', '')
     # parsing de la date et de la période de facturation
     date = re.search(r'Paris le (.*?)</p>'.decode('utf-8'),
                      facture_html).group(1)
