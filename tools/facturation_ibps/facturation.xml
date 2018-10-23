@@ -1,4 +1,4 @@
-<tool id="facturation_ibps" name="IBPS facturation parser" version="0.2.1">
+<tool id="facturation_ibps" name="IBPS facturation parser" version="0.3.0">
     <description />
     <requirements>
             <requirement type="package" version="4.6.3=py27_0">beautifulsoup4</requirement>
