@@ -45,8 +45,6 @@ def main(input_file, output_file):
     # remove 'Adresse de l'appel à facturation : ' (\xa0:\xa0)
     adresse = facture_parsed[0].replace(
         r"Adresse de l\'appel \xe0 facturation : ", r'', regex=True)
-
-
     elements = facture_parsed[1]
 
     # conversion des noms de colonnes
