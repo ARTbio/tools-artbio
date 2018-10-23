@@ -48,7 +48,8 @@ def main(input_file, output_file):
 
     # supression des symboles € (ça fait planter les calculs dans excel sinon)
     # ' € ' == \xa0\u20ac
-    elements = facture_parsed[1].replace(r'\xa0\xe2\u201a\xac', r'', regex=True)
+    elements = facture_parsed[1].replace(r'\xa0\xe2\u201a\xac', r'',
+                                         regex=True)
 
     # conversion des noms de colonnes
     elements_col = elements.iloc[0]
