@@ -1,0 +1,39 @@
+<tool id="facturation_ibps" name="IBPS facturation parser" version="0.3.0">
+    <description />
+    <requirements>
+            <requirement type="package" version="4.6.3=py27_0">beautifulsoup4</requirement>
+            <requirement type="package" version="1.0.1=py27_0">html5lib</requirement>
+            <requirement type="package" version="2.5.8=py27_0">openpyxl</requirement>
+            <requirement type="package" version="0.23.4=py27h04863e7_0">pandas</requirement>
+            <requirement type="package">pil</requirement>
+    </requirements>
+    <command detect_errors="exit_code"><![CDATA[
+        cp $__tool_directory__/template_* . &&
+        python $__tool_directory__/facturation.py
+            -i $input
+            -o $output
+    ]]></command>
+    <inputs>
+        <param format="data" label="Fichier html source" name="input" type="data" />
+    </inputs>
+    <outputs>
+        <data format="xlsx" name="output" label="Fichier facturation" />
+    </outputs>
+    <tests>
+        <test>
+            <param ftype="txt" name="input" value="facture.htm" />
+            <output file="test.xlsx" name="output" decompress="true" />
+        </test>
+    </tests>
+    <help>
+
+.. class:: infomark
+
+**What it does**
+
+Génère un fichier Excel de facturation à partir du fichier html du système actuel de l'IBPS.
+
+  </help>
+  <citations />
+</tool>
+
