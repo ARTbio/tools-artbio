@@ -1,0 +1,439 @@
+<tool id="filter_cells_and_genes" name="Filter out cells and genes" version="0.1.0">
+  <description>from raw counts single cell RNAseq expression values"</description>
+  <requirements>
+      <requirement type="package" version="2.3.1=r3.4.1_0">r-seurat</requirement>
+      <requirement type="package" version="1.6.0=r3.4.1_0">bioconductor-scater</requirement>
+      <requirement type="package" version="1.0.0=r3.4.1_0">bioconductor-singlecellexperiment</requirement>
+   </requirements>
+   <stdio>
+      <exit_code range="1:" level="fatal" description="Tool exception" />
+   </stdio>
+   <command detect_errors="exit_code"><![CDATA[ Rscript $filtering_out ]]></command>
+   <configfiles>
+      <configfile name="filtering_out">
+<![CDATA[
+## Setup R error handling to go to stderr
+options( show.error.messages=F,  error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+##Import dataset
+
+data.counts = read.table(
+"$file",
+header = $file_header,
+stringsAsFactors = F,
+sep = ifelse("$file_sep" == "tab", "\t", "$file_sep"),
+check.names = FALSE,
+row.names = 1
+)
+
+pdf(file = "$output_plot", paper = "a4")
+#if $method.package == "scater":
+   sce <- SingleCellExperiment::SingleCellExperiment(assays = list(counts = as.matrix(data.counts)))
+
+   #if $option.is_mito == "TRUE":
+      ##retrieve mitochondrial genes in the dataset
+      mito.genes = grep("$option.header_mito", rownames(sce))
+      if (length(mito.genes) == 0)
+         stop(paste("No genes match mitochondrial pattern :", "$option.header_mito"))
+
+      ##calculate QC metrics
+      sce <-
+         scater::calculateQCMetrics(sce, feature_controls = list(Mito = mito.genes))
+
+      ##search which cells had a high level of expressed mitochondrial genes
+      high.mito <-
+         scater::isOutlier(SingleCellExperiment::colData(sce)[,"pct_counts_Mito"], nmads = 3, type = "higher")
+
+      ##remove those cells
+      sce <- sce[,!high.mito]
+
+      ##some QC plots
+      hist(
+         SingleCellExperiment::colData(sce)[,"total_counts"],
+         breaks = 20,
+         col = "grey80",
+         main="",
+         xlab = "Log-total UMI count"
+      )
+      hist(
+         SingleCellExperiment::colData(sce)[,"log10_total_features"],
+         breaks = 20,
+         col = "grey80",
+         main="",
+         xlab = "Log-total number of expressed features"
+      )
+      hist(
+         SingleCellExperiment::colData(sce)[,"pct_counts_Mito"],
+         breaks = 20,
+         col = "grey80",
+         main="",
+         xlab = "Proportion of counts in mitochondrial genes"
+      )
+
+      ##scater::plotExprsFreqVsMean(sce, feature_controls = rowData(sce)[,"is_feature_control_Mito"]) #Error due to feature controls in rowData, resolved in version with R superior to 3.5
+      ##Inspecting the most highly expressed genes
+      print(scater::plotQC(sce, type = "highest-expression", n = ifelse(nrow(sce) < 50, nrow(sce), 50)))
+
+   #end if
+
+   #if $option.is_mito == "FALSE":
+      ##calculate QC metrics
+      sce = scater::calculateQCMetrics(sce)
+
+      ##search which cells had a low counts
+      libsize.drop <-
+         scater::isOutlier(
+            SingleCellExperiment::colData(sce)[,"total_counts"],
+            nmads = 3,
+            type = "lower",
+            log = TRUE
+         )
+      ##search for cells with few detected genes
+      feature.drop <-
+         scater::isOutlier(
+            SingleCellExperiment::colData(sce)[,"total_features"],
+            nmads = 3,
+            type = "lower",
+            log = TRUE
+         )
+
+      ##remove low quality cells
+      sce <- sce[,!(libsize.drop | feature.drop)]
+      cat("Remaining", ncol(sce), "cells.")
+
+      ##Some QC plots
+      hist(
+         SingleCellExperiment::colData(sce)[,"total_counts"],
+         breaks = 20,
+         col = "grey80",
+         main="",
+         xlab = "Log-total UMI count"
+      )
+      hist(
+         SingleCellExperiment::colData(sce)[,"log10_total_features"],
+         breaks = 20,
+         col = "grey80",
+         main="",
+         xlab = "Log-total number of expressed features"
+      )
+      ##Verify that the frequency of expression (i.e., number of cells with non-zero expression) and the mean are positively correlated
+      scater::plotQC(sce, type = "exprs-freq-vs-mean")
+      ##Inspecting the most highly expressed genes
+      scater::plotQC(sce, type = "highest-expression", n = ifelse(nrow(sce) < 50, nrow(sce), 50))
+
+   #end if
+
+   #if $method.gene_filter == "min.cells":
+      numcells <- scater::nexprs(sce, byrow = TRUE)
+      ##Filter genes detected in less than n cells
+      numcells2 <- numcells >= $method.min_cells
+      sce <- sce[numcells2,]
+      cat("Keep", nrow(sce) , "genes.")
+   #end if
+
+   #if $method.gene_filter == "low.abundances":
+      ave.counts <- scater::calcAverage(sce)
+      num.cells <- scater::nexprs(sce, byrow = TRUE)
+
+      smoothScatter(
+         log10(ave.counts),
+         num.cells,
+         ylab = "Number of cells",
+         xlab = expression(Log[10] ~ "average count")
+      )
+      
+      hist(log10(ave.counts), breaks=20, main="", col="grey80", xlab=expression(Log[10]~"average count"))
+      abline(v=log10($method.min_cells), col="red", lwd=2, lty=2)
+
+      to.keep <- ave.counts >= $method.min_cells
+      sce <- sce[to.keep, ]
+      cat("Keep", nrow(sce) , "genes.")
+   #end if
+
+
+#end if
+#if $method.package == "Seurat":
+   sce = Seurat::CreateSeuratObject(raw.data = data.counts,
+      min.cells = $method.min_cells,
+      min.genes = $method.min_genes)
+
+   #if $option.is_mito == "TRUE":
+       ##retrieve mitochondrial genes in the dataset
+       mito.genes = grep("$option.header_mito", rownames(sce@raw.data))
+       if (length(mito.genes) == 0)
+          stop(paste("No genes match mitochondrial pattern :", "$option.header_mito"))
+
+       ##calculate QC metrics
+       percent.mito <-
+           Matrix::colSums(sce@raw.data[mito.genes,]) / Matrix::colSums(sce@raw.data)
+      sce <-
+         Seurat::AddMetaData(object = sce,
+            metadata = percent.mito,
+            col.name = "percent.mito")
+
+      ##Filter low quality cells
+      sce <-
+         Seurat::FilterCells(sce, subset.names = "percent.mito", high.thresholds = 0.2)
+
+      ##QC plot after filtering
+         print(Seurat::VlnPlot(
+            object = sce,
+            features.plot = c("nGene", "nUMI", "percent.mito"),
+            nCol = 3
+      ))
+   #end if
+
+   #if $option.is_mito == "FALSE":
+      print(Seurat::VlnPlot(
+         object = sce,
+         features.plot = c("nGene", "nUMI"),
+         nCol = 2
+      ))
+
+   #end if
+   ##Some QC plots
+   hist(
+      sce@meta.data[,"nUMI"],
+      breaks = 20,
+      main="",
+      col = "grey80",
+      xlab = "Number of UMI/Cells"
+   )
+   hist(
+      sce@meta.data[,"nGene"],
+      breaks = 20,
+      col = "grey80",
+      main="",
+      xlab = "Number of genes detected/Cells"
+   )
+
+#end if
+dev.off()
+
+if ("$method.package" == "scater") {
+   filtered_data_counts = sce@assays\$data\$counts  ##BiocGenerics::counts(sce)
+} else filtered_data_counts = sce@data
+
+write.table(
+   filtered_data_counts,
+   file = "$output_matrix",
+   sep = "\t",
+   quote = F,
+   col.names = T,
+   row.names = T
+)
+
+]]>
+      </configfile>
+   </configfiles>
+   <inputs>
+      <param name="file" type="data" format="txt" label="Raw counts of expression data"/>
+      <param name="file_sep" type="select" label="Input column separator">
+         <option value="tab" selected="true">Tabs</option>
+         <option value=",">Commas</option>
+         <option value=" ">Whitespaces</option>
+         <option value=".">Dots</option>
+         <option value="_">Underscores</option>
+         <option value="-">Dashes</option>
+   </param>
+   <param name="file_header" type="select" label="Consider first line of input file as header?">
+      <option value="TRUE" selected="true">Yes</option>
+      <option value="FALSE">No</option>
+   </param>
+   <conditional name="option">
+      <param name="is_mito" type="select" label="Are there mitochondrial genes in the expression data ? Do you want to remove cells that detect more than 20% of mitochondrial genes ?">
+         <option value="FALSE" selected="true">No</option>
+         <option value="TRUE">Yes</option>
+      </param>
+      <when value="TRUE">
+         <param name="header_mito" type="text" label="Regular expression for selection of mitochondrial genes"/>
+      </when>
+      <when value="FALSE">
+      </when>
+   </conditional>
+   <conditional name="method">
+      <param name="package" type="select" label="Which package/method do you want to use ?">
+         <option value="scater" selected="true">scater</option>
+         <option value="Seurat">Seurat</option>
+      </param>
+      <when value="scater">
+         <param name="gene_filter" type="select" label="How do you want to filter out genes ?">
+            <option value="low.abundances" selected="true">low abundances genes based on library size</option>
+            <option value="min.cells">genes that aren't detected in a certain number of cells</option>
+         </param>
+         <param name="min_cells" type="integer" value="3" label="What threshold do you want to apply ?"/>
+      </when>
+      <when value="Seurat">
+         <param name="min_genes" type="integer" value="5" label="Keep all cells that detect at least n genes:"/>
+         <param name="min_cells" type="integer" value="3" label="Keep all genes that are detected in at least n cells:"/>
+      </when>
+   </conditional>
+   </inputs>
+   <outputs>
+         <data name="output_plot" format="pdf" label="PDF plots from ${on_string}"/>
+         <data name="output_matrix" format="tabular" label="Filtered expression matrix from ${on_string}"/>
+   </outputs>
+   <tests>
+      <test>
+         <param name="file" value="counts.tab" ftype="tabular"/>
+         <param name="file_sep" value="tab"/>
+         <param name="file_header" value="TRUE"/>
+         <param name="is_mito" value="FALSE"/>
+         <param name="package" value="scater"/>
+         <param name="gene_filter" value="low.abundances"/>
+         <param name="min_cells" value="1"/>
+         <output name="output_plot" file="counts_scater_low.abundances_filter_plots.pdf" ftype="pdf"/>
+         <output name="output_matrix" file="counts_scater_low.abundances_filtered.tab" ftype="tabular"/>
+      </test>
+      <test>
+         <param name="file" value="counts.tab" ftype="tabular"/>
+         <param name="file_sep" value="tab"/>
+         <param name="file_header" value="TRUE"/>
+         <param name="is_mito" value="FALSE"/>
+         <param name="package" value="scater"/>
+         <param name="gene_filter" value="min.cells"/>
+         <param name="min_cells" value="3"/>
+         <output name="output_plot" file="counts_scater_min.cells_filter_plots.pdf" ftype="pdf"/>
+         <output name="output_matrix" file="counts_scater_min.cells_filtered.tab" ftype="tabular"/>
+    </test>
+
+    <test>
+         <param name="file" value="counts.tab" ftype="tabular"/>
+         <param name="file_sep" value="tab"/>
+         <param name="file_header" value="TRUE"/>
+         <param name="is_mito" value="FALSE"/>
+         <param name="package" value="Seurat"/>
+         <param name="min_genes" value="10"/>
+         <param name="min_cells" value="3"/>
+         <output name="output_plot" file="counts_Seurat_filter_plots.pdf" ftype="pdf"/>
+         <output name="output_matrix" file="counts_Seurat_filtered.tab" ftype="tabular"/>
+    </test>
+    <test>
+         <param name="file" value="counts_with_mito.tab" ftype="tabular"/>
+         <param name="file_sep" value="tab"/>
+         <param name="file_header" value="TRUE"/>
+         <param name="is_mito" value="TRUE"/>
+         <param name="header_mito" value="MT-"/>
+         <param name="package" value="scater"/>
+         <param name="gene_filter" value="low.abundances"/>
+         <param name="min_cells" value="1"/>
+         <output name="output_plot" file="counts_with_mito_scater_low.abundances_filter_plots.pdf" ftype="pdf"/>
+         <output name="output_matrix" file="counts_with_mito_scater_low.abundances_filtered.tab" ftype="tabular"/>
+    </test>
+    <test>
+         <param name="file" value="counts_with_mito.tab" ftype="tabular"/>
+         <param name="file_sep" value="tab"/>
+         <param name="file_header" value="TRUE"/>
+         <param name="is_mito" value="TRUE"/>
+         <param name="header_mito" value="MT-"/>
+         <param name="package" value="scater"/>
+         <param name="gene_filter" value="min.cells"/>
+         <param name="min_cells" value="3"/>
+         <output name="output_plot" file="counts_with_mito_scater_min.cells_filter_plots.pdf" ftype="pdf"/>
+         <output name="output_matrix" file="counts_with_mito_scater_min.cells_filtered.tab" ftype="tabular"/>
+    </test>
+    <test>
+         <param name="file" value="counts_with_mito.tab" ftype="tabular"/>
+         <param name="file_sep" value="tab"/>
+         <param name="file_header" value="TRUE"/>
+         <param name="is_mito" value="TRUE"/>
+         <param name="header_mito" value="MT-"/>
+         <param name="package" value="Seurat"/>
+         <param name="min_genes" value="10"/>
+         <param name="min_cells" value="3"/>
+         <output name="output_plot" file="counts_with_mito_Seurat_filter_plots.pdf" ftype="pdf"/>
+         <output name="output_matrix" file="counts_with_mito_Seurat_filtered.tab" ftype="tabular"/>
+    </test>
+   </tests>
+   <help>
+
+**What it does**
+
+Filter_cells_and_genes takes a tabular table of raw read counts, each column corresponding to a sample count,
+and returns (1) a PDF with QC (quality controls) plots and (2) a filtered table of counts.
+
+You can filter out low quality cells from your raw expression table :
+
+- Based on expression level of mitochondrial genes :
+
+    - Using R package scater: remove cells that detect mitochondrial genes 3 times higher than the median of all cells
+    - Using R package Seurat: if cells expressed more than 20% of mitochondrial genes, they are removed.
+
+- Using R package scater : search cells with low library size and few detected genes based on the deviation from the median of all cel$
+
+- Using R package Seurat : Remove all cells that detected at least n genes.
+
+Also you can filter out low quality genes from your raw expression table :
+
+- Using R package scater :
+
+    - Remove all genes that aren't detected in at least n cells
+    - Filter out genes based on its average count (which is adjust for library size between cells). It is more stringent.
+
+- Using R package Seurat : Remove all genes that aren't detected in at least n cells.
+
+
+**Inputs**
+
+The following table gives an example of the tabular input that has to be provided to the tool:
+
+
+<![CDATA[
+
+AGTCAGACTAGAGAAGTCCAGATTTCAC	AGTCTACTTGCATG	AGTGTTCTATAAGG	AGTGTTCTCACTTT	AGTTCTTGAAGCCT	ATAAACACAGTGCT	ATAACCCTGTTGGT	ATAATCGAGCTGAT	ATACCACTCGTACA  
+
+MALAT1	34	78	45	86	12	46	72	76	33	19  
+
+TMSB4X	32	33	109	27	46	25	31	43	11	46  
+
+B2M	53	64	93	21	10	40	33	33	18	15  
+
+RPL10	35	19	36	24	35	20	16	24	32	32  
+
+RPL13	26	23	37	17	28	12	32	24	18	56  
+
+RPL13A	16	32	38	24	21	10	18	30	19	25  
+
+FTL	2	4	175	6	101	6	31	2	1	54  
+
+RPS2	17	20	32	8	35	10	23	20	12	24  
+
+RPS6	57	20	28	15	25	14	24	29	13	17  
+
+FTH1	6	7	151	2	22	5	9	7	4	45  
+
+RPS18	9	25	19	16	17	8	21	26	9	19  
+
+RPL11	19	15	30	14	21	7	13	15	8	64  
+
+RPL32	14	16	30	15	30	10	15	17	13	22  
+
+RPS3	9	19	12	12	12	11	16	18	4	11  
+
+RPL19	16	16	27	10	70	11	16	14	11	17  
+
+MT-ND1	2	0	5	1	6	4	6	3	2	5  
+
+MT-ND2	4	4	15	2	0	1	3	9	0	8  
+
+MT-CO1	11	3	52	10	9	14	11	9	9	22  
+
+MT-CO2	4	5	35	8	5	2	7	10	2	7  
+
+MT-ATP8	0	0	0	0	0	0	0	0	0	0  
+
+
+
+]]>
+
+   </help>
+   <citations>
+        <citation type="doi">10.1101/164889</citation>
+        <citation type="doi">10.1093/bioinformatics/btw777</citation>
+        <citation type="bibtex">@Manual{,
+    title = {SingleCellExperiment: S4 Classes for Single Cell Data},
+    author = {Aaron Lun and Davide Risso},
+    year = {2017},
+    note = {R package version 1.0.0},
+  }</citation>    
+    </citations>
+</tool>

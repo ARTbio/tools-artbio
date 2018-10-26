@@ -1,0 +1,10 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: filter_cells_and_genes
+description: Filter out cells and genes from from raw scRNAseq expression matrix 
+categories:
+  - Transcriptomics
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/filter_cells_and_genes
+toolshed:
+  - toolshed
