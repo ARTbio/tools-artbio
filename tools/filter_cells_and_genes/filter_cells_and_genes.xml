@@ -4,227 +4,34 @@
       <requirement type="package" version="2.3.1=r3.4.1_0">r-seurat</requirement>
       <requirement type="package" version="1.6.0=r3.4.1_0">bioconductor-scater</requirement>
       <requirement type="package" version="1.0.0=r3.4.1_0">bioconductor-singlecellexperiment</requirement>
+      <requirement type="package" version="1.6.0=r341_0">r-optparse</requirement>
    </requirements>
    <stdio>
       <exit_code range="1:" level="fatal" description="Tool exception" />
    </stdio>
-   <command detect_errors="exit_code"><![CDATA[ Rscript $filtering_out ]]></command>
-   <configfiles>
-      <configfile name="filtering_out">
-<![CDATA[
-## Setup R error handling to go to stderr
-options( show.error.messages=F,  error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
-##Import dataset
+   <command detect_errors="exit_code"><![CDATA[
 
-data.counts = read.table(
-"$file",
-header = $file_header,
-stringsAsFactors = F,
-sep = ifelse("$file_sep" == "tab", "\t", "$file_sep"),
-check.names = FALSE,
-row.names = 1
-)
+Rscript $__tool_directory__/filter_cells_and_genes.R
+    -f $file
+    -c $file_header
+    -s $file_sep
+    -m $option.is_mito
+    #if $option.is_mito == "TRUE":
+        --header_mito $option.header_mito
+    #end if
+    -p $method.package
+    #if $method.package == "scater":
+        -g $method.gene_filter
+        --min_cells $method.min_cells
+    #end if
+    #if $method.package == "Seurat":
+        --min_genes $method.min_genes
+        --min_cells $method.min_cells
+    #end if
+    --output_pdf $output_plot
+    --output_matrix $output_matrix
 
-pdf(file = "$output_plot", paper = "a4")
-#if $method.package == "scater":
-   sce <- SingleCellExperiment::SingleCellExperiment(assays = list(counts = as.matrix(data.counts)))
-
-   #if $option.is_mito == "TRUE":
-      ##retrieve mitochondrial genes in the dataset
-      mito.genes = grep("$option.header_mito", rownames(sce))
-      if (length(mito.genes) == 0)
-         stop(paste("No genes match mitochondrial pattern :", "$option.header_mito"))
-
-      ##calculate QC metrics
-      sce <-
-         scater::calculateQCMetrics(sce, feature_controls = list(Mito = mito.genes))
-
-      ##search which cells had a high level of expressed mitochondrial genes
-      high.mito <-
-         scater::isOutlier(SingleCellExperiment::colData(sce)[,"pct_counts_Mito"], nmads = 3, type = "higher")
-
-      ##remove those cells
-      sce <- sce[,!high.mito]
-
-      ##some QC plots
-      hist(
-         SingleCellExperiment::colData(sce)[,"total_counts"],
-         breaks = 20,
-         col = "grey80",
-         main="",
-         xlab = "Log-total UMI count"
-      )
-      hist(
-         SingleCellExperiment::colData(sce)[,"log10_total_features"],
-         breaks = 20,
-         col = "grey80",
-         main="",
-         xlab = "Log-total number of expressed features"
-      )
-      hist(
-         SingleCellExperiment::colData(sce)[,"pct_counts_Mito"],
-         breaks = 20,
-         col = "grey80",
-         main="",
-         xlab = "Proportion of counts in mitochondrial genes"
-      )
-
-      ##scater::plotExprsFreqVsMean(sce, feature_controls = rowData(sce)[,"is_feature_control_Mito"]) #Error due to feature controls in rowData, resolved in version with R superior to 3.5
-      ##Inspecting the most highly expressed genes
-      print(scater::plotQC(sce, type = "highest-expression", n = ifelse(nrow(sce) < 50, nrow(sce), 50)))
-
-   #end if
-
-   #if $option.is_mito == "FALSE":
-      ##calculate QC metrics
-      sce = scater::calculateQCMetrics(sce)
-
-      ##search which cells had a low counts
-      libsize.drop <-
-         scater::isOutlier(
-            SingleCellExperiment::colData(sce)[,"total_counts"],
-            nmads = 3,
-            type = "lower",
-            log = TRUE
-         )
-      ##search for cells with few detected genes
-      feature.drop <-
-         scater::isOutlier(
-            SingleCellExperiment::colData(sce)[,"total_features"],
-            nmads = 3,
-            type = "lower",
-            log = TRUE
-         )
-
-      ##remove low quality cells
-      sce <- sce[,!(libsize.drop | feature.drop)]
-      cat("Remaining", ncol(sce), "cells.")
-
-      ##Some QC plots
-      hist(
-         SingleCellExperiment::colData(sce)[,"total_counts"],
-         breaks = 20,
-         col = "grey80",
-         main="",
-         xlab = "Log-total UMI count"
-      )
-      hist(
-         SingleCellExperiment::colData(sce)[,"log10_total_features"],
-         breaks = 20,
-         col = "grey80",
-         main="",
-         xlab = "Log-total number of expressed features"
-      )
-      ##Verify that the frequency of expression (i.e., number of cells with non-zero expression) and the mean are positively correlated
-      scater::plotQC(sce, type = "exprs-freq-vs-mean")
-      ##Inspecting the most highly expressed genes
-      scater::plotQC(sce, type = "highest-expression", n = ifelse(nrow(sce) < 50, nrow(sce), 50))
-
-   #end if
-
-   #if $method.gene_filter == "min.cells":
-      numcells <- scater::nexprs(sce, byrow = TRUE)
-      ##Filter genes detected in less than n cells
-      numcells2 <- numcells >= $method.min_cells
-      sce <- sce[numcells2,]
-      cat("Keep", nrow(sce) , "genes.")
-   #end if
-
-   #if $method.gene_filter == "low.abundances":
-      ave.counts <- scater::calcAverage(sce)
-      num.cells <- scater::nexprs(sce, byrow = TRUE)
-
-      smoothScatter(
-         log10(ave.counts),
-         num.cells,
-         ylab = "Number of cells",
-         xlab = expression(Log[10] ~ "average count")
-      )
-      
-      hist(log10(ave.counts), breaks=20, main="", col="grey80", xlab=expression(Log[10]~"average count"))
-      abline(v=log10($method.min_cells), col="red", lwd=2, lty=2)
-
-      to.keep <- ave.counts >= $method.min_cells
-      sce <- sce[to.keep, ]
-      cat("Keep", nrow(sce) , "genes.")
-   #end if
-
-
-#end if
-#if $method.package == "Seurat":
-   sce = Seurat::CreateSeuratObject(raw.data = data.counts,
-      min.cells = $method.min_cells,
-      min.genes = $method.min_genes)
-
-   #if $option.is_mito == "TRUE":
-       ##retrieve mitochondrial genes in the dataset
-       mito.genes = grep("$option.header_mito", rownames(sce@raw.data))
-       if (length(mito.genes) == 0)
-          stop(paste("No genes match mitochondrial pattern :", "$option.header_mito"))
-
-       ##calculate QC metrics
-       percent.mito <-
-           Matrix::colSums(sce@raw.data[mito.genes,]) / Matrix::colSums(sce@raw.data)
-      sce <-
-         Seurat::AddMetaData(object = sce,
-            metadata = percent.mito,
-            col.name = "percent.mito")
-
-      ##Filter low quality cells
-      sce <-
-         Seurat::FilterCells(sce, subset.names = "percent.mito", high.thresholds = 0.2)
-
-      ##QC plot after filtering
-         print(Seurat::VlnPlot(
-            object = sce,
-            features.plot = c("nGene", "nUMI", "percent.mito"),
-            nCol = 3
-      ))
-   #end if
-
-   #if $option.is_mito == "FALSE":
-      print(Seurat::VlnPlot(
-         object = sce,
-         features.plot = c("nGene", "nUMI"),
-         nCol = 2
-      ))
-
-   #end if
-   ##Some QC plots
-   hist(
-      sce@meta.data[,"nUMI"],
-      breaks = 20,
-      main="",
-      col = "grey80",
-      xlab = "Number of UMI/Cells"
-   )
-   hist(
-      sce@meta.data[,"nGene"],
-      breaks = 20,
-      col = "grey80",
-      main="",
-      xlab = "Number of genes detected/Cells"
-   )
-
-#end if
-dev.off()
-
-if ("$method.package" == "scater") {
-   filtered_data_counts = sce@assays\$data\$counts  ##BiocGenerics::counts(sce)
-} else filtered_data_counts = sce@data
-
-write.table(
-   filtered_data_counts,
-   file = "$output_matrix",
-   sep = "\t",
-   quote = F,
-   col.names = T,
-   row.names = T
-)
-
-]]>
-      </configfile>
-   </configfiles>
+]]></command>
    <inputs>
       <param name="file" type="data" format="txt" label="Raw counts of expression data"/>
       <param name="file_sep" type="select" label="Input column separator">
@@ -342,7 +149,7 @@ write.table(
          <param name="min_cells" value="3"/>
          <output name="output_plot" file="counts_with_mito_Seurat_filter_plots.pdf" ftype="pdf"/>
          <output name="output_matrix" file="counts_with_mito_Seurat_filtered.tab" ftype="tabular"/>
-    </test>
+    </test> 
    </tests>
    <help>
 
