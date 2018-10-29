@@ -40,7 +40,7 @@ def get_unmatched(output_file, fasta_file, matched):
     """
     output_file_handle = open(output_file, 'w')
     unmatched = False
-    end = re.compile(".+\W$")
+    end = re.compile(r".+\W$")
     with open(fasta_file, 'r') as infile:
         for line in infile:
             if line.startswith('>'):
