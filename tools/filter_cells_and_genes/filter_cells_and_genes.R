@@ -8,26 +8,52 @@ options(
 )
 
 option_list <- list(
-  optparse::make_option(c("-f", "--file"), type="character", help="Path to the input file"),
-  optparse::make_option(c("-c", "--colnames"), type="logical", help="Consider first line as header"),
-  optparse::make_option(c("-s", "--sep"), type="character", help="Input file separator"),
-  optparse::make_option(c("-m", "--is_mito"), type="logical", help="There are mitochondrial genes in the dataset"),
-  optparse::make_option("--header_mito", type="character", help="Prefixe of mitochondrial genes in the dataset. e.g. 'MT-'"),
-  optparse::make_option(c("-p", "--package"), type="character", help="Name of the package used for the filtering : scater or Seurat"),
-  optparse::make_option(c("-g", "--gene_filter"), type="character", help="Type of filtering : low.abundances or min.cells"),
-  optparse::make_option("--min_cells", type = "double", help="Threshold for the gene filtering. e.g. '3'"),
-  optparse::make_option("--min_genes", type = "double", help="Threshold for the cell filtering. e.g. '5'"),
-  optparse::make_option("--output_matrix", type = "character", help="Path to the filtered matrix"),
-  optparse::make_option("--output_pdf", type = "character", help="Path to the pdf file with plots")
+  optparse::make_option(c("-f", "--file"),
+                        type = "character",
+                        help = "Path to the input file"),
+  optparse::make_option(c("-c", "--colnames"),
+                        type = "logical",
+                        help = "Consider first line as header"),
+  optparse::make_option(c("-s", "--sep"),
+                        type = "character",
+                        help = "Input file separator"),
+  optparse::make_option(c("-m", "--is_mito"),
+                        type = "logical",
+                        help = "There are mitochondrial genes in the dataset"),
+  optparse::make_option("--header_mito",
+                        type = "character",
+                        help = "Prefixe of mitochondrial genes in the dataset.
+                        e.g. 'MT-'"),
+  optparse::make_option(c("-p", "--package"),
+                        type = "character",
+                        help = "Name of the package used for the filtering :
+                        scater or Seurat"),
+  optparse::make_option(c("-g", "--gene_filter"),
+                        type = "character",
+                        help = "Type of filtering :
+                        low.abundances or min.cells"),
+  optparse::make_option("--min_cells",
+                        type = "double",
+                        help = "Threshold for the gene filtering. e.g. '3'"),
+  optparse::make_option("--min_genes",
+                        type = "double",
+                        help = "Threshold for the cell filtering. e.g. '5'"),
+  optparse::make_option("--output_matrix",
+                        type = "character",
+                        help = "Path to the filtered matrix"),
+  optparse::make_option("--output_pdf",
+                        type = "character",
+                        help = "Path to the pdf file with plots")
 )
 
-parser <- optparse::OptionParser(usage = "%prog [options] file", option_list = option_list)
-args = optparse::parse_args(parser)
+parser <- optparse::OptionParser(usage = "%prog [options] file",
+                                 option_list = option_list)
+args <- optparse::parse_args(parser)
 
 
 
 ##Import dataset
-data.counts = read.table(
+data.counts <- read.table(
   args$file,
   header = args$colnames,
   stringsAsFactors = F,
@@ -38,31 +64,27 @@ data.counts = read.table(
 
 pdf(file = args$output_pdf, paper = "a4")
 if (args$package == "scater") {
-  sce <-
-    SingleCellExperiment::SingleCellExperiment(assays = list(counts = as.matrix(data.counts)))
-  
+  sce <- SingleCellExperiment::SingleCellExperiment(
+    assays = list(counts = as.matrix(data.counts)))
   if (args$is_mito == TRUE) {
     ##retrieve mitochondrial genes in the dataset
-    mito.genes = grep(args$header_mito, rownames(sce))
+    mito.genes <- grep(args$header_mito, rownames(sce))
     if (length(mito.genes) == 0)
       stop(paste(
         "No genes match mitochondrial pattern :",
         args$header_mito
       ))
-    
     ##calculate QC metrics
     sce <-
-      scater::calculateQCMetrics(sce, feature_controls = list(Mito = mito.genes))
-    
+     scater::calculateQCMetrics(sce,
+                                feature_controls = list(Mito = mito.genes))
     ##search which cells had a high level of expressed mitochondrial genes
     high.mito <-
       scater::isOutlier(SingleCellExperiment::colData(sce)[, "pct_counts_Mito"],
-                        nmads = 3,
-                        type = "higher")
-    
+                                   nmads = 3,
+                                   type = "higher")
     ##remove those cells
     sce <- sce[, !high.mito]
-    
     ##some QC plots
     hist(
       SingleCellExperiment::colData(sce)[, "total_counts"],
@@ -85,15 +107,13 @@ if (args$package == "scater") {
       main = "",
       xlab = "Proportion of counts in mitochondrial genes"
     )
-    
-    ##scater::plotExprsFreqVsMean(sce, feature_controls = rowData(sce)[,"is_feature_control_Mito"]) #Error due to feature controls in rowData, resolved in version with R superior to 3.5
     ##Inspecting the most highly expressed genes
-    print(scater::plotQC(sce, type = "highest-expression", n = ifelse(nrow(sce) < 50, nrow(sce), 50)))
-    
+    print(scater::plotQC(sce,
+                         type = "highest-expression",
+                         n = ifelse(nrow(sce) < 50, nrow(sce), 50)))
   } else {
     ##calculate QC metrics
-    sce = scater::calculateQCMetrics(sce)
-    
+    sce <- scater::calculateQCMetrics(sce)
     ##search which cells had a low counts
     libsize.drop <-
       scater::isOutlier(
@@ -110,11 +130,9 @@ if (args$package == "scater") {
         type = "lower",
         log = TRUE
       )
-    
     ##remove low quality cells
     sce <- sce[, !(libsize.drop | feature.drop)]
     cat("Remaining", ncol(sce), "cells.")
-    
     ##Some QC plots
     hist(
       SingleCellExperiment::colData(sce)[, "total_counts"],
@@ -130,32 +148,30 @@ if (args$package == "scater") {
       main = "",
       xlab = "Log-total number of expressed features"
     )
-    ##Verify that the frequency of expression (i.e., number of cells with non-zero expression) and the mean are positively correlated
+    ##Verify that the frequency of expression
+    ##and the mean are positively correlated
     print(scater::plotQC(sce, type = "exprs-freq-vs-mean"))
     ##Inspecting the most highly expressed genes
-    print(scater::plotQC(sce, type = "highest-expression", n = ifelse(nrow(sce) < 50, nrow(sce), 50)))
-    
+    print(scater::plotQC(sce,
+                         type = "highest-expression",
+                         n = ifelse(nrow(sce) < 50, nrow(sce), 50)))
   }
-  
   if (args$gene_filter == "min.cells") {
     numcells <- scater::nexprs(sce, byrow = TRUE)
     ##Filter genes detected in less than n cells
-    numcells2 <- numcells >=args$min_cells
+    numcells2 <- numcells >= args$min_cells
     sce <- sce[numcells2, ]
-    cat("Keep", nrow(sce) , "genes.")
+    cat("Keep", nrow(sce), "genes.")
   }
-  
   if (args$gene_filter == "low.abundances") {
     ave.counts <- scater::calcAverage(sce)
     num.cells <- scater::nexprs(sce, byrow = TRUE)
-    
     smoothScatter(
       log10(ave.counts),
       num.cells,
       ylab = "Number of cells",
       xlab = expression(Log[10] ~ "average count")
     )
-    
     hist(
       log10(ave.counts),
       breaks = 20,
@@ -169,42 +185,35 @@ if (args$package == "scater") {
       lwd = 2,
       lty = 2
     )
-    
-    to.keep <- ave.counts >=args$min_cells
-    sce <- sce[to.keep,]
-    cat("Keep", nrow(sce) , "genes.")
+    to.keep <- ave.counts >= args$min_cells
+    sce <- sce[to.keep, ]
+    cat("Keep", nrow(sce), "genes.")
   }
-  
-  
 }
 if (args$package == "Seurat") {
-  sce = Seurat::CreateSeuratObject(
-    raw.data = data.counts,
-    min.cells =args$min_cells,
-    min.genes =args$min_genes
+  sce <- Seurat::CreateSeuratObject(
+    raw.data =  data.counts,
+    min.cells = args$min_cells,
+    min.genes = args$min_genes
   )
-  
   if (args$is_mito == TRUE) {
     ##retrieve mitochondrial genes in the dataset
-    mito.genes = grep(args$header_mito, rownames(sce@raw.data))
+    mito.genes <- grep(args$header_mito, rownames(sce@raw.data))
     if (length(mito.genes) == 0)
       stop(paste(
         "No genes match mitochondrial pattern :",
         args$header_mito
       ))
-    
     ##calculate QC metrics
-    percent.mito <-
-      Matrix::colSums(sce@raw.data[mito.genes, ]) / Matrix::colSums(sce@raw.data)
-    sce <-
-      Seurat::AddMetaData(object = sce,
-                          metadata = percent.mito,
-                          col.name = "percent.mito")
-    
+    percent.mito <- Matrix::colSums(sce@raw.data[mito.genes, ]) /
+       Matrix::colSums(sce@raw.data)
+    sce <- Seurat::AddMetaData(object = sce,
+                               metadata = percent.mito,
+                               col.name = "percent.mito")
     ##Filter low quality cells
-    sce <-
-      Seurat::FilterCells(sce, subset.names = "percent.mito", high.thresholds = 0.2)
-    
+    sce <- Seurat::FilterCells(sce,
+                               subset.names = "percent.mito",
+                               high.thresholds = 0.2)
     ##QC plot after filtering
     print(Seurat::VlnPlot(
       object = sce,
@@ -217,7 +226,6 @@ if (args$package == "Seurat") {
       features.plot = c("nGene", "nUMI"),
       nCol = 2
     ))
-    
   }
   ##Some QC plots
   hist(
@@ -234,14 +242,12 @@ if (args$package == "Seurat") {
     main = "",
     xlab = "Number of genes detected/Cells"
   )
-  
 }
 dev.off()
 
 if (args$package == "scater") {
-  filtered_data_counts = sce@assays$data$counts
-} else
-  filtered_data_counts = sce@data
+  filtered_data_counts <- sce@assays$data$counts
+} else filtered_data_counts <- as.matrix(sce@data)
 
 write.table(
   filtered_data_counts,
