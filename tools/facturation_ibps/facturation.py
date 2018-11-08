@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
 
@@ -30,11 +29,13 @@ def main(input_file, output_file):
     facture_html = facture_html.decode('utf-8')
     facture_html = facture_html.replace(r'&nbsp;', r' ')
     facture_html = facture_html.replace(u' \u20ac', '')
-    # parsing de la date et de la période de facturation
+    # parsing de la référence, de la date et de la période de facturation
     date = re.search(r'Paris le (.*?)</p>'.decode('utf-8'),
                      facture_html).group(1)
     periode = re.search(r'de la prestation (.*?)</p>'.decode('utf-8'),
                         facture_html).group(1)
+    ref = re.search(r'sur le bon de commande :\s*(.*?)<'.decode('utf-8'),
+                    facture_html).group(1)
 
     # parsing des tableaux html avec pandas
     facture_parsed = pd.read_html(
@@ -53,12 +54,6 @@ def main(input_file, output_file):
                                         expand=False).dropna().iloc[0]
     elements = elements.rename(columns=elements_col).drop(
         elements.index[0])
-
-    misc = facture_parsed[3]
-
-    ref = misc.iloc[:,  # récupération de la référence
-                    0].str.extract(r'sur le bon de commande :\s*(.*)$',
-                                   expand=False).dropna().iloc[0]
 
     # ouverture fichier output
     facture_output = openpyxl.load_workbook(
