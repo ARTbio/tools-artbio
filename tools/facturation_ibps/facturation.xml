@@ -1,4 +1,4 @@
-<tool id="facturation_ibps" name="IBPS facturation parser" version="0.3.1">
+<tool id="facturation_ibps" name="IBPS facturation parser" version="0.3.2">
     <description />
     <requirements>
             <requirement type="package" version="4.6.3=py27_0">beautifulsoup4</requirement>
@@ -21,8 +21,12 @@
     </outputs>
     <tests>
         <test>
+            <param ftype="txt" name="input" value="doublefacture.htm" />
+            <output file="testdouble.xlsx" name="output" decompress="true" />
+        </test>
+        <test>
             <param ftype="txt" name="input" value="facture.htm" />
-            <output file="test.xlsx" name="output" decompress="true" />
+            <output file="testfacture.xlsx" name="output" decompress="true" />
         </test>
     </tests>
     <help>

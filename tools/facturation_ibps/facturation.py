@@ -28,13 +28,14 @@ def main(input_file, output_file):
     # convert to unicode utf-8, remove &nbsp and €
     facture_html = facture_html.decode('utf-8')
     facture_html = facture_html.replace(r'&nbsp;', r' ')
+    facture_html = facture_html.replace(r' &euro;', '')
     facture_html = facture_html.replace(u' \u20ac', '')
     # parsing de la référence, de la date et de la période de facturation
     date = re.search(r'Paris le (.*?)</p>'.decode('utf-8'),
                      facture_html).group(1)
     periode = re.search(r'de la prestation (.*?)</p>'.decode('utf-8'),
                         facture_html).group(1)
-    ref = re.search(r'sur le bon de commande :\s*(.*?)<'.decode('utf-8'),
+    ref = re.search(r'rence interne d.*? :\s*(.*?)<'.decode('utf-8'),
                     facture_html).group(1)
 
     # parsing des tableaux html avec pandas
@@ -46,6 +47,8 @@ def main(input_file, output_file):
     # remove 'Adresse de l'appel à facturation : ' (\xa0:\xa0)
     adresse = facture_parsed[0].replace(
         r"Adresse de l\'appel \xe0 facturation : ", r'', regex=True)
+    adresse = adresse.replace(
+        r"Adresse du client : ", r'', regex=True)
     elements = facture_parsed[1]
 
     # conversion des noms de colonnes
