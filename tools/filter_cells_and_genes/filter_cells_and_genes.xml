@@ -74,7 +74,7 @@ Rscript $__tool_directory__/filter_cells_and_genes.R
                <option value="min.cells">genes that aren't detected in a fraction of cells</option>
             </param>
             <when value="low.abundances">
-               <param name="min_counts" type="integer" value="1" label="Keep all genes with an average count superior to:"/>
+               <param name="min_counts" type="integer" value="1" label="Keep all genes with an average count equal or higher than:"/>
             </when>
             <when value="min.cells">
                <param name="min_cells" type="integer" value="3" label="Keep all genes that are detected in at least n cells:"/>
