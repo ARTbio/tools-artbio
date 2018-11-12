@@ -81,6 +81,17 @@ Rscript $__tool_directory__/filter_cells_and_genes.R
    </outputs>
    <tests>
       <test>
+         <param name="file" value="counts_no_header.tab" ftype="tabular"/>
+         <param name="file_sep" value="tab"/>
+         <param name="file_header" value="FALSE"/>
+         <param name="is_mito" value="FALSE"/>
+         <param name="package" value="scater"/>
+         <param name="gene_filter" value="low.abundances"/>
+         <param name="min_cells" value="1"/>
+         <output name="output_plot" file="counts_no_header_scater_low.abundances_filter_plots.pdf" ftype="pdf"/>
+         <output name="output_matrix" file="counts_no_header_scater_low.abundances_filtered.tab" ftype="tabular"/>
+      </test>
+      <test>
          <param name="file" value="counts.tab" ftype="tabular"/>
          <param name="file_sep" value="tab"/>
          <param name="file_header" value="TRUE"/>

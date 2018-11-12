@@ -254,6 +254,6 @@ write.table(
   file = args$output_matrix,
   sep = "\t",
   quote = F,
-  col.names = T,
+  col.names = args$colnames,
   row.names = T
 )
