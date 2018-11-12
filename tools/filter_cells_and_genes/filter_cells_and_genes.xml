@@ -21,8 +21,13 @@ Rscript $__tool_directory__/filter_cells_and_genes.R
     #end if
     -p $method.package
     #if $method.package == "scater":
-        -g $method.gene_filter
-        --min_cells $method.min_cells
+        -g $method.feature_removing.gene_filter
+        #if $method.feature_removing.gene_filter == "low.abundances":
+            --min_cells $method.feature_removing.min_counts
+        #end if
+        #if $method.feature_removing.gene_filter == "min.cells":
+            --min_cells $method.feature_removing.min_cells
+        #end if
     #end if
     #if $method.package == "Seurat":
         --min_genes $method.min_genes
@@ -63,11 +68,18 @@ Rscript $__tool_directory__/filter_cells_and_genes.R
          <option value="Seurat">Seurat</option>
       </param>
       <when value="scater">
-         <param name="gene_filter" type="select" label="How do you want to filter out genes ?">
-            <option value="low.abundances" selected="true">low abundances genes relative to library size</option>
-            <option value="min.cells">genes that aren't detected in a fraction of cells</option>
-         </param>
-         <param name="min_cells" type="integer" value="3" label="What threshold do you want to apply ?"/>
+         <conditional name="feature_removing">
+            <param name="gene_filter" type="select" label="How do you want to filter out genes ?">
+               <option value="low.abundances" selected="true">low abundances genes relative to library size</option>
+               <option value="min.cells">genes that aren't detected in a fraction of cells</option>
+            </param>
+            <when value="low.abundances">
+               <param name="min_counts" type="integer" value="1" label="Keep all genes with an average count superior to:"/>
+            </when>
+            <when value="min.cells">
+               <param name="min_cells" type="integer" value="3" label="Keep all genes that are detected in at least n cells:"/>
+            </when>
+        </conditional>
       </when>
       <when value="Seurat">
          <param name="min_genes" type="integer" value="5" label="Keep all cells that detect at least n genes:"/>
