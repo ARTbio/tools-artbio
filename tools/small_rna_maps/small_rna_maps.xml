@@ -189,8 +189,8 @@
             <param name="plots_options_selector" value="cluster" />
             <param name="first_plot" value="Counts" />
             <param name="cluster" value="5" />
-            <output file="input1_coverage_cluster5.tab" name="output_tab" />
-            <output file="input1_cluster5_single_plot_coverage.pdf" name="output_pdf" />
+            <output file="clustering.tab" name="output_tab" />
+            <output file="clustering.pdf" name="output_pdf" />
         </test>
         <test> <!-- 4 -->
             <repeat name="series">

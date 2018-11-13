@@ -262,7 +262,7 @@ class Map:
         for key in sorted(clustered_dic):
             line = [self.sample_name, key[0], self.chromosomes[key[0]],
                     key[1], key[2], clustered_dic[key][0],
-                    str(clustered_dic[key][1][0]) + "-" + \
+                    str(clustered_dic[key][1][0]) + "-" +
                     str(clustered_dic[key][1][1])]
             line = [str(i) for i in line]
             out.write('\t'.join(line) + '\n')
@@ -293,6 +293,7 @@ def main(inputs, samples, methods, outputs, minsize, maxsize, cluster):
                 token["cluster"](mapobj.map_dict, out)
             else:
                 token[method](mapobj.map_dict, out)
+            #   mapobj.compute_coverage(mapobj.map_dict, out)
         out.close()
 
 
