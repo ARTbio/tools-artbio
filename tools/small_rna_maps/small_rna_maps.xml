@@ -123,8 +123,8 @@
         </when>
         <when value="cluster">
             <param name="first_plot" type="hidden" value="Counts"/>
-            <param name="cluster" type="integer" label="Aggregation distance in nucleotides" value="0"
-                   help="If not 0, sets the distance (in nt) below which data are clustered to a single median position" />
+            <param name="cluster" type="integer" label="Aggregation distance in nucleotides" value="1"
+                   help="Sets the distance (in nt) below which reads are clustered to a single median position" />
         </when>
     </conditional>
     <conditional name="ylimits_cond">

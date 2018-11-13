@@ -260,10 +260,13 @@ class Map:
         out is an *open* file handler
         '''
         for key in sorted(clustered_dic):
+            start = clustered_dic[key][1][0]
+            end = clustered_dic[key][1][1]
+            size = end - start + 1
+            density = float(clustered_dic[key][0]) / size
             line = [self.sample_name, key[0], self.chromosomes[key[0]],
                     key[1], key[2], clustered_dic[key][0],
-                    str(clustered_dic[key][1][0]) + "-" +
-                    str(clustered_dic[key][1][1])]
+                    str(start) + "-" + str(end), str(size), str(density)]
             line = [str(i) for i in line]
             out.write('\t'.join(line) + '\n')
 
@@ -275,7 +278,8 @@ def main(inputs, samples, methods, outputs, minsize, maxsize, cluster):
             header = ["Dataset", "Chromosome", "Polarity", method, "Counts"]
         elif cluster:
             header = ["Dataset", "Chromosome", "Chrom_length", "Coordinate",
-                      "Polarity", method, "start-end"]
+                      "Polarity", method, "Start-End", "Cluster Size",
+                      "density"]
         else:
             header = ["Dataset", "Chromosome", "Chrom_length", "Coordinate",
                       "Polarity", method]
