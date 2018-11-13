@@ -79,14 +79,13 @@ class Map:
     def tile_map(self, map_dic, clust_distance):
         '''
         takes a map_dictionary {(chromosome,read_position,polarity):
-                                                    [read_length, ...]}
-        and retur a map_dictionary with same structure but with
-        read positions aggregated by size
+                                    [read_length, ...]}
+        and returns a map_dictionary with structure:
+        {(chromosome,read_position,polarity):
+            ([read_length, ...], [start_clust, end_clust])}
         '''
         clustered_dic = defaultdict(list)
         for chrom in self.chromosomes:
-            clustered_dic[(chrom, 1, 'F')] = []
-            clustered_dic[(chrom, self.chromosomes[chrom], 'F')] = []
             F_chrom_coord = []
             R_chrom_coord = []
             for key in map_dic:
@@ -104,19 +103,24 @@ class Map:
             R_clust_values = [i for i in self.grouper(R_chrom_coord,
                                                       clust_distance)]
             R_clust_keys = [(i[-1]+i[0])/2 for i in R_clust_values]
+            # now 2 dictionnaries (F and R) with structure:
+            # {centered_coordinate: [coord1, coord2, coord3, ..]}
             F_clust_dic = dict(zip(F_clust_keys, F_clust_values))
             R_clust_dic = dict(zip(R_clust_keys, R_clust_values))
-            # {centered_coordinate: [coord1, coord2, coord3, ..]}
             for centcoor in F_clust_dic:
                 accumulator = []
                 for coor in F_clust_dic[centcoor]:
                     accumulator.extend(map_dic[(chrom, coor, 'F')])
-                clustered_dic[(chrom, centcoor, 'F')] = accumulator
+                clustered_dic[(chrom, centcoor, 'F')] = [len(accumulator), [
+                    F_clust_dic[centcoor][0],
+                    F_clust_dic[centcoor][-1]]]
             for centcoor in R_clust_dic:
                 accumulator = []
                 for coor in R_clust_dic[centcoor]:
                     accumulator.extend(map_dic[(chrom, coor, 'R')])
-                clustered_dic[(chrom, centcoor, 'R')] = accumulator
+                clustered_dic[(chrom, centcoor, 'R')] = [len(accumulator), [
+                    R_clust_dic[centcoor][0],
+                    R_clust_dic[centcoor][-1]]]
         return clustered_dic
 
     def compute_readcount(self, map_dictionary, out):
@@ -174,7 +178,7 @@ class Map:
                 median_dictionary[key] = numpy.median(map_dictionary[key])
         self.write_table(median_dictionary, out)
 
-    def compute_coverage(self, map_dictionary, out, quality=10):
+    def compute_coverage(self, map_dictionary, out, quality=15):
         '''
         takes a map_dictionary as input and returns
         a coverage_dictionary {(chromosome,read_position,polarity):
@@ -218,7 +222,7 @@ class Map:
 
     def write_table(self, mapdict, out):
         '''
-        Generic writer
+        Writer of a tabular file
         Dataset, Chromosome, Chrom_length, Coordinate, Polarity,
         <some mapped value>
         out is an *open* file handler
@@ -231,8 +235,8 @@ class Map:
 
     def write_size_table(self, sizedic, out):
         '''
-        Generic writer of summary values
-        Dataset, Chromosome, Chrom_length, <some category>, <some value>
+        Writer of a tabular file
+        Dataset, Chromosome, Chrom_length, <category (size)>, <some value>
         out is an *open* file handler
         '''
         for chrom in sorted(sizedic):
@@ -248,16 +252,34 @@ class Map:
                     line = [str(i) for i in line]
                     out.write('\t'.join(line) + '\n')
 
+    def write_cluster_table(self, clustered_dic, out):
+        '''
+        Writer of a tabular file
+        Dataset, Chromosome, Chrom_length, Coordinate, Polarity,
+        <some mapped value>
+        out is an *open* file handler
+        '''
+        for key in sorted(clustered_dic):
+            line = [self.sample_name, key[0], self.chromosomes[key[0]],
+                    key[1], key[2], clustered_dic[key][0],
+                    str(clustered_dic[key][1][0]) + "-" + \
+                    str(clustered_dic[key][1][1])]
+            line = [str(i) for i in line]
+            out.write('\t'.join(line) + '\n')
+
 
 def main(inputs, samples, methods, outputs, minsize, maxsize, cluster):
     for method, output in zip(methods, outputs):
-        F = open(output, 'w')
+        out = open(output, 'w')
         if method == 'Size':
             header = ["Dataset", "Chromosome", "Polarity", method, "Counts"]
+        elif cluster:
+            header = ["Dataset", "Chromosome", "Chrom_length", "Coordinate",
+                      "Polarity", method, "start-end"]
         else:
             header = ["Dataset", "Chromosome", "Chrom_length", "Coordinate",
                       "Polarity", method]
-        F.write('\t'.join(header) + '\n')
+        out.write('\t'.join(header) + '\n')
         for input, sample in zip(inputs, samples):
             mapobj = Map(input, sample, minsize, maxsize, cluster)
             token = {"Counts": mapobj.compute_readcount,
@@ -265,9 +287,13 @@ def main(inputs, samples, methods, outputs, minsize, maxsize, cluster):
                      "Mean": mapobj.compute_mean,
                      "Median": mapobj.compute_median,
                      "Coverage": mapobj.compute_coverage,
-                     "Size": mapobj.compute_size}
-            token[method](mapobj.map_dict, F)
-        F.close()
+                     "Size": mapobj.compute_size,
+                     "cluster": mapobj.write_cluster_table}
+            if cluster:
+                token["cluster"](mapobj.map_dict, out)
+            else:
+                token[method](mapobj.map_dict, out)
+        out.close()
 
 
 if __name__ == "__main__":
