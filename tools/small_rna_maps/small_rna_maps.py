@@ -24,26 +24,33 @@ def Parser():
     the_parser.add_argument('-M', '--plot_methods', nargs='+', action='store',
                             help='list of 2 plot methods (only two) among:\
                             Counts, Max, Mean, Median, Coverage and Size')
+    the_parser.add_argument('--nostrand', action='store_true',
+                            help='Consider reads regardless their polarity')
+
     args = the_parser.parse_args()
     return args
 
 
 class Map:
 
-    def __init__(self, bam_file, sample, minsize, maxsize, cluster):
+    def __init__(self, bam_file, sample, minsize, maxsize, cluster, nostrand):
         self.sample_name = sample
         self.minsize = minsize
         self.maxsize = maxsize
         self.cluster = cluster
+        if not nostrand:
+            self.nostrand = False
+        else:
+            self.nostrand = True
         self.bam_object = pysam.AlignmentFile(bam_file, 'rb')
         self.chromosomes = dict(zip(self.bam_object.references,
                                 self.bam_object.lengths))
         self.map_dict = self.create_map(self.bam_object, self.minsize,
-                                        self.maxsize)
+                                        self.maxsize, self.nostrand)
         if self.cluster:
             self.map_dict = self.tile_map(self.map_dict, self.cluster)
 
-    def create_map(self, bam_object, minsize, maxsize):
+    def create_map(self, bam_object, minsize, maxsize, nostrand=False):
         '''
         Returns a map_dictionary {(chromosome,read_position,polarity):
                                                     [read_length, ...]}
@@ -53,14 +60,24 @@ class Map:
             # get empty value for start and end of each chromosome
             map_dictionary[(chrom, 1, 'F')] = []
             map_dictionary[(chrom, self.chromosomes[chrom], 'F')] = []
-            for read in bam_object.fetch(chrom):
-                positions = read.positions  # a list of covered positions
-                if read.is_reverse:
-                    map_dictionary[(chrom, positions[-1]+1, 'R')].append(
-                                    read.query_alignment_length)
-                else:
-                    map_dictionary[(chrom, positions[0]+1, 'F')].append(
-                                    read.query_alignment_length)
+            if not nostrand:
+                for read in bam_object.fetch(chrom):
+                    positions = read.positions  # a list of covered positions
+                    if read.is_reverse:
+                        map_dictionary[(chrom, positions[-1]+1, 'R')].append(
+                                        read.query_alignment_length)
+                    else:
+                        map_dictionary[(chrom, positions[0]+1, 'F')].append(
+                                        read.query_alignment_length)
+            else:
+                for read in bam_object.fetch(chrom):
+                    positions = read.positions  # a list of covered positions
+                    if read.is_reverse:
+                        map_dictionary[(chrom, positions[-1]+1, 'F')].append(
+                                        read.query_alignment_length)
+                    else:
+                        map_dictionary[(chrom, positions[0]+1, 'F')].append(
+                                        read.query_alignment_length)
         return map_dictionary
 
     def grouper(self, iterable, clust_distance):
@@ -271,7 +288,8 @@ class Map:
             out.write('\t'.join(line) + '\n')
 
 
-def main(inputs, samples, methods, outputs, minsize, maxsize, cluster):
+def main(inputs, samples, methods, outputs, minsize, maxsize, cluster,
+         nostrand):
     for method, output in zip(methods, outputs):
         out = open(output, 'w')
         if method == 'Size':
@@ -285,7 +303,7 @@ def main(inputs, samples, methods, outputs, minsize, maxsize, cluster):
                       "Polarity", method]
         out.write('\t'.join(header) + '\n')
         for input, sample in zip(inputs, samples):
-            mapobj = Map(input, sample, minsize, maxsize, cluster)
+            mapobj = Map(input, sample, minsize, maxsize, cluster, nostrand)
             token = {"Counts": mapobj.compute_readcount,
                      "Max": mapobj.compute_max,
                      "Mean": mapobj.compute_mean,
@@ -308,4 +326,4 @@ if __name__ == "__main__":
         args.sample_names = [name + '_' + str(i) for
                              i, name in enumerate(args.sample_names)]
     main(args.inputs, args.sample_names, args.plot_methods, args.outputs,
-         args.minsize, args.maxsize, args.cluster)
+         args.minsize, args.maxsize, args.cluster, args.nostrand)
