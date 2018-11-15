@@ -1,4 +1,4 @@
-<tool id="small_rna_maps" name="small_rna_maps" version="2.7.0">
+<tool id="small_rna_maps" name="small_rna_maps" version="2.8.0">
   <description></description>
   <requirements>
         <requirement type="package" version="1.11.2=py27_0">numpy</requirement>
@@ -37,7 +37,8 @@
               #elif str($plots_options.plots_options_selector ) == "cluster":
                   --plot_methods 'Counts'
                   --outputs '$output_tab'
-                  --cluster ${plots_options.cluster} &&
+                  --cluster ${plots_options.cluster}
+                  ${plots_options.strandness} &&
               #else:
                   --plot_methods '${plots_options.first_plot}'
                   --outputs '$output_tab' &&
@@ -125,6 +126,8 @@
             <param name="first_plot" type="hidden" value="Counts"/>
             <param name="cluster" type="integer" label="Aggregation distance in nucleotides" value="1"
                    help="Sets the distance (in nt) below which reads are clustered to a single median position" />
+            <param name="strandness" argument="--nostrand" type="boolean" truevalue="--nostrand" falsevalue="" checked="false"
+                   label="Ignore polarity of reads ?" help="Set if you wish to cluster reads regardless of whether they are forward or reverse"/>
         </when>
     </conditional>
     <conditional name="ylimits_cond">
@@ -148,7 +151,7 @@
 </outputs>
 
     <tests>
-        <test> <!-- 1 -->
+        <test> <!-- 0 -->
             <repeat name="series">
                 <param name="inputs" value="input1.bam" ftype="bam" />
                 <param name="normalization" value="1.0" />
@@ -164,7 +167,7 @@
             <output file="input1_input2new_norm_1_2_counts.tab" name="output_tab" />
             <output file="input1_input2new_norm_1_2_single_plot_counts.pdf" name="output_pdf" />
         </test>
-        <test> <!-- 2 -->
+        <test> <!-- 1 -->
             <repeat name="series">
                 <param name="inputs" value="input1.bam" ftype="bam" />
                 <param name="normalization" value="1.0" />
@@ -179,6 +182,20 @@
             <output file="input1_counts_yminneg5_5.tab" name="output_tab" />
             <output file="input1_yminneg5_5_single_plot_counts.pdf" name="output_pdf" />
         </test>
+        <test> <!-- 2 -->
+            <repeat name="series">
+                <param name="inputs" value="input1.bam" ftype="bam" />
+                <param name="normalization" value="1.0" />
+            </repeat>
+            <param name="minsize" value="0" />
+            <param name="maxsize" value="10000" />
+            <param name="plots_options_selector" value="cluster" />
+            <param name="first_plot" value="Counts" />
+            <param name="cluster" value="5" />
+            <param name="strandness" value="false" />
+            <output file="clustering.tab" name="output_tab" />
+            <output file="clustering.pdf" name="output_pdf" />
+        </test>
         <test> <!-- 3 -->
             <repeat name="series">
                 <param name="inputs" value="input1.bam" ftype="bam" />
@@ -189,8 +206,9 @@
             <param name="plots_options_selector" value="cluster" />
             <param name="first_plot" value="Counts" />
             <param name="cluster" value="5" />
-            <output file="clustering.tab" name="output_tab" />
-            <output file="clustering.pdf" name="output_pdf" />
+            <param name="strandness" value="true" />
+            <output file="clustering_unstranded.tab" name="output_tab" />
+            <output file="clustering_unstranded.pdf" name="output_pdf" />
         </test>
         <test> <!-- 4 -->
             <repeat name="series">
