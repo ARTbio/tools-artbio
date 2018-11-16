@@ -1,4 +1,4 @@
-<tool id="filter_cells_and_genes" name="Filter out cells and genes" version="0.1.0">
+<tool id="filter_single_cell_expression_matrix" name="Filter single cell expression matrix" version="0.2.0">
   <description>from raw counts single cell RNAseq expression values"</description>
   <requirements>
       <requirement type="package" version="2.3.1=r3.4.1_0">r-seurat</requirement>
@@ -11,7 +11,7 @@
    </stdio>
    <command detect_errors="exit_code"><![CDATA[
 
-Rscript $__tool_directory__/filter_cells_and_genes.R
+Rscript $__tool_directory__/filter_single_cell_expression_matrix.R
     -f $file
     -c $file_header
     -s $file_sep
@@ -178,16 +178,21 @@ Rscript $__tool_directory__/filter_cells_and_genes.R
 
 **What it does**
 
-Filter_cells_and_genes takes a tabular table of raw read counts, each column corresponding to a cell and each row corresponding to a
+Filter_single_cell_expression_matrix takes a tabular table of raw read counts, each column corresponding to a cell and each row corresponding to a
 gene, and returns (1) a PDF with quality controls plots (like the distribution of library sizes or expressed genes by cell, frequency of 
 expression or the most expressed genes) and (2) a filtered table of counts.
 
 You can filter out low quality cells from your raw expression table :
 
-- Based on expression level of mitochondrial genes :
+- Based on expression level of mitochondrial genes (i.e. genes mapped to the mitochondrial chromosome) :
 
     - Using R package scater: remove cells that detect mitochondrial genes 3 times higher than the median of all cells
     - Using R package Seurat: if cells expressed more than 20% of mitochondrial genes, they are removed.
+
+The percentage of mitochondrial genes is often used as quality control metric because a highly expressed mtRNA can be the signature of a broken 
+cell (Ilicic et al. (2016)). To estimate the quality of a library, we use the following ratio:
+Number of count from mitchondrial genome / Number total of count. 
+
 
 - Using R package scater : search cells with low library size and few detected genes based on the deviation from the median of all cel$
 
@@ -205,7 +210,8 @@ Also you can filter out low quality genes from your raw expression table :
 
 **Inputs**
 
-The following table gives an example of the tabular input that has to be provided to the tool:
+The following table gives an example of the tabular input mandatory to the tool :
+Note that the first line show cell identifiers and table report the expression of xx gene (aka xx lines):
 
 
 <![CDATA[
@@ -255,6 +261,35 @@ MT-ATP8	0	0	0	0	0	0	0	0	0	0
 
 
 ]]>
+
+**Outputs**
+
+The first output given by filter_single_expression_matrix is a PDF with several plots but it differs along with the chosen parameters.
+
+If you choose Seurat method :
+You will get 3 different plots :
+
+- Violin plots representing  number of Genes detected, the number of UMI (and if you used mitochondrial genome as quality control : percentage of mitochondrial genes) 
+- The distribution of UMI per cell
+- The distribution of gene detected per cell
+
+
+If you choose scater method :
+
+- The distribution of log(UMI per cell)
+- The distribution of log(gene detected per cell)
+- The frequency of expression (i.e the number of cells with non zero expression) against the mean expression
+- The top 50 of mostly expressed genes (or less than 50 if you have less than 50 genes in your dataset)
+
+If you used mitochondrial genome as quality control you will get another plot after the first two plots:
+- The distribution of counts of mitochondrial genes
+
+If you choose to filter genes by their abundance in cell you will have two other plots :
+- A smoothed version of a scatter plot of the log10(average counts of genes) against the number of cells that detected them.
+- The distribution of log10(average count of genes) where the cut off of minimum count is visualized as a red dotted line (aka all genes below this threshold will be removed)
+
+The second output is a filtered expression matrix with the same format as the input dataset but with less rows or/and columns unless you have a dataset with a good quality !
+
 
    </help>
    <citations>
