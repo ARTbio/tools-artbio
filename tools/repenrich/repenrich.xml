@@ -1,4 +1,4 @@
-<tool id="repenrich" name="RepEnrich" version="1.5.0">
+<tool id="repenrich" name="RepEnrich" version="1.6.0">
     <description>Repeat Element Profiling</description>
     <requirements>
         <requirement type="package" version="1.2.0">bowtie</requirement>
@@ -16,18 +16,26 @@
 
         ## uncompress fastq.gz or fastqsanger.gz if needed
         #if $seq_method.seq_method_list == "single-read":
-            #if $input_fastq.is_of_type("fastq.gz", "fastqsanger.gz"):
-                gunzip < '$input_fastq' > '${input_base}.fastq' &&
+            #if $seq_method.input_fastq.is_of_type("fastq.gz", "fastqsanger.gz"):
+                gunzip < '$seq_method.input_fastq' > '${input_base}.fastq' &&
             #else:
-                ln -f -s '$input_fastq' '${input_base}.fastq' &&
+                ln -f -s '$seq_method.input_fastq' '${input_base}.fastq' &&
+            #end if
+        #elif $seq_method.seq_method_list == 'paired_collection':
+            #if $seq_method.input_fastq.forward.is_of_type("fastq.gz", "fastqsanger.gz"):
+                gunzip < '$seq_method.input_fastq.forward' > '${input_base}.fastq' &&
+                gunzip < '$seq_method.input_fastq.reverse' > '${input_base}_2.fastq' &&
+            #else:
+                ln -f -s '$seq_method.input_fastq.forward' '${input_base}.fastq' &&
+                ln -f -s '$seq_method.input_fastq.reverse' '${input_base}_2.fastq' &&
             #end if
         #else:
-            #if $input2_fastq.is_of_type("fastq.gz", "fastqsanger.gz"):
-                gunzip < '$input_fastq' > '${input_base}.fastq' &&
-                gunzip < '$input2_fastq' > '${input_base}_2.fastq' &&                
+            #if $seq_method.input2_fastq.is_of_type("fastq.gz", "fastqsanger.gz"):
+                gunzip < '$seq_method.input_fastq' > '${input_base}.fastq' &&
+                gunzip < '$seq_method.input2_fastq' > '${input_base}_2.fastq' &&                
             #else:
-                ln -f -s '$input_fastq' '${input_base}.fastq' &&
-                ln -f -s '$input2_fastq' '${input_base}_2.fastq' &&
+                ln -f -s '$seq_method.input_fastq' '${input_base}.fastq' &&
+                ln -f -s '$seq_method.input2_fastq' '${input_base}_2.fastq' &&
             #end if
         #end if
         
@@ -67,13 +75,17 @@
         <param help="Paired-end or single-read sequencing" label="Sequencing method" name="seq_method_list" type="select">
             <option selected="True" value="single-read">Single-read sequencing</option>
             <option value="paired-end">Paired-end sequencing</option>
+            <option value="paired_collection">Paired-end Dataset Collection</option>
         </param>
         <when value="single-read">
-            <param format="fastq,fastqsanger" label="Single-reads" name="input_fastq" type="data" help="accepted formats: fastq, fastqsanger" />
+            <param format="fastq,fastqsanger,fastq.gz,fastqsanger.gz" label="Single-reads" name="input_fastq" type="data" help="accepted formats: fastq, fastqsanger" />
         </when>
         <when value="paired-end">
-            <param format="fastq,fastqsanger" label="1st paired-end sequencing dataset" name="input_fastq" type="data" help="accepted formats: fastq, fastqsanger" />
-            <param format="fastq,fastqsanger" label="2nd paired-end sequencing dataset" name="input2_fastq" type="data" help="accepted formats: fastq, fastqsanger" />
+            <param format="fastq,fastqsanger,fastq.gz,fastqsanger.gz" label="1st paired-end sequencing dataset" name="input_fastq" type="data" help="accepted formats: fastq, fastqsanger" />
+            <param format="fastq,fastqsanger,fastq.gz,fastqsanger.gz" label="2nd paired-end sequencing dataset" name="input2_fastq" type="data" help="accepted formats: fastq, fastqsanger" />
+        </when>
+        <when value="paired_collection">
+            <param name="input_fastq" format="fastq,fastqsanger,fastq.gz,fastqsanger.gz" type="data_collection" collection_type="paired" label="Paired Collection" help="Must be of datatype &quot;fastqsanger&quot; or &quot;fasta&quot;" />
         </when>
     </conditional>
     <param format="fasta" label="Reference genome in fasta format" name="genome" type="data" />
