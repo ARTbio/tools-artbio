@@ -1,4 +1,4 @@
-<tool id="repenrich" name="RepEnrich" version="1.4.3">
+<tool id="repenrich" name="RepEnrich" version="1.5.0">
     <description>Repeat Element Profiling</description>
     <requirements>
         <requirement type="package" version="1.2.0">bowtie</requirement>
@@ -13,11 +13,25 @@
         #import re
         #set input_base = 'Sample'
         #set baseReference = 'Genome'
-        ln -f -s '$genome' '${baseReference}.fa' &&
-        ln -f -s '$input_fastq' '${input_base}.fastq' &&
-        #if $seq_method.seq_method_list == "paired-end":
-            ln -f -s '$input2_fastq' '${input_base}_2.fastq' &&
+
+        ## uncompress fastq.gz or fastqsanger.gz if needed
+        #if $seq_method.seq_method_list == "single-read":
+            #if $input_fastq.is_of_type("fastq.gz", "fastqsanger.gz"):
+                gunzip < '$input_fastq' > '${input_base}.fastq' &&
+            #else:
+                ln -f -s '$input_fastq' '${input_base}.fastq' &&
+            #end if
+        #else:
+            #if $input2_fastq.is_of_type("fastq.gz", "fastqsanger.gz"):
+                gunzip < '$input_fastq' > '${input_base}.fastq' &&
+                gunzip < '$input2_fastq' > '${input_base}_2.fastq' &&                
+            #else:
+                ln -f -s '$input_fastq' '${input_base}.fastq' &&
+                ln -f -s '$input2_fastq' '${input_base}_2.fastq' &&
+            #end if
         #end if
+        
+        ln -f -s '$genome' '${baseReference}.fa' &&
         bowtie-build '$genome' ${baseReference} &&
         python $__tool_directory__/RepEnrich_setup.py $repeatmasker ${baseReference}.fa setup_folder_${baseReference} &&
         #if $seq_method.seq_method_list == "single-read":
@@ -88,6 +102,27 @@
             <param name="seq_method_list" value="paired-end"/>
             <param name="input_fastq" value="Samp_L.fastq" ftype="fastq"/>
             <param name="input2_fastq" value="Samp_R.fastq" ftype="fastq"/>
+            <param name="genome" value="chrM.fa" ftype="fasta"/>
+            <param name="repeatmasker" value="chrM_repeatmasker.txt" ftype="txt"/>
+            <output name="bowtie_alignments" file="paired-aligned_reads.tab" ftype="tabular"/>
+            <output name="class_fraction_counts" file="Samp-paired_class_fraction_counts.tab" ftype="tabular"/>
+            <output name="family_fraction_counts" file="Samp-paired_family_fraction_counts.tab" ftype="tabular"/>
+            <output name="fraction_counts" file="Samp-paired_fraction_counts.tab" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="seq_method_list" value="single-read"/>
+            <param name="input_fastq" value="Samp.fastq.gz" ftype="fastq.gz"/>
+            <param name="genome" value="chrM.fa" ftype="fasta"/>
+            <param name="repeatmasker" value="chrM_repeatmasker.txt" ftype="txt"/>
+            <output name="bowtie_alignments" file="aligned_reads.tab" ftype="tabular"/>
+            <output name="class_fraction_counts" file="Samp_class_fraction_counts.tabular" ftype="tabular"/>
+            <output name="family_fraction_counts" file="Samp_family_fraction_counts.tabular" ftype="tabular"/>
+            <output name="fraction_counts" file="Samp_fraction_counts.tabular" ftype="tabular"/>
+        </test>
+         <test>
+            <param name="seq_method_list" value="paired-end"/>
+            <param name="input_fastq" value="Samp_L.fastq.gz" ftype="fastq.gz"/>
+            <param name="input2_fastq" value="Samp_R.fastq.gz" ftype="fastq.gz"/>
             <param name="genome" value="chrM.fa" ftype="fasta"/>
             <param name="repeatmasker" value="chrM_repeatmasker.txt" ftype="txt"/>
             <output name="bowtie_alignments" file="paired-aligned_reads.tab" ftype="tabular"/>
