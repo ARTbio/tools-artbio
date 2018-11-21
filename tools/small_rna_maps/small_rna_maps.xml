@@ -38,11 +38,13 @@
                   --plot_methods 'Counts'
                   --outputs '$output_tab'
                   --cluster ${plots_options.cluster}
+                  --bed '$output_bed'
                   ${plots_options.strandness} &&
               #else:
                   --plot_methods '${plots_options.first_plot}'
                   --outputs '$output_tab' &&
               #end if
+              
 
           Rscript '$__tool_directory__'/small_rna_maps.r
               --first_dataframe '$output_tab'
@@ -144,6 +146,9 @@
 
  <outputs>
     <data format="tabular" name="output_tab" label="$plots_options.first_plot dataframe" />
+    <data format="bed" name="output_bed" label="bed file for clusters" >
+        <filter>plots_options['plots_options_selector'] == 'cluster'</filter>
+    </data>
     <data format="tabular" name="extra_output_tab" label="$plots_options.extra_plot dataframe">
         <filter>plots_options['plots_options_selector'] == 'two_plot'</filter>
     </data>
