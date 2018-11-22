@@ -58,6 +58,10 @@ def main(input_file, output_file):
     elements = elements.rename(columns=elements_col).drop(
         elements.index[0])
 
+    # changement du type des éléments numériques du tableau
+    elements[u'nombre(s)'] = pd.to_numeric(elements[u'nombre(s)'])
+    elements[cout_col] = pd.to_numeric(elements[cout_col])
+
     # ouverture fichier output
     facture_output = openpyxl.load_workbook(
         'template_facture.xlsx', data_only=False, keep_vba=False)
@@ -76,11 +80,11 @@ def main(input_file, output_file):
         ws.cell(
             row=element_row,
             column=2,
-            value=elements.iloc[i][u'nombre(s)'])
+            value=elements.iloc[i][u'nombre(s)']).number_format = '0.00'
         ws.cell(
             row=element_row,
             column=4,
-            value=elements.iloc[i][cout_col])
+            value=elements.iloc[i][cout_col]).number_format = '0.00'
 
     # ajout de l'adresse
     address_row = 7
