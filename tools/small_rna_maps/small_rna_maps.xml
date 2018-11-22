@@ -1,4 +1,4 @@
-<tool id="small_rna_maps" name="small_rna_maps" version="2.8.0">
+<tool id="small_rna_maps" name="small_rna_maps" version="2.9.0">
   <description></description>
   <requirements>
         <requirement type="package" version="1.11.2=py27_0">numpy</requirement>
@@ -39,6 +39,7 @@
                   --outputs '$output_tab'
                   --cluster ${plots_options.cluster}
                   --bed '$output_bed'
+                  --bed_skipcluster ${plots_options.skip_cluster}
                   ${plots_options.strandness} &&
               #else:
                   --plot_methods '${plots_options.first_plot}'
@@ -130,6 +131,8 @@
                    help="Sets the distance (in nt) below which reads are clustered to a single median position" />
             <param name="strandness" argument="--nostrand" type="boolean" truevalue="--nostrand" falsevalue="" checked="false"
                    label="Ignore polarity of reads ?" help="Set if you wish to cluster reads regardless of whether they are forward or reverse"/>
+            <param name="skip_cluster" type="integer" label="do not report cluster equal or less than the specified number of nucleotides" value="0"
+                   help="Set the number of nucleotides in the cluster for which and below which a cluster is not reported in the bed output. Set to 0 (default) reports all including singlets" />
         </when>
     </conditional>
     <conditional name="ylimits_cond">
@@ -197,9 +200,11 @@
             <param name="plots_options_selector" value="cluster" />
             <param name="first_plot" value="Counts" />
             <param name="cluster" value="5" />
+            <param name="skip_cluster" value="0" />
             <param name="strandness" value="false" />
             <output file="clustering.tab" name="output_tab" />
             <output file="clustering.pdf" name="output_pdf" />
+            <output file="bed1.bed" name="output_bed" />
         </test>
         <test> <!-- 3 -->
             <repeat name="series">
@@ -211,9 +216,27 @@
             <param name="plots_options_selector" value="cluster" />
             <param name="first_plot" value="Counts" />
             <param name="cluster" value="5" />
+            <param name="skip_cluster" value="0" />
             <param name="strandness" value="true" />
             <output file="clustering_unstranded.tab" name="output_tab" />
             <output file="clustering_unstranded.pdf" name="output_pdf" />
+            <output file="bed2.bed" name="output_bed" />
+        </test>
+        <test> <!-- 3.1 -->
+            <repeat name="series">
+                <param name="inputs" value="input1.bam" ftype="bam" />
+                <param name="normalization" value="1.0" />
+            </repeat>
+            <param name="minsize" value="0" />
+            <param name="maxsize" value="10000" />
+            <param name="plots_options_selector" value="cluster" />
+            <param name="first_plot" value="Counts" />
+            <param name="cluster" value="5" />
+            <param name="skip_cluster" value="1" />
+            <param name="strandness" value="false" />
+            <output file="clustering_unstranded.tab" name="output_tab" />
+            <output file="clustering_unstranded.pdf" name="output_pdf" />
+            <output file="bed3.bed" name="output_bed" />
         </test>
         <test> <!-- 4 -->
             <repeat name="series">

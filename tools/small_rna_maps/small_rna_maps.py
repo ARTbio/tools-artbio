@@ -22,6 +22,11 @@ def Parser():
     the_parser.add_argument('--bed', dest='bed', required=False,
                             help='Name of bed output must be specified\
                             if --cluster option used')
+    the_parser.add_argument('--bed_skipcluster', dest='bed_skipcluster',
+                            required=False, type=int, default=0,
+                            help='Skip clusters of size equal or less than\
+                            specified integer in the bed output. \
+                            Default = 1')
     the_parser.add_argument('--outputs', nargs='+', action='store',
                             help='list of two output paths (only two)')
     the_parser.add_argument('-M', '--plot_methods', nargs='+', action='store',
@@ -272,7 +277,7 @@ class Map:
                     line = [str(i) for i in line]
                     out.write('\t'.join(line) + '\n')
 
-    def write_cluster_table(self, clustered_dic, out, bedpath):
+    def write_cluster_table(self, clustered_dic, out, bedpath, skip):
         '''
         Writer of a tabular file
         Dataset, Chromosome, Chrom_length, Coordinate, Polarity,
@@ -296,14 +301,16 @@ class Map:
                     key[1], key[2], clustered_dic[key][0],
                     str(start) + "-" + str(end), str(size), str(density)]
             line = [str(i) for i in line]
-            bedline = [key[0], str(start), str(end), 'cluster', '.', polarity]
+            if size > skip:
+                bedline = [key[0], str(start-1), str(end), 'cluster', '.',
+                           polarity]
+                bed.write('\t'.join(bedline) + '\n')
             out.write('\t'.join(line) + '\n')
-            bed.write('\t'.join(bedline) + '\n')
         bed.close()
 
 
 def main(inputs, samples, methods, outputs, minsize, maxsize, cluster,
-         nostrand, bedfile=None):
+         nostrand, bedfile=None, bed_skipcluster=0):
     for method, output in zip(methods, outputs):
         out = open(output, 'w')
         if method == 'Size':
@@ -326,10 +333,10 @@ def main(inputs, samples, methods, outputs, minsize, maxsize, cluster,
                      "Size": mapobj.compute_size,
                      "cluster": mapobj.write_cluster_table}
             if cluster:
-                token["cluster"](mapobj.map_dict, out, bedfile)
+                token["cluster"](mapobj.map_dict, out, bedfile,
+                                 bed_skipcluster)
             else:
                 token[method](mapobj.map_dict, out)
-            #   mapobj.compute_coverage(mapobj.map_dict, out)
         out.close()
 
 
@@ -340,4 +347,5 @@ if __name__ == "__main__":
         args.sample_names = [name + '_' + str(i) for
                              i, name in enumerate(args.sample_names)]
     main(args.inputs, args.sample_names, args.plot_methods, args.outputs,
-         args.minsize, args.maxsize, args.cluster, args.nostrand, args.bed)
+         args.minsize, args.maxsize, args.cluster, args.nostrand, args.bed,
+         args.bed_skipcluster)
