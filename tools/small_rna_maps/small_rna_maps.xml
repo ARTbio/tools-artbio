@@ -234,8 +234,8 @@
             <param name="cluster" value="5" />
             <param name="skip_cluster" value="1" />
             <param name="strandness" value="false" />
-            <output file="clustering_unstranded.tab" name="output_tab" />
-            <output file="clustering_unstranded.pdf" name="output_pdf" />
+            <output file="clustering.tab" name="output_tab" />
+            <output file="clustering.pdf" name="output_pdf" />
             <output file="bed3.bed" name="output_bed" />
         </test>
         <test> <!-- 4 -->
