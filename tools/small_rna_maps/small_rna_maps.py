@@ -302,8 +302,8 @@ class Map:
                     str(start) + "-" + str(end), str(size), str(density)]
             line = [str(i) for i in line]
             if size > skip:
-                bedline = [key[0], str(start-1), str(end), 'cluster', '.',
-                           polarity]
+                bedline = [key[0], str(start-1), str(end), 'cluster',
+                           str(clustered_dic[key][0]), polarity]
                 bed.write('\t'.join(bedline) + '\n')
             out.write('\t'.join(line) + '\n')
         bed.close()
