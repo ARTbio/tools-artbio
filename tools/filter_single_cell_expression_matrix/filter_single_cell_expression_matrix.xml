@@ -179,8 +179,7 @@ Rscript $__tool_directory__/filter_single_cell_expression_matrix.R
 **What it does**
 
 Filter_single_cell_expression_matrix takes a tabular table of raw read counts, each column corresponding to a cell and each row corresponding to a
-gene, and returns (1) a PDF with quality controls plots (like the distribution of library sizes or expressed genes by cell, frequency of 
-expression or the most expressed genes) and (2) a filtered table of counts.
+gene, and returns (1) a PDF with quality controls plots (see explainations and details below) and (2) a filtered table of counts.
 
 You can filter out low quality cells from your raw expression table :
 
