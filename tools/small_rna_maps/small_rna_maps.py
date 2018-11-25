@@ -287,7 +287,7 @@ class Map:
                     line = [str(i) for i in line]
                     out.write('\t'.join(line) + '\n')
 
-    def write_cluster_table(self, clustered_dic, out, bedpath, skipsize):
+    def write_cluster_table(self, clustered_dic, out, bedpath):
         '''
         Writer of a tabular file
         Dataset, Chromosome, Chrom_length, Coordinate, Polarity,
@@ -356,8 +356,7 @@ def main(inputs, samples, methods, outputs, minsize, maxsize, cluster,
                      "Size": mapobj.compute_size,
                      "cluster": mapobj.write_cluster_table}
             if cluster:
-                token["cluster"](mapobj.map_dict, out, bedfile,
-                                 bed_skipsize)
+                token["cluster"](mapobj.map_dict, out, bedfile)
             else:
                 token[method](mapobj.map_dict, out)
         out.close()
@@ -370,5 +369,4 @@ if __name__ == "__main__":
         args.sample_names = [name + '_' + str(i) for
                              i, name in enumerate(args.sample_names)]
     main(args.inputs, args.sample_names, args.plot_methods, args.outputs,
-         args.minsize, args.maxsize, args.cluster, args.nostrand, args.bed,
-         args.bed_skipsize)
+         args.minsize, args.maxsize, args.cluster, args.nostrand, args.bed)
