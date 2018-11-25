@@ -1,116 +1,83 @@
-FBtr0070001	0	1	cluster	1	.
-FBtr0070001	6	18	cluster	14	.
-FBtr0070001	26	34	cluster	42	.
-FBtr0070001	71	72	cluster	0	.
-FBtr0070533	0	1	cluster	1	.
-FBtr0070533	11	38	cluster	23	.
-FBtr0070533	71	72	cluster	0	.
-FBtr0070603	0	42	cluster	68	.
-FBtr0070603	50	56	cluster	2	.
-FBtr0070603	71	72	cluster	0	.
-FBtr0070604	0	1	cluster	1	.
-FBtr0070604	17	22	cluster	2	.
-FBtr0070604	29	32	cluster	36	.
-FBtr0070604	56	57	cluster	1	.
-FBtr0070604	71	72	cluster	0	.
-FBtr0070911	0	1	cluster	0	.
-FBtr0070911	14	15	cluster	1	.
-FBtr0070911	37	38	cluster	1	.
-FBtr0070911	72	73	cluster	0	.
-FBtr0078490	0	1	cluster	0	.
-FBtr0078490	12	18	cluster	4	.
-FBtr0078490	24	28	cluster	3	.
-FBtr0078490	37	38	cluster	1	.
-FBtr0078490	71	72	cluster	0	.
-FBtr0078580	0	31	cluster	1102	.
-FBtr0078580	51	52	cluster	2	.
-FBtr0078580	71	72	cluster	0	.
-FBtr0078790	0	1	cluster	1	.
-FBtr0078790	16	17	cluster	2	.
-FBtr0078790	32	33	cluster	1	.
-FBtr0078790	41	52	cluster	9	.
-FBtr0078790	68	73	cluster	1	.
-FBtr0079064	0	3	cluster	2	.
-FBtr0079064	32	33	cluster	1	.
-FBtr0079064	51	52	cluster	1	.
-FBtr0079064	71	72	cluster	0	.
-FBtr0079090	0	1	cluster	2	.
-FBtr0079090	25	26	cluster	1	.
-FBtr0079090	32	33	cluster	1	.
-FBtr0079090	52	56	cluster	2	.
-FBtr0079090	71	72	cluster	0	.
-FBtr0079338	0	1	cluster	0	.
-FBtr0079338	11	17	cluster	5	.
-FBtr0079338	24	25	cluster	1	.
-FBtr0079338	41	46	cluster	10	.
-FBtr0079338	72	73	cluster	0	.
-FBtr0079528	0	18	cluster	97	.
-FBtr0079528	27	28	cluster	1	.
-FBtr0079528	34	37	cluster	3	.
-FBtr0079528	50	51	cluster	5	.
-FBtr0079528	70	71	cluster	0	.
-FBtr0079596	0	19	cluster	148	.
-FBtr0079596	52	54	cluster	4	.
-FBtr0079596	72	73	cluster	0	.
-FBtr0079677	0	5	cluster	2	.
-FBtr0079677	51	53	cluster	2	.
-FBtr0079677	71	72	cluster	0	.
-FBtr0079690	0	1	cluster	1	.
-FBtr0079690	21	27	cluster	2	.
-FBtr0079690	32	33	cluster	2	.
-FBtr0079690	71	72	cluster	0	.
-FBtr0079692	0	1	cluster	3	.
-FBtr0079692	17	18	cluster	1	.
-FBtr0079692	24	25	cluster	1	.
-FBtr0079692	31	32	cluster	1	.
-FBtr0079692	72	73	cluster	0	.
-FBtr0079693	0	1	cluster	5	.
-FBtr0079693	24	25	cluster	1	.
-FBtr0079693	71	72	cluster	0	.
-FBtr0079694	0	1	cluster	5	.
-FBtr0079694	17	18	cluster	1	.
-FBtr0079694	51	52	cluster	1	.
-FBtr0079694	71	72	cluster	0	.
-FBtr0079702	0	1	cluster	1	.
-FBtr0079702	18	19	cluster	2	.
-FBtr0079702	55	56	cluster	1	.
-FBtr0079702	71	72	cluster	0	.
-FBtr0079728	0	1	cluster	2	.
-FBtr0079728	7	8	cluster	1	.
-FBtr0079728	18	19	cluster	1	.
-FBtr0079728	32	33	cluster	3	.
-FBtr0079728	55	56	cluster	1	.
-FBtr0079728	71	72	cluster	0	.
-FBtr0079729	0	1	cluster	1	.
-FBtr0079729	12	13	cluster	1	.
-FBtr0079729	51	57	cluster	2	.
-FBtr0079729	71	72	cluster	0	.
-FBtr0079752	0	1	cluster	2	.
-FBtr0079752	6	12	cluster	2	.
-FBtr0079752	32	33	cluster	2	.
-FBtr0079752	51	52	cluster	2	.
-FBtr0079752	71	72	cluster	0	.
-FBtr0079820	0	1	cluster	0	.
-FBtr0079820	44	56	cluster	13	.
-FBtr0079820	73	74	cluster	0	.
-FBtr0080609	0	20	cluster	60	.
-FBtr0080609	41	42	cluster	1	.
-FBtr0080609	50	52	cluster	2	.
-FBtr0080609	71	72	cluster	0	.
-FBtr0080644	0	12	cluster	6	.
-FBtr0080644	71	72	cluster	0	.
-FBtr0080646	0	7	cluster	3	.
-FBtr0080646	71	72	cluster	0	.
-FBtr0080647	0	12	cluster	10	.
-FBtr0080647	71	72	cluster	0	.
-FBtr0080660	0	7	cluster	7	.
-FBtr0080660	71	72	cluster	0	.
-FBtr0080663	0	17	cluster	102	.
-FBtr0080663	25	26	cluster	1	.
-FBtr0080663	31	32	cluster	2	.
-FBtr0080663	49	51	cluster	10	.
-FBtr0080663	70	71	cluster	0	.
-FBtr0080664	0	21	cluster	108	.
-FBtr0080664	27	38	cluster	9	.
-FBtr0080664	49	56	cluster	11	.
-FBtr0080664	70	71	cluster	0	.
+FBtr0070001	0	1	cluster_1	1	.	1.0
+FBtr0070001	6	18	cluster_2	14	.	1.16666666667
+FBtr0070001	26	34	cluster_3	42	.	5.25
+FBtr0070533	0	1	cluster_4	1	.	1.0
+FBtr0070533	11	38	cluster_5	23	.	0.851851851852
+FBtr0070603	0	42	cluster_6	68	.	1.61904761905
+FBtr0070603	50	56	cluster_7	2	.	0.333333333333
+FBtr0070604	0	1	cluster_8	1	.	1.0
+FBtr0070604	17	22	cluster_9	2	.	0.4
+FBtr0070604	29	32	cluster_10	36	.	12.0
+FBtr0070604	56	57	cluster_11	1	.	1.0
+FBtr0070911	14	15	cluster_12	1	.	1.0
+FBtr0070911	37	38	cluster_13	1	.	1.0
+FBtr0078490	12	18	cluster_14	4	.	0.666666666667
+FBtr0078490	24	28	cluster_15	3	.	0.75
+FBtr0078490	37	38	cluster_16	1	.	1.0
+FBtr0078580	0	31	cluster_17	1102	.	35.5483870968
+FBtr0078580	51	52	cluster_18	2	.	2.0
+FBtr0078790	0	1	cluster_19	1	.	1.0
+FBtr0078790	16	17	cluster_20	2	.	2.0
+FBtr0078790	32	33	cluster_21	1	.	1.0
+FBtr0078790	41	52	cluster_22	9	.	0.818181818182
+FBtr0078790	68	73	cluster_23	1	.	0.2
+FBtr0079064	0	3	cluster_24	2	.	0.666666666667
+FBtr0079064	32	33	cluster_25	1	.	1.0
+FBtr0079064	51	52	cluster_26	1	.	1.0
+FBtr0079090	0	1	cluster_27	2	.	2.0
+FBtr0079090	25	26	cluster_28	1	.	1.0
+FBtr0079090	32	33	cluster_29	1	.	1.0
+FBtr0079090	52	56	cluster_30	2	.	0.5
+FBtr0079338	11	17	cluster_31	5	.	0.833333333333
+FBtr0079338	24	25	cluster_32	1	.	1.0
+FBtr0079338	41	46	cluster_33	10	.	2.0
+FBtr0079528	0	18	cluster_34	97	.	5.38888888889
+FBtr0079528	27	28	cluster_35	1	.	1.0
+FBtr0079528	34	37	cluster_36	3	.	1.0
+FBtr0079528	50	51	cluster_37	5	.	5.0
+FBtr0079596	0	19	cluster_38	148	.	7.78947368421
+FBtr0079596	52	54	cluster_39	4	.	2.0
+FBtr0079677	0	5	cluster_40	2	.	0.4
+FBtr0079677	51	53	cluster_41	2	.	1.0
+FBtr0079690	0	1	cluster_42	1	.	1.0
+FBtr0079690	21	27	cluster_43	2	.	0.333333333333
+FBtr0079690	32	33	cluster_44	2	.	2.0
+FBtr0079692	0	1	cluster_45	3	.	3.0
+FBtr0079692	17	18	cluster_46	1	.	1.0
+FBtr0079692	24	25	cluster_47	1	.	1.0
+FBtr0079692	31	32	cluster_48	1	.	1.0
+FBtr0079693	0	1	cluster_49	5	.	5.0
+FBtr0079693	24	25	cluster_50	1	.	1.0
+FBtr0079694	0	1	cluster_51	5	.	5.0
+FBtr0079694	17	18	cluster_52	1	.	1.0
+FBtr0079694	51	52	cluster_53	1	.	1.0
+FBtr0079702	0	1	cluster_54	1	.	1.0
+FBtr0079702	18	19	cluster_55	2	.	2.0
+FBtr0079702	55	56	cluster_56	1	.	1.0
+FBtr0079728	0	1	cluster_57	2	.	2.0
+FBtr0079728	7	8	cluster_58	1	.	1.0
+FBtr0079728	18	19	cluster_59	1	.	1.0
+FBtr0079728	32	33	cluster_60	3	.	3.0
+FBtr0079728	55	56	cluster_61	1	.	1.0
+FBtr0079729	0	1	cluster_62	1	.	1.0
+FBtr0079729	12	13	cluster_63	1	.	1.0
+FBtr0079729	51	57	cluster_64	2	.	0.333333333333
+FBtr0079752	0	1	cluster_65	2	.	2.0
+FBtr0079752	6	12	cluster_66	2	.	0.333333333333
+FBtr0079752	32	33	cluster_67	2	.	2.0
+FBtr0079752	51	52	cluster_68	2	.	2.0
+FBtr0079820	44	56	cluster_69	13	.	1.08333333333
+FBtr0080609	0	20	cluster_70	60	.	3.0
+FBtr0080609	41	42	cluster_71	1	.	1.0
+FBtr0080609	50	52	cluster_72	2	.	1.0
+FBtr0080644	0	12	cluster_73	6	.	0.5
+FBtr0080646	0	7	cluster_74	3	.	0.428571428571
+FBtr0080647	0	12	cluster_75	10	.	0.833333333333
+FBtr0080660	0	7	cluster_76	7	.	1.0
+FBtr0080663	0	17	cluster_77	102	.	6.0
+FBtr0080663	25	26	cluster_78	1	.	1.0
+FBtr0080663	31	32	cluster_79	2	.	2.0
+FBtr0080663	49	51	cluster_80	10	.	5.0
+FBtr0080664	0	21	cluster_81	108	.	5.14285714286
+FBtr0080664	27	38	cluster_82	9	.	0.818181818182
+FBtr0080664	49	56	cluster_83	11	.	1.57142857143

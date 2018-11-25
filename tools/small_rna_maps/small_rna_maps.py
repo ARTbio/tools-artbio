@@ -22,11 +22,21 @@ def Parser():
     the_parser.add_argument('--bed', dest='bed', required=False,
                             help='Name of bed output must be specified\
                             if --cluster option used')
-    the_parser.add_argument('--bed_skipcluster', dest='bed_skipcluster',
-                            required=False, type=int, default=0,
+    the_parser.add_argument('--bed_skipsize', dest='bed_skipsize',
+                            required=False, type=int, default=1,
                             help='Skip clusters of size equal or less than\
                             specified integer in the bed output. \
-                            Default = 1')
+                            Default = 0, not skipping')
+    the_parser.add_argument('--bed_skipdensity', dest='bed_skipdensity',
+                            required=False, type=float, default=0,
+                            help='Skip clusters of density equal or less than\
+                            specified float number in the bed output. \
+                            Default = 0, not skipping')
+    the_parser.add_argument('--bed_skipcounts', dest='bed_skipcounts',
+                            required=False, type=int, default=1,
+                            help='Skip clusters of size equal or less than\
+                            specified integer in the bed output. \
+                            Default = 0, not skipping')
     the_parser.add_argument('--outputs', nargs='+', action='store',
                             help='list of two output paths (only two)')
     the_parser.add_argument('-M', '--plot_methods', nargs='+', action='store',
@@ -107,7 +117,7 @@ class Map:
                                     [read_length, ...]}
         and returns a map_dictionary with structure:
         {(chromosome,read_position,polarity):
-            ([read_length, ...], [start_clust, end_clust])}
+            [*counts*, [start_clust, end_clust]]}
         '''
         clustered_dic = defaultdict(list)
         for chrom in self.chromosomes:
@@ -277,7 +287,7 @@ class Map:
                     line = [str(i) for i in line]
                     out.write('\t'.join(line) + '\n')
 
-    def write_cluster_table(self, clustered_dic, out, bedpath, skip):
+    def write_cluster_table(self, clustered_dic, out, bedpath, skipsize):
         '''
         Writer of a tabular file
         Dataset, Chromosome, Chrom_length, Coordinate, Polarity,
@@ -285,32 +295,45 @@ class Map:
         out is an *open* file handler
         bed is an a file handler internal to the function
         '''
+        def filterCluster(size, count, density):
+            if size < args.bed_skipsize:
+                return False
+            if count < args.bed_skipcounts:
+                return False
+            if density <= args.bed_skipdensity:
+                return False
+            return True
         bed = open(bedpath, 'w')
+        clusterid = 0
         for key in sorted(clustered_dic):
             start = clustered_dic[key][1][0]
             end = clustered_dic[key][1][1]
             size = end - start + 1
+            read_count = clustered_dic[key][0]
             if self.nostrand:
                 polarity = '.'
             elif key[2] == 'F':
                 polarity = '+'
             else:
                 polarity = '-'
-            density = float(clustered_dic[key][0]) / size
+            density = float(read_count) / size
             line = [self.sample_name, key[0], self.chromosomes[key[0]],
-                    key[1], key[2], clustered_dic[key][0],
+                    key[1], key[2], read_count,
                     str(start) + "-" + str(end), str(size), str(density)]
             line = [str(i) for i in line]
-            if size > skip:
-                bedline = [key[0], str(start-1), str(end), 'cluster',
-                           str(clustered_dic[key][0]), polarity]
-                bed.write('\t'.join(bedline) + '\n')
             out.write('\t'.join(line) + '\n')
+            if filterCluster(size, read_count, density):
+                clusterid += 1
+                name = 'cluster_' + str(clusterid)
+                bedline = [key[0], str(start-1), str(end), name,
+                           str(read_count), polarity, str(density)]
+                bed.write('\t'.join(bedline) + '\n')
+        print("number of reported clusters:", clusterid)
         bed.close()
 
 
 def main(inputs, samples, methods, outputs, minsize, maxsize, cluster,
-         nostrand, bedfile=None, bed_skipcluster=0):
+         nostrand, bedfile=None, bed_skipsize=0):
     for method, output in zip(methods, outputs):
         out = open(output, 'w')
         if method == 'Size':
@@ -334,7 +357,7 @@ def main(inputs, samples, methods, outputs, minsize, maxsize, cluster,
                      "cluster": mapobj.write_cluster_table}
             if cluster:
                 token["cluster"](mapobj.map_dict, out, bedfile,
-                                 bed_skipcluster)
+                                 bed_skipsize)
             else:
                 token[method](mapobj.map_dict, out)
         out.close()
@@ -348,4 +371,4 @@ if __name__ == "__main__":
                              i, name in enumerate(args.sample_names)]
     main(args.inputs, args.sample_names, args.plot_methods, args.outputs,
          args.minsize, args.maxsize, args.cluster, args.nostrand, args.bed,
-         args.bed_skipcluster)
+         args.bed_skipsize)
