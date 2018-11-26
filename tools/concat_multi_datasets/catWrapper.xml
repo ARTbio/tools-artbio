@@ -1,5 +1,5 @@
-<tool id="cat_multi_datasets" name="Concatenate multiple datasets" version="0.3">
-    <description>tail-to-head</description>
+<tool id="cat_multi_datasets" name="Concatenate multiple datasets" version="1.0">
+    <description>tail-to-head by specifying how</description>
     <command><![CDATA[
         #if $headers == "No":
             cat
@@ -17,17 +17,42 @@
         ]]>
     </command>
     <inputs>
+        <conditional name="global_condition">
+            <param name="input_type" type="select" label="What type of data do you wish to concatenate?" help="Depending on the type of input selected the concatenation options will differ">
+                <option value="singles">Single datasets</option>
+                <option value="collections">Datasets in collections</option>
+                <option value="paired_collections">Datasets in paired collections</option>
+                <option value="nested_collections">Datasets in nested collections</option>
+            </param>
+            <when value="singles">
+                <param name="inputs" type="data" label="Concatenate Datasets" multiple="True" help="All inputed datasets will be concatenated tail-to-head."/>
+            </when>
+            <when value="collections">
+                <param name="inputs" type="data_collection" label="Input collections with datasets to concatenate" multiple="True" help="Select collections to concatenate into a single dataset"/>
+            </when>
+            <when value="paired_collections">
+                <param name="inputs" type="data_collection" collection_type="paired" label="Input paired collections to concatenate"/>
+                <param name="paired_cat_type" type="select" label="What type of concatenation do you wish to perform?">
+                        <option value="by_strand">Concatenate all datsets of same strand (outputs a single pair of datasets)</option>
+                        <option value="by_pair">Concatenate pairs of datasets (outputs an unpaired collection of datasets)</option>
+                        <option value="all">Concatenate all datasets into a single file regardless of strand (outputs a single file)</option>
+                </param>
+            </when>
+            <when value="nested_collections">
+                <param name="inputs" type="data_collection" label="Select the nested collection to concatenate datasets from"/>
+                <param name="level" type="integer" label="Select at wich level do you wish to concatenate the datasets." help="Refer to help for a detailed example of how this option works."/>
+            </when>
+        </conditional>
         <param name="headers" type="select" label="include dataset names">
-                <option value="No" selected="true">No</option>
-                <option value="Yes">Yes</option>
+            <option value="No" selected="true">No</option>
+            <option value="Yes">Yes</option>
         </param>
-        <param name="input" type="data" label="Concatenate Dataset" multiple="True"/>
     </inputs>
     <outputs>
         <data name="out_file1" format_source="input" metadata_source="input"/>
     </outputs>
     <tests>
-        <test>
+        <!--<test>
             <param name="headers" value="No" />
             <param name="input" value="1.bed,2.bed"/>
             <output name="out_file1" file="cat_wrapper_out1.bed"/>
@@ -36,8 +61,7 @@
             <param name="headers" value="Yes" />
             <param name="input" value="1.bed,2.bed"/>
             <output name="out_file1" file="cat_wrapper_out2.bed"/>
-        </test>
-
+        </test>-->
     </tests>
     <help>
 
