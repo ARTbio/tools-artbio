@@ -20,6 +20,7 @@
                 #end for
                 sleep 1
             #end if
+        #else if $global_condition.input_type == "paired_collection":
         #end if
         ]]>
     </command>
@@ -27,15 +28,11 @@
         <conditional name="global_condition">
             <param name="input_type" type="select" label="What type of data do you wish to concatenate?" help="Depending on the type of input selected the concatenation options will differ">
                 <option value="singles">Single datasets</option>
-                <option value="collections">Datasets in collections</option>
-                <option value="paired_collections">Datasets in paired collections</option>
-                <option value="nested_collections">Datasets in nested collections</option>
+                <option value="paired_collection">Paired collection</option>
+                <option value="nested_collection">Datasets in nested collection</option>
             </param>
             <when value="singles">
                 <param name="inputs" type="data" label="Concatenate Datasets" multiple="True" help="All inputed datasets will be concatenated tail-to-head."/>
-            </when>
-            <when value="collections">
-                <param name="inputs" type="data_collection" label="Input collections with datasets to concatenate" multiple="True" help="Select collections to concatenate into a single dataset"/>
             </when>
             <when value="paired_collections">
                 <param name="inputs" type="data_collection" collection_type="paired" label="Input paired collections to concatenate"/>
