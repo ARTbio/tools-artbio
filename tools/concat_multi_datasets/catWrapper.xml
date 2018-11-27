@@ -40,7 +40,7 @@
             </when>
             <when value="nested_collections">
                 <param name="inputs" type="data_collection" label="Select the nested collection to concatenate datasets from"/>
-                <param name="level" type="integer" label="Select at wich level do you wish to concatenate the datasets." help="Refer to help for a detailed example of how this option works."/>
+                <param name="level" type="integer" value="0" label="Select at wich level do you wish to concatenate the datasets." help="Refer to help for a detailed example of how this option works."/>
             </when>
         </conditional>
         <param name="headers" type="select" label="include dataset names">
