@@ -21,6 +21,9 @@
                 sleep 1
             #end if
         #else if $global_condition.input_type == "paired_collection":
+            #if $global_condition.paired_cat_type == "by_strand":
+                
+            #end if
         #end if
         ]]>
     </command>
@@ -34,7 +37,7 @@
             <when value="singles">
                 <param name="inputs" type="data" label="Concatenate Datasets" multiple="True" help="All inputed datasets will be concatenated tail-to-head."/>
             </when>
-            <when value="paired_collections">
+            <when value="paired_collection">
                 <param name="inputs" type="data_collection" collection_type="paired" label="Input paired collections to concatenate"/>
                 <param name="paired_cat_type" type="select" label="What type of concatenation do you wish to perform?">
                         <option value="by_strand">Concatenate all datsets of same strand (outputs a single pair of datasets)</option>
@@ -42,7 +45,7 @@
                         <option value="all">Concatenate all datasets into a single file regardless of strand (outputs a single file)</option>
                 </param>
             </when>
-            <when value="nested_collections">
+            <when value="nested_collection">
                 <param name="inputs" type="data_collection" label="Select the nested collection to concatenate datasets from"/>
                 <param name="level" type="integer" value="0" label="Select at wich level do you wish to concatenate the datasets." help="Refer to help for a detailed example of how this option works."/>
             </when>
@@ -51,7 +54,14 @@
         <param name="headers" type="integer" label="Number of lines to skip at the beginning of each concatenation:" value="0" help="This paremeter exists so as to not concatenate comments or headers contained at the start of the files."/>
     </inputs>
     <outputs>
-        <data name="out_file1" format_source="input" metadata_source="input"/>
+        <data name="out_file1" format_source="inputs" metadata_source="inputs">
+            <filter>global_condition['input_type'] == 'singles'</filter>
+        </data>
+        <collection name="paired_output" type="paired" label="Split Pair">
+            <data name="forward" />
+            <data name="reverse" />
+            <filter>global_condition['input_type'] == 'paired_collection' and global_condition['paired_cat_type'] == 'by_strand'</filter>
+        </collection>
     </outputs>
     <tests>
         <!--<test>
