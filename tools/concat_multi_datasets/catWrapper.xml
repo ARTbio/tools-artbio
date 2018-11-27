@@ -1,18 +1,25 @@
 <tool id="cat_multi_datasets" name="Concatenate multiple datasets" version="1.0">
     <description>tail-to-head by specifying how</description>
     <command><![CDATA[
-        #if $headers == "No":
-            cat
-            #for $file in $input
-                "$file"
-            #end for
-            > "$out_file1"
+        #if $headers == 0:
+            #set $concat_command = "cat"
         #else:
-            #for $file in $input
-                printf "# ${file.element_identifier}\n" >> "$out_file1" &&
-                cat "$file" >> "$out_file1" &&
-            #end for
-            sleep 1
+            #set $concat_command = 'tail -n +'+ str(int($headers)+1)
+        #end if
+        #if $global_condition.input_type == "singles":
+            #if $dataset_names == "No":
+                $concat_command
+                #for $file in $global_condition.inputs
+                    "$file"
+                #end for
+                > "$out_file1"
+            #else:
+                #for $file in $global_condition.inputs
+                    printf "# ${file.element_identifier}\n" >> "$out_file1" &&
+                    $concat_command "$file" >> "$out_file1" &&
+                #end for
+                sleep 1
+            #end if
         #end if
         ]]>
     </command>
@@ -43,10 +50,8 @@
                 <param name="level" type="integer" value="0" label="Select at wich level do you wish to concatenate the datasets." help="Refer to help for a detailed example of how this option works."/>
             </when>
         </conditional>
-        <param name="headers" type="select" label="include dataset names">
-            <option value="No" selected="true">No</option>
-            <option value="Yes">Yes</option>
-        </param>
+        <param name="dataset_names" type="boolean" label="Include dataset names?" truevalue="Yes" falsevalue="NO" checked="false" help="If 'Yes' is selected '#name of dataset' will be added when concatenating."/>
+        <param name="headers" type="integer" label="Number of lines to skip at the beginning of each concatenation:" value="0" help="This paremeter exists so as to not concatenate comments or headers contained at the start of the files."/>
     </inputs>
     <outputs>
         <data name="out_file1" format_source="input" metadata_source="input"/>
