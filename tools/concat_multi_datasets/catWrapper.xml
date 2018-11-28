@@ -10,19 +10,37 @@
             #if $dataset_names == "No":
                 $concat_command
                 #for $file in $global_condition.inputs
-                    "$file"
+                    '$file'
                 #end for
-                > "$out_file1"
+                > '$out_file1'
             #else:
                 #for $file in $global_condition.inputs
-                    printf "# ${file.element_identifier}\n" >> "$out_file1" &&
-                    $concat_command "$file" >> "$out_file1" &&
+                    printf "# ${file.element_identifier}\n" >> '$out_file1' &&
+                    $concat_command "$file" >> '$out_file1' &&
                 #end for
                 sleep 1
             #end if
         #else if $global_condition.input_type == "paired_collection":
             #if $global_condition.paired_cat_type == "by_strand":
-                
+                #if $dataset_names == "No":
+                    #for $file in $global_condition.inputs
+                        $concat_command
+                        $file['forward']
+                        >> '$forward' &&
+                        $concat_command
+                        $file['reverse']
+                        >> 'reverse'&&
+                    #end for
+                    sleep 1
+                #else:
+                    #for $file in $global_condition.inputs.keys()
+                        printf "# ${file}_forward\n" >> '$forward' &&
+                        $concat_command $global_condition.inputs[$file]['forward'] >> '$forward' &&
+                        printf "# ${file}_reverse\n" >> '$reverse' &&
+                        $concat_command $global_condition.inputs[$file]['reverse'] >> '$reverse' &&
+                    #end for
+                    sleep 1
+                #end if
             #end if
         #end if
         ]]>
@@ -38,7 +56,7 @@
                 <param name="inputs" type="data" label="Concatenate Datasets" multiple="True" help="All inputed datasets will be concatenated tail-to-head."/>
             </when>
             <when value="paired_collection">
-                <param name="inputs" type="data_collection" collection_type="paired" label="Input paired collections to concatenate"/>
+                <param name="inputs" type="data_collection" collection_type="list:paired" label="Input paired collections to concatenate"/>
                 <param name="paired_cat_type" type="select" label="What type of concatenation do you wish to perform?">
                         <option value="by_strand">Concatenate all datsets of same strand (outputs a single pair of datasets)</option>
                         <option value="by_pair">Concatenate pairs of datasets (outputs an unpaired collection of datasets)</option>
@@ -50,14 +68,14 @@
                 <param name="level" type="integer" value="0" label="Select at wich level do you wish to concatenate the datasets." help="Refer to help for a detailed example of how this option works."/>
             </when>
         </conditional>
-        <param name="dataset_names" type="boolean" label="Include dataset names?" truevalue="Yes" falsevalue="NO" checked="false" help="If 'Yes' is selected '#name of dataset' will be added when concatenating."/>
+        <param name="dataset_names" type="boolean" label="Include dataset names?" truevalue="Yes" falsevalue="No" checked="false" help="If 'Yes' is selected '#name of dataset' will be added when concatenating."/>
         <param name="headers" type="integer" label="Number of lines to skip at the beginning of each concatenation:" value="0" help="This paremeter exists so as to not concatenate comments or headers contained at the start of the files."/>
     </inputs>
     <outputs>
         <data name="out_file1" format_source="inputs" metadata_source="inputs">
             <filter>global_condition['input_type'] == 'singles'</filter>
         </data>
-        <collection name="paired_output" type="paired" label="Split Pair">
+        <collection name="paired_output" type="paired" label="Concatenation by strtand">
             <data name="forward" />
             <data name="reverse" />
             <filter>global_condition['input_type'] == 'paired_collection' and global_condition['paired_cat_type'] == 'by_strand'</filter>
