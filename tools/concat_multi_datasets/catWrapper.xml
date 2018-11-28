@@ -35,9 +35,38 @@
                 #else:
                     #for $file in $global_condition.inputs.keys()
                         printf "# ${file}_forward\n" >> '$forward' &&
-                        $concat_command $global_condition.inputs[$file]['forward'] >> '$forward' &&
+                        $concat_command
+                        $global_condition.inputs[$file]['forward']
+                        >> '$forward' &&
                         printf "# ${file}_reverse\n" >> '$reverse' &&
-                        $concat_command $global_condition.inputs[$file]['reverse'] >> '$reverse' &&
+                        $concat_command
+                        $global_condition.inputs[$file]['reverse']
+                        >> '$reverse' &&
+                    #end for
+                    sleep 1
+                #end if
+            #else if $global_condition.paired_cat_type == "by_pair":
+                mkdir concatenated &&
+                #if $dataset_names == "No":
+                    #for $file in $global_condition.inputs.keys()
+                        $concat_command
+                        $global_condition.inputs[$file]['forward']
+                        > concatenated/'${file}.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
+                        $concat_command
+                        $global_condition.inputs[$file]['reverse']
+                        >> concatenated/'${file}.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
+                    #end for
+                    sleep 1
+                #else:
+                    #for $file in $global_condition.inputs.keys()
+                        printf "# ${file}_forward\n" > concatenated/'${file}.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
+                        $concat_command
+                        $global_condition.inputs[$file]['forward']
+                        >> concatenated/'${file}.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
+                        printf "# ${file}_reverse\n" >> concatenated/'${file}.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
+                        $concat_command
+                        $global_condition.inputs[$file]['reverse']
+                        >> concatenated/'${file}.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
                     #end for
                     sleep 1
                 #end if
@@ -58,9 +87,9 @@
             <when value="paired_collection">
                 <param name="inputs" type="data_collection" collection_type="list:paired" label="Input paired collections to concatenate"/>
                 <param name="paired_cat_type" type="select" label="What type of concatenation do you wish to perform?">
-                        <option value="by_strand">Concatenate all datsets of same strand (outputs a single pair of datasets)</option>
-                        <option value="by_pair">Concatenate pairs of datasets (outputs an unpaired collection of datasets)</option>
-                        <option value="all">Concatenate all datasets into a single file regardless of strand (outputs a single file)</option>
+                    <option value="by_strand">Concatenate all datsets of same strand (outputs a single pair of datasets)</option>
+                    <option value="by_pair">Concatenate pairs of datasets (outputs an unpaired collection of datasets)</option>
+                    <option value="all">Concatenate all datasets into a single file regardless of strand (outputs a single file)</option>
                 </param>
             </when>
             <when value="nested_collection">
@@ -79,6 +108,10 @@
             <data name="forward" />
             <data name="reverse" />
             <filter>global_condition['input_type'] == 'paired_collection' and global_condition['paired_cat_type'] == 'by_strand'</filter>
+        </collection>
+        <collection name="list_output" type="list" label="Concatenation by pairs">
+            <discover_datasets pattern="(?P&lt;name&gt;.*)\.(?P&lt;ext&gt;[^\._]+)\.listed" visible="false" directory="concatenated"/>
+            <filter>global_condition['input_type'] == 'paired_collection' and global_condition['paired_cat_type'] == 'by_pair'</filter>
         </collection>
     </outputs>
     <tests>
