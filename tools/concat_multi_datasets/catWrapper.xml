@@ -70,6 +70,30 @@
                     #end for
                     sleep 1
                 #end if
+            #else if $global_condition.paired_cat_type == "all":
+                #if $dataset_names == "No":
+                    #for $file in $global_condition.inputs.keys()
+                        $concat_command
+                        $global_condition.inputs[$file]['forward']
+                        >> $out_file1 &&
+                        $concat_command
+                        $global_condition.inputs[$file]['reverse']
+                        >> $out_file1 &&
+                    #end for
+                    sleep 1
+                #else:
+                    #for $file in $global_condition.inputs.keys()
+                        printf "# ${file}_forward\n" > $out_file1 &&
+                        $concat_command
+                        $global_condition.inputs[$file]['forward']
+                        >> $out_file1 &&
+                        printf "# ${file}_reverse\n" >> $out_file1 &&
+                        $concat_command
+                        $global_condition.inputs[$file]['reverse']
+                        >> $out_file1 &&
+                    #end for
+                    sleep 1
+                #end if
             #end if
         #end if
         ]]>
@@ -101,8 +125,8 @@
         <param name="headers" type="integer" label="Number of lines to skip at the beginning of each concatenation:" value="0" help="This paremeter exists so as to not concatenate comments or headers contained at the start of the files."/>
     </inputs>
     <outputs>
-        <data name="out_file1" format_source="inputs" metadata_source="inputs">
-            <filter>global_condition['input_type'] == 'singles'</filter>
+        <data name="out_file1" format_source="inputs" metadata_source="inputs" label="Concatenated datasets">
+            <filter>global_condition['input_type'] == 'singles' or (global_condition['input_type'] == 'paired_collection' and global_condition['paired_cat_type'] == 'all')</filter>
         </data>
         <collection name="paired_output" type="paired" label="Concatenation by strtand">
             <data name="forward" />
