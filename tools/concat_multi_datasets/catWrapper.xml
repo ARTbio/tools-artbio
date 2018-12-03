@@ -6,6 +6,24 @@
         #else:
             #set $concat_command = 'tail -n +'+ str(int($headers)+1)
         #end if
+        #*#if $global_condition.input_type == "nested_collection":
+            #def get_parents($current_lvl, $parget_level, $parent):
+                #set $parents = []
+                #if $current_lvl < $target_lvl -1:
+                    #for $p in $parent:
+                        $get_parents($current_lvl+1,$target_lvl,$p)
+                    #end for
+                #else:
+                    #for $p in $parent:
+                        #set $parents.append($p)
+                    #end for
+                #end if
+            #end def
+            #if $global_condition.level > 1:
+                $get_parents(0, $global_condition.level, $global_condition.inputs)
+                echo "$parents";
+            #end if
+        #end if*#
         #if $global_condition.input_type == "singles":
             #if $dataset_names == "No":
                 $concat_command
@@ -118,7 +136,7 @@
             </when>
             <when value="nested_collection">
                 <param name="inputs" type="data_collection" label="Select the nested collection to concatenate datasets from"/>
-                <param name="level" type="integer" value="0" label="Select at wich level do you wish to concatenate the datasets." help="Refer to help for a detailed example of how this option works."/>
+                <param name="level" type="integer" min="1" value="1" label="Select at wich level do you wish to concatenate the datasets." help="Refer to help for a detailed example of how this option works."/>
             </when>
         </conditional>
         <param name="dataset_names" type="boolean" label="Include dataset names?" truevalue="Yes" falsevalue="No" checked="false" help="If 'Yes' is selected '#name of dataset' will be added when concatenating."/>
@@ -139,16 +157,20 @@
         </collection>
     </outputs>
     <tests>
-        <!--<test>
-            <param name="headers" value="No" />
-            <param name="input" value="1.bed,2.bed"/>
+        <test> <!-- Test 2 single files concatenation with no other option -->
+            <param name="input_type" value="singles" />
+            <param name="inputs" value="1.bed,2.bed"/>
+            <param name="dataset_names" value="No" />
+            <param name="headers" value="0" />
             <output name="out_file1" file="cat_wrapper_out1.bed"/>
         </test>
-        <test>
-            <param name="headers" value="Yes" />
-            <param name="input" value="1.bed,2.bed"/>
+        <test> <!-- Test 2 single files concatenation with dataset names activated -->
+            <param name="input_type" value="singles" />
+            <param name="inputs" value="1.bed,2.bed"/>
+            <param name="dataset_names" value="Yes" />
+            <param name="headers" value="0" />
             <output name="out_file1" file="cat_wrapper_out2.bed"/>
-        </test>-->
+        </test>
     </tests>
     <help>
 
