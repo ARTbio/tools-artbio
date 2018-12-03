@@ -4,7 +4,7 @@
         #if $headers == 0:
             #set $concat_command = "cat"
         #else:
-            #set $concat_command = 'tail -n +'+ str(int($headers)+1)
+            #set $concat_command = 'tail -q -n +'+ str(int($headers)+1)
         #end if
         #*#if $global_condition.input_type == "nested_collection":
             #def get_parents($current_lvl, $parget_level, $parent):
@@ -170,6 +170,13 @@
             <param name="dataset_names" value="Yes" />
             <param name="headers" value="0" />
             <output name="out_file1" file="cat_wrapper_out2.bed"/>
+        </test>
+        <test> <!-- Test 2 single files concatenation skipping 1 line -->
+            <param name="input_type" value="singles" />
+            <param name="inputs" value="1.bed,2.bed"/>
+            <param name="dataset_names" value="No" />
+            <param name="headers" value="1" />
+            <output name="out_file1" file="cat_wrapper_out3.bed"/>
         </test>
     </tests>
     <help>
