@@ -162,6 +162,7 @@
         </collection>
     </outputs>
     <tests>
+        <!-- Single files concatenation -->
         <test> <!-- Test 2 single files concatenation with no other option -->
             <param name="input_type" value="singles" />
             <param name="inputs" value="1.bed,2.bed"/>
@@ -197,8 +198,26 @@
             <param name="headers" value="4" />
             <output name="out_file1" file="1_options.fastq"/>
         </test>
-        <!-- Test collection concatenation -->
         <!-- Test paired options -->
+        <test> <!-- Test paired gziped collection concatenation by_pair with no other option -->
+            <param name="input_type" value="paired_collection" />
+            <param name="paired_cat_type" value="by_pair"/>
+            <param name="inputs">
+                <collection type="list:paired">
+                    <element name="1">
+                        <collection type="paired">
+                            <element name="forward" value="1_f.fastq.gz"/>
+                            <element name="reverse" value="1_r.fastq.gz"/>
+                        </collection>
+                    </element>
+                </collection>
+            </param>
+            <param name="dataset_names" value="No" />
+            <param name="headers" value="0" />
+            <output_collection name="list_output" type="list" >
+                <element name="1" file="1.fastq.gz" decompress="True"/>
+            </output_collection>
+        </test>
         <!-- Test nested -->
     </tests>
     <help>
