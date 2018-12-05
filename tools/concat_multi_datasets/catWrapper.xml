@@ -183,7 +183,7 @@
             <param name="inputs" value="1_f.fastq.gz,1_r.fastq.gz"/>
             <param name="dataset_names" value="No" />
             <param name="headers" value="0" />
-            <output name="out_file1" file="1.fastq.gz"/>
+            <output name="out_file1" file="1.fastq.gz" decompress="True"/>
         </test>
         <!-- Test collection concatenation -->
         <!-- Test paired options -->
