@@ -5,7 +5,7 @@
 
 
 # setup R error handling to go to stderr
-options( show.error.messages=F, error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+# options( show.error.messages=F, error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
 
 # To not crash galaxy with an UTF8 error with not-US LC settings.
 loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
@@ -197,16 +197,25 @@ if (!is.null(opt$plots)) {
     classes
     par(mar=c(6,10,4,1))
     boxplot(logFC ~ classes, data=results, outline=FALSE, horizontal=TRUE,
-        las=2, xlab="log(Fold Change)", main=paste0(allcontrasts, ", by Class"))
+        las=2, xlab="log2(Fold Change)", main=paste0(allcontrasts, ", by Class"))
     abline(v=0)
     # Plot the repeat types
     types <- with(results, reorder(type, -logFC, median))
     boxplot(logFC ~ types, data=results, outline=FALSE, horizontal=TRUE,
-        las=2, xlab="log(Fold Change)", main=paste0(allcontrasts, ", by Type"), yaxt="n")
+        las=2, xlab="log2(Fold Change)", main=paste0(allcontrasts, ", by Type"), yaxt="n")
     axis(2, cex.axis=(1*16)/(length(levels(types))),
          at=seq(from=1, to=length(levels(types))),
          labels=levels(types), las=2)
     abline(v=0)
+    # volcano plot
+    TEdata = cbind(rownames(results), as.data.frame(results), score=-log(results$FDR, 10))
+    # print(colnames(TEdata))
+    # print(results)
+    colnames(TEdata) = c("Tag","log2FC", "FDR", "Class", "Type", "score")
+    color = ifelse(TEdata$FDR<0.05, "red", "black")   
+    s <- subset(TEdata, FDR<0.01)
+    with(TEdata, plot(log2FC, score,  pch=20, col=color, main="Volcano plot (all tag types)", ylab="-log10(FDR)"))
+    text(s[,2], s[,6], labels = s[,5], pos = seq(from=1, to=3), cex=0.5)
 }
 
 # close the plot device
