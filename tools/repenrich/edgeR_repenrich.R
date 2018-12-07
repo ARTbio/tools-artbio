@@ -5,7 +5,7 @@
 
 
 # setup R error handling to go to stderr
-# options( show.error.messages=F, error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+options( show.error.messages=F, error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
 
 # To not crash galaxy with an UTF8 error with not-US LC settings.
 loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
@@ -209,8 +209,6 @@ if (!is.null(opt$plots)) {
     abline(v=0)
     # volcano plot
     TEdata = cbind(rownames(results), as.data.frame(results), score=-log(results$FDR, 10))
-    # print(colnames(TEdata))
-    # print(results)
     colnames(TEdata) = c("Tag","log2FC", "FDR", "Class", "Type", "score")
     color = ifelse(TEdata$FDR<0.05, "red", "black")   
     s <- subset(TEdata, FDR<0.01)
