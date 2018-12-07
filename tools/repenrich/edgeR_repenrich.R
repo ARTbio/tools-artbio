@@ -194,6 +194,7 @@ if (!is.null(opt$plots)) {
     logFC <- results[, "logFC"]
     # Plot the repeat classes
     classes <- with(results, reorder(class, -logFC, median))
+    classes
     par(mar=c(6,10,4,1))
     boxplot(logFC ~ classes, data=results, outline=FALSE, horizontal=TRUE,
         las=2, xlab="log(Fold Change)", main=paste0(allcontrasts, ", by Class"))
@@ -201,7 +202,10 @@ if (!is.null(opt$plots)) {
     # Plot the repeat types
     types <- with(results, reorder(type, -logFC, median))
     boxplot(logFC ~ types, data=results, outline=FALSE, horizontal=TRUE,
-        las=2, xlab="log(Fold Change)", main=paste0(allcontrasts, ", by Type"))
+        las=2, xlab="log(Fold Change)", main=paste0(allcontrasts, ", by Type"), yaxt="n")
+    axis(2, cex.axis=(1*16)/(length(levels(types))),
+         at=seq(from=1, to=length(levels(types))),
+         labels=levels(types), las=2)
     abline(v=0)
 }
 
