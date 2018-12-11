@@ -203,7 +203,7 @@ if (!is.null(opt$plots)) {
     types <- with(results, reorder(type, -logFC, median))
     boxplot(logFC ~ types, data=results, outline=FALSE, horizontal=TRUE,
         las=2, xlab="log2(Fold Change)", main=paste0(allcontrasts, ", by Type"), yaxt="n")
-    axis(2, cex.axis=(1*16)/(length(levels(types))),
+    axis(2, cex.axis=(1*11)/(length(levels(types))),
          at=seq(from=1, to=length(levels(types))),
          labels=levels(types), las=2)
     abline(v=0)
