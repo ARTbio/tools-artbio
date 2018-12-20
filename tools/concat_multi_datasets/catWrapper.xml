@@ -126,7 +126,7 @@
             <param name="input_type" type="select" label="What type of data do you wish to concatenate?" help="Depending on the type of input selected the concatenation options will differ">
                 <option value="singles">Single datasets</option>
                 <option value="paired_collection">Paired collection</option>
-                <option value="nested_collection">Datasets in nested collection</option>
+                <!--<option value="nested_collection">Datasets in nested collection</option>-->
             </param>
             <when value="singles">
                 <param name="inputs" type="data" label="Concatenate Datasets" multiple="True" help="All inputed datasets will be concatenated tail-to-head."/>
@@ -139,10 +139,10 @@
                     <option value="all">Concatenate all datasets into a single file regardless of strand (outputs a single file)</option>
                 </param>
             </when>
-            <when value="nested_collection">
+            <!--<when value="nested_collection">
                 <param name="inputs" type="data_collection" label="Select the nested collection to concatenate datasets from"/>
                 <param name="level" type="integer" min="1" value="1" label="Select at wich level do you wish to concatenate the datasets." help="Refer to help for a detailed example of how this option works."/>
-            </when>
+            </when>-->
         </conditional>
         <param name="dataset_names" type="boolean" label="Include dataset names?" truevalue="Yes" falsevalue="No" checked="false" help="If 'Yes' is selected '#name of dataset' will be added when concatenating."/>
         <param name="headers" type="integer" label="Number of lines to skip at the beginning of each concatenation:" value="0" help="This paremeter exists so as to not concatenate comments or headers contained at the start of the files."/>
@@ -230,11 +230,17 @@
 
 **What it does**
 
-Concatenates datasets
+Concatenates datasets and paired collections with multiple options:
+
+ - It's possible select either a concatenation by strand, by pair or a whole collection concatenation, when the input is a paired collection.
+
+ - Skipping lines before concatenation to avoid headers
+
+ - Add the name of the concatenated files as separator
 
 -----
 
-**Example**
+**Single datasets concatenation example**
 
 Concatenating Dataset::
 
@@ -261,6 +267,98 @@ will result in the following::
     chr1  151278832  151279227  Z  0  -
     chr2  100000030  200000955  P  0  +
     chr2  100000015  200000999  Q  0  +
+
+-----
+
+**Paired collection concatenation example**
+
+1rst pair::
+
+    forward - reverse
+
+2nd pair::
+
+    forward - reverse
+
+Concatenation by strand::
+
+    concatenates:
+
+    1rst forward + 2nd forward
+    1rst reverse + 2nd reverse
+
+    outputs:
+
+    1 pair
+
+Concatenation by pair::
+
+    concatenates:
+
+    1rst forward + 1rst reverse
+    2nd forward + 2nd reverse
+
+    outputs:
+
+    2 datasets
+
+Concatenate all::
+
+    concatenates:
+
+    1rst forward + 1rst reverse + 2nd forward + 2nd reverse
+
+    outputs:
+
+    1 dataset
+
+-----
+
+**When selecting "Include dataset names" when concatenating files**:
+
+1rst file name="first_tabular"::
+
+    chrX  151087187  151087355  A  0  -
+    chrX  151572400  151572481  B  0  +
+
+2nd file name="second_tabular"::
+
+    chr1  151242630  151242955  X  0  +
+    chr1  151271715  151271999  Y  0  +
+    chr1  151278832  151279227  Z  0  -
+
+output::
+
+    # first_tabular
+    chrX  151087187  151087355  A  0  -
+    chrX  151572400  151572481  B  0  +
+    # second_tabular
+    chr1  151242630  151242955  X  0  +
+    chr1  151271715  151271999  Y  0  +
+    chr1  151278832  151279227  Z  0  -
+
+-----
+
+**Skiping lines**
+
+1rst file::
+
+    chrX  151087187  151087355  A  0  -
+    chrX  151572400  151572481  B  0  +
+
+2nd file::
+
+    chr1  151242630  151242955  X  0  +
+    chr1  151271715  151271999  Y  0  +
+    chr1  151278832  151279227  Z  0  -
+
+skipping 1 line
+
+output::
+
+    chrX  151572400  151572481  B  0  +
+    chr1  151271715  151271999  Y  0  +
+    chr1  151278832  151279227  Z  0  -
 
 -----
 
