@@ -6,24 +6,6 @@
         #else:
             #set $concat_command = 'tail -q -n +'+ str(int($headers)+1)
         #end if
-        #*#if $global_condition.input_type == "nested_collection":
-            #def get_parents($current_lvl, $parget_level, $parent):
-                #set $parents = []
-                #if $current_lvl < $target_lvl -1:
-                    #for $p in $parent:
-                        $get_parents($current_lvl+1,$target_lvl,$p)
-                    #end for
-                #else:
-                    #for $p in $parent:
-                        #set $parents.append($p)
-                    #end for
-                #end if
-            #end def
-            #if $global_condition.level > 1:
-                $get_parents(0, $global_condition.level, $global_condition.inputs)
-                echo "$parents";
-            #end if
-        #end if*#
         #if $global_condition.input_type == "singles":
             #if $dataset_names == "No":
                 $concat_command
@@ -126,7 +108,6 @@
             <param name="input_type" type="select" label="What type of data do you wish to concatenate?" help="Depending on the type of input selected the concatenation options will differ">
                 <option value="singles">Single datasets</option>
                 <option value="paired_collection">Paired collection</option>
-                <!--<option value="nested_collection">Datasets in nested collection</option>-->
             </param>
             <when value="singles">
                 <param name="inputs" type="data" label="Concatenate Datasets" multiple="True" help="All inputed datasets will be concatenated tail-to-head."/>
@@ -139,10 +120,6 @@
                     <option value="all">Concatenate all datasets into a single file regardless of strand (outputs a single file)</option>
                 </param>
             </when>
-            <!--<when value="nested_collection">
-                <param name="inputs" type="data_collection" label="Select the nested collection to concatenate datasets from"/>
-                <param name="level" type="integer" min="1" value="1" label="Select at wich level do you wish to concatenate the datasets." help="Refer to help for a detailed example of how this option works."/>
-            </when>-->
         </conditional>
         <param name="dataset_names" type="boolean" label="Include dataset names?" truevalue="Yes" falsevalue="No" checked="false" help="If 'Yes' is selected '#name of dataset' will be added when concatenating."/>
         <param name="headers" type="integer" label="Number of lines to skip at the beginning of each concatenation:" value="0" help="This paremeter exists so as to not concatenate comments or headers contained at the start of the files."/>
@@ -218,7 +195,6 @@
                 <element name="1" file="1.fastq.gz" decompress="True"/>
             </output_collection>
         </test>
-        <!-- Test nested -->
     </tests>
     <help>
 
