@@ -1,4 +1,4 @@
-<tool id="small_rna_maps" name="small_rna_maps" version="2.10.1">
+<tool id="small_rna_maps" name="small_rna_maps" version="2.11.0">
   <description></description>
   <requirements>
         <requirement type="package" version="1.11.2=py27_0">numpy</requirement>
@@ -13,19 +13,20 @@
       <exit_code range="1:" level="fatal" description="Tool exception" />
   </stdio>
   <command detect_errors="exit_code"><![CDATA[
-          #for $file in $series
-              sambamba view -t \${GALAXY_SLOTS} -F "not unmapped and sequence_length >= ${minsize} and sequence_length <= ${maxsize}" -f bam '$file.inputs' >'$file.inputs.name' &&
-              samtools index '$file.inputs.name' &&
+          #import json
+          #import os
+          #for $file in $inputs
+              sambamba view -t \${GALAXY_SLOTS} -F "not unmapped and sequence_length >= ${minsize} and sequence_length <= ${maxsize}" -f bam '$file' -o '$file.element_identifier' &&
+              samtools index '$file.element_identifier' &&
           #end for
+          ls -la ./ &&
           python '$__tool_directory__'/small_rna_maps.py
-              --inputs
-              #for $file in $series
-                  '$file.inputs.name'
+              --inputs ${ ' '.join(['"%s"' % x.element_identifier for x in $inputs]) }
+              #set $labels = list()
+              #for $file in $inputs:
+                  $labels.append(str($file.element_identifier))
               #end for
-                  --sample_names
-              #for $sample in $series
-                  '$sample.inputs.name'
-              #end for
+              --sample_names ${ ' '.join(['"%s"' % x for x in $labels]) }
               --minsize $minsize
               --maxsize $maxsize
               #if str($plots_options.plots_options_selector ) == "two_plot":
@@ -52,13 +53,11 @@
           Rscript '$__tool_directory__'/small_rna_maps.r
               --first_dataframe '$output_tab'
               --extra_dataframe '$extra_output_tab'
-              --normalization
-              #set $norm = ""
-              #for $file in $series
-                     #set $norm += str($file.normalization)+' '
-              #end for
-              #set $norm = $norm[:-1]
-              '$norm'
+              #if len(str($normalization)) != 1:
+              --normalization "${ ' '.join( [factor for factor in $normalization.split()]) }"
+              #else:
+              --normalization "${ ' '.join( ["1" for factor in $inputs] )}"
+              #end if
               #if $ylimits_cond.ylimits == "no":
                   --ymin '' --ymax ''
               #else:
@@ -78,12 +77,10 @@
               --output_pdf '$output_pdf'
   ]]></command>
  <inputs>
-    <repeat name="series" title="Input" min="1">
-        <param name="inputs" type="data" format="bam" label="Select a single alignment file to parse" multiple="false"
-               help="If 'multiple datasets' method is used, the same normalization factor will be applied to each dataset. Please refer to the help section for more information." />
-        <param name="normalization" type="float" label="Enter a size/normalization factor."
-               help="Enter only one value e.g. '0.75' or '1.23'" value="1.0"/>
-    </repeat>
+    <param name="inputs" type="data" format="bam" label="Select a alignment files to parse" multiple="true"
+           help="maps from these bam inputs will be collected in a single pdf output" />
+    <param name="normalization" type="text" label="Enter a size/normalization factor."
+        help="Enter normalisation factors separated by space eg [0.75 1.23 1.1], no normalization if no values" value="1"/>
     <param name="minsize" type="integer" label="Minimal size of reads for inclusion in analysis"
            value="0" help="default value: 0" />
     <param name="maxsize" type="integer" label="Maximal size of reads for inclusion in analysis"
@@ -166,14 +163,8 @@
 
     <tests>
         <test> <!-- 0 -->
-            <repeat name="series">
-                <param name="inputs" value="input1.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
-            <repeat name="series">
-                <param name="inputs" value="input_new2.bam" ftype="bam" />
-                <param name="normalization" value="2.0" />
-            </repeat>
+            <param name="inputs" value="input1.bam,input_new2.bam" ftype="bam" />
+            <param name="normalization" value="1 2" />
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
             <param name="plots_options_selector" value="one_plot" />
@@ -182,10 +173,8 @@
             <output file="input1_input2new_norm_1_2_single_plot_counts.pdf" name="output_pdf" />
         </test>
         <test> <!-- 1 -->
-            <repeat name="series">
-                <param name="inputs" value="input1.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
+            <param name="inputs" value="input1.bam" ftype="bam" />
+            <param name="normalization" value="1.0" />
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
             <param name="ylimits" value="yes" />
@@ -197,10 +186,8 @@
             <output file="input1_yminneg5_5_single_plot_counts.pdf" name="output_pdf" />
         </test>
         <test> <!-- 2 -->
-            <repeat name="series">
-                <param name="inputs" value="input1.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
+            <param name="inputs" value="input1.bam" ftype="bam" />
+            <param name="normalization" value="1.0" />
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
             <param name="plots_options_selector" value="cluster" />
@@ -213,10 +200,8 @@
             <output file="bed1.bed" name="output_bed" />
         </test>
         <test> <!-- 3 -->
-            <repeat name="series">
-                <param name="inputs" value="input1.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
+            <param name="inputs" value="input1.bam" ftype="bam" />
+            <param name="normalization" value="1.0" />
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
             <param name="plots_options_selector" value="cluster" />
@@ -229,10 +214,8 @@
             <output file="bed2.bed" name="output_bed" />
         </test>
         <test> <!-- 4 -->
-            <repeat name="series">
-                <param name="inputs" value="input1.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
+            <param name="inputs" value="input1.bam" ftype="bam" />
+            <param name="normalization" value="1.0" />
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
             <param name="plots_options_selector" value="cluster" />
@@ -245,10 +228,8 @@
             <output file="bed3.bed" name="output_bed" />
         </test>
         <test> <!-- 5 -->
-            <repeat name="series">
-                <param name="inputs" value="input1.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
+            <param name="inputs" value="input1.bam" ftype="bam" />
+            <param name="normalization" value="1.0" />
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
             <param name="plots_options_selector" value="cluster" />
@@ -263,10 +244,8 @@
             <output file="bed4.bed" name="output_bed" />
         </test>
         <test> <!-- 6 -->
-            <repeat name="series">
-                <param name="inputs" value="input1.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
+            <param name="inputs" value="input1.bam" ftype="bam" />
+            <param name="normalization" value="1.0" />
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
             <param name="plots_options_selector" value="cluster" />
@@ -281,10 +260,8 @@
             <output file="bed5.bed" name="output_bed" />
         </test>
         <test> <!-- 7 -->
-            <repeat name="series">
-                <param name="inputs" value="input1.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
+            <param name="inputs" value="input1.bam" ftype="bam" />
+            <param name="normalization" value="1.0" />
             <param name="minsize" value="20" />
             <param name="maxsize" value="30" />
             <param name="plots_options_selector" value="one_plot" />
@@ -293,10 +270,8 @@
             <output file="input1_min20_max30_single_plot_size.pdf" name="output_pdf" />
         </test>
         <test> <!-- 8 -->
-            <repeat name="series">
-                <param name="inputs" value="input1.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
+            <param name="inputs" value="input1.bam" ftype="bam" />
+            <param name="normalization" value="1.0" />
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
             <param name="plots_options_selector" value="one_plot" />
@@ -305,10 +280,8 @@
             <output file="input1__single_plot_mean.pdf" name="output_pdf" />
         </test>
         <test> <!-- 9 -->
-            <repeat name="series">
-                <param name="inputs" value="input1.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
+            <param name="inputs" value="input1.bam" ftype="bam" />
+            <param name="normalization" value="1.0" />
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
             <param name="plots_options_selector" value="one_plot" />
@@ -317,14 +290,8 @@
             <output file="input1_single_plot_median.pdf" name="output_pdf" />
         </test>
         <test> <!-- 10 -->
-            <repeat name="series">
-                <param name="inputs" value="input1.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
-            <repeat name="series">
-                <param name="inputs" value="input2.bam" ftype="bam" />
-                <param name="normalization" value="2.0" />
-            </repeat>
+            <param name="inputs" value="input1.bam,input2.bam" ftype="bam" />
+            <param name="normalization" value="1.0 2.0" />
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
             <param name="plots_options_selector" value="one_plot" />
@@ -333,14 +300,8 @@
             <output file="input1_input2_norm_1_2_single_plot_counts.pdf" name="output_pdf" />
         </test>
         <test> <!-- 11 -->
-            <repeat name="series">
-                <param name="inputs" value="input1.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
-            <repeat name="series">
-                <param name="inputs" value="input2.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
+            <param name="inputs" value="input1.bam,input2.bam" ftype="bam" />
+            <param name="normalization" value="1.0 1.0" />
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
             <param name="ylimits" value="yes" />
@@ -354,30 +315,8 @@
             <output file="input1_input2_double_plot_counts_size_ylimneg5_5.pdf" name="output_pdf" />
         </test>
         <test> <!-- 12 -->
-            <repeat name="series">
-                <param name="inputs" value="input_single_chr.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
-            <repeat name="series">
-                <param name="inputs" value="input_single_chr.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
-            <repeat name="series">
-                <param name="inputs" value="input_single_chr.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
-            <repeat name="series">
-                <param name="inputs" value="input_single_chr.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
-            <repeat name="series">
-                <param name="inputs" value="input_single_chr.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
-            <repeat name="series">
-                <param name="inputs" value="input_single_chr.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
+            <param name="inputs" value="input_single_chr.bam,input_single_chr.bam,input_single_chr.bam,input_single_chr.bam,input_single_chr.bam,input_single_chr.bam" ftype="bam" />
+            <param name="normalization" value="1.0 1.0 1.0 1.0 1.0 1.0" />
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
             <param name="plots_options_selector" value="one_plot" />
@@ -386,14 +325,8 @@
             <output file="input_single_chr_x_6_single_plot_coverage.pdf" name="output_pdf" />
         </test>
         <test> <!-- 13 -->
-            <repeat name="series">
-                <param name="inputs" value="input1.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
-            <repeat name="series">
-                <param name="inputs" value="input2.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
+            <param name="inputs" value="input1.bam,input2.bam" ftype="bam" />
+            <param name="normalization" value="1.0 1.0" />
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
             <param name="plots_options_selector" value="global" />
@@ -403,14 +336,8 @@
             <output file="global_nomerge.pdf" name="output_pdf" />
         </test>
         <test> <!-- 14 -->
-            <repeat name="series">
-                <param name="inputs" value="input1.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
-            <repeat name="series">
-                <param name="inputs" value="input2.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
+            <param name="inputs" value="input1.bam,input2.bam" ftype="bam" />
+            <param name="normalization" value="1.0 1.0" />
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
             <param name="plots_options_selector" value="global" />
