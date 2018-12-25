@@ -1,4 +1,4 @@
-<tool id="small_rna_maps" name="small_rna_maps" version="2.11.0">
+<tool id="small_rna_maps" name="small_rna_maps" version="2.11.1">
   <description></description>
   <requirements>
         <requirement type="package" version="1.11.2=py27_0">numpy</requirement>
@@ -351,7 +351,7 @@
 
 **What it does**
 
-Plots mapping statistics of an alignment along the reference chromosomes :
+Plots mapping statistics of read alignments along reference chromosomes or genes or arbitrary regions :
 
  - counts
  - mean sizes
@@ -372,7 +372,24 @@ Or in all possible pairwise combinations:
 .. image:: two_plot.png
 
 For comparison purposes, values from bam alignment files can be normalized by a size factor
-before plotting.
+before plotting (Normalisation field)
+
+*Cluster mode*
+
+Cluster of read alignments are aggregated along regions of *variable* lengths. The Clustering
+algorithm works as follows:
+
+A read is clustered with the following read on the genomic reference if the two reads are
+separated by at maximum the clustering distance (set in nucleotides). If clustered, the step is
+repeated with the following read until clustering fails. A new cluster is then searched.
+
+For clustering procedure, one has the possibility to consider the polarity of reads (only forward
+reads or reverse reads can be clustered separately), or to ignore this polarity.
+
+Cluster reads are plotted as for single reads, their coordinate being the median of extrem coordinates of the cluster.
+
+In addition, cluster are reported in a bed file, where clusters can be filtered out upon various parameters,
+cluster size, cluster read number or cluster read density (number of reads divided by the length of the cluster).
 
 **Inputs**
 
@@ -382,12 +399,12 @@ bam alignment files that must be
   - sorted
   - mapped to the same reference
 
-To plot 2 alignment files in the same PDF output the 'single dataset' method should be used.
-
 .. class:: warningmark
 
-If the 'multiple dataset' method is used the normalization factor will be applied to every file selected in the input list.
-Additionally each file in the selected list will be plotted in a separate PDF file.
+This tools follows a "map-reduce" procedure: multiple inputs, that can be arranged as a data collection,
+are visualised side by side in a single pdf file.
+ 
+
 
 **Output**
 
