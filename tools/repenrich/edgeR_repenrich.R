@@ -194,15 +194,26 @@ if (!is.null(opt$plots)) {
     logFC <- results[, "logFC"]
     # Plot the repeat classes
     classes <- with(results, reorder(class, -logFC, median))
+    classes
     par(mar=c(6,10,4,1))
     boxplot(logFC ~ classes, data=results, outline=FALSE, horizontal=TRUE,
-        las=2, xlab="log(Fold Change)", main=paste0(allcontrasts, ", by Class"))
+        las=2, xlab="log2(Fold Change)", main=paste0(allcontrasts, ", by Class"))
     abline(v=0)
     # Plot the repeat types
     types <- with(results, reorder(type, -logFC, median))
     boxplot(logFC ~ types, data=results, outline=FALSE, horizontal=TRUE,
-        las=2, xlab="log(Fold Change)", main=paste0(allcontrasts, ", by Type"))
+        las=2, xlab="log2(Fold Change)", main=paste0(allcontrasts, ", by Type"), yaxt="n")
+    axis(2, cex.axis=(1*28)/(length(levels(types))),
+         at=seq(from=1, to=length(levels(types))),
+         labels=levels(types), las=2)
     abline(v=0)
+    # volcano plot
+    TEdata = cbind(rownames(results), as.data.frame(results), score=-log(results$FDR, 10))
+    colnames(TEdata) = c("Tag","log2FC", "FDR", "Class", "Type", "score")
+    color = ifelse(TEdata$FDR<0.05, "red", "black")   
+    s <- subset(TEdata, FDR<0.01)
+    with(TEdata, plot(log2FC, score,  pch=20, col=color, main="Volcano plot (all tag types)", ylab="-log10(FDR)"))
+    text(s[,2], s[,6], labels = s[,5], pos = seq(from=1, to=3), cex=0.5)
 }
 
 # close the plot device

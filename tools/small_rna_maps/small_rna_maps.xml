@@ -1,4 +1,4 @@
-<tool id="small_rna_maps" name="small_rna_maps" version="2.6.0">
+<tool id="small_rna_maps" name="small_rna_maps" version="2.11.1">
   <description></description>
   <requirements>
         <requirement type="package" version="1.11.2=py27_0">numpy</requirement>
@@ -13,78 +13,84 @@
       <exit_code range="1:" level="fatal" description="Tool exception" />
   </stdio>
   <command detect_errors="exit_code"><![CDATA[
-          #for $file in $series
-              sambamba view -t \${GALAXY_SLOTS} -F "not unmapped and sequence_length >= ${minsize} and sequence_length <= ${maxsize}" -f bam '$file.inputs' >'$file.inputs.name';
-              samtools index '$file.inputs.name';
+          #import json
+          #import os
+          #for $file in $inputs
+              sambamba view -t \${GALAXY_SLOTS} -F "not unmapped and sequence_length >= ${minsize} and sequence_length <= ${maxsize}" -f bam '$file' -o '$file.element_identifier' &&
+              samtools index '$file.element_identifier' &&
           #end for
+          ls -la ./ &&
           python '$__tool_directory__'/small_rna_maps.py
-              --inputs
-          #for $file in $series
-              '$file.inputs.name'
-          #end for
-              --sample_names
-          #for $sample in $series
-              '$sample.inputs.name'
-          #end for
-          --minsize $minsize
-          --maxsize $maxsize
-          --cluster $cluster
-      #if str($plots_options.plots_options_selector ) == "two_plot":
-          --plot_methods '${plots_options.first_plot}' '${plots_options.extra_plot}'
-          --outputs '$output_tab' '$extra_output_tab';
-      #elif str($plots_options.plots_options_selector ) == "global":
-          --plot_methods 'Size'
-          --outputs '$output_tab';
-      #else:
-          --plot_methods '${plots_options.first_plot}'
-          --outputs '$output_tab' ;
-      #end if
-      Rscript '$__tool_directory__'/small_rna_maps.r
-          --first_dataframe '$output_tab'
-          --extra_dataframe '$extra_output_tab'
-          --normalization
-          #set $norm = ""
-          #for $file in $series
-                 #set $norm += str($file.normalization)+' '
-          #end for
-          #set $norm = $norm[:-1]
-          '$norm'
-          #if $ylimits_cond.ylimits == "no":
-              --ymin '' --ymax ''
-          #else:
-              --ymin '${ylimits_cond.ymin}' --ymax '${ylimits_cond.ymax}'
-          #end if
-          #if str($plots_options.plots_options_selector ) == "two_plot":
-              --first_plot_method '${plots_options.first_plot}'
-              --extra_plot_method '${plots_options.extra_plot}'
-          #elif str($plots_options.plots_options_selector ) == "global":
-              --first_plot_method 'Size'
-              --extra_plot_method ''
-              --global '${plots_options.mergestrands}'
-          #else:
-              --first_plot_method '${plots_options.first_plot}'
-              --extra_plot_method ''
-          #end if
+              --inputs ${ ' '.join(['"%s"' % x.element_identifier for x in $inputs]) }
+              #set $labels = list()
+              #for $file in $inputs:
+                  $labels.append(str($file.element_identifier))
+              #end for
+              --sample_names ${ ' '.join(['"%s"' % x for x in $labels]) }
+              --minsize $minsize
+              --maxsize $maxsize
+              #if str($plots_options.plots_options_selector ) == "two_plot":
+                  --plot_methods '${plots_options.first_plot}' '${plots_options.extra_plot}'
+                  --outputs '$output_tab' '$extra_output_tab' &&
+              #elif str($plots_options.plots_options_selector ) == "global":
+                  --plot_methods 'Size'
+                  --outputs '$output_tab' &&
+              #elif str($plots_options.plots_options_selector ) == "cluster":
+                  --plot_methods 'Counts'
+                  --outputs '$output_tab'
+                  --cluster ${plots_options.cluster}
+                  --bed '$output_bed'
+                  --bed_skipsize ${plots_options.skip_size}
+                  --bed_skipcounts ${plots_options.skip_counts}
+                  --bed_skipdensity ${plots_options.skip_density}
+                  ${plots_options.strandness} &&
+              #else:
+                  --plot_methods '${plots_options.first_plot}'
+                  --outputs '$output_tab' &&
+              #end if
+              
+
+          Rscript '$__tool_directory__'/small_rna_maps.r
+              --first_dataframe '$output_tab'
+              --extra_dataframe '$extra_output_tab'
+              #if len(str($normalization)) != 1:
+              --normalization "${ ' '.join( [factor for factor in $normalization.split()]) }"
+              #else:
+              --normalization "${ ' '.join( ["1" for factor in $inputs] )}"
+              #end if
+              #if $ylimits_cond.ylimits == "no":
+                  --ymin '' --ymax ''
+              #else:
+                  --ymin '${ylimits_cond.ymin}' --ymax '${ylimits_cond.ymax}'
+              #end if
+              #if str($plots_options.plots_options_selector ) == "two_plot":
+                  --first_plot_method '${plots_options.first_plot}'
+                  --extra_plot_method '${plots_options.extra_plot}'
+              #elif str($plots_options.plots_options_selector ) == "global":
+                  --first_plot_method 'Size'
+                  --extra_plot_method ''
+                  --global '${plots_options.mergestrands}'
+              #else:
+                  --first_plot_method '${plots_options.first_plot}'
+                  --extra_plot_method ''
+              #end if
               --output_pdf '$output_pdf'
   ]]></command>
  <inputs>
-    <repeat name="series" title="Input" min="1">
-        <param name="inputs" type="data" format="bam" label="Select a single alignment file to parse" multiple="false"
-               help="If 'multiple datasets' method is used, the same normalization factor will be applied to each dataset. Please refer to the help section for more information." />
-        <param name="normalization" type="float" label="Enter a size/normalization factor."
-               help="Enter only one value e.g. '0.75' or '1.23'" value="1.0"/>
-    </repeat>
+    <param name="inputs" type="data" format="bam" label="Select a alignment files to parse" multiple="true"
+           help="maps from these bam inputs will be collected in a single pdf output" />
+    <param name="normalization" type="text" label="Enter a size/normalization factor."
+        help="Enter normalisation factors separated by space eg [0.75 1.23 1.1], no normalization if no values" value="1"/>
     <param name="minsize" type="integer" label="Minimal size of reads for inclusion in analysis"
            value="0" help="default value: 0" />
     <param name="maxsize" type="integer" label="Maximal size of reads for inclusion in analysis"
            value="10000" help="default value: 10000" />
-    <param name="cluster" type="integer" label="Aggregation distance in nucleotides"
-           value="0" help="If not 0, sets the distance (in nt) below which data are clustered to a single median position" />
     <conditional name="plots_options">
         <param name="plots_options_selector" type="select" display="radio" label="Plot Options">
             <option value="one_plot">Just one plot per chromosome</option>
             <option value="two_plot" selected="True">Two plots per chromosome</option>
             <option value="global">Global read size distributions of aligned reads</option>
+            <option value="cluster">Map read clusters</option>
         </param>
         <when value="two_plot">
             <param name="first_plot" type="select" display="radio" label="Select the type of the top plot">
@@ -118,6 +124,19 @@
                 <option value="merge">Merge forward and reverse reads</option>
             </param>
         </when>
+        <when value="cluster">
+            <param name="first_plot" type="hidden" value="Counts"/>
+            <param name="cluster" type="integer" label="Clustering distance in nucleotides" value="1"
+                   help="Sets the distance (in nt) below which reads are clustered to a single median position" />
+            <param name="strandness" argument="--nostrand" type="boolean" truevalue="--nostrand" falsevalue="" checked="false"
+                   label="Ignore polarity of reads ?" help="Set if you wish to cluster reads regardless of whether they are forward or reverse"/>
+            <param name="skip_size" type="integer" label="do not report clusters whose size is less than the specified value" value="1"
+                   help="Cluster size threshod (in nucleotides) for reporting. Set to 1 (default) reports all clusters, including singlets" />
+            <param name="skip_counts" type="integer" label="do not report cluster with a number of reads lower than the specified value" value="1"
+                   help="Number-of-reads threshod (in nucleotides) for cluster reporting. Set to 1 (default) reports all clusters, irrespective of their counts" />
+             <param name="skip_density" type="float" label="do not report cluster with density equal or less than the specified value" value="0"
+                   help="Density threshod (in reads per nucleotides) for reporting. Set to 0 (default) reports all cluster densities" />
+        </when>
     </conditional>
     <conditional name="ylimits_cond">
         <param name="ylimits" type="boolean" truevalue="yes" falsevalue="no" checked="false" label="Do you wish to set an y axis limit to the plots?"
@@ -133,6 +152,9 @@
 
  <outputs>
     <data format="tabular" name="output_tab" label="$plots_options.first_plot dataframe" />
+    <data format="bed" name="output_bed" label="bed file for clusters" >
+        <filter>plots_options['plots_options_selector'] == 'cluster'</filter>
+    </data>
     <data format="tabular" name="extra_output_tab" label="$plots_options.extra_plot dataframe">
         <filter>plots_options['plots_options_selector'] == 'two_plot'</filter>
     </data>
@@ -140,31 +162,21 @@
 </outputs>
 
     <tests>
-        <test>
-            <repeat name="series">
-                <param name="inputs" value="input1.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
-            <repeat name="series">
-                <param name="inputs" value="input_new2.bam" ftype="bam" />
-                <param name="normalization" value="2.0" />
-            </repeat>
+        <test> <!-- 0 -->
+            <param name="inputs" value="input1.bam,input_new2.bam" ftype="bam" />
+            <param name="normalization" value="1 2" />
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
-            <param name="cluster" value="0" />
             <param name="plots_options_selector" value="one_plot" />
             <param name="first_plot" value="Counts" />
             <output file="input1_input2new_norm_1_2_counts.tab" name="output_tab" />
             <output file="input1_input2new_norm_1_2_single_plot_counts.pdf" name="output_pdf" />
         </test>
-        <test>
-            <repeat name="series">
-                <param name="inputs" value="input1.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
+        <test> <!-- 1 -->
+            <param name="inputs" value="input1.bam" ftype="bam" />
+            <param name="normalization" value="1.0" />
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
-            <param name="cluster" value="0" />
             <param name="ylimits" value="yes" />
             <param name="ymin" value="-5" />
             <param name="ymax" value="5" />
@@ -173,87 +185,125 @@
             <output file="input1_counts_yminneg5_5.tab" name="output_tab" />
             <output file="input1_yminneg5_5_single_plot_counts.pdf" name="output_pdf" />
         </test>
-        <test>
-            <repeat name="series">
-                <param name="inputs" value="input1.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
+        <test> <!-- 2 -->
+            <param name="inputs" value="input1.bam" ftype="bam" />
+            <param name="normalization" value="1.0" />
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
+            <param name="plots_options_selector" value="cluster" />
+            <param name="first_plot" value="Counts" />
             <param name="cluster" value="5" />
-            <param name="plots_options_selector" value="one_plot" />
-            <param name="first_plot" value="Coverage" />
-            <output file="input1_coverage_cluster5.tab" name="output_tab" />
-            <output file="input1_cluster5_single_plot_coverage.pdf" name="output_pdf" />
+            <param name="skip_size" value="1" />
+            <param name="strandness" value="false" />
+            <output file="clustering.tab" name="output_tab" />
+            <output file="clustering.pdf" name="output_pdf" />
+            <output file="bed1.bed" name="output_bed" />
         </test>
-        <test>
-            <repeat name="series">
-                <param name="inputs" value="input1.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
+        <test> <!-- 3 -->
+            <param name="inputs" value="input1.bam" ftype="bam" />
+            <param name="normalization" value="1.0" />
+            <param name="minsize" value="0" />
+            <param name="maxsize" value="10000" />
+            <param name="plots_options_selector" value="cluster" />
+            <param name="first_plot" value="Counts" />
+            <param name="cluster" value="5" />
+            <param name="skip_size" value="1" />
+            <param name="strandness" value="true" />
+            <output file="clustering_unstranded.tab" name="output_tab" />
+            <output file="clustering_unstranded.pdf" name="output_pdf" />
+            <output file="bed2.bed" name="output_bed" />
+        </test>
+        <test> <!-- 4 -->
+            <param name="inputs" value="input1.bam" ftype="bam" />
+            <param name="normalization" value="1.0" />
+            <param name="minsize" value="0" />
+            <param name="maxsize" value="10000" />
+            <param name="plots_options_selector" value="cluster" />
+            <param name="first_plot" value="Counts" />
+            <param name="cluster" value="5" />
+            <param name="skip_size" value="2" />
+            <param name="strandness" value="false" />
+            <output file="clustering.tab" name="output_tab" />
+            <output file="clustering.pdf" name="output_pdf" />
+            <output file="bed3.bed" name="output_bed" />
+        </test>
+        <test> <!-- 5 -->
+            <param name="inputs" value="input1.bam" ftype="bam" />
+            <param name="normalization" value="1.0" />
+            <param name="minsize" value="0" />
+            <param name="maxsize" value="10000" />
+            <param name="plots_options_selector" value="cluster" />
+            <param name="first_plot" value="Counts" />
+            <param name="cluster" value="5" />
+            <param name="skip_size" value="2" />
+            <param name="skip_counts" value="3" />
+            <param name="skip_density" value="1.0" />
+            <param name="strandness" value="false" />
+            <output file="clustering.tab" name="output_tab" />
+            <output file="clustering.pdf" name="output_pdf" />
+            <output file="bed4.bed" name="output_bed" />
+        </test>
+        <test> <!-- 6 -->
+            <param name="inputs" value="input1.bam" ftype="bam" />
+            <param name="normalization" value="1.0" />
+            <param name="minsize" value="0" />
+            <param name="maxsize" value="10000" />
+            <param name="plots_options_selector" value="cluster" />
+            <param name="first_plot" value="Counts" />
+            <param name="cluster" value="5" />
+            <param name="skip_size" value="2" />
+            <param name="skip_counts" value="2" />
+            <param name="skip_density" value="0.4" />
+            <param name="strandness" value="true" />
+            <output file="clustering_unstranded.tab" name="output_tab" />
+            <output file="clustering_unstranded.pdf" name="output_pdf" />
+            <output file="bed5.bed" name="output_bed" />
+        </test>
+        <test> <!-- 7 -->
+            <param name="inputs" value="input1.bam" ftype="bam" />
+            <param name="normalization" value="1.0" />
             <param name="minsize" value="20" />
             <param name="maxsize" value="30" />
-            <param name="cluster" value="0" />
             <param name="plots_options_selector" value="one_plot" />
             <param name="first_plot" value="Size" />
             <output file="input1_min20_max30_size.tab" name="output_tab" />
             <output file="input1_min20_max30_single_plot_size.pdf" name="output_pdf" />
         </test>
-        <test>
-            <repeat name="series">
-                <param name="inputs" value="input1.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
+        <test> <!-- 8 -->
+            <param name="inputs" value="input1.bam" ftype="bam" />
+            <param name="normalization" value="1.0" />
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
-            <param name="cluster" value="0" />
             <param name="plots_options_selector" value="one_plot" />
             <param name="first_plot" value="Mean" />
             <output file="input1_mean.tab" name="output_tab" />
             <output file="input1__single_plot_mean.pdf" name="output_pdf" />
         </test>
-        <test>
-            <repeat name="series">
-                <param name="inputs" value="input1.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
+        <test> <!-- 9 -->
+            <param name="inputs" value="input1.bam" ftype="bam" />
+            <param name="normalization" value="1.0" />
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
-            <param name="cluster" value="0" />
             <param name="plots_options_selector" value="one_plot" />
             <param name="first_plot" value="Median" />
             <output file="input1_median.tab" name="output_tab" />
             <output file="input1_single_plot_median.pdf" name="output_pdf" />
         </test>
-        <test>
-            <repeat name="series">
-                <param name="inputs" value="input1.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
-            <repeat name="series">
-                <param name="inputs" value="input2.bam" ftype="bam" />
-                <param name="normalization" value="2.0" />
-            </repeat>
+        <test> <!-- 10 -->
+            <param name="inputs" value="input1.bam,input2.bam" ftype="bam" />
+            <param name="normalization" value="1.0 2.0" />
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
-            <param name="cluster" value="0" />
             <param name="plots_options_selector" value="one_plot" />
             <param name="first_plot" value="Counts" />
             <output file="input1_input2_norm_1_2_counts.tab" name="output_tab" />
             <output file="input1_input2_norm_1_2_single_plot_counts.pdf" name="output_pdf" />
         </test>
-        <test>
-            <repeat name="series">
-                <param name="inputs" value="input1.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
-            <repeat name="series">
-                <param name="inputs" value="input2.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
+        <test> <!-- 11 -->
+            <param name="inputs" value="input1.bam,input2.bam" ftype="bam" />
+            <param name="normalization" value="1.0 1.0" />
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
-            <param name="cluster" value="0" />
             <param name="ylimits" value="yes" />
             <param name="ymin" value="-5" />
             <param name="ymax" value="5" />
@@ -264,69 +314,32 @@
             <output file="input1_input2_size.tab" name="extra_output_tab" />
             <output file="input1_input2_double_plot_counts_size_ylimneg5_5.pdf" name="output_pdf" />
         </test>
-        <test>
-            <repeat name="series">
-                <param name="inputs" value="input_single_chr.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
-            <repeat name="series">
-                <param name="inputs" value="input_single_chr.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
-            <repeat name="series">
-                <param name="inputs" value="input_single_chr.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
-            <repeat name="series">
-                <param name="inputs" value="input_single_chr.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
-            <repeat name="series">
-                <param name="inputs" value="input_single_chr.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
-            <repeat name="series">
-                <param name="inputs" value="input_single_chr.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
+        <test> <!-- 12 -->
+            <param name="inputs" value="input_single_chr.bam,input_single_chr.bam,input_single_chr.bam,input_single_chr.bam,input_single_chr.bam,input_single_chr.bam" ftype="bam" />
+            <param name="normalization" value="1.0 1.0 1.0 1.0 1.0 1.0" />
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
-            <param name="cluster" value="0" />
             <param name="plots_options_selector" value="one_plot" />
             <param name="first_plot" value="Coverage" />
             <output file="input_single_chr_x_6_single_plot_coverage.tab" name="output_tab" />
             <output file="input_single_chr_x_6_single_plot_coverage.pdf" name="output_pdf" />
         </test>
-        <test>
-            <repeat name="series">
-                <param name="inputs" value="input1.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
-            <repeat name="series">
-                <param name="inputs" value="input2.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
+        <test> <!-- 13 -->
+            <param name="inputs" value="input1.bam,input2.bam" ftype="bam" />
+            <param name="normalization" value="1.0 1.0" />
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
-            <param name="cluster" value="0" />
             <param name="plots_options_selector" value="global" />
             <param name="mergestrands" value="nomerge" />
             <param name="first_plot" value="Size" />
             <output file="size.tab" name="output_tab" />
             <output file="global_nomerge.pdf" name="output_pdf" />
         </test>
-        <test>
-            <repeat name="series">
-                <param name="inputs" value="input1.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
-            <repeat name="series">
-                <param name="inputs" value="input2.bam" ftype="bam" />
-                <param name="normalization" value="1.0" />
-            </repeat>
+        <test> <!-- 14 -->
+            <param name="inputs" value="input1.bam,input2.bam" ftype="bam" />
+            <param name="normalization" value="1.0 1.0" />
             <param name="minsize" value="0" />
             <param name="maxsize" value="10000" />
-            <param name="cluster" value="0" />
             <param name="plots_options_selector" value="global" />
             <param name="mergestrands" value="merge" />
             <param name="first_plot" value="Size" />
@@ -338,7 +351,7 @@
 
 **What it does**
 
-Plots mapping statistics of an alignment along the reference chromosomes :
+Plots mapping statistics of read alignments along reference chromosomes or genes or arbitrary regions :
 
  - counts
  - mean sizes
@@ -359,7 +372,24 @@ Or in all possible pairwise combinations:
 .. image:: two_plot.png
 
 For comparison purposes, values from bam alignment files can be normalized by a size factor
-before plotting.
+before plotting (Normalisation field)
+
+*Cluster mode*
+
+Cluster of read alignments are aggregated along regions of *variable* lengths. The Clustering
+algorithm works as follows:
+
+A read is clustered with the following read on the genomic reference if the two reads are
+separated by at maximum the clustering distance (set in nucleotides). If clustered, the step is
+repeated with the following read until clustering fails. A new cluster is then searched.
+
+For clustering procedure, one has the possibility to consider the polarity of reads (only forward
+reads or reverse reads can be clustered separately), or to ignore this polarity.
+
+Cluster reads are plotted as for single reads, their coordinate being the median of extrem coordinates of the cluster.
+
+In addition, cluster are reported in a bed file, where clusters can be filtered out upon various parameters,
+cluster size, cluster read number or cluster read density (number of reads divided by the length of the cluster).
 
 **Inputs**
 
@@ -369,12 +399,12 @@ bam alignment files that must be
   - sorted
   - mapped to the same reference
 
-To plot 2 alignment files in the same PDF output the 'single dataset' method should be used.
-
 .. class:: warningmark
 
-If the 'multiple dataset' method is used the normalization factor will be applied to every file selected in the input list.
-Additionally each file in the selected list will be plotted in a separate PDF file.
+This tools follows a "map-reduce" procedure: multiple inputs, that can be arranged as a data collection,
+are visualised side by side in a single pdf file.
+ 
+
 
 **Output**
 
