@@ -1,4 +1,4 @@
-<tool id="facturation_ibps" name="IBPS facturation parser" version="0.3.3">
+<tool id="facturation_ibps" name="IBPS facturation parser" version="0.4.1">
     <description />
     <requirements>
             <requirement type="package" version="4.6.3=py27_0">beautifulsoup4</requirement>
@@ -10,25 +10,37 @@
     <command detect_errors="exit_code"><![CDATA[
         cp $__tool_directory__/template_* . &&
         python $__tool_directory__/facturation.py
+            -t $__tool_directory__/"$template"
             -i $input
             -o $output
     ]]></command>
     <inputs>
         <param format="data" label="Fichier html source" name="input" type="data" />
+      <param name="template" type="select" label="Service émetteur" help="Indiquer le service émetteur" >
+          <option value="template_facture_M_photonique.xlsx" >Microscopie Optique</option>
+          <option value="template_facture_M_electronique.xlsx" >Microscopie Electronique</option>
+      </param>
     </inputs>
     <outputs>
-        <data format="xlsx" name="output" label="Facturation from ${input.name}" />
+        <data format="xlsx" name="output" label="${input.name}.xlsx" />
     </outputs>
     <tests>
         <test>
             <param ftype="txt" name="input" value="doublefacture.htm" />
+            <param name="template" value="template_facture_M_photonique.xlsx" />
             <output file="testdouble.xlsx" name="output" decompress="true" />
         </test>
         <test>
             <param ftype="txt" name="input" value="facture.htm" />
+            <param name="template" value="template_facture_M_photonique.xlsx" />
             <output file="testfacture.xlsx" name="output" decompress="true" />
         </test>
-    </tests>
+         <test>
+            <param ftype="txt" name="input" value="Microscopie_Electronique-2018-67.html" />
+            <param name="template" value="template_facture_M_electronique.xlsx" />
+            <output file="testfacture_electronique.xlsx" name="output" decompress="true" />
+        </test>
+   </tests>
     <help>
 
 .. class:: infomark

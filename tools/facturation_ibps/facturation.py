@@ -15,11 +15,13 @@ def Parser():
                             help="input html code to convert to xlsx")
     the_parser.add_argument('--output', '-o', action='store', type=str,
                             help='xlsx converted file')
+    the_parser.add_argument('--template', '-t', action='store', type=str,
+                            help='xlsx template file')
     args = the_parser.parse_args()
     return args
 
 
-def main(input_file, output_file):
+def main(template, input_file, output_file):
     """Script de parsing des fichiers de facturation de l'IBPS"""
 
     # ouverture fichier input
@@ -64,7 +66,7 @@ def main(input_file, output_file):
 
     # ouverture fichier output
     facture_output = openpyxl.load_workbook(
-        'template_facture.xlsx', data_only=False, keep_vba=False)
+        template, data_only=False, keep_vba=False)
     ws = facture_output.worksheets[0]
 
     # rajout de l'image de SU qui ne survit pas à la conversion
@@ -105,4 +107,4 @@ def main(input_file, output_file):
 
 if __name__ == '__main__':
     args = Parser()
-    main(args.input, args.output)
+    main(args.template, args.input, args.output)
