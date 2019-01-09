@@ -1,4 +1,4 @@
-<tool id="facturation_ibps" name="IBPS facturation parser" version="0.4">
+<tool id="facturation_ibps" name="IBPS facturation parser" version="0.4.1">
     <description />
     <requirements>
             <requirement type="package" version="4.6.3=py27_0">beautifulsoup4</requirement>
@@ -22,7 +22,7 @@
       </param>
     </inputs>
     <outputs>
-        <data format="xlsx" name="output" label="Facturation from ${input.name}" />
+        <data format="xlsx" name="output" label="${input.name}.xlsx" />
     </outputs>
     <tests>
         <test>
