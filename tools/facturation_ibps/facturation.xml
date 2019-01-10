@@ -1,4 +1,4 @@
-<tool id="facturation_ibps" name="IBPS facturation parser" version="0.4.1">
+<tool id="facturation_ibps" name="IBPS facturation parser" version="0.5.0">
     <description />
     <requirements>
             <requirement type="package" version="4.6.3=py27_0">beautifulsoup4</requirement>
@@ -11,15 +11,19 @@
         cp $__tool_directory__/template_* . &&
         python $__tool_directory__/facturation.py
             -t $__tool_directory__/"$template"
+            -r $reduction
             -i $input
             -o $output
     ]]></command>
     <inputs>
         <param format="data" label="Fichier html source" name="input" type="data" />
-      <param name="template" type="select" label="Service émetteur" help="Indiquer le service émetteur" >
-          <option value="template_facture_M_photonique.xlsx" >Microscopie Optique</option>
-          <option value="template_facture_M_electronique.xlsx" >Microscopie Electronique</option>
-      </param>
+        <param name="template" type="select" label="Service émetteur" help="Indiquer le service émetteur" >
+            <option value="template_facture_M_photonique.xlsx" >Microscopie Optique</option>
+            <option value="template_facture_M_electronique.xlsx" >Microscopie Electronique</option>
+        </param>
+        <param type="float" label="réduction à appliquer" name="reduction" value="0.00"
+               help="Entrer la réduction comme un nombre réel, ie si 20% réduction --> entrer '0.2'.
+                     NB: cette réduction s'applique à l'ensemble des prestations du tableau" />
     </inputs>
     <outputs>
         <data format="xlsx" name="output" label="${input.name}.xlsx" />
@@ -39,8 +43,14 @@
             <param ftype="txt" name="input" value="Microscopie_Electronique-2018-67.html" />
             <param name="template" value="template_facture_M_electronique.xlsx" />
             <output file="testfacture_electronique.xlsx" name="output" decompress="true" />
+         </test>
+        <test>
+            <param ftype="txt" name="input" value="Microscopie_Electronique-2018-67.html" />
+            <param name="template" value="template_facture_M_electronique.xlsx" />
+            <param name="reduction" value="0.34" />
+            <output file="testfacture_electronique_reduc.xlsx" name="output" decompress="true" />
         </test>
-   </tests>
+    </tests>
     <help>
 
 .. class:: infomark
@@ -49,7 +59,7 @@
 
 Génère un fichier Excel de facturation à partir du fichier html du système actuel de l'IBPS.
 
-  </help>
-  <citations />
+    </help>
+    <citations />
 </tool>
 
