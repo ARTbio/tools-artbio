@@ -17,11 +17,13 @@ def Parser():
                             help='xlsx converted file')
     the_parser.add_argument('--template', '-t', action='store', type=str,
                             help='xlsx template file')
+    the_parser.add_argument('--reduction', '-r', action='store', type=float,
+                            help='reduction to apply', default=1.0)
     args = the_parser.parse_args()
     return args
 
 
-def main(template, input_file, output_file):
+def main(template, input_file, output_file, reduction):
     """Script de parsing des fichiers de facturation de l'IBPS"""
 
     # ouverture fichier input
@@ -86,7 +88,8 @@ def main(template, input_file, output_file):
         ws.cell(
             row=element_row,
             column=4,
-            value=elements.iloc[i][cout_col]).number_format = '0.00'
+            value=((1-reduction) *
+                   elements.iloc[i][cout_col])).number_format = '0.00'
 
     # ajout de l'adresse
     address_row = 7
@@ -107,4 +110,4 @@ def main(template, input_file, output_file):
 
 if __name__ == '__main__':
     args = Parser()
-    main(args.template, args.input, args.output)
+    main(args.template, args.input, args.output, args.reduction)
