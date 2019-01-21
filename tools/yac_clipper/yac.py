@@ -129,7 +129,7 @@ class Clip:
             block_gen = islice(input, 1, None, 2)
             for i, line in enumerate(block_gen):
                 read = line.rstrip()
-                trimmed_read = self.scanadapt( self.adaptmotifs, read)
+                trimmed_read = self.scanadapt(self.adaptmotifs, read)
                 if self.minsize <= len(trimmed_read) <= self.maxsize:
                     if (self.Nmode == "reject") and ("N" in trimmed_read):
                         continue
