@@ -99,8 +99,8 @@ class Clip:
         output.write(">{0}\n{1}\n".format(id, read))
 
     def handle_io_fastq(self):
-        '''Open input fastq file, pass read sequence and read qscore to clipping
-        function. Pass clipped read and qscore to output function.'''
+        '''Open input fastq file, pass read sequence and read qscore to
+        scanadapt function. Pass clipped read and qscore to output function.'''
         id = 0
         output = open(self.outputfile, "a")
         with open(self.inputfile, "r") as input:
@@ -121,21 +121,20 @@ class Clip:
         output.close()
 
     def handle_io_fasta(self):
-        '''Open input fasta file, pass read sequence and read qscore to clipping function.
-        Pass clipped read and qscore to output function.'''
+        '''Open input fasta file, pass header and read sequence to scanadapt
+        function. Pass clipped read and qscore to output function.'''
         id = 0
         output = open(self.outputfile, "a")
         with open(self.inputfile, "r") as input:
             block_gen = islice(input, 1, None, 2)
             for i, line in enumerate(block_gen):
-                if i % 2:
-                    read = line.rstrip()
-                    trimmed_read = self.scanadapt(
-                    self.adaptmotifs, read)
-                    if self.minsize <= len(trimmed_read) <= self.maxsize:
-                        if (self.Nmode == "reject") and ("N" in trimmed_read):
-                            continue
-                        id += 1
+                read = line.rstrip()
+                trimmed_read = self.scanadapt(
+                self.adaptmotifs, read)
+                if self.minsize <= len(trimmed_read) <= self.maxsize:
+                    if (self.Nmode == "reject") and ("N" in trimmed_read):
+                        continue
+                    id += 1
                     self.fasta_in_write_output(id, trimmed_read, output)
         output.close()
 
