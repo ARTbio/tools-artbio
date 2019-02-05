@@ -129,8 +129,9 @@
             <param name="perp" value="2"/>
             <param name="theta" value="1" />
             <output name="output" file="cpm.tab" ftype="tabular"/>
-            <output name="tsne_out" file="tsne.pdf" ftype="tabular"/>
+            <output name="tsne_out" file="tsne.pdf" ftype="pdf"/>
         </test>
+        <!-- test without t-SNE -->
         <test>
             <param name="input" value="counts.tab" ftype="tabular"/>
             <param name="type_transfo" value="cpm"/>
