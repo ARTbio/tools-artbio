@@ -35,7 +35,6 @@
                --seed '$visu_option.seed'
                --perp '$visu_option.perp'
                --theta '$visu_option.theta'
-               --legend '$visu_option.legend'
                --tsne_out '$tsne_out'
             #end if
 ]]></command>
@@ -105,10 +104,6 @@
                     <param name="seed" value="42.0" type="float" label="Seed value for reproducibiity" help="Set to 42 as default" />
                     <param name="perp" value="10.0" type="float" label="perplexity"/> 
                     <param name="theta" value="1.0" type="float" label="theta"/> 
-                    <param name="legend" type="select" label="Legend options">
-                        <option value="TRUE">Include legend on plot</option>
-                        <option value="FALSE">Hide legend</option>
-                    </param>
             </when>
             <when value="no" />
         </conditional>
@@ -125,6 +120,17 @@
         </data>
     </outputs>
     <tests>
+        <!-- test t-SNE -->
+        <test>
+            <param name="input" value="counts.tab" ftype="tabular"/>
+            <param name="type_transfo" value="cpm"/>
+            <param name="visualisation" value="tsne"/>
+            <param name="seed" value="49"/>
+            <param name="perp" value="2"/>
+            <param name="theta" value="1" />
+            <output name="output" file="cpm.tab" ftype="tabular"/>
+            <output name="tsne_out" file="tsne.pdf" ftype="tabular"/>
+        </test>
         <test>
             <param name="input" value="counts.tab" ftype="tabular"/>
             <param name="type_transfo" value="cpm"/>

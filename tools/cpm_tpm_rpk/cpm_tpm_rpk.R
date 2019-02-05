@@ -97,12 +97,6 @@ option_list = list(
     help = "theta [default : '%default' ]"
   ),
   make_option(
-    "--legend",
-    default = TRUE,
-    type = 'logical',
-    help = "Legend options [default : '%default' ]"
-  ),
-  make_option(
     c("-D", "--tsne_out"),
     default = "tsne.pdf",
     type = 'character',
@@ -189,27 +183,19 @@ write.table(
 if (opt$tsne == TRUE) {
   df = cpm(data)
   # filter and transpose df for tsne
-#  rownames(df) = df[,1]
-#  df = df[,-1] # we remove the first item column for the transposition
   df = df[rowSums(df) != 0,] # remove lines without information (with only 0 counts)
-#  first_column_name = colnames(df)[1] # save the column name for latter
   tdf = t(df)
   tdf =  log2(tdf + 1)
   # make tsne and plot results
-## Show/hide legend
-  if (opt$legend == TRUE) {
-    gg_legend = NULL } else {
-    gg_legend = theme(legend.position="none")
-  }
-  gg_legend = theme(legend.position="none")
   set.seed(opt$seed) ## Sets seed for reproducibility
   # Run TSNE
   tsne_out <- Rtsne(tdf, perplexity=opt$perp, theta=opt$theta) # 
   embedding <- as.data.frame(tsne_out$Y)
   embedding$Class <- as.factor(sub("Class_", "", rownames(tdf)))
-  ggplot(embedding, aes(x=V1, y=V2, color=Class)) +
-    geom_point(size=1.25) +
-    geom_text(aes(label=Class),hjust=-0.2, vjust=-0.5, size=2.5) +
+  gg_legend = theme(legend.position="none")
+  ggplot(embedding, aes(x=V1, y=V2)) +
+    geom_point(size=1.25, color='red') +
+    geom_text(aes(label=Class),hjust=-0.2, vjust=-0.5, size=2.5, color='darkblue') +
     gg_legend +
     xlab("") +
     ylab("") +
