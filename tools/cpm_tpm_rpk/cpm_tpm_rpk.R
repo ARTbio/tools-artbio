@@ -3,14 +3,17 @@ if (length(commandArgs(TRUE)) == 0) {
   q("no")
 }
 
-# Load necessary packages (install them if it's not the case)
-requiredPackages = c('optparse')
-for (p in requiredPackages) {
-  if (!require(p, character.only = TRUE, quietly = T)) {
-    install.packages(p)
-  }
-  suppressPackageStartupMessages(suppressMessages(library(p, character.only = TRUE)))
-}
+
+# load packages that are provided in the conda env
+options( show.error.messages=F,
+       error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
+warnings()
+library(optparse)
+library(ggplot2)
+library(reshape2)
+library(Rtsne)
+
 
 
 #Arguments
@@ -68,9 +71,44 @@ option_list = list(
     default = "res.tab",
     type = 'character',
     help = "Output name [default : '%default' ]"
+  ),
+  make_option(
+    "--tsne",
+    default = FALSE,
+    type = 'logical',
+    help = "performs T-SNE [default : '%default' ]"
+  ),
+  make_option(
+    "--seed",
+    default = 42,
+    type = 'integer',
+    help = "Seed value for reproducibility [default : '%default' ]"
+  ),
+  make_option(
+    "--perp",
+    default = 5.0,
+    type = 'numeric',
+    help = "perplexity [default : '%default' ]"
+  ),
+  make_option(
+    "--theta",
+    default = 1.0,
+    type = 'numeric',
+    help = "theta [default : '%default' ]"
+  ),
+  make_option(
+    "--legend",
+    default = TRUE,
+    type = 'logical',
+    help = "Legend options [default : '%default' ]"
+  ),
+  make_option(
+    c("-D", "--tsne_out"),
+    default = "tsne.pdf",
+    type = 'character',
+    help = "T-SNE pdf [default : '%default' ]"
   )
 )
-
 
 opt = parse_args(OptionParser(option_list = option_list),
                  args = commandArgs(trailingOnly = TRUE))
@@ -107,7 +145,7 @@ tpm <- function(count, length) {
 
 data = read.table(
   opt$data,
-  h = opt$colnames,
+  header = opt$colnames,
   row.names = 1,
   sep = opt$sep
 )
@@ -146,4 +184,47 @@ write.table(
   quote = F,
   sep = "\t"
 )
+
+## 
+if (opt$tsne == TRUE) {
+  df = cpm(data)
+  # filter and transpose df for tsne
+#  rownames(df) = df[,1]
+#  df = df[,-1] # we remove the first item column for the transposition
+  df = df[rowSums(df) != 0,] # remove lines without information (with only 0 counts)
+#  first_column_name = colnames(df)[1] # save the column name for latter
+  tdf = t(df)
+  tdf =  log2(tdf + 1)
+  # make tsne and plot results
+## Show/hide legend
+  if (opt$legend == TRUE) {
+    gg_legend = NULL } else {
+    gg_legend = theme(legend.position="none")
+  }
+  gg_legend = theme(legend.position="none")
+  set.seed(opt$seed) ## Sets seed for reproducibility
+  # Run TSNE
+  tsne_out <- Rtsne(tdf, perplexity=opt$perp, theta=opt$theta) # 
+  embedding <- as.data.frame(tsne_out$Y)
+  embedding$Class <- as.factor(sub("Class_", "", rownames(tdf)))
+  ggplot(embedding, aes(x=V1, y=V2, color=Class)) +
+    geom_point(size=1.25) +
+    geom_text(aes(label=Class),hjust=-0.2, vjust=-0.5, size=2.5) +
+    gg_legend +
+    xlab("") +
+    ylab("") +
+    ggtitle('t-SNE of data (log2CPM transformed)')
+  ggsave(file=opt$tsne_out, device="pdf")
+}
+  
+
+
+
+
+
+
+
+
+
+
 
