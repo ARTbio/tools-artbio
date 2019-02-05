@@ -62,11 +62,11 @@ def Parser():
 def median(lst):
     lst = sorted(lst)
     if len(lst) < 1:
-            return None
+        return None
     if len(lst) % 2 == 1:
-            return lst[((len(lst)+1)/2)-1]
+        return lst[((len(lst)+1)/2)-1]
     if len(lst) % 2 == 0:
-            return float(sum(lst[(len(lst)/2)-1:(len(lst)/2)+1]))/2.0
+        return float(sum(lst[(len(lst)/2)-1:(len(lst)/2)+1]))/2.0
 
 
 def mean(lst):
