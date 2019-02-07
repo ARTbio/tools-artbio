@@ -400,8 +400,8 @@ for x in counts.keys():
 repcounts = {}
 repcounts['other'] = 0
 for key in counts.keys():
-        convert(key)
-        repcounts[repname] = counts[key]
+    convert(key)
+    repcounts[repname] = counts[key]
 # building the total counts for class enrichment...
 for key in reptotalcounts.keys():
     classtotalcounts[repeatclass[key]] += reptotalcounts[key]
