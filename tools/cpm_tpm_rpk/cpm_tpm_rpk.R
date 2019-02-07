@@ -13,6 +13,7 @@ library(optparse)
 library(ggplot2)
 library(reshape2)
 library(Rtsne)
+library(ggfortify)
 
 
 
@@ -73,10 +74,16 @@ option_list = list(
     help = "Output name [default : '%default' ]"
   ),
   make_option(
-    "--tsne",
+    "--visu",
     default = FALSE,
     type = 'logical',
     help = "performs T-SNE [default : '%default' ]"
+  ),
+  make_option(
+    "--tsne_labels",
+    default = FALSE,
+    type = 'logical',
+    help = "add labels to t-SNE plot [default : '%default' ]"
   ),
   make_option(
     "--seed",
@@ -101,7 +108,14 @@ option_list = list(
     default = "tsne.pdf",
     type = 'character',
     help = "T-SNE pdf [default : '%default' ]"
+  ),
+  make_option(
+    "--pca_out",
+    default = "pca.pdf",
+    type = 'character',
+    help = "PCA pdf [default : '%default' ]"
   )
+
 )
 
 opt = parse_args(OptionParser(option_list = option_list),
@@ -180,27 +194,42 @@ write.table(
 )
 
 ## 
-if (opt$tsne == TRUE) {
-  df = cpm(data)
-  # filter and transpose df for tsne
+if (opt$visu == TRUE) {
+  df = res
+  # filter and transpose df for tsne and pca
   df = df[rowSums(df) != 0,] # remove lines without information (with only 0 counts)
   tdf = t(df)
-  tdf =  log2(tdf + 1)
   # make tsne and plot results
   set.seed(opt$seed) ## Sets seed for reproducibility
-  # Run TSNE
   tsne_out <- Rtsne(tdf, perplexity=opt$perp, theta=opt$theta) # 
   embedding <- as.data.frame(tsne_out$Y)
   embedding$Class <- as.factor(sub("Class_", "", rownames(tdf)))
   gg_legend = theme(legend.position="none")
   ggplot(embedding, aes(x=V1, y=V2)) +
     geom_point(size=1.25, color='red') +
-    geom_text(aes(label=Class),hjust=-0.2, vjust=-0.5, size=2.5, color='darkblue') +
     gg_legend +
     xlab("") +
     ylab("") +
-    ggtitle('t-SNE of data (log2CPM transformed)')
+    ggtitle('t-SNE') +
+    if (opt$tsne_labels == TRUE) {
+      geom_text(aes(label=Class),hjust=-0.2, vjust=-0.5, size=2.5, color='darkblue')
+    }
   ggsave(file=opt$tsne_out, device="pdf")
+  # make PCA and plot result with ggfortify
+  tdf.pca <- prcomp(tdf, center = TRUE, scale. = T)
+  if (opt$tsne_labels == TRUE) {
+      autoplot(tdf.pca, shape=F, label=T, label.size=2.5, colour="darkred") +
+      xlab(paste("PC1",summary(tdf.pca)$importance[2,1]*100, "%")) +
+      ylab(paste("PC2",summary(tdf.pca)$importance[2,2]*100, "%")) +
+      ggtitle('PCA')
+      ggsave(file=opt$pca_out, device="pdf")   
+      } else {
+      autoplot(tdf.pca, shape=T, colour="red") +
+      xlab(paste("PC1",summary(tdf.pca)$importance[2,1]*100, "%")) +
+      ylab(paste("PC2",summary(tdf.pca)$importance[2,2]*100, "%")) +
+      ggtitle('PCA') 
+      ggsave(file=opt$pca_out, device="pdf")
+  }
 }
   
 
