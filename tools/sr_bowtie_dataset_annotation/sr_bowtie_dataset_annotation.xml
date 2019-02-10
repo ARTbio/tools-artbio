@@ -1,4 +1,4 @@
-<tool id="sr_bowtie_dataset_annotation" name="Annotate smRNA dataset" version="2.0.0">
+<tool id="sr_bowtie_dataset_annotation" name="Annotate smRNA dataset" version="2.0.1">
   <description>by iterative alignments with sRbowtie</description>
   <requirements>
         <requirement type="package" version="1.1.2">bowtie</requirement>
@@ -30,10 +30,14 @@
                $index_path $format '$input' > tabular_bowtie_output.tab &&
         genome_aligned=\$(wc -l < matched.fa) &&
         genome_aligned=\$(( \$genome_aligned/2)) &&
-        echo -e "$refGenomeSource1.ownFile.name Matched\t\${genome_aligned}\n" > $output &&
+        #if $refGenomeSource1.genomeSource == "history":
+            echo -e "$refGenomeSource1.ownFile.name Matched\t\${genome_aligned}\n" > $output &&
+        #else:
+            echo -e "$refGenomeSource1.index.fields.dbkey Matched\t\${genome_aligned}\n" > $output &&
+        #end if            
         #set counter = 0
         #for $i in $AdditionalQueries:
-            rm genome.fa &&
+            rm -f genome.fa &&
             #set $counter += 1
             #if $counter != 1:
                 #set input = "class_unmatched.fa"
