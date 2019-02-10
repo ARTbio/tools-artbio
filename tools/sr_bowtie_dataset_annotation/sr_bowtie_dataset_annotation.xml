@@ -1,4 +1,4 @@
-<tool id="sr_bowtie_dataset_annotation" name="Annotate smRNA dataset" version="2.0.1">
+<tool id="sr_bowtie_dataset_annotation" name="Annotate smRNA dataset" version="2.0.2">
   <description>by iterative alignments with sRbowtie</description>
   <requirements>
         <requirement type="package" version="1.1.2">bowtie</requirement>
@@ -31,9 +31,9 @@
         genome_aligned=\$(wc -l < matched.fa) &&
         genome_aligned=\$(( \$genome_aligned/2)) &&
         #if $refGenomeSource1.genomeSource == "history":
-            echo -e "$refGenomeSource1.ownFile.name Matched\t\${genome_aligned}\n" > $output &&
+            echo -e "$refGenomeSource1.ownFile.name\t\${genome_aligned}\n" > $output &&
         #else:
-            echo -e "$refGenomeSource1.index.fields.dbkey Matched\t\${genome_aligned}\n" > $output &&
+            echo -e "$refGenomeSource1.index.fields.dbkey\t\${genome_aligned}\n" > $output &&
         #end if            
         #set counter = 0
         #for $i in $AdditionalQueries:
@@ -57,7 +57,7 @@
             class_aligned=\$(( \$(wc -l < temp_class_matched.fa)/2)) &&
             class_unaligned=\$(( \$(wc -l < temp_class_unmatched.fa)/2)) &&
             mv temp_class_unmatched.fa class_unmatched.fa &&
-            echo -e "$i.ownFile.name Matched\t\${class_aligned}\n" >> $output &&
+            echo -e "$i.ownFile.name\t\${class_aligned}\n" >> $output &&
         #end for
         remaining=\$(( \$(wc -l < class_unmatched.fa)/2)) &&
         echo -e "Unmatched to previous indexes\t\${remaining}\n" >> $output
