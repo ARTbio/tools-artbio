@@ -1,7 +1,10 @@
-<tool id="sr_bowtie_dataset_annotation" name="Annotate smRNA dataset" version="2.0.2">
+<tool id="sr_bowtie_dataset_annotation" name="Annotate smRNA dataset" version="2.1.0">
   <description>by iterative alignments with sRbowtie</description>
   <requirements>
         <requirement type="package" version="1.1.2">bowtie</requirement>
+        <requirement type="package" version="1.3.2">r-optparse</requirement>
+        <requirement type="package" version="2.2.1">r-ggplot2</requirement>
+        <requirement type="package" version="0.4.1">r-scales</requirement>
   </requirements>
   <command  detect_errors="exit_code"><![CDATA[
         #if $refGenomeSource1.genomeSource == "history":
@@ -11,9 +14,9 @@
         #else:
             #set index_path = $refGenomeSource1.index.fields.path
         #end if
-        #if $input.extension == "fasta":
+        #if $input.is_of_type('fasta'):
             #set format = "-f"
-        #elif $input.extension == "fastq":
+        #elif $input.is_of_type('fastq'):
             #set format = "-q"
         #end if
         #if $format == '-f':
@@ -60,7 +63,8 @@
             echo -e "$i.ownFile.name\t\${class_aligned}\n" >> $output &&
         #end for
         remaining=\$(( \$(wc -l < class_unmatched.fa)/2)) &&
-        echo -e "Unmatched to previous indexes\t\${remaining}\n" >> $output
+        echo -e "Not classified\t\${remaining}\n" >> $output &&
+        Rscript $__tool_directory__/barplot.r --input $output --barplot $barplot
         ]]></command>
   <inputs>
       <param name="input" type="data" format="fasta,fastq" label="Input file: reads clipped from their adapter" help="Only with clipped, raw fasta or fastq files"/>
@@ -93,12 +97,13 @@
 <!-- End of other bowtie index selections -->
    </inputs>
    <outputs>
-   <data format="tabular" name="output" label="Cascade Annotation Analysis">
-       <actions>
-           <action name="column_names" type="metadata" default="Reference Index,Number of reads" />
-       </actions>
-    </data>
-   </outputs>
+       <data format="tabular" name="output" label="Cascade Annotation Analysis">
+           <actions>
+               <action name="column_names" type="metadata" default="Reference Index,Number of reads" />
+           </actions>
+        </data>
+        <data name="barplot" format="pdf" label="barplot from ${on_string}" />
+    </outputs>
     <tests>
         <test>
             <param name="input" value ="sample1.fa" ftype="fasta" />
@@ -107,6 +112,7 @@
             <param name="AdditionalQueries_0|ownFile" value="dme_miR21_hairpin.fa" ftype="fasta" />
             <param name="AdditionalQueries_1|ownFile" value="Ensembl_transposon_set.fa" ftype="fasta" />
             <output name="output" ftype="tabular" file="sample1_output.tab" />
+            <output name="barplot" ftype="pdf" file="sample1_output.pdf" />
         </test>
         <test>
             <param name="input" value ="sample.fastq" ftype="fastq" />
@@ -115,6 +121,7 @@
             <param name="AdditionalQueries_0|ownFile" value="dme_miR21_hairpin.fa" ftype="fasta" />
             <param name="AdditionalQueries_1|ownFile" value="Ensembl_transposon_set.fa" ftype="fasta" />
             <output name="output" ftype="tabular" file="sample_output.tab" />
+            <output name="barplot" ftype="pdf" file="sample_output.pdf" />
         </test>
     </tests>
   <help>
