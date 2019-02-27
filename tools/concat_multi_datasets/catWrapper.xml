@@ -140,7 +140,7 @@
     </outputs>
     <tests>
         <!-- Single files concatenation -->
-        <test> Test 2 single files concatenation with no other option
+        <test> <!-- Test 2 single files concatenation with no other option -->
             <param name="input_type" value="singles" />
             <param name="inputs" value="1.bed,2.bed"/>
             <param name="dataset_names" value="No" />
