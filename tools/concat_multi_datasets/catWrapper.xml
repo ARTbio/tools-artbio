@@ -34,7 +34,7 @@
                         >> '$forward' &&
                         $concat_command
                         $file['reverse']
-                        >> 'reverse'&&
+                        >> '$reverse' &&
                     #end for
                     sleep 1
                 #else:
@@ -134,7 +134,7 @@
             <filter>global_condition['input_type'] == 'paired_collection' and global_condition['paired_cat_type'] == 'by_strand'</filter>
         </collection>
         <collection name="list_output" type="list" label="Concatenation by pairs">
-            <discover_datasets pattern="(?P&lt;name&gt;.*)\.(?P&lt;ext&gt;[^\._]+)\.listed" visible="false" directory="concatenated"/>
+            <discover_datasets pattern="(?P&lt;name&gt;.*)\.(?P&lt;ext&gt;[^\._]+\.?[^\._])\.listed" visible="false" directory="concatenated"/>
             <filter>global_condition['input_type'] == 'paired_collection' and global_condition['paired_cat_type'] == 'by_pair'</filter>
         </collection>
     </outputs>
@@ -176,15 +176,27 @@
             <output name="out_file1" file="1_options.fastq.gz" decompress="True"/>
         </test>
         <!-- Test paired options -->
-        <test> <!-- Test paired gziped collection concatenation by_pair with no other option -->
+        <test> <!-- Test paired collection concatenation by_pair with no other option -->
             <param name="input_type" value="paired_collection" />
             <param name="paired_cat_type" value="by_pair"/>
             <param name="inputs">
                 <collection type="list:paired">
-                    <element name="1">
+                    <element name="2">
                         <collection type="paired">
-                            <element name="forward" value="1_f.fastq.gz"/>
-                            <element name="reverse" value="1_r.fastq.gz"/>
+                            <element name="forward" value="2_f.fastq"/>
+                            <element name="reverse" value="2_r.fastq"/>
+                        </collection>
+                    </element>
+                    <element name="3">
+                        <collection type="paired">
+                            <element name="forward" value="3_f.fastq"/>
+                            <element name="reverse" value="3_r.fastq"/>
+                        </collection>
+                    </element>
+                    <element name="4">
+                        <collection type="paired">
+                            <element name="forward" value="4_f.fastq"/>
+                            <element name="reverse" value="4_r.fastq"/>
                         </collection>
                     </element>
                 </collection>
@@ -192,7 +204,41 @@
             <param name="dataset_names" value="No" />
             <param name="headers" value="0" />
             <output_collection name="list_output" type="list" >
-                <element name="1" file="1.fastq.gz" decompress="True"/>
+                <element name="2" file="2.fastq"/>
+                <element name="3" file="3.fastq"/>
+                <element name="4" file="4.fastq"/>
+            </output_collection>
+        </test>
+        <test> <!-- Test paired collection concatenation by_strand with no other option -->
+            <param name="input_type" value="paired_collection" />
+            <param name="paired_cat_type" value="by_strand"/>
+            <param name="inputs">
+                <collection type="list:paired">
+                    <element name="2">
+                        <collection type="paired">
+                            <element name="forward" value="2_f.fastq"/>
+                            <element name="reverse" value="2_r.fastq"/>
+                        </collection>
+                    </element>
+                    <element name="3">
+                        <collection type="paired">
+                            <element name="forward" value="3_f.fastq"/>
+                            <element name="reverse" value="3_r.fastq"/>
+                        </collection>
+                    </element>
+                    <element name="4">
+                        <collection type="paired">
+                            <element name="forward" value="4_f.fastq"/>
+                            <element name="reverse" value="4_r.fastq"/>
+                        </collection>
+                    </element>
+                </collection>
+            </param>
+            <param name="dataset_names" value="No" />
+            <param name="headers" value="0" />
+            <output_collection name="paired_output" type="paired" >
+                <element name="forward" file="f.fastq"/>
+                <element name="reverse" file="r.fastq"/>
             </output_collection>
         </test>
     </tests>
@@ -201,6 +247,8 @@
 .. class:: warningmark
 
 **WARNING:** This tool does not check if the datasets being concatenated are in the same format.
+
+**WARNING:** The paired collection operations do not handle gziped files.
 
 -----
 
