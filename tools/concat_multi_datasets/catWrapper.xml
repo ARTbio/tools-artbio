@@ -1,43 +1,246 @@
-<tool id="cat_multi_datasets" name="Concatenate multiple datasets" version="0.3">
-    <description>tail-to-head</description>
+<tool id="cat_multi_datasets" name="Concatenate multiple datasets" version="1.0">
+    <description>tail-to-head by specifying how</description>
     <command><![CDATA[
-        #if $headers == "No":
-            cat
-            #for $file in $input
-                "$file"
-            #end for
-            > "$out_file1"
+        #if $headers == 0:
+            #set $concat_command = "cat"
         #else:
-            #for $file in $input
-                printf "# ${file.element_identifier}\n" >> "$out_file1" &&
-                cat "$file" >> "$out_file1" &&
-            #end for
-            sleep 1
+            #set $concat_command = 'tail -q -n +'+ str(int($headers)+1)
+        #end if
+        #if $global_condition.input_type == "singles":
+            #if $dataset_names == "No":
+                $concat_command
+                #for $file in $global_condition.inputs
+                    '$file'
+                #end for
+                > '$out_file1'
+            #else:
+                #for $file in $global_condition.inputs
+                    #if $file.ext[-2:] == "gz":
+                        printf "# ${file.element_identifier}\n" | gzip -c >> '$out_file1' &&
+                        gzip -dc "$file" | $concat_command |gzip -c >> '$out_file1' &&
+                    #else:
+                        printf "# ${file.element_identifier}\n" >> '$out_file1' &&
+                        $concat_command "$file" >> '$out_file1' &&
+                    #end if
+                #end for
+                sleep 1
+            #end if
+        #else if $global_condition.input_type == "paired_collection":
+            #if $global_condition.paired_cat_type == "by_strand":
+                #if $dataset_names == "No":
+                    #for $file in $global_condition.inputs
+                        $concat_command
+                        $file['forward']
+                        >> '$forward' &&
+                        $concat_command
+                        $file['reverse']
+                        >> '$reverse' &&
+                    #end for
+                    sleep 1
+                #else:
+                    #for $file in $global_condition.inputs.keys()
+                        printf "# ${file}_forward\n" >> '$forward' &&
+                        $concat_command
+                        $global_condition.inputs[$file]['forward']
+                        >> '$forward' &&
+                        printf "# ${file}_reverse\n" >> '$reverse' &&
+                        $concat_command
+                        $global_condition.inputs[$file]['reverse']
+                        >> '$reverse' &&
+                    #end for
+                    sleep 1
+                #end if
+            #else if $global_condition.paired_cat_type == "by_pair":
+                mkdir concatenated &&
+                #if $dataset_names == "No":
+                    #for $file in $global_condition.inputs.keys()
+                        $concat_command
+                        $global_condition.inputs[$file]['forward']
+                        > concatenated/'${file}.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
+                        $concat_command
+                        $global_condition.inputs[$file]['reverse']
+                        >> concatenated/'${file}.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
+                    #end for
+                    sleep 1
+                #else:
+                    #for $file in $global_condition.inputs.keys()
+                        printf "# ${file}_forward\n" > concatenated/'${file}.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
+                        $concat_command
+                        $global_condition.inputs[$file]['forward']
+                        >> concatenated/'${file}.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
+                        printf "# ${file}_reverse\n" >> concatenated/'${file}.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
+                        $concat_command
+                        $global_condition.inputs[$file]['reverse']
+                        >> concatenated/'${file}.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
+                    #end for
+                    sleep 1
+                #end if
+            #else if $global_condition.paired_cat_type == "all":
+                #if $dataset_names == "No":
+                    #for $file in $global_condition.inputs.keys()
+                        $concat_command
+                        $global_condition.inputs[$file]['forward']
+                        >> $out_file1 &&
+                        $concat_command
+                        $global_condition.inputs[$file]['reverse']
+                        >> $out_file1 &&
+                    #end for
+                    sleep 1
+                #else:
+                    #for $file in $global_condition.inputs.keys()
+                        printf "# ${file}_forward\n" > $out_file1 &&
+                        $concat_command
+                        $global_condition.inputs[$file]['forward']
+                        >> $out_file1 &&
+                        printf "# ${file}_reverse\n" >> $out_file1 &&
+                        $concat_command
+                        $global_condition.inputs[$file]['reverse']
+                        >> $out_file1 &&
+                    #end for
+                    sleep 1
+                #end if
+            #end if
         #end if
         ]]>
     </command>
     <inputs>
-        <param name="headers" type="select" label="include dataset names">
-                <option value="No" selected="true">No</option>
-                <option value="Yes">Yes</option>
-        </param>
-        <param name="input" type="data" label="Concatenate Dataset" multiple="True"/>
+        <conditional name="global_condition">
+            <param name="input_type" type="select" label="What type of data do you wish to concatenate?" help="Depending on the type of input selected the concatenation options will differ">
+                <option value="singles">Single datasets</option>
+                <option value="paired_collection">Paired collection</option>
+            </param>
+            <when value="singles">
+                <param name="inputs" type="data" label="Concatenate Datasets" multiple="True" help="All inputed datasets will be concatenated tail-to-head."/>
+            </when>
+            <when value="paired_collection">
+                <param name="inputs" type="data_collection" collection_type="list:paired" label="Input paired collections to concatenate"/>
+                <param name="paired_cat_type" type="select" label="What type of concatenation do you wish to perform?">
+                    <option value="by_strand">Concatenate all datsets of same strand (outputs a single pair of datasets)</option>
+                    <option value="by_pair">Concatenate pairs of datasets (outputs an unpaired collection of datasets)</option>
+                    <option value="all">Concatenate all datasets into a single file regardless of strand (outputs a single file)</option>
+                </param>
+            </when>
+        </conditional>
+        <param name="dataset_names" type="boolean" label="Include dataset names?" truevalue="Yes" falsevalue="No" checked="false" help="If 'Yes' is selected '#name of dataset' will be added when concatenating."/>
+        <param name="headers" type="integer" label="Number of lines to skip at the beginning of each concatenation:" value="0" help="This paremeter exists so as to not concatenate comments or headers contained at the start of the files."/>
     </inputs>
     <outputs>
-        <data name="out_file1" format_source="input" metadata_source="input"/>
+        <data name="out_file1" format_source="inputs" metadata_source="inputs" label="Concatenated datasets">
+            <filter>global_condition['input_type'] == 'singles' or (global_condition['input_type'] == 'paired_collection' and global_condition['paired_cat_type'] == 'all')</filter>
+        </data>
+        <collection name="paired_output" type="paired" label="Concatenation by strtand">
+            <data name="forward" />
+            <data name="reverse" />
+            <filter>global_condition['input_type'] == 'paired_collection' and global_condition['paired_cat_type'] == 'by_strand'</filter>
+        </collection>
+        <collection name="list_output" type="list" label="Concatenation by pairs">
+            <discover_datasets pattern="(?P&lt;name&gt;.*)\.(?P&lt;ext&gt;[^\._]+\.?[^\._])\.listed" visible="false" directory="concatenated"/>
+            <filter>global_condition['input_type'] == 'paired_collection' and global_condition['paired_cat_type'] == 'by_pair'</filter>
+        </collection>
     </outputs>
     <tests>
-        <test>
-            <param name="headers" value="No" />
-            <param name="input" value="1.bed,2.bed"/>
+        <!-- Single files concatenation -->
+        <test> <!-- Test 2 single files concatenation with no other option -->
+            <param name="input_type" value="singles" />
+            <param name="inputs" value="1.bed,2.bed"/>
+            <param name="dataset_names" value="No" />
+            <param name="headers" value="0" />
             <output name="out_file1" file="cat_wrapper_out1.bed"/>
         </test>
-        <test>
-            <param name="headers" value="Yes" />
-            <param name="input" value="1.bed,2.bed"/>
+        <test> <!-- Test 2 single files concatenation with dataset names activated -->
+            <param name="input_type" value="singles" />
+            <param name="inputs" value="1.bed,2.bed"/>
+            <param name="dataset_names" value="Yes" />
+            <param name="headers" value="0" />
             <output name="out_file1" file="cat_wrapper_out2.bed"/>
         </test>
-
+        <test> <!-- Test 2 single files concatenation skipping 1 line -->
+            <param name="input_type" value="singles" />
+            <param name="inputs" value="1.bed,2.bed"/>
+            <param name="dataset_names" value="No" />
+            <param name="headers" value="1" />
+            <output name="out_file1" file="cat_wrapper_out3.bed"/>
+        </test>
+        <test> <!-- Test gz handling with no options -->
+            <param name="input_type" value="singles" />
+            <param name="inputs" value="1_f.fastq.gz,1_r.fastq.gz"/>
+            <param name="dataset_names" value="No" />
+            <param name="headers" value="0" />
+            <output name="out_file1" file="1.fastq.gz" decompress="True"/>
+        </test>
+        <test> <!-- Test gz handling with options -->
+            <param name="input_type" value="singles" />
+            <param name="inputs" value="1_f.fastq.gz,1_r.fastq.gz"/>
+            <param name="dataset_names" value="Yes" />
+            <param name="headers" value="4" />
+            <output name="out_file1" file="1_options.fastq.gz" decompress="True"/>
+        </test>
+        <!-- Test paired options -->
+        <test> <!-- Test paired collection concatenation by_pair with no other option -->
+            <param name="input_type" value="paired_collection" />
+            <param name="paired_cat_type" value="by_pair"/>
+            <param name="inputs">
+                <collection type="list:paired">
+                    <element name="2">
+                        <collection type="paired">
+                            <element name="forward" value="2_f.fastq"/>
+                            <element name="reverse" value="2_r.fastq"/>
+                        </collection>
+                    </element>
+                    <element name="3">
+                        <collection type="paired">
+                            <element name="forward" value="3_f.fastq"/>
+                            <element name="reverse" value="3_r.fastq"/>
+                        </collection>
+                    </element>
+                    <element name="4">
+                        <collection type="paired">
+                            <element name="forward" value="4_f.fastq"/>
+                            <element name="reverse" value="4_r.fastq"/>
+                        </collection>
+                    </element>
+                </collection>
+            </param>
+            <param name="dataset_names" value="No" />
+            <param name="headers" value="0" />
+            <output_collection name="list_output" type="list" >
+                <element name="2" file="2.fastq"/>
+                <element name="3" file="3.fastq"/>
+                <element name="4" file="4.fastq"/>
+            </output_collection>
+        </test>
+        <test> <!-- Test paired collection concatenation by_strand with no other option -->
+            <param name="input_type" value="paired_collection" />
+            <param name="paired_cat_type" value="by_strand"/>
+            <param name="inputs">
+                <collection type="list:paired">
+                    <element name="2">
+                        <collection type="paired">
+                            <element name="forward" value="2_f.fastq"/>
+                            <element name="reverse" value="2_r.fastq"/>
+                        </collection>
+                    </element>
+                    <element name="3">
+                        <collection type="paired">
+                            <element name="forward" value="3_f.fastq"/>
+                            <element name="reverse" value="3_r.fastq"/>
+                        </collection>
+                    </element>
+                    <element name="4">
+                        <collection type="paired">
+                            <element name="forward" value="4_f.fastq"/>
+                            <element name="reverse" value="4_r.fastq"/>
+                        </collection>
+                    </element>
+                </collection>
+            </param>
+            <param name="dataset_names" value="No" />
+            <param name="headers" value="0" />
+            <output_collection name="paired_output" type="paired" >
+                <element name="forward" file="f.fastq"/>
+                <element name="reverse" file="r.fastq"/>
+            </output_collection>
+        </test>
     </tests>
     <help>
 
@@ -45,15 +248,23 @@
 
 **WARNING:** This tool does not check if the datasets being concatenated are in the same format.
 
+**WARNING:** The paired collection operations do not handle gziped files.
+
 -----
 
 **What it does**
 
-Concatenates datasets
+Concatenates datasets and paired collections with multiple options:
+
+ - It's possible select either a concatenation by strand, by pair or a whole collection concatenation, when the input is a paired collection.
+
+ - Skipping lines before concatenation to avoid headers
+
+ - Add the name of the concatenated files as separator
 
 -----
 
-**Example**
+**Single datasets concatenation example**
 
 Concatenating Dataset::
 
@@ -80,6 +291,98 @@ will result in the following::
     chr1  151278832  151279227  Z  0  -
     chr2  100000030  200000955  P  0  +
     chr2  100000015  200000999  Q  0  +
+
+-----
+
+**Paired collection concatenation example**
+
+1rst pair::
+
+    forward - reverse
+
+2nd pair::
+
+    forward - reverse
+
+Concatenation by strand::
+
+    concatenates:
+
+    1rst forward + 2nd forward
+    1rst reverse + 2nd reverse
+
+    outputs:
+
+    1 pair
+
+Concatenation by pair::
+
+    concatenates:
+
+    1rst forward + 1rst reverse
+    2nd forward + 2nd reverse
+
+    outputs:
+
+    2 datasets
+
+Concatenate all::
+
+    concatenates:
+
+    1rst forward + 1rst reverse + 2nd forward + 2nd reverse
+
+    outputs:
+
+    1 dataset
+
+-----
+
+**When selecting "Include dataset names" when concatenating files**:
+
+1rst file name="first_tabular"::
+
+    chrX  151087187  151087355  A  0  -
+    chrX  151572400  151572481  B  0  +
+
+2nd file name="second_tabular"::
+
+    chr1  151242630  151242955  X  0  +
+    chr1  151271715  151271999  Y  0  +
+    chr1  151278832  151279227  Z  0  -
+
+output::
+
+    # first_tabular
+    chrX  151087187  151087355  A  0  -
+    chrX  151572400  151572481  B  0  +
+    # second_tabular
+    chr1  151242630  151242955  X  0  +
+    chr1  151271715  151271999  Y  0  +
+    chr1  151278832  151279227  Z  0  -
+
+-----
+
+**Skiping lines**
+
+1rst file::
+
+    chrX  151087187  151087355  A  0  -
+    chrX  151572400  151572481  B  0  +
+
+2nd file::
+
+    chr1  151242630  151242955  X  0  +
+    chr1  151271715  151271999  Y  0  +
+    chr1  151278832  151279227  Z  0  -
+
+skipping 1 line
+
+output::
+
+    chrX  151572400  151572481  B  0  +
+    chr1  151271715  151271999  Y  0  +
+    chr1  151278832  151279227  Z  0  -
 
 -----
 
