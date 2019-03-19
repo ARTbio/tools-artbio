@@ -11,8 +11,7 @@ loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
 warnings()
 library(optparse)
 library(ggplot2)
-library(scales)
-
+library(ggrepel)
 
 
 #Arguments
@@ -37,12 +36,18 @@ opt = parse_args(OptionParser(option_list = option_list),
 
 ## 
 annotations = read.delim(opt$input, header=F)
-colnames(annotations) = c("class", "counts")
-annotations = cbind(annotations, fraction=annotations$counts/annotations$counts[1])
-annotations = annotations[-1,]
+colnames(annotations) = c("sample", "class", "counts", "total")
+annotations$percent=round(annotations$counts/annotations$total*100, digits=2)
 # ggplot2 plotting
-ggplot(annotations, aes(x="classes", y=fraction, fill=class)) +
-geom_bar(width = .7, position=position_stack(), stat = "identity") +
-geom_text(aes(label = percent(fraction)), position = position_stack(vjust = 0.5),size = 4)
 ggtitle('Class proportions') 
+ggplot(annotations, aes(x=total/2, y = counts, fill = class, width = total)) +
+       geom_bar(position="fill", stat="identity") + 
+       facet_grid(~sample ) + geom_label_repel(aes(label = percent), position = position_fill(vjust = 0.5), size=2,show.legend = F) +
+       coord_polar(theta="y") +
+       theme(axis.text = element_blank(),
+             axis.ticks = element_blank(),
+             panel.grid  = element_blank(),
+             axis.title.y = element_blank()) +
+       geom_text(aes(x = total/2, y= .5, label = paste(round(total/1000000, digits=3), "M"), vjust = 4, hjust=-1), size=2)
 ggsave(file=opt$barplot, device="pdf")
+
