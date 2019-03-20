@@ -116,6 +116,15 @@
             <output name="output" ftype="tabular" file="sample_output.tab" />
             <output name="barplot" ftype="pdf" file="sample_output.pdf" />
         </test>
+        <test>
+            <param name="input" value ="sample5.fa,sample4.fa,sample3.fa,sample2.fa,sample1.fa" ftype="fasta" />
+            <param name="genomeSource" value="history" />
+            <param name="ownFile" value ="2L-tail.fa" ftype="fasta" />
+            <param name="AdditionalQueries_0|ownFile" value="dme_miR21_hairpin.fa" ftype="fasta" />
+            <param name="AdditionalQueries_1|ownFile" value="Ensembl_transposon_set.fa" ftype="fasta" />
+            <output name="output" ftype="tabular" file="multisample5_output.tab" />
+            <output name="barplot" ftype="pdf" file="multisample5_output.pdf" />
+        </test>
     </tests>
   <help>
 
