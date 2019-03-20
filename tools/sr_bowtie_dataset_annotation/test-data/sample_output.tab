@@ -1,8 +1,3 @@
-2L-tail.fa	638
-
-dme_miR21_hairpin.fa	0
-
-Ensembl_transposon_set.fa	560
-
-Not classified	78
-
+sample.fastq	dme_miR21_hairpin.fa	0	638
+sample.fastq	Ensembl_transposon_set.fa	560	638
+sample.fastq	Not classified	78	638

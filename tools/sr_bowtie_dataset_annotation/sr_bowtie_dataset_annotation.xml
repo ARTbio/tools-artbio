@@ -1,73 +1,66 @@
-<tool id="sr_bowtie_dataset_annotation" name="Annotate smRNA dataset" version="2.1.0">
+<tool id="sr_bowtie_dataset_annotation" name="Annotate smRNA dataset" version="2.2.0">
   <description>by iterative alignments with sRbowtie</description>
   <requirements>
         <requirement type="package" version="1.1.2">bowtie</requirement>
-        <requirement type="package" version="1.3.2">r-optparse</requirement>
-        <requirement type="package" version="2.2.1">r-ggplot2</requirement>
-        <requirement type="package" version="0.4.1">r-scales</requirement>
+        <requirement type="package" version="1.6.0">r-optparse</requirement>
+        <requirement type="package" version="3.1.0">r-ggplot2</requirement>
+        <requirement type="package" version="0.8.0">r-ggrepel</requirement>
   </requirements>
   <command  detect_errors="exit_code"><![CDATA[
         #if $refGenomeSource1.genomeSource == "history":
             bowtie-build -f $refGenomeSource1.ownFile genome  1>/dev/null &&
-            ln -s -f '$refGenomeSource1.ownFile' genome.fa &&
             #set index_path = 'genome'
         #else:
             #set index_path = $refGenomeSource1.index.fields.path
         #end if
-        #if $input.is_of_type('fasta'):
+        #set method_prefix = "-v %s -k 1 --best" % str($mismatches)
+        #if $input[0].is_of_type('fasta'):
             #set format = "-f"
-        #elif $input.is_of_type('fastq'):
+        #elif $input[0].is_of_type('fastq'):
             #set format = "-q"
         #end if
-        #if $format == '-f':
-            input_nbr_read=\$(( \$(wc -l < $input)/2)) &&
-        #elif $format == '-q':
-            input_nbr_read=\$(( \$(wc -l < $input)/4)) &&
-        #end if
-        #set method_prefix = "-v %s -k 1 --best" % str($mismatches)
-        bowtie -p \${GALAXY_SLOTS:-4}
-               $method_prefix
-               --al matched.fa
-               --un unmatched.fa
-               --suppress 6,7,8
-               $index_path $format '$input' > tabular_bowtie_output.tab &&
-        genome_aligned=\$(wc -l < matched.fa) &&
-        genome_aligned=\$(( \$genome_aligned/2)) &&
-        #if $refGenomeSource1.genomeSource == "history":
-            echo -e "$refGenomeSource1.ownFile.name\t\${genome_aligned}\n" > $output &&
-        #else:
-            echo -e "$refGenomeSource1.index.fields.dbkey\t\${genome_aligned}\n" > $output &&
-        #end if            
-        #set counter = 0
-        #for $i in $AdditionalQueries:
-            rm -f genome.fa &&
-            #set $counter += 1
-            #if $counter != 1:
-                #set input = "class_unmatched.fa"
-            #else:
-                #set input = "matched.fa"
-            #end if
-            touch temp_class_matched.fa temp_class_unmatched.fa &&
-            bowtie-build -f $i.ownFile genome  1>/dev/null &&
-            ln -s -f '$i.ownFile' genome.fa &&
-            #set index_path = 'genome'
+
+        #for $file in $input:
+            #set sample=$file.element_identifier
             bowtie -p \${GALAXY_SLOTS:-4}
-                $method_prefix
-                --al temp_class_matched.fa
-                --un temp_class_unmatched.fa
-                --suppress 6,7,8
-                $index_path $format '$input' > tabular_bowtie_output.tab &&
-            class_aligned=\$(( \$(wc -l < temp_class_matched.fa)/2)) &&
-            class_unaligned=\$(( \$(wc -l < temp_class_unmatched.fa)/2)) &&
-            mv temp_class_unmatched.fa class_unmatched.fa &&
-            echo -e "$i.ownFile.name\t\${class_aligned}\n" >> $output &&
+                   $method_prefix
+                   --al matched.fa
+                   --un unmatched.fa
+                   --suppress 6,7,8
+                   $index_path $format $file > tabular_bowtie_output.tab &&
+            genome_aligned=\$(wc -l < matched.fa) &&
+            genome_aligned=\$(( \$genome_aligned/2)) &&
+            #set counter = 0
+            #for $i in $AdditionalQueries:
+                #set $counter += 1
+                #if $counter != 1:
+                    #set to_align = "class_unmatched.fa"
+                #else:
+                    #set to_align = "matched.fa"
+                #end if
+                bowtie-build -f $i.ownFile subgenome  1>/dev/null &&
+                touch tmp_class_matched.fa tmp_class_unmatched.fa &&
+                bowtie -p \${GALAXY_SLOTS:-4}
+                    $method_prefix
+                    --al tmp_class_matched.fa
+                    --un tmp_class_unmatched.fa
+                    --suppress 6,7,8
+                    subgenome $format '$to_align' > tabular_bowtie_output.tab &&
+                class_aligned=\$(( \$(wc -l < tmp_class_matched.fa)/2)) &&
+                class_unaligned=\$(( \$(wc -l < tmp_class_unmatched.fa)/2)) &&
+                echo -e "$sample\t$i.ownFile.name\t\$class_aligned\t\${genome_aligned}" >> $output &&
+                mv tmp_class_unmatched.fa class_unmatched.fa &&
+                rm tmp_class_matched.fa &&
+            #end for
+            remaining=\$(( \$(wc -l < class_unmatched.fa)/2)) &&
+            echo -e "$sample\tNot classified\t\${remaining}\t\${genome_aligned}" >> $output &&
         #end for
-        remaining=\$(( \$(wc -l < class_unmatched.fa)/2)) &&
-        echo -e "Not classified\t\${remaining}\n" >> $output &&
+        
+        
         Rscript $__tool_directory__/barplot.r --input $output --barplot $barplot
         ]]></command>
   <inputs>
-      <param name="input" type="data" format="fasta,fastq" label="Input file: reads clipped from their adapter" help="Only with clipped, raw fasta or fastq files"/>
+    <param name="input" type="data" multiple="True" format="fasta,fastq" label="Input file: reads clipped from their adapter" help="Only with clipped, raw fasta or fastq files"/>
     <param name="mismatches" type="select" label="Number of mismatches allowed" help="specify the number of mismatches allowed during alignments">
         <option value="0">0</option>
         <option value="1" selected="true">1</option>
@@ -99,7 +92,7 @@
    <outputs>
        <data format="tabular" name="output" label="Cascade Annotation Analysis">
            <actions>
-               <action name="column_names" type="metadata" default="Reference Index,Number of reads" />
+               <action name="column_names" type="metadata" default="Sample,Reference Index,Number of reads, Total reads" />
            </actions>
         </data>
         <data name="barplot" format="pdf" label="barplot from ${on_string}" />
@@ -112,7 +105,7 @@
             <param name="AdditionalQueries_0|ownFile" value="dme_miR21_hairpin.fa" ftype="fasta" />
             <param name="AdditionalQueries_1|ownFile" value="Ensembl_transposon_set.fa" ftype="fasta" />
             <output name="output" ftype="tabular" file="sample1_output.tab" />
-            <output name="barplot" ftype="pdf" file="sample1_output.pdf" />
+            <output name="barplot" ftype="pdf" file="sample1_output.pdf" compare="sim_size" delta="500"/>
         </test>
         <test>
             <param name="input" value ="sample.fastq" ftype="fastq" />
@@ -121,7 +114,16 @@
             <param name="AdditionalQueries_0|ownFile" value="dme_miR21_hairpin.fa" ftype="fasta" />
             <param name="AdditionalQueries_1|ownFile" value="Ensembl_transposon_set.fa" ftype="fasta" />
             <output name="output" ftype="tabular" file="sample_output.tab" />
-            <output name="barplot" ftype="pdf" file="sample_output.pdf" />
+            <output name="barplot" ftype="pdf" file="sample_output.pdf" compare="sim_size" delta="500"/>
+        </test>
+        <test>
+            <param name="input" value ="sample5.fa,sample4.fa,sample3.fa,sample2.fa,sample1.fa" ftype="fasta" />
+            <param name="genomeSource" value="history" />
+            <param name="ownFile" value ="2L-tail.fa" ftype="fasta" />
+            <param name="AdditionalQueries_0|ownFile" value="dme_miR21_hairpin.fa" ftype="fasta" />
+            <param name="AdditionalQueries_1|ownFile" value="Ensembl_transposon_set.fa" ftype="fasta" />
+            <output name="output" ftype="tabular" file="multisample5_output.tab" />
+            <output name="barplot" ftype="pdf" file="multisample5_output.pdf" compare="sim_size" delta="500" />
         </test>
     </tests>
   <help>
