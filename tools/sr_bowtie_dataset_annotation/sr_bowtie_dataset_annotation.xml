@@ -1,4 +1,4 @@
-<tool id="sr_bowtie_dataset_annotation" name="Annotate smRNA dataset" version="2.2.0">
+<tool id="sr_bowtie_dataset_annotation" name="Annotate smRNA dataset" version="2.3.0">
   <description>by iterative alignments with sRbowtie</description>
   <requirements>
         <requirement type="package" version="1.1.2">bowtie</requirement>
@@ -13,6 +13,11 @@
         #else:
             #set index_path = $refGenomeSource1.index.fields.path
         #end if
+        
+        #for $i in $AdditionalQueries:
+            bowtie-build -f $i.ownFile $i.ownFile.name  1>/dev/null &&
+        #end for
+                
         #set method_prefix = "-v %s -k 1 --best" % str($mismatches)
         #if $input[0].is_of_type('fasta'):
             #set format = "-f"
@@ -38,14 +43,13 @@
                 #else:
                     #set to_align = "matched.fa"
                 #end if
-                bowtie-build -f $i.ownFile subgenome  1>/dev/null &&
                 touch tmp_class_matched.fa tmp_class_unmatched.fa &&
                 bowtie -p \${GALAXY_SLOTS:-4}
                     $method_prefix
                     --al tmp_class_matched.fa
                     --un tmp_class_unmatched.fa
                     --suppress 6,7,8
-                    subgenome $format '$to_align' > tabular_bowtie_output.tab &&
+                    $i.ownFile.name $format '$to_align' > tabular_bowtie_output.tab &&
                 class_aligned=\$(( \$(wc -l < tmp_class_matched.fa)/2)) &&
                 class_unaligned=\$(( \$(wc -l < tmp_class_unmatched.fa)/2)) &&
                 echo -e "$sample\t$i.ownFile.name\t\$class_aligned\t\${genome_aligned}" >> $output &&
