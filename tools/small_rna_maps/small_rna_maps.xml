@@ -1,4 +1,4 @@
-<tool id="small_rna_maps" name="small_rna_maps" version="2.11.1">
+<tool id="small_rna_maps" name="small_rna_maps" version="2.12.0">
   <description></description>
   <requirements>
         <requirement type="package" version="1.11.2=py27_0">numpy</requirement>
@@ -19,7 +19,6 @@
               sambamba view -t \${GALAXY_SLOTS} -F "not unmapped and sequence_length >= ${minsize} and sequence_length <= ${maxsize}" -f bam '$file' -o '$file.element_identifier' &&
               samtools index '$file.element_identifier' &&
           #end for
-          ls -la ./ &&
           python '$__tool_directory__'/small_rna_maps.py
               --inputs ${ ' '.join(['"%s"' % x.element_identifier for x in $inputs]) }
               #set $labels = list()

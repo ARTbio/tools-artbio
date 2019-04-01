@@ -146,15 +146,33 @@ class Map:
                 accumulator = []
                 for coor in F_clust_dic[centcoor]:
                     accumulator.extend(map_dic[(chrom, coor, 'F')])
+                '''
+                compute the offset of the cluster due to
+                size of reads
+                '''
+                last = sorted(F_clust_dic[centcoor])[-1]
+                try:
+                    margin = max(map_dic[(chrom, last, 'F')]) - 1
+                except ValueError:
+                    margin = 0
                 clustered_dic[(chrom, centcoor, 'F')] = [len(accumulator), [
                     F_clust_dic[centcoor][0],
-                    F_clust_dic[centcoor][-1]]]
+                    F_clust_dic[centcoor][-1] + margin]]
             for centcoor in R_clust_dic:
                 accumulator = []
                 for coor in R_clust_dic[centcoor]:
                     accumulator.extend(map_dic[(chrom, coor, 'R')])
+                '''
+                compute the offset of the cluster due to
+                size of reads
+                '''
+                first = sorted(R_clust_dic[centcoor])[0]
+                try:
+                    margin = max(map_dic[(chrom, first, 'R')]) - 1
+                except ValueError:
+                    margin = 0
                 clustered_dic[(chrom, centcoor, 'R')] = [len(accumulator), [
-                    R_clust_dic[centcoor][0],
+                    R_clust_dic[centcoor][0] - margin,
                     R_clust_dic[centcoor][-1]]]
         return clustered_dic
 
