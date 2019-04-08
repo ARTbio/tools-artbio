@@ -1,4 +1,4 @@
-<tool id="yac" name="Clip adapter" version="2.2.0">
+<tool id="yac" name="Clip adapter" version="2.3.0">
     <description />
     <command detect_errors="exit_code"><![CDATA[
         python $__tool_directory__/yac.py
@@ -19,7 +19,7 @@
             #else
                 mv clip.tmp $output
             #end if
-            
+
     ]]></command>
     <inputs>
         <param format="fasta,fastq" label="Source file" name="input" type="data" />
@@ -124,6 +124,16 @@
             <param name="Nmode" value="accept" />
             <param name="out_format" value="fastagz" />
             <output file="out.fasta.gz" name="output" decompress="True" />
+        </test>
+        <test>
+            <param ftype="fastqsanger.gz" name="input" value="yac_with_empty_reads.fastqsanger.gz" />
+            <param name="min" value="18" />
+            <param name="max" value="30" />
+            <param name="clip_source_list" value="prebuilt" />
+            <param name="clip_sequence" value="TGGAATTCTCGGGTGCCAAG" />
+            <param name="Nmode" value="accept" />
+            <param name="out_format" value="fastagz" />
+            <output file="out_with_empty_reads.fasta.gz" name="output" decompress="True" />
         </test>
     </tests>
     <help>
