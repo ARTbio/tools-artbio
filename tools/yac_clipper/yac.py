@@ -111,8 +111,11 @@ class Clip:
                 else:
                     read = line.rstrip()
                     continue
-                trimmed_read, trimmed_qscore = self.scanadapt(
-                    self.adaptmotifs, read, qscore)
+                try:
+                    trimmed_read, trimmed_qscore = self.scanadapt(
+                        self.adaptmotifs, read, qscore)
+                except ValueError:
+                    continue
                 if self.minsize <= len(trimmed_read) <= self.maxsize:
                     if (self.Nmode == "reject") and ("N" in trimmed_read):
                         continue
