@@ -290,18 +290,42 @@ class Map:
         '''
         Writer of a tabular file
         Dataset, Chromosome, Chrom_length, <category (size)>, <some value>
+        from a dictionary of sizes: {chrom: {polarity: {size: nbre of reads}}}
         out is an *open* file handler
         '''
         for chrom in sorted(sizedic):
             sizes = sizedic[chrom]['F'].keys()
             sizes.extend(sizedic[chrom]['R'].keys())
+            strandness = defaultdict(int)
+            sizeness = defaultdict(int)
+            for polarity in sizedic[chrom]:
+                for size in range(min(sizes), max(sizes)+1):
+                    try:
+                        strandness[polarity] += sizedic[chrom][polarity][size]
+                    except KeyError:
+                        pass
+                    sizeness[size] += sizedic[chrom][polarity][size]
+            Strandbias = strandness['F'] + strandness['R']
+            if Strandbias:
+                Strandbias = strandness['F'] / float(Strandbias)
+            else:
+                Strandbias = 2
+            Mean = numpy.mean(sizeness.values())
+            StDev = numpy.std(sizeness.values())
+            for size in sizeness:
+                if StDev:
+                    sizeness[size] = (sizeness[size] - Mean) / StDev
+                else:
+                    sizeness[size] = 0
             for polarity in sorted(sizedic[chrom]):
                 for size in range(min(sizes), max(sizes)+1):
                     try:
                         line = [self.sample_name, chrom, polarity, size,
-                                sizedic[chrom][polarity][size]]
+                                sizedic[chrom][polarity][size],
+                                Strandbias, sizeness[size]]
                     except KeyError:
-                        line = [self.sample_name, chrom, polarity, size, 0]
+                        line = [self.sample_name, chrom, polarity, size, 0,
+                                Strandbias, sizeness[size]]
                     line = [str(i) for i in line]
                     out.write('\t'.join(line) + '\n')
 
@@ -355,7 +379,8 @@ def main(inputs, samples, methods, outputs, minsize, maxsize, cluster,
     for method, output in zip(methods, outputs):
         out = open(output, 'w')
         if method == 'Size':
-            header = ["Dataset", "Chromosome", "Polarity", method, "Counts"]
+            header = ["Dataset", "Chromosome", "Polarity", method, "Counts",
+                      "Strandness", "z-score"]
         elif cluster:
             header = ["Dataset", "Chromosome", "Chrom_length", "Coordinate",
                       "Polarity", method, "Start-End", "Cluster Size",
