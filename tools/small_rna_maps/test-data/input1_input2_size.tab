@@ -1,1045 +1,1045 @@
-Dataset	Chromosome	Polarity	Size	Counts
-input1.bam	FBtr0070001	F	16	2
-input1.bam	FBtr0070001	F	17	1
-input1.bam	FBtr0070001	F	18	0
-input1.bam	FBtr0070001	F	19	1
-input1.bam	FBtr0070001	F	20	4
-input1.bam	FBtr0070001	F	21	4
-input1.bam	FBtr0070001	F	22	29
-input1.bam	FBtr0070001	F	23	15
-input1.bam	FBtr0070001	F	24	1
-input1.bam	FBtr0070001	R	16	0
-input1.bam	FBtr0070001	R	17	0
-input1.bam	FBtr0070001	R	18	0
-input1.bam	FBtr0070001	R	19	0
-input1.bam	FBtr0070001	R	20	0
-input1.bam	FBtr0070001	R	21	0
-input1.bam	FBtr0070001	R	22	0
-input1.bam	FBtr0070001	R	23	0
-input1.bam	FBtr0070001	R	24	0
-input1.bam	FBtr0070533	F	15	2
-input1.bam	FBtr0070533	F	16	1
-input1.bam	FBtr0070533	F	17	1
-input1.bam	FBtr0070533	F	18	6
-input1.bam	FBtr0070533	F	19	3
-input1.bam	FBtr0070533	F	20	2
-input1.bam	FBtr0070533	F	21	2
-input1.bam	FBtr0070533	F	22	4
-input1.bam	FBtr0070533	F	23	2
-input1.bam	FBtr0070533	F	24	0
-input1.bam	FBtr0070533	F	25	1
-input1.bam	FBtr0070533	R	15	0
-input1.bam	FBtr0070533	R	16	0
-input1.bam	FBtr0070533	R	17	0
-input1.bam	FBtr0070533	R	18	0
-input1.bam	FBtr0070533	R	19	0
-input1.bam	FBtr0070533	R	20	0
-input1.bam	FBtr0070533	R	21	0
-input1.bam	FBtr0070533	R	22	0
-input1.bam	FBtr0070533	R	23	0
-input1.bam	FBtr0070533	R	24	0
-input1.bam	FBtr0070533	R	25	0
-input1.bam	FBtr0070603	F	15	9
-input1.bam	FBtr0070603	F	16	6
-input1.bam	FBtr0070603	F	17	10
-input1.bam	FBtr0070603	F	18	7
-input1.bam	FBtr0070603	F	19	1
-input1.bam	FBtr0070603	F	20	6
-input1.bam	FBtr0070603	F	21	3
-input1.bam	FBtr0070603	F	22	3
-input1.bam	FBtr0070603	F	23	10
-input1.bam	FBtr0070603	F	24	2
-input1.bam	FBtr0070603	F	25	5
-input1.bam	FBtr0070603	F	26	5
-input1.bam	FBtr0070603	F	27	3
-input1.bam	FBtr0070603	R	15	0
-input1.bam	FBtr0070603	R	16	0
-input1.bam	FBtr0070603	R	17	0
-input1.bam	FBtr0070603	R	18	0
-input1.bam	FBtr0070603	R	19	0
-input1.bam	FBtr0070603	R	20	0
-input1.bam	FBtr0070603	R	21	0
-input1.bam	FBtr0070603	R	22	0
-input1.bam	FBtr0070603	R	23	0
-input1.bam	FBtr0070603	R	24	0
-input1.bam	FBtr0070603	R	25	0
-input1.bam	FBtr0070603	R	26	0
-input1.bam	FBtr0070603	R	27	0
-input1.bam	FBtr0070604	F	15	2
-input1.bam	FBtr0070604	F	16	0
-input1.bam	FBtr0070604	F	17	0
-input1.bam	FBtr0070604	F	18	2
-input1.bam	FBtr0070604	F	19	2
-input1.bam	FBtr0070604	F	20	0
-input1.bam	FBtr0070604	F	21	1
-input1.bam	FBtr0070604	F	22	23
-input1.bam	FBtr0070604	F	23	10
-input1.bam	FBtr0070604	R	15	0
-input1.bam	FBtr0070604	R	16	0
-input1.bam	FBtr0070604	R	17	0
-input1.bam	FBtr0070604	R	18	0
-input1.bam	FBtr0070604	R	19	0
-input1.bam	FBtr0070604	R	20	0
-input1.bam	FBtr0070604	R	21	0
-input1.bam	FBtr0070604	R	22	0
-input1.bam	FBtr0070604	R	23	0
-input1.bam	FBtr0070911	F	15	1
-input1.bam	FBtr0070911	F	16	0
-input1.bam	FBtr0070911	F	17	0
-input1.bam	FBtr0070911	F	18	0
-input1.bam	FBtr0070911	F	19	0
-input1.bam	FBtr0070911	F	20	0
-input1.bam	FBtr0070911	F	21	1
-input1.bam	FBtr0070911	R	15	0
-input1.bam	FBtr0070911	R	16	0
-input1.bam	FBtr0070911	R	17	0
-input1.bam	FBtr0070911	R	18	0
-input1.bam	FBtr0070911	R	19	0
-input1.bam	FBtr0070911	R	20	0
-input1.bam	FBtr0070911	R	21	0
-input1.bam	FBtr0078490	F	15	3
-input1.bam	FBtr0078490	F	16	3
-input1.bam	FBtr0078490	F	17	0
-input1.bam	FBtr0078490	F	18	1
-input1.bam	FBtr0078490	F	19	0
-input1.bam	FBtr0078490	F	20	0
-input1.bam	FBtr0078490	F	21	0
-input1.bam	FBtr0078490	F	22	0
-input1.bam	FBtr0078490	F	23	1
-input1.bam	FBtr0078490	R	15	0
-input1.bam	FBtr0078490	R	16	0
-input1.bam	FBtr0078490	R	17	0
-input1.bam	FBtr0078490	R	18	0
-input1.bam	FBtr0078490	R	19	0
-input1.bam	FBtr0078490	R	20	0
-input1.bam	FBtr0078490	R	21	0
-input1.bam	FBtr0078490	R	22	0
-input1.bam	FBtr0078490	R	23	0
-input1.bam	FBtr0078580	F	15	592
-input1.bam	FBtr0078580	F	16	20
-input1.bam	FBtr0078580	F	17	31
-input1.bam	FBtr0078580	F	18	9
-input1.bam	FBtr0078580	F	19	8
-input1.bam	FBtr0078580	F	20	9
-input1.bam	FBtr0078580	F	21	5
-input1.bam	FBtr0078580	F	22	13
-input1.bam	FBtr0078580	F	23	5
-input1.bam	FBtr0078580	F	24	180
-input1.bam	FBtr0078580	F	25	212
-input1.bam	FBtr0078580	F	26	1
-input1.bam	FBtr0078580	F	27	2
-input1.bam	FBtr0078580	F	28	17
-input1.bam	FBtr0078580	R	15	0
-input1.bam	FBtr0078580	R	16	0
-input1.bam	FBtr0078580	R	17	0
-input1.bam	FBtr0078580	R	18	0
-input1.bam	FBtr0078580	R	19	0
-input1.bam	FBtr0078580	R	20	0
-input1.bam	FBtr0078580	R	21	0
-input1.bam	FBtr0078580	R	22	0
-input1.bam	FBtr0078580	R	23	0
-input1.bam	FBtr0078580	R	24	0
-input1.bam	FBtr0078580	R	25	0
-input1.bam	FBtr0078580	R	26	0
-input1.bam	FBtr0078580	R	27	0
-input1.bam	FBtr0078580	R	28	0
-input1.bam	FBtr0078790	F	15	2
-input1.bam	FBtr0078790	F	16	2
-input1.bam	FBtr0078790	F	17	1
-input1.bam	FBtr0078790	F	18	1
-input1.bam	FBtr0078790	F	19	2
-input1.bam	FBtr0078790	F	20	2
-input1.bam	FBtr0078790	F	21	0
-input1.bam	FBtr0078790	F	22	2
-input1.bam	FBtr0078790	F	23	1
-input1.bam	FBtr0078790	R	15	1
-input1.bam	FBtr0078790	R	16	0
-input1.bam	FBtr0078790	R	17	0
-input1.bam	FBtr0078790	R	18	0
-input1.bam	FBtr0078790	R	19	0
-input1.bam	FBtr0078790	R	20	0
-input1.bam	FBtr0078790	R	21	0
-input1.bam	FBtr0078790	R	22	0
-input1.bam	FBtr0078790	R	23	0
-input1.bam	FBtr0079064	F	15	2
-input1.bam	FBtr0079064	F	16	0
-input1.bam	FBtr0079064	F	17	1
-input1.bam	FBtr0079064	F	18	0
-input1.bam	FBtr0079064	F	19	0
-input1.bam	FBtr0079064	F	20	0
-input1.bam	FBtr0079064	F	21	1
-input1.bam	FBtr0079064	R	15	0
-input1.bam	FBtr0079064	R	16	0
-input1.bam	FBtr0079064	R	17	0
-input1.bam	FBtr0079064	R	18	0
-input1.bam	FBtr0079064	R	19	0
-input1.bam	FBtr0079064	R	20	0
-input1.bam	FBtr0079064	R	21	0
-input1.bam	FBtr0079090	F	15	1
-input1.bam	FBtr0079090	F	16	1
-input1.bam	FBtr0079090	F	17	0
-input1.bam	FBtr0079090	F	18	1
-input1.bam	FBtr0079090	F	19	0
-input1.bam	FBtr0079090	F	20	0
-input1.bam	FBtr0079090	F	21	0
-input1.bam	FBtr0079090	F	22	0
-input1.bam	FBtr0079090	F	23	0
-input1.bam	FBtr0079090	F	24	1
-input1.bam	FBtr0079090	F	25	0
-input1.bam	FBtr0079090	F	26	0
-input1.bam	FBtr0079090	F	27	0
-input1.bam	FBtr0079090	F	28	1
-input1.bam	FBtr0079090	R	15	0
-input1.bam	FBtr0079090	R	16	0
-input1.bam	FBtr0079090	R	17	0
-input1.bam	FBtr0079090	R	18	0
-input1.bam	FBtr0079090	R	19	0
-input1.bam	FBtr0079090	R	20	0
-input1.bam	FBtr0079090	R	21	1
-input1.bam	FBtr0079090	R	22	0
-input1.bam	FBtr0079090	R	23	0
-input1.bam	FBtr0079090	R	24	0
-input1.bam	FBtr0079090	R	25	0
-input1.bam	FBtr0079090	R	26	0
-input1.bam	FBtr0079090	R	27	0
-input1.bam	FBtr0079090	R	28	0
-input1.bam	FBtr0079338	F	15	2
-input1.bam	FBtr0079338	F	16	2
-input1.bam	FBtr0079338	F	17	1
-input1.bam	FBtr0079338	F	18	1
-input1.bam	FBtr0079338	F	19	1
-input1.bam	FBtr0079338	F	20	0
-input1.bam	FBtr0079338	F	21	3
-input1.bam	FBtr0079338	F	22	6
-input1.bam	FBtr0079338	R	15	0
-input1.bam	FBtr0079338	R	16	0
-input1.bam	FBtr0079338	R	17	0
-input1.bam	FBtr0079338	R	18	0
-input1.bam	FBtr0079338	R	19	0
-input1.bam	FBtr0079338	R	20	0
-input1.bam	FBtr0079338	R	21	0
-input1.bam	FBtr0079338	R	22	0
-input1.bam	FBtr0079528	F	15	12
-input1.bam	FBtr0079528	F	16	11
-input1.bam	FBtr0079528	F	17	0
-input1.bam	FBtr0079528	F	18	5
-input1.bam	FBtr0079528	F	19	4
-input1.bam	FBtr0079528	F	20	12
-input1.bam	FBtr0079528	F	21	3
-input1.bam	FBtr0079528	F	22	2
-input1.bam	FBtr0079528	F	23	3
-input1.bam	FBtr0079528	F	24	36
-input1.bam	FBtr0079528	F	25	8
-input1.bam	FBtr0079528	F	26	5
-input1.bam	FBtr0079528	F	27	2
-input1.bam	FBtr0079528	F	28	2
-input1.bam	FBtr0079528	F	29	1
-input1.bam	FBtr0079528	R	15	0
-input1.bam	FBtr0079528	R	16	0
-input1.bam	FBtr0079528	R	17	0
-input1.bam	FBtr0079528	R	18	0
-input1.bam	FBtr0079528	R	19	0
-input1.bam	FBtr0079528	R	20	0
-input1.bam	FBtr0079528	R	21	0
-input1.bam	FBtr0079528	R	22	0
-input1.bam	FBtr0079528	R	23	0
-input1.bam	FBtr0079528	R	24	0
-input1.bam	FBtr0079528	R	25	0
-input1.bam	FBtr0079528	R	26	0
-input1.bam	FBtr0079528	R	27	0
-input1.bam	FBtr0079528	R	28	0
-input1.bam	FBtr0079528	R	29	0
-input1.bam	FBtr0079596	F	15	43
-input1.bam	FBtr0079596	F	16	34
-input1.bam	FBtr0079596	F	17	16
-input1.bam	FBtr0079596	F	18	5
-input1.bam	FBtr0079596	F	19	10
-input1.bam	FBtr0079596	F	20	13
-input1.bam	FBtr0079596	F	21	3
-input1.bam	FBtr0079596	F	22	16
-input1.bam	FBtr0079596	F	23	8
-input1.bam	FBtr0079596	F	24	0
-input1.bam	FBtr0079596	F	25	0
-input1.bam	FBtr0079596	F	26	3
-input1.bam	FBtr0079596	F	27	1
-input1.bam	FBtr0079596	R	15	0
-input1.bam	FBtr0079596	R	16	0
-input1.bam	FBtr0079596	R	17	0
-input1.bam	FBtr0079596	R	18	0
-input1.bam	FBtr0079596	R	19	0
-input1.bam	FBtr0079596	R	20	0
-input1.bam	FBtr0079596	R	21	0
-input1.bam	FBtr0079596	R	22	0
-input1.bam	FBtr0079596	R	23	0
-input1.bam	FBtr0079596	R	24	0
-input1.bam	FBtr0079596	R	25	0
-input1.bam	FBtr0079596	R	26	0
-input1.bam	FBtr0079596	R	27	0
-input1.bam	FBtr0079677	F	18	1
-input1.bam	FBtr0079677	F	19	2
-input1.bam	FBtr0079677	F	20	0
-input1.bam	FBtr0079677	F	21	0
-input1.bam	FBtr0079677	F	22	0
-input1.bam	FBtr0079677	F	23	1
-input1.bam	FBtr0079677	R	18	0
-input1.bam	FBtr0079677	R	19	0
-input1.bam	FBtr0079677	R	20	0
-input1.bam	FBtr0079677	R	21	0
-input1.bam	FBtr0079677	R	22	0
-input1.bam	FBtr0079677	R	23	0
-input1.bam	FBtr0079690	F	15	3
-input1.bam	FBtr0079690	F	16	0
-input1.bam	FBtr0079690	F	17	1
-input1.bam	FBtr0079690	F	18	0
-input1.bam	FBtr0079690	F	19	0
-input1.bam	FBtr0079690	F	20	0
-input1.bam	FBtr0079690	F	21	0
-input1.bam	FBtr0079690	F	22	0
-input1.bam	FBtr0079690	F	23	0
-input1.bam	FBtr0079690	F	24	0
-input1.bam	FBtr0079690	F	25	1
-input1.bam	FBtr0079690	R	15	0
-input1.bam	FBtr0079690	R	16	0
-input1.bam	FBtr0079690	R	17	0
-input1.bam	FBtr0079690	R	18	0
-input1.bam	FBtr0079690	R	19	0
-input1.bam	FBtr0079690	R	20	0
-input1.bam	FBtr0079690	R	21	0
-input1.bam	FBtr0079690	R	22	0
-input1.bam	FBtr0079690	R	23	0
-input1.bam	FBtr0079690	R	24	0
-input1.bam	FBtr0079690	R	25	0
-input1.bam	FBtr0079692	F	16	1
-input1.bam	FBtr0079692	F	17	1
-input1.bam	FBtr0079692	F	18	1
-input1.bam	FBtr0079692	F	19	1
-input1.bam	FBtr0079692	F	20	1
-input1.bam	FBtr0079692	F	21	0
-input1.bam	FBtr0079692	F	22	0
-input1.bam	FBtr0079692	F	23	1
-input1.bam	FBtr0079692	R	16	0
-input1.bam	FBtr0079692	R	17	0
-input1.bam	FBtr0079692	R	18	0
-input1.bam	FBtr0079692	R	19	0
-input1.bam	FBtr0079692	R	20	0
-input1.bam	FBtr0079692	R	21	0
-input1.bam	FBtr0079692	R	22	0
-input1.bam	FBtr0079692	R	23	0
-input1.bam	FBtr0079693	F	15	3
-input1.bam	FBtr0079693	F	16	0
-input1.bam	FBtr0079693	F	17	1
-input1.bam	FBtr0079693	F	18	0
-input1.bam	FBtr0079693	F	19	0
-input1.bam	FBtr0079693	F	20	0
-input1.bam	FBtr0079693	F	21	0
-input1.bam	FBtr0079693	F	22	0
-input1.bam	FBtr0079693	F	23	1
-input1.bam	FBtr0079693	F	24	1
-input1.bam	FBtr0079693	R	15	0
-input1.bam	FBtr0079693	R	16	0
-input1.bam	FBtr0079693	R	17	0
-input1.bam	FBtr0079693	R	18	0
-input1.bam	FBtr0079693	R	19	0
-input1.bam	FBtr0079693	R	20	0
-input1.bam	FBtr0079693	R	21	0
-input1.bam	FBtr0079693	R	22	0
-input1.bam	FBtr0079693	R	23	0
-input1.bam	FBtr0079693	R	24	0
-input1.bam	FBtr0079694	F	15	2
-input1.bam	FBtr0079694	F	16	0
-input1.bam	FBtr0079694	F	17	1
-input1.bam	FBtr0079694	F	18	0
-input1.bam	FBtr0079694	F	19	1
-input1.bam	FBtr0079694	F	20	0
-input1.bam	FBtr0079694	F	21	0
-input1.bam	FBtr0079694	F	22	0
-input1.bam	FBtr0079694	F	23	1
-input1.bam	FBtr0079694	F	24	1
-input1.bam	FBtr0079694	F	25	1
-input1.bam	FBtr0079694	R	15	0
-input1.bam	FBtr0079694	R	16	0
-input1.bam	FBtr0079694	R	17	0
-input1.bam	FBtr0079694	R	18	0
-input1.bam	FBtr0079694	R	19	0
-input1.bam	FBtr0079694	R	20	0
-input1.bam	FBtr0079694	R	21	0
-input1.bam	FBtr0079694	R	22	0
-input1.bam	FBtr0079694	R	23	0
-input1.bam	FBtr0079694	R	24	0
-input1.bam	FBtr0079694	R	25	0
-input1.bam	FBtr0079702	F	15	2
-input1.bam	FBtr0079702	F	16	0
-input1.bam	FBtr0079702	F	17	0
-input1.bam	FBtr0079702	F	18	2
-input1.bam	FBtr0079702	R	15	0
-input1.bam	FBtr0079702	R	16	0
-input1.bam	FBtr0079702	R	17	0
-input1.bam	FBtr0079702	R	18	0
-input1.bam	FBtr0079728	F	15	4
-input1.bam	FBtr0079728	F	16	0
-input1.bam	FBtr0079728	F	17	2
-input1.bam	FBtr0079728	F	18	0
-input1.bam	FBtr0079728	F	19	0
-input1.bam	FBtr0079728	F	20	1
-input1.bam	FBtr0079728	F	21	0
-input1.bam	FBtr0079728	F	22	0
-input1.bam	FBtr0079728	F	23	0
-input1.bam	FBtr0079728	F	24	1
-input1.bam	FBtr0079728	R	15	0
-input1.bam	FBtr0079728	R	16	0
-input1.bam	FBtr0079728	R	17	0
-input1.bam	FBtr0079728	R	18	0
-input1.bam	FBtr0079728	R	19	0
-input1.bam	FBtr0079728	R	20	0
-input1.bam	FBtr0079728	R	21	0
-input1.bam	FBtr0079728	R	22	0
-input1.bam	FBtr0079728	R	23	0
-input1.bam	FBtr0079728	R	24	0
-input1.bam	FBtr0079729	F	15	1
-input1.bam	FBtr0079729	F	16	1
-input1.bam	FBtr0079729	F	17	0
-input1.bam	FBtr0079729	F	18	1
-input1.bam	FBtr0079729	F	19	0
-input1.bam	FBtr0079729	F	20	0
-input1.bam	FBtr0079729	F	21	0
-input1.bam	FBtr0079729	F	22	1
-input1.bam	FBtr0079729	R	15	0
-input1.bam	FBtr0079729	R	16	0
-input1.bam	FBtr0079729	R	17	0
-input1.bam	FBtr0079729	R	18	0
-input1.bam	FBtr0079729	R	19	0
-input1.bam	FBtr0079729	R	20	0
-input1.bam	FBtr0079729	R	21	0
-input1.bam	FBtr0079729	R	22	0
-input1.bam	FBtr0079752	F	15	2
-input1.bam	FBtr0079752	F	16	1
-input1.bam	FBtr0079752	F	17	1
-input1.bam	FBtr0079752	F	18	0
-input1.bam	FBtr0079752	F	19	1
-input1.bam	FBtr0079752	F	20	2
-input1.bam	FBtr0079752	F	21	0
-input1.bam	FBtr0079752	F	22	0
-input1.bam	FBtr0079752	F	23	0
-input1.bam	FBtr0079752	F	24	1
-input1.bam	FBtr0079752	R	15	0
-input1.bam	FBtr0079752	R	16	0
-input1.bam	FBtr0079752	R	17	0
-input1.bam	FBtr0079752	R	18	0
-input1.bam	FBtr0079752	R	19	0
-input1.bam	FBtr0079752	R	20	0
-input1.bam	FBtr0079752	R	21	0
-input1.bam	FBtr0079752	R	22	0
-input1.bam	FBtr0079752	R	23	0
-input1.bam	FBtr0079752	R	24	0
-input1.bam	FBtr0079820	F	15	2
-input1.bam	FBtr0079820	F	16	1
-input1.bam	FBtr0079820	F	17	0
-input1.bam	FBtr0079820	F	18	4
-input1.bam	FBtr0079820	F	19	3
-input1.bam	FBtr0079820	F	20	2
-input1.bam	FBtr0079820	F	21	0
-input1.bam	FBtr0079820	F	22	0
-input1.bam	FBtr0079820	F	23	0
-input1.bam	FBtr0079820	F	24	1
-input1.bam	FBtr0079820	R	15	0
-input1.bam	FBtr0079820	R	16	0
-input1.bam	FBtr0079820	R	17	0
-input1.bam	FBtr0079820	R	18	0
-input1.bam	FBtr0079820	R	19	0
-input1.bam	FBtr0079820	R	20	0
-input1.bam	FBtr0079820	R	21	0
-input1.bam	FBtr0079820	R	22	0
-input1.bam	FBtr0079820	R	23	0
-input1.bam	FBtr0079820	R	24	0
-input1.bam	FBtr0080609	F	15	5
-input1.bam	FBtr0080609	F	16	4
-input1.bam	FBtr0080609	F	17	19
-input1.bam	FBtr0080609	F	18	11
-input1.bam	FBtr0080609	F	19	3
-input1.bam	FBtr0080609	F	20	10
-input1.bam	FBtr0080609	F	21	4
-input1.bam	FBtr0080609	F	22	0
-input1.bam	FBtr0080609	F	23	4
-input1.bam	FBtr0080609	F	24	1
-input1.bam	FBtr0080609	F	25	1
-input1.bam	FBtr0080609	F	26	1
-input1.bam	FBtr0080609	R	15	0
-input1.bam	FBtr0080609	R	16	0
-input1.bam	FBtr0080609	R	17	0
-input1.bam	FBtr0080609	R	18	0
-input1.bam	FBtr0080609	R	19	0
-input1.bam	FBtr0080609	R	20	0
-input1.bam	FBtr0080609	R	21	0
-input1.bam	FBtr0080609	R	22	0
-input1.bam	FBtr0080609	R	23	0
-input1.bam	FBtr0080609	R	24	0
-input1.bam	FBtr0080609	R	25	0
-input1.bam	FBtr0080609	R	26	0
-input1.bam	FBtr0080644	F	16	3
-input1.bam	FBtr0080644	F	17	1
-input1.bam	FBtr0080644	F	18	0
-input1.bam	FBtr0080644	F	19	0
-input1.bam	FBtr0080644	F	20	0
-input1.bam	FBtr0080644	F	21	0
-input1.bam	FBtr0080644	F	22	0
-input1.bam	FBtr0080644	F	23	0
-input1.bam	FBtr0080644	F	24	1
-input1.bam	FBtr0080644	F	25	0
-input1.bam	FBtr0080644	F	26	0
-input1.bam	FBtr0080644	F	27	1
-input1.bam	FBtr0080644	R	16	0
-input1.bam	FBtr0080644	R	17	0
-input1.bam	FBtr0080644	R	18	0
-input1.bam	FBtr0080644	R	19	0
-input1.bam	FBtr0080644	R	20	0
-input1.bam	FBtr0080644	R	21	0
-input1.bam	FBtr0080644	R	22	0
-input1.bam	FBtr0080644	R	23	0
-input1.bam	FBtr0080644	R	24	0
-input1.bam	FBtr0080644	R	25	0
-input1.bam	FBtr0080644	R	26	0
-input1.bam	FBtr0080644	R	27	0
-input1.bam	FBtr0080646	F	16	1
-input1.bam	FBtr0080646	F	17	0
-input1.bam	FBtr0080646	F	18	0
-input1.bam	FBtr0080646	F	19	0
-input1.bam	FBtr0080646	F	20	0
-input1.bam	FBtr0080646	F	21	1
-input1.bam	FBtr0080646	F	22	1
-input1.bam	FBtr0080646	R	16	0
-input1.bam	FBtr0080646	R	17	0
-input1.bam	FBtr0080646	R	18	0
-input1.bam	FBtr0080646	R	19	0
-input1.bam	FBtr0080646	R	20	0
-input1.bam	FBtr0080646	R	21	0
-input1.bam	FBtr0080646	R	22	0
-input1.bam	FBtr0080647	F	15	1
-input1.bam	FBtr0080647	F	16	4
-input1.bam	FBtr0080647	F	17	2
-input1.bam	FBtr0080647	F	18	1
-input1.bam	FBtr0080647	F	19	0
-input1.bam	FBtr0080647	F	20	1
-input1.bam	FBtr0080647	F	21	0
-input1.bam	FBtr0080647	F	22	1
-input1.bam	FBtr0080647	R	15	0
-input1.bam	FBtr0080647	R	16	0
-input1.bam	FBtr0080647	R	17	0
-input1.bam	FBtr0080647	R	18	0
-input1.bam	FBtr0080647	R	19	0
-input1.bam	FBtr0080647	R	20	0
-input1.bam	FBtr0080647	R	21	0
-input1.bam	FBtr0080647	R	22	0
-input1.bam	FBtr0080660	F	16	1
-input1.bam	FBtr0080660	F	17	0
-input1.bam	FBtr0080660	F	18	0
-input1.bam	FBtr0080660	F	19	0
-input1.bam	FBtr0080660	F	20	0
-input1.bam	FBtr0080660	F	21	2
-input1.bam	FBtr0080660	F	22	0
-input1.bam	FBtr0080660	F	23	0
-input1.bam	FBtr0080660	F	24	4
-input1.bam	FBtr0080660	R	16	0
-input1.bam	FBtr0080660	R	17	0
-input1.bam	FBtr0080660	R	18	0
-input1.bam	FBtr0080660	R	19	0
-input1.bam	FBtr0080660	R	20	0
-input1.bam	FBtr0080660	R	21	0
-input1.bam	FBtr0080660	R	22	0
-input1.bam	FBtr0080660	R	23	0
-input1.bam	FBtr0080660	R	24	0
-input1.bam	FBtr0080663	F	15	18
-input1.bam	FBtr0080663	F	16	16
-input1.bam	FBtr0080663	F	17	6
-input1.bam	FBtr0080663	F	18	3
-input1.bam	FBtr0080663	F	19	3
-input1.bam	FBtr0080663	F	20	10
-input1.bam	FBtr0080663	F	21	0
-input1.bam	FBtr0080663	F	22	1
-input1.bam	FBtr0080663	F	23	7
-input1.bam	FBtr0080663	F	24	33
-input1.bam	FBtr0080663	F	25	10
-input1.bam	FBtr0080663	F	26	6
-input1.bam	FBtr0080663	F	27	0
-input1.bam	FBtr0080663	F	28	2
-input1.bam	FBtr0080663	R	15	0
-input1.bam	FBtr0080663	R	16	0
-input1.bam	FBtr0080663	R	17	0
-input1.bam	FBtr0080663	R	18	0
-input1.bam	FBtr0080663	R	19	0
-input1.bam	FBtr0080663	R	20	0
-input1.bam	FBtr0080663	R	21	0
-input1.bam	FBtr0080663	R	22	0
-input1.bam	FBtr0080663	R	23	0
-input1.bam	FBtr0080663	R	24	0
-input1.bam	FBtr0080663	R	25	0
-input1.bam	FBtr0080663	R	26	0
-input1.bam	FBtr0080663	R	27	0
-input1.bam	FBtr0080663	R	28	0
-input1.bam	FBtr0080664	F	15	22
-input1.bam	FBtr0080664	F	16	15
-input1.bam	FBtr0080664	F	17	6
-input1.bam	FBtr0080664	F	18	5
-input1.bam	FBtr0080664	F	19	3
-input1.bam	FBtr0080664	F	20	12
-input1.bam	FBtr0080664	F	21	5
-input1.bam	FBtr0080664	F	22	0
-input1.bam	FBtr0080664	F	23	11
-input1.bam	FBtr0080664	F	24	33
-input1.bam	FBtr0080664	F	25	10
-input1.bam	FBtr0080664	F	26	4
-input1.bam	FBtr0080664	F	27	0
-input1.bam	FBtr0080664	F	28	2
-input1.bam	FBtr0080664	R	15	0
-input1.bam	FBtr0080664	R	16	0
-input1.bam	FBtr0080664	R	17	0
-input1.bam	FBtr0080664	R	18	0
-input1.bam	FBtr0080664	R	19	0
-input1.bam	FBtr0080664	R	20	0
-input1.bam	FBtr0080664	R	21	0
-input1.bam	FBtr0080664	R	22	0
-input1.bam	FBtr0080664	R	23	0
-input1.bam	FBtr0080664	R	24	0
-input1.bam	FBtr0080664	R	25	0
-input1.bam	FBtr0080664	R	26	0
-input1.bam	FBtr0080664	R	27	0
-input1.bam	FBtr0080664	R	28	0
-input2.bam	FBtr0070001	F	15	12
-input2.bam	FBtr0070001	F	16	2
-input2.bam	FBtr0070001	F	17	1
-input2.bam	FBtr0070001	F	18	2
-input2.bam	FBtr0070001	F	19	0
-input2.bam	FBtr0070001	F	20	1
-input2.bam	FBtr0070001	F	21	0
-input2.bam	FBtr0070001	F	22	4
-input2.bam	FBtr0070001	F	23	2
-input2.bam	FBtr0070001	R	15	0
-input2.bam	FBtr0070001	R	16	0
-input2.bam	FBtr0070001	R	17	0
-input2.bam	FBtr0070001	R	18	0
-input2.bam	FBtr0070001	R	19	0
-input2.bam	FBtr0070001	R	20	0
-input2.bam	FBtr0070001	R	21	0
-input2.bam	FBtr0070001	R	22	0
-input2.bam	FBtr0070001	R	23	0
-input2.bam	FBtr0070533	F	15	4
-input2.bam	FBtr0070533	F	16	8
-input2.bam	FBtr0070533	F	17	8
-input2.bam	FBtr0070533	F	18	2
-input2.bam	FBtr0070533	F	19	8
-input2.bam	FBtr0070533	F	20	12
-input2.bam	FBtr0070533	F	21	1
-input2.bam	FBtr0070533	F	22	2
-input2.bam	FBtr0070533	R	15	0
-input2.bam	FBtr0070533	R	16	0
-input2.bam	FBtr0070533	R	17	0
-input2.bam	FBtr0070533	R	18	0
-input2.bam	FBtr0070533	R	19	0
-input2.bam	FBtr0070533	R	20	0
-input2.bam	FBtr0070533	R	21	0
-input2.bam	FBtr0070533	R	22	0
-input2.bam	FBtr0070603	F	15	5
-input2.bam	FBtr0070603	F	16	4
-input2.bam	FBtr0070603	F	17	10
-input2.bam	FBtr0070603	F	18	7
-input2.bam	FBtr0070603	F	19	7
-input2.bam	FBtr0070603	F	20	15
-input2.bam	FBtr0070603	F	21	3
-input2.bam	FBtr0070603	F	22	5
-input2.bam	FBtr0070603	F	23	3
-input2.bam	FBtr0070603	F	24	2
-input2.bam	FBtr0070603	R	15	0
-input2.bam	FBtr0070603	R	16	0
-input2.bam	FBtr0070603	R	17	0
-input2.bam	FBtr0070603	R	18	0
-input2.bam	FBtr0070603	R	19	0
-input2.bam	FBtr0070603	R	20	0
-input2.bam	FBtr0070603	R	21	0
-input2.bam	FBtr0070603	R	22	0
-input2.bam	FBtr0070603	R	23	0
-input2.bam	FBtr0070603	R	24	0
-input2.bam	FBtr0070604	F	15	31
-input2.bam	FBtr0070604	F	16	11
-input2.bam	FBtr0070604	F	17	4
-input2.bam	FBtr0070604	F	18	0
-input2.bam	FBtr0070604	F	19	1
-input2.bam	FBtr0070604	F	20	2
-input2.bam	FBtr0070604	F	21	1
-input2.bam	FBtr0070604	F	22	4
-input2.bam	FBtr0070604	F	23	1
-input2.bam	FBtr0070604	R	15	0
-input2.bam	FBtr0070604	R	16	0
-input2.bam	FBtr0070604	R	17	0
-input2.bam	FBtr0070604	R	18	0
-input2.bam	FBtr0070604	R	19	0
-input2.bam	FBtr0070604	R	20	0
-input2.bam	FBtr0070604	R	21	0
-input2.bam	FBtr0070604	R	22	0
-input2.bam	FBtr0070604	R	23	0
-input2.bam	FBtr0070911	F	15	1
-input2.bam	FBtr0070911	F	16	1
-input2.bam	FBtr0070911	F	17	0
-input2.bam	FBtr0070911	F	18	0
-input2.bam	FBtr0070911	F	19	0
-input2.bam	FBtr0070911	F	20	0
-input2.bam	FBtr0070911	F	21	0
-input2.bam	FBtr0070911	F	22	0
-input2.bam	FBtr0070911	F	23	1
-input2.bam	FBtr0070911	R	15	0
-input2.bam	FBtr0070911	R	16	0
-input2.bam	FBtr0070911	R	17	0
-input2.bam	FBtr0070911	R	18	0
-input2.bam	FBtr0070911	R	19	0
-input2.bam	FBtr0070911	R	20	0
-input2.bam	FBtr0070911	R	21	0
-input2.bam	FBtr0070911	R	22	0
-input2.bam	FBtr0070911	R	23	0
-input2.bam	FBtr0078490	F	15	4
-input2.bam	FBtr0078490	F	16	1
-input2.bam	FBtr0078490	F	17	0
-input2.bam	FBtr0078490	F	18	3
-input2.bam	FBtr0078490	F	19	0
-input2.bam	FBtr0078490	F	20	3
-input2.bam	FBtr0078490	F	21	1
-input2.bam	FBtr0078490	F	22	0
-input2.bam	FBtr0078490	F	23	0
-input2.bam	FBtr0078490	F	24	2
-input2.bam	FBtr0078490	R	15	0
-input2.bam	FBtr0078490	R	16	0
-input2.bam	FBtr0078490	R	17	0
-input2.bam	FBtr0078490	R	18	0
-input2.bam	FBtr0078490	R	19	0
-input2.bam	FBtr0078490	R	20	0
-input2.bam	FBtr0078490	R	21	0
-input2.bam	FBtr0078490	R	22	0
-input2.bam	FBtr0078490	R	23	0
-input2.bam	FBtr0078490	R	24	0
-input2.bam	FBtr0078580	F	15	166
-input2.bam	FBtr0078580	F	16	26
-input2.bam	FBtr0078580	F	17	35
-input2.bam	FBtr0078580	F	18	16
-input2.bam	FBtr0078580	F	19	23
-input2.bam	FBtr0078580	F	20	35
-input2.bam	FBtr0078580	F	21	24
-input2.bam	FBtr0078580	F	22	16
-input2.bam	FBtr0078580	F	23	21
-input2.bam	FBtr0078580	F	24	4
-input2.bam	FBtr0078580	F	25	3
-input2.bam	FBtr0078580	F	26	1
-input2.bam	FBtr0078580	R	15	0
-input2.bam	FBtr0078580	R	16	0
-input2.bam	FBtr0078580	R	17	0
-input2.bam	FBtr0078580	R	18	0
-input2.bam	FBtr0078580	R	19	0
-input2.bam	FBtr0078580	R	20	0
-input2.bam	FBtr0078580	R	21	0
-input2.bam	FBtr0078580	R	22	0
-input2.bam	FBtr0078580	R	23	0
-input2.bam	FBtr0078580	R	24	0
-input2.bam	FBtr0078580	R	25	0
-input2.bam	FBtr0078580	R	26	0
-input2.bam	FBtr0078790	F	15	1
-input2.bam	FBtr0078790	F	16	3
-input2.bam	FBtr0078790	F	17	1
-input2.bam	FBtr0078790	F	18	1
-input2.bam	FBtr0078790	F	19	0
-input2.bam	FBtr0078790	F	20	1
-input2.bam	FBtr0078790	F	21	2
-input2.bam	FBtr0078790	F	22	1
-input2.bam	FBtr0078790	R	15	0
-input2.bam	FBtr0078790	R	16	0
-input2.bam	FBtr0078790	R	17	0
-input2.bam	FBtr0078790	R	18	0
-input2.bam	FBtr0078790	R	19	0
-input2.bam	FBtr0078790	R	20	0
-input2.bam	FBtr0078790	R	21	0
-input2.bam	FBtr0078790	R	22	0
-input2.bam	FBtr0079064	F	15	3
-input2.bam	FBtr0079064	F	16	0
-input2.bam	FBtr0079064	F	17	1
-input2.bam	FBtr0079064	F	18	1
-input2.bam	FBtr0079064	R	15	0
-input2.bam	FBtr0079064	R	16	0
-input2.bam	FBtr0079064	R	17	0
-input2.bam	FBtr0079064	R	18	0
-input2.bam	FBtr0079090	F	15	3
-input2.bam	FBtr0079090	F	16	0
-input2.bam	FBtr0079090	F	17	3
-input2.bam	FBtr0079090	F	18	0
-input2.bam	FBtr0079090	F	19	0
-input2.bam	FBtr0079090	F	20	0
-input2.bam	FBtr0079090	F	21	1
-input2.bam	FBtr0079090	R	15	0
-input2.bam	FBtr0079090	R	16	0
-input2.bam	FBtr0079090	R	17	0
-input2.bam	FBtr0079090	R	18	0
-input2.bam	FBtr0079090	R	19	0
-input2.bam	FBtr0079090	R	20	0
-input2.bam	FBtr0079090	R	21	0
-input2.bam	FBtr0079338	F	15	4
-input2.bam	FBtr0079338	F	16	6
-input2.bam	FBtr0079338	F	17	2
-input2.bam	FBtr0079338	F	18	6
-input2.bam	FBtr0079338	F	19	2
-input2.bam	FBtr0079338	F	20	1
-input2.bam	FBtr0079338	F	21	0
-input2.bam	FBtr0079338	F	22	1
-input2.bam	FBtr0079338	F	23	1
-input2.bam	FBtr0079338	R	15	0
-input2.bam	FBtr0079338	R	16	0
-input2.bam	FBtr0079338	R	17	0
-input2.bam	FBtr0079338	R	18	0
-input2.bam	FBtr0079338	R	19	0
-input2.bam	FBtr0079338	R	20	0
-input2.bam	FBtr0079338	R	21	0
-input2.bam	FBtr0079338	R	22	0
-input2.bam	FBtr0079338	R	23	0
-input2.bam	FBtr0079528	F	15	164
-input2.bam	FBtr0079528	F	16	46
-input2.bam	FBtr0079528	F	17	31
-input2.bam	FBtr0079528	F	18	56
-input2.bam	FBtr0079528	F	19	34
-input2.bam	FBtr0079528	F	20	8
-input2.bam	FBtr0079528	F	21	8
-input2.bam	FBtr0079528	F	22	8
-input2.bam	FBtr0079528	F	23	4
-input2.bam	FBtr0079528	F	24	1
-input2.bam	FBtr0079528	F	25	1
-input2.bam	FBtr0079528	F	26	4
-input2.bam	FBtr0079528	R	15	0
-input2.bam	FBtr0079528	R	16	0
-input2.bam	FBtr0079528	R	17	0
-input2.bam	FBtr0079528	R	18	0
-input2.bam	FBtr0079528	R	19	0
-input2.bam	FBtr0079528	R	20	0
-input2.bam	FBtr0079528	R	21	0
-input2.bam	FBtr0079528	R	22	0
-input2.bam	FBtr0079528	R	23	0
-input2.bam	FBtr0079528	R	24	0
-input2.bam	FBtr0079528	R	25	0
-input2.bam	FBtr0079528	R	26	0
-input2.bam	FBtr0079596	F	15	31
-input2.bam	FBtr0079596	F	16	21
-input2.bam	FBtr0079596	F	17	18
-input2.bam	FBtr0079596	F	18	79
-input2.bam	FBtr0079596	F	19	48
-input2.bam	FBtr0079596	F	20	49
-input2.bam	FBtr0079596	F	21	40
-input2.bam	FBtr0079596	F	22	26
-input2.bam	FBtr0079596	F	23	2
-input2.bam	FBtr0079596	F	24	1
-input2.bam	FBtr0079596	R	15	0
-input2.bam	FBtr0079596	R	16	0
-input2.bam	FBtr0079596	R	17	0
-input2.bam	FBtr0079596	R	18	0
-input2.bam	FBtr0079596	R	19	0
-input2.bam	FBtr0079596	R	20	0
-input2.bam	FBtr0079596	R	21	1
-input2.bam	FBtr0079596	R	22	0
-input2.bam	FBtr0079596	R	23	0
-input2.bam	FBtr0079596	R	24	0
-input2.bam	FBtr0079677	F	15	2
-input2.bam	FBtr0079677	F	16	1
-input2.bam	FBtr0079677	F	17	2
-input2.bam	FBtr0079677	F	18	0
-input2.bam	FBtr0079677	F	19	1
-input2.bam	FBtr0079677	F	20	1
-input2.bam	FBtr0079677	R	15	0
-input2.bam	FBtr0079677	R	16	0
-input2.bam	FBtr0079677	R	17	0
-input2.bam	FBtr0079677	R	18	0
-input2.bam	FBtr0079677	R	19	0
-input2.bam	FBtr0079677	R	20	0
-input2.bam	FBtr0079690	F	15	1
-input2.bam	FBtr0079690	F	16	1
-input2.bam	FBtr0079690	F	17	0
-input2.bam	FBtr0079690	F	18	0
-input2.bam	FBtr0079690	F	19	0
-input2.bam	FBtr0079690	F	20	2
-input2.bam	FBtr0079690	F	21	1
-input2.bam	FBtr0079690	R	15	0
-input2.bam	FBtr0079690	R	16	0
-input2.bam	FBtr0079690	R	17	0
-input2.bam	FBtr0079690	R	18	0
-input2.bam	FBtr0079690	R	19	0
-input2.bam	FBtr0079690	R	20	0
-input2.bam	FBtr0079690	R	21	0
-input2.bam	FBtr0079692	F	15	1
-input2.bam	FBtr0079692	F	16	0
-input2.bam	FBtr0079692	F	17	0
-input2.bam	FBtr0079692	F	18	1
-input2.bam	FBtr0079692	F	19	0
-input2.bam	FBtr0079692	F	20	0
-input2.bam	FBtr0079692	F	21	1
-input2.bam	FBtr0079692	F	22	1
-input2.bam	FBtr0079692	R	15	0
-input2.bam	FBtr0079692	R	16	0
-input2.bam	FBtr0079692	R	17	0
-input2.bam	FBtr0079692	R	18	0
-input2.bam	FBtr0079692	R	19	0
-input2.bam	FBtr0079692	R	20	0
-input2.bam	FBtr0079692	R	21	0
-input2.bam	FBtr0079692	R	22	0
-input2.bam	FBtr0079693	F	15	4
-input2.bam	FBtr0079693	F	16	2
-input2.bam	FBtr0079693	F	17	0
-input2.bam	FBtr0079693	F	18	1
-input2.bam	FBtr0079693	F	19	0
-input2.bam	FBtr0079693	F	20	2
-input2.bam	FBtr0079693	R	15	0
-input2.bam	FBtr0079693	R	16	0
-input2.bam	FBtr0079693	R	17	0
-input2.bam	FBtr0079693	R	18	0
-input2.bam	FBtr0079693	R	19	0
-input2.bam	FBtr0079693	R	20	0
-input2.bam	FBtr0079694	F	15	2
-input2.bam	FBtr0079694	F	16	0
-input2.bam	FBtr0079694	F	17	1
-input2.bam	FBtr0079694	F	18	2
-input2.bam	FBtr0079694	F	19	1
-input2.bam	FBtr0079694	R	15	0
-input2.bam	FBtr0079694	R	16	0
-input2.bam	FBtr0079694	R	17	0
-input2.bam	FBtr0079694	R	18	0
-input2.bam	FBtr0079694	R	19	0
-input2.bam	FBtr0079702	F	15	2
-input2.bam	FBtr0079702	F	16	0
-input2.bam	FBtr0079702	F	17	1
-input2.bam	FBtr0079702	F	18	1
-input2.bam	FBtr0079702	R	15	0
-input2.bam	FBtr0079702	R	16	0
-input2.bam	FBtr0079702	R	17	0
-input2.bam	FBtr0079702	R	18	0
-input2.bam	FBtr0079728	F	15	3
-input2.bam	FBtr0079728	F	16	1
-input2.bam	FBtr0079728	F	17	1
-input2.bam	FBtr0079728	F	18	1
-input2.bam	FBtr0079728	R	15	0
-input2.bam	FBtr0079728	R	16	0
-input2.bam	FBtr0079728	R	17	0
-input2.bam	FBtr0079728	R	18	0
-input2.bam	FBtr0079729	F	15	1
-input2.bam	FBtr0079729	F	16	2
-input2.bam	FBtr0079729	F	17	1
-input2.bam	FBtr0079729	R	15	0
-input2.bam	FBtr0079729	R	16	0
-input2.bam	FBtr0079729	R	17	0
-input2.bam	FBtr0079752	F	17	1
-input2.bam	FBtr0079752	F	18	0
-input2.bam	FBtr0079752	F	19	0
-input2.bam	FBtr0079752	F	20	0
-input2.bam	FBtr0079752	F	21	0
-input2.bam	FBtr0079752	F	22	0
-input2.bam	FBtr0079752	F	23	0
-input2.bam	FBtr0079752	F	24	1
-input2.bam	FBtr0079752	R	17	0
-input2.bam	FBtr0079752	R	18	0
-input2.bam	FBtr0079752	R	19	0
-input2.bam	FBtr0079752	R	20	0
-input2.bam	FBtr0079752	R	21	0
-input2.bam	FBtr0079752	R	22	0
-input2.bam	FBtr0079752	R	23	0
-input2.bam	FBtr0079752	R	24	0
-input2.bam	FBtr0079820	F	15	27
-input2.bam	FBtr0079820	F	16	10
-input2.bam	FBtr0079820	F	17	7
-input2.bam	FBtr0079820	F	18	8
-input2.bam	FBtr0079820	F	19	25
-input2.bam	FBtr0079820	F	20	24
-input2.bam	FBtr0079820	F	21	7
-input2.bam	FBtr0079820	F	22	1
-input2.bam	FBtr0079820	R	15	0
-input2.bam	FBtr0079820	R	16	0
-input2.bam	FBtr0079820	R	17	0
-input2.bam	FBtr0079820	R	18	0
-input2.bam	FBtr0079820	R	19	0
-input2.bam	FBtr0079820	R	20	0
-input2.bam	FBtr0079820	R	21	0
-input2.bam	FBtr0079820	R	22	0
-input2.bam	FBtr0080609	F	17	2
-input2.bam	FBtr0080609	F	18	1
-input2.bam	FBtr0080609	F	19	2
-input2.bam	FBtr0080609	F	20	0
-input2.bam	FBtr0080609	F	21	0
-input2.bam	FBtr0080609	F	22	1
-input2.bam	FBtr0080609	F	23	1
-input2.bam	FBtr0080609	F	24	0
-input2.bam	FBtr0080609	F	25	1
-input2.bam	FBtr0080609	R	17	0
-input2.bam	FBtr0080609	R	18	0
-input2.bam	FBtr0080609	R	19	0
-input2.bam	FBtr0080609	R	20	0
-input2.bam	FBtr0080609	R	21	0
-input2.bam	FBtr0080609	R	22	0
-input2.bam	FBtr0080609	R	23	0
-input2.bam	FBtr0080609	R	24	0
-input2.bam	FBtr0080609	R	25	0
-input2.bam	FBtr0080644	F	15	8
-input2.bam	FBtr0080644	R	15	0
-input2.bam	FBtr0080646	F	15	10
-input2.bam	FBtr0080646	F	16	1
-input2.bam	FBtr0080646	F	17	0
-input2.bam	FBtr0080646	F	18	0
-input2.bam	FBtr0080646	F	19	0
-input2.bam	FBtr0080646	F	20	0
-input2.bam	FBtr0080646	F	21	1
-input2.bam	FBtr0080646	R	15	0
-input2.bam	FBtr0080646	R	16	0
-input2.bam	FBtr0080646	R	17	0
-input2.bam	FBtr0080646	R	18	0
-input2.bam	FBtr0080646	R	19	0
-input2.bam	FBtr0080646	R	20	0
-input2.bam	FBtr0080646	R	21	0
-input2.bam	FBtr0080647	F	15	9
-input2.bam	FBtr0080647	F	16	2
-input2.bam	FBtr0080647	F	17	0
-input2.bam	FBtr0080647	F	18	1
-input2.bam	FBtr0080647	R	15	0
-input2.bam	FBtr0080647	R	16	0
-input2.bam	FBtr0080647	R	17	0
-input2.bam	FBtr0080647	R	18	0
-input2.bam	FBtr0080660	F	15	11
-input2.bam	FBtr0080660	R	15	0
-input2.bam	FBtr0080663	F	15	26
-input2.bam	FBtr0080663	F	16	14
-input2.bam	FBtr0080663	F	17	14
-input2.bam	FBtr0080663	F	18	26
-input2.bam	FBtr0080663	F	19	9
-input2.bam	FBtr0080663	F	20	7
-input2.bam	FBtr0080663	F	21	4
-input2.bam	FBtr0080663	F	22	5
-input2.bam	FBtr0080663	F	23	0
-input2.bam	FBtr0080663	F	24	1
-input2.bam	FBtr0080663	R	15	0
-input2.bam	FBtr0080663	R	16	0
-input2.bam	FBtr0080663	R	17	0
-input2.bam	FBtr0080663	R	18	0
-input2.bam	FBtr0080663	R	19	0
-input2.bam	FBtr0080663	R	20	0
-input2.bam	FBtr0080663	R	21	0
-input2.bam	FBtr0080663	R	22	0
-input2.bam	FBtr0080663	R	23	0
-input2.bam	FBtr0080663	R	24	0
-input2.bam	FBtr0080664	F	15	165
-input2.bam	FBtr0080664	F	16	59
-input2.bam	FBtr0080664	F	17	20
-input2.bam	FBtr0080664	F	18	75
-input2.bam	FBtr0080664	F	19	24
-input2.bam	FBtr0080664	F	20	21
-input2.bam	FBtr0080664	F	21	8
-input2.bam	FBtr0080664	F	22	4
-input2.bam	FBtr0080664	F	23	4
-input2.bam	FBtr0080664	F	24	0
-input2.bam	FBtr0080664	F	25	3
-input2.bam	FBtr0080664	F	26	4
-input2.bam	FBtr0080664	R	15	0
-input2.bam	FBtr0080664	R	16	0
-input2.bam	FBtr0080664	R	17	0
-input2.bam	FBtr0080664	R	18	0
-input2.bam	FBtr0080664	R	19	0
-input2.bam	FBtr0080664	R	20	0
-input2.bam	FBtr0080664	R	21	0
-input2.bam	FBtr0080664	R	22	1
-input2.bam	FBtr0080664	R	23	1
-input2.bam	FBtr0080664	R	24	0
-input2.bam	FBtr0080664	R	25	0
-input2.bam	FBtr0080664	R	26	0
+Dataset	Chromosome	Polarity	Size	Counts	Strandness	z-score
+input1.bam	FBtr0070001	F	16	2	1.0	-0.476603123819
+input1.bam	FBtr0070001	F	17	1	1.0	-0.586588460085
+input1.bam	FBtr0070001	F	18	0	1.0	-0.696573796351
+input1.bam	FBtr0070001	F	19	1	1.0	-0.586588460085
+input1.bam	FBtr0070001	F	20	4	1.0	-0.256632451287
+input1.bam	FBtr0070001	F	21	4	1.0	-0.256632451287
+input1.bam	FBtr0070001	F	22	29	1.0	2.49300095536
+input1.bam	FBtr0070001	F	23	15	1.0	0.953206247639
+input1.bam	FBtr0070001	F	24	1	1.0	-0.586588460085
+input1.bam	FBtr0070001	R	16	0	1.0	-0.476603123819
+input1.bam	FBtr0070001	R	17	0	1.0	-0.586588460085
+input1.bam	FBtr0070001	R	18	0	1.0	-0.696573796351
+input1.bam	FBtr0070001	R	19	0	1.0	-0.586588460085
+input1.bam	FBtr0070001	R	20	0	1.0	-0.256632451287
+input1.bam	FBtr0070001	R	21	0	1.0	-0.256632451287
+input1.bam	FBtr0070001	R	22	0	1.0	2.49300095536
+input1.bam	FBtr0070001	R	23	0	1.0	0.953206247639
+input1.bam	FBtr0070001	R	24	0	1.0	-0.586588460085
+input1.bam	FBtr0070533	F	15	2	1.0	-0.114707866935
+input1.bam	FBtr0070533	F	16	1	1.0	-0.745601135079
+input1.bam	FBtr0070533	F	17	1	1.0	-0.745601135079
+input1.bam	FBtr0070533	F	18	6	1.0	2.40886520564
+input1.bam	FBtr0070533	F	19	3	1.0	0.516185401209
+input1.bam	FBtr0070533	F	20	2	1.0	-0.114707866935
+input1.bam	FBtr0070533	F	21	2	1.0	-0.114707866935
+input1.bam	FBtr0070533	F	22	4	1.0	1.14707866935
+input1.bam	FBtr0070533	F	23	2	1.0	-0.114707866935
+input1.bam	FBtr0070533	F	24	0	1.0	-1.37649440322
+input1.bam	FBtr0070533	F	25	1	1.0	-0.745601135079
+input1.bam	FBtr0070533	R	15	0	1.0	-0.114707866935
+input1.bam	FBtr0070533	R	16	0	1.0	-0.745601135079
+input1.bam	FBtr0070533	R	17	0	1.0	-0.745601135079
+input1.bam	FBtr0070533	R	18	0	1.0	2.40886520564
+input1.bam	FBtr0070533	R	19	0	1.0	0.516185401209
+input1.bam	FBtr0070533	R	20	0	1.0	-0.114707866935
+input1.bam	FBtr0070533	R	21	0	1.0	-0.114707866935
+input1.bam	FBtr0070533	R	22	0	1.0	1.14707866935
+input1.bam	FBtr0070533	R	23	0	1.0	-0.114707866935
+input1.bam	FBtr0070533	R	24	0	1.0	-1.37649440322
+input1.bam	FBtr0070533	R	25	0	1.0	-0.745601135079
+input1.bam	FBtr0070603	F	15	9	1.0	1.25973222843
+input1.bam	FBtr0070603	F	16	6	1.0	0.214422506968
+input1.bam	FBtr0070603	F	17	10	1.0	1.60816880226
+input1.bam	FBtr0070603	F	18	7	1.0	0.56285908079
+input1.bam	FBtr0070603	F	19	1	1.0	-1.52776036214
+input1.bam	FBtr0070603	F	20	6	1.0	0.214422506968
+input1.bam	FBtr0070603	F	21	3	1.0	-0.830887214499
+input1.bam	FBtr0070603	F	22	3	1.0	-0.830887214499
+input1.bam	FBtr0070603	F	23	10	1.0	1.60816880226
+input1.bam	FBtr0070603	F	24	2	1.0	-1.17932378832
+input1.bam	FBtr0070603	F	25	5	1.0	-0.134014066855
+input1.bam	FBtr0070603	F	26	5	1.0	-0.134014066855
+input1.bam	FBtr0070603	F	27	3	1.0	-0.830887214499
+input1.bam	FBtr0070603	R	15	0	1.0	1.25973222843
+input1.bam	FBtr0070603	R	16	0	1.0	0.214422506968
+input1.bam	FBtr0070603	R	17	0	1.0	1.60816880226
+input1.bam	FBtr0070603	R	18	0	1.0	0.56285908079
+input1.bam	FBtr0070603	R	19	0	1.0	-1.52776036214
+input1.bam	FBtr0070603	R	20	0	1.0	0.214422506968
+input1.bam	FBtr0070603	R	21	0	1.0	-0.830887214499
+input1.bam	FBtr0070603	R	22	0	1.0	-0.830887214499
+input1.bam	FBtr0070603	R	23	0	1.0	1.60816880226
+input1.bam	FBtr0070603	R	24	0	1.0	-1.17932378832
+input1.bam	FBtr0070603	R	25	0	1.0	-0.134014066855
+input1.bam	FBtr0070603	R	26	0	1.0	-0.134014066855
+input1.bam	FBtr0070603	R	27	0	1.0	-0.830887214499
+input1.bam	FBtr0070604	F	15	2	1.0	-0.340359959259
+input1.bam	FBtr0070604	F	16	0	1.0	-0.618836289562
+input1.bam	FBtr0070604	F	17	0	1.0	-0.618836289562
+input1.bam	FBtr0070604	F	18	2	1.0	-0.340359959259
+input1.bam	FBtr0070604	F	19	2	1.0	-0.340359959259
+input1.bam	FBtr0070604	F	20	0	1.0	-0.618836289562
+input1.bam	FBtr0070604	F	21	1	1.0	-0.479598124411
+input1.bam	FBtr0070604	F	22	23	1.0	2.58364150892
+input1.bam	FBtr0070604	F	23	10	1.0	0.773545361953
+input1.bam	FBtr0070604	R	15	0	1.0	-0.340359959259
+input1.bam	FBtr0070604	R	16	0	1.0	-0.618836289562
+input1.bam	FBtr0070604	R	17	0	1.0	-0.618836289562
+input1.bam	FBtr0070604	R	18	0	1.0	-0.340359959259
+input1.bam	FBtr0070604	R	19	0	1.0	-0.340359959259
+input1.bam	FBtr0070604	R	20	0	1.0	-0.618836289562
+input1.bam	FBtr0070604	R	21	0	1.0	-0.479598124411
+input1.bam	FBtr0070604	R	22	0	1.0	2.58364150892
+input1.bam	FBtr0070604	R	23	0	1.0	0.773545361953
+input1.bam	FBtr0070911	F	15	1	1.0	1.58113883008
+input1.bam	FBtr0070911	F	16	0	1.0	-0.632455532034
+input1.bam	FBtr0070911	F	17	0	1.0	-0.632455532034
+input1.bam	FBtr0070911	F	18	0	1.0	-0.632455532034
+input1.bam	FBtr0070911	F	19	0	1.0	-0.632455532034
+input1.bam	FBtr0070911	F	20	0	1.0	-0.632455532034
+input1.bam	FBtr0070911	F	21	1	1.0	1.58113883008
+input1.bam	FBtr0070911	R	15	0	1.0	1.58113883008
+input1.bam	FBtr0070911	R	16	0	1.0	-0.632455532034
+input1.bam	FBtr0070911	R	17	0	1.0	-0.632455532034
+input1.bam	FBtr0070911	R	18	0	1.0	-0.632455532034
+input1.bam	FBtr0070911	R	19	0	1.0	-0.632455532034
+input1.bam	FBtr0070911	R	20	0	1.0	-0.632455532034
+input1.bam	FBtr0070911	R	21	0	1.0	1.58113883008
+input1.bam	FBtr0078490	F	15	3	1.0	1.76410571268
+input1.bam	FBtr0078490	F	16	3	1.0	1.76410571268
+input1.bam	FBtr0078490	F	17	0	1.0	-0.742781352708
+input1.bam	FBtr0078490	F	18	1	1.0	0.0928476690885
+input1.bam	FBtr0078490	F	19	0	1.0	-0.742781352708
+input1.bam	FBtr0078490	F	20	0	1.0	-0.742781352708
+input1.bam	FBtr0078490	F	21	0	1.0	-0.742781352708
+input1.bam	FBtr0078490	F	22	0	1.0	-0.742781352708
+input1.bam	FBtr0078490	F	23	1	1.0	0.0928476690885
+input1.bam	FBtr0078490	R	15	0	1.0	1.76410571268
+input1.bam	FBtr0078490	R	16	0	1.0	1.76410571268
+input1.bam	FBtr0078490	R	17	0	1.0	-0.742781352708
+input1.bam	FBtr0078490	R	18	0	1.0	0.0928476690885
+input1.bam	FBtr0078490	R	19	0	1.0	-0.742781352708
+input1.bam	FBtr0078490	R	20	0	1.0	-0.742781352708
+input1.bam	FBtr0078490	R	21	0	1.0	-0.742781352708
+input1.bam	FBtr0078490	R	22	0	1.0	-0.742781352708
+input1.bam	FBtr0078490	R	23	0	1.0	0.0928476690885
+input1.bam	FBtr0078580	F	15	592	1.0	3.27906790103
+input1.bam	FBtr0078580	F	16	20	1.0	-0.376106897334
+input1.bam	FBtr0078580	F	17	31	1.0	-0.305815074288
+input1.bam	FBtr0078580	F	18	9	1.0	-0.446398720379
+input1.bam	FBtr0078580	F	19	8	1.0	-0.45278888611
+input1.bam	FBtr0078580	F	20	9	1.0	-0.446398720379
+input1.bam	FBtr0078580	F	21	5	1.0	-0.471959383305
+input1.bam	FBtr0078580	F	22	13	1.0	-0.420838057453
+input1.bam	FBtr0078580	F	23	5	1.0	-0.471959383305
+input1.bam	FBtr0078580	F	24	180	1.0	0.64631961969
+input1.bam	FBtr0078580	F	25	212	1.0	0.850804923095
+input1.bam	FBtr0078580	F	26	1	1.0	-0.49752004623
+input1.bam	FBtr0078580	F	27	2	1.0	-0.491129880499
+input1.bam	FBtr0078580	F	28	17	1.0	-0.395277394528
+input1.bam	FBtr0078580	R	15	0	1.0	3.27906790103
+input1.bam	FBtr0078580	R	16	0	1.0	-0.376106897334
+input1.bam	FBtr0078580	R	17	0	1.0	-0.305815074288
+input1.bam	FBtr0078580	R	18	0	1.0	-0.446398720379
+input1.bam	FBtr0078580	R	19	0	1.0	-0.45278888611
+input1.bam	FBtr0078580	R	20	0	1.0	-0.446398720379
+input1.bam	FBtr0078580	R	21	0	1.0	-0.471959383305
+input1.bam	FBtr0078580	R	22	0	1.0	-0.420838057453
+input1.bam	FBtr0078580	R	23	0	1.0	-0.471959383305
+input1.bam	FBtr0078580	R	24	0	1.0	0.64631961969
+input1.bam	FBtr0078580	R	25	0	1.0	0.850804923095
+input1.bam	FBtr0078580	R	26	0	1.0	-0.49752004623
+input1.bam	FBtr0078580	R	27	0	1.0	-0.491129880499
+input1.bam	FBtr0078580	R	28	0	1.0	-0.395277394528
+input1.bam	FBtr0078790	F	15	2	0.928571428571	1.73719807243
+input1.bam	FBtr0078790	F	16	2	0.928571428571	0.534522483825
+input1.bam	FBtr0078790	F	17	1	0.928571428571	-0.668153104781
+input1.bam	FBtr0078790	F	18	1	0.928571428571	-0.668153104781
+input1.bam	FBtr0078790	F	19	2	0.928571428571	0.534522483825
+input1.bam	FBtr0078790	F	20	2	0.928571428571	0.534522483825
+input1.bam	FBtr0078790	F	21	0	0.928571428571	-1.87082869339
+input1.bam	FBtr0078790	F	22	2	0.928571428571	0.534522483825
+input1.bam	FBtr0078790	F	23	1	0.928571428571	-0.668153104781
+input1.bam	FBtr0078790	R	15	1	0.928571428571	1.73719807243
+input1.bam	FBtr0078790	R	16	0	0.928571428571	0.534522483825
+input1.bam	FBtr0078790	R	17	0	0.928571428571	-0.668153104781
+input1.bam	FBtr0078790	R	18	0	0.928571428571	-0.668153104781
+input1.bam	FBtr0078790	R	19	0	0.928571428571	0.534522483825
+input1.bam	FBtr0078790	R	20	0	0.928571428571	0.534522483825
+input1.bam	FBtr0078790	R	21	0	0.928571428571	-1.87082869339
+input1.bam	FBtr0078790	R	22	0	0.928571428571	0.534522483825
+input1.bam	FBtr0078790	R	23	0	0.928571428571	-0.668153104781
+input1.bam	FBtr0079064	F	15	2	1.0	1.96116135138
+input1.bam	FBtr0079064	F	16	0	1.0	-0.784464540553
+input1.bam	FBtr0079064	F	17	1	1.0	0.588348405415
+input1.bam	FBtr0079064	F	18	0	1.0	-0.784464540553
+input1.bam	FBtr0079064	F	19	0	1.0	-0.784464540553
+input1.bam	FBtr0079064	F	20	0	1.0	-0.784464540553
+input1.bam	FBtr0079064	F	21	1	1.0	0.588348405415
+input1.bam	FBtr0079064	R	15	0	1.0	1.96116135138
+input1.bam	FBtr0079064	R	16	0	1.0	-0.784464540553
+input1.bam	FBtr0079064	R	17	0	1.0	0.588348405415
+input1.bam	FBtr0079064	R	18	0	1.0	-0.784464540553
+input1.bam	FBtr0079064	R	19	0	1.0	-0.784464540553
+input1.bam	FBtr0079064	R	20	0	1.0	-0.784464540553
+input1.bam	FBtr0079064	R	21	0	1.0	0.588348405415
+input1.bam	FBtr0079090	F	15	1	0.833333333333	1.15470053838
+input1.bam	FBtr0079090	F	16	1	0.833333333333	1.15470053838
+input1.bam	FBtr0079090	F	17	0	0.833333333333	-0.866025403784
+input1.bam	FBtr0079090	F	18	1	0.833333333333	1.15470053838
+input1.bam	FBtr0079090	F	19	0	0.833333333333	-0.866025403784
+input1.bam	FBtr0079090	F	20	0	0.833333333333	-0.866025403784
+input1.bam	FBtr0079090	F	21	0	0.833333333333	1.15470053838
+input1.bam	FBtr0079090	F	22	0	0.833333333333	-0.866025403784
+input1.bam	FBtr0079090	F	23	0	0.833333333333	-0.866025403784
+input1.bam	FBtr0079090	F	24	1	0.833333333333	1.15470053838
+input1.bam	FBtr0079090	F	25	0	0.833333333333	-0.866025403784
+input1.bam	FBtr0079090	F	26	0	0.833333333333	-0.866025403784
+input1.bam	FBtr0079090	F	27	0	0.833333333333	-0.866025403784
+input1.bam	FBtr0079090	F	28	1	0.833333333333	1.15470053838
+input1.bam	FBtr0079090	R	15	0	0.833333333333	1.15470053838
+input1.bam	FBtr0079090	R	16	0	0.833333333333	1.15470053838
+input1.bam	FBtr0079090	R	17	0	0.833333333333	-0.866025403784
+input1.bam	FBtr0079090	R	18	0	0.833333333333	1.15470053838
+input1.bam	FBtr0079090	R	19	0	0.833333333333	-0.866025403784
+input1.bam	FBtr0079090	R	20	0	0.833333333333	-0.866025403784
+input1.bam	FBtr0079090	R	21	1	0.833333333333	1.15470053838
+input1.bam	FBtr0079090	R	22	0	0.833333333333	-0.866025403784
+input1.bam	FBtr0079090	R	23	0	0.833333333333	-0.866025403784
+input1.bam	FBtr0079090	R	24	0	0.833333333333	1.15470053838
+input1.bam	FBtr0079090	R	25	0	0.833333333333	-0.866025403784
+input1.bam	FBtr0079090	R	26	0	0.833333333333	-0.866025403784
+input1.bam	FBtr0079090	R	27	0	0.833333333333	-0.866025403784
+input1.bam	FBtr0079090	R	28	0	0.833333333333	1.15470053838
+input1.bam	FBtr0079338	F	15	2	1.0	0.0
+input1.bam	FBtr0079338	F	16	2	1.0	0.0
+input1.bam	FBtr0079338	F	17	1	1.0	-0.57735026919
+input1.bam	FBtr0079338	F	18	1	1.0	-0.57735026919
+input1.bam	FBtr0079338	F	19	1	1.0	-0.57735026919
+input1.bam	FBtr0079338	F	20	0	1.0	-1.15470053838
+input1.bam	FBtr0079338	F	21	3	1.0	0.57735026919
+input1.bam	FBtr0079338	F	22	6	1.0	2.30940107676
+input1.bam	FBtr0079338	R	15	0	1.0	0.0
+input1.bam	FBtr0079338	R	16	0	1.0	0.0
+input1.bam	FBtr0079338	R	17	0	1.0	-0.57735026919
+input1.bam	FBtr0079338	R	18	0	1.0	-0.57735026919
+input1.bam	FBtr0079338	R	19	0	1.0	-0.57735026919
+input1.bam	FBtr0079338	R	20	0	1.0	-1.15470053838
+input1.bam	FBtr0079338	R	21	0	1.0	0.57735026919
+input1.bam	FBtr0079338	R	22	0	1.0	2.30940107676
+input1.bam	FBtr0079528	F	15	12	1.0	0.571705623589
+input1.bam	FBtr0079528	F	16	11	1.0	0.455819348537
+input1.bam	FBtr0079528	F	17	0	1.0	-0.818929677033
+input1.bam	FBtr0079528	F	18	5	1.0	-0.239498301774
+input1.bam	FBtr0079528	F	19	4	1.0	-0.355384576825
+input1.bam	FBtr0079528	F	20	12	1.0	0.571705623589
+input1.bam	FBtr0079528	F	21	3	1.0	-0.471270851877
+input1.bam	FBtr0079528	F	22	2	1.0	-0.587157126929
+input1.bam	FBtr0079528	F	23	3	1.0	-0.471270851877
+input1.bam	FBtr0079528	F	24	36	1.0	3.35297622483
+input1.bam	FBtr0079528	F	25	8	1.0	0.108160523382
+input1.bam	FBtr0079528	F	26	5	1.0	-0.239498301774
+input1.bam	FBtr0079528	F	27	2	1.0	-0.587157126929
+input1.bam	FBtr0079528	F	28	2	1.0	-0.587157126929
+input1.bam	FBtr0079528	F	29	1	1.0	-0.703043401981
+input1.bam	FBtr0079528	R	15	0	1.0	0.571705623589
+input1.bam	FBtr0079528	R	16	0	1.0	0.455819348537
+input1.bam	FBtr0079528	R	17	0	1.0	-0.818929677033
+input1.bam	FBtr0079528	R	18	0	1.0	-0.239498301774
+input1.bam	FBtr0079528	R	19	0	1.0	-0.355384576825
+input1.bam	FBtr0079528	R	20	0	1.0	0.571705623589
+input1.bam	FBtr0079528	R	21	0	1.0	-0.471270851877
+input1.bam	FBtr0079528	R	22	0	1.0	-0.587157126929
+input1.bam	FBtr0079528	R	23	0	1.0	-0.471270851877
+input1.bam	FBtr0079528	R	24	0	1.0	3.35297622483
+input1.bam	FBtr0079528	R	25	0	1.0	0.108160523382
+input1.bam	FBtr0079528	R	26	0	1.0	-0.239498301774
+input1.bam	FBtr0079528	R	27	0	1.0	-0.587157126929
+input1.bam	FBtr0079528	R	28	0	1.0	-0.587157126929
+input1.bam	FBtr0079528	R	29	0	1.0	-0.703043401981
+input1.bam	FBtr0079596	F	15	43	1.0	2.45349951274
+input1.bam	FBtr0079596	F	16	34	1.0	1.748193756
+input1.bam	FBtr0079596	F	17	16	1.0	0.337582242539
+input1.bam	FBtr0079596	F	18	5	1.0	-0.524458126801
+input1.bam	FBtr0079596	F	19	10	1.0	-0.132621595283
+input1.bam	FBtr0079596	F	20	13	1.0	0.102480323628
+input1.bam	FBtr0079596	F	21	3	1.0	-0.681192739409
+input1.bam	FBtr0079596	F	22	16	1.0	0.337582242539
+input1.bam	FBtr0079596	F	23	8	1.0	-0.28935620789
+input1.bam	FBtr0079596	F	24	0	1.0	-0.91629465832
+input1.bam	FBtr0079596	F	25	0	1.0	-0.91629465832
+input1.bam	FBtr0079596	F	26	3	1.0	-0.681192739409
+input1.bam	FBtr0079596	F	27	1	1.0	-0.837927352016
+input1.bam	FBtr0079596	R	15	0	1.0	2.45349951274
+input1.bam	FBtr0079596	R	16	0	1.0	1.748193756
+input1.bam	FBtr0079596	R	17	0	1.0	0.337582242539
+input1.bam	FBtr0079596	R	18	0	1.0	-0.524458126801
+input1.bam	FBtr0079596	R	19	0	1.0	-0.132621595283
+input1.bam	FBtr0079596	R	20	0	1.0	0.102480323628
+input1.bam	FBtr0079596	R	21	0	1.0	-0.681192739409
+input1.bam	FBtr0079596	R	22	0	1.0	0.337582242539
+input1.bam	FBtr0079596	R	23	0	1.0	-0.28935620789
+input1.bam	FBtr0079596	R	24	0	1.0	-0.91629465832
+input1.bam	FBtr0079596	R	25	0	1.0	-0.91629465832
+input1.bam	FBtr0079596	R	26	0	1.0	-0.681192739409
+input1.bam	FBtr0079596	R	27	0	1.0	-0.837927352016
+input1.bam	FBtr0079677	F	18	1	1.0	0.4472135955
+input1.bam	FBtr0079677	F	19	2	1.0	1.788854382
+input1.bam	FBtr0079677	F	20	0	1.0	-0.894427191
+input1.bam	FBtr0079677	F	21	0	1.0	-0.894427191
+input1.bam	FBtr0079677	F	22	0	1.0	-0.894427191
+input1.bam	FBtr0079677	F	23	1	1.0	0.4472135955
+input1.bam	FBtr0079677	R	18	0	1.0	0.4472135955
+input1.bam	FBtr0079677	R	19	0	1.0	1.788854382
+input1.bam	FBtr0079677	R	20	0	1.0	-0.894427191
+input1.bam	FBtr0079677	R	21	0	1.0	-0.894427191
+input1.bam	FBtr0079677	R	22	0	1.0	-0.894427191
+input1.bam	FBtr0079677	R	23	0	1.0	0.4472135955
+input1.bam	FBtr0079690	F	15	3	1.0	2.85773803325
+input1.bam	FBtr0079690	F	16	0	1.0	-0.51031036308
+input1.bam	FBtr0079690	F	17	1	1.0	0.612372435696
+input1.bam	FBtr0079690	F	18	0	1.0	-0.51031036308
+input1.bam	FBtr0079690	F	19	0	1.0	-0.51031036308
+input1.bam	FBtr0079690	F	20	0	1.0	-0.51031036308
+input1.bam	FBtr0079690	F	21	0	1.0	-0.51031036308
+input1.bam	FBtr0079690	F	22	0	1.0	-0.51031036308
+input1.bam	FBtr0079690	F	23	0	1.0	-0.51031036308
+input1.bam	FBtr0079690	F	24	0	1.0	-0.51031036308
+input1.bam	FBtr0079690	F	25	1	1.0	0.612372435696
+input1.bam	FBtr0079690	R	15	0	1.0	2.85773803325
+input1.bam	FBtr0079690	R	16	0	1.0	-0.51031036308
+input1.bam	FBtr0079690	R	17	0	1.0	0.612372435696
+input1.bam	FBtr0079690	R	18	0	1.0	-0.51031036308
+input1.bam	FBtr0079690	R	19	0	1.0	-0.51031036308
+input1.bam	FBtr0079690	R	20	0	1.0	-0.51031036308
+input1.bam	FBtr0079690	R	21	0	1.0	-0.51031036308
+input1.bam	FBtr0079690	R	22	0	1.0	-0.51031036308
+input1.bam	FBtr0079690	R	23	0	1.0	-0.51031036308
+input1.bam	FBtr0079690	R	24	0	1.0	-0.51031036308
+input1.bam	FBtr0079690	R	25	0	1.0	0.612372435696
+input1.bam	FBtr0079692	F	16	1	1.0	0.57735026919
+input1.bam	FBtr0079692	F	17	1	1.0	0.57735026919
+input1.bam	FBtr0079692	F	18	1	1.0	0.57735026919
+input1.bam	FBtr0079692	F	19	1	1.0	0.57735026919
+input1.bam	FBtr0079692	F	20	1	1.0	0.57735026919
+input1.bam	FBtr0079692	F	21	0	1.0	-1.73205080757
+input1.bam	FBtr0079692	F	22	0	1.0	-1.73205080757
+input1.bam	FBtr0079692	F	23	1	1.0	0.57735026919
+input1.bam	FBtr0079692	R	16	0	1.0	0.57735026919
+input1.bam	FBtr0079692	R	17	0	1.0	0.57735026919
+input1.bam	FBtr0079692	R	18	0	1.0	0.57735026919
+input1.bam	FBtr0079692	R	19	0	1.0	0.57735026919
+input1.bam	FBtr0079692	R	20	0	1.0	0.57735026919
+input1.bam	FBtr0079692	R	21	0	1.0	-1.73205080757
+input1.bam	FBtr0079692	R	22	0	1.0	-1.73205080757
+input1.bam	FBtr0079692	R	23	0	1.0	0.57735026919
+input1.bam	FBtr0079693	F	15	3	1.0	2.61861468283
+input1.bam	FBtr0079693	F	16	0	1.0	-0.654653670708
+input1.bam	FBtr0079693	F	17	1	1.0	0.436435780472
+input1.bam	FBtr0079693	F	18	0	1.0	-0.654653670708
+input1.bam	FBtr0079693	F	19	0	1.0	-0.654653670708
+input1.bam	FBtr0079693	F	20	0	1.0	-0.654653670708
+input1.bam	FBtr0079693	F	21	0	1.0	-0.654653670708
+input1.bam	FBtr0079693	F	22	0	1.0	-0.654653670708
+input1.bam	FBtr0079693	F	23	1	1.0	0.436435780472
+input1.bam	FBtr0079693	F	24	1	1.0	0.436435780472
+input1.bam	FBtr0079693	R	15	0	1.0	2.61861468283
+input1.bam	FBtr0079693	R	16	0	1.0	-0.654653670708
+input1.bam	FBtr0079693	R	17	0	1.0	0.436435780472
+input1.bam	FBtr0079693	R	18	0	1.0	-0.654653670708
+input1.bam	FBtr0079693	R	19	0	1.0	-0.654653670708
+input1.bam	FBtr0079693	R	20	0	1.0	-0.654653670708
+input1.bam	FBtr0079693	R	21	0	1.0	-0.654653670708
+input1.bam	FBtr0079693	R	22	0	1.0	-0.654653670708
+input1.bam	FBtr0079693	R	23	0	1.0	0.436435780472
+input1.bam	FBtr0079693	R	24	0	1.0	0.436435780472
+input1.bam	FBtr0079694	F	15	2	1.0	2.12132034356
+input1.bam	FBtr0079694	F	16	0	1.0	-0.989949493661
+input1.bam	FBtr0079694	F	17	1	1.0	0.565685424949
+input1.bam	FBtr0079694	F	18	0	1.0	-0.989949493661
+input1.bam	FBtr0079694	F	19	1	1.0	0.565685424949
+input1.bam	FBtr0079694	F	20	0	1.0	-0.989949493661
+input1.bam	FBtr0079694	F	21	0	1.0	-0.989949493661
+input1.bam	FBtr0079694	F	22	0	1.0	-0.989949493661
+input1.bam	FBtr0079694	F	23	1	1.0	0.565685424949
+input1.bam	FBtr0079694	F	24	1	1.0	0.565685424949
+input1.bam	FBtr0079694	F	25	1	1.0	0.565685424949
+input1.bam	FBtr0079694	R	15	0	1.0	2.12132034356
+input1.bam	FBtr0079694	R	16	0	1.0	-0.989949493661
+input1.bam	FBtr0079694	R	17	0	1.0	0.565685424949
+input1.bam	FBtr0079694	R	18	0	1.0	-0.989949493661
+input1.bam	FBtr0079694	R	19	0	1.0	0.565685424949
+input1.bam	FBtr0079694	R	20	0	1.0	-0.989949493661
+input1.bam	FBtr0079694	R	21	0	1.0	-0.989949493661
+input1.bam	FBtr0079694	R	22	0	1.0	-0.989949493661
+input1.bam	FBtr0079694	R	23	0	1.0	0.565685424949
+input1.bam	FBtr0079694	R	24	0	1.0	0.565685424949
+input1.bam	FBtr0079694	R	25	0	1.0	0.565685424949
+input1.bam	FBtr0079702	F	15	2	1.0	1.0
+input1.bam	FBtr0079702	F	16	0	1.0	-1.0
+input1.bam	FBtr0079702	F	17	0	1.0	-1.0
+input1.bam	FBtr0079702	F	18	2	1.0	1.0
+input1.bam	FBtr0079702	R	15	0	1.0	1.0
+input1.bam	FBtr0079702	R	16	0	1.0	-1.0
+input1.bam	FBtr0079702	R	17	0	1.0	-1.0
+input1.bam	FBtr0079702	R	18	0	1.0	1.0
+input1.bam	FBtr0079728	F	15	4	1.0	2.56205046088
+input1.bam	FBtr0079728	F	16	0	1.0	-0.64051261522
+input1.bam	FBtr0079728	F	17	2	1.0	0.960768922831
+input1.bam	FBtr0079728	F	18	0	1.0	-0.64051261522
+input1.bam	FBtr0079728	F	19	0	1.0	-0.64051261522
+input1.bam	FBtr0079728	F	20	1	1.0	0.160128153805
+input1.bam	FBtr0079728	F	21	0	1.0	-0.64051261522
+input1.bam	FBtr0079728	F	22	0	1.0	-0.64051261522
+input1.bam	FBtr0079728	F	23	0	1.0	-0.64051261522
+input1.bam	FBtr0079728	F	24	1	1.0	0.160128153805
+input1.bam	FBtr0079728	R	15	0	1.0	2.56205046088
+input1.bam	FBtr0079728	R	16	0	1.0	-0.64051261522
+input1.bam	FBtr0079728	R	17	0	1.0	0.960768922831
+input1.bam	FBtr0079728	R	18	0	1.0	-0.64051261522
+input1.bam	FBtr0079728	R	19	0	1.0	-0.64051261522
+input1.bam	FBtr0079728	R	20	0	1.0	0.160128153805
+input1.bam	FBtr0079728	R	21	0	1.0	-0.64051261522
+input1.bam	FBtr0079728	R	22	0	1.0	-0.64051261522
+input1.bam	FBtr0079728	R	23	0	1.0	-0.64051261522
+input1.bam	FBtr0079728	R	24	0	1.0	0.160128153805
+input1.bam	FBtr0079729	F	15	1	1.0	1.0
+input1.bam	FBtr0079729	F	16	1	1.0	1.0
+input1.bam	FBtr0079729	F	17	0	1.0	-1.0
+input1.bam	FBtr0079729	F	18	1	1.0	1.0
+input1.bam	FBtr0079729	F	19	0	1.0	-1.0
+input1.bam	FBtr0079729	F	20	0	1.0	-1.0
+input1.bam	FBtr0079729	F	21	0	1.0	-1.0
+input1.bam	FBtr0079729	F	22	1	1.0	1.0
+input1.bam	FBtr0079729	R	15	0	1.0	1.0
+input1.bam	FBtr0079729	R	16	0	1.0	1.0
+input1.bam	FBtr0079729	R	17	0	1.0	-1.0
+input1.bam	FBtr0079729	R	18	0	1.0	1.0
+input1.bam	FBtr0079729	R	19	0	1.0	-1.0
+input1.bam	FBtr0079729	R	20	0	1.0	-1.0
+input1.bam	FBtr0079729	R	21	0	1.0	-1.0
+input1.bam	FBtr0079729	R	22	0	1.0	1.0
+input1.bam	FBtr0079752	F	15	2	1.0	1.60356745147
+input1.bam	FBtr0079752	F	16	1	1.0	0.267261241912
+input1.bam	FBtr0079752	F	17	1	1.0	0.267261241912
+input1.bam	FBtr0079752	F	18	0	1.0	-1.06904496765
+input1.bam	FBtr0079752	F	19	1	1.0	0.267261241912
+input1.bam	FBtr0079752	F	20	2	1.0	1.60356745147
+input1.bam	FBtr0079752	F	21	0	1.0	-1.06904496765
+input1.bam	FBtr0079752	F	22	0	1.0	-1.06904496765
+input1.bam	FBtr0079752	F	23	0	1.0	-1.06904496765
+input1.bam	FBtr0079752	F	24	1	1.0	0.267261241912
+input1.bam	FBtr0079752	R	15	0	1.0	1.60356745147
+input1.bam	FBtr0079752	R	16	0	1.0	0.267261241912
+input1.bam	FBtr0079752	R	17	0	1.0	0.267261241912
+input1.bam	FBtr0079752	R	18	0	1.0	-1.06904496765
+input1.bam	FBtr0079752	R	19	0	1.0	0.267261241912
+input1.bam	FBtr0079752	R	20	0	1.0	1.60356745147
+input1.bam	FBtr0079752	R	21	0	1.0	-1.06904496765
+input1.bam	FBtr0079752	R	22	0	1.0	-1.06904496765
+input1.bam	FBtr0079752	R	23	0	1.0	-1.06904496765
+input1.bam	FBtr0079752	R	24	0	1.0	0.267261241912
+input1.bam	FBtr0079820	F	15	2	1.0	0.520305902373
+input1.bam	FBtr0079820	F	16	1	1.0	-0.222988243874
+input1.bam	FBtr0079820	F	17	0	1.0	-0.966282390121
+input1.bam	FBtr0079820	F	18	4	1.0	2.00689419487
+input1.bam	FBtr0079820	F	19	3	1.0	1.26360004862
+input1.bam	FBtr0079820	F	20	2	1.0	0.520305902373
+input1.bam	FBtr0079820	F	21	0	1.0	-0.966282390121
+input1.bam	FBtr0079820	F	22	0	1.0	-0.966282390121
+input1.bam	FBtr0079820	F	23	0	1.0	-0.966282390121
+input1.bam	FBtr0079820	F	24	1	1.0	-0.222988243874
+input1.bam	FBtr0079820	R	15	0	1.0	0.520305902373
+input1.bam	FBtr0079820	R	16	0	1.0	-0.222988243874
+input1.bam	FBtr0079820	R	17	0	1.0	-0.966282390121
+input1.bam	FBtr0079820	R	18	0	1.0	2.00689419487
+input1.bam	FBtr0079820	R	19	0	1.0	1.26360004862
+input1.bam	FBtr0079820	R	20	0	1.0	0.520305902373
+input1.bam	FBtr0079820	R	21	0	1.0	-0.966282390121
+input1.bam	FBtr0079820	R	22	0	1.0	-0.966282390121
+input1.bam	FBtr0079820	R	23	0	1.0	-0.966282390121
+input1.bam	FBtr0079820	R	24	0	1.0	-0.222988243874
+input1.bam	FBtr0080609	F	15	5	1.0	-0.0472279924555
+input1.bam	FBtr0080609	F	16	4	1.0	-0.236139962277
+input1.bam	FBtr0080609	F	17	19	1.0	2.59753958505
+input1.bam	FBtr0080609	F	18	11	1.0	1.08624382648
+input1.bam	FBtr0080609	F	19	3	1.0	-0.425051932099
+input1.bam	FBtr0080609	F	20	10	1.0	0.897331856654
+input1.bam	FBtr0080609	F	21	4	1.0	-0.236139962277
+input1.bam	FBtr0080609	F	22	0	1.0	-0.991787841565
+input1.bam	FBtr0080609	F	23	4	1.0	-0.236139962277
+input1.bam	FBtr0080609	F	24	1	1.0	-0.802875871743
+input1.bam	FBtr0080609	F	25	1	1.0	-0.802875871743
+input1.bam	FBtr0080609	F	26	1	1.0	-0.802875871743
+input1.bam	FBtr0080609	R	15	0	1.0	-0.0472279924555
+input1.bam	FBtr0080609	R	16	0	1.0	-0.236139962277
+input1.bam	FBtr0080609	R	17	0	1.0	2.59753958505
+input1.bam	FBtr0080609	R	18	0	1.0	1.08624382648
+input1.bam	FBtr0080609	R	19	0	1.0	-0.425051932099
+input1.bam	FBtr0080609	R	20	0	1.0	0.897331856654
+input1.bam	FBtr0080609	R	21	0	1.0	-0.236139962277
+input1.bam	FBtr0080609	R	22	0	1.0	-0.991787841565
+input1.bam	FBtr0080609	R	23	0	1.0	-0.236139962277
+input1.bam	FBtr0080609	R	24	0	1.0	-0.802875871743
+input1.bam	FBtr0080609	R	25	0	1.0	-0.802875871743
+input1.bam	FBtr0080609	R	26	0	1.0	-0.802875871743
+input1.bam	FBtr0080644	F	16	3	1.0	2.88675134595
+input1.bam	FBtr0080644	F	17	1	1.0	0.57735026919
+input1.bam	FBtr0080644	F	18	0	1.0	-0.57735026919
+input1.bam	FBtr0080644	F	19	0	1.0	-0.57735026919
+input1.bam	FBtr0080644	F	20	0	1.0	-0.57735026919
+input1.bam	FBtr0080644	F	21	0	1.0	-0.57735026919
+input1.bam	FBtr0080644	F	22	0	1.0	-0.57735026919
+input1.bam	FBtr0080644	F	23	0	1.0	-0.57735026919
+input1.bam	FBtr0080644	F	24	1	1.0	0.57735026919
+input1.bam	FBtr0080644	F	25	0	1.0	-0.57735026919
+input1.bam	FBtr0080644	F	26	0	1.0	-0.57735026919
+input1.bam	FBtr0080644	F	27	1	1.0	0.57735026919
+input1.bam	FBtr0080644	R	16	0	1.0	2.88675134595
+input1.bam	FBtr0080644	R	17	0	1.0	0.57735026919
+input1.bam	FBtr0080644	R	18	0	1.0	-0.57735026919
+input1.bam	FBtr0080644	R	19	0	1.0	-0.57735026919
+input1.bam	FBtr0080644	R	20	0	1.0	-0.57735026919
+input1.bam	FBtr0080644	R	21	0	1.0	-0.57735026919
+input1.bam	FBtr0080644	R	22	0	1.0	-0.57735026919
+input1.bam	FBtr0080644	R	23	0	1.0	-0.57735026919
+input1.bam	FBtr0080644	R	24	0	1.0	0.57735026919
+input1.bam	FBtr0080644	R	25	0	1.0	-0.57735026919
+input1.bam	FBtr0080644	R	26	0	1.0	-0.57735026919
+input1.bam	FBtr0080644	R	27	0	1.0	0.57735026919
+input1.bam	FBtr0080646	F	16	1	1.0	1.15470053838
+input1.bam	FBtr0080646	F	17	0	1.0	-0.866025403784
+input1.bam	FBtr0080646	F	18	0	1.0	-0.866025403784
+input1.bam	FBtr0080646	F	19	0	1.0	-0.866025403784
+input1.bam	FBtr0080646	F	20	0	1.0	-0.866025403784
+input1.bam	FBtr0080646	F	21	1	1.0	1.15470053838
+input1.bam	FBtr0080646	F	22	1	1.0	1.15470053838
+input1.bam	FBtr0080646	R	16	0	1.0	1.15470053838
+input1.bam	FBtr0080646	R	17	0	1.0	-0.866025403784
+input1.bam	FBtr0080646	R	18	0	1.0	-0.866025403784
+input1.bam	FBtr0080646	R	19	0	1.0	-0.866025403784
+input1.bam	FBtr0080646	R	20	0	1.0	-0.866025403784
+input1.bam	FBtr0080646	R	21	0	1.0	1.15470053838
+input1.bam	FBtr0080646	R	22	0	1.0	1.15470053838
+input1.bam	FBtr0080647	F	15	1	1.0	-0.208514414057
+input1.bam	FBtr0080647	F	16	4	1.0	2.29365855463
+input1.bam	FBtr0080647	F	17	2	1.0	0.625543242171
+input1.bam	FBtr0080647	F	18	1	1.0	-0.208514414057
+input1.bam	FBtr0080647	F	19	0	1.0	-1.04257207029
+input1.bam	FBtr0080647	F	20	1	1.0	-0.208514414057
+input1.bam	FBtr0080647	F	21	0	1.0	-1.04257207029
+input1.bam	FBtr0080647	F	22	1	1.0	-0.208514414057
+input1.bam	FBtr0080647	R	15	0	1.0	-0.208514414057
+input1.bam	FBtr0080647	R	16	0	1.0	2.29365855463
+input1.bam	FBtr0080647	R	17	0	1.0	0.625543242171
+input1.bam	FBtr0080647	R	18	0	1.0	-0.208514414057
+input1.bam	FBtr0080647	R	19	0	1.0	-1.04257207029
+input1.bam	FBtr0080647	R	20	0	1.0	-0.208514414057
+input1.bam	FBtr0080647	R	21	0	1.0	-1.04257207029
+input1.bam	FBtr0080647	R	22	0	1.0	-0.208514414057
+input1.bam	FBtr0080660	F	16	1	1.0	0.169030850946
+input1.bam	FBtr0080660	F	17	0	1.0	-0.59160797831
+input1.bam	FBtr0080660	F	18	0	1.0	-0.59160797831
+input1.bam	FBtr0080660	F	19	0	1.0	-0.59160797831
+input1.bam	FBtr0080660	F	20	0	1.0	-0.59160797831
+input1.bam	FBtr0080660	F	21	2	1.0	0.929669680201
+input1.bam	FBtr0080660	F	22	0	1.0	-0.59160797831
+input1.bam	FBtr0080660	F	23	0	1.0	-0.59160797831
+input1.bam	FBtr0080660	F	24	4	1.0	2.45094733871
+input1.bam	FBtr0080660	R	16	0	1.0	0.169030850946
+input1.bam	FBtr0080660	R	17	0	1.0	-0.59160797831
+input1.bam	FBtr0080660	R	18	0	1.0	-0.59160797831
+input1.bam	FBtr0080660	R	19	0	1.0	-0.59160797831
+input1.bam	FBtr0080660	R	20	0	1.0	-0.59160797831
+input1.bam	FBtr0080660	R	21	0	1.0	0.929669680201
+input1.bam	FBtr0080660	R	22	0	1.0	-0.59160797831
+input1.bam	FBtr0080660	R	23	0	1.0	-0.59160797831
+input1.bam	FBtr0080660	R	24	0	1.0	2.45094733871
+input1.bam	FBtr0080663	F	15	18	1.0	1.1202070984
+input1.bam	FBtr0080663	F	16	16	1.0	0.89125966223
+input1.bam	FBtr0080663	F	17	6	1.0	-0.253477518616
+input1.bam	FBtr0080663	F	18	3	1.0	-0.59689867287
+input1.bam	FBtr0080663	F	19	3	1.0	-0.59689867287
+input1.bam	FBtr0080663	F	20	10	1.0	0.204417353722
+input1.bam	FBtr0080663	F	21	0	1.0	-0.940319827123
+input1.bam	FBtr0080663	F	22	1	1.0	-0.825846109039
+input1.bam	FBtr0080663	F	23	7	1.0	-0.139003800531
+input1.bam	FBtr0080663	F	24	33	1.0	2.83731286967
+input1.bam	FBtr0080663	F	25	10	1.0	0.204417353722
+input1.bam	FBtr0080663	F	26	6	1.0	-0.253477518616
+input1.bam	FBtr0080663	F	27	0	1.0	-0.940319827123
+input1.bam	FBtr0080663	F	28	2	1.0	-0.711372390954
+input1.bam	FBtr0080663	R	15	0	1.0	1.1202070984
+input1.bam	FBtr0080663	R	16	0	1.0	0.89125966223
+input1.bam	FBtr0080663	R	17	0	1.0	-0.253477518616
+input1.bam	FBtr0080663	R	18	0	1.0	-0.59689867287
+input1.bam	FBtr0080663	R	19	0	1.0	-0.59689867287
+input1.bam	FBtr0080663	R	20	0	1.0	0.204417353722
+input1.bam	FBtr0080663	R	21	0	1.0	-0.940319827123
+input1.bam	FBtr0080663	R	22	0	1.0	-0.825846109039
+input1.bam	FBtr0080663	R	23	0	1.0	-0.139003800531
+input1.bam	FBtr0080663	R	24	0	1.0	2.83731286967
+input1.bam	FBtr0080663	R	25	0	1.0	0.204417353722
+input1.bam	FBtr0080663	R	26	0	1.0	-0.253477518616
+input1.bam	FBtr0080663	R	27	0	1.0	-0.940319827123
+input1.bam	FBtr0080663	R	28	0	1.0	-0.711372390954
+input1.bam	FBtr0080664	F	15	22	1.0	1.44542182806
+input1.bam	FBtr0080664	F	16	15	1.0	0.658469943893
+input1.bam	FBtr0080664	F	17	6	1.0	-0.353325335748
+input1.bam	FBtr0080664	F	18	5	1.0	-0.465747033485
+input1.bam	FBtr0080664	F	19	3	1.0	-0.690590428961
+input1.bam	FBtr0080664	F	20	12	1.0	0.32120485068
+input1.bam	FBtr0080664	F	21	5	1.0	-0.465747033485
+input1.bam	FBtr0080664	F	22	0	1.0	-1.02785552217
+input1.bam	FBtr0080664	F	23	11	1.0	0.208783152942
+input1.bam	FBtr0080664	F	24	33	1.0	2.68206050317
+input1.bam	FBtr0080664	F	25	10	1.0	0.0963614552039
+input1.bam	FBtr0080664	F	26	4	1.0	-0.578168731223
+input1.bam	FBtr0080664	F	27	0	1.0	-1.02785552217
+input1.bam	FBtr0080664	F	28	2	1.0	-0.803012126699
+input1.bam	FBtr0080664	R	15	0	1.0	1.44542182806
+input1.bam	FBtr0080664	R	16	0	1.0	0.658469943893
+input1.bam	FBtr0080664	R	17	0	1.0	-0.353325335748
+input1.bam	FBtr0080664	R	18	0	1.0	-0.465747033485
+input1.bam	FBtr0080664	R	19	0	1.0	-0.690590428961
+input1.bam	FBtr0080664	R	20	0	1.0	0.32120485068
+input1.bam	FBtr0080664	R	21	0	1.0	-0.465747033485
+input1.bam	FBtr0080664	R	22	0	1.0	-1.02785552217
+input1.bam	FBtr0080664	R	23	0	1.0	0.208783152942
+input1.bam	FBtr0080664	R	24	0	1.0	2.68206050317
+input1.bam	FBtr0080664	R	25	0	1.0	0.0963614552039
+input1.bam	FBtr0080664	R	26	0	1.0	-0.578168731223
+input1.bam	FBtr0080664	R	27	0	1.0	-1.02785552217
+input1.bam	FBtr0080664	R	28	0	1.0	-0.803012126699
+input2.bam	FBtr0070001	F	15	12	1.0	2.66969524989
+input2.bam	FBtr0070001	F	16	2	1.0	-0.190692517849
+input2.bam	FBtr0070001	F	17	1	1.0	-0.476731294623
+input2.bam	FBtr0070001	F	18	2	1.0	-0.190692517849
+input2.bam	FBtr0070001	F	19	0	1.0	-0.762770071396
+input2.bam	FBtr0070001	F	20	1	1.0	-0.476731294623
+input2.bam	FBtr0070001	F	21	0	1.0	-0.762770071396
+input2.bam	FBtr0070001	F	22	4	1.0	0.381385035698
+input2.bam	FBtr0070001	F	23	2	1.0	-0.190692517849
+input2.bam	FBtr0070001	R	15	0	1.0	2.66969524989
+input2.bam	FBtr0070001	R	16	0	1.0	-0.190692517849
+input2.bam	FBtr0070001	R	17	0	1.0	-0.476731294623
+input2.bam	FBtr0070001	R	18	0	1.0	-0.190692517849
+input2.bam	FBtr0070001	R	19	0	1.0	-0.762770071396
+input2.bam	FBtr0070001	R	20	0	1.0	-0.476731294623
+input2.bam	FBtr0070001	R	21	0	1.0	-0.762770071396
+input2.bam	FBtr0070001	R	22	0	1.0	0.381385035698
+input2.bam	FBtr0070001	R	23	0	1.0	-0.190692517849
+input2.bam	FBtr0070533	F	15	4	1.0	-0.44252514642
+input2.bam	FBtr0070533	F	16	8	1.0	0.646767521691
+input2.bam	FBtr0070533	F	17	8	1.0	0.646767521691
+input2.bam	FBtr0070533	F	18	2	1.0	-0.987171480476
+input2.bam	FBtr0070533	F	19	8	1.0	0.646767521691
+input2.bam	FBtr0070533	F	20	12	1.0	1.7360601898
+input2.bam	FBtr0070533	F	21	1	1.0	-1.2594946475
+input2.bam	FBtr0070533	F	22	2	1.0	-0.987171480476
+input2.bam	FBtr0070533	R	15	0	1.0	-0.44252514642
+input2.bam	FBtr0070533	R	16	0	1.0	0.646767521691
+input2.bam	FBtr0070533	R	17	0	1.0	0.646767521691
+input2.bam	FBtr0070533	R	18	0	1.0	-0.987171480476
+input2.bam	FBtr0070533	R	19	0	1.0	0.646767521691
+input2.bam	FBtr0070533	R	20	0	1.0	1.7360601898
+input2.bam	FBtr0070533	R	21	0	1.0	-1.2594946475
+input2.bam	FBtr0070533	R	22	0	1.0	-0.987171480476
+input2.bam	FBtr0070603	F	15	5	1.0	-0.295149167299
+input2.bam	FBtr0070603	F	16	4	1.0	-0.563466592117
+input2.bam	FBtr0070603	F	17	10	1.0	1.04643795679
+input2.bam	FBtr0070603	F	18	7	1.0	0.241485682336
+input2.bam	FBtr0070603	F	19	7	1.0	0.241485682336
+input2.bam	FBtr0070603	F	20	15	1.0	2.38802508088
+input2.bam	FBtr0070603	F	21	3	1.0	-0.831784016935
+input2.bam	FBtr0070603	F	22	5	1.0	-0.295149167299
+input2.bam	FBtr0070603	F	23	3	1.0	-0.831784016935
+input2.bam	FBtr0070603	F	24	2	1.0	-1.10010144175
+input2.bam	FBtr0070603	R	15	0	1.0	-0.295149167299
+input2.bam	FBtr0070603	R	16	0	1.0	-0.563466592117
+input2.bam	FBtr0070603	R	17	0	1.0	1.04643795679
+input2.bam	FBtr0070603	R	18	0	1.0	0.241485682336
+input2.bam	FBtr0070603	R	19	0	1.0	0.241485682336
+input2.bam	FBtr0070603	R	20	0	1.0	2.38802508088
+input2.bam	FBtr0070603	R	21	0	1.0	-0.831784016935
+input2.bam	FBtr0070603	R	22	0	1.0	-0.295149167299
+input2.bam	FBtr0070603	R	23	0	1.0	-0.831784016935
+input2.bam	FBtr0070603	R	24	0	1.0	-1.10010144175
+input2.bam	FBtr0070604	F	15	31	1.0	2.66515623513
+input2.bam	FBtr0070604	F	16	11	1.0	0.5235128319
+input2.bam	FBtr0070604	F	17	4	1.0	-0.22606235923
+input2.bam	FBtr0070604	F	18	0	1.0	-0.654391039875
+input2.bam	FBtr0070604	F	19	1	1.0	-0.547308869714
+input2.bam	FBtr0070604	F	20	2	1.0	-0.440226699552
+input2.bam	FBtr0070604	F	21	1	1.0	-0.547308869714
+input2.bam	FBtr0070604	F	22	4	1.0	-0.22606235923
+input2.bam	FBtr0070604	F	23	1	1.0	-0.547308869714
+input2.bam	FBtr0070604	R	15	0	1.0	2.66515623513
+input2.bam	FBtr0070604	R	16	0	1.0	0.5235128319
+input2.bam	FBtr0070604	R	17	0	1.0	-0.22606235923
+input2.bam	FBtr0070604	R	18	0	1.0	-0.654391039875
+input2.bam	FBtr0070604	R	19	0	1.0	-0.547308869714
+input2.bam	FBtr0070604	R	20	0	1.0	-0.440226699552
+input2.bam	FBtr0070604	R	21	0	1.0	-0.547308869714
+input2.bam	FBtr0070604	R	22	0	1.0	-0.22606235923
+input2.bam	FBtr0070604	R	23	0	1.0	-0.547308869714
+input2.bam	FBtr0070911	F	15	1	1.0	1.41421356237
+input2.bam	FBtr0070911	F	16	1	1.0	1.41421356237
+input2.bam	FBtr0070911	F	17	0	1.0	-0.707106781187
+input2.bam	FBtr0070911	F	18	0	1.0	-0.707106781187
+input2.bam	FBtr0070911	F	19	0	1.0	-0.707106781187
+input2.bam	FBtr0070911	F	20	0	1.0	-0.707106781187
+input2.bam	FBtr0070911	F	21	0	1.0	-0.707106781187
+input2.bam	FBtr0070911	F	22	0	1.0	-0.707106781187
+input2.bam	FBtr0070911	F	23	1	1.0	1.41421356237
+input2.bam	FBtr0070911	R	15	0	1.0	1.41421356237
+input2.bam	FBtr0070911	R	16	0	1.0	1.41421356237
+input2.bam	FBtr0070911	R	17	0	1.0	-0.707106781187
+input2.bam	FBtr0070911	R	18	0	1.0	-0.707106781187
+input2.bam	FBtr0070911	R	19	0	1.0	-0.707106781187
+input2.bam	FBtr0070911	R	20	0	1.0	-0.707106781187
+input2.bam	FBtr0070911	R	21	0	1.0	-0.707106781187
+input2.bam	FBtr0070911	R	22	0	1.0	-0.707106781187
+input2.bam	FBtr0070911	R	23	0	1.0	1.41421356237
+input2.bam	FBtr0078490	F	15	4	1.0	1.82036410924
+input2.bam	FBtr0078490	F	16	1	1.0	-0.280056016806
+input2.bam	FBtr0078490	F	17	0	1.0	-0.98019605882
+input2.bam	FBtr0078490	F	18	3	1.0	1.12022406722
+input2.bam	FBtr0078490	F	19	0	1.0	-0.98019605882
+input2.bam	FBtr0078490	F	20	3	1.0	1.12022406722
+input2.bam	FBtr0078490	F	21	1	1.0	-0.280056016806
+input2.bam	FBtr0078490	F	22	0	1.0	-0.98019605882
+input2.bam	FBtr0078490	F	23	0	1.0	-0.98019605882
+input2.bam	FBtr0078490	F	24	2	1.0	0.420084025208
+input2.bam	FBtr0078490	R	15	0	1.0	1.82036410924
+input2.bam	FBtr0078490	R	16	0	1.0	-0.280056016806
+input2.bam	FBtr0078490	R	17	0	1.0	-0.98019605882
+input2.bam	FBtr0078490	R	18	0	1.0	1.12022406722
+input2.bam	FBtr0078490	R	19	0	1.0	-0.98019605882
+input2.bam	FBtr0078490	R	20	0	1.0	1.12022406722
+input2.bam	FBtr0078490	R	21	0	1.0	-0.280056016806
+input2.bam	FBtr0078490	R	22	0	1.0	-0.98019605882
+input2.bam	FBtr0078490	R	23	0	1.0	-0.98019605882
+input2.bam	FBtr0078490	R	24	0	1.0	0.420084025208
+input2.bam	FBtr0078580	F	15	166	1.0	3.20393225613
+input2.bam	FBtr0078580	F	16	26	1.0	-0.114567244671
+input2.bam	FBtr0078580	F	17	35	1.0	0.0987648660954
+input2.bam	FBtr0078580	F	18	16	1.0	-0.351602923299
+input2.bam	FBtr0078580	F	19	23	1.0	-0.185677948259
+input2.bam	FBtr0078580	F	20	35	1.0	0.0987648660954
+input2.bam	FBtr0078580	F	21	24	1.0	-0.161974380396
+input2.bam	FBtr0078580	F	22	16	1.0	-0.351602923299
+input2.bam	FBtr0078580	F	23	21	1.0	-0.233085083985
+input2.bam	FBtr0078580	F	24	4	1.0	-0.636045737654
+input2.bam	FBtr0078580	F	25	3	1.0	-0.659749305517
+input2.bam	FBtr0078580	F	26	1	1.0	-0.707156441243
+input2.bam	FBtr0078580	R	15	0	1.0	3.20393225613
+input2.bam	FBtr0078580	R	16	0	1.0	-0.114567244671
+input2.bam	FBtr0078580	R	17	0	1.0	0.0987648660954
+input2.bam	FBtr0078580	R	18	0	1.0	-0.351602923299
+input2.bam	FBtr0078580	R	19	0	1.0	-0.185677948259
+input2.bam	FBtr0078580	R	20	0	1.0	0.0987648660954
+input2.bam	FBtr0078580	R	21	0	1.0	-0.161974380396
+input2.bam	FBtr0078580	R	22	0	1.0	-0.351602923299
+input2.bam	FBtr0078580	R	23	0	1.0	-0.233085083985
+input2.bam	FBtr0078580	R	24	0	1.0	-0.636045737654
+input2.bam	FBtr0078580	R	25	0	1.0	-0.659749305517
+input2.bam	FBtr0078580	R	26	0	1.0	-0.707156441243
+input2.bam	FBtr0078790	F	15	1	1.0	-0.301511344578
+input2.bam	FBtr0078790	F	16	3	1.0	2.11057941204
+input2.bam	FBtr0078790	F	17	1	1.0	-0.301511344578
+input2.bam	FBtr0078790	F	18	1	1.0	-0.301511344578
+input2.bam	FBtr0078790	F	19	0	1.0	-1.50755672289
+input2.bam	FBtr0078790	F	20	1	1.0	-0.301511344578
+input2.bam	FBtr0078790	F	21	2	1.0	0.904534033733
+input2.bam	FBtr0078790	F	22	1	1.0	-0.301511344578
+input2.bam	FBtr0078790	R	15	0	1.0	-0.301511344578
+input2.bam	FBtr0078790	R	16	0	1.0	2.11057941204
+input2.bam	FBtr0078790	R	17	0	1.0	-0.301511344578
+input2.bam	FBtr0078790	R	18	0	1.0	-0.301511344578
+input2.bam	FBtr0078790	R	19	0	1.0	-1.50755672289
+input2.bam	FBtr0078790	R	20	0	1.0	-0.301511344578
+input2.bam	FBtr0078790	R	21	0	1.0	0.904534033733
+input2.bam	FBtr0078790	R	22	0	1.0	-0.301511344578
+input2.bam	FBtr0079064	F	15	3	1.0	1.60591013709
+input2.bam	FBtr0079064	F	16	0	1.0	-1.14707866935
+input2.bam	FBtr0079064	F	17	1	1.0	-0.229415733871
+input2.bam	FBtr0079064	F	18	1	1.0	-0.229415733871
+input2.bam	FBtr0079064	R	15	0	1.0	1.60591013709
+input2.bam	FBtr0079064	R	16	0	1.0	-1.14707866935
+input2.bam	FBtr0079064	R	17	0	1.0	-0.229415733871
+input2.bam	FBtr0079064	R	18	0	1.0	-0.229415733871
+input2.bam	FBtr0079090	F	15	3	1.0	1.52752523165
+input2.bam	FBtr0079090	F	16	0	1.0	-0.763762615826
+input2.bam	FBtr0079090	F	17	3	1.0	1.52752523165
+input2.bam	FBtr0079090	F	18	0	1.0	-0.763762615826
+input2.bam	FBtr0079090	F	19	0	1.0	-0.763762615826
+input2.bam	FBtr0079090	F	20	0	1.0	-0.763762615826
+input2.bam	FBtr0079090	F	21	1	1.0	0.0
+input2.bam	FBtr0079090	R	15	0	1.0	1.52752523165
+input2.bam	FBtr0079090	R	16	0	1.0	-0.763762615826
+input2.bam	FBtr0079090	R	17	0	1.0	1.52752523165
+input2.bam	FBtr0079090	R	18	0	1.0	-0.763762615826
+input2.bam	FBtr0079090	R	19	0	1.0	-0.763762615826
+input2.bam	FBtr0079090	R	20	0	1.0	-0.763762615826
+input2.bam	FBtr0079090	R	21	0	1.0	0.0
+input2.bam	FBtr0079338	F	15	4	1.0	0.683264830596
+input2.bam	FBtr0079338	F	16	6	1.0	1.62932382681
+input2.bam	FBtr0079338	F	17	2	1.0	-0.262794165614
+input2.bam	FBtr0079338	F	18	6	1.0	1.62932382681
+input2.bam	FBtr0079338	F	19	2	1.0	-0.262794165614
+input2.bam	FBtr0079338	F	20	1	1.0	-0.735823663719
+input2.bam	FBtr0079338	F	21	0	1.0	-1.20885316182
+input2.bam	FBtr0079338	F	22	1	1.0	-0.735823663719
+input2.bam	FBtr0079338	F	23	1	1.0	-0.735823663719
+input2.bam	FBtr0079338	R	15	0	1.0	0.683264830596
+input2.bam	FBtr0079338	R	16	0	1.0	1.62932382681
+input2.bam	FBtr0079338	R	17	0	1.0	-0.262794165614
+input2.bam	FBtr0079338	R	18	0	1.0	1.62932382681
+input2.bam	FBtr0079338	R	19	0	1.0	-0.262794165614
+input2.bam	FBtr0079338	R	20	0	1.0	-0.735823663719
+input2.bam	FBtr0079338	R	21	0	1.0	-1.20885316182
+input2.bam	FBtr0079338	R	22	0	1.0	-0.735823663719
+input2.bam	FBtr0079338	R	23	0	1.0	-0.735823663719
+input2.bam	FBtr0079528	F	15	164	1.0	3.02578347064
+input2.bam	FBtr0079528	F	16	46	1.0	0.352976611984
+input2.bam	FBtr0079528	F	17	31	1.0	0.0132130282561
+input2.bam	FBtr0079528	F	18	56	1.0	0.579485667802
+input2.bam	FBtr0079528	F	19	34	1.0	0.0811657450016
+input2.bam	FBtr0079528	F	20	8	1.0	-0.507757800126
+input2.bam	FBtr0079528	F	21	8	1.0	-0.507757800126
+input2.bam	FBtr0079528	F	22	8	1.0	-0.507757800126
+input2.bam	FBtr0079528	F	23	4	1.0	-0.598361422454
+input2.bam	FBtr0079528	F	24	1	1.0	-0.666314139199
+input2.bam	FBtr0079528	F	25	1	1.0	-0.666314139199
+input2.bam	FBtr0079528	F	26	4	1.0	-0.598361422454
+input2.bam	FBtr0079528	R	15	0	1.0	3.02578347064
+input2.bam	FBtr0079528	R	16	0	1.0	0.352976611984
+input2.bam	FBtr0079528	R	17	0	1.0	0.0132130282561
+input2.bam	FBtr0079528	R	18	0	1.0	0.579485667802
+input2.bam	FBtr0079528	R	19	0	1.0	0.0811657450016
+input2.bam	FBtr0079528	R	20	0	1.0	-0.507757800126
+input2.bam	FBtr0079528	R	21	0	1.0	-0.507757800126
+input2.bam	FBtr0079528	R	22	0	1.0	-0.507757800126
+input2.bam	FBtr0079528	R	23	0	1.0	-0.598361422454
+input2.bam	FBtr0079528	R	24	0	1.0	-0.666314139199
+input2.bam	FBtr0079528	R	25	0	1.0	-0.666314139199
+input2.bam	FBtr0079528	R	26	0	1.0	-0.598361422454
+input2.bam	FBtr0079596	F	15	31	0.996835443038	-0.0267038802222
+input2.bam	FBtr0079596	F	16	21	0.996835443038	-0.471768550592
+input2.bam	FBtr0079596	F	17	18	0.996835443038	-0.605287951703
+input2.bam	FBtr0079596	F	18	79	0.996835443038	2.10960653755
+input2.bam	FBtr0079596	F	19	48	0.996835443038	0.729906059406
+input2.bam	FBtr0079596	F	20	49	0.996835443038	0.774412526443
+input2.bam	FBtr0079596	F	21	40	0.996835443038	0.418360790148
+input2.bam	FBtr0079596	F	22	26	0.996835443038	-0.249236215407
+input2.bam	FBtr0079596	F	23	2	0.996835443038	-1.31739142429
+input2.bam	FBtr0079596	F	24	1	0.996835443038	-1.36189789133
+input2.bam	FBtr0079596	R	15	0	0.996835443038	-0.0267038802222
+input2.bam	FBtr0079596	R	16	0	0.996835443038	-0.471768550592
+input2.bam	FBtr0079596	R	17	0	0.996835443038	-0.605287951703
+input2.bam	FBtr0079596	R	18	0	0.996835443038	2.10960653755
+input2.bam	FBtr0079596	R	19	0	0.996835443038	0.729906059406
+input2.bam	FBtr0079596	R	20	0	0.996835443038	0.774412526443
+input2.bam	FBtr0079596	R	21	1	0.996835443038	0.418360790148
+input2.bam	FBtr0079596	R	22	0	0.996835443038	-0.249236215407
+input2.bam	FBtr0079596	R	23	0	0.996835443038	-1.31739142429
+input2.bam	FBtr0079596	R	24	0	0.996835443038	-1.36189789133
+input2.bam	FBtr0079677	F	15	2	1.0	1.21267812518
+input2.bam	FBtr0079677	F	16	1	1.0	-0.242535625036
+input2.bam	FBtr0079677	F	17	2	1.0	1.21267812518
+input2.bam	FBtr0079677	F	18	0	1.0	-1.69774937525
+input2.bam	FBtr0079677	F	19	1	1.0	-0.242535625036
+input2.bam	FBtr0079677	F	20	1	1.0	-0.242535625036
+input2.bam	FBtr0079677	R	15	0	1.0	1.21267812518
+input2.bam	FBtr0079677	R	16	0	1.0	-0.242535625036
+input2.bam	FBtr0079677	R	17	0	1.0	1.21267812518
+input2.bam	FBtr0079677	R	18	0	1.0	-1.69774937525
+input2.bam	FBtr0079677	R	19	0	1.0	-0.242535625036
+input2.bam	FBtr0079677	R	20	0	1.0	-0.242535625036
+input2.bam	FBtr0079690	F	15	1	1.0	0.408248290464
+input2.bam	FBtr0079690	F	16	1	1.0	0.408248290464
+input2.bam	FBtr0079690	F	17	0	1.0	-1.02062072616
+input2.bam	FBtr0079690	F	18	0	1.0	-1.02062072616
+input2.bam	FBtr0079690	F	19	0	1.0	-1.02062072616
+input2.bam	FBtr0079690	F	20	2	1.0	1.83711730709
+input2.bam	FBtr0079690	F	21	1	1.0	0.408248290464
+input2.bam	FBtr0079690	R	15	0	1.0	0.408248290464
+input2.bam	FBtr0079690	R	16	0	1.0	0.408248290464
+input2.bam	FBtr0079690	R	17	0	1.0	-1.02062072616
+input2.bam	FBtr0079690	R	18	0	1.0	-1.02062072616
+input2.bam	FBtr0079690	R	19	0	1.0	-1.02062072616
+input2.bam	FBtr0079690	R	20	0	1.0	1.83711730709
+input2.bam	FBtr0079690	R	21	0	1.0	0.408248290464
+input2.bam	FBtr0079692	F	15	1	1.0	1.0
+input2.bam	FBtr0079692	F	16	0	1.0	-1.0
+input2.bam	FBtr0079692	F	17	0	1.0	-1.0
+input2.bam	FBtr0079692	F	18	1	1.0	1.0
+input2.bam	FBtr0079692	F	19	0	1.0	-1.0
+input2.bam	FBtr0079692	F	20	0	1.0	-1.0
+input2.bam	FBtr0079692	F	21	1	1.0	1.0
+input2.bam	FBtr0079692	F	22	1	1.0	1.0
+input2.bam	FBtr0079692	R	15	0	1.0	1.0
+input2.bam	FBtr0079692	R	16	0	1.0	-1.0
+input2.bam	FBtr0079692	R	17	0	1.0	-1.0
+input2.bam	FBtr0079692	R	18	0	1.0	1.0
+input2.bam	FBtr0079692	R	19	0	1.0	-1.0
+input2.bam	FBtr0079692	R	20	0	1.0	-1.0
+input2.bam	FBtr0079692	R	21	0	1.0	1.0
+input2.bam	FBtr0079692	R	22	0	1.0	1.0
+input2.bam	FBtr0079693	F	15	4	1.0	1.80578779629
+input2.bam	FBtr0079693	F	16	2	1.0	0.361157559257
+input2.bam	FBtr0079693	F	17	0	1.0	-1.08347267777
+input2.bam	FBtr0079693	F	18	1	1.0	-0.361157559257
+input2.bam	FBtr0079693	F	19	0	1.0	-1.08347267777
+input2.bam	FBtr0079693	F	20	2	1.0	0.361157559257
+input2.bam	FBtr0079693	R	15	0	1.0	1.80578779629
+input2.bam	FBtr0079693	R	16	0	1.0	0.361157559257
+input2.bam	FBtr0079693	R	17	0	1.0	-1.08347267777
+input2.bam	FBtr0079693	R	18	0	1.0	-0.361157559257
+input2.bam	FBtr0079693	R	19	0	1.0	-1.08347267777
+input2.bam	FBtr0079693	R	20	0	1.0	0.361157559257
+input2.bam	FBtr0079694	F	15	2	1.0	1.06904496765
+input2.bam	FBtr0079694	F	16	0	1.0	-1.60356745147
+input2.bam	FBtr0079694	F	17	1	1.0	-0.267261241912
+input2.bam	FBtr0079694	F	18	2	1.0	1.06904496765
+input2.bam	FBtr0079694	F	19	1	1.0	-0.267261241912
+input2.bam	FBtr0079694	R	15	0	1.0	1.06904496765
+input2.bam	FBtr0079694	R	16	0	1.0	-1.60356745147
+input2.bam	FBtr0079694	R	17	0	1.0	-0.267261241912
+input2.bam	FBtr0079694	R	18	0	1.0	1.06904496765
+input2.bam	FBtr0079694	R	19	0	1.0	-0.267261241912
+input2.bam	FBtr0079702	F	15	2	1.0	1.41421356237
+input2.bam	FBtr0079702	F	16	0	1.0	-1.41421356237
+input2.bam	FBtr0079702	F	17	1	1.0	0.0
+input2.bam	FBtr0079702	F	18	1	1.0	0.0
+input2.bam	FBtr0079702	R	15	0	1.0	1.41421356237
+input2.bam	FBtr0079702	R	16	0	1.0	-1.41421356237
+input2.bam	FBtr0079702	R	17	0	1.0	0.0
+input2.bam	FBtr0079702	R	18	0	1.0	0.0
+input2.bam	FBtr0079728	F	15	3	1.0	1.73205080757
+input2.bam	FBtr0079728	F	16	1	1.0	-0.57735026919
+input2.bam	FBtr0079728	F	17	1	1.0	-0.57735026919
+input2.bam	FBtr0079728	F	18	1	1.0	-0.57735026919
+input2.bam	FBtr0079728	R	15	0	1.0	1.73205080757
+input2.bam	FBtr0079728	R	16	0	1.0	-0.57735026919
+input2.bam	FBtr0079728	R	17	0	1.0	-0.57735026919
+input2.bam	FBtr0079728	R	18	0	1.0	-0.57735026919
+input2.bam	FBtr0079729	F	15	1	1.0	-0.707106781187
+input2.bam	FBtr0079729	F	16	2	1.0	1.41421356237
+input2.bam	FBtr0079729	F	17	1	1.0	-0.707106781187
+input2.bam	FBtr0079729	R	15	0	1.0	-0.707106781187
+input2.bam	FBtr0079729	R	16	0	1.0	1.41421356237
+input2.bam	FBtr0079729	R	17	0	1.0	-0.707106781187
+input2.bam	FBtr0079752	F	17	1	1.0	1.73205080757
+input2.bam	FBtr0079752	F	18	0	1.0	-0.57735026919
+input2.bam	FBtr0079752	F	19	0	1.0	-0.57735026919
+input2.bam	FBtr0079752	F	20	0	1.0	-0.57735026919
+input2.bam	FBtr0079752	F	21	0	1.0	-0.57735026919
+input2.bam	FBtr0079752	F	22	0	1.0	-0.57735026919
+input2.bam	FBtr0079752	F	23	0	1.0	-0.57735026919
+input2.bam	FBtr0079752	F	24	1	1.0	1.73205080757
+input2.bam	FBtr0079752	R	17	0	1.0	1.73205080757
+input2.bam	FBtr0079752	R	18	0	1.0	-0.57735026919
+input2.bam	FBtr0079752	R	19	0	1.0	-0.57735026919
+input2.bam	FBtr0079752	R	20	0	1.0	-0.57735026919
+input2.bam	FBtr0079752	R	21	0	1.0	-0.57735026919
+input2.bam	FBtr0079752	R	22	0	1.0	-0.57735026919
+input2.bam	FBtr0079752	R	23	0	1.0	-0.57735026919
+input2.bam	FBtr0079752	R	24	0	1.0	1.73205080757
+input2.bam	FBtr0079820	F	15	27	1.0	1.42187198314
+input2.bam	FBtr0079820	F	16	10	1.0	-0.385367173
+input2.bam	FBtr0079820	F	17	7	1.0	-0.704291729965
+input2.bam	FBtr0079820	F	18	8	1.0	-0.59798354431
+input2.bam	FBtr0079820	F	19	25	1.0	1.20925561183
+input2.bam	FBtr0079820	F	20	24	1.0	1.10294742617
+input2.bam	FBtr0079820	F	21	7	1.0	-0.704291729965
+input2.bam	FBtr0079820	F	22	1	1.0	-1.3421408439
+input2.bam	FBtr0079820	R	15	0	1.0	1.42187198314
+input2.bam	FBtr0079820	R	16	0	1.0	-0.385367173
+input2.bam	FBtr0079820	R	17	0	1.0	-0.704291729965
+input2.bam	FBtr0079820	R	18	0	1.0	-0.59798354431
+input2.bam	FBtr0079820	R	19	0	1.0	1.20925561183
+input2.bam	FBtr0079820	R	20	0	1.0	1.10294742617
+input2.bam	FBtr0079820	R	21	0	1.0	-0.704291729965
+input2.bam	FBtr0079820	R	22	0	1.0	-1.3421408439
+input2.bam	FBtr0080609	F	17	2	1.0	1.50755672289
+input2.bam	FBtr0080609	F	18	1	1.0	0.150755672289
+input2.bam	FBtr0080609	F	19	2	1.0	1.50755672289
+input2.bam	FBtr0080609	F	20	0	1.0	-1.20604537831
+input2.bam	FBtr0080609	F	21	0	1.0	-1.20604537831
+input2.bam	FBtr0080609	F	22	1	1.0	0.150755672289
+input2.bam	FBtr0080609	F	23	1	1.0	0.150755672289
+input2.bam	FBtr0080609	F	24	0	1.0	-1.20604537831
+input2.bam	FBtr0080609	F	25	1	1.0	0.150755672289
+input2.bam	FBtr0080609	R	17	0	1.0	1.50755672289
+input2.bam	FBtr0080609	R	18	0	1.0	0.150755672289
+input2.bam	FBtr0080609	R	19	0	1.0	1.50755672289
+input2.bam	FBtr0080609	R	20	0	1.0	-1.20604537831
+input2.bam	FBtr0080609	R	21	0	1.0	-1.20604537831
+input2.bam	FBtr0080609	R	22	0	1.0	0.150755672289
+input2.bam	FBtr0080609	R	23	0	1.0	0.150755672289
+input2.bam	FBtr0080609	R	24	0	1.0	-1.20604537831
+input2.bam	FBtr0080609	R	25	0	1.0	0.150755672289
+input2.bam	FBtr0080644	F	15	8	1.0	0
+input2.bam	FBtr0080644	R	15	0	1.0	0
+input2.bam	FBtr0080646	F	15	10	1.0	2.42935266809
+input2.bam	FBtr0080646	F	16	1	1.0	-0.209426954146
+input2.bam	FBtr0080646	F	17	0	1.0	-0.50262468995
+input2.bam	FBtr0080646	F	18	0	1.0	-0.50262468995
+input2.bam	FBtr0080646	F	19	0	1.0	-0.50262468995
+input2.bam	FBtr0080646	F	20	0	1.0	-0.50262468995
+input2.bam	FBtr0080646	F	21	1	1.0	-0.209426954146
+input2.bam	FBtr0080646	R	15	0	1.0	2.42935266809
+input2.bam	FBtr0080646	R	16	0	1.0	-0.209426954146
+input2.bam	FBtr0080646	R	17	0	1.0	-0.50262468995
+input2.bam	FBtr0080646	R	18	0	1.0	-0.50262468995
+input2.bam	FBtr0080646	R	19	0	1.0	-0.50262468995
+input2.bam	FBtr0080646	R	20	0	1.0	-0.50262468995
+input2.bam	FBtr0080646	R	21	0	1.0	-0.209426954146
+input2.bam	FBtr0080647	F	15	9	1.0	1.69705627485
+input2.bam	FBtr0080647	F	16	2	1.0	-0.282842712475
+input2.bam	FBtr0080647	F	17	0	1.0	-0.848528137424
+input2.bam	FBtr0080647	F	18	1	1.0	-0.565685424949
+input2.bam	FBtr0080647	R	15	0	1.0	1.69705627485
+input2.bam	FBtr0080647	R	16	0	1.0	-0.282842712475
+input2.bam	FBtr0080647	R	17	0	1.0	-0.848528137424
+input2.bam	FBtr0080647	R	18	0	1.0	-0.565685424949
+input2.bam	FBtr0080660	F	15	11	1.0	0
+input2.bam	FBtr0080660	R	15	0	1.0	0
+input2.bam	FBtr0080663	F	15	26	1.0	1.73000949772
+input2.bam	FBtr0080663	F	16	14	1.0	0.381950148847
+input2.bam	FBtr0080663	F	17	14	1.0	0.381950148847
+input2.bam	FBtr0080663	F	18	26	1.0	1.73000949772
+input2.bam	FBtr0080663	F	19	9	1.0	-0.179741246516
+input2.bam	FBtr0080663	F	20	7	1.0	-0.404417804661
+input2.bam	FBtr0080663	F	21	4	1.0	-0.741432641879
+input2.bam	FBtr0080663	F	22	5	1.0	-0.629094362806
+input2.bam	FBtr0080663	F	23	0	1.0	-1.19078575817
+input2.bam	FBtr0080663	F	24	1	1.0	-1.0784474791
+input2.bam	FBtr0080663	R	15	0	1.0	1.73000949772
+input2.bam	FBtr0080663	R	16	0	1.0	0.381950148847
+input2.bam	FBtr0080663	R	17	0	1.0	0.381950148847
+input2.bam	FBtr0080663	R	18	0	1.0	1.73000949772
+input2.bam	FBtr0080663	R	19	0	1.0	-0.179741246516
+input2.bam	FBtr0080663	R	20	0	1.0	-0.404417804661
+input2.bam	FBtr0080663	R	21	0	1.0	-0.741432641879
+input2.bam	FBtr0080663	R	22	0	1.0	-0.629094362806
+input2.bam	FBtr0080663	R	23	0	1.0	-1.19078575817
+input2.bam	FBtr0080663	R	24	0	1.0	-1.0784474791
+input2.bam	FBtr0080664	F	15	165	0.994858611825	2.88880021869
+input2.bam	FBtr0080664	F	16	59	0.994858611825	0.579212614557
+input2.bam	FBtr0080664	F	17	20	0.994858611825	-0.270541315264
+input2.bam	FBtr0080664	F	18	75	0.994858611825	0.927829611407
+input2.bam	FBtr0080664	F	19	24	0.994858611825	-0.183387066051
+input2.bam	FBtr0080664	F	20	21	0.994858611825	-0.24875275296
+input2.bam	FBtr0080664	F	21	8	0.994858611825	-0.532004062901
+input2.bam	FBtr0080664	F	22	4	0.994858611825	-0.59736974981
+input2.bam	FBtr0080664	F	23	4	0.994858611825	-0.59736974981
+input2.bam	FBtr0080664	F	24	0	0.994858611825	-0.706312561326
+input2.bam	FBtr0080664	F	25	3	0.994858611825	-0.640946874416
+input2.bam	FBtr0080664	F	26	4	0.994858611825	-0.619158312113
+input2.bam	FBtr0080664	R	15	0	0.994858611825	2.88880021869
+input2.bam	FBtr0080664	R	16	0	0.994858611825	0.579212614557
+input2.bam	FBtr0080664	R	17	0	0.994858611825	-0.270541315264
+input2.bam	FBtr0080664	R	18	0	0.994858611825	0.927829611407
+input2.bam	FBtr0080664	R	19	0	0.994858611825	-0.183387066051
+input2.bam	FBtr0080664	R	20	0	0.994858611825	-0.24875275296
+input2.bam	FBtr0080664	R	21	0	0.994858611825	-0.532004062901
+input2.bam	FBtr0080664	R	22	1	0.994858611825	-0.59736974981
+input2.bam	FBtr0080664	R	23	1	0.994858611825	-0.59736974981
+input2.bam	FBtr0080664	R	24	0	0.994858611825	-0.706312561326
+input2.bam	FBtr0080664	R	25	0	0.994858611825	-0.640946874416
+input2.bam	FBtr0080664	R	26	0	0.994858611825	-0.619158312113
