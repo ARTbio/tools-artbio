@@ -29,7 +29,7 @@ option_list = list(
     c("-t", "--type"),
     default = 'cpm',
     type = 'character',
-    help = "Transformation type, either cpm, tpm or rpk [default : '%default' ]"
+    help = "Transformation type, either cpm, tpm, rpk or none[default : '%default' ]"
   ),
   make_option(
     c("-s", "--sep"),
@@ -127,7 +127,7 @@ if (opt$data == "" & !(opt$help)) {
 } else if ((opt$type == "tpm" | opt$type == "rpk") & opt$gene == "") {
   stop("At least two arguments must be supplied (count data and gene length file).\n",
        call. = FALSE)
-} else if (opt$type != "tpm" & opt$type != "rpk" & opt$type != "cpm") {
+} else if (opt$type != "tpm" & opt$type != "rpk" & opt$type != "cpm" & opt$type != "none") {
   stop("Wrong transformation requested (--type option) must be : cpm, tpm or rpk.\n",
        call. = FALSE)
 }
@@ -177,6 +177,8 @@ if (opt$type == "tpm")
   res = as.data.frame(apply(data, 2, tpm, length = gene_length), row.names = rownames(data))
 if (opt$type == "rpk")
   res = as.data.frame(apply(data, 2, rpk, length = gene_length), row.names = rownames(data))
+if (opt$type == "none")
+  res = data
 colnames(res) = colnames(data)
 
 
