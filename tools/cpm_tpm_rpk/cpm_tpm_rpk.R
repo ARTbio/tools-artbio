@@ -29,7 +29,7 @@ option_list = list(
     c("-t", "--type"),
     default = 'cpm',
     type = 'character',
-    help = "Transformation type, either cpm, tpm or rpk [default : '%default' ]"
+    help = "Transformation type, either cpm, tpm, rpk or none[default : '%default' ]"
   ),
   make_option(
     c("-s", "--sep"),
@@ -127,7 +127,7 @@ if (opt$data == "" & !(opt$help)) {
 } else if ((opt$type == "tpm" | opt$type == "rpk") & opt$gene == "") {
   stop("At least two arguments must be supplied (count data and gene length file).\n",
        call. = FALSE)
-} else if (opt$type != "tpm" & opt$type != "rpk" & opt$type != "cpm") {
+} else if (opt$type != "tpm" & opt$type != "rpk" & opt$type != "cpm" & opt$type != "none") {
   stop("Wrong transformation requested (--type option) must be : cpm, tpm or rpk.\n",
        call. = FALSE)
 }
@@ -153,6 +153,7 @@ tpm <- function(count, length) {
 
 data = read.table(
   opt$data,
+  check.names = FALSE,
   header = opt$colnames,
   row.names = 1,
   sep = opt$sep
@@ -177,6 +178,8 @@ if (opt$type == "tpm")
   res = as.data.frame(apply(data, 2, tpm, length = gene_length), row.names = rownames(data))
 if (opt$type == "rpk")
   res = as.data.frame(apply(data, 2, rpk, length = gene_length), row.names = rownames(data))
+if (opt$type == "none")
+  res = data
 colnames(res) = colnames(data)
 
 
@@ -206,7 +209,7 @@ if (opt$visu == TRUE) {
   embedding$Class <- as.factor(sub("Class_", "", rownames(tdf)))
   gg_legend = theme(legend.position="none")
   ggplot(embedding, aes(x=V1, y=V2)) +
-    geom_point(size=1.25, color='red') +
+    geom_point(size=1, color='red') +
     gg_legend +
     xlab("") +
     ylab("") +
@@ -215,16 +218,20 @@ if (opt$visu == TRUE) {
       geom_text(aes(label=Class),hjust=-0.2, vjust=-0.5, size=2.5, color='darkblue')
     }
   ggsave(file=opt$tsne_out, device="pdf")
-  # make PCA and plot result with ggfortify
+  # make PCA and plot result with ggfortify (autoplot)
   tdf.pca <- prcomp(tdf, center = TRUE, scale. = T)
   if (opt$tsne_labels == TRUE) {
-      autoplot(tdf.pca, shape=F, label=T, label.size=2.5, colour="darkred") +
+      autoplot(tdf.pca, shape=F, label=T, label.size=2.5, label.vjust=1.2,
+               label.hjust=1.2,
+               colour="darkblue") +
+      geom_point(size=1, color='red') +
       xlab(paste("PC1",summary(tdf.pca)$importance[2,1]*100, "%")) +
       ylab(paste("PC2",summary(tdf.pca)$importance[2,2]*100, "%")) +
       ggtitle('PCA')
       ggsave(file=opt$pca_out, device="pdf")   
       } else {
-      autoplot(tdf.pca, shape=T, colour="red") +
+      autoplot(tdf.pca, shape=T, colour="darkblue") +
+      geom_point(size=1, color='red') +
       xlab(paste("PC1",summary(tdf.pca)$importance[2,1]*100, "%")) +
       ylab(paste("PC2",summary(tdf.pca)$importance[2,2]*100, "%")) +
       ggtitle('PCA') 
