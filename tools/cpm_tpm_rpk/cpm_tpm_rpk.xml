@@ -111,10 +111,10 @@
                 <option value="yes" >t-SNE and PCA</option>
             </param>
             <when value="yes">
-                    <param name="seed" value="49.0" type="float" label="Seed value for reproducibility" help="Set to 49 as default" />
-                    <param name="perp" value="10.0" type="float" label="perplexity" help="should be less than ((nbre observations)-1)/3" /> 
-                    <param name="theta" value="1.0" type="float" label="theta"/>
-                    <param name="tsne_labels" type="select" label="Add labels to points in the t-SNE plot" >
+                    <param name="seed" value="49.0" type="float" label="Seed value for reproducibility of t-SNE" help="Set to 49 as default" />
+                    <param name="perp" value="10.0" type="float" label="perplexity (t-SNE)" help="should be less than ((nbre observations)-1)/3" /> 
+                    <param name="theta" value="1.0" type="float" label="theta (t-SNE)"/>
+                    <param name="tsne_labels" type="select" label="Add labels to points plots" >
                         <option value="no" selected="true">No Labels</option>
                         <option value="yes" >Label points</option>
                     </param>
