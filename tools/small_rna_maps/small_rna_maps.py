@@ -11,9 +11,9 @@ def Parser():
     the_parser.add_argument('--inputs', dest='inputs', required=True,
                             nargs='+', help='list of input BAM files')
     the_parser.add_argument('--minsize', dest='minsize', type=int,
-                            default=0, help='minimal size of reads')
+                            default=19, help='minimal size of reads')
     the_parser.add_argument('--maxsize', dest='maxsize', type=int,
-                            default=10000, help='maximal size of reads')
+                            default=29, help='maximal size of reads')
     the_parser.add_argument('--cluster', dest='cluster', type=int,
                             default=0, help='clustering distance')
     the_parser.add_argument('--sample_names', dest='sample_names',
@@ -63,12 +63,11 @@ class Map:
         self.bam_object = pysam.AlignmentFile(bam_file, 'rb')
         self.chromosomes = dict(zip(self.bam_object.references,
                                 self.bam_object.lengths))
-        self.map_dict = self.create_map(self.bam_object, self.minsize,
-                                        self.maxsize, self.nostrand)
+        self.map_dict = self.create_map(self.bam_object, self.nostrand)
         if self.cluster:
             self.map_dict = self.tile_map(self.map_dict, self.cluster)
 
-    def create_map(self, bam_object, minsize, maxsize, nostrand=False):
+    def create_map(self, bam_object, nostrand=False):
         '''
         Returns a map_dictionary {(chromosome,read_position,polarity):
                                                     [read_length, ...]}
@@ -294,16 +293,12 @@ class Map:
         out is an *open* file handler
         '''
         for chrom in sorted(sizedic):
-            sizes = sizedic[chrom]['F'].keys()
-            sizes.extend(sizedic[chrom]['R'].keys())
+            sizes = range(self.minsize, self.maxsize+1)
             strandness = defaultdict(int)
             sizeness = defaultdict(int)
             for polarity in sizedic[chrom]:
-                for size in range(min(sizes), max(sizes)+1):
-                    try:
-                        strandness[polarity] += sizedic[chrom][polarity][size]
-                    except KeyError:
-                        pass
+                for size in sizes:
+                    strandness[polarity] += sizedic[chrom][polarity][size]
                     sizeness[size] += sizedic[chrom][polarity][size]
             Strandbias = strandness['F'] + strandness['R']
             if Strandbias:
@@ -318,7 +313,7 @@ class Map:
                 else:
                     sizeness[size] = 0
             for polarity in sorted(sizedic[chrom]):
-                for size in range(min(sizes), max(sizes)+1):
+                for size in sizes:
                     try:
                         line = [self.sample_name, chrom, polarity, size,
                                 sizedic[chrom][polarity][size],
