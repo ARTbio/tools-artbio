@@ -1,4 +1,4 @@
-<tool id="cat_multi_datasets" name="Concatenate multiple datasets" version="1.0">
+<tool id="cat_multi_datasets" name="Concatenate multiple datasets" version="1.1.0">
     <description>tail-to-head by specifying how</description>
     <command><![CDATA[
         #if $headers == 0:
@@ -56,22 +56,22 @@
                     #for $file in $global_condition.inputs.keys()
                         $concat_command
                         $global_condition.inputs[$file]['forward']
-                        > concatenated/'${file}.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
+                        > concatenated/'${file}.listed.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
                         $concat_command
                         $global_condition.inputs[$file]['reverse']
-                        >> concatenated/'${file}.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
+                        >> concatenated/'${file}.listed.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
                     #end for
                     sleep 1
                 #else:
                     #for $file in $global_condition.inputs.keys()
-                        printf "# ${file}_forward\n" > concatenated/'${file}.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
+                        printf "# ${file}_forward\n" > concatenated/'${file}.listed.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
                         $concat_command
                         $global_condition.inputs[$file]['forward']
-                        >> concatenated/'${file}.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
-                        printf "# ${file}_reverse\n" >> concatenated/'${file}.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
+                        >> concatenated/'${file}.listed.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
+                        printf "# ${file}_reverse\n" >> concatenated/'${file}.listed.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
                         $concat_command
                         $global_condition.inputs[$file]['reverse']
-                        >> concatenated/'${file}.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
+                        >> concatenated/'${file}.listed.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
                     #end for
                     sleep 1
                 #end if
@@ -134,7 +134,7 @@
             <filter>global_condition['input_type'] == 'paired_collection' and global_condition['paired_cat_type'] == 'by_strand'</filter>
         </collection>
         <collection name="list_output" type="list" label="Concatenation by pairs">
-            <discover_datasets pattern="(?P&lt;name&gt;.*)\.(?P&lt;ext&gt;[^\._]+\.?[^\._])\.listed" visible="false" directory="concatenated"/>
+            <discover_datasets pattern="(?P&lt;name&gt;.*)\.listed\.(?P&lt;ext&gt;.*)\.listed" visible="false" directory="concatenated"/>
             <filter>global_condition['input_type'] == 'paired_collection' and global_condition['paired_cat_type'] == 'by_pair'</filter>
         </collection>
     </outputs>
