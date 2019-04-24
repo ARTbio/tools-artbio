@@ -374,14 +374,14 @@ def main(inputs, samples, methods, outputs, minsize, maxsize, cluster,
     for method, output in zip(methods, outputs):
         out = open(output, 'w')
         if method == 'Size':
-            header = ["Dataset", "Chromosome", "Polarity", method, "Counts",
+            header = ["# Dataset", "Chromosome", "Polarity", method, "Counts",
                       "Strandness", "z-score"]
         elif cluster:
-            header = ["Dataset", "Chromosome", "Chrom_length", "Coordinate",
+            header = ["# Dataset", "Chromosome", "Chrom_length", "Coordinate",
                       "Polarity", method, "Start-End", "Cluster Size",
                       "density"]
         else:
-            header = ["Dataset", "Chromosome", "Chrom_length", "Coordinate",
+            header = ["# Dataset", "Chromosome", "Chrom_length", "Coordinate",
                       "Polarity", method]
         out.write('\t'.join(header) + '\n')
         for input, sample in zip(inputs, samples):
