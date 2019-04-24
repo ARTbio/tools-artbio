@@ -1,4 +1,4 @@
-Dataset	Chromosome	Chrom_length	Coordinate	Polarity	Counts	Start-End	Cluster Size	density
+# Dataset	Chromosome	Chrom_length	Coordinate	Polarity	Counts	Start-End	Cluster Size	density
 input1.bam	FBtr0070001	72	1	F	0	1-1	1	0.0
 input1.bam	FBtr0070001	72	12	F	12	7-39	33	0.363636363636
 input1.bam	FBtr0070001	72	30	F	42	27-53	27	1.55555555556

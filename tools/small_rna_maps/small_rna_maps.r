@@ -28,6 +28,7 @@ args = parse_args(parser)
 # data frames implementation
 ## first table
 Table = read.delim(args$first_dataframe, header=T, row.names=NULL)
+colnames(Table)[1] <- "Dataset"
 if (args$first_plot_method == "Counts" | args$first_plot_method == "Size") {
   Table <- within(Table, Counts[Polarity=="R"] <- (Counts[Polarity=="R"]*-1))
 }
@@ -52,6 +53,7 @@ n_genes=length(per_gene_readmap)
 # second table
 if (args$extra_plot_method != '') {
   ExtraTable=read.delim(args$extra_dataframe, header=T, row.names=NULL)
+  colnames(ExtraTable)[1] <- "Dataset"
   if (args$extra_plot_method == "Counts" | args$extra_plot_method=='Size') {
     ExtraTable <- within(ExtraTable, Counts[Polarity=="R"] <- (Counts[Polarity=="R"]*-1))
   }

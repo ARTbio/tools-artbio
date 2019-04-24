@@ -1,4 +1,4 @@
-Dataset	Chromosome	Chrom_length	Coordinate	Polarity	Coverage
+# Dataset	Chromosome	Chrom_length	Coordinate	Polarity	Coverage
 input_single_chr.bam_0	1	80	1	F	0
 input_single_chr.bam_0	1	80	80	F	0
 input_single_chr.bam_1	1	80	1	F	0
