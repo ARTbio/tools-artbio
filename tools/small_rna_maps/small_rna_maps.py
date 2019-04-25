@@ -89,12 +89,8 @@ class Map:
             else:
                 for read in bam_object.fetch(chrom):
                     positions = read.positions  # a list of covered positions
-                    if read.is_reverse:
-                        map_dictionary[(chrom, positions[-1]+1, 'F')].append(
-                                        read.query_alignment_length)
-                    else:
-                        map_dictionary[(chrom, positions[0]+1, 'F')].append(
-                                        read.query_alignment_length)
+                    map_dictionary[(chrom, positions[0]+1, 'F')].append(
+                                    read.query_alignment_length)
         return map_dictionary
 
     def grouper(self, iterable, clust_distance):
