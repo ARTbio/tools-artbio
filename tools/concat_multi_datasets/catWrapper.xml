@@ -33,6 +33,21 @@
                         $concat_command '$x' '$y' > concatenated/'${x.element_identifier}.listed.${x.ext}.listed' &&
                     #end for
                     sleep 1
+                #else:
+                    #for $x, $y in zip($global_condition.collections_condition.input_1, $global_condition.collections_condition.input_2)
+                        #if $x.ext[-2:] == "gz":
+                            printf "# ${x.element_identifier}\n" | gzip -c > concatenated/'${x.element_identifier}_${y.element_identifier}.listed.${x.ext}.listed' &&
+                            gzip -dc '$x' | $concat_command | gzip -c >> concatenated/'${x.element_identifier}_${y.element_identifier}.listed.${x.ext}.listed' &&
+                            printf "# ${y.element_identifier}\n" | gzip -c >> concatenated/'${x.element_identifier}_${y.element_identifier}.listed.${x.ext}.listed' &&
+                            gzip -dc '$y' | $concat_command | gzip -c >> concatenated/'${x.element_identifier}_${y.element_identifier}.listed.${x.ext}.listed' &&
+                        #else:
+                            printf "# ${x.element_identifier}\n" > concatenated/'${x.element_identifier}_${y.element_identifier}.listed.${x.ext}.listed' &&
+                            $concat_command '$x'>> concatenated/'${x.element_identifier}_${y.element_identifier}.listed.${x.ext}.listed' &&
+                            printf "# ${y.element_identifier}\n" >> concatenated/'${x.element_identifier}_${y.element_identifier}.listed.${x.ext}.listed' &&
+                            $concat_command '$y' >> concatenated/'${x.element_identifier}_${y.element_identifier}.listed.${x.ext}.listed' &&
+                        #end if
+                    #end for
+                sleep 1
                 #end if
             #end if
         #else if $global_condition.input_type == "paired_collection":
@@ -286,6 +301,25 @@
                 <element name="2" file="2.fastq"/>
                 <element name="3" file="3.fastq"/>
                 <element name="4" file="4.fastq"/>
+            </output_collection>
+        </test>
+        <test> <!-- Test 2 collections concatenation with other options-->
+            <param name="input_type" value="simple_collections" />
+            <param name="collection_cat_type" value="two_collections"/>
+            <param name="input_1">
+                <collection type="list">
+                    <element name="1" value="1_f.fastq"/>
+                </collection>
+            </param>
+            <param name="input_2">
+                <collection type="list">
+                    <element name="1" value="1_r.fastq.gz"/>
+                </collection>
+            </param>
+            <param name="dataset_names" value="Yes" />
+            <param name="headers" value="4" />
+            <output_collection name="list_output" type="list" count="1" >
+                <element name="1_1" file="1_options.fastq.gz" decompress="True"/>
             </output_collection>
         </test>
     </tests>
