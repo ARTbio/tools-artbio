@@ -308,18 +308,18 @@
             <param name="collection_cat_type" value="two_collections"/>
             <param name="input_1">
                 <collection type="list">
-                    <element name="1" value="1_f.fastq"/>
+                    <element name="1_f.fastq" value="1_f.fastq.gz"/>
                 </collection>
             </param>
             <param name="input_2">
                 <collection type="list">
-                    <element name="1" value="1_r.fastq.gz"/>
+                    <element name="1_r.fastq" value="1_r.fastq.gz"/>
                 </collection>
             </param>
             <param name="dataset_names" value="Yes" />
             <param name="headers" value="4" />
             <output_collection name="list_output" type="list" count="1" >
-                <element name="1_1" file="1_options.fastq.gz" decompress="True"/>
+                <element name="1_f.fastq_1_r.fastq" file="1_options.fastq.gz" decompress="True"/>
             </output_collection>
         </test>
     </tests>
