@@ -331,13 +331,23 @@
 
 **WARNING:** The paired collection operations do not handle gziped files.
 
+**WARNING:** When concatenating 2 collections make sure the first collection is the one with the most items.
+
 -----
 
 **What it does**
 
 Concatenates datasets and paired collections with multiple options:
 
- - It's possible select either a concatenation by strand, by pair or a whole collection concatenation, when the input is a paired collection.
+ - When the input is a paired collection:
+
+   - concatenation by strand : all the forward files are concatenated then all the reverse files are concatenated to finish with a single forward - reverse pair
+
+   - concatenation by pair : all the pairs are concatenated to finish with a collection containing single files
+
+   - whole collection concatenation : every file is concatenated to finish with a single file
+
+ - When the inputs are 2 collections: files are concatenated 2 by 2
 
  - Skipping lines before concatenation to avoid headers
 
@@ -412,7 +422,7 @@ Concatenation result::
 
     forward - reverse
 
-Concatenation by strand::
+- Concatenation by strand::
 
     concatenates:
 
@@ -423,7 +433,7 @@ Concatenation by strand::
 
     1 pair
 
-Concatenation by pair::
+- Concatenation by pair::
 
     concatenates:
 
@@ -434,7 +444,7 @@ Concatenation by pair::
 
     2 datasets
 
-Concatenate all::
+- Concatenate all::
 
     concatenates:
 
