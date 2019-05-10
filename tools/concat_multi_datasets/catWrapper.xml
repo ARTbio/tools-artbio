@@ -341,13 +341,13 @@ Concatenates datasets and paired collections with multiple options:
 
  - When the input is a paired collection:
 
-   - concatenation by strand : all the forward files are concatenated then all the reverse files are concatenated to finish with a single forward - reverse pair
+   - concatenation by strand : forward and reverse datasets are concatenated separately and a list with a single forward - reverse dataset pair is returned
 
-   - concatenation by pair : all the pairs are concatenated to finish with a collection containing single files
+   - concatenation by pair : forward - reverse dataset pairs are concatenated and a simple dataset collection is returned
 
-   - whole collection concatenation : every file is concatenated to finish with a single file
+   - whole collection concatenation : all datasets in the collection are concatenated and a single dataset is returned
 
- - When the inputs are 2 collections: files are concatenated 2 by 2
+ - When the inputs are 2 collections: datasets are concatenated in a pairwise combination and a single dataset collection is returned
 
  - Skipping lines before concatenation to avoid headers
 
