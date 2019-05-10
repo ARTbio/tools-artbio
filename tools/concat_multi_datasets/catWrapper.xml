@@ -1,4 +1,4 @@
-<tool id="cat_multi_datasets" name="Concatenate multiple datasets" version="1.1.0">
+<tool id="cat_multi_datasets" name="Concatenate multiple datasets" version="1.2.0">
     <description>tail-to-head by specifying how</description>
     <command><![CDATA[
         #if $headers == 0:
@@ -24,6 +24,31 @@
                     #end if
                 #end for
                 sleep 1
+            #end if
+        #else if $global_condition.input_type == "simple_collections":
+            #if $global_condition.collections_condition.collection_cat_type == "two_collections":
+                mkdir concatenated &&
+                #if $dataset_names == "No":
+                    #for $x, $y in zip($global_condition.collections_condition.input_1, $global_condition.collections_condition.input_2)
+                        $concat_command '$x' '$y' > concatenated/'${x.element_identifier}.listed.${x.ext}.listed' &&
+                    #end for
+                    sleep 1
+                #else:
+                    #for $x, $y in zip($global_condition.collections_condition.input_1, $global_condition.collections_condition.input_2)
+                        #if $x.ext[-2:] == "gz":
+                            printf "# ${x.element_identifier}\n" | gzip -c > concatenated/'${x.element_identifier}_${y.element_identifier}.listed.${x.ext}.listed' &&
+                            gzip -dc '$x' | $concat_command | gzip -c >> concatenated/'${x.element_identifier}_${y.element_identifier}.listed.${x.ext}.listed' &&
+                            printf "# ${y.element_identifier}\n" | gzip -c >> concatenated/'${x.element_identifier}_${y.element_identifier}.listed.${x.ext}.listed' &&
+                            gzip -dc '$y' | $concat_command | gzip -c >> concatenated/'${x.element_identifier}_${y.element_identifier}.listed.${x.ext}.listed' &&
+                        #else:
+                            printf "# ${x.element_identifier}\n" > concatenated/'${x.element_identifier}_${y.element_identifier}.listed.${x.ext}.listed' &&
+                            $concat_command '$x'>> concatenated/'${x.element_identifier}_${y.element_identifier}.listed.${x.ext}.listed' &&
+                            printf "# ${y.element_identifier}\n" >> concatenated/'${x.element_identifier}_${y.element_identifier}.listed.${x.ext}.listed' &&
+                            $concat_command '$y' >> concatenated/'${x.element_identifier}_${y.element_identifier}.listed.${x.ext}.listed' &&
+                        #end if
+                    #end for
+                sleep 1
+                #end if
             #end if
         #else if $global_condition.input_type == "paired_collection":
             #if $global_condition.paired_cat_type == "by_strand":
@@ -107,18 +132,30 @@
         <conditional name="global_condition">
             <param name="input_type" type="select" label="What type of data do you wish to concatenate?" help="Depending on the type of input selected the concatenation options will differ">
                 <option value="singles">Single datasets</option>
+                <option value="simple_collections">Collections</option>
                 <option value="paired_collection">Paired collection</option>
             </param>
             <when value="singles">
                 <param name="inputs" type="data" label="Concatenate Datasets" multiple="True" help="All inputed datasets will be concatenated tail-to-head."/>
             </when>
             <when value="paired_collection">
-                <param name="inputs" type="data_collection" collection_type="list:paired" label="Input paired collections to concatenate"/>
+                <param name="inputs" type="data_collection" collection_type="list:paired" label="Input paired collection to concatenate"/>
                 <param name="paired_cat_type" type="select" label="What type of concatenation do you wish to perform?">
                     <option value="by_strand">Concatenate all datsets of same strand (outputs a single pair of datasets)</option>
                     <option value="by_pair">Concatenate pairs of datasets (outputs an unpaired collection of datasets)</option>
                     <option value="all">Concatenate all datasets into a single file regardless of strand (outputs a single file)</option>
                 </param>
+            </when>
+            <when value="simple_collections">
+                <conditional name="collections_condition">
+                    <param name="collection_cat_type" type="select" label="What type of concatenation do you wish to perform?">
+                        <option value="two_collections">Concatenate datasets of 2 collections (outputs a simple collection)</option>
+                    </param>
+                    <when value="two_collections">
+                        <param name="input_1" type="data_collection" collection_type="list" label="Input first collection" help="The first collection contains the datasets that will be written first in the concatenated file" />
+                        <param name="input_2" type="data_collection" collection_type="list" label="Input second collection" help="The second collection contains  the datasets that will be written last in the concatenated file" />
+                    </when>
+                </conditional>
             </when>
         </conditional>
         <param name="dataset_names" type="boolean" label="Include dataset names?" truevalue="Yes" falsevalue="No" checked="false" help="If 'Yes' is selected '#name of dataset' will be added when concatenating."/>
@@ -135,7 +172,7 @@
         </collection>
         <collection name="list_output" type="list" label="Concatenation by pairs">
             <discover_datasets pattern="(?P&lt;name&gt;.*)\.listed\.(?P&lt;ext&gt;.*)\.listed" visible="false" directory="concatenated"/>
-            <filter>global_condition['input_type'] == 'paired_collection' and global_condition['paired_cat_type'] == 'by_pair'</filter>
+            <filter>(global_condition['input_type'] == 'paired_collection' and global_condition['paired_cat_type'] == 'by_pair') or (global_condition['input_type'] == 'simple_collections' and global_condition['collections_condition']['collection_cat_type'] == 'two_collections')</filter>
         </collection>
     </outputs>
     <tests>
@@ -241,6 +278,50 @@
                 <element name="reverse" file="r.fastq"/>
             </output_collection>
         </test>
+        <test> <!-- Test 2 collections concatenation -->
+            <param name="input_type" value="simple_collections" />
+            <param name="collection_cat_type" value="two_collections"/>
+            <param name="input_1">
+                <collection type="list">
+                    <element name="2" value="2_f.fastq"/>
+                    <element name="3" value="3_f.fastq"/>
+                    <element name="4" value="4_f.fastq"/>
+                </collection>
+            </param>
+            <param name="input_2">
+                <collection type="list">
+                    <element name="2" value="2_r.fastq"/>
+                    <element name="3" value="3_r.fastq"/>
+                    <element name="4" value="4_r.fastq"/>
+                </collection>
+            </param>
+            <param name="dataset_names" value="No" />
+            <param name="headers" value="0" />
+            <output_collection name="list_output" type="list" count="3" >
+                <element name="2" file="2.fastq"/>
+                <element name="3" file="3.fastq"/>
+                <element name="4" file="4.fastq"/>
+            </output_collection>
+        </test>
+        <test> <!-- Test 2 collections concatenation with other options-->
+            <param name="input_type" value="simple_collections" />
+            <param name="collection_cat_type" value="two_collections"/>
+            <param name="input_1">
+                <collection type="list">
+                    <element name="1_f.fastq" value="1_f.fastq.gz"/>
+                </collection>
+            </param>
+            <param name="input_2">
+                <collection type="list">
+                    <element name="1_r.fastq" value="1_r.fastq.gz"/>
+                </collection>
+            </param>
+            <param name="dataset_names" value="Yes" />
+            <param name="headers" value="4" />
+            <output_collection name="list_output" type="list" count="1" >
+                <element name="1_f.fastq_1_r.fastq" file="1_options.fastq.gz" decompress="True"/>
+            </output_collection>
+        </test>
     </tests>
     <help>
 
@@ -250,13 +331,23 @@
 
 **WARNING:** The paired collection operations do not handle gziped files.
 
+**WARNING:** When concatenating 2 collections make sure the first collection is the one with the most items.
+
 -----
 
 **What it does**
 
 Concatenates datasets and paired collections with multiple options:
 
- - It's possible select either a concatenation by strand, by pair or a whole collection concatenation, when the input is a paired collection.
+ - When the input is a paired collection:
+
+   - concatenation by strand : forward and reverse datasets are concatenated separately and a list with a single forward - reverse dataset pair is returned
+
+   - concatenation by pair : forward - reverse dataset pairs are concatenated and a simple dataset collection is returned
+
+   - whole collection concatenation : all datasets in the collection are concatenated and a single dataset is returned
+
+ - When the inputs are 2 collections: datasets are concatenated in a pairwise combination and a single dataset collection is returned
 
  - Skipping lines before concatenation to avoid headers
 
@@ -294,6 +385,33 @@ will result in the following::
 
 -----
 
+**2 Collections concatenation**
+
+1rst collection::
+
+    a
+    b
+    c
+    d
+
+2nd collection::
+
+    1
+    2
+    3
+    4
+
+Concatenation result::
+
+    A single collection containing:
+
+    a concatenated with 1
+    b concatenated with 2
+    c concatenated with 3
+    d concatenated with 4
+
+-----
+
 **Paired collection concatenation example**
 
 1rst pair::
@@ -304,7 +422,7 @@ will result in the following::
 
     forward - reverse
 
-Concatenation by strand::
+- Concatenation by strand::
 
     concatenates:
 
@@ -315,7 +433,7 @@ Concatenation by strand::
 
     1 pair
 
-Concatenation by pair::
+- Concatenation by pair::
 
     concatenates:
 
@@ -326,7 +444,7 @@ Concatenation by pair::
 
     2 datasets
 
-Concatenate all::
+- Concatenate all::
 
     concatenates:
 
