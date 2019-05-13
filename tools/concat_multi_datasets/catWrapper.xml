@@ -1,4 +1,4 @@
-<tool id="cat_multi_datasets" name="Concatenate multiple datasets" version="1.2.0">
+<tool id="cat_multi_datasets" name="Concatenate multiple datasets" version="1.3.0">
     <description>tail-to-head by specifying how</description>
     <command><![CDATA[
         #if $headers == 0:
@@ -26,15 +26,14 @@
                 sleep 1
             #end if
         #else if $global_condition.input_type == "simple_collections":
-            #if $global_condition.collections_condition.collection_cat_type == "two_collections":
                 mkdir concatenated &&
                 #if $dataset_names == "No":
-                    #for $x, $y in zip($global_condition.collections_condition.input_1, $global_condition.collections_condition.input_2)
+                    #for $x, $y in zip($global_condition.input_1, $global_condition.input_2)
                         $concat_command '$x' '$y' > concatenated/'${x.element_identifier}.listed.${x.ext}.listed' &&
                     #end for
                     sleep 1
                 #else:
-                    #for $x, $y in zip($global_condition.collections_condition.input_1, $global_condition.collections_condition.input_2)
+                    #for $x, $y in zip($global_condition.input_1, $global_condition.input_2)
                         #if $x.ext[-2:] == "gz":
                             printf "# ${x.element_identifier}\n" | gzip -c > concatenated/'${x.element_identifier}_${y.element_identifier}.listed.${x.ext}.listed' &&
                             gzip -dc '$x' | $concat_command | gzip -c >> concatenated/'${x.element_identifier}_${y.element_identifier}.listed.${x.ext}.listed' &&
@@ -49,7 +48,6 @@
                     #end for
                 sleep 1
                 #end if
-            #end if
         #else if $global_condition.input_type == "paired_collection":
             #if $global_condition.paired_cat_type == "by_strand":
                 #if $dataset_names == "No":
@@ -132,7 +130,7 @@
         <conditional name="global_condition">
             <param name="input_type" type="select" label="What type of data do you wish to concatenate?" help="Depending on the type of input selected the concatenation options will differ">
                 <option value="singles">Single datasets</option>
-                <option value="simple_collections">Collections</option>
+                <option value="simple_collections">2 Collections</option>
                 <option value="paired_collection">Paired collection</option>
             </param>
             <when value="singles">
@@ -147,15 +145,8 @@
                 </param>
             </when>
             <when value="simple_collections">
-                <conditional name="collections_condition">
-                    <param name="collection_cat_type" type="select" label="What type of concatenation do you wish to perform?">
-                        <option value="two_collections">Concatenate datasets of 2 collections (outputs a simple collection)</option>
-                    </param>
-                    <when value="two_collections">
-                        <param name="input_1" type="data_collection" collection_type="list" label="Input first collection" help="The first collection contains the datasets that will be written first in the concatenated file" />
-                        <param name="input_2" type="data_collection" collection_type="list" label="Input second collection" help="The second collection contains  the datasets that will be written last in the concatenated file" />
-                    </when>
-                </conditional>
+                <param name="input_1" type="data_collection" collection_type="list" label="Input first collection" help="The first collection contains the datasets that will be written first in the concatenated file" />
+                <param name="input_2" type="data_collection" collection_type="list" label="Input second collection" help="The second collection contains  the datasets that will be written last in the concatenated file" />
             </when>
         </conditional>
         <param name="dataset_names" type="boolean" label="Include dataset names?" truevalue="Yes" falsevalue="No" checked="false" help="If 'Yes' is selected '#name of dataset' will be added when concatenating."/>
@@ -172,7 +163,7 @@
         </collection>
         <collection name="list_output" type="list" label="Concatenation by pairs">
             <discover_datasets pattern="(?P&lt;name&gt;.*)\.listed\.(?P&lt;ext&gt;.*)\.listed" visible="false" directory="concatenated"/>
-            <filter>(global_condition['input_type'] == 'paired_collection' and global_condition['paired_cat_type'] == 'by_pair') or (global_condition['input_type'] == 'simple_collections' and global_condition['collections_condition']['collection_cat_type'] == 'two_collections')</filter>
+            <filter>(global_condition['input_type'] == 'paired_collection' and global_condition['paired_cat_type'] == 'by_pair') or (global_condition['input_type'] == 'simple_collections')</filter>
         </collection>
     </outputs>
     <tests>
