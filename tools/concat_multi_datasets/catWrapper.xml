@@ -123,6 +123,50 @@
                     sleep 1
                 #end if
             #end if
+        #else if $global_condition.input_type == "nested_collection":
+            #set $parents = list()
+            #def parent_fetcher($input_collection, $depth)
+                #if $depth == 0:
+                    $parents.append($input_collection)
+                #else if $input_collection.is_collection:
+                    #for $i in $input_collection:
+                        parent_fetcher($i, $depth-1)
+                    #end for
+                #end if
+            #end def
+            #def child_fetcher($input_collection, $childs):
+                #if $input_collection.is_collection:
+                    #for $i in $input_collection:
+                        child_fetcher($i, $childs)
+                    #end for
+                #else:
+                    childs.append($input_collection)
+                #end if
+            #end def
+            mkdir concatenated &&
+            #set $elem = $input_nested
+            #set $level_count = 0
+            #while $elem.is_collection:
+                $level_count += 1
+                $elem = $elem[$elem.keys()[0]]
+            #end while
+            #if $level_count < $level:
+                >&2 printf "Level ${level} concatenation isn't possible since there are only ${level_count} levels" &&
+                exit -2
+            #end if
+            $parent_fetcher($input_nested, $level)
+            #if $dataset_names == "No":
+                #for $p in $parents:
+                    #set children = list()
+                    child_fetcher($p, $children)
+                    $concat_command
+                #for $i in $children:
+                        '$i'
+                    #end for
+                    > concatenated/'${p.element_identifier}.listed.${children[0].ext}.listed' &&
+                #end for
+                sleep 1
+            #end if
         #end if
         ]]>
     </command>
@@ -132,6 +176,7 @@
                 <option value="singles">Single datasets</option>
                 <option value="simple_collections">2 Collections</option>
                 <option value="paired_collection">Paired collection</option>
+                <option value="nested_collection">Nested collection</option>
             </param>
             <when value="singles">
                 <param name="inputs" type="data" label="Concatenate Datasets" multiple="True" help="All inputed datasets will be concatenated tail-to-head."/>
@@ -148,6 +193,10 @@
                 <param name="input_1" type="data_collection" collection_type="list" label="Input first collection" help="The first collection contains the datasets that will be written first in the concatenated file" />
                 <param name="input_2" type="data_collection" collection_type="list" label="Input second collection" help="The second collection contains  the datasets that will be written last in the concatenated file" />
             </when>
+            <when value="nested_collection">
+                <param name="input_nested" type="data_collection" collection_type="list:list" label="Input collection" help="The Nested collection which items you want to concatenate." />
+                <param name="level" type="integer" label="At which level do you wish to concatenate the items of the collection?" help="0 beeing the root and so the output is a single file. For more information check help below." value="0" min="0"/>
+            </when>
         </conditional>
         <param name="dataset_names" type="boolean" label="Include dataset names?" truevalue="Yes" falsevalue="No" checked="false" help="If 'Yes' is selected '#name of dataset' will be added when concatenating."/>
         <param name="headers" type="integer" label="Number of lines to skip at the beginning of each concatenation:" value="0" help="This paremeter exists so as to not concatenate comments or headers contained at the start of the files."/>
@@ -163,7 +212,7 @@
         </collection>
         <collection name="list_output" type="list" label="Concatenation by pairs">
             <discover_datasets pattern="(?P&lt;name&gt;.*)\.listed\.(?P&lt;ext&gt;.*)\.listed" visible="false" directory="concatenated"/>
-            <filter>(global_condition['input_type'] == 'paired_collection' and global_condition['paired_cat_type'] == 'by_pair') or (global_condition['input_type'] == 'simple_collections')</filter>
+            <filter>(global_condition['input_type'] == 'paired_collection' and global_condition['paired_cat_type'] == 'by_pair') or (global_condition['input_type'] == 'simple_collections') or (global_condition['input_type'] == 'nested_collection')</filter>
         </collection>
     </outputs>
     <tests>
@@ -311,6 +360,39 @@
             <param name="headers" value="4" />
             <output_collection name="list_output" type="list" count="1" >
                 <element name="1_f.fastq_1_r.fastq" file="1_options.fastq.gz" decompress="True"/>
+            </output_collection>
+        </test>
+        <test> <!-- Test nested collections concatenation -->
+            <param name="input_type" value="nested_collections" />
+            <param name="level" value="1" />
+            <param name="input_nested">
+                <collection type="list:list">
+                    <element name="2">
+                        <collection type="list">
+                            <element name="2_f" value="2_f.fastq" ftype="fastq"/>
+                            <element name="2_r" value="2_r.fastq" ftype="fastq"/>
+                        </collection>
+                    </element>
+                    <element name="3">
+                        <collection type="list">
+                            <element name="3_f" value="3_f.fastq" ftype="fastq"/>
+                            <element name="3_r" value="3_r.fastq" ftype="fastq"/>
+                        </collection>
+                    </element>
+                    <element name="4">
+                        <collection type="list">
+                            <element name="4_f" value="4_f.fastq" ftype="fastq"/>
+                            <element name="4_r" value="4_r.fastq" ftype="fastq"/>
+                        </collection>
+                    </element>
+                </collection>
+            </param>
+            <param name="dataset_names" value="No" />
+            <param name="headers" value="0" />
+            <output_collection name="list_output" type="list" count="3" >
+                <element name="2" file="2.fastq"/>
+                <element name="3" file="3.fastq"/>
+                <element name="4" file="4.fastq"/>
             </output_collection>
         </test>
     </tests>
