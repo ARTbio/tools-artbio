@@ -166,6 +166,21 @@
                         > concatenated/'${p.element_identifier}.listed.${children[0].ext}.listed' &&
                     #end for
                     sleep 1
+                #else:
+                    #for $p in $parents:
+                        #set children = list()
+                        #silent $child_fetcher($p, $children)
+                        #for $i in $children:
+                            #if $i.ext[-2:] == "gz":
+                                printf "# ${i.element_identifier}\n" | gzip -c >> concatenated/'${p.element_identifier}.listed.${i.ext}.listed' &&
+                                gzip -dc '$i' | $concat_command | gzip -c >> concatenated/'${p.element_identifier}.listed.${i.ext}.listed' &&
+                            #else:
+                                printf "# ${i.element_identifier}\n" >> concatenated/'${p.element_identifier}.listed.${i.ext}.listed' &&
+                                $concat_command '$i' >> concatenated/'${p.element_identifier}.listed.${i.ext}.listed' &&
+                            #end if
+                        #end for
+                    #end for
+                    sleep 1
                 #end if
             #end if
         #end if
@@ -423,6 +438,29 @@
             </param>
             <param name="dataset_names" value="No" />
             <param name="headers" value="0" />
+        </test>
+        <test> <!-- Test nested collections concatenation with options and gzip-->
+            <param name="input_type" value="nested_collection" />
+            <param name="level" value="0" />
+            <param name="input_nested">
+                <collection type="list:list">
+                    <element name="1_f.fastq">
+                        <collection type="list">
+                            <element name="1_f.fastq" value="1_f.fastq" ftype="fastq.gz"/>
+                        </collection>
+                    </element>
+                    <element name="1_r.fastq">
+                        <collection type="list">
+                            <element name="1_r.fastq" value="1_r.fastq" ftype="fastq.gz"/>
+                        </collection>
+                    </element>
+                </collection>
+            </param>
+            <param name="dataset_names" value="Yes" />
+            <param name="headers" value="4" />
+            <output_collection name="list_output" type="list" count="1" >
+                <element name="Unnamed Collection" file="1_options.fastq.gz" decompress="True"/>
+            </output_collection>
         </test>
     </tests>
     <help>
