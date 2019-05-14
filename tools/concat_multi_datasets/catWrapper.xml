@@ -446,12 +446,12 @@
                 <collection type="list:list">
                     <element name="1_f.fastq">
                         <collection type="list">
-                            <element name="1_f.fastq" value="1_f.fastq" ftype="fastq.gz"/>
+                            <element name="1_f.fastq" value="1_f.fastq.gz" ftype="fastq.gz"/>
                         </collection>
                     </element>
                     <element name="1_r.fastq">
                         <collection type="list">
-                            <element name="1_r.fastq" value="1_r.fastq" ftype="fastq.gz"/>
+                            <element name="1_r.fastq" value="1_r.fastq.gz" ftype="fastq.gz"/>
                         </collection>
                     </element>
                 </collection>
