@@ -507,8 +507,6 @@
 
 **WARNING:** This tool does not check if the datasets being concatenated are in the same format.
 
-**WARNING:** The paired collection operations do not handle gziped files.
-
 **WARNING:** When concatenating 2 collections make sure the first collection is the one with the most items.
 
 -----
@@ -526,6 +524,8 @@ Concatenates datasets and paired collections with multiple options:
    - whole collection concatenation : all datasets in the collection are concatenated and a single dataset is returned
 
  - When the inputs are 2 collections: datasets are concatenated in a pairwise combination and a single dataset collection is returned
+
+ - When nested collection concatenation: datasets are concatenated at a given level and a collection containing the concatenated files is returned
 
  - Skipping lines before concatenation to avoid headers
 
@@ -631,6 +631,42 @@ Concatenation result::
     outputs:
 
     1 dataset
+
+-----
+
+**Nested collection concatenation example**
+
+Nested collection:
+
+    - root_collection
+
+        - inner_collection_1
+
+            - dataset_11
+            - dataset_12
+
+        - inner_collection_2
+
+            - dataset_21
+            - dataset_22
+            - dataset_23
+
+- Concatenation with level = 1:
+
+    outputs:
+
+    - returned_collection
+
+        - dataset_11 and dataset_12 concatenated
+        - dataset_21, dataset_22 and dataset_23 concatenated
+
+- Concatenation with level = 0:
+
+    outputs:
+
+    - returned_collection
+
+        - all datasets concatenated
 
 -----
 
