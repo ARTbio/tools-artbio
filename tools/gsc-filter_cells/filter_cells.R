@@ -24,10 +24,10 @@ option_list = list(
               help="Input file that contains values to filter"),
   make_option(c("-s", "--sep"), default="/t", type='character',
               help="File column separator [default : '%default' ]"),
-  make_option(c("-m", "--metadata"), default=NA, type='character',
-              help="Input file that contains cells metadata"),
-  make_option(c("-d", "--delimiter"), default="/t", type='character',
-              help="Column separator for metadata file [default : '%default' ]"),
+#   make_option(c("-m", "--metadata"), default=NA, type='character',
+#               help="Input file that contains cells metadata"),
+#   make_option(c("-d", "--delimiter"), default="/t", type='character',
+#               help="Column separator for metadata file [default : '%default' ]"),
   make_option(c("-p", "--percentile"), default=FALSE, type='logical',
               help="Use percentile method for cell filtering [default : '%default' ]"),
   make_option(c("-a", "--percentile_genes"), default=2, type='integer',
@@ -38,6 +38,8 @@ option_list = list(
               help="Remove cells that didn't express at least this number of genes (Used if --percentile FALSE) [default : '%default' ]"),
   make_option("--cutoff_counts", default=2, type='integer',
               help="Number of transcript threshold for cell filtering (Used if --percentile FALSE) [default : '%default' ]"),
+
+# the --out option has to be unfold to map to every output produced by the tool <- Work in Progress
   make_option(c("-o", "--out"), default="~", type = 'character',
               help="Path to set the working directory [default : '%default' ]")
 )
@@ -53,62 +55,61 @@ data.counts <- read.table(
   row.names = 1
 )
 
-metadata <- read.table(
-  opt$metadata,
-  header = TRUE,
-  stringsAsFactors = F,
-  sep = opt$delimiter,
-  check.names = FALSE,
-  row.names = 1
-)
+# metadata <- read.table(
+#   opt$metadata,
+#   header = TRUE,
+#   stringsAsFactors = F,
+#   sep = opt$delimiter,
+#   check.names = FALSE,
+#   row.names = 1
+# )
 
 # Retrieve neoplastic cell identifiers
-neoplastic_ids <- rownames(metadata[metadata$Cluster_2d == 1 |
-                                  metadata$Cluster_2d == 4 | metadata$Cluster_2d == 11, ])
+# neoplastic_ids <- rownames(metadata[metadata$Cluster_2d == 1 |
+#                                   metadata$Cluster_2d == 4 | metadata$Cluster_2d == 11, ])
 
 data.counts <- data.counts[, neoplastic_ids]
 
 QC_metrics <-
-  data.frame(cell_id = neoplastic_ids,
+  data.frame(cell_id = colnames(data.counts),
              nGene = colSums(data.counts != 0),    #nGene : Number of detected genes for each cell
              total_counts = colSums(data.counts),  #total_counts : Total counts per cell
              stringsAsFactors = F)
 
-plot_hist <- function(mat, var, title, cutoff){
+plot_hist <- function(mydata, variable, title, cutoff){
   hist_plot <- hist(
-    mat[, var],
-    xlab = var,
+    mydata[, variable],
+    xlab = variable,
     main = title
   )
-  abline(v = cutoff, col = "red") #Visualize where your cutoff is.
+  abline(v = cutoff, col = "red") # Visualize where your cutoff is.
   text(cutoff, max(hist_plot$counts), cutoff, col = "red", pos = 2)
 }
 
-percentile_cutoff <- function(n, mat, variable, plot_title, ...){
+percentile_cutoff <- function(n, qcmetrics, variable, plot_title, ...){
   # Find the cutoff based on the n percentile of a distribution
   # Returns the cutoff value and plot an histogram. It requires 4 parameters :
   # n : nth percentile chosen [integer]
-  # mat : matrice or dataframe that contains the parameter used for filter cells [object]
-  # variable : Name of the column that correspond to the parameter [character]
-  # plot_title : Title of the generated histogram (parameter distribution) [character]
+  # qcmetrics : matrice or dataframe that contains the number of genes and total counts metrics (QC_metrics) [object]
+  # variable : either number of genes or total number of counts, from which percentile cutoff is computed [character]
+  # plot_title : Title of the generated histogram (distribution of the variable) [character]
   
-  var_sorted <- sort(mat[, variable])
-  percentile <- (sum(var_sorted)*n)/100  #Value which covers n% of variable (nGene or total_counts)
+  var_sorted <- sort(qcmetrics[, variable]) # ascending sorting of the variable values
+  percentile <- sum(var_sorted) * n / 100  # Value which covers n% of the total sum of the variable (nGene or total_counts)
   
-  # Loop initiation
+  # Percentile loop
   new_sum <- 0
   index <- 0
   for (i in var_sorted){
     index <- index + 1
     new_sum <- new_sum + i
     if (new_sum > percentile){ #Find where your data pass the n percentile
-      variable_percentile <- var_sorted[index] #the greatest value that with all other values
-                                               #represent less than n% of the whole
-      
-      plot_hist(mat,                           #input dataframe/matrix
-                var = variable,                #column name of variable used for filtering
-                title = plot_title,            #plot title
-                cutoff = variable_percentile)  #Threshold of filtering
+      variable_percentile <- var_sorted[index] # the greatest value that with all other lower values
+                                               # represents less than n% of the whole
+      plot_hist(qcmetrics,                     # input dataframe/matrix
+                variable,                      # variable used for percentile filtering
+                plot_title,                    # plot title
+                variable_percentile)  # Percentile threshold for filtering
       break
     }
   }
@@ -116,9 +117,9 @@ percentile_cutoff <- function(n, mat, variable, plot_title, ...){
 }
 
 
-pdf(file = paste(opt$out, "filterCells.pdf", sep = "/"))
+pdf(file = paste(opt$out, "filterCells.pdf", sep = "/")) # TOOL OUTPUT # TOOL OUTPUT # TOOL OUTPUT
 
-#Determine thresholds based on percentile
+# Determine thresholds based on percentile
 if(opt$percentile == T) {
   total_counts_cutoff <- percentile_cutoff(
     opt$percentile_counts,
@@ -136,19 +137,19 @@ if(opt$percentile == T) {
 } else {
   ngene_cutoff <- opt$cutoff_genes
   plot_hist(QC_metrics,
-            var = "nGene",
+            variable = "nGene",
             title = "Histogram of Number of detected genes per cell",         
             cutoff = ngene_cutoff)
   
   total_counts_cutoff <- opt$cutoff_counts
   plot_hist(QC_metrics,
-            var = "total_counts",
+            variable = "total_counts",
             title = "Histogram of Total counts per cell",
             cutoff = total_counts_cutoff)
 }
 
 
-#Filter out rows that didn't pass both cutoffs
+# Filter out rows that didn't pass both cutoffs
 QC_metrics$filtered <-
   QC_metrics$nGene <= ngene_cutoff &
   QC_metrics$total_counts <= total_counts_cutoff
@@ -186,32 +187,35 @@ ggplot(QC_metrics, aes(nGene, total_counts, colour = filtered)) +
 
 dev.off()
 
-#Retrieve identifier of kept cells
+# Retrieve identifier of kept cells
 kept.cells <- QC_metrics$cell_id[!QC_metrics$filtered]
 
 data.counts <- data.counts[,kept.cells]
 
-#Save filtered matrix
+# Save filtered cells 
 write.table(
   data.counts,
-  paste(opt$out, "filterCells.tsv", sep = "/"),
+  paste(opt$out, "filterCells.tsv", sep = "/"), # TOOL OUTPUT # TOOL OUTPUT # TOOL OUTPUT
   sep = "\t",
   quote = F,
   col.names = T,
   row.names = T
 )
 
-#Add new QC metrics to metadata file
-new.metadata <- merge(metadata,
-                      QC_metrics,
-                      by.x = "row.names",
-                      by.y = "cell_id",
-                      sort = F)
+# Add new QC metrics to metadata file
+# new.metadata <- merge(metadata,
+#                       QC_metrics,
+#                       by.x = "row.names",
+#                       by.y = "cell_id",
+#                       sort = F)
 
-#Save new metadata
+# Add QC metrics of filtered cells to a metadata file
+# <- Work in progress
+
+# Save the metadata (QC metrics) file  <- Work in progress
 write.table(
-  new.metadata,
-  paste(opt$out, "filterCellsMetadata.tsv", sep = "/"),
+  metadata,
+  paste(opt$out, "filterCellsMetadata.tsv", sep = "/"), # TOOL OUTPUT # TOOL OUTPUT # TOOL OUTPUT
   sep = "\t",
   quote = F,
   col.names = T,
