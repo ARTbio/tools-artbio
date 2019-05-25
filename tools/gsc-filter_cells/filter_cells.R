@@ -10,14 +10,13 @@
 # Example of command (that generates output files) :
 # Rscript 1-filter_cells.R -f ../../../Darmanis_data/GBM_raw_gene_counts.csv -s \  -m ../../../Darmanis_data/GBM_metadata.csv -d \  -p FALSE --cutoff_genes 1700 --cutoff_counts 90000 -o .
 
-# Load necessary packages (install them if it's not the case)
-requiredPackages = c('ggplot2', 'optparse')
-for(p in requiredPackages){
-  if(!require(p,character.only = TRUE)) {
-    install.packages(p, repos = "https://cran.univ-paris1.fr/")
-  }
-  suppressMessages(invisible(library(p,character.only = TRUE)))
-}
+# load packages that are provided in the conda env
+options( show.error.messages=F,
+       error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
+warnings()
+library(optparse)
+library(ggplot2)
 
 #Arguments
 option_list = list(
