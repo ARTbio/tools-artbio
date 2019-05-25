@@ -3,12 +3,12 @@
 #####################
 
 # First step of the signature-based workflow
-# Using cutoff based on percentiles to remove low quality cells
-# Design from Darmanis dataset there is an additional step : 
-# only work with neoplastic cells
+# Remove low quality cells bellow a user-fixed cutoff of 
+# percentiles or raw values of number of genes detected or
+# total aligned reads
 
 # Example of command (that generates output files) :
-# Rscript 1-filter_cells.R -f ../../../Darmanis_data/GBM_raw_gene_counts.csv -s \  -m ../../../Darmanis_data/GBM_metadata.csv -d \  -p FALSE --cutoff_genes 1700 --cutoff_counts 90000 -o .
+# Rscript filter_cells.R -f <input> --sep "/t" --cutoff_genes 1700 --cutoff_counts 90000 -o ...
 
 # load packages that are provided in the conda env
 options( show.error.messages=F,
@@ -18,21 +18,15 @@ warnings()
 library(optparse)
 library(ggplot2)
 
-#Arguments
+# Arguments
 option_list = list(
   make_option(c("-f", "--file"), default=NA, type='character',
               help="Input file that contains values to filter"),
-  make_option(c("-s", "--sep"), default="/t", type='character',
+  make_option("--sep", default="/t", type='character',
               help="File column separator [default : '%default' ]"),
-#   make_option(c("-m", "--metadata"), default=NA, type='character',
-#               help="Input file that contains cells metadata"),
-#   make_option(c("-d", "--delimiter"), default="/t", type='character',
-#               help="Column separator for metadata file [default : '%default' ]"),
-  make_option(c("-p", "--percentile"), default=FALSE, type='logical',
-              help="Use percentile method for cell filtering [default : '%default' ]"),
-  make_option(c("-a", "--percentile_genes"), default=2, type='integer',
+  make_option("--percentile_genes", default=0, type='integer',
               help="nth Percentile of the number of genes detected by a cell distribution (If --percentile TRUE) [default : '%default' ]"),
-  make_option(c("-b", "--percentile_counts"), default=2, type='integer',
+  make_option("--percentile_counts", default=0, type='integer',
               help="nth Percentile of the total counts per cell distribution (If --percentile TRUE) [default : '%default' ]"),
   make_option("--cutoff_genes", default=2, type='integer',
               help="Remove cells that didn't express at least this number of genes (Used if --percentile FALSE) [default : '%default' ]"),
@@ -45,7 +39,7 @@ option_list = list(
 )
 opt = parse_args(OptionParser(option_list=option_list), args = commandArgs(trailingOnly = TRUE))
 
-#Import datasets
+# Import datasets
 data.counts <- read.table(
   opt$file,
   header = TRUE,
@@ -55,25 +49,12 @@ data.counts <- read.table(
   row.names = 1
 )
 
-# metadata <- read.table(
-#   opt$metadata,
-#   header = TRUE,
-#   stringsAsFactors = F,
-#   sep = opt$delimiter,
-#   check.names = FALSE,
-#   row.names = 1
-# )
-
-# Retrieve neoplastic cell identifiers
-# neoplastic_ids <- rownames(metadata[metadata$Cluster_2d == 1 |
-#                                   metadata$Cluster_2d == 4 | metadata$Cluster_2d == 11, ])
-
 data.counts <- data.counts[, neoplastic_ids]
 
 QC_metrics <-
   data.frame(cell_id = colnames(data.counts),
-             nGene = colSums(data.counts != 0),    #nGene : Number of detected genes for each cell
-             total_counts = colSums(data.counts),  #total_counts : Total counts per cell
+             nGene = colSums(data.counts != 0),    # nGene : Number of detected genes for each cell
+             total_counts = colSums(data.counts),  # total_counts : Total counts per cell
              stringsAsFactors = F)
 
 plot_hist <- function(mydata, variable, title, cutoff){
@@ -87,6 +68,10 @@ plot_hist <- function(mydata, variable, title, cutoff){
 }
 
 percentile_cutoff <- function(n, qcmetrics, variable, plot_title, ...){
+
+# Warning I think the whole function could be refactored as described in
+# https://github.com/ARTbio/mirca/pull/41#discussion_r266097289
+
   # Find the cutoff based on the n percentile of a distribution
   # Returns the cutoff value and plot an histogram. It requires 4 parameters :
   # n : nth percentile chosen [integer]
@@ -103,7 +88,7 @@ percentile_cutoff <- function(n, qcmetrics, variable, plot_title, ...){
   for (i in var_sorted){
     index <- index + 1
     new_sum <- new_sum + i
-    if (new_sum > percentile){ #Find where your data pass the n percentile
+    if (new_sum > percentile){ # Find where your data pass the n percentile
       variable_percentile <- var_sorted[index] # the greatest value that with all other lower values
                                                # represents less than n% of the whole
       plot_hist(qcmetrics,                     # input dataframe/matrix
@@ -120,7 +105,7 @@ percentile_cutoff <- function(n, qcmetrics, variable, plot_title, ...){
 pdf(file = paste(opt$out, "filterCells.pdf", sep = "/")) # TOOL OUTPUT # TOOL OUTPUT # TOOL OUTPUT
 
 # Determine thresholds based on percentile
-if(opt$percentile == T) {
+if(opt$percentile_genes > 0) |(opt$percentile_counts > 0) {
   total_counts_cutoff <- percentile_cutoff(
     opt$percentile_counts,
     QC_metrics,
@@ -154,7 +139,7 @@ QC_metrics$filtered <-
   QC_metrics$nGene <= ngene_cutoff &
   QC_metrics$total_counts <= total_counts_cutoff
 
-#Plot the result
+# Plot the results
 ggplot(QC_metrics, aes(nGene, total_counts, colour = filtered)) +
   geom_point() + scale_y_log10() +
   scale_colour_discrete(name  = "Filtered cells",
