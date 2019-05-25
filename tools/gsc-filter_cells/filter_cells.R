@@ -8,7 +8,7 @@
 # total aligned reads
 
 # Example of command (that generates output files) :
-# Rscript filter_cells.R -f <input> --sep "/t" --cutoff_genes 1700 --cutoff_counts 90000 -o ...
+# Rscript filter_cells.R -f <input> --sep "/t" --cutoff_genes 1700 --cutoff_counts 90000 --pdfplot <plotfile.pdf>  --output <filtered_cells.tsv> --output_metada <filtered_metadata.tsv>
 
 # load packages that are provided in the conda env
 options( show.error.messages=F,
