@@ -32,10 +32,12 @@ option_list = list(
               help="Remove cells that didn't express at least this number of genes (Used if --percentile FALSE) [default : '%default' ]"),
   make_option("--cutoff_counts", default=2, type='integer',
               help="Number of transcript threshold for cell filtering (Used if --percentile FALSE) [default : '%default' ]"),
-
-# the --out option has to be unfold to map to every output produced by the tool <- Work in Progress
-  make_option(c("-o", "--out"), default="~", type = 'character',
-              help="Path to set the working directory [default : '%default' ]")
+  make_option("--pdfplot", type = 'character',
+              help="Path to pdf file of the plots"),
+  make_option("--output", type = 'character',
+              help="Path to tsv file of filtered cell data"),
+  make_option("--output_metada", type = 'character',
+              help="Path to tsv file of filtered cell metadata")
 )
 opt = parse_args(OptionParser(option_list=option_list), args = commandArgs(trailingOnly = TRUE))
 
@@ -102,7 +104,7 @@ percentile_cutoff <- function(n, qcmetrics, variable, plot_title, ...){
 }
 
 
-pdf(file = paste(opt$out, "filterCells.pdf", sep = "/")) # TOOL OUTPUT # TOOL OUTPUT # TOOL OUTPUT
+pdf(file = opt$pdfplot)
 
 # Determine thresholds based on percentile
 if(opt$percentile_genes > 0) |(opt$percentile_counts > 0) {
@@ -180,27 +182,20 @@ data.counts <- data.counts[,kept.cells]
 # Save filtered cells 
 write.table(
   data.counts,
-  paste(opt$out, "filterCells.tsv", sep = "/"), # TOOL OUTPUT # TOOL OUTPUT # TOOL OUTPUT
+  opt$output,
   sep = "\t",
   quote = F,
   col.names = T,
   row.names = T
 )
 
-# Add new QC metrics to metadata file
-# new.metadata <- merge(metadata,
-#                       QC_metrics,
-#                       by.x = "row.names",
-#                       by.y = "cell_id",
-#                       sort = F)
-
 # Add QC metrics of filtered cells to a metadata file
-# <- Work in progress
+metadata <- QC_metrics[kept.cells,]
 
-# Save the metadata (QC metrics) file  <- Work in progress
+# Save the metadata (QC metrics) file
 write.table(
   metadata,
-  paste(opt$out, "filterCellsMetadata.tsv", sep = "/"), # TOOL OUTPUT # TOOL OUTPUT # TOOL OUTPUT
+  opt$output_metada,
   sep = "\t",
   quote = F,
   col.names = T,
