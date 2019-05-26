@@ -8,7 +8,7 @@
 # total aligned reads
 
 # Example of command (that generates output files) :
-# Rscript filter_cells.R -f <input> --sep "/t" --cutoff_genes 1700 --cutoff_counts 90000 --pdfplot <plotfile.pdf>  --output <filtered_cells.tsv> --output_metada <filtered_metadata.tsv>
+# Rscript filter_cells.R -f <input> --sep "/t" --absolute_genes 1700 --absolute_counts 90000 --pdfplot <plotfile.pdf>  --output <filtered_cells.tsv> --output_metada <filtered_metadata.tsv>
 
 # load packages that are provided in the conda env
 options( show.error.messages=F,
@@ -28,9 +28,9 @@ option_list = list(
               help="nth Percentile of the number of genes detected by a cell distribution (If --percentile TRUE) [default : '%default' ]"),
   make_option("--percentile_counts", default=0, type='integer',
               help="nth Percentile of the total counts per cell distribution (If --percentile TRUE) [default : '%default' ]"),
-  make_option("--cutoff_genes", default=2, type='integer',
+  make_option("--absolute_genes", default=0, type='integer',
               help="Remove cells that didn't express at least this number of genes (Used if --percentile FALSE) [default : '%default' ]"),
-  make_option("--cutoff_counts", default=2, type='integer',
+  make_option("--absolute_counts", default=0, type='integer',
               help="Number of transcript threshold for cell filtering (Used if --percentile FALSE) [default : '%default' ]"),
   make_option("--pdfplot", type = 'character',
               help="Path to pdf file of the plots"),
@@ -40,6 +40,16 @@ option_list = list(
               help="Path to tsv file of filtered cell metadata")
 )
 opt = parse_args(OptionParser(option_list=option_list), args = commandArgs(trailingOnly = TRUE))
+
+# check consistency of filtering options
+if ((opt$percentile_counts > 0) & (opt$absolute_counts > 0)) {
+  opt$percentile_counts = 100 # since input parameters are not consistent (one or either method, not both), no filtering
+if ((opt$percentile_counts == 0) & (opt$absolute_counts == 0)) {
+  opt$percentile_counts = 100 # since input parameters are not consistent (one or either method, not both), no filtering
+if ((opt$percentile_genes > 0) & (opt$absolute_genes > 0)) {
+  opt$percentile_genes = 100 # since input parameters are not consistent (one or either method, not both), no filtering
+if ((opt$percentile_genes == 0) & (opt$absolute_genes == 0)) {
+  opt$percentile_genes = 100 # since input parameters are not consistent (one or either method, not both), no filtering
 
 # Import datasets
 data.counts <- read.table(
@@ -76,79 +86,57 @@ plot_hist <- function(mydata, variable, title, cutoff){
     plot(hist_plot)
 }
 
+# returns the highest value such as the sum of the ordered values including this highest value
+# is lower (below) than the percentile threshold (n)
 percentile_cutoff <- function(n, qcmetrics, variable, plot_title, ...){
-
-# Warning I think the whole function could be refactored as described in
-# https://github.com/ARTbio/mirca/pull/41#discussion_r266097289
-
-  # Find the cutoff based on the n percentile of a distribution
-  # Returns the cutoff value and plot an histogram. It requires 4 parameters :
-  # n : nth percentile chosen [integer]
-  # qcmetrics : matrice or dataframe that contains the number of genes and total counts metrics (QC_metrics) [object]
-  # variable : either number of genes or total number of counts, from which percentile cutoff is computed [character]
-  # plot_title : Title of the generated histogram (distribution of the variable) [character]
-  
-  var_sorted <- sort(qcmetrics[, variable]) # ascending sorting of the variable values
-  percentile <- sum(var_sorted) * n / 100  # Value which covers n% of the total sum of the variable (nGene or total_counts)
-  
-  # Percentile loop
-  new_sum <- 0
-  index <- 0
-  for (i in var_sorted){
-    index <- index + 1
-    new_sum <- new_sum + i
-    if (new_sum > percentile){ # Find where your data pass the n percentile
-      variable_percentile <- var_sorted[index] # the greatest value that with all other lower values
-                                               # represents less than n% of the whole
-      plot_hist(qcmetrics,                     # input dataframe/matrix
-                variable,                      # variable used for percentile filtering
-                plot_title,                    # plot title
-                variable_percentile)  # Percentile threshold for filtering
-      break
-    }
-  }
-  return(variable_percentile)
+  p = n / 100
+  percentile_threshold = quantile(qcmetrics[, variable], p)[[1]]
+  plot_hist(qcmetrics,
+            variable,
+            plot_title,
+            percentile_threshold)
+  return(percentile_threshold)
 }
-
 
 pdf(file = opt$pdfplot)
 
 # Determine thresholds based on percentile
-if(opt$percentile_genes > 0) |(opt$percentile_counts > 0) {
-  total_counts_cutoff <- percentile_cutoff(
+
+if (opt$percentile_counts > 0) {
+  counts_threshold <- percentile_cutoff(
     opt$percentile_counts,
     QC_metrics,
-    "total_counts",
-    "Histogram of Total counts per cell"
-  )
-  
-  ngene_cutoff <- percentile_cutoff(
-    opt$percentile_genes,
-    QC_metrics,
-    "nGene",
-    "Histogram of Number of detected genes per cell"
-  )
-} else {
-  ngene_cutoff <- opt$cutoff_genes
-  plot_hist(QC_metrics,
-            variable = "nGene",
-            title = "Histogram of Number of detected genes per cell",         
-            cutoff = ngene_cutoff)
-  
-  total_counts_cutoff <- opt$cutoff_counts
+    "Aligned read counts",
+    "Histogram of Aligned read counts per cell"
+  )} else {
+  counts_threshold <- opt$absolute_counts
   plot_hist(QC_metrics,
             variable = "total_counts",
             title = "Histogram of Total counts per cell",
-            cutoff = total_counts_cutoff)
+            cutoff = counts_threshold)
 }
 
+if (opt$percentile_genes > 0) {
+ 
+  genes_threshold <- percentile_cutoff(
+    opt$percentile_genes,
+    QC_metrics,
+    "Number of detected genes",
+    "Histogram of Number of detected genes per cell"
+  )} else {
+  genes_threshold <- opt$absolute_genes
+  plot_hist(QC_metrics,
+            variable = "Number of detected genes",
+            title = "Histogram of Number of detected genes per cell",         
+            cutoff = genes_threshold)
+}
 
-# Filter out rows that didn't pass both cutoffs
-QC_metrics$filtered <-
-  QC_metrics$nGene <= ngene_cutoff &
-  QC_metrics$total_counts <= total_counts_cutoff
+# Filter out rows bellow thresholds (genes and read counts)
+QC_metrics$filtered <- QC_metrics$nGene < genes_threshold &
+                       QC_metrics$total_counts < counts_threshold
 
 # Plot the results
+# fix the legend of graphs, that are misleading <- Work in Progress
 ggplot(QC_metrics, aes(nGene, total_counts, colour = filtered)) +
   geom_point() + scale_y_log10() +
   scale_colour_discrete(name  = "Filtered cells",
