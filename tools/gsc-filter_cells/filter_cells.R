@@ -60,13 +60,20 @@ QC_metrics <-
              stringsAsFactors = F)
 
 plot_hist <- function(mydata, variable, title, cutoff){
-  hist_plot <- hist(
+  mybinwidth = round(max(mydata[, variable]) * 5 / 100)
+  mylabel = paste0("cutoff= ", cutoff)
+  hist_plot <- qplot(
     mydata[, variable],
+    main = title,
     xlab = variable,
-    main = title
-  )
-  abline(v = cutoff, col = "red") # Visualize where your cutoff is.
-  text(cutoff, max(hist_plot$counts), cutoff, col = "red", pos = 2)
+    geom="histogram",
+    binwidth = mybinwidth,
+    col = I("white")) +
+    geom_vline(xintercept = cutoff) +
+    annotate(geom="text",
+             x=cutoff + mybinwidth, y=1,
+             label=mylabel, color="white")
+    plot(hist_plot)
 }
 
 percentile_cutoff <- function(n, qcmetrics, variable, plot_title, ...){
