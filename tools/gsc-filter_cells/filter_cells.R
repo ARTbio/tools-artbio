@@ -18,7 +18,7 @@ library(ggplot2)
 option_list = list(
   make_option(c("-f", "--file"), default=NA, type='character',
               help="Input file that contains values to filter"),
-  make_option("--sep", default="/t", type='character',
+  make_option("--sep", default="\t", type='character',
               help="File column separator [default : '%default' ]"),
   make_option("--percentile_genes", default=0, type='integer',
               help="nth Percentile of the number of genes detected by a cell distribution (If --percentile TRUE) [default : '%default' ]"),
@@ -36,16 +36,20 @@ option_list = list(
               help="Path to tsv file of filtered cell metadata")
 )
 opt = parse_args(OptionParser(option_list=option_list), args = commandArgs(trailingOnly = TRUE))
+if (opt$sep == "tab") {opt$sep = "\t"}
+if (opt$sep == "comma") {opt$sep = ","}
+if (opt$sep == "space") {opt$sep = " "}
+
 
 # check consistency of filtering options
 if ((opt$percentile_counts > 0) & (opt$absolute_counts > 0)) {
-  opt$percentile_counts = 100 } # since input parameters are not consistent (one or either method, not both), no filtering
-if ((opt$percentile_counts == 0) & (opt$absolute_counts == 0)) {
-  opt$percentile_counts = 100 } # since input parameters are not consistent (one or either method, not both), no filtering
+  opt$percentile_counts = 0 } # since input parameters are not consistent (one or either method, not both), no filtering
+# if ((opt$percentile_counts == 0) & (opt$absolute_counts == 0)) {
+#   opt$percentile_counts = 0 } # since input parameters are not consistent (one or either method, not both), no filtering
 if ((opt$percentile_genes > 0) & (opt$absolute_genes > 0)) {
-  opt$percentile_genes = 100 } # since input parameters are not consistent (one or either method, not both), no filtering
-if ((opt$percentile_genes == 0) & (opt$absolute_genes == 0)) {
-  opt$percentile_genes = 100 } # since input parameters are not consistent (one or either method, not both), no filtering
+  opt$percentile_genes = 0 } # since input parameters are not consistent (one or either method, not both), no filtering
+# if ((opt$percentile_genes == 0) & (opt$absolute_genes == 0)) {
+#   opt$percentile_genes = 100 } # since input parameters are not consistent (one or either method, not both), no filtering
 
 # Import datasets
 data.counts <- read.table(
@@ -142,7 +146,7 @@ if(opt$percentile_counts > 0){
 if(opt$percentile_genes > 0){
     part_two = paste0("cells with number of detected genes below the ",
                       opt$percentile_genes,
-                      "th percentile of detected gene counts.")} else {
+                      "th percentile of detected gene counts")} else {
     part_two = paste0("cells with number of detected genes below ",
                       opt$absolute_genes)
 }

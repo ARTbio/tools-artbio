@@ -10,7 +10,12 @@
     <command detect_errors="exit_code"><![CDATA[ 
         Rscript $__tool_directory__/filter_cells.R 
             -f $input 
-            --sep '$sep'
+            --sep 
+            #if $sep == 'tab':
+              'tab'
+            #elif $sep == 'comma':
+              'comma'
+            #end if
             --percentile_genes '$percentile_genes'
             --percentile_counts '$percentile_counts'
             --absolute_genes '$absolute_genes'
@@ -23,8 +28,7 @@
         <param name="input" type="data" format="txt" label="Raw counts of expression data"/>
         <param name="sep" type="select" label="Indicate column separator">
             <option value="tab" selected="true">Tabs</option>
-            <option value=",">Comma</option>
-            <option value="\ ">Whitespace</option>
+            <option value="comma">Comma</option>
         </param>
         <param name="percentile_genes" value="0" type="integer" label="Detected Genes Percentile Threshold [integer] %"
                help="Cells with % of detected genes below this threshold will be filtered out. Leave at 0 for no filtering" />
@@ -42,17 +46,70 @@
     </outputs>
     <tests>
         <test>
-            <param name="input" value="none.tab" ftype="tabular"/>
-            <param name="type_transfo" value="none"/>
-            <param name="log" value="FALSE"/>
-            <param name="visualisation" value="yes"/>
-            <param name="seed" value="49"/>
-            <param name="perp" value="10"/>
-            <param name="theta" value="1" />
-            <param name="tsne_labels" value="yes" />
-            <output name="output" file="none.tab" ftype="tabular"/>
-            <output name="tsne_out" file="none_tsne.pdf" ftype="pdf"/>
-            <output name="pca_out" file="none_pca.pdf" ftype="pdf"/>
+            <param name="input" value="input.csv" ftype="txt"/>
+            <param name="sep" value='comma' />
+            <param name="percentile_genes" value="20"/>
+            <param name="percentile_counts" value="20"/>
+            <output name="pdfplot" file="percentile_gene-and-counts.pdf" ftype="pdf"/>
+            <output name="output" file="percentile_gene-and-counts.tab" ftype="tabular"/>
+            <output name="output_metada" file="percentile_gene-and-counts.meta" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="input.tsv" ftype="txt"/>
+            <param name="sep" value='tab' />
+            <param name="percentile_genes" value="20"/>
+            <param name="percentile_counts" value="20"/>
+            <output name="pdfplot" file="percentile_gene-and-counts.pdf" ftype="pdf"/>
+            <output name="output" file="percentile_gene-and-counts.tab" ftype="tabular"/>
+            <output name="output_metada" file="percentile_gene-and-counts.meta" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="input.csv" ftype="txt"/>
+            <param name="sep" value='comma' />
+            <param name="percentile_genes" value="20"/>
+            <output name="pdfplot" file="percentile_gene-only.pdf" ftype="pdf"/>
+            <output name="output" file="percentile_gene-only.tab" ftype="tabular"/>
+            <output name="output_metada" file="percentile_gene-only.meta" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="input.csv" ftype="txt"/>
+            <param name="sep" value='comma' />
+            <param name="percentile_counts" value="20"/>
+            <output name="pdfplot" file="percentile_counts-only.pdf" ftype="pdf"/>
+            <output name="output" file="percentile_counts-only.tab" ftype="tabular"/>
+            <output name="output_metada" file="percentile_counts-only.meta" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="input.csv" ftype="txt"/>
+            <param name="sep" value='comma' />
+            <output name="pdfplot" file="no-filtering.pdf" ftype="pdf"/>
+            <output name="output" file="no-filtering.tab" ftype="tabular"/>
+            <output name="output_metada" file="no-filtering.meta" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="input.csv" ftype="txt"/>
+            <param name="sep" value='comma' />
+            <param name="absolute_genes" value="5"/>
+            <param name="absolute_counts" value="1000"/>
+            <output name="pdfplot" file="absolute_gene-and-counts.pdf" ftype="pdf"/>
+            <output name="output" file="absolute_gene-and-counts.tab" ftype="tabular"/>
+            <output name="output_metada" file="absolute_gene-and-counts.meta" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="input.csv" ftype="txt"/>
+            <param name="sep" value='comma' />
+            <param name="absolute_genes" value="5"/>
+            <output name="pdfplot" file="absolute_gene-only.pdf" ftype="pdf"/>
+            <output name="output" file="absolute_gene-only.tab" ftype="tabular"/>
+            <output name="output_metada" file="absolute_gene-only.meta" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="input.csv" ftype="txt"/>
+            <param name="sep" value='comma' />
+            <param name="absolute_counts" value="1000"/>
+            <output name="pdfplot" file="absolute_counts-only.pdf" ftype="pdf"/>
+            <output name="output" file="absolute_counts-only.tab" ftype="tabular"/>
+            <output name="output_metada" file="absolute_counts-only.meta" ftype="tabular"/>
         </test>
     </tests>
     <help>
