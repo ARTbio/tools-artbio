@@ -1,4 +1,4 @@
-<tool id="filter_cells" name="filter cells data" version="0.1.0">
+<tool id="filter_cells" name="Filter cells data" version="0.2.0">
     <description>on total aligned reads and/or number of detected genes</description>
     <requirements>
         <requirement type="package" version="1.3.2=r3.3.2_0">r-optparse</requirement>
@@ -116,6 +116,44 @@
 
 **What it does**
 
+The tools takes a table of gene expression values (rows) in single cell RNAseq library sequencing (columns)
+and filters out cells with low number of detected genes and/or cells with low number of aligned reads.
+
+Cutoffs can be applied using absolute number of aligned reads or detected genes or using
+a percentile threshold for these variables.
+
+For both absolute or percentile thresholds, only cells exclusively below
+these threshold are excluded (cell cutoffs do not include the threshold values).
+
+Specifying a value both for an absolute and an percentile threshold of a variable
+(Number of detected genes or Number of aligned counts) is not consistent. In this
+situation, the tools *does not* filter cells with respect to the corresponding variable threshold.
+If a 0 is applied both for an absolute and an percentile threshold of a variable, then
+this variable is not used to filter the cells.
+
+The tools returns a gene expression table for cells that were retained, a metadata table
+that contains numbers of detected genes and aligned reads for retained cell library and
+a pdf file with three plots illustrating the performed filtering operation.
+
+**Input**
+
+A table of comma (csv) or tabulation (tsv) separated values.
+Gene names should be in the first column and cell names should be in the first row.
+Note that in a number of a csv files, header of the gene column is omitted, resulting in
+a first row with one item less than in other rows. This is handled by the tool that
+recognises this situation.
 
     </help>
+    <citations>
+        <citation type="bibtex">
+        @Manual{,
+             title = {R: A Language and Environment for Statistical Computing},
+             author = {{R Core Team}},
+             organization = {R Foundation for Statistical Computing},
+             address = {Vienna, Austria},
+             year = {2014},
+             url = {http://www.R-project.org/},
+        }
+        </citation>
+    </citations>
 </tool>
