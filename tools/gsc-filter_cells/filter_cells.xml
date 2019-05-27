@@ -139,14 +139,20 @@
 
 **What it does**
 
-The tools takes a table of gene expression values (rows) in single cell RNAseq library sequencing (columns)
-and filters out cells with low number of detected genes and/or cells with low number of aligned reads.
+The tools takes a table of gene (rows) expression values (as number of reads aligned each of genes)
+in single cell RNAseq sequencing libraries (columns) and filters out cells with low number
+of detected genes and/or cells with low number of aligned reads.
 
-Cutoffs can be applied using absolute number of aligned reads or detected genes or using
-a percentile threshold for these variables.
+Cutoffs can be applied to absolute numbers of aligned reads or of detected genes, or to
+percentile thresholds for these variables.
 
 For both absolute or percentile thresholds, only cells exclusively below
 these threshold are excluded (cell cutoffs do not include the threshold values).
+
+If you choose to combine cutoffs for both the number of detected genes
+and the total number of aligned reads, then you have 2 options: either exclude libraries that
+do not satisfy one OR the other threshold (Union) or exclude libraries that do not satisfy
+both thresholds (Intersection).
 
 Specifying a value both for an absolute and an percentile threshold of a variable
 (Number of detected genes or Number of aligned counts) is not consistent. In this
