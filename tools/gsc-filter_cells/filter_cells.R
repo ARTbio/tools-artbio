@@ -21,13 +21,15 @@ option_list = list(
   make_option("--sep", default="\t", type='character',
               help="File column separator [default : '%default' ]"),
   make_option("--percentile_genes", default=0, type='integer',
-              help="nth Percentile of the number of genes detected by a cell distribution (If --percentile TRUE) [default : '%default' ]"),
+              help="nth Percentile of the number of genes detected by a cell distribution [default : '%default' ]"),
   make_option("--percentile_counts", default=0, type='integer',
-              help="nth Percentile of the total counts per cell distribution (If --percentile TRUE) [default : '%default' ]"),
+              help="nth Percentile of the total counts per cell distribution [default : '%default' ]"),
   make_option("--absolute_genes", default=0, type='integer',
-              help="Remove cells that didn't express at least this number of genes (Used if --percentile FALSE) [default : '%default' ]"),
+              help="Remove cells that didn't express at least this number of genes [default : '%default' ]"),
   make_option("--absolute_counts", default=0, type='integer',
-              help="Number of transcript threshold for cell filtering (Used if --percentile FALSE) [default : '%default' ]"),
+              help="Number of transcript threshold for cell filtering [default : '%default' ]"),
+  make_option("--combine_cutoffs", default='union', type='character',
+              help="Use the union or the intersection between number of genes and counts cutoffs [default : '%default' ]"),
   make_option("--pdfplot", type = 'character',
               help="Path to pdf file of the plots"),
   make_option("--output", type = 'character',
@@ -130,7 +132,12 @@ if (opt$percentile_genes > 0) {
 }
 
 # Filter out rows below thresholds (genes and read counts)
-QC_metrics$filtered <- (QC_metrics$nGenes < genes_threshold) | (QC_metrics$total_counts < counts_threshold)
+if(opt$combine_cutoff == "union"){
+  QC_metrics$filtered <- (QC_metrics$nGenes < genes_threshold) | (QC_metrics$total_counts < counts_threshold)
+}
+if(opt$combine_cutoff == "intersection"){
+  QC_metrics$filtered <- (QC_metrics$nGenes < genes_threshold) & (QC_metrics$total_counts < counts_threshold)
+}
 
 ## Plot the results
 
