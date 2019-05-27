@@ -28,6 +28,8 @@ option_list = list(
               help="Remove cells that didn't express at least this number of genes (Used if --percentile FALSE) [default : '%default' ]"),
   make_option("--absolute_counts", default=0, type='integer',
               help="Number of transcript threshold for cell filtering (Used if --percentile FALSE) [default : '%default' ]"),
+  make_option("--manage_cutoffs", default="intersect", type='character',
+              help="combine or intersect cutoffs for filtering"),
   make_option("--pdfplot", type = 'character',
               help="Path to pdf file of the plots"),
   make_option("--output", type = 'character',
@@ -130,7 +132,11 @@ if (opt$percentile_genes > 0) {
 }
 
 # Filter out rows below thresholds (genes and read counts)
-QC_metrics$filtered <- (QC_metrics$nGenes < genes_threshold) | (QC_metrics$total_counts < counts_threshold)
+if (opt$manage_cutoffs == 'union'){
+    QC_metrics$filtered <- (QC_metrics$nGenes < genes_threshold) | (QC_metrics$total_counts < counts_threshold)
+} else {
+    QC_metrics$filtered <- (QC_metrics$nGenes < genes_threshold) & (QC_metrics$total_counts < counts_threshold)
+}
 
 ## Plot the results
 
