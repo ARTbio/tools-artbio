@@ -42,7 +42,7 @@ option_list = list(
   ),
   make_option(
     c("-o", "--output"),
-    default = NONE
+    default = NA,
     type = 'character',
     help = "Output name [default : '%default' ]"
   )
@@ -50,6 +50,8 @@ option_list = list(
 
 opt = parse_args(OptionParser(option_list = option_list),
                  args = commandArgs(trailingOnly = TRUE))
+if (opt$sep == "tab") {opt$sep = "\t"}
+if (opt$sep == "comma") {opt$sep = ","}
 
 # Open files
 data.counts <- read.table(

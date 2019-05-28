@@ -29,126 +29,46 @@
             <option value="TRUE" selected="true">True</option>
             <option value="FALSE">False</option>
         </param>
-        <param name="percentile_genes" value="0.05" type="float" label="remove genes that are expressed in less than this fraction of cells"
-               help="Fraction is expressed as a floatting number < 1" />
+        <param name="detection" value="0.05" type="float" label="remove genes that are expressed in less than this fraction of cells"
+               help="Fraction is expressed as a floatting number &lt; 1" />
     </inputs>
     <outputs>
         <data name="output" format="tabular" label="Cell data filtered from ${on_string}" />
     </outputs>
     <tests>
         <test>
-            <param name="input" value="input.csv" ftype="txt"/>
-            <param name="sep" value='comma' />
-            <param name="percentile_genes" value="20"/>
-            <param name="percentile_counts" value="20"/>
-            <output name="pdfplot" file="percentile_gene-and-counts.pdf" ftype="pdf"/>
-            <output name="output" file="percentile_gene-and-counts.tab" ftype="tabular"/>
-            <output name="output_metada" file="percentile_gene-and-counts.meta" ftype="tabular"/>
-        </test>
-        <test>
-            <param name="input" value="input.csv" ftype="txt"/>
-            <param name="sep" value='comma' />
-            <param name="percentile_genes" value="20"/>
-            <param name="percentile_counts" value="20"/>
-            <param name="manage_cutoffs" value="intersect"/>
-            <output name="pdfplot" file="intersect_percentile_gene-and-counts.pdf" ftype="pdf"/>
-            <output name="output" file="intersect_percentile_gene-and-counts.tab" ftype="tabular"/>
-            <output name="output_metada" file="intersect_percentile_gene-and-counts.meta" ftype="tabular"/>
-        </test>
-        <test>
             <param name="input" value="input.tsv" ftype="txt"/>
             <param name="sep" value='tab' />
-            <param name="percentile_genes" value="20"/>
-            <param name="percentile_counts" value="20"/>
-            <output name="pdfplot" file="percentile_gene-and-counts.pdf" ftype="pdf"/>
-            <output name="output" file="percentile_gene-and-counts.tab" ftype="tabular"/>
-            <output name="output_metada" file="percentile_gene-and-counts.meta" ftype="tabular"/>
+            <param name="colnames" value="TRUE"/>
+            <param name="detection" value="0.05"/>
+            <output name="output" file="filtered-0.05.tab" ftype="tabular"/>
         </test>
         <test>
             <param name="input" value="input.csv" ftype="txt"/>
             <param name="sep" value='comma' />
-            <param name="percentile_genes" value="20"/>
-            <output name="pdfplot" file="percentile_gene-only.pdf" ftype="pdf"/>
-            <output name="output" file="percentile_gene-only.tab" ftype="tabular"/>
-            <output name="output_metada" file="percentile_gene-only.meta" ftype="tabular"/>
-        </test>
-        <test>
-            <param name="input" value="input.csv" ftype="txt"/>
-            <param name="sep" value='comma' />
-            <param name="percentile_counts" value="20"/>
-            <output name="pdfplot" file="percentile_counts-only.pdf" ftype="pdf"/>
-            <output name="output" file="percentile_counts-only.tab" ftype="tabular"/>
-            <output name="output_metada" file="percentile_counts-only.meta" ftype="tabular"/>
-        </test>
-        <test>
-            <param name="input" value="input.csv" ftype="txt"/>
-            <param name="sep" value='comma' />
-            <output name="pdfplot" file="no-filtering.pdf" ftype="pdf"/>
-            <output name="output" file="no-filtering.tab" ftype="tabular"/>
-            <output name="output_metada" file="no-filtering.meta" ftype="tabular"/>
-        </test>
-        <test>
-            <param name="input" value="input.csv" ftype="txt"/>
-            <param name="sep" value='comma' />
-            <param name="absolute_genes" value="5"/>
-            <param name="absolute_counts" value="1000"/>
-            <output name="pdfplot" file="absolute_gene-and-counts.pdf" ftype="pdf"/>
-            <output name="output" file="absolute_gene-and-counts.tab" ftype="tabular"/>
-            <output name="output_metada" file="absolute_gene-and-counts.meta" ftype="tabular"/>
-        </test>
-        <test>
-            <param name="input" value="input.csv" ftype="txt"/>
-            <param name="sep" value='comma' />
-            <param name="absolute_genes" value="5"/>
-            <output name="pdfplot" file="absolute_gene-only.pdf" ftype="pdf"/>
-            <output name="output" file="absolute_gene-only.tab" ftype="tabular"/>
-            <output name="output_metada" file="absolute_gene-only.meta" ftype="tabular"/>
-        </test>
-        <test>
-            <param name="input" value="input.csv" ftype="txt"/>
-            <param name="sep" value='comma' />
-            <param name="absolute_counts" value="1000"/>
-            <output name="pdfplot" file="absolute_counts-only.pdf" ftype="pdf"/>
-            <output name="output" file="absolute_counts-only.tab" ftype="tabular"/>
-            <output name="output_metada" file="absolute_counts-only.meta" ftype="tabular"/>
+            <param name="colnames" value="TRUE"/>
+            <param name="detection" value="0.05"/>
+            <output name="output" file="filtered-0.05.tab" ftype="tabular"/>
         </test>
     </tests>
     <help>
 
 **What it does**
 
-The tools takes a table of gene (rows) expression values (as number of reads aligned each of genes)
-in single cell RNAseq sequencing libraries (columns) and filters out cells with low number
-of detected genes and/or cells with low number of aligned reads.
+The tools takes a table of gene expression values (e.E. log10(CPM+1), etc...)
+from single cell RNAseq sequencing libraries (columns) and filters out genes (rows) that
+are detected in less than the specified fraction of libraries.
 
-Cutoffs can be applied to absolute numbers of aligned reads or of detected genes, or to
-percentile thresholds for these variables.
 
-For both absolute or percentile thresholds, only cells exclusively below
-these threshold are excluded (cell cutoffs do not include the threshold values).
-
-If you choose to combine cutoffs for both the number of detected genes
-and the total number of aligned reads, then you have 2 options: either exclude libraries that
-do not satisfy one OR the other threshold (Union) or exclude libraries that do not satisfy
-both thresholds (Intersection).
-
-Specifying a value both for an absolute and an percentile threshold of a variable
-(Number of detected genes or Number of aligned counts) is not consistent. In this
-situation, the tools *does not* filter cells with respect to the corresponding variable threshold.
-If a 0 is applied both for an absolute and an percentile threshold of a variable, then
-this variable is not used to filter the cells.
-
-The tools returns a gene expression table for cells that were retained, a metadata table
-that contains numbers of detected genes and aligned reads for retained cell library and
-a pdf file with three plots illustrating the performed filtering operation.
+The tools returns a gene expression table for genes that were retained.
 
 **Input**
 
 A table of comma (csv) or tabulation (tsv) separated values.
 Gene names should be in the first column and cell names should be in the first row.
 Note that in a number of a csv files, header of the gene column is omitted, resulting in
-a first row with one item less than in other rows. This is handled by the tool that
-recognises this situation.
+a first row with one item less than in other rows. Although this is not recommended, the tool
+handles this type of table and will return a filtered table with the same structure.
 
     </help>
     <citations>
