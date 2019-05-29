@@ -174,7 +174,7 @@ dev.off()
 # Retrieve identifier of kept cells
 kept.cells <- QC_metrics$cell_id[!QC_metrics$filtered]
 
-data.counts <- data.frame(Genes=rownames(data.counts[,kept.cells]), data.counts[,kept.cells])
+data.counts <- data.frame(Genes=rownames(data.counts[,kept.cells]), data.counts[,kept.cells], check.names = FALSE)
 
 # Save filtered cells 
 write.table(
