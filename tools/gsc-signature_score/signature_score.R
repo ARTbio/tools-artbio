@@ -2,89 +2,87 @@
 #    Signature score    #
 #########################
 
-# Fourth step of the signature-based workflow
-# Compute the signature score based on the
-# geometric mean of the target gene expression
-# and separate cells thanks to this signature
-#score into 2 groups (high/low).
+# Compute the signature score based on the geometric mean of the target gene expression
+# and split cells  in 2 groups (high/low) using this signature score.
 
-#Example of command
-# Rscript 4-signature_score.R -f ../3-filter_genes/filterGenes.tsv -m ../1-filter_cells/filterCellsMetadata.tsv -l ARNT2,SALL2,SOX9,OLIG2,POU3F2 -o .
+# Example of command
+# Rscript 4-signature_score.R --input <input.tsv> --metadata <filterCellsMetadata.tsv>
+#                             --genes  ARNT2,SALL2,SOX9,OLIG2,POU3F2 --output <output>
 
-# Load necessary packages (install them if it's not the case)
-requiredPackages = c('optparse', 'psych', 'ggplot2', 'gridExtra')
-for (p in requiredPackages) {
-  if (!require(p, character.only = TRUE, quietly = T)) {
-    install.packages(p)
-  }
-  suppressPackageStartupMessages(suppressMessages(library(p, character.only = TRUE)))
-}
+# load packages that are provided in the conda env
+options( show.error.messages=F,
+       error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
+warnings()
 
+library(optparse)
+library(psych)
+library(ggplot2)
+library(gridExtra)
 
-#Arguments
+# Arguments
 option_list = list(
   make_option(
-    c("-f", "--file"),
+    "--input",
     default = NA,
     type = 'character',
     help = "Input file that contains log2(CPM +1) values"
   ),
   make_option(
-    c("-s", "--sep"),
+    "--sep",
     default = '\t',
     type = 'character',
     help = "File separator [default : '%default' ]"
   ),
   make_option(
-    c("-c", "--colnames"),
+    "--colnames",
     default = TRUE,
     type = 'logical',
     help = "Consider first line as header ? [default : '%default' ]"
   ),  
   make_option(
-    c("-m", "--metadata"),
+    "--metadata",
     default = NA,
     type = 'character',
     help = "Input file that contains cells metadata"
   ),
   make_option(
-    c("-d", "--delimiter"),
+    "--delimiter",
     default = "\t",
     type = 'character',
     help = "Column separator for metadata file [default : '%default' ]"
   ), 
   make_option(
-    c("-l", "--list"),
+    "--genes",
     default = NA,
     type = 'character',
     help = "List of genes comma separated"
   ),
   make_option(
-    c("-p", "--percent"),
+    "--percentile",
     default = 20,
     type = 'integer',
     help = "Percentage of dectection threshold [default : '%default' ]"
   ),
   make_option(
-    c("-o", "--out"),
+    "--output",
     default = "~",
     type = 'character',
     help = "Output name [default : '%default' ]"
   )
-  )
-
+)
 
 opt = parse_args(OptionParser(option_list = option_list),
                  args = commandArgs(trailingOnly = TRUE))
 
-if (opt$file == "" | opt$list == "" & !(opt$help)) {
-  stop("At least tw arguments must be supplied (count data --file option and gene list --list option).\n",
-       call. = FALSE)
-}
+if (opt$sep == "tab") {opt$sep = "\t"}
+if (opt$sep == "comma") {opt$sep = ","}
+if (opt$delimiter == "tab") {opt$delimiter = "\t"}
+if (opt$delimiter == "comma") {opt$delimiter = ","}
 
-#Open files
+# Open files
 data.counts <- read.table(
-  opt$file,
+  opt$input,
   h = opt$colnames,
   row.names = 1,
   sep = opt$sep,
@@ -100,19 +98,19 @@ metadata <- read.delim(
   row.names = 1
 )
 
-#Get vector of target genes
-genes <- unlist(strsplit(opt$list, ","))
+# Get vector of target genes
+genes <- unlist(strsplit(opt$genes, ","))
 
 if (unique(genes %in% rownames(data.counts)) == F)
-  stop("None of these genes are in your dataset: ", opt$list)
+  stop("None of these genes are in your dataset: ", opt$genes)
 
 logical_genes <- rownames(data.counts) %in% genes
 
-#Retrieve target genes in counts data
+# Retrieve target genes in counts data
 signature.counts <- subset(data.counts, logical_genes)
 
 
-##Descriptive Statistics Function
+## Descriptive Statistics Function
 descriptive_stats = function(InputData) {
   SummaryData = data.frame(
     mean = rowMeans(InputData),
@@ -127,19 +125,19 @@ descriptive_stats = function(InputData) {
 
 signature_stats <- descriptive_stats(signature.counts)
 
-#Remove poorly expressed genes from the signature 
-kept_genes <- signature_stats$Percentage_Detection >= opt$percent
+# Remove poorly expressed genes from the signature 
+kept_genes <- signature_stats$Percentage_Detection >= opt$percentile
 
 signature.counts <- signature.counts[kept_genes,]
 
-#Add warnings
+# Add warnings
 if (unique(kept_genes) == F) {
   stop(
     "None of these genes are detected in ",
-    opt$percent,
+    opt$percentile,
     "% of your cells: ",
     rownames(signature_stats),
-    ". You can be less stringent thanks to --percent parameter."
+    ". You can be less stringent thanks to --percentile parameter."
   )
 }
 if (length(unique(kept_genes)) > 1) {
@@ -149,24 +147,24 @@ if (length(unique(kept_genes)) > 1) {
   )
 }
 
-#Replace 0 by 1 counts
+# Replace 0 by 1 counts
 signature.counts[signature.counts == 0] <- 1
 
-#Geometric mean by cell
+# Geometric mean by cell
 score <- apply(signature.counts, 2, geometric.mean)
 
-#Add result in metadata
+# Add result in metadata
 metadata_filtered <- metadata[names(score),]
 metadata_filtered$Signature_category <- ifelse(score > mean(score), "HIGH", "LOW")
 metadata_filtered$Signature_score <- score
 
-#Re-arrange score matrix for plots
+# Re-arrange score matrix for plots
 score <- data.frame(score = score,
                     order = rank(score, ties.method = "first"),
                     signature = metadata_filtered$Signature_category,
                     stringsAsFactors = F)
 
-pdf(file = paste(opt$out, "signatureScore.pdf", sep = "/"))
+pdf(file = paste(opt$output, "signatureScore.pdf", sep = "/"))
 
 ggplot(score, aes(x = order, y = score)) +
   geom_line() + 
@@ -217,7 +215,7 @@ dev.off()
 #Save file
 write.table(
   metadata_filtered,
-  paste(opt$out, "signatureScoreMetadata.tsv", sep = "/"),
+  paste(opt$output, "signatureScoreMetadata.tsv", sep = "/"),
   sep = "\t",
   quote = F,
   col.names = T,
