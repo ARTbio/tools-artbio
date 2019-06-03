@@ -41,25 +41,13 @@ option_list = list(
     help = "Consider first line as header ? [default : '%default' ]"
   ),  
   make_option(
-    "--metadata",
-    default = NA,
-    type = 'character',
-    help = "Input file that contains cells metadata"
-  ),
-  make_option(
-    "--delimiter",
-    default = "\t",
-    type = 'character',
-    help = "Column separator for metadata file [default : '%default' ]"
-  ), 
-  make_option(
     "--genes",
     default = NA,
     type = 'character',
     help = "List of genes comma separated"
   ),
   make_option(
-    "--percentile",
+    "--percentile_threshold",
     default = 20,
     type = 'integer',
     help = "Percentage of dectection threshold [default : '%default' ]"
@@ -80,22 +68,13 @@ if (opt$sep == "comma") {opt$sep = ","}
 if (opt$delimiter == "tab") {opt$delimiter = "\t"}
 if (opt$delimiter == "comma") {opt$delimiter = ","}
 
-# Open files
+# Take input data
 data.counts <- read.table(
   opt$input,
   h = opt$colnames,
   row.names = 1,
   sep = opt$sep,
   check.names = F
-)
-
-metadata <- read.delim(
-  opt$metadata,
-  header = TRUE,
-  stringsAsFactors = F,
-  sep = opt$delimiter,
-  check.names = FALSE,
-  row.names = 1
 )
 
 # Get vector of target genes
@@ -126,7 +105,7 @@ descriptive_stats = function(InputData) {
 signature_stats <- descriptive_stats(signature.counts)
 
 # Remove poorly expressed genes from the signature 
-kept_genes <- signature_stats$Percentage_Detection >= opt$percentile
+kept_genes <- signature_stats$Percentage_Detection >= opt$percentile_threshold
 
 signature.counts <- signature.counts[kept_genes,]
 
@@ -134,10 +113,10 @@ signature.counts <- signature.counts[kept_genes,]
 if (unique(kept_genes) == F) {
   stop(
     "None of these genes are detected in ",
-    opt$percentile,
+    opt$percentile_threshold,
     "% of your cells: ",
     rownames(signature_stats),
-    ". You can be less stringent thanks to --percentile parameter."
+    ". You can be less stringent thanks to --percentile_threshold parameter."
   )
 }
 if (length(unique(kept_genes)) > 1) {
@@ -151,17 +130,19 @@ if (length(unique(kept_genes)) > 1) {
 signature.counts[signature.counts == 0] <- 1
 
 # Geometric mean by cell
-score <- apply(signature.counts, 2, geometric.mean)
+score <- apply(signature.counts, 2, geometric.mean) # geometric.mean requires psych
 
-# Add result in metadata
-metadata_filtered <- metadata[names(score),]
-metadata_filtered$Signature_category <- ifelse(score > mean(score), "HIGH", "LOW")
-metadata_filtered$Signature_score <- score
+# Add results in signature_output
+signature_output <- data.frame(
+                         cell = names(score),
+                         score = score,
+                         rate = ifelse(score > mean(score), "HIGH", "LOW")
+                         )
 
 # Re-arrange score matrix for plots
 score <- data.frame(score = score,
                     order = rank(score, ties.method = "first"),
-                    signature = metadata_filtered$Signature_category,
+                    signature = signature_output$rate,
                     stringsAsFactors = F)
 
 pdf(file = paste(opt$output, "signatureScore.pdf", sep = "/"))
