@@ -140,7 +140,9 @@ score <- apply(signature.counts, 2, geometric.mean) # geometric.mean requires ps
 signature_output <- data.frame(
                          cell = names(score),
                          score = score,
-                         rate = ifelse(score > mean(score), "HIGH", "LOW")
+                         rate = ifelse(score > mean(score), "HIGH", "LOW"),
+                         nGenes = colSums(data.counts != 0),
+                         total_counts = colSums(data.counts)
                          )
 
 # Re-arrange score matrix for plots
@@ -175,15 +177,10 @@ ggplot(data.frame(density_score[1:2]), aes(x, y, fill = ifelse(x < mean(score$sc
   )
 
 #Check patient distribution in two groups
-counts <- data.frame(table(signature_output$rate, signature_output$cell))
-
-ggplot(data = counts, aes(x = Var2, y = Freq, fill = Var1)) +
-  geom_bar(stat = "identity", position = position_dodge(), alpha = .8) +
-  scale_fill_manual(values=c("#ff0000", "#08661e")) +
-  labs(title = "Cell score distribution by patient", fill = "Score", x = "Patient")
+# counts <- data.frame(table(signature_output$rate, signature_output$cell))
 
 #Check score independant of low expression
-p_gene <- ggplot(signature_output, aes(rate, nGene)) +  # To do: compute nGene from input data !
+p_gene <- ggplot(signature_output, aes(rate, nGenes)) +
   geom_violin(aes(fill = rate), alpha = .5, trim = F, show.legend = F) +
   scale_fill_manual(values=c("#ff0000", "#08661e")) +
   geom_jitter() + labs(y = "Number of detected genes", x = "Signature")
@@ -204,5 +201,5 @@ write.table(
   sep = "\t",
   quote = F,
   col.names = T,
-  row.names = T
+  row.names = F
 )
