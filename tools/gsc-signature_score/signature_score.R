@@ -6,8 +6,8 @@
 # and split cells  in 2 groups (high/low) using this signature score.
 
 # Example of command
-# Rscript 4-signature_score.R --input <input.tsv> --metadata <filterCellsMetadata.tsv>
-#                             --genes  ARNT2,SALL2,SOX9,OLIG2,POU3F2 --output <output>
+# Rscript 4-signature_score.R --input <input.tsv> --genes  ARNT2,SALL2,SOX9,OLIG2,POU3F2
+#                             --output <output.tab> --pdf <output.pdf>
 
 # load packages that are provided in the conda env
 options( show.error.messages=F,
@@ -54,9 +54,15 @@ option_list = list(
   ),
   make_option(
     "--output",
-    default = "~",
+    default = "~/output.tab",
     type = 'character',
-    help = "Output name [default : '%default' ]"
+    help = "Output path [default : '%default' ]"
+  ),
+  make_option(
+    "--pdf",
+    default = "~/output.pdf",
+    type = 'character',
+    help = "Output path [default : '%default' ]"
   )
 )
 
@@ -145,7 +151,7 @@ score <- data.frame(score = score,
                     signature = signature_output$rate,
                     stringsAsFactors = F)
 
-pdf(file = paste(opt$output, "signatureScore.pdf", sep = "/"))
+pdf(file = opt$pdf)
 
 ggplot(score, aes(x = order, y = score)) +
   geom_line() + 
@@ -171,7 +177,7 @@ ggplot(data.frame(density_score[1:2]), aes(x, y, fill = ifelse(x < mean(score$sc
   )
 
 #Check patient distribution in two groups
-counts <- data.frame(table(metadata_filtered$Signature_category, metadata_filtered$Sample.name))
+counts <- data.frame(table(signature_output$rate, signature_output$Sample.name))
 
 ggplot(data = counts, aes(x = Var2, y = Freq, fill = Var1)) +
   geom_bar(stat = "identity", position = position_dodge(), alpha = .8) +
@@ -179,13 +185,13 @@ ggplot(data = counts, aes(x = Var2, y = Freq, fill = Var1)) +
   labs(title = "Cell score distribution by patient", fill = "Score", x = "Patient")
 
 #Check score independant of low expression
-p_gene <- ggplot(metadata_filtered, aes(Signature_category, nGene)) +
-  geom_violin(aes(fill = Signature_category), alpha = .5, trim = F, show.legend = F) +
+p_gene <- ggplot(signature_output, aes(rate, nGene)) +
+  geom_violin(aes(fill = rate), alpha = .5, trim = F, show.legend = F) +
   scale_fill_manual(values=c("#ff0000", "#08661e")) +
   geom_jitter() + labs(y = "Number of detected genes", x = "Signature")
 
-p_counts <- ggplot(metadata_filtered, aes(Signature_category, total_counts)) +
-  geom_violin(aes(fill = Signature_category), alpha = .5, trim = F, show.legend = F) +
+p_counts <- ggplot(signature_output, aes(rate, total_counts)) +
+  geom_violin(aes(fill = rate), alpha = .5, trim = F, show.legend = F) +
   scale_fill_manual(values=c("#ff0000", "#08661e")) +
   geom_jitter() + labs(y = "Total counts", x = "Signature")
 
@@ -195,8 +201,8 @@ dev.off()
 
 #Save file
 write.table(
-  metadata_filtered,
-  paste(opt$output, "signatureScoreMetadata.tsv", sep = "/"),
+  signature_output,
+  opt$output,
   sep = "\t",
   quote = F,
   col.names = T,
