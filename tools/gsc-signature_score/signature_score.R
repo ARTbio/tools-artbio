@@ -84,9 +84,11 @@ data.counts <- read.table(
 # Get vector of target genes
 genes <- unlist(strsplit(opt$genes, ","))
 
-if (unique(genes %in% rownames(data.counts)) == F)
-  stop("None of these genes are in your dataset: ", opt$genes)
-
+if (length(unique(genes %in% rownames(data.counts))) == 1) {
+  if (unique(genes %in% rownames(data.counts)) == F)
+    stop("None of these genes are in your dataset: ", opt$genes)
+}
+    
 logical_genes <- rownames(data.counts) %in% genes
 
 # Retrieve target genes in counts data
@@ -108,28 +110,31 @@ descriptive_stats = function(InputData) {
 
 signature_stats <- descriptive_stats(signature.counts)
 
-# Remove poorly expressed genes from the signature 
+# Find poorly detected genes from the signature 
 kept_genes <- signature_stats$Percentage_Detection >= opt$percentile_threshold
 
-signature.counts <- signature.counts[kept_genes,]
-
 # Add warnings
-if (unique(kept_genes) == F) {
-  stop(
-    "None of these genes are detected in ",
-    opt$percentile_threshold,
-    "% of your cells: ",
-    rownames(signature_stats),
-    ". You can be less stringent thanks to --percentile_threshold parameter."
-  )
-}
 if (length(unique(kept_genes)) > 1) {
   cat(
     "WARNINGS ! Following genes were removed from further analysis due to low gene expression :",
-    paste(rownames(signature.counts)[!kept_genes], collapse = ",")
+    paste(paste(rownames(signature.counts)[!kept_genes], round(signature_stats$Percentage_Detection[!kept_genes], 2), sep = " : "), collapse = ", "),
+    "\n"
   )
+} else {
+  if (unique(kept_genes) == F) {
+    stop(
+      "None of these genes are detected in ",
+      opt$percent,
+      "% of your cells: ",
+      paste(rownames(signature_stats), collapse = ", "),
+      ". You can be less stringent thanks to --percent parameter."
+    )
+  }
 }
 
+# Remove genes poorly detected in the dataset
+signature.counts <- signature.counts[kept_genes,]
+    
 # Replace 0 by 1 counts
 signature.counts[signature.counts == 0] <- 1
 
