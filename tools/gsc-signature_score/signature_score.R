@@ -159,7 +159,7 @@ ggplot(score, aes(x = order, y = score)) +
   geom_area(aes(fill = signature), alpha = .7) +
   scale_fill_manual(values=c("#ff0000", "#08661e")) +
   geom_text(aes(x = 1, y = mean(score)), label = "Mean", vjust = -0.3, colour = "black") +
-  labs(title = "Score Signature", x = "Cell index", y = "Score")
+  labs(title = "Ordered cell signature scores", x = "Cell index", y = "Score")
 
 density_score <- density(score$score)
 ggplot(data.frame(density_score[1:2]), aes(x, y, fill = ifelse(x < mean(score$score), "LOW", "HIGH"))) +
@@ -170,16 +170,13 @@ ggplot(data.frame(density_score[1:2]), aes(x, y, fill = ifelse(x < mean(score$sc
   scale_fill_manual(values=c("#ff0000", "#08661e")) +
   ylim(0, max(density_score$y)) +
   labs(
-    title = "Score density",
+    title = "Distribution of Cell signature scores",
     x = paste("N =", density_score$n, "Bandwidth =", density_score$bw),
     y = "Density",
     fill = "Signature"
   )
 
-#Check patient distribution in two groups
-# counts <- data.frame(table(signature_output$rate, signature_output$cell))
-
-#Check score independant of low expression
+# Check score independant of low expression
 p_gene <- ggplot(signature_output, aes(rate, nGenes)) +
   geom_violin(aes(fill = rate), alpha = .5, trim = F, show.legend = F) +
   scale_fill_manual(values=c("#ff0000", "#08661e")) +
@@ -190,11 +187,11 @@ p_counts <- ggplot(signature_output, aes(rate, total_counts)) +
   scale_fill_manual(values=c("#ff0000", "#08661e")) +
   geom_jitter() + labs(y = "Total counts", x = "Signature")
 
-grid.arrange(p_gene, p_counts, ncol = 2, top = "Comparison of expression level based on their Signature score (HIGH vs LOW)")
+grid.arrange(p_gene, p_counts, ncol = 2, top = "Influence of library sequencing depth on cell signature scores")
 
 dev.off()
 
-#Save file
+# Save file
 write.table(
   signature_output,
   opt$output,
