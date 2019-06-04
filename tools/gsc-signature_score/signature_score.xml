@@ -1,0 +1,91 @@
+<tool id="signature_score" name="Compute signature scores" version="0.2.0">
+    <description>in single cell RNAseq</description>
+    <requirements>
+        <requirement type="package" version="1.3.2=r3.3.2_0">r-optparse</requirement>
+        <requirement type="package" version="2.2.1=r3.3.2_0">r-ggplot2</requirement>
+        <requirement type="package" version="2.3=r3.3.2_0">r-gridextra</requirement>
+        <requirement type="package" version="1.6.9=r3.3.2_0">r-psych</requirement>
+    </requirements>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Tool exception" />
+    </stdio>
+    <command detect_errors="exit_code"><![CDATA[ 
+        Rscript $__tool_directory__/signature_score.R 
+            --input $input 
+            --sep 
+            #if $sep == 'tab':
+              'tab'
+            #elif $sep == 'comma':
+              'comma'
+            #end if
+            --genes '$genes'
+            --output '$output'
+            --pdf '$pdf'
+]]></command>
+    <inputs>
+        <param name="input" type="data" format="txt" label="Raw counts of expression data"/>
+        <param name="sep" type="select" label="Indicate column separator">
+            <option value="tab" selected="true">Tabs</option>
+            <option value="comma">Comma</option>
+        </param>
+        <param name="genes" type="text" value="" label="Comma-separated list of genes to include in signature"
+               help="Comma-separated list of genes to include in signature" />
+    </inputs>
+    <outputs>
+        <data name="pdf" format="pdf" label="Plots from ${on_string}" />
+        <data name="output" format="tabular" label="signature score from $genes and ${on_string}" />
+    </outputs>
+    <tests>
+        <test>
+            <param name="input" value="filterCells_100.tsv" ftype="txt"/>
+            <param name="sep" value='tab' />
+            <param name="genes" value="ZNF454,GAPDH,LAIR1,ACAD9,CHTOP" />
+            <output name="pdf" file="signature.pdf" ftype="pdf" compare="sim_size" delta="200" />
+            <output name="output" file="signature.tsv" ftype="tabular"/>
+        </test>
+    </tests>
+    <help>
+
+**What it does**
+
+The tools takes a table of gene expression values (rows) in single cell RNAseq library sequencing (columns)
+and filters out cells with low number of detected genes and/or cells with low number of aligned reads.
+
+Cutoffs can be applied using absolute number of aligned reads or detected genes or using
+a percentile threshold for these variables.
+
+For both absolute or percentile thresholds, only cells exclusively below
+these threshold are excluded (cell cutoffs do not include the threshold values).
+
+Specifying a value both for an absolute and an percentile threshold of a variable
+(Number of detected genes or Number of aligned counts) is not consistent. In this
+situation, the tools *does not* filter cells with respect to the corresponding variable threshold.
+If a 0 is applied both for an absolute and an percentile threshold of a variable, then
+this variable is not used to filter the cells.
+
+The tools returns a gene expression table for cells that were retained, a metadata table
+that contains numbers of detected genes and aligned reads for retained cell library and
+a pdf file with three plots illustrating the performed filtering operation.
+
+**Input**
+
+A table of comma (csv) or tabulation (tsv) separated values.
+Gene names should be in the first column and cell names should be in the first row.
+Note that in a number of a csv files, header of the gene column is omitted, resulting in
+a first row with one item less than in other rows. This is handled by the tool that
+recognises this situation.
+
+    </help>
+    <citations>
+        <citation type="bibtex">
+        @Manual{,
+             title = {R: A Language and Environment for Statistical Computing},
+             author = {{R Core Team}},
+             organization = {R Foundation for Statistical Computing},
+             address = {Vienna, Austria},
+             year = {2014},
+             url = {http://www.R-project.org/},
+        }
+        </citation>
+    </citations>
+</tool>
