@@ -84,7 +84,7 @@ data.counts <- read.table(
 # Get vector of target genes
 genes <- unlist(strsplit(opt$genes, ","))
 
-if (length(unique(genes %in% rownames(data.counts)) == 1) {
+if (length(unique(genes %in% rownames(data.counts))) == 1) {
   if (unique(genes %in% rownames(data.counts)) == F)
     stop("None of these genes are in your dataset: ", opt$genes)
 }
