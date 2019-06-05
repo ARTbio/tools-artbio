@@ -1,4 +1,4 @@
-<tool id="filter_cells" name="Filter cells data" version="0.3.0">
+<tool id="filter_cells" name="Filter cells data" version="0.4.0">
     <description>on total aligned reads and/or number of detected genes</description>
     <requirements>
         <requirement type="package" version="1.3.2=r3.3.2_0">r-optparse</requirement>
@@ -139,7 +139,7 @@
 
 **What it does**
 
-The tools takes a table of gene (rows) expression values (as number of reads aligned each of genes)
+The tools takes a table of gene (rows) expression values (as number of reads aligned to genes)
 in single cell RNAseq sequencing libraries (columns) and filters out cells with low number
 of detected genes and/or cells with low number of aligned reads.
 
@@ -166,7 +166,8 @@ a pdf file with three plots illustrating the performed filtering operation.
 
 **Input**
 
-A table of comma (csv) or tabulation (tsv) separated values.
+A table of comma (csv) or tabulation (tsv) separated expression values, in number (integers)
+of reads aligned to genes.
 Gene names should be in the first column and cell names should be in the first row.
 Note that in a number of a csv files, header of the gene column is omitted, resulting in
 a first row with one item less than in other rows. This is handled by the tool that
