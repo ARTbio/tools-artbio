@@ -30,19 +30,19 @@ option_list = list(
     help = "File separator, must be the same for all input files [default : '%default' ]"
   ),
   make_option(
-    c("-c", "--colnames"),
+    "--colnames",
     default = TRUE,
     type = 'logical',
     help = "Consider first lines as header (must stand for all input files) [default : '%default' ]"
   ),  
   make_option(
-    --expression_file,
+    "--expression_file",
     default = NA,
     type = 'character',
     help = "Input file that contains log2(CPM +1) expression values"
   ),
   make_option(
-    --signatures_file,
+    "--signatures_file",
     default = NA,
     type = 'character',
     help = "Input file that contains cell signature"
@@ -60,19 +60,19 @@ option_list = list(
     help = "Input file that contains genes metadata"
   ),
   make_option(
-    --sig_corr,
+    "--sig_corr",
     default = "sig_corr.tsv",
     type = 'character',
     help = "signature correlations output [default : '%default' ]"
-  )
+  ),
   make_option(
-    --gene_corr,
+    "--gene_corr",
     default = "gene_corr.tsv",
     type = 'character',
     help = "genes-genes correlations output [default : '%default' ]"
-  )
+  ),
   make_option(
-    --gene_corr_pval,
+    "--gene_corr_pval",
     default = "gene_corr_pval.tsv",
     type = 'character',
     help = "genes-genes correlations pvalues output [default : '%default' ]"
@@ -128,24 +128,24 @@ gene_corr_score <- cbind.data.frame(r = gene_corr$r[, opt$score_header],
                                     P = gene_corr$P[, opt$score_header])
 
 # Heatmap
-heatmaply(
-  subset(gene_corr_score, select = r),
-  xlab = "Signature Score", 
-  ylab = "Differentially Expressed Genes",
-  main = "Correlation between Signature and significantly DE genes",
-  dendrogram = "row",
-  colors = RdBu,
-  showticklabels = c(F,F),
-  limits = c(-1,1),
-  margins = c(40,NA,NA,NA),
-  file = paste0(opt$out, "/CorrelationHeatmap.html")
-)
+ heatmaply(
+   subset(gene_corr_score, select = r),
+   xlab = "Signature Score", 
+   ylab = "Differentially Expressed Genes",
+   main = "Correlation between Signature and significantly DE genes",
+   dendrogram = "row",
+   colors = RdBu,
+   showticklabels = c(F,F),
+   limits = c(-1,1),
+   margins = c(40,NA,NA,NA),
+   file = "./plot.html"
+ )
 
 
 # Save files
 write.table(
   gene_corr_score,
-  file = opt$sig_coor,
+  file = opt$sig_corr,
   sep = "\t",
   quote = F,
   col.names = T,
