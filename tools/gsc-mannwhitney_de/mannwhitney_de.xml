@@ -38,15 +38,15 @@
                help="Consider genes as significantly differentially expressed if their adjusted p-values (Benjamini-Hochberg correction) is inferior to this thresold."/>
     </inputs>
     <outputs>
-        <data name="output" format="tabular" label="Gene metadata of Mann-Whitney differential  analysis from ${on_string}" />
+        <data name="output" format="tabular" label="Gene metadata of Mann-Whitney differential analysis from ${on_string}" />
     </outputs>
     <tests>
         <test>
-            <param name="input" value="input.tsv" ftype="txt"/>
+            <param name="input" value="filterCells_100.tsv" ftype="txt"/>
             <param name="sep" value='tab' />
             <param name="colnames" value="TRUE"/>
-            <param name="metadata" value="signatureScoreMetadata.tsv" ftype="tabular"/>
-            <param name="name" value="Signature_category"/>
+            <param name="metadata" value="signature.tsv" ftype="tabular"/>
+            <param name="name" value="rate"/>
             <param name="fdr" value="0.01"/>
             <output name="output" file="geneMetadata.tab" ftype="tabular"/>
         </test>
@@ -55,15 +55,14 @@
 
 **What it does**
 
-The tools takes a table of gene expression values (e.E. log10(CPM+1), etc...)
-from single cell RNAseq sequencing libraries (columns) and a metadata file that contains at least to columns :  
+The tools takes a table of gene expression values (e.E. log10(CPM+1), etc...) from single cell RNAseq sequencing libraries (columns) and a metadata file that contains at least to columns :
     * Cell barcodes
-    * Column that differentiate cell in two groups. For example, HIGH and LOW categories based on a signature score.
+    * Column that differentiate cell in two groups. It must be a column with only  'HIGH' and 'LOW' categories based on a signature score.
 
 For each gene (rows in expression data file), this script perform a Mann-Whitney test between 
-the two groups of cells (ex. : HIGH/LOW) and then adjust the resulted p-values by using the
-Benjamini-Hochberg (BH) correction. A False Discovery Rate (FDR) threshold is used to determine if p-adjust
-can be considerated as significant (below) or not (above the FDR value). 
+the two groups of cells (HIGH/LOW) and then adjust the resulted p-values by using the
+Benjamini-Hochberg (BH) correction. A False Discovery Rate (FDR) threshold is used to determine if gene
+can be considerated as significant (p-adjust below FDR) or not (p-adjust above the FDR value). 
 
 The tools returns a gene metadata table. For each row (genes) :
     * mean : mean expression across all cells
@@ -73,16 +72,11 @@ The tools returns a gene metadata table. For each row (genes) :
     * mean_low : mean expression across cells of the second group
     * mean_high : mean expression across cells of the first group
     * fold_change : mean_high / mean_low
+    * statistic : W statistic of Mann-Whitney test
+    * p.value : p-value of Mann-Whitney test
     * p-adjust : p-values adjusted from the BH correction
     * Significant : TRUE/FALSE vector (if p-adjust inferior to FDR then the value is TRUE) 
 
-**Input**
-
-A table of comma (csv) or tabulation (tsv) separated values.
-Gene names should be in the first column and cell names should be in the first row.
-Note that in a number of a csv files, header of the gene column is omitted, resulting in
-a first row with one item less than in other rows. Although this is not recommended, the tool
-handles this type of table and will return a filtered table with the same structure.
 
     </help>
     <citations>

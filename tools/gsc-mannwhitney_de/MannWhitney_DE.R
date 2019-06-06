@@ -103,10 +103,8 @@ MW_test <- data.frame(t(apply(data.counts, 1, function(x) {
   do.call("cbind", wilcox.test(x[names(high_cells)[high_cells]], x[names(high_cells)[!high_cells]]))[, 1:2]
 })), stringsAsFactors = F)
 
-MW_test[,1:3] <- apply(MW_test, 2, as.numeric) #Change type "chr" to "num"
-
 # Benjamini-Hochberg correction and significativity
-MW_test$p.adjust <- p.adjust(MW_test$p.value, method = "BH" , n = nrow(MW_test))
+MW_test$p.adjust <- p.adjust(as.numeric(MW_test$p.value), method = "BH" , n = nrow(MW_test))
 # MW_test$Critical.value <- (rank(MW_test$p.value) / nrow(MW_test)) * opt$fdr
 MW_test$Significant <- MW_test$p.adjust < opt$fdr
 
