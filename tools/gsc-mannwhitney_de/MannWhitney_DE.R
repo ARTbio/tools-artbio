@@ -1,9 +1,14 @@
+####################
+#   Differential   #
+#     analysis     #
+####################
+
 # Fifth step of the signature-based workflow
 # Perform a differential analysis between 2
 # groups high/low.
 
 # Example of command
-# Rscript 5-differential_analysis.R -f ../3-filter_genes/filterGenes.tsv -m ../4-signature_score/signatureScoreMetadata.tsv --name Signature_category -o .
+# Rscript MannWhitney_DE.R --input <input.tsv> --sep <tab> --colnames <TRUE> --metadata <signature.tsv> --names <rate> --fdr <0.01> --output <diff_analysis.tsv>
 
 # load packages that are provided in the conda env
 options( show.error.messages=F,
@@ -11,7 +16,6 @@ options( show.error.messages=F,
 loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
 warnings()
 library(optparse)
-#library(Hmisc)
 
 #Arguments
 option_list = list(
@@ -43,7 +47,7 @@ option_list = list(
     "--name",
     default = "signature",
     type = 'character',
-    help = "Column name of signature category (HIGH/LOW) in metadata file [default : '%default' ]"
+    help = "Column name of rate category in metadata file. It must be a vector of two categories only : 'HIGH' and 'LOW'  [default : '%default' ]"
   ), 
   make_option(
     "--fdr",
@@ -89,27 +93,24 @@ metadata <- read.delim(
   row.names = 1
 )
 
-print(head(data.counts[,1:5]))
-print(head(metadata))
+metadata <- subset(metadata, rownames(metadata) %in% colnames(data.counts))
 
-metadata <- metadata[colnames(data.counts),]
-
-#Create a logical named vector of whether or not the cell is signature "high"
-high_cells <- metadata[,opt$name] == "HIGH" #setNames(metadata[,opt$name] == "HIGH", rownames(metadata))
+# Create a logical named vector of whether or not the cell is signature "high"
+high_cells <- setNames(metadata[,opt$name] == "HIGH", rownames(metadata))
 
 ## Mann-Whitney test (Two-sample Wilcoxon test)
 MW_test <- data.frame(t(apply(data.counts, 1, function(x) {
-  do.call("cbind", wilcox.test(x[high_cells], x[!high_cells]))[, 1:4]
+  do.call("cbind", wilcox.test(x[names(high_cells)[high_cells]], x[names(high_cells)[!high_cells]]))[, 1:2]
 })), stringsAsFactors = F)
 
-MW_test[,1:3] <- apply(MW_test[,1:3], 2, as.numeric) #Change type "chr" to "num"
+MW_test[,1:3] <- apply(MW_test, 2, as.numeric) #Change type "chr" to "num"
 
-#Benjamini-Hochberg correction and significativity
+# Benjamini-Hochberg correction and significativity
 MW_test$p.adjust <- p.adjust(MW_test$p.value, method = "BH" , n = nrow(MW_test))
-#MW_test$Critical.value <- (rank(MW_test$p.value) / nrow(MW_test)) * opt$fdr
+# MW_test$Critical.value <- (rank(MW_test$p.value) / nrow(MW_test)) * opt$fdr
 MW_test$Significant <- MW_test$p.adjust < opt$fdr
 
-##Descriptive Statistics Function
+## Descriptive Statistics Function
 descriptive_stats <- function(InputData) {
   SummaryData = data.frame(
     mean = rowMeans(InputData),
@@ -128,14 +129,14 @@ descriptive_stats <- function(InputData) {
 gene_stats <- descriptive_stats(data.counts)
 
 results <- merge(gene_stats, MW_test, by = "row.names")
-rownames(results) <- results$Row.names
+colnames(results)[1] <- "genes"
 
-#Save files
+# Save files
 write.table(
-  results[,-1],
+  results,
   opt$output,
   sep = "\t",
   quote = F,
   col.names = T,
-  row.names = T
+  row.names = F
 )
