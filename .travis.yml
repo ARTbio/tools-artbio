@@ -73,7 +73,7 @@ before_install:
   - unset JAVA_HOME
 
 install:
-  - pip install planemo
+  - pip install planemo==0.58.1
   - planemo conda_init
   - export PATH="$PLANEMO_CONDA_PREFIX/bin:$PATH"
   - conda install -y conda=4.6.8
