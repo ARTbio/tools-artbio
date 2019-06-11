@@ -1,4 +1,4 @@
-Dataset	Chromosome	Chrom_length	Coordinate	Polarity	Counts
+# Dataset	Chromosome	Chrom_length	Coordinate	Polarity	Counts
 input1.bam	FBtr0070001	72	1	F	0
 input1.bam	FBtr0070001	72	7	F	5
 input1.bam	FBtr0070001	72	8	F	3

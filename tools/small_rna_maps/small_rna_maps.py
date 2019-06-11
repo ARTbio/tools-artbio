@@ -89,12 +89,8 @@ class Map:
             else:
                 for read in bam_object.fetch(chrom):
                     positions = read.positions  # a list of covered positions
-                    if read.is_reverse:
-                        map_dictionary[(chrom, positions[-1]+1, 'F')].append(
-                                        read.query_alignment_length)
-                    else:
-                        map_dictionary[(chrom, positions[0]+1, 'F')].append(
-                                        read.query_alignment_length)
+                    map_dictionary[(chrom, positions[0]+1, 'F')].append(
+                                    read.query_alignment_length)
         return map_dictionary
 
     def grouper(self, iterable, clust_distance):
@@ -374,14 +370,14 @@ def main(inputs, samples, methods, outputs, minsize, maxsize, cluster,
     for method, output in zip(methods, outputs):
         out = open(output, 'w')
         if method == 'Size':
-            header = ["Dataset", "Chromosome", "Polarity", method, "Counts",
+            header = ["# Dataset", "Chromosome", "Polarity", method, "Counts",
                       "Strandness", "z-score"]
         elif cluster:
-            header = ["Dataset", "Chromosome", "Chrom_length", "Coordinate",
+            header = ["# Dataset", "Chromosome", "Chrom_length", "Coordinate",
                       "Polarity", method, "Start-End", "Cluster Size",
                       "density"]
         else:
-            header = ["Dataset", "Chromosome", "Chrom_length", "Coordinate",
+            header = ["# Dataset", "Chromosome", "Chrom_length", "Coordinate",
                       "Polarity", method]
         out.write('\t'.join(header) + '\n')
         for input, sample in zip(inputs, samples):
