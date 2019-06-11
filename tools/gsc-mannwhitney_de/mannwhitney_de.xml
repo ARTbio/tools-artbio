@@ -67,7 +67,7 @@ can be considerated as significant (p-adjust below FDR) or not (p-adjust above t
 The tools returns a gene metadata table. For each row (genes) :
     * mean : mean expression across all cells
     * SD : standard deviation of its expression across all cells
-    * variance : variance of its expression across all cells
+    * variance : variance of expression across all cells
     * Percentage_detection : (sum of its expression values across all cells / number of cells) * 100
     * mean_low : mean expression across cells of the second group
     * mean_high : mean expression across cells of the first group
