@@ -16,8 +16,8 @@ options( show.error.messages=F,
 loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
 requiredPackages = c('optparse', 'Hmisc', "heatmaply")
 warnings()
+
 library(optparse)
-# both next packages are in conda-forge (r-hmisc and r-heatmaply)
 library(Hmisc)
 library(heatmaply)
 
@@ -86,9 +86,9 @@ if (opt$sep == "tab") {opt$sep = "\t"}
 if (opt$sep == "comma") {opt$sep = ","}
 
 # Open files
-data.counts <- read.table(
+data <- read.table(
   opt$expression_file,
-  h = opt$colnames,
+  header = opt$colnames,
   row.names = 1,
   sep = opt$sep,
   check.names = F
@@ -97,36 +97,25 @@ signature <- read.delim(
   opt$signatures_file,
   header = T,
   stringsAsFactors = F,
+  row.names = 1,
   sep = opt$sep,
-  check.names = F,
-  row.names = 1
-)
-diff_expressed_genes <- read.delim(
-  opt$DE_genes,
-  header = T,
-  stringsAsFactors = F,
-  sep = opt$sep,
-  check.names = F,
-  row.names = 1
+  check.names = F
 )
 
-# Retrieve significantly differentially expressed genes
-# here a header name is imposed, to do :  select on padj !
-DE_genes <- rownames(subset(diff_expressed_genes, Significant == TRUE))
 
-# Filter expression matrix
-data <- data.counts[DE_genes,]
+# keep only signatures that are in the expression dataframe
+signature <- subset(signature, rownames(signature) %in% colnames(data))
 
 # Add signature score to expression matrix
-data <- rbind(t(subset(signature, select = c(opt$score_header))), data[,rownames(signature)])
+data <- rbind(t(signature), data)
 
 # Gene correlation
 gene_corr <- rcorr(t(data), type = "pearson") # transpose because we correlate genes, not cells
 
 # Gene correlation with signature score
 gene_corr_score <- cbind.data.frame(gene = colnames(gene_corr$r),
-                                    r = gene_corr$r[, opt$score_header], 
-                                    P = gene_corr$P[, opt$score_header])
+                                    r = gene_corr$r[, 1], 
+                                    P = gene_corr$P[, 1])
 
 # Heatmap
  heatmaply(
