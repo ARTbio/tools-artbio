@@ -1,4 +1,4 @@
-<tool id="filter_genes" name="Filter genes in single cell data" version="0.2.0">
+<tool id="filter_genes" name="Filter genes in single cell data" version="0.3.0">
     <description>which are detected in less that a given fraction of the libraries</description>
     <requirements>
         <requirement type="package" version="1.3.2=r3.3.2_0">r-optparse</requirement>
@@ -55,16 +55,16 @@
 
 **What it does**
 
-The tools takes a table of gene expression values (e.E. log10(CPM+1), etc...)
-from single cell RNAseq sequencing libraries (columns) and filters out genes (rows) that
-are detected in less than the specified fraction of libraries.
+The tools takes a table of _normalized_ gene expression values
+(i.e. log2(CPM+1), TPM, RPK, etc...) from single cell RNAseq sequencing libraries (columns)
+and filters out genes (rows) that are detected in less than the specified fraction of libraries.
 
-
-The tools returns a gene expression table for genes that were retained.
+A TSV gene expression table for genes that passed the filter is returned.
 
 **Input**
 
-A table of comma (csv) or tabulation (tsv) separated values.
+A table of comma (csv) or tabulation (tsv) separated values of _normalized_ gene expressions,
+i.e. log2(CPM+1), TPM, RPK, etc...
 Gene names should be in the first column and cell names should be in the first row.
 Note that in a number of a csv files, header of the gene column is omitted, resulting in
 a first row with one item less than in other rows. Although this is not recommended, the tool
