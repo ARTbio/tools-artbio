@@ -9,7 +9,7 @@ jobs:
       addons: {}
       before_install: skip
       install:
-        - pip install flake8 flake8-import-order planemo
+        - pip install flake8 flake8-import-order planemo==0.58.1
         - planemo --version
         - git diff --quiet "$TRAVIS_COMMIT_RANGE" -- ; GIT_DIFF_EXIT_CODE=$?
         - |
@@ -76,7 +76,7 @@ install:
   - pip install planemo
   - planemo conda_init
   - export PATH="$PLANEMO_CONDA_PREFIX/bin:$PATH"
-  - conda install -y conda=4.5.11
+  - conda install -y conda=4.6.8
   - planemo --version
   - conda --version
   - git diff --quiet "$TRAVIS_COMMIT_RANGE" -- ; GIT_DIFF_EXIT_CODE=$?
