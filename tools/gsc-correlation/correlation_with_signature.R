@@ -124,7 +124,8 @@ data <- rbind(t(subset(signature, select = c(opt$score_header))), data[,rownames
 gene_corr <- rcorr(t(data), type = "pearson") # transpose because we correlate genes, not cells
 
 # Gene correlation with signature score
-gene_corr_score <- cbind.data.frame(r = gene_corr$r[, opt$score_header], 
+gene_corr_score <- cbind.data.frame(gene = colnames(gene_corr$r),
+                                    r = gene_corr$r[, opt$score_header], 
                                     P = gene_corr$P[, opt$score_header])
 
 # Heatmap
@@ -149,22 +150,24 @@ write.table(
   sep = "\t",
   quote = F,
   col.names = T,
-  row.names = T
+  row.names = F
 )
 
+r_genes <- data.frame(gene=rownames(gene_corr$r), gene_corr$r) # add rownames as a variable for output
+p_genes <- data.frame(gene=rownames(gene_corr$P), gene_corr$P) # add rownames as a variable for output
 write.table(
-  gene_corr$r[-1,-1],
+  r_genes,
   file = opt$gene_corr,
   sep = "\t",
   quote = F,
   col.names = T,
-  row.names = T
+  row.names = F
 )
 write.table(
-  gene_corr$P[-1,-1],
+  p_genes, 
   file = opt$gene_corr_pval,
   sep = "\t",
   quote = F,
   col.names = T,
-  row.names = T
+  row.names = F
 )

@@ -48,10 +48,10 @@
         </param>
     </inputs>
     <outputs>
-        <data name="sig_corr" format="tabular" label="Signature correlations from ${on_string}" />
-        <data name="gene_corr" format="tabular" label="Genes-genes correlations from ${on_string}" />
-        <data name="gene_corr_pval" format="tabular" label="genes-genes correlations pvalues from ${on_string}" />
-        <data name="plot" format="html" label="PLOT" />
+        <data name="sig_corr" format="tabular" label="Genes-Signature correlations" />
+        <data name="gene_corr" format="tabular" label="Correlations r (all)" />
+        <data name="gene_corr_pval" format="tabular" label="Correlations p-values (all)" />
+        <data name="plot" format="html" label="Hierarchical clustering of Genes-Signature correlations" />
     </outputs>
     <tests>
         <test>
