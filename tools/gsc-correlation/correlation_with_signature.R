@@ -5,10 +5,11 @@
 # Example of command
 # Rscript correlations_with_signature.R --expression_file <expression_data.tsv>
 #                                       --signatures_file <signature_scores.tsv>
-#                                       --DE_genes <differentially_express_genes.tsv>
-#                                       --score_header "score" --sig_corr <sig corr file>
+#                                       --sep "\t"
+#                                       --colnames "T"
 #                                       --gene_corr <gene-gene corr file>
 #                                       --gene_corr_pval <gene-gene corr pvalues file>
+#                                       --sig_corr <genes correlation to signature file>
 
 # load packages that are provided in the conda env
 options( show.error.messages=F,
@@ -19,7 +20,6 @@ warnings()
 
 library(optparse)
 library(Hmisc)
-library(heatmaply)
 
 # Arguments
 option_list = list(
@@ -46,18 +46,6 @@ option_list = list(
     default = NA,
     type = 'character',
     help = "Input file that contains cell signature"
-  ),
-  make_option(
-    "--score_header",
-    default = "score",
-    type = 'character',
-    help = "Column name of signature score in cell signatures file [default : '%default' ]"
-  ), 
-  make_option(
-    "--DE_genes",
-    default = NA,
-    type = 'character',
-    help = "Input file that contains genes metadata"
   ),
   make_option(
     "--sig_corr",
@@ -113,28 +101,15 @@ data <- rbind(t(signature), data)
 gene_corr <- rcorr(t(data), type = "pearson") # transpose because we correlate genes, not cells
 
 # Gene correlation with signature score
-gene_corr_score <- cbind.data.frame(gene = colnames(gene_corr$r),
-                                    r = gene_corr$r[, 1], 
-                                    P = gene_corr$P[, 1])
-
-# Heatmap
- heatmaply(
-   subset(gene_corr_score, select = r),
-   xlab = "Signature Score", 
-   ylab = "Differentially Expressed Genes",
-   main = "Correlation between Signature and significantly DE genes",
-   dendrogram = "row",
-   colors = RdBu,
-   showticklabels = c(F,F),
-   limits = c(-1,1),
-   margins = c(40,NA,NA,NA),
-   file = "./plot.html"
- )
+gene_signature_corr <- cbind.data.frame(gene = colnames(gene_corr$r),
+                                        r = gene_corr$r[, 1], 
+                                        P = gene_corr$P[, 1])
+gene_signature_corr <- gene_signature_corr[ order(gene_signature_corr[,2], decreasing = T), ]
 
 
 # Save files
 write.table(
-  gene_corr_score,
+  gene_signature_corr,
   file = opt$sig_corr,
   sep = "\t",
   quote = F,
