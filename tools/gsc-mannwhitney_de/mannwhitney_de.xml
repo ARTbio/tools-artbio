@@ -70,19 +70,25 @@ the two groups of cells (HIGH/LOW) and then adjust the returned p-values by usin
 Benjamini-Hochberg (BH) correction. A False Discovery Rate (FDR) threshold is used to determine if gene
 can be considerated as significant (p-adjust below FDR) or not (p-adjust above the FDR value). 
 
-The tools returns a result table. For each row (genes) :
-    * mean : mean expression across all cells
-    * SD : standard deviation of its expression across all cells
-    * variance : variance of expression across all cells
-    * Percentage_detection : (number of cells where the gene is detected (expression value superior to 0) / number of cells) * 100
-    * mean_low : mean expression across cells of the second group
-    * mean_high : mean expression across cells of the first group
-    * fold_change : mean_high / mean_low
-    * statistic : W statistic of Mann-Whitney test
-    * p.value : p-value of Mann-Whitney test
-    * p.adjust : p-values adjusted from the BH correction
-    * Significant : TRUE/FALSE vector (if p-adjust inferior to FDR then the value is TRUE) 
+**Output**
 
+The tools returns a result table. For each row (genes) :
+
+==================== ======================================================================================================
+              Column Description
+-------------------- ------------------------------------------------------------------------------------------------------
+                mean mean expression across all cells
+                  SD standard deviation of its expression across all cells
+            variance variance of expression across all cells
+Percentage_detection (number of cells where the gene is detected (expression value superior to 0) / number of cells) * 100
+        mean_factor2 mean expression across cells of the second group
+        mean_factor1 mean expression across cells of the first group
+         fold_change mean_factor1 - mean_factor2
+           statistic W statistic of Mann-Whitney test
+             p.value p-value of Mann-Whitney test
+            p.adjust p-values adjusted from the BH correction
+         Significant TRUE/FALSE vector (if p-adjust inferior to FDR then the value is TRUE) 
+==================== ======================================================================================================
 
     </help>
     <citations>

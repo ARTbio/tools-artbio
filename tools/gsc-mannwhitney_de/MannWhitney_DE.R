@@ -126,10 +126,10 @@ descriptive_stats <- function(InputData) {
     Percentage_Detection = apply(InputData, 1, function(x, y = InputData) {
       (sum(x != 0) / ncol(y)) * 100
     }),
-    mean_LOW = rowMeans(InputData[,factor2_cells]),
-    mean_HIGH = rowMeans(InputData[, factor1_cells])
+    mean_factor2 = rowMeans(InputData[,factor2_cells]),
+    mean_factor1 = rowMeans(InputData[, factor1_cells])
   )
-  SummaryData$fold_change = SummaryData$mean_HIGH - SummaryData$mean_LOW
+  SummaryData$fold_change = SummaryData$mean_factor1 - SummaryData$mean_factor2
   return(SummaryData)
 }
 
