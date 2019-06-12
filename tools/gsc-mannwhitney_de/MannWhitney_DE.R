@@ -3,9 +3,8 @@
 #     analysis     #
 ####################
 
-# Fifth step of the signature-based workflow
 # Perform a differential analysis between 2
-# groups high/low.
+# groups of cells.
 
 # Example of command
 # Rscript MannWhitney_DE.R --input <input.tsv> --sep <tab> --colnames <TRUE> --metadata <signature.tsv> --column_name <rate> --fdr <0.01> --output <diff_analysis.tsv>
@@ -120,7 +119,7 @@ descriptive_stats <- function(InputData) {
     mean_LOW = rowMeans(InputData[,!high_cells]),
     mean_HIGH = rowMeans(InputData[, high_cells])
   )
-  SummaryData$fold_change = SummaryData$mean_HIGH / SummaryData$mean_LOW
+  SummaryData$fold_change = SummaryData$mean_HIGH - SummaryData$mean_LOW
   return(SummaryData)
 }
 
