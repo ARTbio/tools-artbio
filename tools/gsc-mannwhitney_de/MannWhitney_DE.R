@@ -46,8 +46,18 @@ option_list = list(
     "--column_name",
     default = "signature",
     type = 'character',
-    help = "Column name of rate category in metadata file. It must be a vector of two categories only : 'HIGH' and 'LOW'  [default : '%default' ]"
+    help = "Column name of rate category in metadata file. It must be a vector of two categories only [default : '%default' ]"
+  ),
+  make_option(
+    "--factor1",
+    type = 'character',
+    help = "First factor of rate category in metadata file [default : '%default' ]"
   ), 
+  make_option(
+    "--factor2",
+    type = 'character',
+    help = "First factor of rate category in metadata file [default : '%default' ]"
+  ),
   make_option(
     "--fdr",
     default = 0.01,
@@ -72,7 +82,6 @@ if (opt$input == "" | opt$metadata == "" & !(opt$help)) {
 
 if (opt$sep == "tab") {opt$sep = "\t"}
 if (opt$sep == "comma") {opt$sep = ","}
-if (opt$sep == "space") {opt$sep = " "}
 
 #Open files
 data.counts <- read.table(
@@ -94,12 +103,13 @@ metadata <- read.delim(
 
 metadata <- subset(metadata, rownames(metadata) %in% colnames(data.counts))
 
-# Create a logical named vector of whether or not the cell is signature "high"
-high_cells <- setNames(metadata[,opt$column_name] == "HIGH", rownames(metadata))
+# Create two logical named vectors for each factor level of cell signature
+factor1_cells <- setNames(metadata[,opt$column_name] == opt$factor1, rownames(metadata))
+factor2_cells <- setNames(metadata[,opt$column_name] == opt$factor2, rownames(metadata))
 
 ## Mann-Whitney test (Two-sample Wilcoxon test)
 MW_test <- data.frame(t(apply(data.counts, 1, function(x) {
-  do.call("cbind", wilcox.test(x[names(high_cells)[high_cells]], x[names(high_cells)[!high_cells]]))[, 1:2]
+  do.call("cbind", wilcox.test(x[names(factor1_cells)[factor1_cells]], x[names(factor2_cells)[factor2_cells]]))[, 1:2]
 })), stringsAsFactors = F)
 
 # Benjamini-Hochberg correction and significativity
@@ -116,8 +126,8 @@ descriptive_stats <- function(InputData) {
     Percentage_Detection = apply(InputData, 1, function(x, y = InputData) {
       (sum(x != 0) / ncol(y)) * 100
     }),
-    mean_LOW = rowMeans(InputData[,!high_cells]),
-    mean_HIGH = rowMeans(InputData[, high_cells])
+    mean_LOW = rowMeans(InputData[,factor2_cells]),
+    mean_HIGH = rowMeans(InputData[, factor1_cells])
   )
   SummaryData$fold_change = SummaryData$mean_HIGH - SummaryData$mean_LOW
   return(SummaryData)
