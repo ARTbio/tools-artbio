@@ -1,5 +1,5 @@
 <tool id="mannwhitney_de" name="Perform a differential analysis" version="0.1.0">
-    <description>between the two groups of a signature score using a Mann-Whitney test</description>
+    <description>using a Mann-Whitney test</description>
     <requirements>
         <requirement type="package" version="1.3.2=r3.3.2_0">r-optparse</requirement>
     </requirements>
@@ -33,12 +33,12 @@
         </param>
         <param name="metadata" type="data" format="tabular" label="Cell metadata"
                help="A tsv table file with at least two columns : cell barcodes and a column that split cells into two categories." />
-        <param name="column_name" type="text" label="Name of the category column"/>
+        <param name="column_name" type="text" label="Name of the category column taking two different values of a factor"/>
         <param name="fdr" type="float" value="0.01" label="FDR threshold"
-               help="Consider genes as significantly differentially expressed if their adjusted p-values (Benjamini-Hochberg correction) is inferior to this thresold."/>
+               help="Reject tests if adjusted p-values (Benjamini-Hochberg correction) is superior to the FDR thresold."/>
     </inputs>
     <outputs>
-        <data name="output" format="tabular" label="Gene metadata of Mann-Whitney differential analysis from ${on_string}" />
+        <data name="output" format="tabular" label="Results of Mann-Whitney differential analysis from ${on_string}" />
     </outputs>
     <tests>
         <test>
@@ -55,26 +55,26 @@
 
 **What it does**
 
-The tools takes a table of gene expression values (e.E. log10(CPM+1), etc...) from single cell RNAseq sequencing libraries (columns) and a metadata file that contains at least to columns :
-    * Cell barcodes
+The tools takes a table of gene expression values (e.E. log10(CPM+1), etc...) from single cell RNAseq sequencing libraries (columns) and a metadata file that contains at least two columns :
+    * Cell identifiers
     * Column that differentiate cell in two groups. It must be a column with only  'HIGH' and 'LOW' categories based on a signature score.
 
 For each gene (rows in expression data file), this script perform a Mann-Whitney test between 
-the two groups of cells (HIGH/LOW) and then adjust the resulted p-values by using the
+the two groups of cells (HIGH/LOW) and then adjust the returned p-values by using the
 Benjamini-Hochberg (BH) correction. A False Discovery Rate (FDR) threshold is used to determine if gene
 can be considerated as significant (p-adjust below FDR) or not (p-adjust above the FDR value). 
 
-The tools returns a gene metadata table. For each row (genes) :
+The tools returns a result table. For each row (genes) :
     * mean : mean expression across all cells
     * SD : standard deviation of its expression across all cells
-    * variance : variance of its expression across all cells
-    * Percentage_detection : (sum of its expression values across all cells / number of cells) * 100
+    * variance : variance of expression across all cells
+    * Percentage_detection : (number of cells where the gene is detected (expression value superior to 0) / number of cells) * 100
     * mean_low : mean expression across cells of the second group
     * mean_high : mean expression across cells of the first group
     * fold_change : mean_high / mean_low
     * statistic : W statistic of Mann-Whitney test
     * p.value : p-value of Mann-Whitney test
-    * p-adjust : p-values adjusted from the BH correction
+    * p.adjust : p-values adjusted from the BH correction
     * Significant : TRUE/FALSE vector (if p-adjust inferior to FDR then the value is TRUE) 
 
 
