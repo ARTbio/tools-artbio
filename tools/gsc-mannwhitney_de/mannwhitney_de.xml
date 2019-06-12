@@ -8,18 +8,18 @@
     </stdio>
     <command detect_errors="exit_code"><![CDATA[ 
         Rscript $__tool_directory__/MannWhitney_DE.R 
-            --input $input 
+            --input '$input' 
             --sep 
             #if $sep == 'tab':
               'tab'
             #elif $sep == 'comma':
               'comma'
             #end if
-            --colnames $colnames
-            --metadata $metadata
-            --name $name
-            --fdr $fdr
-            --output $output
+            --colnames '$colnames'
+            --metadata '$metadata'
+            --column_name '$column_name'
+            --fdr '$fdr'
+            --output '$output'
 ]]></command>
     <inputs>
         <param name="input" type="data" format="txt" label="Expression data" help="a csv or tsv table file" />
@@ -33,7 +33,7 @@
         </param>
         <param name="metadata" type="data" format="tabular" label="Cell metadata"
                help="A tsv table file with at least two columns : cell barcodes and a column that split cells into two categories." />
-        <param name="name" type="text" label="Name of the category column"/>
+        <param name="column_name" type="text" label="Name of the category column"/>
         <param name="fdr" type="float" value="0.01" label="FDR threshold"
                help="Consider genes as significantly differentially expressed if their adjusted p-values (Benjamini-Hochberg correction) is inferior to this thresold."/>
     </inputs>
@@ -46,7 +46,7 @@
             <param name="sep" value='tab' />
             <param name="colnames" value="TRUE"/>
             <param name="metadata" value="signature.tsv" ftype="tabular"/>
-            <param name="name" value="rate"/>
+            <param name="column_name" value="rate"/>
             <param name="fdr" value="0.01"/>
             <output name="output" file="geneMetadata.tab" ftype="tabular"/>
         </test>

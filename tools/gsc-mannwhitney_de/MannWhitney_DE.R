@@ -8,7 +8,7 @@
 # groups high/low.
 
 # Example of command
-# Rscript MannWhitney_DE.R --input <input.tsv> --sep <tab> --colnames <TRUE> --metadata <signature.tsv> --names <rate> --fdr <0.01> --output <diff_analysis.tsv>
+# Rscript MannWhitney_DE.R --input <input.tsv> --sep <tab> --colnames <TRUE> --metadata <signature.tsv> --column_name <rate> --fdr <0.01> --output <diff_analysis.tsv>
 
 # load packages that are provided in the conda env
 options( show.error.messages=F,
@@ -44,7 +44,7 @@ option_list = list(
     help = "Input file that contains cells metadata"
   ),
   make_option(
-    "--name",
+    "--column_name",
     default = "signature",
     type = 'character',
     help = "Column name of rate category in metadata file. It must be a vector of two categories only : 'HIGH' and 'LOW'  [default : '%default' ]"
@@ -96,7 +96,7 @@ metadata <- read.delim(
 metadata <- subset(metadata, rownames(metadata) %in% colnames(data.counts))
 
 # Create a logical named vector of whether or not the cell is signature "high"
-high_cells <- setNames(metadata[,opt$name] == "HIGH", rownames(metadata))
+high_cells <- setNames(metadata[,opt$column_name] == "HIGH", rownames(metadata))
 
 ## Mann-Whitney test (Two-sample Wilcoxon test)
 MW_test <- data.frame(t(apply(data.counts, 1, function(x) {
