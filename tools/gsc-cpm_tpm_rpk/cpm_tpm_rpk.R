@@ -115,17 +115,6 @@ option_list = list(
 opt = parse_args(OptionParser(option_list = option_list),
                  args = commandArgs(trailingOnly = TRUE))
 
-if (opt$data == "" & !(opt$help)) {
-  stop("At least one argument must be supplied (count data).\n",
-       call. = FALSE)
-} else if ((opt$type == "tpm" | opt$type == "rpk") & opt$gene == "") {
-  stop("At least two arguments must be supplied (count data and gene length file).\n",
-       call. = FALSE)
-} else if (opt$type != "tpm" & opt$type != "rpk" & opt$type != "cpm" & opt$type != "none") {
-  stop("Wrong transformation requested (--type option) must be : cpm, tpm or rpk.\n",
-       call. = FALSE)
-}
-
 if (opt$sep == "tab") {opt$sep = "\t"}
 if (opt$gene_sep == "tab") {opt$gene_sep = "\t"}
 
@@ -182,7 +171,7 @@ if (opt$log == TRUE) {
 }
 
 write.table(
-  cbind(Features = rownames(res), res),
+  cbind(Genes = rownames(res), res),
   opt$out,
   col.names = opt$colnames,
   row.names = F,
@@ -190,49 +179,6 @@ write.table(
   sep = "\t"
 )
 
-## 
-if (opt$visu == TRUE) {
-  df = res
-  # filter and transpose df for tsne and pca
-  df = df[rowSums(df) != 0,] # remove lines without information (with only 0 counts)
-  tdf = t(df)
-  # make tsne and plot results
-  set.seed(opt$seed) ## Sets seed for reproducibility
-  tsne_out <- Rtsne(tdf, perplexity=opt$perp, theta=opt$theta) # 
-  embedding <- as.data.frame(tsne_out$Y)
-  embedding$Class <- as.factor(sub("Class_", "", rownames(tdf)))
-  gg_legend = theme(legend.position="none")
-  ggplot(embedding, aes(x=V1, y=V2)) +
-    geom_point(size=1, color='red') +
-    gg_legend +
-    xlab("") +
-    ylab("") +
-    ggtitle('t-SNE') +
-    if (opt$tsne_labels == TRUE) {
-      geom_text(aes(label=Class),hjust=-0.2, vjust=-0.5, size=2.5, color='darkblue')
-    }
-  ggsave(file=opt$tsne_out, device="pdf")
-  # make PCA and plot result with ggfortify (autoplot)
-  tdf.pca <- prcomp(tdf, center = TRUE, scale. = T)
-  if (opt$tsne_labels == TRUE) {
-      autoplot(tdf.pca, shape=F, label=T, label.size=2.5, label.vjust=1.2,
-               label.hjust=1.2,
-               colour="darkblue") +
-      geom_point(size=1, color='red') +
-      xlab(paste("PC1",summary(tdf.pca)$importance[2,1]*100, "%")) +
-      ylab(paste("PC2",summary(tdf.pca)$importance[2,2]*100, "%")) +
-      ggtitle('PCA')
-      ggsave(file=opt$pca_out, device="pdf")   
-      } else {
-      autoplot(tdf.pca, shape=T, colour="darkblue") +
-      geom_point(size=1, color='red') +
-      xlab(paste("PC1",summary(tdf.pca)$importance[2,1]*100, "%")) +
-      ylab(paste("PC2",summary(tdf.pca)$importance[2,2]*100, "%")) +
-      ggtitle('PCA') 
-      ggsave(file=opt$pca_out, device="pdf")
-  }
-}
-  
 
 
 
