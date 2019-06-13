@@ -1,4 +1,4 @@
-<tool id="cpm_tpm_rpk" name="Generate CPM, TPM, RPK" version="0.5.0">
+<tool id="cpm_tpm_rpk" name="Generate CPM, TPM, RPK" version="0.5.1">
     <description>from raw counts expression values</description>
     <requirements>
         <requirement type="package" version="1.6.0">r-optparse</requirement>
@@ -8,21 +8,21 @@
     </stdio>
     <command detect_errors="exit_code"><![CDATA[ 
         Rscript $__tool_directory__/cpm_tpm_rpk.R 
-            --data $input 
-            --type $option.type_transfo 
-            --sep $input_sep 
-            --colnames $input_header 
+            --data '$input'
+            --type '$option.type_transfo' 
+            --sep '$input_sep' 
+            --colnames '$input_header' 
             #if $option.type_transfo == "tpm":
-                -f $option.gene_file 
+                -f '$option.gene_file' 
                 --gene_sep $option.gene_sep 
                 --gene_header $option.gene_header
             #end if 
             #if $option.type_transfo == "rpk":
-                -f $option.gene_file 
-                --gene_sep $option.gene_sep 
-                --gene_header $option.gene_header
+                -f '$option.gene_file' 
+                --gene_sep '$option.gene_sep' 
+                --gene_header '$option.gene_header'
             #end if
-            -l $log
+            --log '$log'
             #if $log == "FALSE":
                 -o ${output}
             #else if $log == "TRUE":

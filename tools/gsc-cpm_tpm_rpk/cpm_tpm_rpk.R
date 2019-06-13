@@ -66,50 +66,7 @@ option_list = list(
     default = "res.tab",
     type = 'character',
     help = "Output name [default : '%default' ]"
-  ),
-  make_option(
-    "--visu",
-    default = FALSE,
-    type = 'logical',
-    help = "performs T-SNE [default : '%default' ]"
-  ),
-  make_option(
-    "--tsne_labels",
-    default = FALSE,
-    type = 'logical',
-    help = "add labels to t-SNE plot [default : '%default' ]"
-  ),
-  make_option(
-    "--seed",
-    default = 42,
-    type = 'integer',
-    help = "Seed value for reproducibility [default : '%default' ]"
-  ),
-  make_option(
-    "--perp",
-    default = 5.0,
-    type = 'numeric',
-    help = "perplexity [default : '%default' ]"
-  ),
-  make_option(
-    "--theta",
-    default = 1.0,
-    type = 'numeric',
-    help = "theta [default : '%default' ]"
-  ),
-  make_option(
-    c("-D", "--tsne_out"),
-    default = "tsne.pdf",
-    type = 'character',
-    help = "T-SNE pdf [default : '%default' ]"
-  ),
-  make_option(
-    "--pca_out",
-    default = "pca.pdf",
-    type = 'character',
-    help = "PCA pdf [default : '%default' ]"
   )
-
 )
 
 opt = parse_args(OptionParser(option_list = option_list),
