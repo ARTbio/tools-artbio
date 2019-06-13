@@ -1,6 +1,6 @@
 # .shed.yml supporting automatic pushes.
 owner: artbio
-name: high_dimension_visualization
+name: high_dimensions_visualisation
 description: Generates PCA, t-SNE and HCPC visualisation 
 long_description: |
   Generates PCA, t-SNE and HCPC visualisation

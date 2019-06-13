@@ -20,64 +20,28 @@ library(ggfortify)
 #Arguments
 option_list = list(
   make_option(
-    c("-d", "--data"),
+    "--data",
     default = NA,
     type = 'character',
-    help = "Input file that contains count values to transform"
+    help = "Input file that contains expression value to visualise"
   ),
   make_option(
-    c("-t", "--type"),
-    default = 'cpm',
-    type = 'character',
-    help = "Transformation type, either cpm, tpm, rpk or none[default : '%default' ]"
-  ),
-  make_option(
-    c("-s", "--sep"),
+    "--sep",
     default = '\t',
     type = 'character',
     help = "File separator [default : '%default' ]"
   ),
   make_option(
-    c("-c", "--colnames"),
+    "--colnames",
     default = TRUE,
     type = 'logical',
     help = "Consider first line as header ? [default : '%default' ]"
   ),
   make_option(
-    c("-f", "--gene"),
-    default = NA,
-    type = 'character',
-    help = "Two column of gene length file"
-  ),
-  make_option(
-    c("-a", "--gene_sep"),
-    default = '\t',
-    type = 'character',
-    help = "Gene length file separator [default : '%default' ]"
-  ),
-  make_option(
-    c("-b", "--gene_header"),
-    default = TRUE,
-    type = 'logical',
-    help = "Consider first line of gene length as header ? [default : '%default' ]"
-  ),
-  make_option(
-    c("-l", "--log"),
-    default = FALSE,
-    type = 'logical',
-    help = "Should be log transformed as well ? (log2(data +1)) [default : '%default' ]"
-  ),
-  make_option(
-    c("-o", "--out"),
+    "--out",
     default = "res.tab",
     type = 'character',
     help = "Output name [default : '%default' ]"
-  ),
-  make_option(
-    "--visu",
-    default = FALSE,
-    type = 'logical',
-    help = "performs T-SNE [default : '%default' ]"
   ),
   make_option(
     "--tsne_labels",
@@ -104,7 +68,7 @@ option_list = list(
     help = "theta [default : '%default' ]"
   ),
   make_option(
-    c("-D", "--tsne_out"),
+    "--tsne_out",
     default = "tsne.pdf",
     type = 'character',
     help = "T-SNE pdf [default : '%default' ]"
@@ -121,35 +85,7 @@ option_list = list(
 opt = parse_args(OptionParser(option_list = option_list),
                  args = commandArgs(trailingOnly = TRUE))
 
-if (opt$data == "" & !(opt$help)) {
-  stop("At least one argument must be supplied (count data).\n",
-       call. = FALSE)
-} else if ((opt$type == "tpm" | opt$type == "rpk") & opt$gene == "") {
-  stop("At least two arguments must be supplied (count data and gene length file).\n",
-       call. = FALSE)
-} else if (opt$type != "tpm" & opt$type != "rpk" & opt$type != "cpm" & opt$type != "none") {
-  stop("Wrong transformation requested (--type option) must be : cpm, tpm or rpk.\n",
-       call. = FALSE)
-}
-
 if (opt$sep == "tab") {opt$sep = "\t"}
-if (opt$gene_sep == "tab") {opt$gene_sep = "\t"}
-
-cpm <- function(count) {
-  t(t(count) / colSums(count)) * 1000000
-}
-
-
-rpk <- function(count, length) {
-  count / (length / 1000)
-}
-
-tpm <- function(count, length) {
-  RPK = rpk(count, length)
-  perMillion_factor = colSums(RPK) / 1000000
-  TPM = RPK / perMillion_factor
-  return(TPM)
-}
 
 data = read.table(
   opt$data,
@@ -159,27 +95,6 @@ data = read.table(
   sep = opt$sep
 )
 
-if (opt$type == "tpm" | opt$type == "rpk") {
-  gene_length = as.data.frame(
-    read.table(
-      opt$gene,
-      h = opt$gene_header,
-      row.names = 1,
-      sep = opt$gene_sep
-    )
-  )
-  gene_length = as.data.frame(gene_length[match(rownames(data), rownames(gene_length)), ], rownames(data))
-}
-
-
-if (opt$type == "cpm")
-  res = cpm(data)
-if (opt$type == "tpm")
-  res = as.data.frame(apply(data, 2, tpm, length = gene_length), row.names = rownames(data))
-if (opt$type == "rpk")
-  res = as.data.frame(apply(data, 2, rpk, length = gene_length), row.names = rownames(data))
-if (opt$type == "none")
-  res = data
 colnames(res) = colnames(data)
 
 
