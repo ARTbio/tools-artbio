@@ -72,6 +72,15 @@ across the single-cell data
     The table should have 2 columns (Cell-identifier and signature-value). The signature
     values are scalars, one value per cell-identifier and are in the second column.
 
+**Outputs**
+
+- Correlation table between the signature score and selected gene expression. There is three columns: 
+        - gene name
+        - r : correlation value
+        - P : associated p-value
+- Gene - Gene correlation table. It's a n x n matrix of correlation values where n is the number of selected genes. 
+- Gene - Gene correlation associated p-values table. It has the same dimensions as Gene-Gene correlation table but for p-values.
+        
     </help>
     <citations>
         <citation type="bibtex">
