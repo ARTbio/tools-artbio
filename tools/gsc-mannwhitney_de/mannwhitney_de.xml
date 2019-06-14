@@ -18,8 +18,7 @@
             --colnames '$colnames'
             --factor1 '$factor1'
             --factor2 '$factor2'
-            --metadata '$metadata'
-            --column_name '$column_name'
+            --comparison_factor_file '$comparison_factor_file'
             --fdr '$fdr'
             --output '$output'
 ]]></command>
@@ -33,11 +32,10 @@
             <option value="TRUE" selected="true">Yes</option>
             <option value="FALSE">No</option>
         </param>
-        <param name="metadata" type="data" format="tabular" label="Cell metadata"
-               help="A tsv table file with at least two columns : cell barcodes and a column that split cells into two categories." />
-        <param name="column_name" type="text" label="Name of the category" help="column taking two different values of a factor"/>
-        <param name="factor1" type="text" label="Specify a first factor level" help="typical values could be 'HIGH' or 'mutant'"/>
-        <param name="factor2" type="text" label="Specify a second factor level" help="typical values could be 'LOW' or 'wt'"/>
+        <param name="comparison_factor_file" type="data" format="tabular" label="Comparison factor table"
+               help="A tsv table file with two columns : cell identifiers and a column that split cells into two categories." />
+        <param name="factor1" type="text" label="The first value that the comparison factor can take." help="typical values could be 'HIGH', 'mutant', 't1', etc."/>
+        <param name="factor2" type="text" label="The second value that the comparison factor can take." help="typical values could be 'LOW', 'wt', 't2', etc."/>
         <param name="fdr" type="float" value="0.01" label="FDR threshold"
                help="Reject tests if adjusted p-values (Benjamini-Hochberg correction) is superior to the FDR thresold."/>
     </inputs>
@@ -49,8 +47,7 @@
             <param name="input" value="filterCells_100.tsv" ftype="txt"/>
             <param name="sep" value='tab' />
             <param name="colnames" value="TRUE"/>
-            <param name="metadata" value="signature.tsv" ftype="tabular"/>
-            <param name="column_name" value="rate"/>
+            <param name="comparison_factor_file" value="signature_2columns.tsv" ftype="tabular"/>
             <param name="factor1" value="HIGH"/>
             <param name="factor2" value="LOW"/>
             <param name="fdr" value="0.01"/>

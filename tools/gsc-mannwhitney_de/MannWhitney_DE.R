@@ -37,26 +37,20 @@ option_list = list(
     help = "Consider first line as header ? [default : '%default' ]"
   ),  
   make_option(
-    "--metadata",
+    "--comparison_factor_file",
     default = NA,
     type = 'character',
-    help = "Input file that contains cells metadata"
-  ),
-  make_option(
-    "--column_name",
-    default = "signature",
-    type = 'character',
-    help = "Column name of rate category in metadata file. It must be a vector of two categories only [default : '%default' ]"
+    help = " A two column table : cell identifiers and a comparison factor that split cells in two categories (high/low, HOM/HET,...)"
   ),
   make_option(
     "--factor1",
     type = 'character',
-    help = "First factor of rate category in metadata file [default : '%default' ]"
+    help = "First factor of rate category in comparison factor file"
   ), 
   make_option(
     "--factor2",
     type = 'character',
-    help = "First factor of rate category in metadata file [default : '%default' ]"
+    help = "Second factor of rate category in comparison factor file"
   ),
   make_option(
     "--fdr",
@@ -66,7 +60,7 @@ option_list = list(
   ),
   make_option(
     "--output",
-    default = "~",
+    default = "results.tsv",
     type = 'character',
     help = "Output name [default : '%default' ]"
   )
@@ -75,10 +69,6 @@ option_list = list(
 opt = parse_args(OptionParser(option_list = option_list),
                  args = commandArgs(trailingOnly = TRUE))
 
-if (opt$input == "" | opt$metadata == "" & !(opt$help)) {
-  stop("At least two arguments must be supplied (count data --input option and cell metadata --metadata option).\n",
-       call. = FALSE)
-}
 
 if (opt$sep == "tab") {opt$sep = "\t"}
 if (opt$sep == "comma") {opt$sep = ","}
@@ -92,8 +82,8 @@ data.counts <- read.table(
   check.names = F
 )
 
-metadata <- read.delim(
-  opt$metadata,
+metadata <- read.table(
+  opt$comparison_factor_file,
   header = TRUE,
   stringsAsFactors = F,
   sep = "\t",
@@ -104,8 +94,8 @@ metadata <- read.delim(
 metadata <- subset(metadata, rownames(metadata) %in% colnames(data.counts))
 
 # Create two logical named vectors for each factor level of cell signature
-factor1_cells <- setNames(metadata[,opt$column_name] == opt$factor1, rownames(metadata))
-factor2_cells <- setNames(metadata[,opt$column_name] == opt$factor2, rownames(metadata))
+factor1_cells <- setNames(metadata[,1] == opt$factor1, rownames(metadata))
+factor2_cells <- setNames(metadata[,1] == opt$factor2, rownames(metadata))
 
 ## Mann-Whitney test (Two-sample Wilcoxon test)
 MW_test <- data.frame(t(apply(data.counts, 1, function(x) {
