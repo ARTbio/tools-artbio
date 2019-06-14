@@ -37,7 +37,7 @@
         <param name="factor1" type="text" label="The first value that the comparison factor can take." help="typical values could be 'HIGH', 'mutant', 't1', etc."/>
         <param name="factor2" type="text" label="The second value that the comparison factor can take." help="typical values could be 'LOW', 'wt', 't2', etc."/>
         <param name="fdr" type="float" value="0.01" label="FDR threshold"
-               help="Reject tests if adjusted p-values (Benjamini-Hochberg correction) is superior to the FDR thresold."/>
+               help="Reject tests if adjusted p-values (Benjamini-Hochberg correction) is superior to the FDR cut-off."/>
     </inputs>
     <outputs>
         <data name="output" format="tabular" label="Results of Mann-Whitney differential analysis from ${on_string}" />
@@ -58,14 +58,14 @@
 
 **What it does**
 
-The tools takes a table of gene expression values (e.E. log10(CPM+1), etc...) from single cell RNAseq sequencing libraries (columns) and a metadata file that contains at least two columns :
+The tools takes a table of gene expression values (e.E. log2(CPM+1), etc...) from single cell RNAseq sequencing libraries (columns) and a metadata file that contains at least two columns :
     * Cell identifiers
     * Column that differentiate cell in two groups. It must be a column with only two categories (factor levels).
 
 For each gene (rows in expression data file), this script perform a Mann-Whitney test between 
 the two groups of cells (high/low, mutant/wild type) and then adjust the returned p-values by using the
 Benjamini-Hochberg (BH) correction. A False Discovery Rate (FDR) threshold is used to determine if gene
-can be considerated as significant (p-adjust below FDR) or not (p-adjust above the FDR value). 
+can be considerated as significant (p-adjust below FDR cut-off) or not (p-adjust above the FDR cut-off). 
 
 **Output**
 
@@ -78,9 +78,9 @@ The tools returns a result table. For each row (genes) :
                   SD standard deviation of its expression across all cells
             variance variance of expression across all cells
 Percentage_detection (number of cells where the gene is detected (expression value superior to 0) / number of cells) * 100
-        mean_factor2 mean expression across cells of the second group
-        mean_factor1 mean expression across cells of the first group
-         fold_change mean_factor1 - mean_factor2
+        mean_factor2 mean expression across cells of the second group (of log transformed expression values)
+        mean_factor1 mean expression across cells of the first group (of log transformed expression values)
+         fold_change mean_factor1 - mean_factor2 (difference of log)
            statistic W statistic of Mann-Whitney test
              p.value p-value of Mann-Whitney test
             p.adjust p-values adjusted from the BH correction
