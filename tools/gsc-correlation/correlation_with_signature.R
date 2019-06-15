@@ -1,180 +1,137 @@
-####################
-#    Correlation   #
-#     analysis     #
-####################
-
-# Sixth step of the signature-based workflow
-# Perform a correlation analysis between the
-# signature score and DEG expression.
+# Performs multi-correlation analysis between the vectors of gene expressions
+# in single cell RNAseq libraries and the vectors of signature scores in these
+# same single cell RNAseq libraries.
 
 # Example of command
-# Rscript 6-correlation.R -f ../3-filter_genes/filterGenes.tsv -m ../4-signature_score/signatureScoreMetadata.tsv -g ../5-differential_analysis/diffAnalysisGeneMetadata.tsv --score Signature_score -o .
+# Rscript correlations_with_signature.R --expression_file <expression_data.tsv>
+#                                       --signatures_file <signature_scores.tsv>
+#                                       --sep "\t"
+#                                       --colnames "T"
+#                                       --gene_corr <gene-gene corr file>
+#                                       --gene_corr_pval <gene-gene corr pvalues file>
+#                                       --sig_corr <genes correlation to signature file>
 
-# Load necessary packages (install them if it's not the case)
-requiredPackages = c('optparse', 'Hmisc', "heatmaply")
-for (p in requiredPackages) {
-  if (!require(p, character.only = TRUE, quietly = T)) {
-    install.packages(p)
-  }
-  suppressPackageStartupMessages(suppressMessages(library(p, character.only = TRUE)))
-}
+# load packages that are provided in the conda env
+options( show.error.messages=F,
+       error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
+requiredPackages = c('optparse', 'Hmisc')
+warnings()
 
-#Arguments
+library(optparse)
+library(Hmisc)
+
+# Arguments
 option_list = list(
   make_option(
-    c("-f", "--file"),
-    default = NA,
-    type = 'character',
-    help = "Input file that contains log2(CPM +1) values"
-  ),
-  make_option(
-    c("-s", "--sep"),
+    "--sep",
     default = '\t',
     type = 'character',
-    help = "File separator [default : '%default' ]"
+    help = "File separator, must be the same for all input files [default : '%default' ]"
   ),
   make_option(
-    c("-c", "--colnames"),
+    "--colnames",
     default = TRUE,
     type = 'logical',
-    help = "Consider first line as header ? [default : '%default' ]"
+    help = "Consider first lines as header (must stand for all input files) [default : '%default' ]"
   ),  
   make_option(
-    c("-m", "--metadata"),
+    "--expression_file",
     default = NA,
     type = 'character',
-    help = "Input file that contains cells metadata"
+    help = "Input file that contains log2(CPM +1) expression values"
   ),
   make_option(
-    c("-d", "--delimiter"),
-    default = "\t",
-    type = 'character',
-    help = "Column separator for metadata file [default : '%default' ]"
-  ),
-  make_option(
-    "--score",
-    default = "score",
-    type = 'character',
-    help = "Column name of signature score in gene metadata file [default : '%default' ]"
-  ), 
-  make_option(
-    c("-g", "--gene_metadata"),
+    "--signatures_file",
     default = NA,
     type = 'character',
-    help = "Input file that contains genes metadata"
+    help = "Input file that contains cell signature"
   ),
   make_option(
-    "--gene_delimiter",
-    default = "\t",
+    "--sig_corr",
+    default = "sig_corr.tsv",
     type = 'character',
-    help = "Column separator for gene metadata file [default : '%default' ]"
+    help = "signature correlations output [default : '%default' ]"
   ),
   make_option(
-    c("-a", "--autocorr"),
-    default = FALSE,
-    type = 'logical',
-    help = "Output the gene-gene expression correlation matrices [default : '%default' ]"
-  ),
-  make_option(
-    c("-o", "--out"),
-    default = "~",
+    "--gene_corr",
+    default = "gene_corr.tsv",
     type = 'character',
-    help = "Output name [default : '%default' ]"
+    help = "genes-genes correlations output [default : '%default' ]"
+  ),
+  make_option(
+    "--gene_corr_pval",
+    default = "gene_corr_pval.tsv",
+    type = 'character',
+    help = "genes-genes correlations pvalues output [default : '%default' ]"
   )
 )
 
 opt = parse_args(OptionParser(option_list = option_list),
                  args = commandArgs(trailingOnly = TRUE))
 
-if (opt$file == "" | opt$metadata == "" & !(opt$help)) {
-  stop("At least tw arguments must be supplied (count data --file option and cell metadata --metadata option).\n",
-       call. = FALSE)
-}
+if (opt$sep == "tab") {opt$sep = "\t"}
+if (opt$sep == "comma") {opt$sep = ","}
 
-
-#Open files
-data.counts <- read.table(
-  opt$file,
-  h = opt$colnames,
+# Open files
+data <- read.table(
+  opt$expression_file,
+  header = opt$colnames,
+  row.names = 1,
+  sep = opt$sep,
+  check.names = F
+)
+signature <- read.delim(
+  opt$signatures_file,
+  header = T,
+  stringsAsFactors = F,
   row.names = 1,
   sep = opt$sep,
   check.names = F
 )
 
-metadata <- read.delim(
-  opt$metadata,
-  header = TRUE,
-  stringsAsFactors = F,
-  sep = opt$delimiter,
-  check.names = FALSE,
-  row.names = 1
-)
 
-gene_metadata <- read.delim(
-  opt$gene_metadata,
-  header = TRUE,
-  stringsAsFactors = F,
-  sep = opt$gene_delimiter,
-  check.names = FALSE,
-  row.names = 1
-)
+# keep only signatures that are in the expression dataframe
+signature <- subset(signature, rownames(signature) %in% colnames(data))
 
-#Retrieve significantly differentially expressed genes
-DE_genes <- rownames(subset(gene_metadata, Significant == TRUE))
+# Add signature score to expression matrix
+data <- rbind(t(signature), data)
 
-#Filter expression matrix
-data <- data.counts[DE_genes,]
+# Gene correlation
+gene_corr <- rcorr(t(data), type = "pearson") # transpose because we correlate genes, not cells
 
-#Add signature score to expression matrix
-data <- rbind(t(subset(metadata, select = c(opt$score))), data[,rownames(metadata)])
-
-#Gene correlation
-gene_corr <- rcorr(t(data), type = "pearson")
-
-#Gene correlation with signature score
-gene_corr_score <- cbind.data.frame(r = gene_corr$r[, opt$score], 
-                                    P = gene_corr$P[, opt$score])
-
-#Heatmap
-heatmaply(
-  subset(gene_corr_score, select = r),
-  xlab = "Signature Score", 
-  ylab = "Differentially Expressed Genes",
-  main = paste0("Correlation between Signature and significantly DE genes"),
-  dendrogram = "row",
-  colors = RdBu,
-  showticklabels = c(F,F),
-  limits = c(-1,1),
-  margins = c(40,NA,NA,NA),
-  file = paste0(opt$out, "/CorrelationHeatmap.html")
-)
+# Gene correlation with signature score
+gene_signature_corr <- cbind.data.frame(gene = colnames(gene_corr$r),
+                                        Pearson_correlation = gene_corr$r[, 1], 
+                                        p_value = gene_corr$P[, 1])
+gene_signature_corr <- gene_signature_corr[ order(gene_signature_corr[,2], decreasing = T), ]
 
 
-#Save files
+# Save files
 write.table(
-  gene_corr_score,
-  paste0(opt$out, "/GeneCorrelationWithSignature.tsv"),
+  gene_signature_corr,
+  file = opt$sig_corr,
   sep = "\t",
   quote = F,
   col.names = T,
-  row.names = T
+  row.names = F
 )
 
-if(opt$autocorr == T){
-  write.table(
-    gene_corr$r[-1,-1],
-    paste0(opt$out, "/GeneGeneCorrelation.tsv"),
-    sep = "\t",
-    quote = F,
-    col.names = T,
-    row.names = T
-  )
-  write.table(
-    gene_corr$P[-1,-1],
-    paste0(opt$out, "/GeneGeneCorrelationPvalues.tsv"),
-    sep = "\t",
-    quote = F,
-    col.names = T,
-    row.names = T
-  )
-}
+r_genes <- data.frame(gene=rownames(gene_corr$r), gene_corr$r) # add rownames as a variable for output
+p_genes <- data.frame(gene=rownames(gene_corr$P), gene_corr$P) # add rownames as a variable for output
+write.table(
+  r_genes[-1,-2],
+  file = opt$gene_corr,
+  sep = "\t",
+  quote = F,
+  col.names = T,
+  row.names = F
+)
+write.table(
+  p_genes[-1,-2], 
+  file = opt$gene_corr_pval,
+  sep = "\t",
+  quote = F,
+  col.names = T,
+  row.names = F
+)
