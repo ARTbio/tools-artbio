@@ -15,7 +15,7 @@
 options( show.error.messages=F,
        error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
 loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
-requiredPackages = c('optparse', 'Hmisc', "heatmaply")
+requiredPackages = c('optparse', 'Hmisc')
 warnings()
 
 library(optparse)
@@ -102,8 +102,8 @@ gene_corr <- rcorr(t(data), type = "pearson") # transpose because we correlate g
 
 # Gene correlation with signature score
 gene_signature_corr <- cbind.data.frame(gene = colnames(gene_corr$r),
-                                        r = gene_corr$r[, 1], 
-                                        P = gene_corr$P[, 1])
+                                        Pearson_correlation = gene_corr$r[, 1], 
+                                        p_value = gene_corr$P[, 1])
 gene_signature_corr <- gene_signature_corr[ order(gene_signature_corr[,2], decreasing = T), ]
 
 
@@ -120,7 +120,7 @@ write.table(
 r_genes <- data.frame(gene=rownames(gene_corr$r), gene_corr$r) # add rownames as a variable for output
 p_genes <- data.frame(gene=rownames(gene_corr$P), gene_corr$P) # add rownames as a variable for output
 write.table(
-  r_genes,
+  r_genes[-1,-2],
   file = opt$gene_corr,
   sep = "\t",
   quote = F,
@@ -128,7 +128,7 @@ write.table(
   row.names = F
 )
 write.table(
-  p_genes, 
+  p_genes[-1,-2], 
   file = opt$gene_corr_pval,
   sep = "\t",
   quote = F,
