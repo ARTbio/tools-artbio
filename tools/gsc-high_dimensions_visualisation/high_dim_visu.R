@@ -5,6 +5,7 @@ loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
 requiredPackages = c('optparse', 'Rtsne', 'ggplot2', 'ggfortify')
 warnings()
 library(optparse)
+library(FactoMineR)
 library(Rtsne)
 library(ggplot2)
 library(ggfortify)
@@ -111,25 +112,33 @@ data = read.table(
     }
   ggsave(file=opt$tsne_out, device="pdf")
 
+
+# make PCA with FactoMineR
+
+pca <- PCA(t(data), ncp=5, graph=FALSE)
+pdf(opt$pca_out)
+plot(pca, label="none")
+dev.off()
+
   # make PCA and plot result with ggfortify (autoplot)
-  tdf.pca <- prcomp(tdf, center = TRUE, scale. = T)
-  if (opt$tsne_labels == TRUE) {
-      autoplot(tdf.pca, shape=F, label=T, label.size=2.5, label.vjust=1.2,
-               label.hjust=1.2,
-               colour="darkblue") +
-      geom_point(size=1, color='red') +
-      xlab(paste("PC1",summary(tdf.pca)$importance[2,1]*100, "%")) +
-      ylab(paste("PC2",summary(tdf.pca)$importance[2,2]*100, "%")) +
-      ggtitle('PCA')
-      ggsave(file=opt$pca_out, device="pdf")   
-      } else {
-      autoplot(tdf.pca, shape=T, colour="darkblue") +
-      geom_point(size=1, color='red') +
-      xlab(paste("PC1",summary(tdf.pca)$importance[2,1]*100, "%")) +
-      ylab(paste("PC2",summary(tdf.pca)$importance[2,2]*100, "%")) +
-      ggtitle('PCA') 
-      ggsave(file=opt$pca_out, device="pdf")
-  }
+#   tdf.pca <- prcomp(tdf, center = TRUE, scale. = T)
+#   if (opt$tsne_labels == TRUE) {
+#       autoplot(tdf.pca, shape=F, label=T, label.size=2.5, label.vjust=1.2,
+#                label.hjust=1.2,
+#                colour="darkblue") +
+#       geom_point(size=1, color='red') +
+#       xlab(paste("PC1",summary(tdf.pca)$importance[2,1]*100, "%")) +
+#       ylab(paste("PC2",summary(tdf.pca)$importance[2,2]*100, "%")) +
+#       ggtitle('PCA')
+#       ggsave(file=opt$pca_out, device="pdf")   
+#       } else {
+#       autoplot(tdf.pca, shape=T, colour="darkblue") +
+#       geom_point(size=1, color='red') +
+#       xlab(paste("PC1",summary(tdf.pca)$importance[2,1]*100, "%")) +
+#       ylab(paste("PC2",summary(tdf.pca)$importance[2,2]*100, "%")) +
+#       ggtitle('PCA') 
+#       ggsave(file=opt$pca_out, device="pdf")
+#   }
 
   
 
