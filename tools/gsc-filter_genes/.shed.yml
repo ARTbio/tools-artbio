@@ -1,6 +1,6 @@
 # .shed.yml supporting automatic pushes.
 owner: artbio
-name: gsc-filter_genes
+name: gsc_filter_genes
 description: Filter genes that are detected in less than a fraction of libraries in single cell RNAseq data
 long_description:
 categories:
