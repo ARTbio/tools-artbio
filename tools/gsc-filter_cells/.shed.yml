@@ -1,6 +1,6 @@
 # .shed.yml supporting automatic pushes.
 owner: artbio
-name: gsc-filter_cells
+name: gsc_filter_cells
 description: Filter single cell RNAseq data on libray depth and number of detected genes
 long_description: |
   Filter single cell RNAseq datasets on 
