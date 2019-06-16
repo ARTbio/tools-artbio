@@ -39,10 +39,16 @@ option_list = list(
     help = "Output name [default : '%default' ]"
   ),
   make_option(
-    "--tsne_labels",
+    "--labels",
     default = FALSE,
     type = 'logical',
     help = "add labels to t-SNE plot [default : '%default' ]"
+  ),
+  make_option(
+    "--visu_choice",
+    default = 'PCA',
+    type = 'character',
+    help = "visualisation method (PCA, tSNE) [default : '%default' ]"
   ),
   make_option(
     "--seed",
@@ -63,18 +69,11 @@ option_list = list(
     help = "theta [default : '%default' ]"
   ),
   make_option(
-    "--tsne_out",
-    default = "tsne.pdf",
+    "--pdf_out",
+    default = "out.pdf",
     type = 'character',
-    help = "T-SNE pdf [default : '%default' ]"
-  ),
-  make_option(
-    "--pca_out",
-    default = "pca.pdf",
-    type = 'character',
-    help = "PCA pdf [default : '%default' ]"
+    help = "pdf of plots [default : '%default' ]"
   )
-
 )
 
 opt = parse_args(OptionParser(option_list = option_list),
@@ -92,6 +91,7 @@ data = read.table(
 )
 
 # t-SNE
+if (opt$visu_choice == 'tSNE') {
   # filter and transpose df for tsne and pca
   data = data[rowSums(data) != 0,] # remove lines without information (with only 0s)
   tdf = t(data)
@@ -107,22 +107,29 @@ data = read.table(
     xlab("") +
     ylab("") +
     ggtitle('t-SNE') +
-    if (opt$tsne_labels == TRUE) {
-      geom_text(aes(label=Class),hjust=-0.2, vjust=-0.5, size=2.5, color='darkblue')
+    if (opt$labels == TRUE) {
+      geom_text(aes(label=Class),hjust=-0.2, vjust=-0.5, size=1.5, color='darkblue')
     }
-  ggsave(file=opt$tsne_out, device="pdf")
+  ggsave(file=opt$pdf_out, device="pdf")
+}
 
 
 # make PCA with FactoMineR
-
-pca <- PCA(t(data), ncp=5, graph=FALSE)
-pdf(opt$pca_out)
-plot(pca, label="none")
+  if (opt$visu_choice == 'PCA') {
+  pca <- PCA(t(data), ncp=5, graph=FALSE)
+  pdf(opt$pdf_out)
+  if (opt$labels == FALSE) {
+    plot(pca, label="none")
+    } else {
+    plot(pca, cex=0.2)
+  }
 dev.off()
+}
+
 
   # make PCA and plot result with ggfortify (autoplot)
 #   tdf.pca <- prcomp(tdf, center = TRUE, scale. = T)
-#   if (opt$tsne_labels == TRUE) {
+#   if (opt$labels == TRUE) {
 #       autoplot(tdf.pca, shape=F, label=T, label.size=2.5, label.vjust=1.2,
 #                label.hjust=1.2,
 #                colour="darkblue") +

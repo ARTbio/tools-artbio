@@ -12,19 +12,21 @@
     </stdio>
     <command detect_errors="exit_code"><![CDATA[ 
         Rscript $__tool_directory__/high_dim_visu.R 
-            --data $input 
-            --sep $input_sep 
-            --colnames $input_header 
-            #if $tsne_labels == "yes":
-                --tsne_labels 'TRUE'
+            --data '$input'
+            --sep '$input_sep'
+            --colnames '$input_header'
+            #if $labels == "yes":
+                --labels 'TRUE'
             #else
-                --tsne_labels 'FALSE'
+                --labels 'FALSE'
             #end if
-            --seed '$seed'
-            --perp '$perp'
-            --theta '$theta'
-            --tsne_out '$tsne_out'
-            --pca_out '$pca_out'
+            --visu_choice '$visualisation.visu_choice'
+            #if $visualisation.visu_choice == "tSNE":
+                --seed '$visualisation.seed'
+                --perp '$visualisation.perp'
+                --theta '$visualisation.theta'
+            #end if
+            --pdf_out '$pdf_out'
 ]]></command>
     <inputs>
         <param name="input" type="data" format="txt" label="expression data"/>
@@ -36,29 +38,59 @@
             <option value="TRUE" selected="true">Yes</option>
             <option value="FALSE">No</option>
         </param>
-
-        <param name="seed" value="49.0" type="float" label="Seed value for reproducibility of t-SNE" help="Set to 49 as default" />
-        <param name="perp" value="10.0" type="float" label="perplexity (t-SNE)" help="should be less than ((nbr observations)-1)/3" /> 
-        <param name="theta" value="1.0" type="float" label="theta (t-SNE)"/>
-        <param name="tsne_labels" type="select" label="Add labels to points plots" >
+        <param name="labels" type="select" label="Add sample labels to scatter plot" >
             <option value="no" selected="true">No Labels</option>
             <option value="yes" >Label points</option>
         </param>
+        <conditional name="visualisation">
+            <param label="Choose visualisation method" name="visu_choice" type="select">
+                <option value="PCA" selected="True">PCA</option>
+                <option value="tSNE">t-SNE</option>
+            </param>
+            <when value="tSNE">
+                <param name="seed" value="49.0" type="float" label="Seed value for reproducibility of t-SNE" help="Set to 49 as default" />
+                <param name="perp" value="10.0" type="float" label="perplexity (t-SNE)" help="should be less than ((nbr observations)-1)/3" /> 
+                <param name="theta" value="1.0" type="float" label="theta (t-SNE)"/>
+            </when>
+            <when value="PCA">
+            </when>
+        </conditional>
     </inputs>
     <outputs>
-        <data name="tsne_out" format="pdf" label="tsne from ${on_string}" />
-        <data name="pca_out" format="pdf" label="PCA from ${on_string}" />
+        <data name="pdf_out" format="pdf" label="plots from ${tool.name} on ${on_string}" />
     </outputs>
     <tests>
         <!-- test t-SNE -->
         <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="yes" />
+            <param name="visu_choice" value="tSNE" />
             <param name="seed" value="49"/>
             <param name="perp" value="10"/>
             <param name="theta" value="1" />
-            <param name="tsne_labels" value="yes" />
-            <output name="tsne_out" file="tsne.pdf" ftype="pdf"/>
-            <output name="pca_out" file="pca.pdf" ftype="pdf"/>
+            <output name="pdf_out" file="tsne.labels.pdf" ftype="pdf"/>
+        </test>
+        <test>
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="no" />
+            <param name="visu_choice" value="tSNE" />
+            <param name="seed" value="49"/>
+            <param name="perp" value="10"/>
+            <param name="theta" value="1" />
+            <output name="pdf_out" file="tsne.nolabels.pdf" ftype="pdf"/>
+        </test>
+        <!-- test PCA -->
+        <test>
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="yes" />
+            <param name="visu_choice" value="PCA" />
+            <output name="pdf_out" file="pca.labels.pdf" ftype="pdf"/>
+        </test>
+        <test>
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="no" />
+            <param name="visu_choice" value="PCA" />
+            <output name="pdf_out" file="pca.nolabels.pdf" ftype="pdf"/>
         </test>
     </tests>
     <help>
