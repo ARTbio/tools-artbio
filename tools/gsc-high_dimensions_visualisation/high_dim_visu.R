@@ -42,7 +42,7 @@ option_list = list(
     "--labels",
     default = FALSE,
     type = 'logical',
-    help = "add labels to t-SNE plot [default : '%default' ]"
+    help = "add labels in scatter plots [default : '%default' ]"
   ),
   make_option(
     "--visu_choice",
@@ -63,7 +63,7 @@ option_list = list(
     help = "Table with plot coordinates [default : '%default' ]"
   ),
   make_option(
-    "--seed",
+    "--Rtsne_seed",
     default = 42,
     type = 'integer',
     help = "Seed value for reproducibility [default : '%default' ]"
@@ -123,7 +123,7 @@ option_list = list(
     help = " Exaggeration factor used to multiply the P matrix in the first part of the optimization [default : '%default' ]"
   ), 
    make_option(
-    "--PCA_ncp",
+    "--PCA_npc",
     default = 5,
     type = 'integer',
     help = "number of dimensions kept in the results [default : '%default' ]"
@@ -135,7 +135,7 @@ option_list = list(
     help = "nb.clust, number of clusters to consider in the hierarchical clustering. [default : -1 let HCPC to optimize the number]"
   ),
    make_option(
-    "--HCPC_ncp",
+    "--HCPC_npc",
     default = 5,
     type = 'integer',
     help = "npc, number of dimensions which are kept for HCPC analysis [default : '%default' ]"
@@ -180,7 +180,7 @@ if (opt$visu_choice == 'tSNE') {
   data = data[rowSums(data) != 0,] # remove lines without information (with only 0s)
   tdf = t(data)
   # make tsne and plot results
-  set.seed(opt$seed) ## Sets seed for reproducibility
+  set.seed(opt$Rtsne_seed) ## Sets seed for reproducibility
 
   tsne_out <- Rtsne(tdf, dims = opt$Rtsne_dims, initial_dims = opt$Rtsne_initial_dims, 
      perplexity = opt$Rtsne_perplexity , theta = opt$Rtsne_theta, pca = opt$Rtsne_pca, 
@@ -211,7 +211,7 @@ if (opt$visu_choice == 'tSNE') {
 
 # make PCA with FactoMineR
 if (opt$visu_choice == 'PCA') {
-  pca <- PCA(t(data), ncp=opt$PCA_ncp, graph=FALSE)
+  pca <- PCA(t(data), npc=opt$PCA_npc, graph=FALSE)
   pdf(opt$pdf_out)
   if (opt$labels == FALSE) {
     plot(pca, label="none")
@@ -223,7 +223,7 @@ dev.off()
   #save coordinates table
   if(opt$plot_coordinates){
   coord_table <- cbind(rownames(pca$ind$coord),as.data.frame(pca$ind$coord))
-  colnames(coord_table)=c("Cells",paste0("DIM",(1:opt$PCA_ncp)))
+  colnames(coord_table)=c("Cells",paste0("DIM",(1:opt$PCA_npc)))
   }
 
 }
@@ -236,7 +236,7 @@ pdf(opt$pdf_out)
 ## HCPC starts with a PCA
 pca <- PCA(
     t(data),
-    ncp = opt$HCPC_ncp,
+    npc = opt$HCPC_npc,
     graph = FALSE,
     scale.unit = FALSE
 )
@@ -304,7 +304,7 @@ dev.off()
 
  if(opt$plot_coordinates){
   coord_table <- cbind(Cell=rownames(res.hcpc$call$X),as.data.frame(res.hcpc$call$X))
-  colnames(coord_table)=c("Cells",paste0("DIM",(1:opt$HCPC_ncp)),"Cluster")
+  colnames(coord_table)=c("Cells",paste0("DIM",(1:opt$HCPC_npc)),"Cluster")
   }
 
 
