@@ -51,34 +51,106 @@ option_list = list(
     help = "visualisation method ('PCA', 'tSNE', 'HCPC') [default : '%default' ]"
   ),
   make_option(
+    "--plot_coordinates",
+    default = FALSE,
+    type = 'logical',
+    help = "Table with plot coordinates in the output [default : '%default' ]"
+  ),
+   make_option(
+    "--table_coordinates",
+    default = 'Coord.tab',
+    type = 'character',
+    help = "Table with plot coordinates [default : '%default' ]"
+  ),
+  make_option(
     "--seed",
     default = 42,
     type = 'integer',
     help = "Seed value for reproducibility [default : '%default' ]"
   ),
   make_option(
-    "--perp",
+    "--Rtsne_dims",
+    default = 2,
+    type = 'integer',
+    help = "Output dimensionality [default : '%default' ]"
+  ),
+  make_option(
+    "--Rtsne_initial_dims",
+    default = 50,
+    type = 'integer',
+    help = "The number of dimensions that should be retained in the initial PCA step [default : '%default' ]"
+  ),
+  make_option(
+    "--Rtsne_perplexity",
     default = 5.0,
     type = 'numeric',
     help = "perplexity [default : '%default' ]"
   ),
   make_option(
-    "--theta",
+    "--Rtsne_theta",
     default = 1.0,
     type = 'numeric',
     help = "theta [default : '%default' ]"
+  ), 
+   make_option(
+    "--Rtsne_pca",
+    default = TRUE,
+    type = 'logical',
+    help = "Whether an initial PCA step should be performed [default : '%default' ]"
   ),
   make_option(
-    "--npc",
-    default = 5,
+    "--Rtsne_pca_center",
+    default = TRUE,
+    type = 'logical',
+    help = "Should data be centered before pca is applied? [default : '%default' ]"
+  ),
+   make_option(
+    "--Rtsne_pca_scale",
+    default = FALSE,
+    type = 'logical',
+    help = "Should data be scaled before pca is applied? [default : '%default' ]"
+  ),
+	make_option(
+    "--Rtsne_normalize",
+    default = TRUE,
+    type = 'logical',
+    help = "Should data be normalized internally prior to distance calculations? [default : '%default' ]"
+  ),
+  make_option(
+    "--Rtsne_exaggeration_factor",
+    default = 12.0,
     type = 'numeric',
-    help = "npc, number of dimensions which are kept for HCPC analysis [default : '%default' ]"
+    help = " Exaggeration factor used to multiply the P matrix in the first part of the optimization [default : '%default' ]"
+  ), 
+   make_option(
+    "--PCA_ncp",
+    default = 5,
+    type = 'integer',
+    help = "number of dimensions kept in the results [default : '%default' ]"
   ),
   make_option(
-    "--ncluster",
+    "--HCPC_ncluster",
     default = -1,
     type = 'numeric',
     help = "nb.clust, number of clusters to consider in the hierarchical clustering. [default : -1 let HCPC to optimize the number]"
+  ),
+   make_option(
+    "--HCPC_ncp",
+    default = 5,
+    type = 'integer',
+    help = "npc, number of dimensions which are kept for HCPC analysis [default : '%default' ]"
+  ),
+  make_option(
+    "--HCPC_metric",
+    default = 'euclidian',
+    type = 'character',
+    help = "Metric to be used for calculating dissimilarities between observations, available 'euclidian' or 'manhattan' [default : '%default' ]"
+  ),
+  make_option(
+    "--HCPC_method",
+    default = 'ward',
+    type = 'character',
+    help = "Clustering method between 'ward','average','single', 'complete', 'weighted'  [default :'%default']"
   ),
   make_option(
     "--pdf_out",
@@ -109,9 +181,14 @@ if (opt$visu_choice == 'tSNE') {
   tdf = t(data)
   # make tsne and plot results
   set.seed(opt$seed) ## Sets seed for reproducibility
-  tsne_out <- Rtsne(tdf, perplexity=opt$perp, theta=opt$theta)
-  embedding <- as.data.frame(tsne_out$Y)
-  embedding$Class <- as.factor(sub("Class_", "", rownames(tdf)))
+
+  tsne_out <- Rtsne(tdf, dims = opt$Rtsne_dims, initial_dims = opt$Rtsne_initial_dims, 
+     perplexity = opt$Rtsne_perplexity , theta = opt$Rtsne_theta, pca = opt$Rtsne_pca, 
+     pca_center = opt$Rtsne_pca_center,  pca_scale = opt$Rtsne_pca_scale,
+     normalize = opt$Rtsne_normalize, exaggeration_factor=opt$Rtsne_exaggeration_factor)
+
+  embedding <- as.data.frame(tsne_out$Y[,1:2])
+  embedding$Class <- as.factor(rownames(tdf))
   gg_legend = theme(legend.position="none")
   ggplot(embedding, aes(x=V1, y=V2)) +
     geom_point(size=1, color='red') +
@@ -123,12 +200,18 @@ if (opt$visu_choice == 'tSNE') {
       geom_text(aes(label=Class),hjust=-0.2, vjust=-0.5, size=1.5, color='darkblue')
     }
   ggsave(file=opt$pdf_out, device="pdf")
+  
+  #save coordinates table
+  if(opt$plot_coordinates){
+  coord_table <- cbind(rownames(tdf),as.data.frame(tsne_out$Y))
+  colnames(coord_table)=c("Cells",paste0("DIM",(1:opt$Rtsne_dims)))
+  }
 }
 
 
 # make PCA with FactoMineR
 if (opt$visu_choice == 'PCA') {
-  pca <- PCA(t(data), ncp=5, graph=FALSE)
+  pca <- PCA(t(data), ncp=opt$PCA_ncp, graph=FALSE)
   pdf(opt$pdf_out)
   if (opt$labels == FALSE) {
     plot(pca, label="none")
@@ -136,6 +219,13 @@ if (opt$visu_choice == 'PCA') {
     plot(pca, cex=0.2)
   }
 dev.off()
+
+  #save coordinates table
+  if(opt$plot_coordinates){
+  coord_table <- cbind(rownames(pca$ind$coord),as.data.frame(pca$ind$coord))
+  colnames(coord_table)=c("Cells",paste0("DIM",(1:opt$PCA_ncp)))
+  }
+
 }
 
 #############################
@@ -146,18 +236,21 @@ pdf(opt$pdf_out)
 ## HCPC starts with a PCA
 pca <- PCA(
     t(data),
-    ncp = opt$npc,
+    ncp = opt$HCPC_ncp,
     graph = FALSE,
     scale.unit = FALSE
 )
 
 PCA_IndCoord = as.data.frame(pca$ind$coord) # coordinates of observations in PCA
-Vartab = get_eig(pca)
+#Vartab = get_eig(pca)  #variable masquee car on ne s en sert pas dans la suite du code
+
+
+
 
 ## Hierarchical Clustering On Principal Components Followed By Kmean Clustering
 res.hcpc <- HCPC(pca,
-                 nb.clust=opt$ncluster,
-                 graph = F)
+                 nb.clust=opt$HCPC_ncluster, metric=opt$HCPC_metric, method=opt$HCPC_method,
+                 graph=F)
 # A string. "tree" plots the tree. "bar" plots bars of inertia gains. "map" plots a factor map,
 # individuals colored by cluster. "3D.map" plots the same factor map, individuals colored by cluster,
 # the tree above.
@@ -169,8 +262,12 @@ plot(res.hcpc, choice="map", label="none")
 } else {
 plot(res.hcpc, choice="map")
 }
+
+
 QuanVarDescCluster <- as.list(res.hcpc$desc.var$quanti)
 AxesDescCluster = as.list(res.hcpc$desc.axes$quanti)
+
+
 ## Clusters to which individual observations belong
 Clust <- data.frame(Cluster = res.hcpc$data.clust[, (nrow(data) + 1)],
                     Observation = rownames(res.hcpc$data.clust))
@@ -180,10 +277,12 @@ metadata = merge(y = metadata,
                  by = "Observation")
 ObsNumberPerCluster = as.data.frame(table(metadata$Cluster))
 colnames(ObsNumberPerCluster) = c("Cluster", "ObsNumber")
+
 ## Silhouette Plot
 hc.cut = hcut(PCA_IndCoord,
               k = nlevels(metadata$Cluster),
               hc_method = "ward.D2")
+              
 Sil = fviz_silhouette(hc.cut)
 sil1 = as.data.frame(Sil$data)
 
@@ -203,8 +302,30 @@ sil1 = as.data.frame(Sil$data)
 #  plot(pca, label="none", habillage="ind", col.hab=PatientSampleColor )
 dev.off()
 
+ if(opt$plot_coordinates){
+  coord_table <- cbind(Cell=rownames(res.hcpc$call$X),as.data.frame(res.hcpc$call$X))
+  colnames(coord_table)=c("Cells",paste0("DIM",(1:opt$HCPC_ncp)),"Cluster")
+  }
+
+
+
 
 }
+
+## Return coordinates file to user
+
+if(opt$plot_coordinates){
+  write.table(
+    coord_table,
+    file = opt$table_coordinates,
+    sep = "\t",
+    quote = F,
+    col.names = T,
+    row.names = F
+    )
+}
+
+
   
 
 
