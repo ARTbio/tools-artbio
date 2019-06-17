@@ -178,10 +178,10 @@
                     #set $file_base_name=$sub_list.element_identifier
                     #for $sub_list_element in $sub_list:
                         #if $sub_list_element.ext[-2:] == "gz":
-                            printf "# ${sub_list_element.element_identifier}\n" | gzip -c > concatenated/'${file_base_name}.listed.${sub_list_element.ext}.listed' &&
+                            printf "# ${sub_list_element.element_identifier}\n" | gzip -c >> concatenated/'${file_base_name}.listed.${sub_list_element.ext}.listed' &&
                             gzip -dc ${sub_list_element} | $concat_command | gzip -c >> concatenated/'${file_base_name}.listed.${sub_list_element.ext}.listed' &&
                         #else:
-                            printf "# ${sub_list_element.element_identifier}\n" > concatenated/'${file_base_name}.listed.${sub_list_element.ext}.listed' &&
+                            printf "# ${sub_list_element.element_identifier}\n" >> concatenated/'${file_base_name}.listed.${sub_list_element.ext}.listed' &&
                             $concat_command ${sub_list_element} >> concatenated/'${file_base_name}.listed.${sub_list_element.ext}.listed' &&
                         #end if
                     #end for
