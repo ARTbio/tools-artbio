@@ -59,6 +59,13 @@ option_list = list(
     help = "FDR threshold [default : '%default' ]"
   ),
   make_option(
+    "--log",
+    default=FALSE,
+    action="store_true",
+    type = 'logical',
+    help = "Expression data are log-transformed [default : '%default' ]"
+  ),
+  make_option(
     "--output",
     default = "results.tsv",
     type = 'character',
@@ -68,7 +75,6 @@ option_list = list(
 
 opt = parse_args(OptionParser(option_list = option_list),
                  args = commandArgs(trailingOnly = TRUE))
-
 
 if (opt$sep == "tab") {opt$sep = "\t"}
 if (opt$sep == "comma") {opt$sep = ","}
@@ -96,7 +102,7 @@ metadata <- subset(metadata, rownames(metadata) %in% colnames(data.counts))
 # Create two logical named vectors for each factor level of cell signature
 factor1_cells <- setNames(metadata[,1] == opt$factor1, rownames(metadata))
 factor2_cells <- setNames(metadata[,1] == opt$factor2, rownames(metadata))
-
+print(head(data.counts[,1:3]));print(str(data.counts))
 ## Mann-Whitney test (Two-sample Wilcoxon test)
 MW_test <- data.frame(t(apply(data.counts, 1, function(x) {
   do.call("cbind", wilcox.test(x[names(factor1_cells)[factor1_cells]], x[names(factor2_cells)[factor2_cells]]))[, 1:2]
@@ -119,7 +125,11 @@ descriptive_stats <- function(InputData) {
     mean_factor2 = rowMeans(InputData[,factor2_cells]),
     mean_factor1 = rowMeans(InputData[, factor1_cells])
   )
-  SummaryData$fold_change = SummaryData$mean_factor1 - SummaryData$mean_factor2
+  if(opt$log) {
+  SummaryData$fold_change <- SummaryData$mean_factor1 - SummaryData$mean_factor2
+  } else {
+  SummaryData$fold_change <- SummaryData$mean_factor1 / SummaryData$mean_factor2
+  }
   return(SummaryData)
 }
 

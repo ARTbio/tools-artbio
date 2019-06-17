@@ -20,6 +20,7 @@
             --factor2 '$factor2'
             --comparison_factor_file '$comparison_factor_file'
             --fdr '$fdr'
+            $log
             --output '$output'
 ]]></command>
     <inputs>
@@ -37,21 +38,35 @@
         <param name="factor1" type="text" label="The first value that the comparison factor can take." help="typical values could be 'HIGH', 'mutant', 't1', etc."/>
         <param name="factor2" type="text" label="The second value that the comparison factor can take." help="typical values could be 'LOW', 'wt', 't2', etc."/>
         <param name="fdr" type="float" value="0.01" label="FDR threshold"
-               help="Reject tests if adjusted p-values (Benjamini-Hochberg correction) is superior to the FDR cut-off."/>
+               help="Reject H0 of no differential expression if adjusted p-values (Benjamini-Hochberg correction) is higher than the FDR cut-off."/>
+        <param name="log" type="boolean" checked="false" label="Expression data are log-transformed" truevalue="--log" falsevalue=""/>
+
     </inputs>
     <outputs>
         <data name="output" format="tabular" label="Results of Mann-Whitney differential analysis from ${on_string}" />
     </outputs>
     <tests>
         <test>
-            <param name="input" value="filterCells_100.tsv" ftype="txt"/>
-            <param name="sep" value='tab' />
+            <param name="input" value="filtered-0.05.tab" ftype="txt"/>
+            <param name="sep" value="tab" />
             <param name="colnames" value="TRUE"/>
             <param name="comparison_factor_file" value="signature_2columns.tsv" ftype="tabular"/>
             <param name="factor1" value="HIGH"/>
             <param name="factor2" value="LOW"/>
             <param name="fdr" value="0.01"/>
-            <output name="output" file="geneMetadata.tab" ftype="tabular"/>
+            <param name="log" value="true"/>
+            <output name="output" file="geneMetadata_log.tsv" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="filterCells_100.tsv" ftype="txt"/>
+            <param name="sep" value="tab" />
+            <param name="colnames" value="TRUE"/>
+            <param name="comparison_factor_file" value="signature_2columns.tsv" ftype="tabular"/>
+            <param name="factor1" value="HIGH"/>
+            <param name="factor2" value="LOW"/>
+            <param name="fdr" value="0.01"/>
+            <param name="log" value="false"/>
+            <output name="output" file="geneMetadata_nolog.tsv" ftype="tabular"/>
         </test>
     </tests>
     <help>
@@ -84,7 +99,7 @@ Percentage_detection (number of cells where the gene is detected (expression val
            statistic W statistic of Mann-Whitney test
              p.value p-value of Mann-Whitney test
             p.adjust p-values adjusted from the BH correction
-         Significant TRUE/FALSE vector (if p-adjust inferior to FDR then the value is TRUE) 
+         Significant TRUE/FALSE vector (if p-adjust inferior to FDR cut-off then the value is TRUE) 
 ==================== ======================================================================================================
 
     </help>

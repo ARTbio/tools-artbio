@@ -1,7 +1,7 @@
 # .shed.yml supporting automatic pushes.
 owner: artbio
 name: gsc-mannwhitney_de
-description: Perform a differential expression analysis between two groups
+description: Perform a mann-whitney differential testing between two sets of gene expression data
 long_description:
 categories:
   - Transcriptomics
