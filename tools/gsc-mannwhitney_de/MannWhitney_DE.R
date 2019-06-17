@@ -102,7 +102,7 @@ metadata <- subset(metadata, rownames(metadata) %in% colnames(data.counts))
 # Create two logical named vectors for each factor level of cell signature
 factor1_cells <- setNames(metadata[,1] == opt$factor1, rownames(metadata))
 factor2_cells <- setNames(metadata[,1] == opt$factor2, rownames(metadata))
-print(head(data.counts[,1:3]));print(str(data.counts))
+
 ## Mann-Whitney test (Two-sample Wilcoxon test)
 MW_test <- data.frame(t(apply(data.counts, 1, function(x) {
   do.call("cbind", wilcox.test(x[names(factor1_cells)[factor1_cells]], x[names(factor2_cells)[factor2_cells]]))[, 1:2]
