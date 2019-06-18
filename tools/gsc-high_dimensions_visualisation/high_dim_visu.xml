@@ -22,9 +22,9 @@
                 --labels 'FALSE'
             #end if
             
-            #if $plot_coordinates == "TRUE":
+            #if '$coordinates.plot_coordinates' == "TRUE":
                 --plot_coordinates 'TRUE'
-                --table_coordinates '$table_coordinates_out'
+               
             #else
                 --plot_coordinates 'FALSE'
             #end if
@@ -111,7 +111,7 @@
 					<option value="euclidian" selected="true">euclidian</option>
 					<option value="manhatan">manhatan</option>
 				</param>
-			    <param name="HCPC_method"  type="select" label="Clustering method" help="Clustering method between 'ward','average','single', 'complete', 'weighted' " > 
+			    <param name="HCPC_method"  type="select" label="Clustering method" help="Clustering method between 'ward', 'average', 'single', 'complete', 'weighted' " > 
 					<option value="ward" selected="true">ward</option>
 					<option value="average">average</option>
 					<option value="single">single</option>
@@ -123,7 +123,17 @@
             	  <param name="PCA_npc" value="5" type="integer" label="Number of principal components to keep"
                        help="The number of dimensions which are kept for PCA analysis (default=5)" />
             </when>
+            
         </conditional>
+        	<section name="coordinates" type="section" label="Table with scatter plots coordinates" expanded=FALSE>
+            	<option value="TRUE" selected="true">Yes</option>
+            	<option value="FALSE">No</option>
+            	 <param name="plot_coordinates" type="select" label="Coordinates table" help=" " > 
+					<option value="TRUE" >Yes</option>
+					<option value="FALSE" selected="true">No</option>
+				</param>
+        	</section>
+        
     </inputs>
     <outputs>
         <data name="pdf_out" format="pdf" label="plots from ${tool.name} on ${on_string}" />
