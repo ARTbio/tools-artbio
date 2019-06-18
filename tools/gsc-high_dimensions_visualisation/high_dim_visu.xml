@@ -21,11 +21,10 @@
             #else
                 --labels 'FALSE'
             #end if
-            
-            #if '$coordinates' == "Yes":
+
+            #if '$coordinates.coord' == "Yes":
                 --plot_coordinates 'TRUE'
                 --table_coordinates '$coordinates.table_coordinates'
-               
             #else
                 --plot_coordinates 'FALSE'
             #end if
@@ -126,15 +125,15 @@
             </when>
         </conditional>
         <conditional name="coordinates">
-            <param label="Return scatter plot table coordinates" name="coordinates" type="select">
+            <param label="Return scatter plot table coordinates" name="coord" type="select">
                 <option value="No" selected="True">No</option>
                 <option value="Yes">Yes</option>
             </param>
             <when value="Yes"> 
    	          	<param name="table_coordinates" value="Coordinates_table.tab" type="text" label="Scatter plot coordinates table filename" />
             </when>
-            <when value="no" /> 
-            
+            <when value="No"> 
+            </when>
         </conditional>
              
     </inputs>
@@ -193,6 +192,39 @@
             <param name="labels" value="no" />
             <param name="visu_choice" value="PCA" />
             <output name="pdf_out" file="pca.nolabels.pdf" ftype="pdf"/>
+        </test>
+        <!-- test Coordinates tables -->
+        <test>
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="no" />
+            <param name="visu_choice" value="PCA" />
+            <param name="coord" value="Yes" />
+            <output name="pdf_out" file="pca.nolabels.pdf" ftype="pdf"/>
+            <output name="table_coordinates" file="pca.table.tab" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="no" />
+            <param name="visu_choice" value="tSNE" />
+            <param name="coord" value="Yes" />
+            <param name="Rtsne_seed" value="42"/>
+            <param name="Rtsne_perplexity" value="5.0"/>
+            <param name="Rtsne_theta" value="1.0" />
+            <param name="Rtsne_dims" value="3" />
+            <param name="Rtsne_exaggeration_factor" value="15.0" />
+            <output name="pdf_out" file="tSNE-2.nolabels.pdf" ftype="pdf"/>
+            <output name="table_coordinates" file="tSNE-2.table.tab" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="yes" />
+            <param name="visu_choice" value="HCPC" />
+            <param name="coord" value="Yes" />
+            <param name="HCPC_method" value="average"/>
+            <param name="HCPC_metric" value="manhattan"/>
+            <param name="HCPC_npc" value="4" />
+            <output name="pdf_out" file="HCPC-2.labels.pdf" ftype="pdf"/>
+            <output name="table_coordinates" file="HCPC-2.table.tab" ftype="tabular"/>
         </test>
     </tests>
     <help>
