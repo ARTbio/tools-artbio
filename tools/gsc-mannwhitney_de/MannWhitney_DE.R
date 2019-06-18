@@ -3,60 +3,55 @@
 #     analysis     #
 ####################
 
-# Fifth step of the signature-based workflow
 # Perform a differential analysis between 2
-# groups high/low.
+# groups of cells.
 
 # Example of command
-# Rscript 5-differential_analysis.R -f ../3-filter_genes/filterGenes.tsv -m ../4-signature_score/signatureScoreMetadata.tsv --name Signature_category -o .
+# Rscript MannWhitney_DE.R --input <input.tsv> --sep <tab> --colnames <TRUE> --metadata <signature.tsv> --column_name <rate> --fdr <0.01> --output <diff_analysis.tsv>
 
-# Load necessary packages (install them if it's not the case)
-requiredPackages = c('optparse', 'Hmisc')
-for (p in requiredPackages) {
-  if (!require(p, character.only = TRUE, quietly = T)) {
-    install.packages(p)
-  }
-  suppressPackageStartupMessages(suppressMessages(library(p, character.only = TRUE)))
-}
+# load packages that are provided in the conda env
+options( show.error.messages=F,
+       error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
+warnings()
+library(optparse)
 
 #Arguments
 option_list = list(
   make_option(
-    c("-f", "--file"),
+    "--input",
     default = NA,
     type = 'character',
     help = "Input file that contains log2(CPM +1) values"
   ),
   make_option(
-    c("-s", "--sep"),
+    "--sep",
     default = '\t',
     type = 'character',
     help = "File separator [default : '%default' ]"
   ),
   make_option(
-    c("-c", "--colnames"),
+    "--colnames",
     default = TRUE,
     type = 'logical',
     help = "Consider first line as header ? [default : '%default' ]"
   ),  
   make_option(
-    c("-m", "--metadata"),
+    "--comparison_factor_file",
     default = NA,
     type = 'character',
-    help = "Input file that contains cells metadata"
+    help = " A two column table : cell identifiers and a comparison factor that split cells in two categories (high/low, HOM/HET,...)"
   ),
   make_option(
-    c("-d", "--delimiter"),
-    default = "\t",
+    "--factor1",
     type = 'character',
-    help = "Column separator for metadata file [default : '%default' ]"
+    help = "First factor of rate category in comparison factor file"
   ), 
   make_option(
-    c("-n", "--name"),
-    default = "signature",
+    "--factor2",
     type = 'character',
-    help = "Column name of signature category (HIGH/LOW) in metadata file [default : '%default' ]"
-  ), 
+    help = "Second factor of rate category in comparison factor file"
+  ),
   make_option(
     "--fdr",
     default = 0.01,
@@ -64,8 +59,15 @@ option_list = list(
     help = "FDR threshold [default : '%default' ]"
   ),
   make_option(
-    c("-o", "--out"),
-    default = "~",
+    "--log",
+    default=FALSE,
+    action="store_true",
+    type = 'logical',
+    help = "Expression data are log-transformed [default : '%default' ]"
+  ),
+  make_option(
+    "--output",
+    default = "results.tsv",
     type = 'character',
     help = "Output name [default : '%default' ]"
   )
@@ -74,47 +76,45 @@ option_list = list(
 opt = parse_args(OptionParser(option_list = option_list),
                  args = commandArgs(trailingOnly = TRUE))
 
-if (opt$file == "" | opt$metadata == "" & !(opt$help)) {
-  stop("At least tw arguments must be supplied (count data --file option and cell metadata --metadata option).\n",
-       call. = FALSE)
-}
-
+if (opt$sep == "tab") {opt$sep = "\t"}
+if (opt$sep == "comma") {opt$sep = ","}
 
 #Open files
 data.counts <- read.table(
-  opt$file,
+  opt$input,
   h = opt$colnames,
   row.names = 1,
   sep = opt$sep,
   check.names = F
 )
 
-metadata <- read.delim(
-  opt$metadata,
+metadata <- read.table(
+  opt$comparison_factor_file,
   header = TRUE,
   stringsAsFactors = F,
-  sep = opt$delimiter,
+  sep = "\t",
   check.names = FALSE,
   row.names = 1
 )
 
-#Create a logical named vector of whether or not the cell is signature "high"
-high_cells <- setNames(metadata[,opt$name] == "HIGH", rownames(metadata))
+metadata <- subset(metadata, rownames(metadata) %in% colnames(data.counts))
+
+# Create two logical named vectors for each factor level of cell signature
+factor1_cells <- setNames(metadata[,1] == opt$factor1, rownames(metadata))
+factor2_cells <- setNames(metadata[,1] == opt$factor2, rownames(metadata))
 
 ## Mann-Whitney test (Two-sample Wilcoxon test)
 MW_test <- data.frame(t(apply(data.counts, 1, function(x) {
-  do.call("cbind", wilcox.test(x[high_cells], x[!high_cells]))[, 1:4]
+  do.call("cbind", wilcox.test(x[names(factor1_cells)[factor1_cells]], x[names(factor2_cells)[factor2_cells]]))[, 1:2]
 })), stringsAsFactors = F)
 
-MW_test[,1:3] <- apply(MW_test[,1:3], 2, as.numeric) #Change type "chr" to "num"
-
-#Benjamini-Hochberg correction and significativity
-MW_test$p.adjust <- p.adjust(MW_test$p.value, method = "BH" , n = nrow(MW_test))
-MW_test$Critical.value <- (rank(MW_test$p.value) / nrow(MW_test)) * opt$fdr
+# Benjamini-Hochberg correction and significativity
+MW_test$p.adjust <- p.adjust(as.numeric(MW_test$p.value), method = "BH" , n = nrow(MW_test))
+# MW_test$Critical.value <- (rank(MW_test$p.value) / nrow(MW_test)) * opt$fdr
 MW_test$Significant <- MW_test$p.adjust < opt$fdr
 
-##Descriptive Statistics Function
-descriptive_stats = function(InputData) {
+## Descriptive Statistics Function
+descriptive_stats <- function(InputData) {
   SummaryData = data.frame(
     mean = rowMeans(InputData),
     SD = apply(InputData, 1, sd),
@@ -122,24 +122,28 @@ descriptive_stats = function(InputData) {
     Percentage_Detection = apply(InputData, 1, function(x, y = InputData) {
       (sum(x != 0) / ncol(y)) * 100
     }),
-    mean_LOW = rowMeans(InputData[,!high_cells]),
-    mean_HIGH = rowMeans(InputData[, high_cells])
+    mean_factor2 = rowMeans(InputData[,factor2_cells]),
+    mean_factor1 = rowMeans(InputData[, factor1_cells])
   )
-  SummaryData$fold_change = SummaryData$mean_HIGH / SummaryData$mean_LOW
+  if(opt$log) {
+  SummaryData$fold_change <- SummaryData$mean_factor1 - SummaryData$mean_factor2
+  } else {
+  SummaryData$fold_change <- SummaryData$mean_factor1 / SummaryData$mean_factor2
+  }
   return(SummaryData)
 }
 
 gene_stats <- descriptive_stats(data.counts)
 
 results <- merge(gene_stats, MW_test, by = "row.names")
-rownames(results) <- results$Row.names
+colnames(results)[1] <- "genes"
 
-#Save files
+# Save files
 write.table(
-  results[,-1],
-  paste(opt$out, "diffAnalysisGeneMetadata.tsv", sep = "/"),
+  results,
+  opt$output,
   sep = "\t",
   quote = F,
   col.names = T,
-  row.names = T
+  row.names = F
 )
