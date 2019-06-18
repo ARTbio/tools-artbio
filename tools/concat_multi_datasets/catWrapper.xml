@@ -1,4 +1,4 @@
-<tool id="cat_multi_datasets" name="Concatenate multiple datasets" version="1.2.0">
+<tool id="cat_multi_datasets" name="Concatenate multiple datasets" version="1.3.0">
     <description>tail-to-head by specifying how</description>
     <command><![CDATA[
         #if $headers == 0:
@@ -8,11 +8,14 @@
         #end if
         #if $global_condition.input_type == "singles":
             #if $dataset_names == "No":
-                $concat_command
                 #for $file in $global_condition.inputs
-                    '$file'
+                    #if $file.ext[-2:] == "gz":
+                        gzip -dc '$file' | $concat_command | gzip -c >> '$out_file1' &&
+                    #else:
+                        $concat_command '$file' >> '$out_file1' &&
+                    #end if
                 #end for
-                > '$out_file1'
+                sleep 1
             #else:
                 #for $file in $global_condition.inputs
                     #if $file.ext[-2:] == "gz":
@@ -26,15 +29,19 @@
                 sleep 1
             #end if
         #else if $global_condition.input_type == "simple_collections":
-            #if $global_condition.collections_condition.collection_cat_type == "two_collections":
                 mkdir concatenated &&
                 #if $dataset_names == "No":
-                    #for $x, $y in zip($global_condition.collections_condition.input_1, $global_condition.collections_condition.input_2)
-                        $concat_command '$x' '$y' > concatenated/'${x.element_identifier}.listed.${x.ext}.listed' &&
+                    #for $x, $y in zip($global_condition.input_1, $global_condition.input_2):
+                        #if $x.ext[-2:] == "gz":
+                            gzip -dc '$x' | $concat_command | gzip -c > concatenated/'${x.element_identifier}.listed.${x.ext}.listed' &&
+                            gzip -dc '$y' | $concat_command | gzip -c >> concatenated/'${x.element_identifier}.listed.${x.ext}.listed' &&
+                        #else:
+                            $concat_command '$x' '$y' > concatenated/'${x.element_identifier}.listed.${x.ext}.listed' &&
+                        #end if
                     #end for
                     sleep 1
                 #else:
-                    #for $x, $y in zip($global_condition.collections_condition.input_1, $global_condition.collections_condition.input_2)
+                    #for $x, $y in zip($global_condition.input_1, $global_condition.input_2)
                         #if $x.ext[-2:] == "gz":
                             printf "# ${x.element_identifier}\n" | gzip -c > concatenated/'${x.element_identifier}_${y.element_identifier}.listed.${x.ext}.listed' &&
                             gzip -dc '$x' | $concat_command | gzip -c >> concatenated/'${x.element_identifier}_${y.element_identifier}.listed.${x.ext}.listed' &&
@@ -49,81 +56,141 @@
                     #end for
                 sleep 1
                 #end if
-            #end if
         #else if $global_condition.input_type == "paired_collection":
             #if $global_condition.paired_cat_type == "by_strand":
+                mkdir concatenated &&
                 #if $dataset_names == "No":
                     #for $file in $global_condition.inputs
-                        $concat_command
-                        $file['forward']
-                        >> '$forward' &&
-                        $concat_command
-                        $file['reverse']
-                        >> '$reverse' &&
+                        #if $file['forward'].ext[-2:] == "gz":
+                            gzip -dc $file['forward'] | $concat_command | gzip -c >> concatenated/forward.listed.${file['forward'].ext}.listed &&
+                            gzip -dc $file['reverse'] | $concat_command | gzip -c >> concatenated/reverse.listed.${file['reverse'].ext}.listed &&
+                        #else:
+                            $concat_command $file['forward'] >> concatenated/forward.listed.${file['forward'].ext}.listed &&
+                            $concat_command $file['reverse'] >> concatenated/reverse.listed.${file['reverse'].ext}.listed &&
+                        #end if
                     #end for
                     sleep 1
                 #else:
-                    #for $file in $global_condition.inputs.keys()
-                        printf "# ${file}_forward\n" >> '$forward' &&
-                        $concat_command
-                        $global_condition.inputs[$file]['forward']
-                        >> '$forward' &&
-                        printf "# ${file}_reverse\n" >> '$reverse' &&
-                        $concat_command
-                        $global_condition.inputs[$file]['reverse']
-                        >> '$reverse' &&
+                    #for $file in $global_condition.inputs.keys():
+                        #if $global_condition.inputs[$file]['forward'].ext[-2:] == "gz":
+                            printf "# ${file}_forward\n" | gzip -c >> concatenated/forward.listed.${global_condition.inputs[$file]['forward'].ext}.listed &&
+                            gzip -dc $global_condition.inputs[$file]['forward'] | $concat_command | gzip -c >> concatenated/forward.listed.${global_condition.inputs[$file]['forward'].ext}.listed &&
+                            printf "# ${file}_reverse\n" | gzip -c >> concatenated/reverse.listed.${global_condition.inputs[$file]['reverse'].ext}.listed &&
+                            gzip -dc $global_condition.inputs[$file]['reverse'] | $concat_command | gzip -c >> concatenated/reverse.listed.${global_condition.inputs[$file]['reverse'].ext}.listed &&
+                        #else:
+                            printf "# ${file}_forward\n" >> concatenated/forward.listed.${global_condition.inputs[$file]['forward'].ext}.listed &&
+                            $concat_command $global_condition.inputs[$file]['forward'] >> concatenated/forward.listed.${global_condition.inputs[$file]['forward'].ext}.listed &&
+                            printf "# ${file}_reverse\n" >> concatenated/reverse.listed.${global_condition.inputs[$file]['reverse'].ext}.listed &&
+                            $concat_command $global_condition.inputs[$file]['reverse'] >> concatenated/reverse.listed.${global_condition.inputs[$file]['reverse'].ext}.listed &&
+                        #end if
                     #end for
                     sleep 1
                 #end if
             #else if $global_condition.paired_cat_type == "by_pair":
                 mkdir concatenated &&
                 #if $dataset_names == "No":
-                    #for $file in $global_condition.inputs.keys()
-                        $concat_command
-                        $global_condition.inputs[$file]['forward']
-                        > concatenated/'${file}.listed.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
-                        $concat_command
-                        $global_condition.inputs[$file]['reverse']
-                        >> concatenated/'${file}.listed.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
+                    #for $file in $global_condition.inputs.keys():
+                        #if $global_condition.inputs[$file]['forward'].ext[-2:] == "gz":
+                            gzip -dc $global_condition.inputs[$file]['forward'] | $concat_command | gzip -c
+                            > concatenated/'${file}.listed.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
+                            gzip -dc $global_condition.inputs[$file]['reverse'] | $concat_command | gzip -c
+                            >> concatenated/'${file}.listed.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
+                        #else:
+                            $concat_command $global_condition.inputs[$file]['forward']
+                            > concatenated/'${file}.listed.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
+                            $concat_command $global_condition.inputs[$file]['reverse']
+                            >> concatenated/'${file}.listed.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
+                        #end if
                     #end for
                     sleep 1
                 #else:
-                    #for $file in $global_condition.inputs.keys()
-                        printf "# ${file}_forward\n" > concatenated/'${file}.listed.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
-                        $concat_command
-                        $global_condition.inputs[$file]['forward']
-                        >> concatenated/'${file}.listed.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
-                        printf "# ${file}_reverse\n" >> concatenated/'${file}.listed.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
-                        $concat_command
-                        $global_condition.inputs[$file]['reverse']
-                        >> concatenated/'${file}.listed.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
+                    #for $file in $global_condition.inputs.keys():
+                        #if $global_condition.inputs[$file]['reverse'].ext[-2:] == "gz":
+                            printf "# ${file}_forward\n" | gzip -c > concatenated/'${file}.listed.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
+                            gzip -dc $global_condition.inputs[$file]['forward'] | $concat_command | gzip -c
+                            >> concatenated/'${file}.listed.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
+                            printf "# ${file}_reverse\n" | gzip -c >> concatenated/'${file}.listed.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
+                            gzip -dc $global_condition.inputs[$file]['reverse'] | $concat_command | gzip -c
+                            >> concatenated/'${file}.listed.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
+                        #else:
+                            printf "# ${file}_forward\n" > concatenated/'${file}.listed.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
+                            $concat_command $global_condition.inputs[$file]['forward']
+                            >> concatenated/'${file}.listed.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
+                            printf "# ${file}_reverse\n" >> concatenated/'${file}.listed.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
+                            $concat_command $global_condition.inputs[$file]['reverse']
+                            >> concatenated/'${file}.listed.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
+                        #end if
                     #end for
                     sleep 1
                 #end if
             #else if $global_condition.paired_cat_type == "all":
+                mkdir concatenated &&
+                #set $base_name=$global_condition.inputs.element_identifier
+                #set $extention=$global_condition.inputs[$global_condition.inputs.keys()[0]]['forward'].ext
                 #if $dataset_names == "No":
-                    #for $file in $global_condition.inputs.keys()
-                        $concat_command
-                        $global_condition.inputs[$file]['forward']
-                        >> $out_file1 &&
-                        $concat_command
-                        $global_condition.inputs[$file]['reverse']
-                        >> $out_file1 &&
+                    #for $file in $global_condition.inputs.keys():
+                        #if $global_condition.inputs[$file]['forward'].ext[-2:] == "gz":
+                            gzip -dc $global_condition.inputs[$file]['forward'] | $concat_command | gzip -c >> c'$paired_out_file' &&
+                            gzip -dc $global_condition.inputs[$file]['reverse'] | $concat_command | gzip -c >> '$paired_out_file' &&
+                        #else:
+                            $concat_command
+                            $global_condition.inputs[$file]['forward']
+                            >> '$paired_out_file' &&
+                            $concat_command
+                            $global_condition.inputs[$file]['reverse']
+                            >> '$paired_out_file' &&
+                        #end if
                     #end for
                     sleep 1
                 #else:
-                    #for $file in $global_condition.inputs.keys()
-                        printf "# ${file}_forward\n" > $out_file1 &&
-                        $concat_command
-                        $global_condition.inputs[$file]['forward']
-                        >> $out_file1 &&
-                        printf "# ${file}_reverse\n" >> $out_file1 &&
-                        $concat_command
-                        $global_condition.inputs[$file]['reverse']
-                        >> $out_file1 &&
+                    #for $file in $global_condition.inputs.keys():
+                        #if $global_condition.inputs[$file]['forward'].ext[-2:] == "gz":
+                            printf "# ${file}_forward\n" | gzip -c > '$paired_out_file' &&
+                            gzip -dc $global_condition.inputs[$file]['forward'] | $concat_command | gzip -c >> '$paired_out_file' &&
+                            printf "# ${file}_reverse\n" | gzip -c >> '$paired_out_file' &&
+                            gzip -dc $global_condition.inputs[$file]['reverse'] | $concat_command | gzip -c >> '$paired_out_file' &&
+                        #else:
+                            printf "# ${file}_forward\n" > '$paired_out_file' &&
+                            $concat_command
+                            $global_condition.inputs[$file]['forward']
+                            >> '$paired_out_file' &&
+                            printf "# ${file}_reverse\n" >> '$paired_out_file' &&
+                            $concat_command
+                            $global_condition.inputs[$file]['reverse']
+                            >> '$paired_out_file' &&
+                        #end if
                     #end for
                     sleep 1
                 #end if
+            #end if
+        #else if $global_condition.input_type == "nested_collection":
+            mkdir concatenated &&
+            #if $dataset_names == "No":
+                #for $sub_list in $global_condition.inputs:
+                    #set $file_base_name=$sub_list.element_identifier
+                    #for $sub_list_element in $sub_list:
+                        #if $sub_list_element.ext[-2:] == "gz":
+                            gzip -dc ${sub_list_element} | $concat_command | gzip -c >> concatenated/'${file_base_name}.listed.${sub_list_element.ext}.listed' &&
+                        #else:
+                            $concat_command ${sub_list_element} >> concatenated/'${file_base_name}.listed.${sub_list_element.ext}.listed' &&
+                        #end if
+                    #end for
+                #end for
+                sleep 1
+            #else:
+                #for $sub_list in $global_condition.inputs:
+                    #set $file_base_name=$sub_list.element_identifier
+                    #for $sub_list_element in $sub_list:
+                        #if $sub_list_element.ext[-2:] == "gz":
+                            printf "# ${sub_list_element.element_identifier}\n" | gzip -c >> concatenated/'${file_base_name}.listed.${sub_list_element.ext}.listed' &&
+                            gzip -dc ${sub_list_element} | $concat_command | gzip -c >> concatenated/'${file_base_name}.listed.${sub_list_element.ext}.listed' &&
+                        #else:
+                            printf "# ${sub_list_element.element_identifier}\n" >> concatenated/'${file_base_name}.listed.${sub_list_element.ext}.listed' &&
+                            $concat_command ${sub_list_element} >> concatenated/'${file_base_name}.listed.${sub_list_element.ext}.listed' &&
+                        #end if
+                    #end for
+                #end for
+                sleep 1
             #end if
         #end if
         ]]>
@@ -132,8 +199,9 @@
         <conditional name="global_condition">
             <param name="input_type" type="select" label="What type of data do you wish to concatenate?" help="Depending on the type of input selected the concatenation options will differ">
                 <option value="singles">Single datasets</option>
-                <option value="simple_collections">Collections</option>
+                <option value="simple_collections">2 Collections</option>
                 <option value="paired_collection">Paired collection</option>
+                <option value="nested_collection">Nested collection</option>
             </param>
             <when value="singles">
                 <param name="inputs" type="data" label="Concatenate Datasets" multiple="True" help="All inputed datasets will be concatenated tail-to-head."/>
@@ -147,15 +215,11 @@
                 </param>
             </when>
             <when value="simple_collections">
-                <conditional name="collections_condition">
-                    <param name="collection_cat_type" type="select" label="What type of concatenation do you wish to perform?">
-                        <option value="two_collections">Concatenate datasets of 2 collections (outputs a simple collection)</option>
-                    </param>
-                    <when value="two_collections">
-                        <param name="input_1" type="data_collection" collection_type="list" label="Input first collection" help="The first collection contains the datasets that will be written first in the concatenated file" />
-                        <param name="input_2" type="data_collection" collection_type="list" label="Input second collection" help="The second collection contains  the datasets that will be written last in the concatenated file" />
-                    </when>
-                </conditional>
+                <param name="input_1" type="data_collection" collection_type="list" label="Input first collection" help="The first collection contains the datasets that will be written first in the concatenated file" />
+                <param name="input_2" type="data_collection" collection_type="list" label="Input second collection" help="The second collection contains  the datasets that will be written last in the concatenated file" />
+            </when>
+            <when value="nested_collection">
+                <param name="inputs" type="data_collection" collection_type="list:list" label="Input nested collection" help="The Nested collection which items you want to concatenate." />
             </when>
         </conditional>
         <param name="dataset_names" type="boolean" label="Include dataset names?" truevalue="Yes" falsevalue="No" checked="false" help="If 'Yes' is selected '#name of dataset' will be added when concatenating."/>
@@ -163,16 +227,18 @@
     </inputs>
     <outputs>
         <data name="out_file1" format_source="inputs" metadata_source="inputs" label="Concatenated datasets">
-            <filter>global_condition['input_type'] == 'singles' or (global_condition['input_type'] == 'paired_collection' and global_condition['paired_cat_type'] == 'all')</filter>
+            <filter>global_condition['input_type'] == 'singles'</filter>
+        </data>
+        <data name="paired_out_file" label="${global_condition.inputs.element_identifier}" auto_format="true">
+            <filter>global_condition['input_type'] == 'paired_collection' and global_condition['paired_cat_type'] == 'all'</filter>
         </data>
         <collection name="paired_output" type="paired" label="Concatenation by strtand">
-            <data name="forward" />
-            <data name="reverse" />
+            <discover_datasets pattern="(?P&lt;name&gt;.*)\.listed\.(?P&lt;ext&gt;.*)\.listed" visible="false" directory="concatenated"/>
             <filter>global_condition['input_type'] == 'paired_collection' and global_condition['paired_cat_type'] == 'by_strand'</filter>
         </collection>
         <collection name="list_output" type="list" label="Concatenation by pairs">
-            <discover_datasets pattern="(?P&lt;name&gt;.*)\.listed\.(?P&lt;ext&gt;.*)\.listed" visible="false" directory="concatenated"/>
-            <filter>(global_condition['input_type'] == 'paired_collection' and global_condition['paired_cat_type'] == 'by_pair') or (global_condition['input_type'] == 'simple_collections' and global_condition['collections_condition']['collection_cat_type'] == 'two_collections')</filter>
+            <discover_datasets pattern="(?P&lt;identifier_0&gt;.*)\.listed\.(?P&lt;ext&gt;.*)\.listed" visible="false" directory="concatenated"/>
+            <filter>(global_condition['input_type'] == 'paired_collection' and global_condition['paired_cat_type'] == 'by_pair') or (global_condition['input_type'] == 'simple_collections') or (global_condition['input_type'] == 'nested_collection')</filter>
         </collection>
     </outputs>
     <tests>
@@ -322,6 +388,48 @@
                 <element name="1_f.fastq_1_r.fastq" file="1_options.fastq.gz" decompress="True"/>
             </output_collection>
         </test>
+        <test> <!-- Test nested collections concatenation -->
+            <param name="input_type" value="nested_collection" />
+            <param name="inputs">
+                <collection type="list:list">
+                    <element name="2">
+                        <collection type="list">
+                            <element name="2_f" value="2_f.fastq" ftype="fastq"/>
+                            <element name="2_r" value="2_r.fastq" ftype="fastq"/>
+                        </collection>
+                    </element>
+                    <element name="3">
+                        <collection type="list">
+                            <element name="3" value="3.fastq" ftype="fastq"/>
+                        </collection>
+                    </element>
+                </collection>
+            </param>
+            <param name="dataset_names" value="No" />
+            <param name="headers" value="0" />
+            <output_collection name="list_output" type="list" count="2" >
+                <element name="2" file="2.fastq"/>
+                <element name="3" file="3.fastq"/>
+            </output_collection>
+        </test>
+        <test> <!-- Test nested collections concatenation with options and gzip-->
+            <param name="input_type" value="nested_collection" />
+            <param name="inputs">
+                <collection type="list:list">
+                    <element name="1">
+                        <collection type="list">
+                            <element name="1_f.fastq" value="1_f.fastq.gz" ftype="fastq.gz"/>
+                            <element name="1_r.fastq" value="1_r.fastq.gz" ftype="fastq.gz"/>
+                        </collection>
+                    </element>
+                </collection>
+            </param>
+            <param name="dataset_names" value="Yes" />
+            <param name="headers" value="4" />
+            <output_collection name="list_output" type="list" count="1" >
+                <element name="1" file="1_options.fastq.gz" decompress="True"/>
+            </output_collection>
+        </test>
     </tests>
     <help>
 
@@ -329,9 +437,9 @@
 
 **WARNING:** This tool does not check if the datasets being concatenated are in the same format.
 
-**WARNING:** The paired collection operations do not handle gziped files.
-
 **WARNING:** When concatenating 2 collections make sure the first collection is the one with the most items.
+
+**WARNING:** This tool can't handle nested collection deeper than list:list.
 
 -----
 
@@ -348,6 +456,8 @@ Concatenates datasets and paired collections with multiple options:
    - whole collection concatenation : all datasets in the collection are concatenated and a single dataset is returned
 
  - When the inputs are 2 collections: datasets are concatenated in a pairwise combination and a single dataset collection is returned
+
+ - When nested collection concatenation: datasets in each sub-collection are concatenated and a simple dataset collection is returned
 
  - Skipping lines before concatenation to avoid headers
 
@@ -453,6 +563,32 @@ Concatenation result::
     outputs:
 
     1 dataset
+
+-----
+
+**Nested collection concatenation example**
+
+Nested collection:
+
+    - Experiment
+
+        - Sample_1
+
+            - Sample_1_file_1
+            - Sample_1_file_2
+
+        - Sample_2
+
+            - Sample_2_file_1
+            - Sample_2_file_2
+            - Sample_2_file_3
+
+Concatenation result::
+
+    A single collection containing:
+
+        - Sample_1: (Sample_1_file_1 + Sample_1_file_2)
+        - Sample_2: (Sample_2_file_1 + Sample_2_file_2 + Sample_2_file_3)
 
 -----
 
