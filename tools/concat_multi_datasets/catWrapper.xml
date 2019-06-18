@@ -124,37 +124,40 @@
                     sleep 1
                 #end if
             #else if $global_condition.paired_cat_type == "all":
+                mkdir concatenated &&
+                #set $base_name=$global_condition.inputs.element_identifier
+                #set $extention=$global_condition.inputs[$global_condition.inputs.keys()[0]]['forward'].ext
                 #if $dataset_names == "No":
                     #for $file in $global_condition.inputs.keys():
                         #if $global_condition.inputs[$file]['forward'].ext[-2:] == "gz":
-                            gzip -dc $global_condition.inputs[$file]['forward'] | $concat_command | gzip -c >> $out_file1 &&
-                            gzip -dc $global_condition.inputs[$file]['reverse'] | $concat_command | gzip -c >> $out_file1 &&
+                            gzip -dc $global_condition.inputs[$file]['forward'] | $concat_command | gzip -c >> c'$paired_out_file' &&
+                            gzip -dc $global_condition.inputs[$file]['reverse'] | $concat_command | gzip -c >> '$paired_out_file' &&
                         #else:
                             $concat_command
                             $global_condition.inputs[$file]['forward']
-                            >> $out_file1 &&
+                            >> '$paired_out_file' &&
                             $concat_command
                             $global_condition.inputs[$file]['reverse']
-                            >> $out_file1 &&
+                            >> '$paired_out_file' &&
                         #end if
                     #end for
                     sleep 1
                 #else:
                     #for $file in $global_condition.inputs.keys():
                         #if $global_condition.inputs[$file]['forward'].ext[-2:] == "gz":
-                            printf "# ${file}_forward\n" | gzip -c > $out_file1 &&
-                            gzip -dc $global_condition.inputs[$file]['forward'] | $concat_command | gzip -c >> $out_file1 &&
-                            printf "# ${file}_reverse\n" | gzip -c >> $out_file1 &&
-                            gzip -dc $global_condition.inputs[$file]['reverse'] | $concat_command | gzip -c >> $out_file1 &&
+                            printf "# ${file}_forward\n" | gzip -c > '$paired_out_file' &&
+                            gzip -dc $global_condition.inputs[$file]['forward'] | $concat_command | gzip -c >> '$paired_out_file' &&
+                            printf "# ${file}_reverse\n" | gzip -c >> '$paired_out_file' &&
+                            gzip -dc $global_condition.inputs[$file]['reverse'] | $concat_command | gzip -c >> '$paired_out_file' &&
                         #else:
-                            printf "# ${file}_forward\n" > $out_file1 &&
+                            printf "# ${file}_forward\n" > '$paired_out_file' &&
                             $concat_command
                             $global_condition.inputs[$file]['forward']
-                            >> $out_file1 &&
-                            printf "# ${file}_reverse\n" >> $out_file1 &&
+                            >> '$paired_out_file' &&
+                            printf "# ${file}_reverse\n" >> '$paired_out_file' &&
                             $concat_command
                             $global_condition.inputs[$file]['reverse']
-                            >> $out_file1 &&
+                            >> '$paired_out_file' &&
                         #end if
                     #end for
                     sleep 1
@@ -224,9 +227,12 @@
     </inputs>
     <outputs>
         <data name="out_file1" format_source="inputs" metadata_source="inputs" label="Concatenated datasets">
-            <filter>global_condition['input_type'] == 'singles' or (global_condition['input_type'] == 'paired_collection' and global_condition['paired_cat_type'] == 'all')</filter>
+            <filter>global_condition['input_type'] == 'singles'</filter>
         </data>
-        <collection name="paired_output" type="paired" label="Concatenation by strtand" format_source="inputs">
+        <data name="paired_out_file" label="${global_condition.inputs.element_identifier}" auto_format="true">
+            <filter>global_condition['input_type'] == 'paired_collection' and global_condition['paired_cat_type'] == 'all'</filter>
+        </data>
+        <collection name="paired_output" type="paired" label="Concatenation by strtand">
             <discover_datasets pattern="(?P&lt;name&gt;.*)\.listed\.(?P&lt;ext&gt;.*)\.listed" visible="false" directory="concatenated"/>
             <filter>global_condition['input_type'] == 'paired_collection' and global_condition['paired_cat_type'] == 'by_strand'</filter>
         </collection>
