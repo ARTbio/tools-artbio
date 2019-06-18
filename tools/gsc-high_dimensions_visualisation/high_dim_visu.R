@@ -211,7 +211,7 @@ if (opt$visu_choice == 'tSNE') {
 
 # make PCA with FactoMineR
 if (opt$visu_choice == 'PCA') {
-  pca <- PCA(t(data), npc=opt$PCA_npc, graph=FALSE)
+  pca <- PCA(t(data), ncp=opt$PCA_npc, graph=FALSE)
   pdf(opt$pdf_out)
   if (opt$labels == FALSE) {
     plot(pca, label="none")
@@ -236,7 +236,7 @@ pdf(opt$pdf_out)
 ## HCPC starts with a PCA
 pca <- PCA(
     t(data),
-    npc = opt$HCPC_npc,
+    ncp = opt$HCPC_npc,
     graph = FALSE,
     scale.unit = FALSE
 )
