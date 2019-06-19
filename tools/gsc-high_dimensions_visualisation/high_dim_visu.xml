@@ -142,8 +142,7 @@
     </outputs>
     <tests>
         <!-- test HCPC -->
- <!-- 
-       <test>
+        <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="yes" />
             <param name="visu_choice" value="HCPC" />
@@ -159,7 +158,7 @@
             <param name="visu_choice" value="HCPC" />
             <output name="pdf_out" file="hcpc.nolabels.pdf" ftype="pdf"/>
         </test>
-        <!~~ test t-SNE ~~>
+        <!-- test t-SNE -->
         <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="yes" />
@@ -178,7 +177,7 @@
             <param name="Rtsne_theta" value="1" />
             <output name="pdf_out" file="tsne.nolabels.pdf" ftype="pdf"/>
         </test>
-        <!~~ test PCA ~~>
+        <!-- test PCA -->
         <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="yes" />
@@ -192,7 +191,6 @@
             <param name="visu_choice" value="PCA" />
             <output name="pdf_out" file="pca.nolabels.pdf" ftype="pdf"/>
         </test>
- -->
         <!-- test Coordinates tables -->
         <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
@@ -200,8 +198,9 @@
             <param name="visu_choice" value="PCA" />
             <param name="coord" value="yes" />
             <output name="pdf_out" file="pca.nolabels.pdf" ftype="pdf"/>
-<!--             <output name="table_coordinates" file="pca.coord.tab" ftype="tabular"/> -->
-        </test>
+            <output name="table_coordinates" file="pca.coord.tab" ftype="tabular"/>
+        
+</test>
 <!-- 
 
         <test>
