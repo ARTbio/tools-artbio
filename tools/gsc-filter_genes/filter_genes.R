@@ -45,7 +45,7 @@ option_list = list(
     default = 0,
     type = 'numeric',
     help = "Include genes with detected expression in at least \
-    this fraction of cells [default : '%default' ]"
+    this number of cells [default : '%default' ]"
   ),
   make_option(
     c("-o", "--output"),
