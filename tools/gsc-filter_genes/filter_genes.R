@@ -34,11 +34,18 @@ option_list = list(
     help = "first line is a header [default : '%default' ]"
   ),
   make_option(
-    "--detection",
-    default = 0.05,
+    "--percentile_detection",
+    default = 0,
     type = 'numeric',
     help = "Include genes with detected expression in at least \
     this fraction of cells [default : '%default' ]"
+  ),
+  make_option(
+    "--absolute_detection",
+    default = 0,
+    type = 'numeric',
+    help = "Include genes with detected expression in at least \
+    this number of cells [default : '%default' ]"
   ),
   make_option(
     c("-o", "--output"),
@@ -62,8 +69,15 @@ data.counts <- read.table(
   check.names = F
 )
 
+# note the [if else] below, to handle percentile_detection=absolute_detection=0
 # Search for genes that are expressed in a certain percent of cells
-kept_genes <- rowSums(data.counts != 0) > (opt$detection * ncol(data.counts))
+if (opt$percentile_detection > 0) {
+kept_genes <- rowSums(data.counts != 0) >= (opt$percentile_detection * ncol(data.counts))
+} else {
+
+# Search for genes that are expressed in more than an absolute number of cells
+kept_genes <- rowSums(data.counts != 0) >= (opt$absolute_detection)
+}
 
 # Filter matrix
 data.counts <- data.counts[kept_genes,]
