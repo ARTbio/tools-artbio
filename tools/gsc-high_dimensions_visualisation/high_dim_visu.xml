@@ -21,9 +21,9 @@
             #else
                 --labels 'FALSE'
             #end if
-            #if $coordinates.coord == "yes":
+            #if $coord == "yes":
                 --plot_coordinates 'TRUE'
-                --table_coordinates '$coordinates.table_coordinates'
+                --table_coordinates '$table_coordinates'
             #else
                 --plot_coordinates 'FALSE'               
             #end if
@@ -121,23 +121,16 @@
             	  <param name="PCA_npc" value="5" type="integer" label="Number of principal components to keep" help="The number of dimensions which are kept for PCA analysis (default=5)" />
             </when>
         </conditional>
-        <conditional name="coordinates">
             <param label="Return scatter plot table coordinates" name="coord" type="select">
                 <option value="no" selected="True">No</option>
                 <option value="yes">Yes</option>
             </param>
-            <when value="yes"> 
-   	          	<param name="table_coordinates" value="Coordinates_table.tab" type="text" label="Scatter plot coordinates table filename" />
-            </when>
-            <when value="no"> 
-            </when>
-        </conditional>
              
     </inputs>
     <outputs>
         <data name="pdf_out" format="pdf" label="plots from ${tool.name} on ${on_string}" />
         <data name="table_coordinates" format="tabular" label="Scatter plot coordinates from ${tool.name} on ${on_string}" >
-<!--         	<filter>coordinates == 'yes'</filter> -->
+            <filter>coord == 'yes'</filter>
         </data>
     </outputs>
     <tests>
