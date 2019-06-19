@@ -141,7 +141,7 @@ if (opt$manage_cutoffs == 'union'){
 ## Plot the results
 
 # Determine title from the parameter logics
-if(opt$percentile_counts > 0){
+if (opt$percentile_counts > 0){
     part_one = paste0("Cells with aligned reads counts below the ",
                       opt$percentile_counts,
                       "th percentile of aligned read counts")} else {
@@ -150,11 +150,15 @@ if(opt$percentile_counts > 0){
 }
 
 if(opt$percentile_genes > 0){
-    part_two = paste0("cells with number of detected genes below the ",
+    part_two = paste0("with number of detected genes below the ",
                       opt$percentile_genes,
                       "th percentile of detected gene counts")} else {
-    part_two = paste0("cells with number of detected genes below ",
+    part_two = paste0("with number of detected genes below ",
                       opt$absolute_genes)
+}
+if (opt$manage_cutoffs == "intersect") {
+    conjunction = " and\n" } else {
+    conjunction = " or\n"
 }
 
 # plot with ggplot2
@@ -166,7 +170,7 @@ ggplot(QC_metrics, aes(nGenes, total_counts, colour = filtered)) +
                                      paste0("Filtered (", table(QC_metrics$filtered)[2], " cells)"))) +
      xlab("Detected genes per cell") + ylab("Aligned reads per cell (log10 scale)") +
      geom_vline(xintercept = genes_threshold) + geom_hline(yintercept = counts_threshold) +
-     ggtitle( paste0(part_one, " and\n", part_two, "\nwere filtered out")) +
+     ggtitle( paste0(part_one, conjunction, part_two, "\nwere filtered out")) +
      theme(plot.title = element_text(size = 8, face = "bold"))
 
 dev.off()
