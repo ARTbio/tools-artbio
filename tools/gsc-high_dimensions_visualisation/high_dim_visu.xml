@@ -23,7 +23,7 @@
             #end if
             #if $coord == "yes":
                 --plot_coordinates 'TRUE'
-                --table_coordinates '$table_coordinates'
+             	--table_coordinates '$table_coordinates'
             #else
                 --plot_coordinates 'FALSE'               
             #end if
@@ -52,6 +52,7 @@
                 --PCA_npc '$visualisation.PCA_npc'
             #end if
             
+           
             --pdf_out '$pdf_out'
             
 ]]></command>
@@ -177,7 +178,6 @@
             <param name="visu_choice" value="PCA" />
             <output name="pdf_out" file="pca.labels.pdf" ftype="pdf"/>
         </test>
-
         <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="no" />
@@ -191,12 +191,9 @@
             <param name="visu_choice" value="PCA" />
             <param name="coord" value="yes" />
             <output name="pdf_out" file="pca.nolabels.pdf" ftype="pdf"/>
-            <output name="table_coordinates" file="pca.coord.tab" ftype="tabular"/>
-        
-</test>
-<!-- 
-
-        <test>
+            <output name="table_coordinates" file="pca.coord.tab" ftype="tabular"/>       
+		</test>
+       	<test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="no" />
             <param name="visu_choice" value="tSNE" />
@@ -206,8 +203,8 @@
             <param name="Rtsne_theta" value="1.0" />
             <param name="Rtsne_dims" value="3" />
             <param name="Rtsne_exaggeration_factor" value="15.0" />
-            <output name="pdf_out" file="tSNE-2.nolabels.pdf" ftype="pdf"/>
-            <output name="table_coordinates" file="tSNE-2.table.tab" ftype="tabular"/>
+            <output name="pdf_out" file="tsne-2.nolabels.pdf" ftype="pdf"/>
+            <output name="table_coordinates" file="tsne-2.coord.tab" ftype="tabular"/>
         </test>
         <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
@@ -217,17 +214,15 @@
             <param name="HCPC_method" value="average"/>
             <param name="HCPC_metric" value="manhattan"/>
             <param name="HCPC_npc" value="4" />
-            <output name="pdf_out" file="HCPC-2.labels.pdf" ftype="pdf"/>
-            <output name="table_coordinates" file="HCPC-2.table.tab" ftype="tabular"/>
+            <output name="pdf_out" file="hcpc-2.labels.pdf" ftype="pdf"/>
+            <output name="table_coordinates" file="hcpc-2.coord.tab" ftype="tabular"/>
         </test>
-
- -->
     </tests>
     <help>
 
 **What it does**
 
-Takes a raw count expression matrix and returns visualisation plots
+Takes a raw count expression matrix and returns visualisation plots and scatter plot stables from different data reduction dimension tools
 
     </help>
 </tool>

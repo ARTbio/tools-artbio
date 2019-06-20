@@ -157,7 +157,7 @@ option_list = list(
     default = "out.pdf",
     type = 'character',
     help = "pdf of plots [default : '%default' ]"
-  )
+  )  
 )
 
 opt = parse_args(OptionParser(option_list = option_list),
