@@ -46,6 +46,12 @@
                 --HCPC_npc '$visualisation.HCPC_npc'
                 --HCPC_metric '$visualisation.HCPC_metric'
                 --HCPC_method '$visualisation.HCPC_method'
+                --HCPC_consol '$visualisation.HCPC_consol'
+                --HCPC_itermax '$visualisation.HCPC_itermax'
+                --HCPC_min '$visualisation.HCPC_min'
+                --HCPC_max '$visualisation.HCPC_max'
+                --HCPC_clusterCA '$visualisation.HCPC_clusterCA'
+                --HCPC_kk '$visualisation.HCPC_kk'
             #end if
             
             #if $visualisation.visu_choice == "PCA":
@@ -117,6 +123,22 @@
 					<option value="complete">complete</option>
 					<option value="weighted">weighted</option>
 				</param>
+				<param name="HCPC_consol"  type="select" label="k-means consolidation" help="If TRUE, a k-means consolidation is performed" > 
+					<option value="TRUE" selected="true">Yes</option>
+					<option value="FALSE">False</option>
+				</param>
+				<param name="HCPC_itermax" value="10" type="integer" label="Maximum number of iterations for consolidation"
+                       help=" (default=10)" />
+                <param name="HCPC_min" value="3" type="integer" label="min number of clusters"
+                       help=" The least possible number of clusters suggested (default=3)" />
+                <param name="HCPC_max" value="-1" type="text" label="max number of clusters"
+                       help=" The higher possible number of clusters suggested, by default the minimum between 10 and the number of individuals divided by 2. (default=-1)" />
+				<param name="HCPC_clusterCA"  type="select" label="clusterCA, Clustering against rows or columns" help="default(rows)" > 
+					<option value="rows" selected="true">Rows</option>
+					<option value="cols">Columns</option>
+				</param>
+				 <param name="HCPC_kk" value="-1" type="text" label="kk, Number of clusters used in a Kmeans preprocessing "
+                       help="No k-means consolidation is done if a kk value is provided (default=-1)" />
             </when>
             <when value="PCA">
             	  <param name="PCA_npc" value="5" type="integer" label="Number of principal components to keep" help="The number of dimensions which are kept for PCA analysis (default=5)" />
@@ -216,6 +238,18 @@
             <param name="HCPC_npc" value="4" />
             <output name="pdf_out" file="hcpc-2.labels.pdf" ftype="pdf"/>
             <output name="table_coordinates" file="hcpc-2.coord.tab" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="yes" />
+            <param name="visu_choice" value="HCPC" />
+            <param name="coord" value="yes" />
+            <param name="HCPC_method" value="single"/>
+            <param name="HCPC_metric" value="euclidian"/>
+            <param name="HCPC_npc" value="4" />
+            <param name="HCPC_clusterCA" value="cols" />
+            <output name="pdf_out" file="hcpc-3.labels.pdf" ftype="pdf"/>
+            <output name="table_coordinates" file="hcpc-3.coord.tab" ftype="tabular"/>
         </test>
     </tests>
     <help>

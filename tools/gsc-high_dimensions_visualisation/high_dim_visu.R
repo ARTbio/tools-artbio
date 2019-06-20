@@ -157,14 +157,52 @@ option_list = list(
     default = "out.pdf",
     type = 'character',
     help = "pdf of plots [default : '%default' ]"
-  )  
+  ),
+   make_option(
+    "--HCPC_consol",
+    default = 'TRUE',
+    type = 'logical',
+    help = "If TRUE, a k-means consolidation is performed [default :'%default']"
+  ),
+   make_option(
+    "--HCPC_itermax",
+    default = '10',
+    type = 'integer',
+    help = "The maximum number of iterations for the consolidation [default :'%default']"
+  ),
+   make_option(
+    "--HCPC_min",
+    default = '3',
+    type = 'integer',
+    help = "The least possible number of clusters suggested [default :'%default']"
+  ),
+   make_option(
+    "--HCPC_max",
+    default = -1,
+    type = 'integer',
+    help = "The higher possible number of clusters suggested [default :'%default']"
+  ),
+   make_option(
+    "--HCPC_clusterCA",
+    default = 'rows',
+    type = 'character',
+    help = "A string equals to 'rows' or 'columns' for the clustering of Correspondence Analysis results [default :'%default']"
+  ),
+   make_option(
+    "--HCPC_kk",
+    default = -1,
+    type = 'numeric',
+    help = "The maximum number of iterations for the consolidation [default :'%default']"
+  ) 
 )
 
 opt = parse_args(OptionParser(option_list = option_list),
                  args = commandArgs(trailingOnly = TRUE))
 
-if (opt$sep == "tab") {opt$sep = "\t"}
-if (opt$sep == "comma") {opt$sep = ","}
+if (opt$sep == "tab") {opt$sep <- "\t"}
+if (opt$sep == "comma") {opt$sep <- ","}
+if(opt$HCPC_max == -1) {opt$HCPC_max <- NULL}
+if(opt$HCPC_kk == -1) {opt$HCPC_kk <- Inf}
 
 data = read.table(
   opt$data,
@@ -250,7 +288,8 @@ PCA_IndCoord = as.data.frame(pca$ind$coord) # coordinates of observations in PCA
 ## Hierarchical Clustering On Principal Components Followed By Kmean Clustering
 res.hcpc <- HCPC(pca,
                  nb.clust=opt$HCPC_ncluster, metric=opt$HCPC_metric, method=opt$HCPC_method,
-                 graph=F)
+                 graph=F,consol=opt$HCPC_consol,iter.max=opt$HCPC_itermax,min=opt$HCPC_min,max=opt$HCPC_max,
+                 cluster.CA=opt$HCPC_clusterCA,kk=opt$HCPC_kk)
 # A string. "tree" plots the tree. "bar" plots bars of inertia gains. "map" plots a factor map,
 # individuals colored by cluster. "3D.map" plots the same factor map, individuals colored by cluster,
 # the tree above.
