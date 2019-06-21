@@ -262,6 +262,8 @@ to a position in the k-dim space, of coordinates c1, c2, c3, ..., ck.
 
 Since visualisation in more than 3 dimension is not easy for a human beeing, there is
 a number of methods to "reduce" or "project" a k-dim space in a space of 2 or 3 dimensions.
+This is of great help, not only to summarise the data, but also to find similarities, common trends
+between the data (under the hypothesis that similar data are closer in the k-dimension space)
 
 This tool returns the visualisation of a dimensional reduction using either
 
@@ -270,7 +272,7 @@ This tool returns the visualisation of a dimensional reduction using either
 * t-distributed Stochastic Neighbor Embedding
 
 The tool returns in addition the table of the coordinates of the observations (RNAseq libraries)
-in the low dim space 
+in the low dim space, which can be used for post-treatment or to tune the provided visualisation.
 
     </help>
 </tool>
