@@ -89,15 +89,15 @@
 					<option value="TRUE" selected="true">Yes</option>
 					<option value="FALSE">False</option>
 				</param>
-				<param name="Rtsne_pca_center"  type="select" label="pca centering (t-SNE)" help="Should data be centered before pca is applied? " > 
+				<param name="Rtsne_pca_center"  type="select" label="Centering data" help="Should data be centered before pca is applied? " > 
 					<option value="TRUE" selected="true">Yes</option>
 					<option value="FALSE">False</option>
 				</param>
-				<param name="Rtsne_pca_scale"  type="select" label="pca scaling (t-SNE)" help="Should data be scaled before pca is applied? " > 
+				<param name="Rtsne_pca_scale"  type="select" label="Scalling data" help="Should data be scaled before pca is applied? " > 
 					<option value="YES">Yes</option>
 					<option value="FALSE" selected="true">False</option>
 				</param>
-				<param name="Rtsne_normalize"  type="select" label="pca centering (t-SNE)" help="Should data be normalized internally prior to distance calculations? " > 
+				<param name="Rtsne_normalize"  type="select" label="Normalisation of data" help="Should data be normalized internally prior to distance calculations? " > 
 					<option value="TRUE" selected="true">Yes</option>
 					<option value="FALSE">False</option>
 				</param>
@@ -263,16 +263,16 @@ to a position in the k-dim space, of coordinates c1, c2, c3, ..., ck.
 Since visualisation in more than 3 dimension is not easy for a human beeing, there is
 a number of methods to "reduce" or "project" a k-dim space in a space of 2 or 3 dimensions.
 This is of great help, not only to summarise the data, but also to find similarities, common trends
-between the data (under the hypothesis that similar data are closer in the k-dimension space)
+between the data (under the hypothesis that similar data are closer in the k-dimension space).
 
-This tool returns the visualisation of a dimensional reduction using either
+This tool returns the visualisation of a dimensional reduction using either:
 
 * Principal Components Analysis (PCA)
 * Hierarchical Clustering of Principal Components (HCPC)
 * t-distributed Stochastic Neighbor Embedding
 
-The tool returns in addition the table of the coordinates of the observations (RNAseq libraries)
-in the low dim space, which can be used for post-treatment or to tune the provided visualisation.
+The tool returns in addition the table of the coordinates of the observations (eg RNAseq libraries)
+in the low dim space, which can be used for post-treatment or to further adjust the provided visualisation.
 
     </help>
 </tool>
