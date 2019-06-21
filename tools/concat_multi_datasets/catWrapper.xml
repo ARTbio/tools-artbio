@@ -1,4 +1,4 @@
-<tool id="cat_multi_datasets" name="Concatenate multiple datasets" version="1.3.0">
+<tool id="cat_multi_datasets" name="Concatenate multiple datasets" version="1.4.0">
     <description>tail-to-head by specifying how</description>
     <command><![CDATA[
         #if $headers == 0:
@@ -6,25 +6,30 @@
         #else:
             #set $concat_command = 'tail -q -n +'+ str(int($headers)+1)
         #end if
+        printf "Concatenating files:\n" &&
         #if $global_condition.input_type == "singles":
             #if $dataset_names == "No":
                 #for $file in $global_condition.inputs
-                    #if $file.ext[-2:] == "gz":
+                    printf "${file.element_identifier}..." &&
+                    #if $file.ext[-2:] == "gz" and $headers != 0:
                         gzip -dc '$file' | $concat_command | gzip -c >> '$out_file1' &&
                     #else:
                         $concat_command '$file' >> '$out_file1' &&
                     #end if
+                    printf "Done\n" &&
                 #end for
                 sleep 1
             #else:
                 #for $file in $global_condition.inputs
-                    #if $file.ext[-2:] == "gz":
+                    printf "${file.element_identifier}..." &&
+                    #if $file.ext[-2:] == "gz" and $headers != 0:
                         printf "# ${file.element_identifier}\n" | gzip -c >> '$out_file1' &&
                         gzip -dc "$file" | $concat_command |gzip -c >> '$out_file1' &&
                     #else:
                         printf "# ${file.element_identifier}\n" >> '$out_file1' &&
                         $concat_command "$file" >> '$out_file1' &&
                     #end if
+                    printf "Done\n" &&
                 #end for
                 sleep 1
             #end if
@@ -32,17 +37,20 @@
                 mkdir concatenated &&
                 #if $dataset_names == "No":
                     #for $x, $y in zip($global_condition.input_1, $global_condition.input_2):
-                        #if $x.ext[-2:] == "gz":
+                        printf "${x.element_identifier} and ${y.element_identifier}..." &&
+                        #if $x.ext[-2:] == "gz" and $headers != 0:
                             gzip -dc '$x' | $concat_command | gzip -c > concatenated/'${x.element_identifier}.listed.${x.ext}.listed' &&
                             gzip -dc '$y' | $concat_command | gzip -c >> concatenated/'${x.element_identifier}.listed.${x.ext}.listed' &&
                         #else:
                             $concat_command '$x' '$y' > concatenated/'${x.element_identifier}.listed.${x.ext}.listed' &&
                         #end if
+                        printf "Done\n" &&
                     #end for
                     sleep 1
                 #else:
                     #for $x, $y in zip($global_condition.input_1, $global_condition.input_2)
-                        #if $x.ext[-2:] == "gz":
+                        printf "${x.element_identifier} and ${y.element_identifier}..." &&
+                        #if $x.ext[-2:] == "gz" and $headers != 0:
                             printf "# ${x.element_identifier}\n" | gzip -c > concatenated/'${x.element_identifier}_${y.element_identifier}.listed.${x.ext}.listed' &&
                             gzip -dc '$x' | $concat_command | gzip -c >> concatenated/'${x.element_identifier}_${y.element_identifier}.listed.${x.ext}.listed' &&
                             printf "# ${y.element_identifier}\n" | gzip -c >> concatenated/'${x.element_identifier}_${y.element_identifier}.listed.${x.ext}.listed' &&
@@ -53,6 +61,7 @@
                             printf "# ${y.element_identifier}\n" >> concatenated/'${x.element_identifier}_${y.element_identifier}.listed.${x.ext}.listed' &&
                             $concat_command '$y' >> concatenated/'${x.element_identifier}_${y.element_identifier}.listed.${x.ext}.listed' &&
                         #end if
+                        printf "Done\n" &&
                     #end for
                 sleep 1
                 #end if
@@ -61,18 +70,21 @@
                 mkdir concatenated &&
                 #if $dataset_names == "No":
                     #for $file in $global_condition.inputs
-                        #if $file['forward'].ext[-2:] == "gz":
+                        printf "${file.element_identifier}- forward and reverse..." &&
+                        #if $file['forward'].ext[-2:] == "gz" and $headers != 0:
                             gzip -dc $file['forward'] | $concat_command | gzip -c >> concatenated/forward.listed.${file['forward'].ext}.listed &&
                             gzip -dc $file['reverse'] | $concat_command | gzip -c >> concatenated/reverse.listed.${file['reverse'].ext}.listed &&
                         #else:
                             $concat_command $file['forward'] >> concatenated/forward.listed.${file['forward'].ext}.listed &&
                             $concat_command $file['reverse'] >> concatenated/reverse.listed.${file['reverse'].ext}.listed &&
                         #end if
+                        printf "Done\n" &&
                     #end for
                     sleep 1
                 #else:
                     #for $file in $global_condition.inputs.keys():
-                        #if $global_condition.inputs[$file]['forward'].ext[-2:] == "gz":
+                        printf "$file - forward and reverse..." &&
+                        #if $global_condition.inputs[$file]['forward'].ext[-2:] == "gz" and $headers != 0:
                             printf "# ${file}_forward\n" | gzip -c >> concatenated/forward.listed.${global_condition.inputs[$file]['forward'].ext}.listed &&
                             gzip -dc $global_condition.inputs[$file]['forward'] | $concat_command | gzip -c >> concatenated/forward.listed.${global_condition.inputs[$file]['forward'].ext}.listed &&
                             printf "# ${file}_reverse\n" | gzip -c >> concatenated/reverse.listed.${global_condition.inputs[$file]['reverse'].ext}.listed &&
@@ -83,6 +95,7 @@
                             printf "# ${file}_reverse\n" >> concatenated/reverse.listed.${global_condition.inputs[$file]['reverse'].ext}.listed &&
                             $concat_command $global_condition.inputs[$file]['reverse'] >> concatenated/reverse.listed.${global_condition.inputs[$file]['reverse'].ext}.listed &&
                         #end if
+                        printf "Done\n" &&
                     #end for
                     sleep 1
                 #end if
@@ -90,7 +103,8 @@
                 mkdir concatenated &&
                 #if $dataset_names == "No":
                     #for $file in $global_condition.inputs.keys():
-                        #if $global_condition.inputs[$file]['forward'].ext[-2:] == "gz":
+                        printf "$file - forward and reverse..." &&
+                        #if $global_condition.inputs[$file]['forward'].ext[-2:] == "gz" and $headers != 0:
                             gzip -dc $global_condition.inputs[$file]['forward'] | $concat_command | gzip -c
                             > concatenated/'${file}.listed.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
                             gzip -dc $global_condition.inputs[$file]['reverse'] | $concat_command | gzip -c
@@ -101,11 +115,13 @@
                             $concat_command $global_condition.inputs[$file]['reverse']
                             >> concatenated/'${file}.listed.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
                         #end if
+                        printf "Done\n" &&
                     #end for
                     sleep 1
                 #else:
                     #for $file in $global_condition.inputs.keys():
-                        #if $global_condition.inputs[$file]['reverse'].ext[-2:] == "gz":
+                        printf "$file - forward and reverse..." &&
+                        #if $global_condition.inputs[$file]['reverse'].ext[-2:] == "gz" and $headers != 0:
                             printf "# ${file}_forward\n" | gzip -c > concatenated/'${file}.listed.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
                             gzip -dc $global_condition.inputs[$file]['forward'] | $concat_command | gzip -c
                             >> concatenated/'${file}.listed.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
@@ -120,6 +136,7 @@
                             $concat_command $global_condition.inputs[$file]['reverse']
                             >> concatenated/'${file}.listed.${global_condition.inputs[$file]['reverse'].ext}.listed' &&
                         #end if
+                        printf "Done\n" &&
                     #end for
                     sleep 1
                 #end if
@@ -129,7 +146,8 @@
                 #set $extention=$global_condition.inputs[$global_condition.inputs.keys()[0]]['forward'].ext
                 #if $dataset_names == "No":
                     #for $file in $global_condition.inputs.keys():
-                        #if $global_condition.inputs[$file]['forward'].ext[-2:] == "gz":
+                        printf "$file - forward and reverse..." &&
+                        #if $global_condition.inputs[$file]['forward'].ext[-2:] == "gz" and $headers != 0:
                             gzip -dc $global_condition.inputs[$file]['forward'] | $concat_command | gzip -c >> c'$paired_out_file' &&
                             gzip -dc $global_condition.inputs[$file]['reverse'] | $concat_command | gzip -c >> '$paired_out_file' &&
                         #else:
@@ -140,11 +158,13 @@
                             $global_condition.inputs[$file]['reverse']
                             >> '$paired_out_file' &&
                         #end if
+                        printf "Done\n" &&
                     #end for
                     sleep 1
                 #else:
                     #for $file in $global_condition.inputs.keys():
-                        #if $global_condition.inputs[$file]['forward'].ext[-2:] == "gz":
+                        printf "$file - forward and reverse..." &&
+                        #if $global_condition.inputs[$file]['forward'].ext[-2:] == "gz" and $headers != 0:
                             printf "# ${file}_forward\n" | gzip -c > '$paired_out_file' &&
                             gzip -dc $global_condition.inputs[$file]['forward'] | $concat_command | gzip -c >> '$paired_out_file' &&
                             printf "# ${file}_reverse\n" | gzip -c >> '$paired_out_file' &&
@@ -159,6 +179,7 @@
                             $global_condition.inputs[$file]['reverse']
                             >> '$paired_out_file' &&
                         #end if
+                        printf "Done\n" &&
                     #end for
                     sleep 1
                 #end if
@@ -169,11 +190,13 @@
                 #for $sub_list in $global_condition.inputs:
                     #set $file_base_name=$sub_list.element_identifier
                     #for $sub_list_element in $sub_list:
-                        #if $sub_list_element.ext[-2:] == "gz":
+                        printf "${file_base_name} - ${sub_list_element.element_identifier}..." &&
+                        #if $sub_list_element.ext[-2:] == "gz" and $headers != 0:
                             gzip -dc ${sub_list_element} | $concat_command | gzip -c >> concatenated/'${file_base_name}.listed.${sub_list_element.ext}.listed' &&
                         #else:
                             $concat_command ${sub_list_element} >> concatenated/'${file_base_name}.listed.${sub_list_element.ext}.listed' &&
                         #end if
+                        printf "Done\n" &&
                     #end for
                 #end for
                 sleep 1
@@ -181,13 +204,15 @@
                 #for $sub_list in $global_condition.inputs:
                     #set $file_base_name=$sub_list.element_identifier
                     #for $sub_list_element in $sub_list:
-                        #if $sub_list_element.ext[-2:] == "gz":
+                        printf "${file_base_name} - ${sub_list_element.element_identifier}..." &&
+                        #if $sub_list_element.ext[-2:] == "gz" and $headers != 0:
                             printf "# ${sub_list_element.element_identifier}\n" | gzip -c >> concatenated/'${file_base_name}.listed.${sub_list_element.ext}.listed' &&
                             gzip -dc ${sub_list_element} | $concat_command | gzip -c >> concatenated/'${file_base_name}.listed.${sub_list_element.ext}.listed' &&
                         #else:
                             printf "# ${sub_list_element.element_identifier}\n" >> concatenated/'${file_base_name}.listed.${sub_list_element.ext}.listed' &&
                             $concat_command ${sub_list_element} >> concatenated/'${file_base_name}.listed.${sub_list_element.ext}.listed' &&
                         #end if
+                        printf "Done\n" &&
                     #end for
                 #end for
                 sleep 1
