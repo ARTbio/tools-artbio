@@ -93,7 +93,7 @@
 					<option value="FALSE">False</option>
 				</param>
 				<param name="Rtsne_pca_scale"  type="select" label="Scalling data" help="Should data be scaled before pca is applied? " > 
-					<option value="YES">Yes</option>
+					<option value="TRUE">Yes</option>
 					<option value="FALSE" selected="true">False</option>
 				</param>
 				<param name="Rtsne_normalize"  type="select" label="Normalisation of data"
