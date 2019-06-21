@@ -21,17 +21,46 @@
             #else
                 --labels 'FALSE'
             #end if
+            #if $coord == "yes":
+                --plot_coordinates 'TRUE'
+             	--table_coordinates '$table_coordinates'
+            #else
+                --plot_coordinates 'FALSE'               
+            #end if
             --visu_choice '$visualisation.visu_choice'
             #if $visualisation.visu_choice == "tSNE":
-                --seed '$visualisation.seed'
-                --perp '$visualisation.perp'
-                --theta '$visualisation.theta'
+                --Rtsne_seed '$visualisation.Rtsne_seed'
+                --Rtsne_perplexity '$visualisation.Rtsne_perplexity'
+                --Rtsne_theta '$visualisation.Rtsne_theta'
+                --Rtsne_dims '$visualisation.Rtsne_dims'
+                --Rtsne_initial_dims '$visualisation.Rtsne_initial_dims'
+                --Rtsne_pca '$visualisation.Rtsne_pca'
+                --Rtsne_pca_center '$visualisation.Rtsne_pca_center'
+                --Rtsne_pca_scale '$visualisation.Rtsne_pca_scale'
+                --Rtsne_normalize '$visualisation.Rtsne_normalize'
+                --Rtsne_exaggeration_factor '$visualisation.Rtsne_exaggeration_factor'
             #end if
+            
             #if $visualisation.visu_choice == "HCPC":
-                --npc '$visualisation.npc'
-                --ncluster '$visualisation.ncluster'
+                --HCPC_ncluster '$visualisation.HCPC_ncluster'
+                --HCPC_npc '$visualisation.HCPC_npc'
+                --HCPC_metric '$visualisation.HCPC_metric'
+                --HCPC_method '$visualisation.HCPC_method'
+                --HCPC_consol '$visualisation.HCPC_consol'
+                --HCPC_itermax '$visualisation.HCPC_itermax'
+                --HCPC_min '$visualisation.HCPC_min'
+                --HCPC_max '$visualisation.HCPC_max'
+                --HCPC_clusterCA '$visualisation.HCPC_clusterCA'
+                --HCPC_kk '$visualisation.HCPC_kk'
             #end if
+            
+            #if $visualisation.visu_choice == "PCA":
+                --PCA_npc '$visualisation.PCA_npc'
+            #end if
+            
+           
             --pdf_out '$pdf_out'
+            
 ]]></command>
     <inputs>
         <param name="input" type="data" format="txt" label="expression data"/>
@@ -54,22 +83,78 @@
                 <option value="tSNE">t-SNE</option>
             </param>
             <when value="tSNE">
-                <param name="seed" value="49.0" type="float" label="Seed value for reproducibility of t-SNE" help="Set to 49 as default" />
-                <param name="perp" value="10.0" type="float" label="perplexity (t-SNE)" help="should be less than ((nbr observations)-1)/3" /> 
-                <param name="theta" value="1.0" type="float" label="theta (t-SNE)"/>
+                <param name="Rtsne_seed" value="42" type="integer" label="Seed value for reproducibility of t-SNE" help="Set to 42 as default" />
+                <param name="Rtsne_perplexity" value="10.0" type="float" label="perplexity (t-SNE)" help="should be less than ((nbr observations)-1)/3" /> 
+                <param name="Rtsne_theta" value="1.0" type="float" label="theta (t-SNE)"/>
+                <param name="Rtsne_dims" value="2" type="integer" label="dims (t-SNE)" help="Output dimensionality (should not be greater than 3)" /> 
+                <param name="Rtsne_initial_dims" value="50" type="integer" label="initial dims (t-SNE)" help="The number of dimensions that should be retained in the initial PCA step" /> 
+				<param name="Rtsne_pca"  type="select" label="pca (t-SNE)" help="Whether an initial PCA step should be performed" > 
+					<option value="TRUE" selected="true">Yes</option>
+					<option value="FALSE">False</option>
+				</param>
+				<param name="Rtsne_pca_center"  type="select" label="pca centering (t-SNE)" help="Should data be centered before pca is applied? " > 
+					<option value="TRUE" selected="true">Yes</option>
+					<option value="FALSE">False</option>
+				</param>
+				<param name="Rtsne_pca_scale"  type="select" label="pca scaling (t-SNE)" help="Should data be scaled before pca is applied? " > 
+					<option value="YES">Yes</option>
+					<option value="FALSE" selected="true">False</option>
+				</param>
+				<param name="Rtsne_normalize"  type="select" label="pca centering (t-SNE)" help="Should data be normalized internally prior to distance calculations? " > 
+					<option value="TRUE" selected="true">Yes</option>
+					<option value="FALSE">False</option>
+				</param>
+				<param name="Rtsne_exaggeration_factor" value="12.0" type="float" label="Exageration factor" help="Exaggeration factor used to multiply the P matrix in the first part of the optimization" />
+				
             </when>
             <when value="HCPC">
-                <param name="npc" value="5" type="integer" label="Number of principal components to keep"
+                <param name="HCPC_npc" value="5" type="integer" label="Number of principal components to keep"
                        help="The number of dimensions which are kept for HCPC analysis (default=5)" />
-                <param name="ncluster" value="-1" type="integer" label="Number of clusters in Hierar. Clustering"
+                <param name="HCPC_ncluster" value="-1" type="integer" label="Number of clusters in Hierar. Clustering"
                        help="nb.clust, the number of clusters to consider in the hierarchical clustering. (default : -1, let HCPC to optimize the number)" />
+				<param name="HCPC_metric"  type="select" label="Dissimilarity metric" help="Metric to be used for calculating dissimilarities between observations, available 'euclidian' or 'manhattan'? " > 
+					<option value="euclidian" selected="true">euclidian</option>
+					<option value="manhattan">manhattan</option>
+				</param>
+			    <param name="HCPC_method"  type="select" label="Clustering method" help="Clustering method between 'ward', 'average', 'single', 'complete', 'weighted' " > 
+					<option value="ward" selected="true">ward</option>
+					<option value="average">average</option>
+					<option value="single">single</option>
+					<option value="complete">complete</option>
+					<option value="weighted">weighted</option>
+				</param>
+				<param name="HCPC_consol"  type="select" label="k-means consolidation" help="If TRUE, a k-means consolidation is performed" > 
+					<option value="TRUE" selected="true">Yes</option>
+					<option value="FALSE">False</option>
+				</param>
+				<param name="HCPC_itermax" value="10" type="integer" label="Maximum number of iterations for consolidation"
+                       help=" (default=10)" />
+                <param name="HCPC_min" value="3" type="integer" label="min number of clusters"
+                       help=" The least possible number of clusters suggested (default=3)" />
+                <param name="HCPC_max" value="-1" type="text" label="max number of clusters"
+                       help=" The higher possible number of clusters suggested, by default the minimum between 10 and the number of individuals divided by 2. (default=-1)" />
+				<param name="HCPC_clusterCA"  type="select" label="clusterCA, Clustering against rows or columns" help="default(rows)" > 
+					<option value="rows" selected="true">Rows</option>
+					<option value="cols">Columns</option>
+				</param>
+				 <param name="HCPC_kk" value="-1" type="text" label="kk, Number of clusters used in a Kmeans preprocessing "
+                       help="No k-means consolidation is done if a kk value is provided (default=-1)" />
             </when>
             <when value="PCA">
+            	  <param name="PCA_npc" value="5" type="integer" label="Number of principal components to keep" help="The number of dimensions which are kept for PCA analysis (default=5)" />
             </when>
         </conditional>
+            <param label="Return scatter plot table coordinates" name="coord" type="select">
+                <option value="no" selected="True">No</option>
+                <option value="yes">Yes</option>
+            </param>
+             
     </inputs>
     <outputs>
         <data name="pdf_out" format="pdf" label="plots from ${tool.name} on ${on_string}" />
+        <data name="table_coordinates" format="tabular" label="Scatter plot coordinates from ${tool.name} on ${on_string}" >
+            <filter>coord == 'yes'</filter>
+        </data>
     </outputs>
     <tests>
         <!-- test HCPC -->
@@ -77,15 +162,15 @@
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="yes" />
             <param name="visu_choice" value="HCPC" />
-            <param name="npc" value="5"/>
-            <param name="ncluster" value="-1"/>
+            <param name="HCPC_npc" value="5"/>
+            <param name="HCPC_ncluster" value="-1"/>
             <output name="pdf_out" file="hcpc.labels.pdf" ftype="pdf"/>
         </test>
         <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="no" />
-            <param name="npc" value="5"/>
-            <param name="ncluster" value="-1"/>
+            <param name="HCPC_npc" value="5"/>
+            <param name="HCPC_ncluster" value="-1"/>
             <param name="visu_choice" value="HCPC" />
             <output name="pdf_out" file="hcpc.nolabels.pdf" ftype="pdf"/>
         </test>
@@ -94,18 +179,18 @@
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="yes" />
             <param name="visu_choice" value="tSNE" />
-            <param name="seed" value="49"/>
-            <param name="perp" value="10"/>
-            <param name="theta" value="1" />
+            <param name="Rtsne_seed" value="49"/>
+            <param name="Rtsne_perplexity" value="10"/>
+            <param name="Rtsne_theta" value="1" />
             <output name="pdf_out" file="tsne.labels.pdf" ftype="pdf"/>
         </test>
         <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="no" />
             <param name="visu_choice" value="tSNE" />
-            <param name="seed" value="49"/>
-            <param name="perp" value="10"/>
-            <param name="theta" value="1" />
+            <param name="Rtsne_seed" value="49"/>
+            <param name="Rtsne_perplexity" value="10"/>
+            <param name="Rtsne_theta" value="1" />
             <output name="pdf_out" file="tsne.nolabels.pdf" ftype="pdf"/>
         </test>
         <!-- test PCA -->
@@ -121,24 +206,57 @@
             <param name="visu_choice" value="PCA" />
             <output name="pdf_out" file="pca.nolabels.pdf" ftype="pdf"/>
         </test>
+        <!-- test Coordinates tables -->
+        <test>
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="no" />
+            <param name="visu_choice" value="PCA" />
+            <param name="coord" value="yes" />
+            <output name="pdf_out" file="pca.nolabels.pdf" ftype="pdf"/>
+            <output name="table_coordinates" file="pca.coord.tab" ftype="tabular"/>       
+		</test>
+       	<test>
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="no" />
+            <param name="visu_choice" value="tSNE" />
+            <param name="coord" value="yes" />
+            <param name="Rtsne_seed" value="42"/>
+            <param name="Rtsne_perplexity" value="5.0"/>
+            <param name="Rtsne_theta" value="1.0" />
+            <param name="Rtsne_dims" value="3" />
+            <param name="Rtsne_exaggeration_factor" value="15.0" />
+            <output name="pdf_out" file="tsne-2.nolabels.pdf" ftype="pdf"/>
+            <output name="table_coordinates" file="tsne-2.coord.tab" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="yes" />
+            <param name="visu_choice" value="HCPC" />
+            <param name="coord" value="yes" />
+            <param name="HCPC_method" value="average"/>
+            <param name="HCPC_metric" value="manhattan"/>
+            <param name="HCPC_npc" value="4" />
+            <output name="pdf_out" file="hcpc-2.labels.pdf" ftype="pdf"/>
+            <output name="table_coordinates" file="hcpc-2.coord.tab" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="yes" />
+            <param name="visu_choice" value="HCPC" />
+            <param name="coord" value="yes" />
+            <param name="HCPC_method" value="single"/>
+            <param name="HCPC_metric" value="euclidian"/>
+            <param name="HCPC_npc" value="4" />
+            <param name="HCPC_clusterCA" value="cols" />
+            <output name="pdf_out" file="hcpc-3.labels.pdf" ftype="pdf"/>
+            <output name="table_coordinates" file="hcpc-3.coord.tab" ftype="tabular"/>
+        </test>
     </tests>
     <help>
 
 **What it does**
 
-Takes a raw count expression matrix and returns a table of normalized expression values.
-
-Normalization can be:
-
-- CPM (Counts Per Million) are obtained by dividing counts by the library counts sum and multiplying the results by a million.
-- RPK (Reads Per Kilobases) are obtained by dividing read counts by gene lengths (expressed in kilo-nucleotides).
-- TPM (Transcripts Per Million) are obtained by dividing RPK values by the sum of all RPK values in a sample and multiplying the results by 1 million.
-
-RPK and TPM require a two-column correspondance table gene_name - gene length where the length is specified in nucleotide. Both these metrics are relevant only for sequencing of full length RNAs.
-
-Note: do not comment you header line if you have header line in you tabular input (ie do not start the header line with a '#' character)
-
-Computed values may be log-transformed (log2([CPM or RPK or TPM]+1))
+Takes a raw count expression matrix and returns visualisation plots and scatter plot stables from different data reduction dimension tools
 
     </help>
 </tool>
