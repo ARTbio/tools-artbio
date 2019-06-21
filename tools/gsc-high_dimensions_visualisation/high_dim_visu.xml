@@ -22,10 +22,7 @@
                 --labels 'FALSE'
             #end if
             #if $coord == "yes":
-                --plot_coordinates 'TRUE'
              	--table_coordinates '$table_coordinates'
-            #else
-                --plot_coordinates 'FALSE'               
             #end if
             --visu_choice '$visualisation.visu_choice'
             #if $visualisation.visu_choice == "tSNE":
@@ -256,7 +253,24 @@
 
 **What it does**
 
-Takes a raw count expression matrix and returns visualisation plots and scatter plot stables from different data reduction dimension tools
+Takes as an input a matrix of n observations (columns, generally n RNAseq library) of k variables
+(rows, generally k genes).
+
+k variables define a space of k dimensions. Any observation
+of k expression values for k genes (the purpose of one RNAseq experiment) can be assigned
+to a position in the k-dim space, of coordinates c1, c2, c3, ..., ck.
+
+Since visualisation in more than 3 dimension is not easy for a human beeing, there is
+a number of methods to "reduce" or "project" a k-dim space in a space of 2 or 3 dimensions.
+
+This tool returns the visualisation of a dimensional reduction using either
+
+* Principal Components Analysis (PCA)
+* Hierarchical Clustering of Principal Components (HCPC)
+* t-distributed Stochastic Neighbor Embedding
+
+The tool returns in addition the table of the coordinates of the observations (RNAseq libraries)
+in the low dim space 
 
     </help>
 </tool>

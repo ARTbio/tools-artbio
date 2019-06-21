@@ -50,15 +50,9 @@ option_list = list(
     type = 'character',
     help = "visualisation method ('PCA', 'tSNE', 'HCPC') [default : '%default' ]"
   ),
-  make_option(
-    "--plot_coordinates",
-    default = FALSE,
-    type = 'logical',
-    help = "Table with plot coordinates in the output [default : '%default' ]"
-  ),
    make_option(
     "--table_coordinates",
-    default = 'Coord.tab',
+    default = '',
     type = 'character',
     help = "Table with plot coordinates [default : '%default' ]"
   ),
@@ -240,7 +234,7 @@ if (opt$visu_choice == 'tSNE') {
   ggsave(file=opt$pdf_out, device="pdf")
   
   #save coordinates table
-  if(opt$plot_coordinates){
+  if(opt$table_coordinates != ''){
   coord_table <- cbind(rownames(tdf),as.data.frame(tsne_out$Y))
   colnames(coord_table)=c("Cells",paste0("DIM",(1:opt$Rtsne_dims)))
   }
@@ -259,7 +253,7 @@ if (opt$visu_choice == 'PCA') {
 dev.off()
 
   #save coordinates table
-  if(opt$plot_coordinates){
+  if(opt$table_coordinates != ''){
   coord_table <- cbind(rownames(pca$ind$coord),as.data.frame(pca$ind$coord))
   colnames(coord_table)=c("Cells",paste0("DIM",(1:opt$PCA_npc)))
   }
@@ -339,9 +333,10 @@ sil1 = as.data.frame(Sil$data)
 #  plot(pca, label="none", habillage="ind", col.hab=cols )
 #  PatientSampleColor = Color1[as.factor(metadata[, Patient])]
 #  plot(pca, label="none", habillage="ind", col.hab=PatientSampleColor )
+
 dev.off()
 
- if(opt$plot_coordinates){
+ if(opt$table_coordinates != ''){
   coord_table <- cbind(Cell=rownames(res.hcpc$call$X),as.data.frame(res.hcpc$call$X))
   colnames(coord_table)=c("Cells",paste0("DIM",(1:opt$HCPC_npc)),"Cluster")
   }
@@ -353,7 +348,7 @@ dev.off()
 
 ## Return coordinates file to user
 
-if(opt$plot_coordinates){
+if(opt$table_coordinates != ''){
   write.table(
     coord_table,
     file = opt$table_coordinates,
