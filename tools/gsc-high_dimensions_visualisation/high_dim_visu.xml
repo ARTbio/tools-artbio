@@ -16,6 +16,9 @@
             --data '$input'
             --sep '$input_sep'
             --colnames '$input_header'
+            #if $factor_choice == 'Yes'
+                --factor '$factor'
+            #end if
             #if $labels == "yes":
                 --labels 'TRUE'
             #else
@@ -74,6 +77,18 @@
             <option value="no" selected="true">No Labels</option>
             <option value="yes" >Label points</option>
         </param>
+        <conditional name="factor_condition">
+            <param label="Do you wish to contrast cells with a factor" name="factor_choice" type="select">
+                <option value="Yes">Yes</option>
+                <option value="No" selected="true">No</option>
+            </param>
+            <when value="Yes">
+                <param name="factor" type="data" format="tabular" label="Factor to constrast data"
+                       help="A two-column data frame, first column contains data labels, second column contains the levels of a factor to contrast visualisation" />
+            </when>
+            <when value="No">
+            </when>
+        </conditional>
         <conditional name="visualisation">
             <param label="Choose visualisation method" name="visu_choice" type="select">
                 <option value="PCA" selected="True">PCA</option>
