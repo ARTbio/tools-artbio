@@ -29,6 +29,7 @@
                 --Rtsne_seed '$visualisation.Rtsne_seed'
                 --Rtsne_perplexity '$visualisation.Rtsne_perplexity'
                 --Rtsne_theta '$visualisation.Rtsne_theta'
+                --Rtsne_max_iter '$visualisation.Rtsne_max_iter'
                 --Rtsne_dims '$visualisation.Rtsne_dims'
                 --Rtsne_initial_dims '$visualisation.Rtsne_initial_dims'
                 --Rtsne_pca '$visualisation.Rtsne_pca'
@@ -81,14 +82,12 @@
             </param>
             <when value="tSNE">
                 <param name="Rtsne_seed" value="42" type="integer" label="Seed value for reproducibility of t-SNE" help="Set to 42 as default" />
-                <param name="Rtsne_perplexity" value="10.0" type="float" label="perplexity (t-SNE)" help="should be less than ((nbr observations)-1)/3" /> 
-                <param name="Rtsne_theta" value="1.0" type="float" label="theta (t-SNE)"/>
                 <param name="Rtsne_dims" value="2" type="integer" label="dims (t-SNE)" help="Output dimensionality (should not be greater than 3)" /> 
-                <param name="Rtsne_initial_dims" value="50" type="integer" label="initial dims (t-SNE)" help="The number of dimensions that should be retained in the initial PCA step" /> 
 				<param name="Rtsne_pca"  type="select" label="pca (t-SNE)" help="Whether an initial PCA step should be performed" > 
 					<option value="TRUE" selected="true">Yes</option>
 					<option value="FALSE">False</option>
 				</param>
+                <param name="Rtsne_initial_dims" value="50" type="integer" label="initial dims (t-SNE)" help="The number of dimensions that should be retained in the initial PCA step" /> 
 				<param name="Rtsne_pca_center"  type="select" label="Centering data" help="Should data be centered before pca is applied? " > 
 					<option value="TRUE" selected="true">Yes</option>
 					<option value="FALSE">False</option>
@@ -97,12 +96,16 @@
 					<option value="YES">Yes</option>
 					<option value="FALSE" selected="true">False</option>
 				</param>
-				<param name="Rtsne_normalize"  type="select" label="Normalisation of data" help="Should data be normalized internally prior to distance calculations? " > 
+				<param name="Rtsne_normalize"  type="select" label="Normalisation of data"
+				             help="Should variables (gene expressions) be normalized internally prior to distance calculations? " > 
 					<option value="TRUE" selected="true">Yes</option>
 					<option value="FALSE">False</option>
 				</param>
+                <param name="Rtsne_perplexity" value="10.0" type="float" label="perplexity (t-SNE)" help="should be less than ((nbr observations)-1)/3" /> 
+                <param name="Rtsne_theta" value="1.0" type="float" label="theta (t-SNE)"/>
 				<param name="Rtsne_exaggeration_factor" value="12.0" type="float" label="Exageration factor" help="Exaggeration factor used to multiply the P matrix in the first part of the optimization" />
-				
+                <param name="Rtsne_max_iter" value="1000" type="integer" label="Number of iterations (default: 1000)"
+                             help="The number of iterations that Rtsne executes to improve low dim representation (gradient descent optimization)" /> 
             </when>
             <when value="HCPC">
                 <param name="HCPC_npc" value="5" type="integer" label="Number of principal components to keep"
@@ -275,4 +278,33 @@ The tool returns in addition the table of the coordinates of the observations (e
 in the low dim space, which can be used for post-treatment or to further adjust the provided visualisation.
 
     </help>
+    <citations>
+        <citation type="bibtex">@Article{,
+            title = {Visualizing High-Dimensional Data Using t-SNE},
+            volume = {9},
+            pages = {2579-2605},
+            year = {2008},
+            author = {L.J.P. {van der Maaten} and G.E. Hinton},
+            journal = {Journal of Machine Learning Research},
+            }
+        </citation>
+        <citation type="bibtex">@Article{,
+            title = {Accelerating t-SNE using Tree-Based Algorithms},
+            volume = {15},
+            pages = {3221-3245},
+            year = {2014},
+            author = {L.J.P. {van der Maaten}},
+            journal = {Journal of Machine Learning Research},
+            }
+        </citation>
+        <citation type="bibtex">@Manual{,
+            title = {{Rtsne}: T-Distributed Stochastic Neighbor Embedding using
+            Barnes-Hut Implementation},
+            author = {Jesse H. Krijthe},
+            year = {2015},
+            note = {R package version 0.15},
+            url = {https://github.com/jkrijthe/Rtsne},
+            }
+        </citation>
+  </citations>
 </tool>

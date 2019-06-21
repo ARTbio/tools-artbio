@@ -50,7 +50,7 @@ option_list = list(
     type = 'character',
     help = "visualisation method ('PCA', 'tSNE', 'HCPC') [default : '%default' ]"
   ),
-   make_option(
+  make_option(
     "--table_coordinates",
     default = '',
     type = 'character',
@@ -86,7 +86,13 @@ option_list = list(
     type = 'numeric',
     help = "theta [default : '%default' ]"
   ), 
-   make_option(
+  make_option(
+    "--Rtsne_max_iter",
+    default = 1000,
+    type = 'integer',
+    help = "max_iter [default : '%default' ]"
+  ), 
+  make_option(
     "--Rtsne_pca",
     default = TRUE,
     type = 'logical',
@@ -104,7 +110,7 @@ option_list = list(
     type = 'logical',
     help = "Should data be scaled before pca is applied? [default : '%default' ]"
   ),
-	make_option(
+  make_option(
     "--Rtsne_normalize",
     default = TRUE,
     type = 'logical',
@@ -152,19 +158,19 @@ option_list = list(
     type = 'character',
     help = "pdf of plots [default : '%default' ]"
   ),
-   make_option(
+  make_option(
     "--HCPC_consol",
     default = 'TRUE',
     type = 'logical',
     help = "If TRUE, a k-means consolidation is performed [default :'%default']"
   ),
-   make_option(
+  make_option(
     "--HCPC_itermax",
     default = '10',
     type = 'integer',
     help = "The maximum number of iterations for the consolidation [default :'%default']"
   ),
-   make_option(
+  make_option(
     "--HCPC_min",
     default = '3',
     type = 'integer',
@@ -182,7 +188,7 @@ option_list = list(
     type = 'character',
     help = "A string equals to 'rows' or 'columns' for the clustering of Correspondence Analysis results [default :'%default']"
   ),
-   make_option(
+  make_option(
     "--HCPC_kk",
     default = -1,
     type = 'numeric',
@@ -214,10 +220,17 @@ if (opt$visu_choice == 'tSNE') {
   # make tsne and plot results
   set.seed(opt$Rtsne_seed) ## Sets seed for reproducibility
 
-  tsne_out <- Rtsne(tdf, dims = opt$Rtsne_dims, initial_dims = opt$Rtsne_initial_dims, 
-     perplexity = opt$Rtsne_perplexity , theta = opt$Rtsne_theta, pca = opt$Rtsne_pca, 
-     pca_center = opt$Rtsne_pca_center,  pca_scale = opt$Rtsne_pca_scale,
-     normalize = opt$Rtsne_normalize, exaggeration_factor=opt$Rtsne_exaggeration_factor)
+  tsne_out <- Rtsne(tdf,
+                    dims = opt$Rtsne_dims,
+                    initial_dims = opt$Rtsne_initial_dims, 
+                    perplexity = opt$Rtsne_perplexity ,
+                    theta = opt$Rtsne_theta,
+                    max_iter = opt$Rtsne_max_iter,
+                    pca = opt$Rtsne_pca, 
+                    pca_center = opt$Rtsne_pca_center,
+                    pca_scale = opt$Rtsne_pca_scale,
+                    normalize = opt$Rtsne_normalize,
+                    exaggeration_factor=opt$Rtsne_exaggeration_factor)
 
   embedding <- as.data.frame(tsne_out$Y[,1:2])
   embedding$Class <- as.factor(rownames(tdf))
