@@ -290,7 +290,7 @@ k variables define a space of k dimensions. Any observation
 of k expression values for k genes (the purpose of one RNAseq experiment) can be assigned
 to a position in the k-dim space, of coordinates c1, c2, c3, ..., ck.
 
-Since visualisation in more than 3 dimension is not easy for a human beeing, there is
+Since visualisation in more than 3 dimensions is not easy for a human beeing, there is
 a number of methods to "reduce" or "project" a k-dim space in a space of 2 or 3 dimensions.
 This is of great help, not only to summarise the data, but also to find similarities, common trends
 between the data (under the hypothesis that similar data are closer in the k-dimension space).
