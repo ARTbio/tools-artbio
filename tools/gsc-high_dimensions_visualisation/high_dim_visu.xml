@@ -172,6 +172,40 @@
         </data>
     </outputs>
     <tests>
+        <!-- test PCA -->
+        <test>
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="yes" />
+            <param name="visu_choice" value="PCA" />
+            <param name="factor_choice" value="No" />
+            <output name="pdf_out" file="pca.labels.pdf" ftype="pdf"/>
+        </test>
+        <test>
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="no" />
+            <param name="visu_choice" value="PCA" />
+            <param name="factor_choice" value="No" />
+            <output name="pdf_out" file="pca.nolabels.pdf" ftype="pdf"/>
+        </test>
+        <!-- test Coordinates tables on PCA -->
+        <test>
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="no" />
+            <param name="visu_choice" value="PCA" />
+            <param name="coord" value="yes" />
+            <param name="factor_choice" value="No" />
+            <output name="pdf_out" file="pca.nolabels.pdf" ftype="pdf"/>
+            <output name="table_coordinates" file="pca.coord.tab" ftype="tabular"/>       
+		</test>
+        <!-- test factor contrasting on PCA -->
+        <test>
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="no" />
+            <param name="visu_choice" value="PCA" />
+            <param name="factor_choice" value="Yes" />
+            <param name="factor" value="factor.tsv" ftype="txt"/>
+            <output name="pdf_out" file="pca.nolabels.factors.pdf" ftype="pdf"/>
+        </test>
         <!-- test HCPC -->
         <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
@@ -188,60 +222,6 @@
             <param name="HCPC_ncluster" value="-1"/>
             <param name="visu_choice" value="HCPC" />
             <output name="pdf_out" file="hcpc.nolabels.pdf" ftype="pdf"/>
-        </test>
-        <!-- test t-SNE -->
-        <test>
-            <param name="input" value="cpm_input.tsv" ftype="txt"/>
-            <param name="labels" value="yes" />
-            <param name="visu_choice" value="tSNE" />
-            <param name="Rtsne_seed" value="49"/>
-            <param name="Rtsne_perplexity" value="10"/>
-            <param name="Rtsne_theta" value="1" />
-            <output name="pdf_out" file="tsne.labels.pdf" ftype="pdf"/>
-        </test>
-        <test>
-            <param name="input" value="cpm_input.tsv" ftype="txt"/>
-            <param name="labels" value="no" />
-            <param name="visu_choice" value="tSNE" />
-            <param name="Rtsne_seed" value="49"/>
-            <param name="Rtsne_perplexity" value="10"/>
-            <param name="Rtsne_theta" value="1" />
-            <output name="pdf_out" file="tsne.nolabels.pdf" ftype="pdf"/>
-        </test>
-        <!-- test PCA -->
-        <test>
-            <param name="input" value="cpm_input.tsv" ftype="txt"/>
-            <param name="labels" value="yes" />
-            <param name="visu_choice" value="PCA" />
-            <output name="pdf_out" file="pca.labels.pdf" ftype="pdf"/>
-        </test>
-        <test>
-            <param name="input" value="cpm_input.tsv" ftype="txt"/>
-            <param name="labels" value="no" />
-            <param name="visu_choice" value="PCA" />
-            <output name="pdf_out" file="pca.nolabels.pdf" ftype="pdf"/>
-        </test>
-        <!-- test Coordinates tables -->
-        <test>
-            <param name="input" value="cpm_input.tsv" ftype="txt"/>
-            <param name="labels" value="no" />
-            <param name="visu_choice" value="PCA" />
-            <param name="coord" value="yes" />
-            <output name="pdf_out" file="pca.nolabels.pdf" ftype="pdf"/>
-            <output name="table_coordinates" file="pca.coord.tab" ftype="tabular"/>       
-		</test>
-       	<test>
-            <param name="input" value="cpm_input.tsv" ftype="txt"/>
-            <param name="labels" value="no" />
-            <param name="visu_choice" value="tSNE" />
-            <param name="coord" value="yes" />
-            <param name="Rtsne_seed" value="42"/>
-            <param name="Rtsne_perplexity" value="5.0"/>
-            <param name="Rtsne_theta" value="1.0" />
-            <param name="Rtsne_dims" value="3" />
-            <param name="Rtsne_exaggeration_factor" value="15.0" />
-            <output name="pdf_out" file="tsne-2.nolabels.pdf" ftype="pdf"/>
-            <output name="table_coordinates" file="tsne-2.coord.tab" ftype="tabular"/>
         </test>
         <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
@@ -265,6 +245,38 @@
             <param name="HCPC_clusterCA" value="cols" />
             <output name="pdf_out" file="hcpc-3.labels.pdf" ftype="pdf"/>
             <output name="table_coordinates" file="hcpc-3.coord.tab" ftype="tabular"/>
+        </test>
+        <!-- test t-SNE -->
+        <test>
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="yes" />
+            <param name="visu_choice" value="tSNE" />
+            <param name="Rtsne_seed" value="49"/>
+            <param name="Rtsne_perplexity" value="10"/>
+            <param name="Rtsne_theta" value="1" />
+            <output name="pdf_out" file="tsne.labels.pdf" ftype="pdf"/>
+        </test>
+        <test>
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="no" />
+            <param name="visu_choice" value="tSNE" />
+            <param name="Rtsne_seed" value="49"/>
+            <param name="Rtsne_perplexity" value="10"/>
+            <param name="Rtsne_theta" value="1" />
+            <output name="pdf_out" file="tsne.nolabels.pdf" ftype="pdf"/>
+        </test>
+       	<test>
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="no" />
+            <param name="visu_choice" value="tSNE" />
+            <param name="coord" value="yes" />
+            <param name="Rtsne_seed" value="42"/>
+            <param name="Rtsne_perplexity" value="5.0"/>
+            <param name="Rtsne_theta" value="1.0" />
+            <param name="Rtsne_dims" value="3" />
+            <param name="Rtsne_exaggeration_factor" value="15.0" />
+            <output name="pdf_out" file="tsne-2.nolabels.pdf" ftype="pdf"/>
+            <output name="table_coordinates" file="tsne-2.coord.tab" ftype="tabular"/>
         </test>
     </tests>
     <help>
