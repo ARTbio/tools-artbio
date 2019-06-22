@@ -240,7 +240,7 @@ if (opt$factor != '') {
   factor_cols <- rep("deepskyblue4", length(rownames(data)))
 }
 
-# t-SNE
+################  t-SNE ####################
 if (opt$visu_choice == 'tSNE') {
   # filter and transpose df for tsne and pca
   data = data[rowSums(data) != 0,] # remove lines without information (with only 0s)
@@ -282,7 +282,7 @@ if (opt$visu_choice == 'tSNE') {
 }
 
 
-# make PCA with FactoMineR
+######### make PCA with FactoMineR #################
 if (opt$visu_choice == 'PCA') {
   pca <- PCA(t(data), ncp=opt$PCA_npc, graph=FALSE)
   pdf(opt$pdf_out)
@@ -306,12 +306,10 @@ dev.off()
 
 }
 
-#############################
-# make HCPC with FactoMineR #
+########### make HCPC with FactoMineR ##########
 if (opt$visu_choice == 'HCPC') {
-pdf(opt$pdf_out)
 
-## HCPC starts with a PCA
+# HCPC starts with a PCA
 pca <- PCA(
     t(data),
     ncp = opt$HCPC_npc,
@@ -320,19 +318,15 @@ pca <- PCA(
 )
 
 PCA_IndCoord = as.data.frame(pca$ind$coord) # coordinates of observations in PCA
-#Vartab = get_eig(pca)  #variable masquee car on ne s en sert pas dans la suite du code
 
-
-
-
-## Hierarchical Clustering On Principal Components Followed By Kmean Clustering
+# Hierarchical Clustering On Principal Components Followed By Kmean Clustering
 res.hcpc <- HCPC(pca,
                  nb.clust=opt$HCPC_ncluster, metric=opt$HCPC_metric, method=opt$HCPC_method,
                  graph=F,consol=opt$HCPC_consol,iter.max=opt$HCPC_itermax,min=opt$HCPC_min,max=opt$HCPC_max,
                  cluster.CA=opt$HCPC_clusterCA,kk=opt$HCPC_kk)
-# A string. "tree" plots the tree. "bar" plots bars of inertia gains. "map" plots a factor map,
-# individuals colored by cluster. "3D.map" plots the same factor map, individuals colored by cluster,
-# the tree above.
+# HCPC plots
+
+pdf(opt$pdf_out)
 plot(res.hcpc, choice="tree")
 plot(res.hcpc, choice="bar")
 plot(res.hcpc, choice="3D.map")
@@ -342,28 +336,33 @@ plot(res.hcpc, choice="map", label="none")
 plot(res.hcpc, choice="map")
 }
 
+# user contrasts on the pca
+if (opt$factor != '') {
+    plot(pca, label="none", habillage="ind", col.hab=factor_cols )
+    legend(x = 'topright', 
+       legend = as.character(factorColors$factor),
+       col = factorColors$color, pch = 16, bty = 'n', xjust = 1, cex=0.7)
+    }
 
-QuanVarDescCluster <- as.list(res.hcpc$desc.var$quanti)
-AxesDescCluster = as.list(res.hcpc$desc.axes$quanti)
+## Clusters to which individual observations belong # used ?
+# Clust <- data.frame(Cluster = res.hcpc$data.clust[, (nrow(data) + 1)],
+#                     Observation = rownames(res.hcpc$data.clust))
+# metadata <- data.frame(Observation=colnames(data), row.names=colnames(data))
+# metadata = merge(y = metadata,
+#                  x = Clust,
+#                  by = "Observation")
 
-
-## Clusters to which individual observations belong
-Clust <- data.frame(Cluster = res.hcpc$data.clust[, (nrow(data) + 1)],
-                    Observation = rownames(res.hcpc$data.clust))
-metadata <- data.frame(Observation=colnames(data), row.names=colnames(data))
-metadata = merge(y = metadata,
-                 x = Clust,
-                 by = "Observation")
-ObsNumberPerCluster = as.data.frame(table(metadata$Cluster))
-colnames(ObsNumberPerCluster) = c("Cluster", "ObsNumber")
-
-## Silhouette Plot
-hc.cut = hcut(PCA_IndCoord,
-              k = nlevels(metadata$Cluster),
-              hc_method = "ward.D2")
-              
-Sil = fviz_silhouette(hc.cut)
-sil1 = as.data.frame(Sil$data)
+# unclear utility
+# ObsNumberPerCluster = as.data.frame(table(metadata$Cluster))
+# colnames(ObsNumberPerCluster) = c("Cluster", "ObsNumber")
+# 
+# ## Silhouette Plot # not used
+# hc.cut = hcut(PCA_IndCoord,
+#               k = nlevels(metadata$Cluster),
+#               hc_method = "ward.D2")
+#               
+# Sil = fviz_silhouette(hc.cut)
+# sil1 = as.data.frame(Sil$data)
 
 ## Normalized Mutual Information # to be implemented later
 # sink(opt$mutual_info)
@@ -375,10 +374,6 @@ sil1 = as.data.frame(Sil$data)
 # )
 # sink()
 
-#  plot(pca, label="none", habillage="ind", col.hab=metadata$Cluster_2d_color )
-#  plot(pca, label="none", habillage="ind", col.hab=cols )
-#  PatientSampleColor = Color1[as.factor(metadata[, Patient])]
-#  plot(pca, label="none", habillage="ind", col.hab=PatientSampleColor )
 
 dev.off()
 
