@@ -17,7 +17,7 @@
             --sep '$input_sep'
             --colnames '$input_header'
             #if $factor_condition.factor_choice == 'Yes'
-                --factor 'factor_condition.factor'
+                --factor '$factor_condition.factor'
             #end if
             #if $labels == "yes":
                 --labels 'TRUE'

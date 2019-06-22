@@ -10,6 +10,7 @@ library(factoextra)
 library(Rtsne)
 library(ggplot2)
 library(ggfortify)
+library(RColorBrewer)
 
 
 # Arguments
@@ -43,6 +44,12 @@ option_list = list(
     default = FALSE,
     type = 'logical',
     help = "add labels in scatter plots [default : '%default' ]"
+  ),
+  make_option(
+    "--factor",
+    default = '',
+    type = 'character',
+    help = "A two column table that specifies factor levels for contrasting data [default : '%default' ]"
   ),
   make_option(
     "--visu_choice",
@@ -212,6 +219,27 @@ data = read.table(
   sep = opt$sep
 )
 
+# Contrasting factor and its colors
+if (opt$factor != '') {
+  contrasting_factor <- read.delim(
+      opt$factor,
+      row.names = 1,
+      header = TRUE
+  )
+  contrasting_factor <- as.data.frame(contrasting_factor[row.names(data), ])
+  colnames(contrasting_factor) <- c("factor")
+  factorColors <-
+      with(contrasting_factor,
+      data.frame(factor = levels(factor),
+      data.frame(factor = levels(factor),
+      color = I(brewer.pal(nlevels(factor), name = 'Dark2'))))
+      )
+  factor_cols <- factorColors$color[match(contrasting_factor$factor,
+                                          factorColors$factor)]
+  } else {
+  factor_cols <- rep("deepskyblue4", length(rownames(data)))
+}
+
 # t-SNE
 if (opt$visu_choice == 'tSNE') {
   # filter and transpose df for tsne and pca
@@ -259,10 +287,15 @@ if (opt$visu_choice == 'PCA') {
   pca <- PCA(t(data), ncp=opt$PCA_npc, graph=FALSE)
   pdf(opt$pdf_out)
   if (opt$labels == FALSE) {
-    plot(pca, label="none")
+    plot(pca, label="none" , col.ind = factor_cols)
     } else {
-    plot(pca, cex=0.2)
+    plot(pca, cex=0.2 , col.ind = factor_cols)
   }
+if (opt$factor != '') {
+    legend(x = 'topright', 
+       legend = as.character(factorColors$factor),
+       col = factorColors$color, pch = 16, bty = 'n', xjust = 1, cex=0.7)
+}
 dev.off()
 
   #save coordinates table
