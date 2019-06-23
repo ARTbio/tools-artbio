@@ -228,6 +228,7 @@ if (opt$factor != '') {
   rownames(contrasting_factor) <- contrasting_factor[,1]
   contrasting_factor <- contrasting_factor[colnames(data),]
   colnames(contrasting_factor) <- c("id","factor")
+  contrasting_factor$factor <- as.factor(contrasting_factor$factor)
   factorColors <-
     with(contrasting_factor,
          data.frame(factor = levels(factor),
