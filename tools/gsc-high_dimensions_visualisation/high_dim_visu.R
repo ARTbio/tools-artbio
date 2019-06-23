@@ -10,6 +10,7 @@ library(factoextra)
 library(Rtsne)
 library(ggplot2)
 library(ggfortify)
+library(RColorBrewer)
 
 
 # Arguments
@@ -45,20 +46,20 @@ option_list = list(
     help = "add labels in scatter plots [default : '%default' ]"
   ),
   make_option(
+    "--factor",
+    default = '',
+    type = 'character',
+    help = "A two column table that specifies factor levels for contrasting data [default : '%default' ]"
+  ),
+  make_option(
     "--visu_choice",
     default = 'PCA',
     type = 'character',
     help = "visualisation method ('PCA', 'tSNE', 'HCPC') [default : '%default' ]"
   ),
   make_option(
-    "--plot_coordinates",
-    default = FALSE,
-    type = 'logical',
-    help = "Table with plot coordinates in the output [default : '%default' ]"
-  ),
-   make_option(
     "--table_coordinates",
-    default = 'Coord.tab',
+    default = '',
     type = 'character',
     help = "Table with plot coordinates [default : '%default' ]"
   ),
@@ -92,7 +93,13 @@ option_list = list(
     type = 'numeric',
     help = "theta [default : '%default' ]"
   ), 
-   make_option(
+  make_option(
+    "--Rtsne_max_iter",
+    default = 1000,
+    type = 'integer',
+    help = "max_iter [default : '%default' ]"
+  ), 
+  make_option(
     "--Rtsne_pca",
     default = TRUE,
     type = 'logical',
@@ -110,7 +117,7 @@ option_list = list(
     type = 'logical',
     help = "Should data be scaled before pca is applied? [default : '%default' ]"
   ),
-	make_option(
+  make_option(
     "--Rtsne_normalize",
     default = TRUE,
     type = 'logical',
@@ -158,19 +165,19 @@ option_list = list(
     type = 'character',
     help = "pdf of plots [default : '%default' ]"
   ),
-   make_option(
+  make_option(
     "--HCPC_consol",
     default = 'TRUE',
     type = 'logical',
     help = "If TRUE, a k-means consolidation is performed [default :'%default']"
   ),
-   make_option(
+  make_option(
     "--HCPC_itermax",
     default = '10',
     type = 'integer',
     help = "The maximum number of iterations for the consolidation [default :'%default']"
   ),
-   make_option(
+  make_option(
     "--HCPC_min",
     default = '3',
     type = 'integer',
@@ -188,7 +195,7 @@ option_list = list(
     type = 'character',
     help = "A string equals to 'rows' or 'columns' for the clustering of Correspondence Analysis results [default :'%default']"
   ),
-   make_option(
+  make_option(
     "--HCPC_kk",
     default = -1,
     type = 'numeric',
@@ -212,66 +219,110 @@ data = read.table(
   sep = opt$sep
 )
 
-# t-SNE
+# Contrasting factor and its colors
+if (opt$factor != '') {
+  contrasting_factor <- read.delim(
+    opt$factor,
+    header = TRUE
+  )
+  rownames(contrasting_factor) <- contrasting_factor[,1]
+  contrasting_factor <- contrasting_factor[colnames(data),]
+  colnames(contrasting_factor) <- c("id","factor")
+  contrasting_factor$factor <- as.factor(contrasting_factor$factor)
+  factorColors <-
+    with(contrasting_factor,
+         data.frame(factor = levels(factor),
+                    data.frame(factor = levels(factor),
+                               color = I(brewer.pal(nlevels(factor), name = 'Paired'))))
+    )
+  factor_cols <- factorColors$color[match(contrasting_factor$factor,
+                                          factorColors$factor)]
+} else {
+  factor_cols <- rep("deepskyblue4", length(rownames(data)))
+}
+
+################  t-SNE ####################
 if (opt$visu_choice == 'tSNE') {
   # filter and transpose df for tsne and pca
-  data = data[rowSums(data) != 0,] # remove lines without information (with only 0s)
   tdf = t(data)
   # make tsne and plot results
   set.seed(opt$Rtsne_seed) ## Sets seed for reproducibility
 
-  tsne_out <- Rtsne(tdf, dims = opt$Rtsne_dims, initial_dims = opt$Rtsne_initial_dims, 
-     perplexity = opt$Rtsne_perplexity , theta = opt$Rtsne_theta, pca = opt$Rtsne_pca, 
-     pca_center = opt$Rtsne_pca_center,  pca_scale = opt$Rtsne_pca_scale,
-     normalize = opt$Rtsne_normalize, exaggeration_factor=opt$Rtsne_exaggeration_factor)
+  tsne_out <- Rtsne(tdf,
+                    dims = opt$Rtsne_dims,
+                    initial_dims = opt$Rtsne_initial_dims, 
+                    perplexity = opt$Rtsne_perplexity ,
+                    theta = opt$Rtsne_theta,
+                    max_iter = opt$Rtsne_max_iter,
+                    pca = opt$Rtsne_pca, 
+                    pca_center = opt$Rtsne_pca_center,
+                    pca_scale = opt$Rtsne_pca_scale,
+                    normalize = opt$Rtsne_normalize,
+                    exaggeration_factor=opt$Rtsne_exaggeration_factor)
 
   embedding <- as.data.frame(tsne_out$Y[,1:2])
   embedding$Class <- as.factor(rownames(tdf))
-  gg_legend = theme(legend.position="none")
-  ggplot(embedding, aes(x=V1, y=V2)) +
-    geom_point(size=1, color='red') +
-    gg_legend +
-    xlab("") +
-    ylab("") +
-    ggtitle('t-SNE') +
-    if (opt$labels == TRUE) {
-      geom_text(aes(label=Class),hjust=-0.2, vjust=-0.5, size=1.5, color='darkblue')
-    }
+  gg_legend = theme(legend.position="right")
+  if (opt$factor == '') {
+    ggplot(embedding, aes(x=V1, y=V2)) +
+      geom_point(size=1, color='deepskyblue4') +
+      gg_legend +
+      xlab("") +
+      ylab("") +
+      ggtitle('t-SNE') +
+      if (opt$labels) {
+        geom_text(aes(label=Class),hjust=-0.2, vjust=-0.5, size=1.5, color='deepskyblue4')
+      }
+    } else {
+    embedding$factor <- as.factor(contrasting_factor$factor)
+    ggplot(embedding, aes(x=V1, y=V2, color=factor)) +
+      geom_point(size=1) + #, color=factor_cols
+      gg_legend +
+      xlab("") +
+      ylab("") +
+      ggtitle('t-SNE') +
+      if (opt$labels) {
+        geom_text(aes(label=Class, colour=factor),hjust=-0.2, vjust=-0.5, size=1.5)
+      }
+    }    
   ggsave(file=opt$pdf_out, device="pdf")
   
   #save coordinates table
-  if(opt$plot_coordinates){
+  if(opt$table_coordinates != ''){
   coord_table <- cbind(rownames(tdf),as.data.frame(tsne_out$Y))
   colnames(coord_table)=c("Cells",paste0("DIM",(1:opt$Rtsne_dims)))
   }
 }
 
 
-# make PCA with FactoMineR
+######### make PCA with FactoMineR #################
 if (opt$visu_choice == 'PCA') {
   pca <- PCA(t(data), ncp=opt$PCA_npc, graph=FALSE)
   pdf(opt$pdf_out)
   if (opt$labels == FALSE) {
-    plot(pca, label="none")
+    plot(pca, label="none" , col.ind = factor_cols)
     } else {
-    plot(pca, cex=0.2)
+    plot(pca, cex=0.2 , col.ind = factor_cols)
   }
+if (opt$factor != '') {
+    legend(x = 'topright', 
+       legend = as.character(factorColors$factor),
+       col = factorColors$color, pch = 16, bty = 'n', xjust = 1, cex=0.7)
+}
 dev.off()
 
   #save coordinates table
-  if(opt$plot_coordinates){
+  if(opt$table_coordinates != ''){
   coord_table <- cbind(rownames(pca$ind$coord),as.data.frame(pca$ind$coord))
   colnames(coord_table)=c("Cells",paste0("DIM",(1:opt$PCA_npc)))
   }
 
 }
 
-#############################
-# make HCPC with FactoMineR #
+########### make HCPC with FactoMineR ##########
 if (opt$visu_choice == 'HCPC') {
-pdf(opt$pdf_out)
 
-## HCPC starts with a PCA
+# HCPC starts with a PCA
 pca <- PCA(
     t(data),
     ncp = opt$HCPC_npc,
@@ -280,19 +331,15 @@ pca <- PCA(
 )
 
 PCA_IndCoord = as.data.frame(pca$ind$coord) # coordinates of observations in PCA
-#Vartab = get_eig(pca)  #variable masquee car on ne s en sert pas dans la suite du code
 
-
-
-
-## Hierarchical Clustering On Principal Components Followed By Kmean Clustering
+# Hierarchical Clustering On Principal Components Followed By Kmean Clustering
 res.hcpc <- HCPC(pca,
                  nb.clust=opt$HCPC_ncluster, metric=opt$HCPC_metric, method=opt$HCPC_method,
                  graph=F,consol=opt$HCPC_consol,iter.max=opt$HCPC_itermax,min=opt$HCPC_min,max=opt$HCPC_max,
                  cluster.CA=opt$HCPC_clusterCA,kk=opt$HCPC_kk)
-# A string. "tree" plots the tree. "bar" plots bars of inertia gains. "map" plots a factor map,
-# individuals colored by cluster. "3D.map" plots the same factor map, individuals colored by cluster,
-# the tree above.
+# HCPC plots
+dims <- head(as.data.frame(res.hcpc$call$t$res$eig),2) # dims variances in column 2
+pdf(opt$pdf_out)
 plot(res.hcpc, choice="tree")
 plot(res.hcpc, choice="bar")
 plot(res.hcpc, choice="3D.map")
@@ -302,28 +349,32 @@ plot(res.hcpc, choice="map", label="none")
 plot(res.hcpc, choice="map")
 }
 
+# user contrasts on the pca
+if (opt$factor != '') {
+    plot(pca, label="none", habillage="ind", col.hab=factor_cols)
+    legend(x = 'topright', 
+       legend = as.character(factorColors$factor),
+       col = factorColors$color, pch = 16, bty = 'n', xjust = 1, cex=0.7)
+    }
+## Clusters to which individual observations belong # used ?
+# Clust <- data.frame(Cluster = res.hcpc$data.clust[, (nrow(data) + 1)],
+#                     Observation = rownames(res.hcpc$data.clust))
+# metadata <- data.frame(Observation=colnames(data), row.names=colnames(data))
+# metadata = merge(y = metadata,
+#                  x = Clust,
+#                  by = "Observation")
 
-QuanVarDescCluster <- as.list(res.hcpc$desc.var$quanti)
-AxesDescCluster = as.list(res.hcpc$desc.axes$quanti)
-
-
-## Clusters to which individual observations belong
-Clust <- data.frame(Cluster = res.hcpc$data.clust[, (nrow(data) + 1)],
-                    Observation = rownames(res.hcpc$data.clust))
-metadata <- data.frame(Observation=colnames(data), row.names=colnames(data))
-metadata = merge(y = metadata,
-                 x = Clust,
-                 by = "Observation")
-ObsNumberPerCluster = as.data.frame(table(metadata$Cluster))
-colnames(ObsNumberPerCluster) = c("Cluster", "ObsNumber")
-
-## Silhouette Plot
-hc.cut = hcut(PCA_IndCoord,
-              k = nlevels(metadata$Cluster),
-              hc_method = "ward.D2")
-              
-Sil = fviz_silhouette(hc.cut)
-sil1 = as.data.frame(Sil$data)
+# unclear utility
+# ObsNumberPerCluster = as.data.frame(table(metadata$Cluster))
+# colnames(ObsNumberPerCluster) = c("Cluster", "ObsNumber")
+# 
+# ## Silhouette Plot # not used
+# hc.cut = hcut(PCA_IndCoord,
+#               k = nlevels(metadata$Cluster),
+#               hc_method = "ward.D2")
+#               
+# Sil = fviz_silhouette(hc.cut)
+# sil1 = as.data.frame(Sil$data)
 
 ## Normalized Mutual Information # to be implemented later
 # sink(opt$mutual_info)
@@ -334,26 +385,17 @@ sil1 = as.data.frame(Sil$data)
 #   summary_stats = TRUE
 # )
 # sink()
-
-#  plot(pca, label="none", habillage="ind", col.hab=metadata$Cluster_2d_color )
-#  plot(pca, label="none", habillage="ind", col.hab=cols )
-#  PatientSampleColor = Color1[as.factor(metadata[, Patient])]
-#  plot(pca, label="none", habillage="ind", col.hab=PatientSampleColor )
 dev.off()
 
- if(opt$plot_coordinates){
+ if(opt$table_coordinates != ''){
   coord_table <- cbind(Cell=rownames(res.hcpc$call$X),as.data.frame(res.hcpc$call$X))
   colnames(coord_table)=c("Cells",paste0("DIM",(1:opt$HCPC_npc)),"Cluster")
   }
-
-
-
-
 }
 
 ## Return coordinates file to user
 
-if(opt$plot_coordinates){
+if(opt$table_coordinates != ''){
   write.table(
     coord_table,
     file = opt$table_coordinates,
