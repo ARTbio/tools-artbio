@@ -166,7 +166,7 @@
              
     </inputs>
     <outputs>
-        <data name="pdf_out" format="pdf" label="plots from ${tool.name} on ${on_string}" />
+        <data name="pdf_out" format="pdf" label="${visualisation.visu_choice} on ${on_string}" />
         <data name="table_coordinates" format="tabular" label="Scatter plot coordinates from ${tool.name} on ${on_string}" >
             <filter>coord == 'yes'</filter>
         </data>
@@ -204,6 +204,14 @@
             <param name="visu_choice" value="PCA" />
             <param name="factor_choice" value="Yes" />
             <param name="factor" value="factor.tsv" ftype="txt"/>
+            <output name="pdf_out" file="pca.nolabels.factors.pdf" ftype="pdf"/>
+        </test>
+        <test>
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="no" />
+            <param name="visu_choice" value="PCA" />
+            <param name="factor_choice" value="Yes" />
+            <param name="factor" value="shuffled_factor.tsv" ftype="txt"/>
             <output name="pdf_out" file="pca.nolabels.factors.pdf" ftype="pdf"/>
         </test>
         <!-- test HCPC -->
@@ -288,6 +296,18 @@
             <param name="Rtsne_exaggeration_factor" value="15.0" />
             <output name="pdf_out" file="tsne-2.nolabels.pdf" ftype="pdf"/>
             <output name="table_coordinates" file="tsne-2.coord.tab" ftype="tabular"/>
+        </test>
+        <!-- test factor contrasting on t-SNE -->
+        <test>
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="yes" />
+            <param name="visu_choice" value="tSNE" />
+            <param name="factor_choice" value="Yes" />
+            <param name="factor" value="shuffled_factor.tsv" ftype="txt"/>
+            <param name="Rtsne_seed" value="49"/>
+            <param name="Rtsne_perplexity" value="10"/>
+            <param name="Rtsne_theta" value="1" />
+            <output name="pdf_out" file="tsne.labels.factor.pdf" ftype="pdf"/>
         </test>
     </tests>
     <help>

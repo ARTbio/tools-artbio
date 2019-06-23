@@ -243,7 +243,6 @@ if (opt$factor != '') {
 ################  t-SNE ####################
 if (opt$visu_choice == 'tSNE') {
   # filter and transpose df for tsne and pca
-  data = data[rowSums(data) != 0,] # remove lines without information (with only 0s)
   tdf = t(data)
   # make tsne and plot results
   set.seed(opt$Rtsne_seed) ## Sets seed for reproducibility
@@ -262,26 +261,27 @@ if (opt$visu_choice == 'tSNE') {
 
   embedding <- as.data.frame(tsne_out$Y[,1:2])
   embedding$Class <- as.factor(rownames(tdf))
-  gg_legend = theme(legend.position="none")
+  gg_legend = theme(legend.position="right")
   if (opt$factor == '') {
     ggplot(embedding, aes(x=V1, y=V2)) +
-      geom_point(size=1, color='red') +
+      geom_point(size=1, color='deepskyblue4') +
       gg_legend +
       xlab("") +
       ylab("") +
       ggtitle('t-SNE') +
-      if (opt$labels == TRUE) {
+      if (opt$labels) {
         geom_text(aes(label=Class),hjust=-0.2, vjust=-0.5, size=1.5, color='deepskyblue4')
       }
     } else {
-    ggplot(embedding, aes(x=V1, y=V2)) +
-      geom_point(size=1, color='red') +
+    embedding$factor <- as.factor(contrasting_factor$factor)
+    ggplot(embedding, aes(x=V1, y=V2, color=factor)) +
+      geom_point(size=1) + #, color=factor_cols
       gg_legend +
       xlab("") +
       ylab("") +
       ggtitle('t-SNE') +
-      if (opt$labels == TRUE) {
-        geom_text(aes(label=Class),hjust=-0.2, vjust=-0.5, size=1.5, color=factor_cols)
+      if (opt$labels) {
+        geom_text(aes(label=Class, colour=factor),hjust=-0.2, vjust=-0.5, size=1.5)
       }
     }    
   ggsave(file=opt$pdf_out, device="pdf")
@@ -337,7 +337,7 @@ res.hcpc <- HCPC(pca,
                  graph=F,consol=opt$HCPC_consol,iter.max=opt$HCPC_itermax,min=opt$HCPC_min,max=opt$HCPC_max,
                  cluster.CA=opt$HCPC_clusterCA,kk=opt$HCPC_kk)
 # HCPC plots
-
+dims <- head(as.data.frame(res.hcpc$call$t$res$eig),2) # dims variances in column 2
 pdf(opt$pdf_out)
 plot(res.hcpc, choice="tree")
 plot(res.hcpc, choice="bar")
@@ -350,12 +350,11 @@ plot(res.hcpc, choice="map")
 
 # user contrasts on the pca
 if (opt$factor != '') {
-    plot(pca, label="none", habillage="ind", col.hab=factor_cols )
+    plot(pca, label="none", habillage="ind", col.hab=factor_cols)
     legend(x = 'topright', 
        legend = as.character(factorColors$factor),
        col = factorColors$color, pch = 16, bty = 'n', xjust = 1, cex=0.7)
     }
-
 ## Clusters to which individual observations belong # used ?
 # Clust <- data.frame(Cluster = res.hcpc$data.clust[, (nrow(data) + 1)],
 #                     Observation = rownames(res.hcpc$data.clust))
@@ -385,18 +384,12 @@ if (opt$factor != '') {
 #   summary_stats = TRUE
 # )
 # sink()
-
-
 dev.off()
 
  if(opt$table_coordinates != ''){
   coord_table <- cbind(Cell=rownames(res.hcpc$call$X),as.data.frame(res.hcpc$call$X))
   colnames(coord_table)=c("Cells",paste0("DIM",(1:opt$HCPC_npc)),"Cluster")
   }
-
-
-
-
 }
 
 ## Return coordinates file to user
