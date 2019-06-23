@@ -222,21 +222,21 @@ data = read.table(
 # Contrasting factor and its colors
 if (opt$factor != '') {
   contrasting_factor <- read.delim(
-      opt$factor,
-      row.names = 1,
-      header = TRUE
+    opt$factor,
+    header = TRUE
   )
-  contrasting_factor <- as.data.frame(contrasting_factor[row.names(data), ])
-  colnames(contrasting_factor) <- c("factor")
+  rownames(contrasting_factor) <- contrasting_factor[,1]
+  contrasting_factor <- contrasting_factor[colnames(data),]
+  colnames(contrasting_factor) <- c("id","factor")
   factorColors <-
-      with(contrasting_factor,
-      data.frame(factor = levels(factor),
-      data.frame(factor = levels(factor),
-      color = I(brewer.pal(nlevels(factor), name = 'Dark2'))))
-      )
+    with(contrasting_factor,
+         data.frame(factor = levels(factor),
+                    data.frame(factor = levels(factor),
+                               color = I(brewer.pal(nlevels(factor), name = 'Dark2'))))
+    )
   factor_cols <- factorColors$color[match(contrasting_factor$factor,
                                           factorColors$factor)]
-  } else {
+} else {
   factor_cols <- rep("deepskyblue4", length(rownames(data)))
 }
 
