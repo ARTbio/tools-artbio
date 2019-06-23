@@ -6,6 +6,6 @@ long_description:
 categories:
   - Transcriptomics
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/gsc-filter_genes
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/gsc_filter_genes
 toolshed:
   - toolshed
