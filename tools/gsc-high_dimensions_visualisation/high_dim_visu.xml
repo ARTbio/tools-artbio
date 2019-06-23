@@ -218,13 +218,13 @@
         <!-- test factor contrasting on HCPC -->
         <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
-            <param name="labels" value="yes" />
+            <param name="labels" value="no" />
             <param name="visu_choice" value="HCPC" />
             <param name="HCPC_npc" value="5"/>
             <param name="HCPC_ncluster" value="-1"/>
             <param name="factor_choice" value="Yes" />
             <param name="factor" value="factor.tsv" ftype="txt"/>
-            <output name="pdf_out" file="hcpc.labels.factor.pdf" ftype="pdf"/>
+            <output name="pdf_out" file="hcpc.nolabels.factor.pdf" ftype="pdf"/>
         </test>
         <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>

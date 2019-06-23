@@ -232,7 +232,7 @@ if (opt$factor != '') {
     with(contrasting_factor,
          data.frame(factor = levels(factor),
                     data.frame(factor = levels(factor),
-                               color = I(brewer.pal(nlevels(factor), name = 'Dark2'))))
+                               color = I(brewer.pal(nlevels(factor), name = 'Paired'))))
     )
   factor_cols <- factorColors$color[match(contrasting_factor$factor,
                                           factorColors$factor)]
@@ -263,15 +263,27 @@ if (opt$visu_choice == 'tSNE') {
   embedding <- as.data.frame(tsne_out$Y[,1:2])
   embedding$Class <- as.factor(rownames(tdf))
   gg_legend = theme(legend.position="none")
-  ggplot(embedding, aes(x=V1, y=V2)) +
-    geom_point(size=1, color='red') +
-    gg_legend +
-    xlab("") +
-    ylab("") +
-    ggtitle('t-SNE') +
-    if (opt$labels == TRUE) {
-      geom_text(aes(label=Class),hjust=-0.2, vjust=-0.5, size=1.5, color='darkblue')
-    }
+  if (opt$factor == '') {
+    ggplot(embedding, aes(x=V1, y=V2)) +
+      geom_point(size=1, color='red') +
+      gg_legend +
+      xlab("") +
+      ylab("") +
+      ggtitle('t-SNE') +
+      if (opt$labels == TRUE) {
+        geom_text(aes(label=Class),hjust=-0.2, vjust=-0.5, size=1.5, color='deepskyblue4')
+      }
+    } else {
+    ggplot(embedding, aes(x=V1, y=V2)) +
+      geom_point(size=1, color='red') +
+      gg_legend +
+      xlab("") +
+      ylab("") +
+      ggtitle('t-SNE') +
+      if (opt$labels == TRUE) {
+        geom_text(aes(label=Class),hjust=-0.2, vjust=-0.5, size=1.5, color=factor_cols)
+      }
+    }    
   ggsave(file=opt$pdf_out, device="pdf")
   
   #save coordinates table
