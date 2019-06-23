@@ -335,6 +335,14 @@ This tool returns the visualisation of a dimensional reduction using either:
 The tool returns in addition the table of the coordinates of the observations (eg RNAseq libraries)
 in the low dim space, which can be used for post-treatment or to further adjust the provided visualisation.
 
+** Contrast data with a factor **
+The tool offers the possibility to colour data points according to the levels of a factor.
+To use the option "Factor to contrast data", provide a tabulated-separated, two-column table
+with first column containing the cell/data library identifiers (same identifiers as those
+provided as column headers in the input data table) and second column containing the corresponding
+factor levels value. This table does not need to be sorted in the same order as in the data
+table. It may also contain more identifiers than those provided in the data table.
+
     </help>
     <citations>
         <citation type="bibtex">@Article{,
