@@ -81,6 +81,7 @@ kept_genes <- rowSums(data.counts != 0) >= (opt$absolute_detection)
 
 # Filter matrix
 data.counts <- data.counts[kept_genes,]
+data.counts <- cbind(Genes=rownames(data.counts), data.counts)
 
 # Save filtered matrix
 write.table(
@@ -89,5 +90,5 @@ write.table(
   sep = "\t",
   quote = F,
   col.names = T,
-  row.names = T
+  row.names = F
 )
