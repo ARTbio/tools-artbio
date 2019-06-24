@@ -35,8 +35,8 @@
         </param>
         <param name="comparison_factor_file" type="data" format="tabular" label="Comparison factor table"
                help="A tsv table file with two columns : cell identifiers and a column that split cells into two categories." />
-        <param name="factor1" type="text" label="The first value that the comparison factor can take." help="typical values could be 'HIGH', 'mutant', 't1', etc."/>
-        <param name="factor2" type="text" label="The second value that the comparison factor can take." help="typical values could be 'LOW', 'wt', 't2', etc."/>
+        <param name="factor1" type="text" label="Condition-1. The first level (value) that the comparison factor can take." help="typical values could be 'LOW', 'wt', 't1', etc."/>
+        <param name="factor2" type="text" label="Condition-2. The second level (value) that the comparison factor can take." help="typical values could be 'HIGH', 'mutant', 't2', etc."/>
         <param name="fdr" type="float" value="0.01" label="FDR threshold"
                help="Reject H0 of no differential expression if adjusted p-values (Benjamini-Hochberg correction) is higher than the FDR cut-off."/>
         <param name="log" type="boolean" checked="false" label="Expression data are log-transformed" truevalue="--log" falsevalue=""/>
@@ -51,8 +51,8 @@
             <param name="sep" value="tab" />
             <param name="colnames" value="TRUE"/>
             <param name="comparison_factor_file" value="signature_2columns.tsv" ftype="tabular"/>
-            <param name="factor1" value="HIGH"/>
-            <param name="factor2" value="LOW"/>
+            <param name="factor1" value="LOW"/>
+            <param name="factor2" value="HIGH"/>
             <param name="fdr" value="0.01"/>
             <param name="log" value="true"/>
             <output name="output" file="geneMetadata_log.tsv" ftype="tabular"/>
@@ -62,8 +62,8 @@
             <param name="sep" value="tab" />
             <param name="colnames" value="TRUE"/>
             <param name="comparison_factor_file" value="signature_2columns.tsv" ftype="tabular"/>
-            <param name="factor1" value="HIGH"/>
-            <param name="factor2" value="LOW"/>
+            <param name="factor1" value="LOW"/>
+            <param name="factor2" value="HIGH"/>
             <param name="fdr" value="0.01"/>
             <param name="log" value="false"/>
             <output name="output" file="geneMetadata_nolog.tsv" ftype="tabular"/>
@@ -73,14 +73,23 @@
 
 **What it does**
 
-The tools takes a table of gene expression values (e.E. log2(CPM+1), etc...) from single cell RNAseq sequencing libraries (columns) and a metadata file that contains at least two columns :
-    * Cell identifiers
-    * Column that differentiate cell in two groups. It must be a column with only two categories (factor levels).
+The tools takes a table of gene expression values (e.E. log2(CPM+1), etc...) from single cell RNAseq sequencing libraries (columns)
 
-For each gene (rows in expression data file), this script perform a Mann-Whitney test between 
+and a metadata file that contains at least two columns :
+    * Cell identifiers
+    * A Column that differentiates cell in two groups (the two levels of a comparison factor). It must be a column with only values (the factor levels).
+
+For each gene (rows in expression data file), this script perform a 2-sided Mann-Whitney test between 
 the two groups of cells (high/low, mutant/wild type) and then adjust the returned p-values by using the
-Benjamini-Hochberg (BH) correction. A False Discovery Rate (FDR) threshold is used to determine if gene
-can be considerated as significant (p-adjust below FDR cut-off) or not (p-adjust above the FDR cut-off). 
+Benjamini-Hochberg (BH) correction. A False Discovery Rate (FDR) threshold is used to determine if gene expression
+can be considered as significantly deviant for the H0 hypothesis of no-differential-expression (p-adjust below FDR cut-off) or not (p-adjust above the FDR cut-off). 
+
+.. class:: warningmark
+
+**Comparison plan**
+
+Note that log2Fold-Changes computed by the tool are based on the comparison of condition-2 (level-2) versus condition-1 (level-1) i.e.
+the tools returns the log2FC in condition-2 **relative** to condition-1.
 
 **Output**
 

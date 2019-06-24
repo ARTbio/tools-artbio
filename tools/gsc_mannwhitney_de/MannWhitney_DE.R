@@ -45,12 +45,12 @@ option_list = list(
   make_option(
     "--factor1",
     type = 'character',
-    help = "First factor of rate category in comparison factor file"
+    help = "level associated to the control condition in the factor file"
   ), 
   make_option(
     "--factor2",
     type = 'character',
-    help = "Second factor of rate category in comparison factor file"
+    help = "level associated to the test condition in the factor file"
   ),
   make_option(
     "--fdr",
@@ -126,9 +126,9 @@ descriptive_stats <- function(InputData) {
     mean_factor1 = rowMeans(InputData[, factor1_cells])
   )
   if(opt$log) {
-  SummaryData$fold_change <- SummaryData$mean_factor1 - SummaryData$mean_factor2
+  SummaryData$log2FC <- SummaryData$mean_factor2 - SummaryData$mean_factor1
   } else {
-  SummaryData$fold_change <- SummaryData$mean_factor1 / SummaryData$mean_factor2
+  SummaryData$log2FC <- log2(SummaryData$mean_factor2 / SummaryData$mean_factor1)
   }
   return(SummaryData)
 }
