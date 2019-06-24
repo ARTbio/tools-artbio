@@ -191,7 +191,7 @@ write.table(
 )
 
 # Add QC metrics of filtered cells to a metadata file
-metadata <- QC_metrics[kept.cells,]
+metadata <- QC_metrics
 
 # Save the metadata (QC metrics) file
 write.table(

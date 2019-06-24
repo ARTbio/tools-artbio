@@ -1,4 +1,4 @@
-<tool id="single_cell_gene_expression_correlations" name="single_cell_gene_expression_correlations" version="0.9.0">
+<tool id="single_cell_gene_expression_correlations" name="single-cell gene expression correlations" version="0.9.0">
     <description>between genes or with a signature of selected genes</description>
     <requirements>
         <requirement type="package" version="1.3.2=r3.3.2_0">r-optparse</requirement>
