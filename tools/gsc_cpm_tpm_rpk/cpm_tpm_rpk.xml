@@ -1,4 +1,4 @@
-<tool id="cpm_tpm_rpk" name="Generate CPM, TPM, RPK" version="0.9.0">
+<tool id="cpm_tpm_rpk" name="Generate CPM, TPM, RPK" version="0.9.1">
     <description>from raw counts expression values</description>
     <requirements>
         <requirement type="package" version="1.6.0">r-optparse</requirement>
@@ -76,10 +76,10 @@
         </param>
     </inputs>
     <outputs>
-        <data name="output" format="tabular" label="${option.type_transfo} from ${on_string}">
+        <data name="output" format="tabular" label="${option.type_transfo} of ${on_string}">
             <filter>log == "FALSE"</filter>
         </data>
-        <data name="output_log" format="tabular" label="log2(${option.type_transfo} +1) from ${on_string}">
+        <data name="output_log" format="tabular" label="log2(${option.type_transfo} +1) of ${on_string}">
             <filter>log == "TRUE"</filter>
         </data>
     </outputs>

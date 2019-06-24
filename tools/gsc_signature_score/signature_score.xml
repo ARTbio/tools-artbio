@@ -36,9 +36,9 @@
                help="signature gene that are not expressed in at least this percentage of cells will not be kept to compute the effective signature" />
     </inputs>
     <outputs>
-        <data name="pdf" format="pdf" label="Plots from ${on_string}" />
+        <data name="pdf" format="pdf" label="Signatures plots from ${on_string}" />
         <data name="output" format="tabular" label="signature scores from ${on_string}" />
-        <data name="stats" format="tabular" label="genes statistics in ${on_string}" />
+        <data name="stats" format="tabular" label="genes statistics from ${on_string}" />
     </outputs>
     <tests>
         <test>
