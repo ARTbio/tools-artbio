@@ -1,0 +1,12 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: gsc_signature_score
+description: Compute signature scores from single cell RNAseq data
+long_description: |
+  Compute signature scores from single cell RNAseq data
+categories:
+  - Transcriptomics
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/gsc_signature_score
+toolshed:
+  - toolshed

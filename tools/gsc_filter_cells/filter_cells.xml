@@ -1,0 +1,189 @@
+<tool id="filter_cells" name="Filter cells data" version="0.9.0">
+    <description>on total aligned reads and/or number of detected genes</description>
+    <requirements>
+        <requirement type="package" version="1.3.2=r3.3.2_0">r-optparse</requirement>
+        <requirement type="package" version="2.2.1=r3.3.2_0">r-ggplot2</requirement>
+    </requirements>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Tool exception" />
+    </stdio>
+    <command detect_errors="exit_code"><![CDATA[ 
+        Rscript $__tool_directory__/filter_cells.R 
+            -f $input 
+            --sep 
+            #if $sep == 'tab':
+              'tab'
+            #elif $sep == 'comma':
+              'comma'
+            #end if
+            --percentile_genes '$percentile_genes'
+            --percentile_counts '$percentile_counts'
+            --absolute_genes '$absolute_genes'
+            --absolute_counts '$absolute_counts'
+            --manage_cutoffs
+            #if $manage_cutoffs == 'union':
+              'union'
+            #elif $manage_cutoffs == 'intersect':
+              'intersect'
+            #end if
+            --pdfplot $pdfplot
+            --output $output
+            --output_metada $output_metada
+]]></command>
+    <inputs>
+        <param name="input" type="data" format="txt,tabular" label="Raw counts of expression data"/>
+        <param name="sep" type="select" label="Indicate column separator">
+            <option value="tab" selected="true">Tabs</option>
+            <option value="comma">Comma</option>
+        </param>
+        <param name="percentile_genes" value="0" type="integer" label="Detected Genes Percentile Threshold [integer] %"
+               help="Cells with % of detected genes below this threshold will be filtered out. Leave at 0 for no filtering" />
+        <param name="percentile_counts" value="0" type="integer" label="Aligned read count Percentile Threshold [integer] %"
+               help="Cells with number of aligned reads below this % threshold will be filtered out. Leave at 0 for no filtering" />
+        <param name="absolute_genes" value="0" type="integer" label="Absolute number of Detected Genes Threshold [integer]"
+               help="Cells with number of detected genes below this threshold will be filtered out. Leave at 0 for no filtering" />
+        <param name="absolute_counts" value="0" type="integer" label="Absolute number of aligned read Threshold [integer]"
+               help="Cells with number of aligned reads below this absolute threshold will be filtered out. Leave at 0 for no filtering" />
+        <param name="manage_cutoffs" type="select" label=" filter out intersection or union of cutoffs"
+               help="If you use two cutoffs on number of detected genes and number of aligned reads, respectively, there are two options
+               for using these cutoffs in filtering: either excluding items that are below one or the other threshold (union) or
+               excluding items that are below both thresholds (intersection)" >
+            <option value="union" selected="true">Union of cutoffs</option>
+            <option value="intersect">Intersection of cutoffs</option>
+        </param>
+    </inputs>
+    <outputs>
+        <data name="pdfplot" format="pdf" label="Plots from ${on_string}" />
+        <data name="output" format="tabular" label="Cell data filtered with ${on_string}" />
+        <data name="output_metada" format="tabular" label="Cell metadata filtered with ${on_string}" />
+    </outputs>
+    <tests>
+        <test>
+            <param name="input" value="input.csv" ftype="txt"/>
+            <param name="sep" value='comma' />
+            <param name="percentile_genes" value="20"/>
+            <param name="percentile_counts" value="20"/>
+            <output name="pdfplot" file="percentile_gene-and-counts.pdf" ftype="pdf"/>
+            <output name="output" file="percentile_gene-and-counts.tab" ftype="tabular"/>
+            <output name="output_metada" file="percentile_gene-and-counts.meta" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="input.csv" ftype="txt"/>
+            <param name="sep" value='comma' />
+            <param name="percentile_genes" value="20"/>
+            <param name="percentile_counts" value="20"/>
+            <param name="manage_cutoffs" value="intersect"/>
+            <output name="pdfplot" file="intersect_percentile_gene-and-counts.pdf" ftype="pdf"/>
+            <output name="output" file="intersect_percentile_gene-and-counts.tab" ftype="tabular"/>
+            <output name="output_metada" file="intersect_percentile_gene-and-counts.meta" ftype="tabular"/>
+        </test>
+       <test>
+            <param name="input" value="input.tsv" ftype="txt"/>
+            <param name="sep" value='tab' />
+            <param name="percentile_genes" value="20"/>
+            <param name="percentile_counts" value="20"/>
+            <output name="pdfplot" file="percentile_gene-and-counts.pdf" ftype="pdf"/>
+            <output name="output" file="percentile_gene-and-counts.tab" ftype="tabular"/>
+            <output name="output_metada" file="percentile_gene-and-counts.meta" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="input.csv" ftype="txt"/>
+            <param name="sep" value='comma' />
+            <param name="percentile_genes" value="20"/>
+            <output name="pdfplot" file="percentile_gene-only.pdf" ftype="pdf"/>
+            <output name="output" file="percentile_gene-only.tab" ftype="tabular"/>
+            <output name="output_metada" file="percentile_gene-only.meta" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="input.csv" ftype="txt"/>
+            <param name="sep" value='comma' />
+            <param name="percentile_counts" value="20"/>
+            <output name="pdfplot" file="percentile_counts-only.pdf" ftype="pdf"/>
+            <output name="output" file="percentile_counts-only.tab" ftype="tabular"/>
+            <output name="output_metada" file="percentile_counts-only.meta" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="input.csv" ftype="txt"/>
+            <param name="sep" value='comma' />
+            <output name="pdfplot" file="no-filtering.pdf" ftype="pdf"/>
+            <output name="output" file="no-filtering.tab" ftype="tabular"/>
+            <output name="output_metada" file="no-filtering.meta" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="input.csv" ftype="txt"/>
+            <param name="sep" value='comma' />
+            <param name="absolute_genes" value="5"/>
+            <param name="absolute_counts" value="1000"/>
+            <output name="pdfplot" file="absolute_gene-and-counts.pdf" ftype="pdf"/>
+            <output name="output" file="absolute_gene-and-counts.tab" ftype="tabular"/>
+            <output name="output_metada" file="absolute_gene-and-counts.meta" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="input.csv" ftype="txt"/>
+            <param name="sep" value='comma' />
+            <param name="absolute_genes" value="5"/>
+            <output name="pdfplot" file="absolute_gene-only.pdf" ftype="pdf"/>
+            <output name="output" file="absolute_gene-only.tab" ftype="tabular"/>
+            <output name="output_metada" file="absolute_gene-only.meta" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="input.csv" ftype="txt"/>
+            <param name="sep" value='comma' />
+            <param name="absolute_counts" value="1000"/>
+            <output name="pdfplot" file="absolute_counts-only.pdf" ftype="pdf"/>
+            <output name="output" file="absolute_counts-only.tab" ftype="tabular"/>
+            <output name="output_metada" file="absolute_counts-only.meta" ftype="tabular"/>
+        </test>
+    </tests>
+    <help>
+
+**What it does**
+
+The tools takes a table of gene (rows) expression values (as number of reads aligned to genes)
+in single cell RNAseq sequencing libraries (columns) and filters out cells with low number
+of detected genes and/or cells with low number of aligned reads.
+
+Cutoffs can be applied to absolute numbers of aligned reads or of detected genes, or to
+percentile thresholds for these variables.
+
+For both absolute or percentile thresholds, only cells exclusively below
+these threshold are excluded (cell cutoffs do not include the threshold values).
+
+If you choose to combine cutoffs for both the number of detected genes
+and the total number of aligned reads, then you have 2 options: either exclude libraries that
+do not satisfy one OR the other threshold (Union) or exclude libraries that do not satisfy
+both thresholds (Intersection).
+
+Specifying a value both for an absolute and an percentile threshold of a variable
+(Number of detected genes or Number of aligned counts) is not consistent. In this
+situation, the tools *does not* filter cells with respect to the corresponding variable threshold.
+If a 0 is applied both for an absolute and an percentile threshold of a variable, then
+this variable is not used to filter the cells.
+
+The tools returns a gene expression table for cells that were retained, a metadata table
+that contains numbers of detected genes and aligned reads for retained cell library and
+a pdf file with three plots illustrating the performed filtering operation.
+
+**Input**
+
+A table of comma (csv) or tabulation (tsv) separated expression values, in number (integers)
+of reads aligned to genes.
+Gene names should be in the first column and cell names should be in the first row.
+Note that in a number of a csv files, header of the gene column is omitted, resulting in
+a first row with one item less than in other rows. This is handled by the tool that
+recognises this situation.
+
+    </help>
+    <citations>
+        <citation type="bibtex">
+        @Manual{,
+             title = {R: A Language and Environment for Statistical Computing},
+             author = {{R Core Team}},
+             organization = {R Foundation for Statistical Computing},
+             address = {Vienna, Austria},
+             year = {2014},
+             url = {http://www.R-project.org/},
+        }
+        </citation>
+    </citations>
+</tool>
