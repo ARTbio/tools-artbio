@@ -50,7 +50,7 @@ option_list = list(
     "--percentile_threshold",
     default = 20,
     type = 'integer',
-    help = "Percentage of dectection threshold [default : '%default' ]"
+    help = "detection threshold to keep a gene in signature set [default : '%default' ]"
   ),
   make_option(
     "--output",
@@ -156,6 +156,14 @@ signature_output <- data.frame(
                          total_counts = colSums(data.counts)
                          )
 
+# statistics of input genes, signature genes first lines
+statistics.counts <- rbind(subset(data.counts, logical_genes),
+                    subset(data.counts, !logical_genes))  
+statistics <- descriptive_stats(statistics.counts)
+statistics <- cbind(gene=rownames(statistics), statistics)
+
+
+
 # Re-arrange score matrix for plots
 score <- data.frame(score = score,
                     order = rank(score, ties.method = "first"),
@@ -206,6 +214,15 @@ dev.off()
 write.table(
   signature_output,
   opt$output,
+  sep = "\t",
+  quote = F,
+  col.names = T,
+  row.names = F
+)
+
+write.table(
+  statistics,
+  opt$stats,
   sep = "\t",
   quote = F,
   col.names = T,
