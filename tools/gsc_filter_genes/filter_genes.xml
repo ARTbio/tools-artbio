@@ -21,7 +21,7 @@
             --output $output
 ]]></command>
     <inputs>
-        <param name="input" type="data" format="txt" label="Expression data" help="a csv or tsv table file" />
+        <param name="input" type="data" format="txt,tabular" label="Expression data" help="a csv or tsv table file" />
         <param name="sep" type="select" label="Indicate column separator">
             <option value="tab" selected="true">Tabs</option>
             <option value="comma">Comma</option>

@@ -23,9 +23,9 @@
             --gene_corr_pval '$gene_corr_pval'
 ]]></command>
     <inputs>
-        <param name="expression_file" type="data" format="txt" label="Expression data"
+        <param name="expression_file" type="data" format="txt,tabular" label="Expression data"
                help="a csv or tsv file that contains log2(CPM +1) expression values" />
-        <param name="signatures_file" type="data" format="txt" label="signature values"
+        <param name="signatures_file" type="data" format="txt,tabular" label="signature values"
                help="a csv or tsv file that contains cell signatures" />
         <param name="sep" type="select" label="Indicate column separator"
                help="Note that all input files must have the same format">
