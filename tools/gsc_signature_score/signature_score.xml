@@ -29,11 +29,11 @@
             <option value="comma">Comma</option>
         </param>
         <param name="genes" type="text" value="" label="Comma-separated list of genes to include in signature"
-               help="Comma-separated list of genes to include in signature" />
+               help="Comma-separated list of genes to include in signature, eg &quot;ZNF454,GAPDH,LAIR1,ACAD9,CHTOP&quot; " />
     </inputs>
     <outputs>
         <data name="pdf" format="pdf" label="Plots from ${on_string}" />
-        <data name="output" format="tabular" label="signature score from $genes and ${on_string}" />
+        <data name="output" format="tabular" label="signature scores from ${on_string}" />
     </outputs>
     <tests>
         <test>
@@ -52,10 +52,13 @@ The tools takes a table of _normalized_ gene expression values (rows) in single 
 and a comma-separated list of genes, and returns in a table the geometric mean of expression of these
 genes for each cell/library. This geometric mean is considered as the score for the genes signature for a given cell/library. 
 
-The returned table also contains for each cell/library (i) the rate of the signature score,
-ie whether it is higher or lower that the average signature score in cells/libraries, (ii) the
-number of genes detected in each cell/library as well as (iii) the total number of aligned
-reads in each cell/library.
+The returned table contains for each cell/library
+
+* the cell/library identifier
+* the signature score for this identifier
+* the rate of the signature score, ie whether it is higher (HIGH) or lower (LOW) that the average signature score in all cells/libraries
+* the number of genes detected in the cell/library
+* the total number of aligned reads in the cell/library
 
 **Input**
 

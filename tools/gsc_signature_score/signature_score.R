@@ -54,15 +54,21 @@ option_list = list(
   ),
   make_option(
     "--output",
-    default = "~/output.tab",
+    default = "./output.tab",
     type = 'character',
     help = "Output path [default : '%default' ]"
+  ),
+  make_option(
+    "--stats",
+    default = "./statistics.tab",
+    type = 'character',
+    help = "statistics path [default : '%default' ]"
   ),
   make_option(
     "--pdf",
     default = "~/output.pdf",
     type = 'character',
-    help = "Output path [default : '%default' ]"
+    help = "pdf path [default : '%default' ]"
   )
 )
 
