@@ -19,7 +19,9 @@
               'comma'
             #end if
             --genes '$genes'
+            --percentile_threshold '$threshold'
             --output '$output'
+            --stats '$stats'
             --pdf '$pdf'
 ]]></command>
     <inputs>
@@ -29,11 +31,14 @@
             <option value="comma">Comma</option>
         </param>
         <param name="genes" type="text" value="" label="Comma-separated list of genes to include in signature"
-               help="Comma-separated list of genes to include in signature" />
+               help="Comma-separated list of genes to include in signature, eg &quot;ZNF454,GAPDH,LAIR1,ACAD9,CHTOP&quot;" />
+        <param name="threshold" type="float" value="20.0" label="Threshold to keep a proposed gene in the effective signature"
+               help="signature gene that are not expressed in at least this percentage of cells will not be kept to compute the effective signature" />
     </inputs>
     <outputs>
         <data name="pdf" format="pdf" label="Plots from ${on_string}" />
-        <data name="output" format="tabular" label="signature score from $genes and ${on_string}" />
+        <data name="output" format="tabular" label="signature scores from ${on_string}" />
+        <data name="stats" format="tabular" label="genes statistics in ${on_string}" />
     </outputs>
     <tests>
         <test>
@@ -42,6 +47,7 @@
             <param name="genes" value="ZNF454,GAPDH,LAIR1,ACAD9,CHTOP" />
             <output name="pdf" file="signature.pdf" ftype="pdf" compare="sim_size" delta="200" />
             <output name="output" file="signature.tsv" ftype="tabular"/>
+            <output name="stats" file="gene_stats.tsv" ftype="tabular"/>
         </test>
     </tests>
     <help>
@@ -52,18 +58,29 @@ The tools takes a table of _normalized_ gene expression values (rows) in single 
 and a comma-separated list of genes, and returns in a table the geometric mean of expression of these
 genes for each cell/library. This geometric mean is considered as the score for the genes signature for a given cell/library. 
 
-The returned table also contains for each cell/library (i) the rate of the signature score,
-ie whether it is higher or lower that the average signature score in cells/libraries, (ii) the
-number of genes detected in each cell/library as well as (iii) the total number of aligned
-reads in each cell/library.
 
-**Input**
+**Inputs**
 
 A table of comma (csv) or tabulation (tsv) separated values.
 Gene names should be in the first column and cell names should be in the first row.
 Note that in a number of a csv files, header of the gene column is omitted, resulting in
 a first row with one item less than in other rows. This is handled by the tool that
 recognises this situation.
+
+A comma separated list of genes desired as contributing to the signature score of the cell/library
+
+The expression threshold for signature genes (the aforementioned gene list) to be effectively
+taken into account to compute signature scores. By default, genes are taken into account if
+they are expressed in at least 20% of cells/libraries
+
+** Outputs **
+The tools returns a table "signature scores" that contains
+
+* the cell/library identifier
+* the signature score for this identifier
+* the rate of the signature score, ie whether it is higher (HIGH) or lower (LOW) that the average signature score in all cells/libraries
+* the number of genes detected in the cell/library
+* the total number of aligned reads in the cell/library
 
     </help>
     <citations>
