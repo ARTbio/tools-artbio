@@ -31,7 +31,7 @@
             --output_metada $output_metada
 ]]></command>
     <inputs>
-        <param name="input" type="data" format="txt" label="Raw counts of expression data"/>
+        <param name="input" type="data" format="txt,tabular" label="Raw counts of expression data"/>
         <param name="sep" type="select" label="Indicate column separator">
             <option value="tab" selected="true">Tabs</option>
             <option value="comma">Comma</option>
@@ -45,7 +45,7 @@
         <param name="absolute_counts" value="0" type="integer" label="Absolute number of aligned read Threshold [integer]"
                help="Cells with number of aligned reads below this absolute threshold will be filtered out. Leave at 0 for no filtering" />
         <param name="manage_cutoffs" type="select" label=" filter out intersection or union of cutoffs"
-               help="If you use two cutoffs on number of detected genes and number of aligned reads, respectively, their is two options
+               help="If you use two cutoffs on number of detected genes and number of aligned reads, respectively, there are two options
                for using these cutoffs in filtering: either excluding items that are below one or the other threshold (union) or
                excluding items that are below both thresholds (intersection)" >
             <option value="union" selected="true">Union of cutoffs</option>

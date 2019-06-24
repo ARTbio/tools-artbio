@@ -64,7 +64,7 @@
             
 ]]></command>
     <inputs>
-        <param name="input" type="data" format="txt" label="expression data"/>
+        <param name="input" type="data" format="txt,tabular" label="expression data"/>
         <param name="input_sep" type="select" label="Input column separator">
             <option value="tab" selected="true">Tabs</option>
             <option value=",">Comma</option>

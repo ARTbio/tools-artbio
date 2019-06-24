@@ -45,12 +45,12 @@ option_list = list(
   make_option(
     "--factor1",
     type = 'character',
-    help = "First factor of rate category in comparison factor file"
+    help = "level associated to the control condition in the factor file"
   ), 
   make_option(
     "--factor2",
     type = 'character',
-    help = "Second factor of rate category in comparison factor file"
+    help = "level associated to the test condition in the factor file"
   ),
   make_option(
     "--fdr",
@@ -122,13 +122,13 @@ descriptive_stats <- function(InputData) {
     Percentage_Detection = apply(InputData, 1, function(x, y = InputData) {
       (sum(x != 0) / ncol(y)) * 100
     }),
-    mean_factor2 = rowMeans(InputData[,factor2_cells]),
-    mean_factor1 = rowMeans(InputData[, factor1_cells])
+    mean_condition2 = rowMeans(InputData[,factor2_cells]),
+    mean_condition1 = rowMeans(InputData[, factor1_cells])
   )
   if(opt$log) {
-  SummaryData$fold_change <- SummaryData$mean_factor1 - SummaryData$mean_factor2
+  SummaryData$log2FC <- SummaryData$mean_condition2 - SummaryData$mean_condition1
   } else {
-  SummaryData$fold_change <- SummaryData$mean_factor1 / SummaryData$mean_factor2
+  SummaryData$log2FC <- log2(SummaryData$mean_condition2 / SummaryData$mean_condition1)
   }
   return(SummaryData)
 }
