@@ -31,7 +31,7 @@
             --output_metada $output_metada
 ]]></command>
     <inputs>
-        <param name="input" type="data" format="txt" label="Raw counts of expression data"/>
+        <param name="input" type="data" format="txt,tabular" label="Raw counts of expression data"/>
         <param name="sep" type="select" label="Indicate column separator">
             <option value="tab" selected="true">Tabs</option>
             <option value="comma">Comma</option>
