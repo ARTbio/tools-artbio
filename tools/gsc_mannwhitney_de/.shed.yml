@@ -1,11 +1,11 @@
 # .shed.yml supporting automatic pushes.
 owner: artbio
-name: gsc-mannwhitney_de
+name: gsc_mannwhitney_de
 description: Perform a mann-whitney differential testing between two sets of gene expression data
 long_description:
 categories:
   - Transcriptomics
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/gsc-mannwhitney_de
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/gsc_mannwhitney_de
 toolshed:
   - toolshed
