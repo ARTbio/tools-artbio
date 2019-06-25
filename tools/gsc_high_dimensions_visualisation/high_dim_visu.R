@@ -232,8 +232,7 @@ if (opt$factor != '') {
   factorColors <-
     with(contrasting_factor,
          data.frame(factor = levels(factor),
-                    data.frame(factor = levels(factor),
-                               color = I(brewer.pal(nlevels(factor), name = 'Paired'))))
+                               color = I(brewer.pal(nlevels(factor), name = 'Paired')))
     )
   factor_cols <- factorColors$color[match(contrasting_factor$factor,
                                           factorColors$factor)]
