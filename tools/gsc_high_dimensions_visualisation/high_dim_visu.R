@@ -229,10 +229,16 @@ if (opt$factor != '') {
   contrasting_factor <- contrasting_factor[colnames(data),]
   colnames(contrasting_factor) <- c("id","factor")
   contrasting_factor$factor <- as.factor(contrasting_factor$factor)
+  if(nlevels(contrasting_factor$factor) == 2){
+    colors_labels <- c("#E41A1C", "#377EB8")
+  } else {
+    colors_labels <- brewer.pal(nlevels(contrasting_factor$factor), name = 'Paired')
+  }
   factorColors <-
     with(contrasting_factor,
-         data.frame(factor = levels(factor),
-                               color = I(brewer.pal(nlevels(factor), name = 'Paired')))
+         data.frame(factor = levels(contrasting_factor$factor),
+                    color = I(colors_labels)
+         )
     )
   factor_cols <- factorColors$color[match(contrasting_factor$factor,
                                           factorColors$factor)]
