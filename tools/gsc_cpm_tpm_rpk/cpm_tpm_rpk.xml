@@ -1,0 +1,160 @@
+<tool id="cpm_tpm_rpk" name="Generate CPM, TPM, RPK" version="0.9.1">
+    <description>from raw counts expression values</description>
+    <requirements>
+        <requirement type="package" version="1.6.0">r-optparse</requirement>
+    </requirements>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Tool exception" />
+    </stdio>
+    <command detect_errors="exit_code"><![CDATA[ 
+        Rscript $__tool_directory__/cpm_tpm_rpk.R 
+            --data '$input'
+            --type '$option.type_transfo' 
+            --sep '$input_sep' 
+            --colnames '$input_header' 
+            #if $option.type_transfo == "tpm":
+                -f '$option.gene_file' 
+                --gene_sep $option.gene_sep 
+                --gene_header $option.gene_header
+            #end if 
+            #if $option.type_transfo == "rpk":
+                -f '$option.gene_file' 
+                --gene_sep '$option.gene_sep' 
+                --gene_header '$option.gene_header'
+            #end if
+            --log '$log'
+            #if $log == "FALSE":
+                -o ${output}
+            #else if $log == "TRUE":
+                -o ${output_log}
+            #end if
+]]></command>
+    <inputs>
+        <param name="input" type="data" format="txt,tabular" label="Raw counts of expression data"/>
+        <param name="input_sep" type="select" label="Input column separator">
+            <option value="tab" selected="true">Tabulation</option>
+            <option value=",">Comma</option>
+        </param>
+        <param name="input_header" type="select" label="Consider first line of input file as header?">
+            <option value="TRUE" selected="true">Yes</option>
+            <option value="FALSE">No</option>
+        </param>
+            <conditional name="option">
+                <param name="type_transfo" type="select" label="Type of transformation">
+                    <option value="cpm" selected="true">CPM</option>
+                    <option value="tpm">TPM</option>
+                    <option value="rpk">RPK</option>
+                </param>
+                <when value="tpm">
+                    <param name="gene_file" type="data" format="txt,tabular" label="Gene length file"/> 
+                    <param name="gene_sep" type="select" label="Gene length column separator">
+                        <option value="tab" selected="true">Tabulation</option>
+                        <option value=",">Commas</option>
+                    </param>
+                    <param name="gene_header" type="select" label="Consider first line of gene length file as header ?">
+                        <option value="TRUE" selected="true">Yes</option>
+                        <option value="FALSE">No</option>
+                    </param>
+                </when>
+                <when value="rpk">
+                    <param name="gene_file" type="data" format="txt,tabular" label="Gene length file"/>
+                    <param name="gene_sep" type="select" label="Gene length column separator">
+                        <option value="tab" selected="true">Tabs</option>
+                        <option value=",">Commas</option>
+                    </param>
+                    <param name="gene_header" type="select" label="Consider first line of gene length file as header ?">
+                        <option value="TRUE" selected="true">Yes</option>
+                        <option value="FALSE">No</option>
+                    </param>
+                </when>
+                <when value="cpm">
+                </when>
+            </conditional>
+        <param name="log" type="select" label="Data should be log transformed ?">
+            <option value="FALSE" selected="true">No</option>
+            <option value="TRUE">Yes</option>
+        </param>
+    </inputs>
+    <outputs>
+        <data name="output" format="tabular" label="${option.type_transfo} of ${on_string}">
+            <filter>log == "FALSE"</filter>
+        </data>
+        <data name="output_log" format="tabular" label="log2(${option.type_transfo} +1) of ${on_string}">
+            <filter>log == "TRUE"</filter>
+        </data>
+    </outputs>
+    <tests>
+        <test>
+            <param name="input" value="counts.tab" ftype="tabular"/>
+            <param name="type_transfo" value="cpm"/>
+            <param name="log" value="TRUE"/>
+            <output name="output" file="logcpm.tab" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="counts.tab" ftype="tabular"/>
+            <param name="type_transfo" value="tpm"/>
+            <param name="gene_file" value="gene_length.tab" ftype="tabular"/>
+            <param name="log" value="TRUE"/>
+            <output name="output" file="logtpm.tab" ftype="tabular"/>
+        </test>
+        <!-- test without t-SNE -->
+        <test>
+            <param name="input" value="counts.tab" ftype="tabular"/>
+            <param name="type_transfo" value="cpm"/>
+            <output name="output" file="cpm.tab" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="counts.tab" ftype="tabular"/>
+            <param name="type_transfo" value="tpm"/>
+            <param name="gene_file" value="gene_length.tab" ftype="tabular"/>
+            <param name="gene_header" value="TRUE"/>
+            <output name="output" file="tpm.tab" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="counts.tab" ftype="tabular"/>
+            <param name="type_transfo" value="rpk"/>
+            <param name="gene_file" value="gene_length.tab" ftype="tabular"/>
+            <param name="gene_header" value="TRUE"/>
+            <output name="output" file="rpk.tab" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="counts.tab" ftype="tabular"/>
+            <param name="type_transfo" value="rpk"/>
+            <param name="gene_file" value="gene_length.tab" ftype="tabular"/>
+            <param name="gene_header" value="TRUE"/>
+            <param name="log" value="TRUE"/>
+            <output name="output" file="logrpk.tab" ftype="tabular"/>
+        </test>
+    </tests>
+    <help>
+
+**What it does**
+
+Takes a raw count expression matrix and returns a table of normalized expression values.
+
+Normalization can be:
+
+- CPM (Counts Per Million) are obtained by dividing counts by the library counts sum and multiplying the results by a million.
+- RPK (Reads Per Kilobases) are obtained by dividing read counts by gene lengths (expressed in kilo-nucleotides).
+- TPM (Transcripts Per Million) are obtained by dividing RPK values by the sum of all RPK values in a sample and multiplying the results by 1 million.
+
+RPK and TPM require a two-column correspondance table gene_name - gene length where the length is specified in nucleotide. Both these metrics are relevant only for sequencing of full length RNAs.
+
+Note: First header row must NOT start with a '#' comment character
+
+Computed values may be base-2 log-transformed (log2([CPM or RPK or TPM]+1))
+
+    </help>
+    <citations>
+        <citation type="bibtex">
+        @Manual{,
+             title = {R: A Language and Environment for Statistical Computing},
+             author = {{R Core Team}},
+             organization = {R Foundation for Statistical Computing},
+             address = {Vienna, Austria},
+             year = {2014},
+             url = {http://www.R-project.org/},
+        }
+        </citation>
+    </citations>
+</tool>

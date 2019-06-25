@@ -1,0 +1,97 @@
+<tool id="single_cell_gene_expression_correlations" name="single-cell gene expression correlations" version="0.9.0">
+    <description>between genes or with a signature of selected genes</description>
+    <requirements>
+        <requirement type="package" version="1.3.2=r3.3.2_0">r-optparse</requirement>
+        <requirement type="package" version="4.0_3=r3.3.2_0">r-hmisc</requirement>
+    </requirements>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Tool exception" />
+    </stdio>
+    <command detect_errors="exit_code"><![CDATA[ 
+        Rscript $__tool_directory__/correlation_with_signature.R 
+            --expression_file '$expression_file'
+            --signatures_file '$signatures_file'
+            --sep 
+            #if $sep == 'tab':
+              'tab'
+            #elif $sep == 'comma':
+              'comma'
+            #end if
+            --colnames '$colnames'
+            --sig_corr '$sig_corr'
+            --gene_corr '$gene_corr'
+            --gene_corr_pval '$gene_corr_pval'
+]]></command>
+    <inputs>
+        <param name="expression_file" type="data" format="txt,tabular" label="Expression data"
+               help="a csv or tsv file that contains log2(CPM +1) expression values" />
+        <param name="signatures_file" type="data" format="txt,tabular" label="signature values"
+               help="a csv or tsv file that contains cell signatures" />
+        <param name="sep" type="select" label="Indicate column separator"
+               help="Note that all input files must have the same format">
+            <option value="tab" selected="true">Tabs</option>
+            <option value="comma">Comma</option>
+        </param>
+        <param name="colnames" type="select" label="Firt row contains column names"
+               help="chose whether your files contain a header row (often a good idea)" >
+            <option value="TRUE" selected="true">True</option>
+            <option value="FALSE">False</option>
+        </param>
+    </inputs>
+    <outputs>
+        <data name="sig_corr" format="tabular" label="Genes-Signature correlations" />
+        <data name="gene_corr" format="tabular" label="Correlations r (all)" />
+        <data name="gene_corr_pval" format="tabular" label="Correlations p-values (all)" />
+    </outputs>
+    <tests>
+        <test>
+            <param name="expression_file" value="gene_filtered_input.tsv" ftype="txt"/>
+            <param name="signatures_file" value="signature.tsv" ftype="txt"/>
+            <param name="sep" value='tab' />
+            <param name="colnames" value="TRUE"/>
+            <output name="sig_corr" file="sig_corr.tsv" ftype="tabular"/>
+            <output name="gene_corr" file="gene_corr.tsv" ftype="tabular"/>
+            <output name="gene_corr_pval" file="gene_corr_pval.tsv" ftype="tabular"/>
+        </test>
+    </tests>
+    <help>
+
+**What it does**
+
+The tools computes a table of pairwise expression correlations between **selected genes**
+in single-cell RNAseq data, as well as a table of correlation between the expression of
+these selected genes and the value of a signature (must be a scalar for each library)
+across the single-cell data
+
+**Inputs**
+
+- a table of expression values (e.E. log10(CPM+1), etc...) of **selected genes** from single-cell RNAseq sequencing libraries (columns)
+    These genes may be selected for their significant differential expression, because they
+    belong to a specific pathway, etc.
+- a table of signature values for the single-cell RNAseq sequencing datasets
+    The table should have 2 columns (Cell-identifier and signature-value). The signature
+    values are scalars, one value per cell-identifier and are in the second column.
+
+**Outputs**
+
+- Correlation table between the signature score and selected gene expression. There is three columns: 
+        - gene name
+        - Pearson_correlation : Pearson correlation value
+        - p_value : associated p-value
+- Gene - Gene correlation table. It's a n x n matrix of correlation values where n is the number of selected genes. 
+- Gene - Gene correlation associated p-values table. It has the same dimensions as Gene-Gene correlation table but for p-values.
+        
+    </help>
+    <citations>
+        <citation type="bibtex">
+        @Manual{,
+             title = {R: A Language and Environment for Statistical Computing},
+             author = {{R Core Team}},
+             organization = {R Foundation for Statistical Computing},
+             address = {Vienna, Austria},
+             year = {2014},
+             url = {http://www.R-project.org/},
+        }
+        </citation>
+    </citations>
+</tool>

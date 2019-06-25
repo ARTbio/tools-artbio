@@ -1,0 +1,15 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: gsc_high_dimensions_visualisation
+description: Generates PCA, t-SNE and HCPC visualisation 
+long_description: |
+  Generates PCA, t-SNE and HCPC visualisation
+  of highly dimensional expression data from
+  single-cell RNAseq
+categories:
+  - Transcriptomics
+  - Visualization
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/gsc_high_dimension_visualization
+toolshed:
+  - toolshed
