@@ -228,20 +228,24 @@ if (opt$factor != '') {
   rownames(contrasting_factor) <- contrasting_factor[,1]
   contrasting_factor <- contrasting_factor[colnames(data),]
   colnames(contrasting_factor) <- c("id","factor")
-  contrasting_factor$factor <- as.factor(contrasting_factor$factor)
-  if(nlevels(contrasting_factor$factor) == 2){
-    colors_labels <- c("#E41A1C", "#377EB8")
-  } else {
-    colors_labels <- brewer.pal(nlevels(contrasting_factor$factor), name = 'Paired')
-  }
-  factorColors <-
-    with(contrasting_factor,
-         data.frame(factor = levels(contrasting_factor$factor),
-                    color = I(colors_labels)
-         )
-    )
-  factor_cols <- factorColors$color[match(contrasting_factor$factor,
+  if(is.numeric(contrasting_factor$factor)){
+    factor_cols <- brewer.pal(n = 9, name = "Blues")[contrasting_factor$factor]
+  }else {
+    contrasting_factor$factor <- as.factor(contrasting_factor$factor)
+    if(nlevels(contrasting_factor$factor) == 2){
+      colors_labels <- c("#E41A1C", "#377EB8")
+    } else {
+      colors_labels <- brewer.pal(nlevels(contrasting_factor$factor), name = 'Paired')
+    }
+    factorColors <-
+      with(contrasting_factor,
+           data.frame(factor = levels(contrasting_factor$factor),
+                      color = I(colors_labels)
+           )
+      )
+    factor_cols <- factorColors$color[match(contrasting_factor$factor,
                                           factorColors$factor)]
+  }
 } else {
   factor_cols <- rep("deepskyblue4", length(rownames(data)))
 }
@@ -279,7 +283,12 @@ if (opt$visu_choice == 'tSNE') {
         geom_text(aes(label=Class),hjust=-0.2, vjust=-0.5, size=1.5, color='deepskyblue4')
       }
     } else {
-    embedding$factor <- as.factor(contrasting_factor$factor)
+    if(is.numeric(contrasting_factor$factor)){
+      embedding$factor <- contrasting_factor$factor
+    } else {
+      embedding$factor <- as.factor(contrasting_factor$factor)
+    }
+
     ggplot(embedding, aes(x=V1, y=V2, color=factor)) +
       geom_point(size=1) + #, color=factor_cols
       gg_legend +
@@ -309,7 +318,7 @@ if (opt$visu_choice == 'PCA') {
     } else {
     plot(pca, cex=0.2 , col.ind = factor_cols)
   }
-if (opt$factor != '') {
+if (opt$factor != '' & is.factor(contrasting_factor$factor)) {
     legend(x = 'topright', 
        legend = as.character(factorColors$factor),
        col = factorColors$color, pch = 16, bty = 'n', xjust = 1, cex=0.7)
@@ -354,7 +363,7 @@ plot(res.hcpc, choice="map")
 }
 
 # user contrasts on the pca
-if (opt$factor != '') {
+if (opt$factor != '' & is.factor(contrasting_factor$factor)) {
     plot(pca, label="none", habillage="ind", col.hab=factor_cols)
     legend(x = 'topright', 
        legend = as.character(factorColors$factor),
