@@ -332,7 +332,6 @@ pca <- PCA(
     t(data),
     ncp = opt$HCPC_npc,
     graph = FALSE,
-    scale.unit = FALSE
 )
 
 PCA_IndCoord = as.data.frame(pca$ind$coord) # coordinates of observations in PCA
