@@ -224,7 +224,7 @@ if (opt$factor != '') {
   colnames(contrasting_factor) <- c("id","factor")
   if(is.numeric(contrasting_factor$factor)){
     factor_cols <- brewer.pal(n = 9, name = "Blues")[contrasting_factor$factor]
-  }else {
+  } else {
     contrasting_factor$factor <- as.factor(contrasting_factor$factor)
     if(nlevels(contrasting_factor$factor) == 2){
       colors_labels <- c("#E41A1C", "#377EB8")
@@ -269,8 +269,8 @@ if (opt$visu_choice == 'tSNE') {
     ggplot(embedding, aes(x=V1, y=V2)) +
       geom_point(size=1, color='deepskyblue4') +
       gg_legend +
-      xlab("") +
-      ylab("") +
+      xlab("t-SNE 1") +
+      ylab("t-SNE 2") +
       ggtitle('t-SNE') +
       if (opt$labels) {
         geom_text(aes(label=Class),hjust=-0.2, vjust=-0.5, size=1.5, color='deepskyblue4')
@@ -285,8 +285,8 @@ if (opt$visu_choice == 'tSNE') {
     ggplot(embedding, aes(x=V1, y=V2, color=factor)) +
       geom_point(size=1) + #, color=factor_cols
       gg_legend +
-      xlab("") +
-      ylab("") +
+      xlab("t-SNE 1") +
+      ylab("t-SNE 2") +
       ggtitle('t-SNE') +
       if (opt$labels) {
         geom_text(aes(label=Class, colour=factor),hjust=-0.2, vjust=-0.5, size=1.5)
