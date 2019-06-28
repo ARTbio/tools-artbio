@@ -38,7 +38,6 @@
                 --Rtsne_pca '$visualisation.Rtsne_pca'
                 --Rtsne_pca_center '$visualisation.Rtsne_pca_center'
                 --Rtsne_pca_scale '$visualisation.Rtsne_pca_scale'
-                --Rtsne_normalize '$visualisation.Rtsne_normalize'
                 --Rtsne_exaggeration_factor '$visualisation.Rtsne_exaggeration_factor'
             #end if
             
@@ -110,11 +109,6 @@
 				<param name="Rtsne_pca_scale"  type="select" label="Scalling data" help="Should data be scaled before pca is applied? " > 
 					<option value="TRUE">Yes</option>
 					<option value="FALSE" selected="true">False</option>
-				</param>
-				<param name="Rtsne_normalize"  type="select" label="Normalisation of data"
-				             help="Should variables (gene expressions) be normalized internally prior to distance calculations? " > 
-					<option value="TRUE" selected="true">Yes</option>
-					<option value="FALSE">False</option>
 				</param>
                 <param name="Rtsne_perplexity" value="10.0" type="float" label="perplexity (t-SNE)" help="should be less than ((nbr observations)-1)/3" /> 
                 <param name="Rtsne_theta" value="1.0" type="float" label="theta (t-SNE)"/>
