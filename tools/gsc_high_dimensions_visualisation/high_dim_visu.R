@@ -318,10 +318,12 @@ if (opt$visu_choice == 'PCA') {
     } else {
     plot(pca, cex=0.2 , col.ind = factor_cols)
   }
-if (opt$factor != '' & is.factor(contrasting_factor$factor)) {
+if (opt$factor != '') {
+  if(is.factor(contrasting_factor$factor)) {
     legend(x = 'topright', 
        legend = as.character(factorColors$factor),
        col = factorColors$color, pch = 16, bty = 'n', xjust = 1, cex=0.7)
+  }
 }
 dev.off()
 
@@ -363,12 +365,14 @@ plot(res.hcpc, choice="map")
 }
 
 # user contrasts on the pca
-if (opt$factor != '' & is.factor(contrasting_factor$factor)) {
+if (opt$factor != '') {
+  if(is.factor(contrasting_factor$factor)) {
     plot(pca, label="none", habillage="ind", col.hab=factor_cols)
     legend(x = 'topright', 
        legend = as.character(factorColors$factor),
        col = factorColors$color, pch = 16, bty = 'n', xjust = 1, cex=0.7)
-    }
+  }
+}
 ## Clusters to which individual observations belong # used ?
 # Clust <- data.frame(Cluster = res.hcpc$data.clust[, (nrow(data) + 1)],
 #                     Observation = rownames(res.hcpc$data.clust))
