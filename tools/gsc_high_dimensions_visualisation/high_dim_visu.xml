@@ -215,6 +215,15 @@
             <param name="factor" value="2-lev_factor.tsv" ftype="txt"/>
             <output name="pdf_out" file="pca.nolabels.2-lev-factor.pdf" ftype="pdf"/>
         </test>
+        <!-- test numerical factor contrasting on PCA -->
+        <test>
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="no" />
+            <param name="visu_choice" value="PCA" />
+            <param name="factor_choice" value="Yes" />
+            <param name="factor" value="numeric_factor.tsv" ftype="txt"/>
+            <output name="pdf_out" file="pca.nolabels.numerical-factor.pdf" ftype="pdf"/>
+        </test>
         <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="no" />
