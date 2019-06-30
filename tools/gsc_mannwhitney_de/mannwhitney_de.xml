@@ -34,7 +34,8 @@
             <option value="FALSE">No</option>
         </param>
         <param name="comparison_factor_file" type="data" format="tabular" label="Comparison factor table"
-               help="A tsv table file with two columns : cell identifiers and a column that split cells into two categories." />
+               help="A tsv table file with two columns : cell identifiers and a column that split cells into two categories.
+                     Other columns are ignored" />
         <param name="factor1" type="text" label="Condition-1. The first level (value) that the comparison factor can take." help="typical values could be 'LOW', 'wt', 't1', etc."/>
         <param name="factor2" type="text" label="Condition-2. The second level (value) that the comparison factor can take." help="typical values could be 'HIGH', 'mutant', 't2', etc."/>
         <param name="fdr" type="float" value="0.01" label="FDR threshold"
