@@ -205,6 +205,43 @@ if (opt$sep == "comma") {opt$sep <- ","}
 if(opt$HCPC_max == -1) {opt$HCPC_max <- NULL}
 if(opt$HCPC_kk == -1) {opt$HCPC_kk <- Inf}
 
+##Add legend to plot()
+legend.col <- function(col, lev){
+ 
+opar <- par
+ 
+n <- length(col)
+ 
+bx <- par("usr")
+ 
+box.cx <- c(bx[2] + (bx[2] - bx[1]) / 1000,
+bx[2] + (bx[2] - bx[1]) / 1000 + (bx[2] - bx[1]) / 50)
+box.cy <- c(bx[3], bx[3])
+box.sy <- (bx[4] - bx[3]) / n
+ 
+xx <- rep(box.cx, each = 2)
+ 
+par(xpd = TRUE)
+for(i in 1:n){
+ 
+yy <- c(box.cy[1] + (box.sy * (i - 1)),
+box.cy[1] + (box.sy * (i)),
+box.cy[1] + (box.sy * (i)),
+box.cy[1] + (box.sy * (i - 1)))
+polygon(xx, yy, col = col[i], border = col[i])
+ 
+}
+par(new = TRUE)
+plot(0, 0, type = "n",
+ylim = c(min(lev), max(lev)),
+yaxt = "n", ylab = "",
+xaxt = "n", xlab = "",
+frame.plot = FALSE)
+axis(side = 4, las = 2, tick = FALSE, line = .25)
+par <- opar
+}
+
+
 data = read.table(
   opt$data,
   check.names = FALSE,
@@ -316,6 +353,8 @@ if (opt$factor != '') {
     legend(x = 'topright', 
        legend = as.character(factorColors$factor),
        col = factorColors$color, pch = 16, bty = 'n', xjust = 1, cex=0.7)
+  } else {
+    legend.col(col = brewer.pal(n = 9, name = "Blues"), lev = cut(contrasting_factor$factor, 9, label = FALSE))
   }
 }
 dev.off()
@@ -359,11 +398,13 @@ plot(res.hcpc, choice="map")
 
 # user contrasts on the pca
 if (opt$factor != '') {
+  plot(pca, label="none", col.ind = factor_cols)
   if(is.factor(contrasting_factor$factor)) {
-    plot(pca, label="none", habillage="ind", col.hab=factor_cols)
     legend(x = 'topright', 
        legend = as.character(factorColors$factor),
        col = factorColors$color, pch = 16, bty = 'n', xjust = 1, cex=0.7)
+  } else {
+    legend.col(col = brewer.pal(n = 9, name = "Blues"), lev = cut(contrasting_factor$factor, 9, label = FALSE))
   }
 }
 ## Clusters to which individual observations belong # used ?
