@@ -98,7 +98,7 @@ metadata <- read.table(
 )
 
 metadata <- subset(metadata, rownames(metadata) %in% colnames(data.counts))
-metadata <- metadata[, 1:2] # only two first columns are used (or shoud be used)
+metadata <- metadata[, 1] # only rownames and first columns are used (or shoud be used)
 
 # Create two logical named vectors for each factor level of cell signature
 factor1_cells <- setNames(metadata[,1] == opt$factor1, rownames(metadata))
