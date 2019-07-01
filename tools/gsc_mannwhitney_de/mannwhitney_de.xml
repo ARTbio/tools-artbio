@@ -59,6 +59,17 @@
             <output name="output" file="geneMetadata_log.tsv" ftype="tabular"/>
         </test>
         <test>
+            <param name="input" value="filtered-0.05.tab" ftype="txt"/>
+            <param name="sep" value="tab" />
+            <param name="colnames" value="TRUE"/>
+            <param name="comparison_factor_file" value="signature_3columns.tsv" ftype="tabular"/>
+            <param name="factor1" value="LOW"/>
+            <param name="factor2" value="HIGH"/>
+            <param name="fdr" value="0.01"/>
+            <param name="log" value="true"/>
+            <output name="output" file="geneMetadata_log.tsv" ftype="tabular"/>
+        </test>
+        <test>
             <param name="input" value="filterCells_100.tsv" ftype="txt"/>
             <param name="sep" value="tab" />
             <param name="colnames" value="TRUE"/>
