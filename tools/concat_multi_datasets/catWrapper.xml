@@ -1,4 +1,4 @@
-<tool id="cat_multi_datasets" name="Concatenate multiple datasets" version="1.4.0">
+<tool id="cat_multi_datasets" name="Concatenate multiple datasets" version="1.4.1">
     <description>tail-to-head by specifying how</description>
     <command><![CDATA[
         #if $headers == 0:
@@ -11,11 +11,15 @@
             #if $dataset_names == "No":
                 #for $file in $global_condition.inputs
                     printf "${file.element_identifier}..." &&
-                    #if $file.ext[-2:] == "gz" and $headers != 0:
-                        gzip -dc '$file' | $concat_command | gzip -c >> '$out_file1' &&
-                    #else:
+                    #if $file.ext:
+                        #if $file.ext[-2:] == "gz" and $headers != 0:
+                            gzip -dc '$file' | $concat_command | gzip -c >> '$out_file1' &&
+                        #else:
+                            $concat_command '$file' >> '$out_file1' &&
+                        #end if
+                     #else:
                         $concat_command '$file' >> '$out_file1' &&
-                    #end if
+                     #end if
                     printf "Done\n" &&
                 #end for
                 sleep 1
