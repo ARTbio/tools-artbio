@@ -2,11 +2,11 @@
     <description>from highly dimensional expression data</description>
     <requirements>
         <requirement type="package" version="1.6.2=r35h6115d3f_0">r-optparse</requirement>
-        <requirement type="package" version="1.41=r351h6115d3f_1">r-factominer</requirement>
-        <requirement type="package" version="1.0.5=r351_1">r-factoextra</requirement>
-        <requirement type="package" version="0.15=r351he1b5a44_0">r-rtsne</requirement>
-        <requirement type="package" version="3.2.0=r35h6115d3f_0">r-ggplot2</requirement>
-        <requirement type="package" version="0.4.5=r351h6115d3f_1">r-ggfortify</requirement>
+        <requirement type="package" version="1.42=r35h6115d3f_0">r-factominer</requirement>
+        <requirement type="package" version="1.0.5">r-factoextra</requirement>
+        <requirement type="package" version="0.15">r-rtsne</requirement>
+        <requirement type="package" version="3.2.0">r-ggplot2</requirement>
+        <requirement type="package" version="0.4.5">r-ggfortify</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
