@@ -333,7 +333,7 @@ if (opt$visu_choice == 'tSNE') {
   
   #save coordinates table
   if(opt$table_coordinates != ''){
-  coord_table <- cbind(rownames(tdf),as.data.frame(tsne_out$Y))
+  coord_table <- cbind(rownames(tdf), round(as.data.frame(tsne_out$Y), 6))
   colnames(coord_table)=c("Cells",paste0("DIM",(1:opt$Rtsne_dims)))
   }
 }
@@ -361,7 +361,7 @@ dev.off()
 
   #save coordinates table
   if(opt$table_coordinates != ''){
-  coord_table <- cbind(rownames(pca$ind$coord),as.data.frame(pca$ind$coord))
+  coord_table <- cbind(rownames(pca$ind$coord), round(as.data.frame(pca$ind$coord), 6))
   colnames(coord_table)=c("Cells",paste0("DIM",(1:opt$PCA_npc)))
   }
 
@@ -439,7 +439,10 @@ if (opt$factor != '') {
 dev.off()
 
  if(opt$table_coordinates != ''){
-  coord_table <- cbind(Cell=rownames(res.hcpc$call$X),as.data.frame(res.hcpc$call$X))
+  coord_table <- cbind(Cell=rownames(res.hcpc$call$X),
+                       round(as.data.frame(res.hcpc$call$X[, -length(res.hcpc$call$X)]), 6),
+                       as.data.frame(res.hcpc$call$X[, length(res.hcpc$call$X)])
+                       )
   colnames(coord_table)=c("Cells",paste0("DIM",(1:opt$HCPC_npc)),"Cluster")
   }
 }

@@ -1,4 +1,4 @@
-<tool id="high_dimensions_visualisation" name="Generate PCA, tSNE and HCPC" version="0.9.3">
+<tool id="high_dimensions_visualisation" name="Generate PCA, tSNE and HCPC" version="0.9.4">
     <description>from highly dimensional expression data</description>
     <requirements>
         <requirement type="package" version="1.6.2=r35h6115d3f_0">r-optparse</requirement>
