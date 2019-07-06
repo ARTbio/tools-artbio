@@ -293,7 +293,7 @@
             <param name="Rtsne_seed" value="49"/>
             <param name="Rtsne_perplexity" value="10"/>
             <param name="Rtsne_theta" value="1" />
-            <output name="pdf_out" file="tsne.labels.pdf" ftype="pdf"/>
+            <output name="pdf_out" file="tsne.labels.pdf" ftype="pdf" compare="sim_size" delta="500"/>
         </test>
         <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
@@ -302,7 +302,7 @@
             <param name="Rtsne_seed" value="49"/>
             <param name="Rtsne_perplexity" value="10"/>
             <param name="Rtsne_theta" value="1" />
-            <output name="pdf_out" file="tsne.nolabels.pdf" ftype="pdf"/>
+            <output name="pdf_out" file="tsne.nolabels.pdf" ftype="pdf" compare="sim_size" delta="500"/>
         </test>
        	<test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
@@ -314,7 +314,7 @@
             <param name="Rtsne_theta" value="1.0" />
             <param name="Rtsne_dims" value="3" />
             <param name="Rtsne_exaggeration_factor" value="15.0" />
-            <output name="pdf_out" file="tsne-2.nolabels.pdf" ftype="pdf"/>
+            <output name="pdf_out" file="tsne-2.nolabels.pdf" ftype="pdf" compare="sim_size" delta="500"/>
             <output name="table_coordinates" file="tsne-2.coord.tab" ftype="tabular"/>
         </test>
         <!-- test factor contrasting on t-SNE -->
@@ -327,7 +327,7 @@
             <param name="Rtsne_seed" value="49"/>
             <param name="Rtsne_perplexity" value="10"/>
             <param name="Rtsne_theta" value="1" />
-            <output name="pdf_out" file="tsne.labels.factor.pdf" ftype="pdf"/>
+            <output name="pdf_out" file="tsne.labels.factor.pdf" ftype="pdf" compare="sim_size" delta="500"/>
         </test>
     </tests>
     <help>
