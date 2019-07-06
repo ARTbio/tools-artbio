@@ -174,6 +174,15 @@
 -->
     </outputs>
     <tests>
+       	<test>
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="no" />
+            <param name="visu_choice" value="tSNE" />
+            <param name="coord" value="yes" />
+            <param name="Rtsne_dims" value="3" />
+            <output name="pdf_out" file="tsne-2.nolabels.pdf" ftype="pdf" compare="sim_size" delta="500"/>
+            <output name="table_coordinates" file="tsne-2.coord.tab" ftype="tabular"/>
+        </test>
         <!-- test PCA -->
         <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
@@ -303,19 +312,6 @@
             <param name="Rtsne_perplexity" value="10"/>
             <param name="Rtsne_theta" value="1" />
             <output name="pdf_out" file="tsne.nolabels.pdf" ftype="pdf" compare="sim_size" delta="500"/>
-        </test>
-       	<test>
-            <param name="input" value="cpm_input.tsv" ftype="txt"/>
-            <param name="labels" value="no" />
-            <param name="visu_choice" value="tSNE" />
-            <param name="coord" value="yes" />
-            <param name="Rtsne_seed" value="42"/>
-            <param name="Rtsne_perplexity" value="5.0"/>
-            <param name="Rtsne_theta" value="1.0" />
-            <param name="Rtsne_dims" value="3" />
-            <param name="Rtsne_exaggeration_factor" value="15.0" />
-            <output name="pdf_out" file="tsne-2.nolabels.pdf" ftype="pdf" compare="sim_size" delta="500"/>
-            <output name="table_coordinates" file="tsne-2.coord.tab" ftype="tabular"/>
         </test>
         <!-- test factor contrasting on t-SNE -->
         <test>
