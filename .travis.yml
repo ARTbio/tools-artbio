@@ -37,34 +37,33 @@ jobs:
     - stage: test
       env: CHUNK=2
 
-#    - stage: deploy
-#      if: (type = push) AND (branch = master)
-#      addons: {}
-#      before_install: skip
-#      install:
-#        - pip install planemo
-#        - planemo --version
-#        - git diff --quiet "$TRAVIS_COMMIT_RANGE" -- ; GIT_DIFF_EXIT_CODE=$?
-#        - |
-#          if [ "$GIT_DIFF_EXIT_CODE" -gt 1 ] ; then
-#              git remote set-branches --add origin master
-#              git fetch
-#              TRAVIS_COMMIT_RANGE=origin/master...
-#          fi
-#        - echo $TRAVIS_COMMIT_RANGE
-#        - |
-#          planemo ci_find_repos --exclude_from .tt_blacklist \
-#                                --changed_in_commit_range "$TRAVIS_COMMIT_RANGE" \
-#                                --output changed_repositories.list
-#        - cat changed_repositories.list
-#      script:
-#        - set -e
-#        - |
-#          if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then
-#              while read -r DIR; do planemo shed_update --shed_target testtoolshed --shed_email "$SHED_EMAIL" --shed_password "$SHED_PASSWORD" --force_repository_creation "$DIR" || exit 1; done < changed_repositories.list
-#              while read -r DIR; do planemo shed_update --shed_target toolshed --shed_email "$SHED_EMAIL" --shed_password "$SHED_PASSWORD" --force_repository_creation "$DIR" || exit 1; done < changed_repositories.list
-#          fi
-#
+    - stage: deploy
+      if: (type = push) AND (branch = master)
+      addons: {}
+      before_install: skip
+      install:
+        - pip install planemo
+        - planemo --version
+        - git diff --quiet "$TRAVIS_COMMIT_RANGE" -- ; GIT_DIFF_EXIT_CODE=$?
+        - |
+          if [ "$GIT_DIFF_EXIT_CODE" -gt 1 ] ; then
+              git remote set-branches --add origin master
+              git fetch
+              TRAVIS_COMMIT_RANGE=origin/master...
+          fi
+        - echo $TRAVIS_COMMIT_RANGE
+        - |
+          planemo ci_find_repos --exclude_from .tt_skip \
+                                --changed_in_commit_range "$TRAVIS_COMMIT_RANGE" \
+                                --output changed_repositories.list
+        - cat changed_repositories.list
+      script:
+        - set -e
+        - |
+          if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then
+              while read -r DIR; do planemo shed_update --shed_target testtoolshed --shed_email "$SHED_EMAIL" --shed_password "$SHED_PASSWORD" --force_repository_creation "$DIR" || exit 1; done < changed_repositories.list
+              while read -r DIR; do planemo shed_update --shed_target toolshed --shed_email "$SHED_EMAIL" --shed_password "$SHED_PASSWORD" --force_repository_creation "$DIR" || exit 1; done < changed_repositories.list
+          fi
 
 before_install:
   - export GALAXY_REPO=https://github.com/galaxyproject/galaxy
