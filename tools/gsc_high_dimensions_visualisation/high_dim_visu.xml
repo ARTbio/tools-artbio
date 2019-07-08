@@ -4,9 +4,8 @@
         <requirement type="package" version="1.6.2=r35h6115d3f_0">r-optparse</requirement>
         <requirement type="package" version="1.42=r35h6115d3f_0">r-factominer</requirement>
         <requirement type="package" version="1.0.5">r-factoextra</requirement>
-        <requirement type="package" version="0.13=r351hfc679d8_2">r-rtsne</requirement>
-        <requirement type="package" version="3.2.0">r-ggplot2</requirement>
-        <requirement type="package" version="0.4.5">r-ggfortify</requirement>
+        <requirement type="package" version="0.13=r351hf484d3e_1002">r-rtsne</requirement>
+        <requirement type="package" version="0.4.7=r351h6115d3f_0">r-ggfortify</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
