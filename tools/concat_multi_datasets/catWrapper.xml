@@ -464,11 +464,11 @@
 
 .. class:: warningmark
 
-**WARNING:** This tool does not check if the datasets being concatenated are in the same format.
+**WARNINGS:**
 
-**WARNING:** When concatenating 2 collections make sure the first collection is the one with the most items.
-
-**WARNING:** This tool can't handle nested collection deeper than list:list.
+- This tool does not check if the datasets being concatenated are in the same format.
+- When concatenating 2 collections make sure the first collection is the one with the most items.
+- This tool can't handle nested collection deeper than list:list.
 
 -----
 
