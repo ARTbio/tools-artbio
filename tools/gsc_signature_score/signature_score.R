@@ -65,6 +65,18 @@ option_list = list(
     help = "statistics path [default : '%default' ]"
   ),
   make_option(
+    "--correlations",
+    default = "./correlations.tab",
+    type = 'character',
+    help = "Correlations between signature genes  [default : '%default' ]"
+  ),
+  make_option(
+    "--covariances",
+    default = "./statistics.tab",
+    type = 'character',
+    help = "Covariances between signature genes [default : '%default' ]"
+  ),
+  make_option(
     "--pdf",
     default = "~/output.pdf",
     type = 'character',
@@ -100,6 +112,15 @@ logical_genes <- rownames(data.counts) %in% genes
 # Retrieve target genes in counts data
 signature.counts <- subset(data.counts, logical_genes)
 
+# compute covariance
+signature.covariances <- as.data.frame(cov(t(signature.counts)))
+signature.covariances <- cbind(gene=rownames(signature.covariances), signature.covariances)
+write.table(signature.covariances, file=opt$covariances, quote=F, row.names=F, sep="\t")
+
+# compute signature.correlations
+signature.correlations <- as.data.frame(cov(t(signature.counts)))
+signature.correlations <- cbind(gene=rownames(signature.correlations), signature.correlations)
+write.table(signature.correlations, file=opt$correlations, quote=F, row.names=F, sep="\t")
 
 ## Descriptive Statistics Function
 descriptive_stats = function(InputData) {
@@ -171,43 +192,16 @@ score <- data.frame(score = score,
                     stringsAsFactors = F)
 
 pdf(file = opt$pdf)
+myplot <- ggplot(signature_output, aes(x=rate, y=score)) +
+                 geom_violin(aes(fill = rate), alpha = .5, trim = F, show.legend = F, cex=0.5) +
+                 geom_abline(slope=0, intercept=mean(score$score), lwd=.5, color="red") +
+                 scale_fill_manual(values=c("#ff0000", "#08661e")) +
+                 geom_jitter(size=0.2) + labs(y = "Score", x = "Rate") +
+                 annotate("text", x = 0.55, y = mean(score$score), cex = 3, vjust=1.5,
+                           color="black", label = mean(score$score), parse = TRUE) +
+                 labs(title = "Violin plots of Cell signature scores")
 
-ggplot(score, aes(x = order, y = score)) +
-  geom_line() + 
-  geom_segment(x = 0, xend = max(score$order[score$signature == "LOW"]), y = mean(score$score), yend = mean(score$score)) +
-  geom_area(aes(fill = signature), alpha = .7) +
-  scale_fill_manual(values=c("#ff0000", "#08661e")) +
-  geom_text(aes(x = 1, y = mean(score)), label = "Mean", vjust = -0.3, colour = "black") +
-  labs(title = "Ordered cell signature scores", x = "Cell index", y = "Score")
-
-density_score <- density(score$score)
-ggplot(data.frame(density_score[1:2]), aes(x, y, fill = ifelse(x < mean(score$score), "LOW", "HIGH"))) +
-  geom_line() +
-  geom_vline(xintercept = mean(score$score)) +
-  geom_text(x = mean(score$score), y = max(density_score$y), label = "Mean", hjust = -0.3, colour = "black") +
-  geom_area(alpha = .7) +
-  scale_fill_manual(values=c("#ff0000", "#08661e")) +
-  ylim(0, max(density_score$y)) +
-  labs(
-    title = "Distribution of Cell signature scores",
-    x = paste("N =", density_score$n, "Bandwidth =", density_score$bw),
-    y = "Density",
-    fill = "Signature"
-  )
-
-# Check score independant of low expression
-p_gene <- ggplot(signature_output, aes(rate, nGenes)) +
-  geom_violin(aes(fill = rate), alpha = .5, trim = F, show.legend = F) +
-  scale_fill_manual(values=c("#ff0000", "#08661e")) +
-  geom_jitter() + labs(y = "Number of detected genes", x = "Signature")
-
-p_counts <- ggplot(signature_output, aes(rate, total_counts)) +
-  geom_violin(aes(fill = rate), alpha = .5, trim = F, show.legend = F) +
-  scale_fill_manual(values=c("#ff0000", "#08661e")) +
-  geom_jitter() + labs(y = "Total counts", x = "Signature")
-
-grid.arrange(p_gene, p_counts, ncol = 2, top = "Influence of library sequencing depth on cell signature scores")
-
+print(myplot)
 dev.off()
 
 # Save file
