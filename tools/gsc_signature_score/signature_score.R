@@ -65,6 +65,18 @@ option_list = list(
     help = "statistics path [default : '%default' ]"
   ),
   make_option(
+    "--correlations",
+    default = "./correlations.tab",
+    type = 'character',
+    help = "Correlations between signature genes  [default : '%default' ]"
+  ),
+  make_option(
+    "--covariances",
+    default = "./statistics.tab",
+    type = 'character',
+    help = "Covariances between signature genes [default : '%default' ]"
+  ),
+  make_option(
     "--pdf",
     default = "~/output.pdf",
     type = 'character',
@@ -100,6 +112,15 @@ logical_genes <- rownames(data.counts) %in% genes
 # Retrieve target genes in counts data
 signature.counts <- subset(data.counts, logical_genes)
 
+# compute covariance
+signature.covariances <- as.data.frame(cov(t(signature.counts)))
+signature.covariances <- cbind(gene=rownames(signature.covariances), signature.covariances)
+write.table(signature.covariances, file=opt$covariances, quote=F, row.names=F, sep="\t")
+
+# compute signature.correlations
+signature.correlations <- as.data.frame(cov(t(signature.counts)))
+signature.correlations <- cbind(gene=rownames(signature.correlations), signature.correlations)
+write.table(signature.correlations, file=opt$correlations, quote=F, row.names=F, sep="\t")
 
 ## Descriptive Statistics Function
 descriptive_stats = function(InputData) {

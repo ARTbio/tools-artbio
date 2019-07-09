@@ -23,6 +23,8 @@
             --output '$output'
             --stats '$stats'
             --pdf '$pdf'
+            --correlations '$correlations'
+            --covariances '$covariances'
 ]]></command>
     <inputs>
         <param name="input" type="data" format="txt,tabular" label="Raw counts of expression data"/>
@@ -39,6 +41,8 @@
         <data name="pdf" format="pdf" label="Signatures plots from ${on_string}" />
         <data name="output" format="tabular" label="signature scores from ${on_string}" />
         <data name="stats" format="tabular" label="genes statistics from ${on_string}" />
+        <data name="correlations" format="tabular" label="Signature genes correlations" />
+        <data name="covariances" format="tabular" label="Signature genes covariances" />
     </outputs>
     <tests>
         <test>
@@ -48,6 +52,8 @@
             <output name="pdf" file="signature.pdf" ftype="pdf" compare="sim_size" delta="200" />
             <output name="output" file="signature.tsv" ftype="tabular"/>
             <output name="stats" file="gene_stats.tsv" ftype="tabular"/>
+            <output name="correlations" file="correlations.tsv" ftype="tabular"/>
+            <output name="covariances" file="covariances.tsv" ftype="tabular"/>
         </test>
     </tests>
     <help>
