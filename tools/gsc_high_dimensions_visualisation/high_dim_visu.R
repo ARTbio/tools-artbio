@@ -11,7 +11,7 @@ library(Rtsne)
 library(ggplot2)
 library(ggfortify)
 library(RColorBrewer)
-
+library(ClusterR)
 
 # Arguments
 option_list = list(
@@ -194,6 +194,12 @@ option_list = list(
     default = -1,
     type = 'numeric',
     help = "The maximum number of iterations for the consolidation [default :'%default']"
+  ),
+  make_option(
+    "--mutual_info",
+    default = "",
+    type = "character",
+    help = "Output file of external validation of HCPC clustering with factor levels [default :'%default']"
   ) 
 )
 
@@ -260,7 +266,7 @@ if (opt$factor != '') {
   contrasting_factor <- contrasting_factor[colnames(data),]
   colnames(contrasting_factor) <- c("id","factor")
   if(is.numeric(contrasting_factor$factor)){
-    factor_cols <- brewer.pal(n = 9, name = "Blues")[contrasting_factor$factor]
+    factor_cols <- rev(brewer.pal(n = 11, name = "RdYlGn"))[contrasting_factor$factor]
   } else {
     contrasting_factor$factor <- as.factor(contrasting_factor$factor)
     if(nlevels(contrasting_factor$factor) == 2){
@@ -354,7 +360,7 @@ if (opt$factor != '') {
        legend = as.character(factorColors$factor),
        col = factorColors$color, pch = 16, bty = 'n', xjust = 1, cex=0.7)
   } else {
-    legend.col(col = brewer.pal(n = 9, name = "Blues"), lev = cut(contrasting_factor$factor, 9, label = FALSE))
+    legend.col(col = rev(brewer.pal(n = 11, name = "RdYlGn")), lev = cut(contrasting_factor$factor, 11, label = FALSE))
   }
 }
 dev.off()
@@ -403,8 +409,19 @@ if (opt$factor != '') {
     legend(x = 'topright', 
        legend = as.character(factorColors$factor),
        col = factorColors$color, pch = 16, bty = 'n', xjust = 1, cex=0.7)
+    
+    ## Normalized Mutual Information # to be implemented later
+    sink(opt$mutual_info)
+    res <- external_validation(
+       true_labels = as.numeric(contrasting_factor$factor),
+       clusters = as.numeric(res.hcpc$data.clust$clust),
+       method = "adjusted_rand_index",
+       summary_stats = TRUE
+    )
+    sink()
+
   } else {
-    legend.col(col = brewer.pal(n = 9, name = "Blues"), lev = cut(contrasting_factor$factor, 9, label = FALSE))
+    legend.col(col = rev(brewer.pal(n = 11, name = "RdYlGn")), lev = cut(contrasting_factor$factor, 11, label = FALSE))
   }
 }
 ## Clusters to which individual observations belong # used ?
@@ -427,15 +444,6 @@ if (opt$factor != '') {
 # Sil = fviz_silhouette(hc.cut)
 # sil1 = as.data.frame(Sil$data)
 
-## Normalized Mutual Information # to be implemented later
-# sink(opt$mutual_info)
-# res = external_validation(
-#   as.numeric(factor(metadata[, Patient])),
-#   as.numeric(metadata$Cluster),
-#   method = "adjusted_rand_index",
-#   summary_stats = TRUE
-# )
-# sink()
 dev.off()
 
  if(opt$table_coordinates != ''){

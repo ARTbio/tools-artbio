@@ -6,6 +6,7 @@
         <requirement type="package" version="1.0.5">r-factoextra</requirement>
         <requirement type="package" version="0.15=r351he1b5a44_0">r-rtsne</requirement>
         <requirement type="package" version="0.4.7=r351h6115d3f_0">r-ggfortify</requirement>
+        <requirement type="package" version="1.1.9=r351h0357c0b_0">r-clusterr</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
@@ -56,11 +57,11 @@
             #if $visualisation.visu_choice == "PCA":
                 --PCA_npc '$visualisation.PCA_npc'
             #end if
-#*            
+            
             #if $visualisation.visu_choice == "HCPC" and $factor_condition.factor_choice == "Yes":
                 --mutual_info '$mutual_info'
             #end if            
-*#           
+           
             --pdf_out '$pdf_out'
             
 ]]></command>
@@ -166,11 +167,9 @@
         <data name="table_coordinates" format="tabular" label="Scatter plot coordinates from ${visualisation.visu_choice} of ${on_string}" >
             <filter>coord == 'yes'</filter>
         </data>
-<!--
         <data name="mutual_info" format="txt" label="External validation of clustering from ${visualisation.visu_choice} of ${on_string}" >
-            <filter>visualisation.visu_choice == 'HCPC' and factor_condition.factor_choice == 'Yes'</filter>
+            <filter>visualisation['visu_choice'] == 'HCPC' and factor_condition['factor_choice'] == 'Yes'</filter>
         </data>
--->
     </outputs>
     <tests>
         <!-- test PCA -->
@@ -214,7 +213,7 @@
             <param name="visu_choice" value="PCA" />
             <param name="factor_choice" value="Yes" />
             <param name="factor" value="2-lev_factor.tsv" ftype="txt"/>
-            <output name="pdf_out" file="pca.nolabels.2-lev-factor.pdf" ftype="pdf"/>
+            <output name="pdf_out" file="pca.nolabels.2-lev-factor.pdf" compare="sim_size" ftype="pdf"/>
         </test>
         <!-- test numerical factor contrasting on PCA -->
         <test>
@@ -223,7 +222,7 @@
             <param name="visu_choice" value="PCA" />
             <param name="factor_choice" value="Yes" />
             <param name="factor" value="numeric_factor.tsv" ftype="txt"/>
-            <output name="pdf_out" file="pca.nolabels.numerical-factor.pdf" ftype="pdf"/>
+            <output name="pdf_out" file="pca.nolabels.numerical-factor.pdf" compare="sim_size" ftype="pdf"/>
         </test>
         <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
@@ -231,7 +230,7 @@
             <param name="visu_choice" value="PCA" />
             <param name="factor_choice" value="Yes" />
             <param name="factor" value="shuffled_factor.tsv" ftype="txt"/>
-            <output name="pdf_out" file="pca.nolabels.factors.pdf" ftype="pdf"/>
+            <output name="pdf_out" file="pca.nolabels.factors.pdf" compare="sim_size" ftype="pdf"/>
         </test>
         <!-- test HCPC -->
         <test>
@@ -240,7 +239,7 @@
             <param name="visu_choice" value="HCPC" />
             <param name="HCPC_npc" value="5"/>
             <param name="HCPC_ncluster" value="-1"/>
-            <output name="pdf_out" file="hcpc.labels.pdf" ftype="pdf"/>
+            <output name="pdf_out" file="hcpc.labels.pdf" compare="sim_size" ftype="pdf"/>
         </test>
         <!-- test factor contrasting on HCPC -->
         <test>
@@ -251,7 +250,8 @@
             <param name="HCPC_ncluster" value="-1"/>
             <param name="factor_choice" value="Yes" />
             <param name="factor" value="factor.tsv" ftype="txt"/>
-            <output name="pdf_out" file="hcpc.nolabels.factor.pdf" ftype="pdf"/>
+            <output name="pdf_out" file="hcpc.nolabels.factor.pdf" compare="sim_size" ftype="pdf"/>
+            <output name="mutual_info" file="hcpc.factor.extval.txt" ftype="txt"/>
         </test>
         <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
@@ -259,7 +259,7 @@
             <param name="HCPC_npc" value="5"/>
             <param name="HCPC_ncluster" value="-1"/>
             <param name="visu_choice" value="HCPC" />
-            <output name="pdf_out" file="hcpc.nolabels.pdf" ftype="pdf"/>
+            <output name="pdf_out" file="hcpc.nolabels.pdf" compare="sim_size" ftype="pdf"/>
         </test>
         <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
@@ -281,7 +281,7 @@
             <param name="HCPC_metric" value="euclidian"/>
             <param name="HCPC_npc" value="4" />
             <param name="HCPC_clusterCA" value="cols" />
-            <output name="pdf_out" file="hcpc-3.labels.pdf" ftype="pdf"/>
+            <output name="pdf_out" file="hcpc-3.labels.pdf" compare="sim_size" ftype="pdf"/>
             <output name="table_coordinates" file="hcpc-3.coord.tab" ftype="tabular"/>
         </test>
         <!-- test t-SNE -->
