@@ -196,6 +196,12 @@ option_list = list(
     help = "The maximum number of iterations for the consolidation [default :'%default']"
   ),
   make_option(
+    "--HCPC_clust",
+    default = "",
+    type = 'character',
+    help = "Output result of HCPC clustering : two column table (cell identifiers and clusters) [default :'%default']"
+  ),
+  make_option(
     "--mutual_info",
     default = "",
     type = "character",
@@ -453,6 +459,13 @@ dev.off()
                        )
   colnames(coord_table)=c("Cells",paste0("DIM",(1:opt$HCPC_npc)),"Cluster")
   }
+
+ if(opt$HCPC_clust != ""){
+ res_clustering <- data.frame(Cell = rownames(res.hcpc$data.clust),
+                              Cluster = res.hcpc$data.clust$clust)
+ 
+ }
+
 }
 
 ## Return coordinates file to user
@@ -469,7 +482,16 @@ if(opt$table_coordinates != ''){
 }
 
 
-  
+if(opt$HCPC_clust != ""){
+  write.table(
+    res_clustering,
+    file = opt$HCPC_clust,
+    sep = "\t",
+    quote = F,
+    col.names = T,
+    row.names = F
+    )
+}  
 
 
 

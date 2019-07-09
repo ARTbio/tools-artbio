@@ -52,6 +52,9 @@
                 --HCPC_max '$visualisation.HCPC_max'
                 --HCPC_clusterCA '$visualisation.HCPC_clusterCA'
                 --HCPC_kk '$visualisation.HCPC_kk'
+                #if $visualisation.res_clustering == "yes":
+                    --HCPC_clust '$HCPC_clust'
+                #end if 
             #end if
             
             #if $visualisation.visu_choice == "PCA":
@@ -61,7 +64,7 @@
             #if $visualisation.visu_choice == "HCPC" and $factor_condition.factor_choice == "Yes":
                 --mutual_info '$mutual_info'
             #end if            
-           
+
             --pdf_out '$pdf_out'
             
 ]]></command>
@@ -151,6 +154,10 @@
 				</param>
 				 <param name="HCPC_kk" value="-1" type="text" label="kk, Number of clusters used in a Kmeans preprocessing "
                        help="No k-means consolidation is done if a kk value is provided (default=-1)" />
+                <param label="Return HCPC clustering table" name="res_clustering" type="select">
+                    <option value="no" selected="True">No</option>
+                    <option value="yes">Yes</option>
+                </param>
             </when>
             <when value="PCA">
             	  <param name="PCA_npc" value="5" type="integer" label="Number of principal components to keep" help="The number of dimensions which are kept for PCA analysis (default=5)" />
@@ -169,6 +176,9 @@
         </data>
         <data name="mutual_info" format="txt" label="External validation of clustering from ${visualisation.visu_choice} of ${on_string}" >
             <filter>visualisation['visu_choice'] == 'HCPC' and factor_condition['factor_choice'] == 'Yes'</filter>
+        </data>
+        <data name="HCPC_clust" format="tabular" label="Clustering table from ${visualisation.visu_choice} of ${on_string}" >
+            <filter>visualisation['visu_choice'] == 'HCPC' and visualisation['res_clustering'] == 'yes'</filter>
         </data>
     </outputs>
     <tests>
@@ -252,6 +262,7 @@
             <param name="factor" value="factor.tsv" ftype="txt"/>
             <output name="pdf_out" file="hcpc.nolabels.factor.pdf" compare="sim_size" ftype="pdf"/>
             <output name="mutual_info" file="hcpc.factor.extval.txt" ftype="txt"/>
+            <output name="HCPC_clust" file="hcpc.clusters.tab" ftype="tabular"/>
         </test>
         <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
