@@ -60,6 +60,8 @@
             
             #if $visualisation.visu_choice == "PCA":
                 --PCA_npc '$visualisation.PCA_npc'
+                --PCA_x_axis '$visualisation.PCA_x_axis'
+                --PCA_y_axis '$visualisation.PCA_y_axis'
             #end if
             
             #if $visualisation.visu_choice == "HCPC" and $factor_condition.factor_choice == "Yes":
@@ -167,6 +169,8 @@
             </when>
             <when value="PCA">
             	  <param name="PCA_npc" value="5" type="integer" label="Number of principal components to keep" help="The number of dimensions which are kept for PCA analysis (default=5)" />
+                  <param name="PCA_x_axis" value="1" type="integer" label="First principal component to plot" help="X axis for PCA plot (default=1)" />
+                  <param name="PCA_y_axis" value="2" type="integer" label="Second principal component to plot" help="Y axis for PCA plot (default=2)" />
             </when>
         </conditional>
             <param label="Return scatter plot table coordinates" name="coord" type="select">
@@ -203,6 +207,17 @@
             <param name="factor_choice" value="No" />
             <output name="pdf_out" file="pca.nolabels.pdf" ftype="pdf"/>
         </test>
+        <!-- test PCA PC2 vs PC3 -->
+        <test>
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="no" />
+            <param name="visu_choice" value="PCA" />
+            <param name="factor_choice" value="No" />
+            <param name="PCA_x_axis" value="2" />
+            <param name="PCA_y_axis" value="3" />
+            <output name="pdf_out" file="pca.2vs3.pdf" ftype="pdf"/>
+        </test>
+
         <!-- test Coordinates tables on PCA -->
         <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>

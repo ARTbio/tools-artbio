@@ -135,6 +135,18 @@ option_list = list(
     type = 'integer',
     help = "number of dimensions kept in the results [default : '%default' ]"
   ),
+   make_option(
+    "--PCA_x_axis",
+    default = 1,
+    type = 'integer',
+    help = "PC to plot in the x axis [default : '%default' ]"
+  ),
+   make_option(
+    "--PCA_y_axis",
+    default = 2,
+    type = 'integer',
+    help = "PC to plot in the y axis [default : '%default' ]"
+  ),
   make_option(
     "--HCPC_ncluster",
     default = -1,
@@ -363,9 +375,9 @@ if (opt$visu_choice == 'PCA') {
   pca <- PCA(t(data), ncp=opt$PCA_npc, graph=FALSE)
   pdf(opt$pdf_out)
   if (opt$labels == FALSE) {
-    plot(pca, label="none" , col.ind = factor_cols)
+    plot(pca, axes = c(opt$PCA_x_axis,opt$PCA_y_axis), label="none" , col.ind = factor_cols)
     } else {
-    plot(pca, cex=0.2 , col.ind = factor_cols)
+    plot(pca, axes = c(opt$PCA_x_axis,opt$PCA_y_axis), cex=0.2 , col.ind = factor_cols)
   }
 if (opt$factor != '') {
   if(is.factor(contrasting_factor$factor)) {
