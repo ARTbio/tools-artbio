@@ -258,6 +258,7 @@
             <param name="visu_choice" value="HCPC" />
             <param name="HCPC_npc" value="5"/>
             <param name="HCPC_ncluster" value="-1"/>
+            <param name="res_clustering" value="yes"/>
             <param name="factor_choice" value="Yes" />
             <param name="factor" value="factor.tsv" ftype="txt"/>
             <output name="pdf_out" file="hcpc.nolabels.factor.pdf" compare="sim_size" ftype="pdf"/>
