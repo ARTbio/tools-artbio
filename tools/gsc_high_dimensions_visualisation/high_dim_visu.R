@@ -117,6 +117,12 @@ option_list = list(
     type = 'logical',
     help = "Should data be scaled before pca is applied? [default : '%default' ]"
   ),
+  make_option(	
+    "--Rtsne_normalize",	
+    default = TRUE,	
+    type = 'logical',	
+    help = "Should data be normalized internally prior to distance calculations? [default : '%default' ]"	
+  ),
   make_option(
     "--Rtsne_exaggeration_factor",
     default = 12.0,
@@ -309,6 +315,7 @@ if (opt$visu_choice == 'tSNE') {
                     pca = opt$Rtsne_pca, 
                     pca_center = opt$Rtsne_pca_center,
                     pca_scale = opt$Rtsne_pca_scale,
+                    normalize = opt$Rtsne_normalize,
                     exaggeration_factor=opt$Rtsne_exaggeration_factor)
 
   embedding <- as.data.frame(tsne_out$Y[,1:2])
