@@ -77,11 +77,10 @@ standard deviation rescaling, or both (standardization).
 In addition, these operations can be performed on subsets of observations, is the user provides
 a two-column table that maps observations to groups (factor levels).
 
-
 **Inputs**
 
 
- observations (library sequencing)
+observations (library sequencing)
 are in columns
 
 Normalization can be:
