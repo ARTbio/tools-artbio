@@ -87,7 +87,7 @@ case, normalization operations will be performed by group having same level.
 
 **Outputs**
 
-A table with same numbers of columns and rows, and transformed values.
+A table with same numbers of columns and rows as input table, and transformed values.
 
     </help>
     <citations>
