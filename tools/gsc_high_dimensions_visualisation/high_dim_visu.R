@@ -11,7 +11,7 @@ library(Rtsne)
 library(ggplot2)
 library(ggfortify)
 library(RColorBrewer)
-
+library(ClusterR)
 
 # Arguments
 option_list = list(
@@ -92,13 +92,13 @@ option_list = list(
     default = 1.0,
     type = 'numeric',
     help = "theta [default : '%default' ]"
-  ), 
+  ),
   make_option(
     "--Rtsne_max_iter",
     default = 1000,
     type = 'integer',
     help = "max_iter [default : '%default' ]"
-  ), 
+  ),
   make_option(
     "--Rtsne_pca",
     default = TRUE,
@@ -128,12 +128,24 @@ option_list = list(
     default = 12.0,
     type = 'numeric',
     help = " Exaggeration factor used to multiply the P matrix in the first part of the optimization [default : '%default' ]"
-  ), 
+  ),
    make_option(
     "--PCA_npc",
     default = 5,
     type = 'integer',
     help = "number of dimensions kept in the results [default : '%default' ]"
+  ),
+   make_option(
+    "--PCA_x_axis",
+    default = 1,
+    type = 'integer',
+    help = "PC to plot in the x axis [default : '%default' ]"
+  ),
+   make_option(
+    "--PCA_y_axis",
+    default = 2,
+    type = 'integer',
+    help = "PC to plot in the y axis [default : '%default' ]"
   ),
   make_option(
     "--HCPC_ncluster",
@@ -200,7 +212,19 @@ option_list = list(
     default = -1,
     type = 'numeric',
     help = "The maximum number of iterations for the consolidation [default :'%default']"
-  ) 
+  ),
+  make_option(
+    "--HCPC_clust",
+    default = "",
+    type = 'character',
+    help = "Output result of HCPC clustering : two column table (cell identifiers and clusters) [default :'%default']"
+  ),
+  make_option(
+    "--mutual_info",
+    default = "",
+    type = "character",
+    help = "Output file of external validation of HCPC clustering with factor levels [default :'%default']"
+  )
 )
 
 opt = parse_args(OptionParser(option_list = option_list),
@@ -210,6 +234,43 @@ if (opt$sep == "tab") {opt$sep <- "\t"}
 if (opt$sep == "comma") {opt$sep <- ","}
 if(opt$HCPC_max == -1) {opt$HCPC_max <- NULL}
 if(opt$HCPC_kk == -1) {opt$HCPC_kk <- Inf}
+
+##Add legend to plot()
+legend.col <- function(col, lev){
+
+opar <- par
+
+n <- length(col)
+
+bx <- par("usr")
+
+box.cx <- c(bx[2] + (bx[2] - bx[1]) / 1000,
+bx[2] + (bx[2] - bx[1]) / 1000 + (bx[2] - bx[1]) / 50)
+box.cy <- c(bx[3], bx[3])
+box.sy <- (bx[4] - bx[3]) / n
+
+xx <- rep(box.cx, each = 2)
+
+par(xpd = TRUE)
+for(i in 1:n){
+
+yy <- c(box.cy[1] + (box.sy * (i - 1)),
+box.cy[1] + (box.sy * (i)),
+box.cy[1] + (box.sy * (i)),
+box.cy[1] + (box.sy * (i - 1)))
+polygon(xx, yy, col = col[i], border = col[i])
+
+}
+par(new = TRUE)
+plot(0, 0, type = "n",
+ylim = c(min(lev), max(lev)),
+yaxt = "n", ylab = "",
+xaxt = "n", xlab = "",
+frame.plot = FALSE)
+axis(side = 4, las = 2, tick = FALSE, line = .25)
+par <- opar
+}
+
 
 data = read.table(
   opt$data,
@@ -228,20 +289,24 @@ if (opt$factor != '') {
   rownames(contrasting_factor) <- contrasting_factor[,1]
   contrasting_factor <- contrasting_factor[colnames(data),]
   colnames(contrasting_factor) <- c("id","factor")
-  contrasting_factor$factor <- as.factor(contrasting_factor$factor)
-  if(nlevels(contrasting_factor$factor) == 2){
-    colors_labels <- c("#E41A1C", "#377EB8")
+  if(is.numeric(contrasting_factor$factor)){
+    factor_cols <- rev(brewer.pal(n = 11, name = "RdYlGn"))[contrasting_factor$factor]
   } else {
-    colors_labels <- brewer.pal(nlevels(contrasting_factor$factor), name = 'Paired')
-  }
-  factorColors <-
-    with(contrasting_factor,
-         data.frame(factor = levels(contrasting_factor$factor),
-                    color = I(colors_labels)
-         )
-    )
-  factor_cols <- factorColors$color[match(contrasting_factor$factor,
+    contrasting_factor$factor <- as.factor(contrasting_factor$factor)
+    if(nlevels(contrasting_factor$factor) == 2){
+      colors_labels <- c("#E41A1C", "#377EB8")
+    } else {
+      colors_labels <- brewer.pal(nlevels(contrasting_factor$factor), name = 'Paired')
+    }
+    factorColors <-
+      with(contrasting_factor,
+           data.frame(factor = levels(contrasting_factor$factor),
+                      color = I(colors_labels)
+           )
+      )
+    factor_cols <- factorColors$color[match(contrasting_factor$factor,
                                           factorColors$factor)]
+  }
 } else {
   factor_cols <- rep("deepskyblue4", length(rownames(data)))
 }
@@ -272,19 +337,24 @@ if (opt$visu_choice == 'tSNE') {
     ggplot(embedding, aes(x=V1, y=V2)) +
       geom_point(size=1, color='deepskyblue4') +
       gg_legend +
-      xlab("") +
-      ylab("") +
+      xlab("t-SNE 1") +
+      ylab("t-SNE 2") +
       ggtitle('t-SNE') +
       if (opt$labels) {
         geom_text(aes(label=Class),hjust=-0.2, vjust=-0.5, size=1.5, color='deepskyblue4')
       }
     } else {
-    embedding$factor <- as.factor(contrasting_factor$factor)
+    if(is.numeric(contrasting_factor$factor)){
+      embedding$factor <- contrasting_factor$factor
+    } else {
+      embedding$factor <- as.factor(contrasting_factor$factor)
+    }
+
     ggplot(embedding, aes(x=V1, y=V2, color=factor)) +
       geom_point(size=1) + #, color=factor_cols
       gg_legend +
-      xlab("") +
-      ylab("") +
+      xlab("t-SNE 1") +
+      ylab("t-SNE 2") +
       ggtitle('t-SNE') +
       if (opt$labels) {
         geom_text(aes(label=Class, colour=factor),hjust=-0.2, vjust=-0.5, size=1.5)
@@ -294,7 +364,7 @@ if (opt$visu_choice == 'tSNE') {
   
   #save coordinates table
   if(opt$table_coordinates != ''){
-  coord_table <- cbind(rownames(tdf),as.data.frame(tsne_out$Y))
+  coord_table <- cbind(rownames(tdf), round(as.data.frame(tsne_out$Y), 6))
   colnames(coord_table)=c("Cells",paste0("DIM",(1:opt$Rtsne_dims)))
   }
 }
@@ -305,20 +375,24 @@ if (opt$visu_choice == 'PCA') {
   pca <- PCA(t(data), ncp=opt$PCA_npc, graph=FALSE)
   pdf(opt$pdf_out)
   if (opt$labels == FALSE) {
-    plot(pca, label="none" , col.ind = factor_cols)
+    plot(pca, axes = c(opt$PCA_x_axis,opt$PCA_y_axis), label="none" , col.ind = factor_cols)
     } else {
-    plot(pca, cex=0.2 , col.ind = factor_cols)
+    plot(pca, axes = c(opt$PCA_x_axis,opt$PCA_y_axis), cex=0.2 , col.ind = factor_cols)
   }
 if (opt$factor != '') {
+  if(is.factor(contrasting_factor$factor)) {
     legend(x = 'topright', 
        legend = as.character(factorColors$factor),
        col = factorColors$color, pch = 16, bty = 'n', xjust = 1, cex=0.7)
+  } else {
+    legend.col(col = rev(brewer.pal(n = 11, name = "RdYlGn")), lev = cut(contrasting_factor$factor, 11, label = FALSE))
+  }
 }
 dev.off()
 
   #save coordinates table
   if(opt$table_coordinates != ''){
-  coord_table <- cbind(rownames(pca$ind$coord),as.data.frame(pca$ind$coord))
+  coord_table <- cbind(rownames(pca$ind$coord), round(as.data.frame(pca$ind$coord), 6))
   colnames(coord_table)=c("Cells",paste0("DIM",(1:opt$PCA_npc)))
   }
 
@@ -355,11 +429,25 @@ plot(res.hcpc, choice="map")
 
 # user contrasts on the pca
 if (opt$factor != '') {
-    plot(pca, label="none", habillage="ind", col.hab=factor_cols)
+  plot(pca, label="none", col.ind = factor_cols)
+  if(is.factor(contrasting_factor$factor)) {
     legend(x = 'topright', 
        legend = as.character(factorColors$factor),
        col = factorColors$color, pch = 16, bty = 'n', xjust = 1, cex=0.7)
-    }
+    
+    ## Normalized Mutual Information
+    sink(opt$mutual_info)
+    res <- external_validation(
+       true_labels = as.numeric(contrasting_factor$factor),
+       clusters = as.numeric(res.hcpc$data.clust$clust),
+       summary_stats = TRUE
+    )
+    sink()
+
+  } else {
+    legend.col(col = rev(brewer.pal(n = 11, name = "RdYlGn")), lev = cut(contrasting_factor$factor, 11, label = FALSE))
+  }
+}
 ## Clusters to which individual observations belong # used ?
 # Clust <- data.frame(Cluster = res.hcpc$data.clust[, (nrow(data) + 1)],
 #                     Observation = rownames(res.hcpc$data.clust))
@@ -380,21 +468,22 @@ if (opt$factor != '') {
 # Sil = fviz_silhouette(hc.cut)
 # sil1 = as.data.frame(Sil$data)
 
-## Normalized Mutual Information # to be implemented later
-# sink(opt$mutual_info)
-# res = external_validation(
-#   as.numeric(factor(metadata[, Patient])),
-#   as.numeric(metadata$Cluster),
-#   method = "adjusted_rand_index",
-#   summary_stats = TRUE
-# )
-# sink()
 dev.off()
 
  if(opt$table_coordinates != ''){
-  coord_table <- cbind(Cell=rownames(res.hcpc$call$X),as.data.frame(res.hcpc$call$X))
+  coord_table <- cbind(Cell=rownames(res.hcpc$call$X),
+                       round(as.data.frame(res.hcpc$call$X[, -length(res.hcpc$call$X)]), 6),
+                       as.data.frame(res.hcpc$call$X[, length(res.hcpc$call$X)])
+                       )
   colnames(coord_table)=c("Cells",paste0("DIM",(1:opt$HCPC_npc)),"Cluster")
   }
+
+ if(opt$HCPC_clust != ""){
+ res_clustering <- data.frame(Cell = rownames(res.hcpc$data.clust),
+                              Cluster = res.hcpc$data.clust$clust)
+ 
+ }
+
 }
 
 ## Return coordinates file to user
@@ -411,7 +500,16 @@ if(opt$table_coordinates != ''){
 }
 
 
-  
+if(opt$HCPC_clust != ""){
+  write.table(
+    res_clustering,
+    file = opt$HCPC_clust,
+    sep = "\t",
+    quote = F,
+    col.names = T,
+    row.names = F
+    )
+}  
 
 
 

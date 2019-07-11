@@ -1,0 +1,20 @@
+ 
+---------------------------------------- 
+purity                         : 0.515 
+entropy                        : 0.459 
+normalized mutual information  : 0.2573 
+variation of information       : 2.7326 
+normalized var. of information : 0.8523 
+---------------------------------------- 
+specificity                    : 0.709 
+sensitivity                    : 0.5529 
+precision                      : 0.368 
+recall                         : 0.5529 
+F-measure                      : 0.4419 
+---------------------------------------- 
+accuracy OR rand-index         : 0.6724 
+adjusted-rand-index            : 0.2231 
+jaccard-index                  : 0.2836 
+fowlkes-mallows-index          : 0.4511 
+mirkin-metric                  : 349208 
+---------------------------------------- 
