@@ -64,7 +64,7 @@
             <param name="scale" value="FALSE"/>
             <param name="factor_options" value="TRUE" />
             <param name="file" value="mini.data.factor.tsv" ftype="tabular" />          
-            <output name="output" file="center_standardize.tab" ftype="tabular"/>
+            <output name="output" file="group_center.tab" ftype="tabular"/>
         </test>
     </tests>
     <help>
@@ -79,21 +79,15 @@ a two-column table that maps observations to groups (factor levels).
 
 **Inputs**
 
+A data table with observations (samples, library sequencings) in columns (library names
+are column names) and variables (genes) in rows (gene names are row names).
 
-observations (library sequencing)
-are in columns
+Optionally, a two-column table may be used to map observations to a factor level. In this
+case, normalization operations will be performed by group having same level.
 
-Normalization can be:
+**Outputs**
 
-- CPM (Counts Per Million) are obtained by dividing counts by the library counts sum and multiplying the results by a million.
-- RPK (Reads Per Kilobases) are obtained by dividing read counts by gene lengths (expressed in kilo-nucleotides).
-- TPM (Transcripts Per Million) are obtained by dividing RPK values by the sum of all RPK values in a sample and multiplying the results by 1 million.
-
-RPK and TPM require a two-column correspondance table gene_name - gene length where the length is specified in nucleotide. Both these metrics are relevant only for sequencing of full length RNAs.
-
-Note: First header row must NOT start with a '#' comment character
-
-Computed values may be base-2 log-transformed (log2([CPM or RPK or TPM]+1))
+A table with same numbers of columns and rows, and transformed values.
 
     </help>
     <citations>
