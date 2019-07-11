@@ -1,4 +1,4 @@
-<tool id="center_scale" name="Center or scale (standardize) data" version="0.1.0">
+<tool id="center_scale" name="Center or scale (standardize) data" version="0.9.0">
     <description></description>
     <requirements>
         <requirement type="package" version="1.6.0">r-optparse</requirement>
@@ -55,14 +55,14 @@
         </test>
         <test>
             <param name="input" value="mini.data.counts.tsv" ftype="tabular" />
-            <param name="factor_options" type="TRUE" />
+            <param name="factor_options" value="TRUE" />
             <param name="file" value="mini.data.factor.tsv" ftype="tabular" />          
             <output name="output" file="group_standardize.tab" ftype="tabular"/>
         </test>
         <test>
             <param name="input" value="mini.data.counts.tsv" ftype="tabular" />
             <param name="scale" value="FALSE"/>
-            <param name="factor_options" type="TRUE" />
+            <param name="factor_options" value="TRUE" />
             <param name="file" value="mini.data.factor.tsv" ftype="tabular" />          
             <output name="output" file="center_standardize.tab" ftype="tabular"/>
         </test>
@@ -71,7 +71,18 @@
 
 **What it does**
 
-Takes a raw count expression matrix and returns a table of normalized expression values.
+The tool perform various normalization operations on a data table, including mean centering,
+standard deviation rescaling, or both (standardization).
+
+In addition, these operations can be performed on subsets of observations, is the user provides
+a two-column table that maps observations to groups (factor levels).
+
+
+**Inputs**
+
+
+ observations (library sequencing)
+are in columns
 
 Normalization can be:
 
