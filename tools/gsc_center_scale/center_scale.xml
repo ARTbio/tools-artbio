@@ -1,5 +1,5 @@
-<tool id="cpm_tpm_rpk" name="Generate CPM, TPM, RPK" version="0.9.1">
-    <description>from raw counts expression values</description>
+<tool id="center_scale" name="Center or scale (standardize) data" version="0.1.0">
+    <description></description>
     <requirements>
         <requirement type="package" version="1.6.0">r-optparse</requirement>
     </requirements>
@@ -7,123 +7,64 @@
         <exit_code range="1:" level="fatal" description="Tool exception" />
     </stdio>
     <command detect_errors="exit_code"><![CDATA[ 
-        Rscript $__tool_directory__/cpm_tpm_rpk.R 
+        Rscript $__tool_directory__/center_scale.R 
             --data '$input'
-            --type '$option.type_transfo' 
-            --sep '$input_sep' 
-            --colnames '$input_header' 
-            #if $option.type_transfo == "tpm":
-                -f '$option.gene_file' 
-                --gene_sep $option.gene_sep 
-                --gene_header $option.gene_header
-            #end if 
-            #if $option.type_transfo == "rpk":
-                -f '$option.gene_file' 
-                --gene_sep '$option.gene_sep' 
-                --gene_header '$option.gene_header'
+            --center '$center'
+            --scale '$scale'
+            #if $factor.factor_options == 'TRUE':
+               --factor '$file'
             #end if
-            --log '$log'
-            #if $log == "FALSE":
-                -o ${output}
-            #else if $log == "TRUE":
-                -o ${output_log}
-            #end if
+            --output '$output'
 ]]></command>
     <inputs>
-        <param name="input" type="data" format="txt,tabular" label="Raw counts of expression data"/>
-        <param name="input_sep" type="select" label="Input column separator">
-            <option value="tab" selected="true">Tabulation</option>
-            <option value=",">Comma</option>
-        </param>
-        <param name="input_header" type="select" label="Consider first line of input file as header?">
+        <param name="input" type="data" format="tabular" label="Input file with values to transform"
+               help="Must be tabular separated with columns and row names, variables in rows, observations in columns" />
+        <param name="center" type="select" label="Center data to mean">
             <option value="TRUE" selected="true">Yes</option>
             <option value="FALSE">No</option>
         </param>
-            <conditional name="option">
-                <param name="type_transfo" type="select" label="Type of transformation">
-                    <option value="cpm" selected="true">CPM</option>
-                    <option value="tpm">TPM</option>
-                    <option value="rpk">RPK</option>
-                </param>
-                <when value="tpm">
-                    <param name="gene_file" type="data" format="txt,tabular" label="Gene length file"/> 
-                    <param name="gene_sep" type="select" label="Gene length column separator">
-                        <option value="tab" selected="true">Tabulation</option>
-                        <option value=",">Commas</option>
-                    </param>
-                    <param name="gene_header" type="select" label="Consider first line of gene length file as header ?">
-                        <option value="TRUE" selected="true">Yes</option>
-                        <option value="FALSE">No</option>
-                    </param>
-                </when>
-                <when value="rpk">
-                    <param name="gene_file" type="data" format="txt,tabular" label="Gene length file"/>
-                    <param name="gene_sep" type="select" label="Gene length column separator">
-                        <option value="tab" selected="true">Tabs</option>
-                        <option value=",">Commas</option>
-                    </param>
-                    <param name="gene_header" type="select" label="Consider first line of gene length file as header ?">
-                        <option value="TRUE" selected="true">Yes</option>
-                        <option value="FALSE">No</option>
-                    </param>
-                </when>
-                <when value="cpm">
-                </when>
-            </conditional>
-        <param name="log" type="select" label="Data should be log transformed ?">
-            <option value="FALSE" selected="true">No</option>
-            <option value="TRUE">Yes</option>
+        <param name="scale" type="select" label="Scale data to standard deviation">
+            <option value="TRUE" selected="true">Yes</option>
+            <option value="FALSE">No</option>
         </param>
+        <conditional name="factor">
+            <param name="factor_options" type="select" label="group data by factor ?">
+                <option value="TRUE">Yes</option>
+                <option value="FALSE" selected="true">No</option>
+            </param>
+            <when value="TRUE">
+                <param name="file" type="data" format="tabular" label="Grouping map"
+                       help="A two-column observation|factor_level table that assigns group ids to observations" /> 
+            </when>
+            <when value="FALSE">
+            </when>
+        </conditional>
     </inputs>
     <outputs>
-        <data name="output" format="tabular" label="${option.type_transfo} of ${on_string}">
-            <filter>log == "FALSE"</filter>
-        </data>
-        <data name="output_log" format="tabular" label="log2(${option.type_transfo} +1) of ${on_string}">
-            <filter>log == "TRUE"</filter>
-        </data>
+        <data name="output" format="tabular" label="scale ${on_string}" />
     </outputs>
     <tests>
         <test>
-            <param name="input" value="counts.tab" ftype="tabular"/>
-            <param name="type_transfo" value="cpm"/>
-            <param name="log" value="TRUE"/>
-            <output name="output" file="logcpm.tab" ftype="tabular"/>
+            <param name="input" value="mini.data.counts.tsv" ftype="tabular"/>
+            <output name="output" file="full_standardize.tab" ftype="tabular"/>
         </test>
         <test>
-            <param name="input" value="counts.tab" ftype="tabular"/>
-            <param name="type_transfo" value="tpm"/>
-            <param name="gene_file" value="gene_length.tab" ftype="tabular"/>
-            <param name="log" value="TRUE"/>
-            <output name="output" file="logtpm.tab" ftype="tabular"/>
-        </test>
-        <!-- test without t-SNE -->
-        <test>
-            <param name="input" value="counts.tab" ftype="tabular"/>
-            <param name="type_transfo" value="cpm"/>
-            <output name="output" file="cpm.tab" ftype="tabular"/>
+            <param name="input" value="mini.data.counts.tsv" ftype="tabular"/>
+            <param name="scale" value="FALSE"/>
+            <output name="output" file="full_center.tab" ftype="tabular"/>
         </test>
         <test>
-            <param name="input" value="counts.tab" ftype="tabular"/>
-            <param name="type_transfo" value="tpm"/>
-            <param name="gene_file" value="gene_length.tab" ftype="tabular"/>
-            <param name="gene_header" value="TRUE"/>
-            <output name="output" file="tpm.tab" ftype="tabular"/>
+            <param name="input" value="mini.data.counts.tsv" ftype="tabular" />
+            <param name="factor_options" type="TRUE" />
+            <param name="file" value="mini.data.factor.tsv" ftype="tabular" />          
+            <output name="output" file="group_standardize.tab" ftype="tabular"/>
         </test>
         <test>
-            <param name="input" value="counts.tab" ftype="tabular"/>
-            <param name="type_transfo" value="rpk"/>
-            <param name="gene_file" value="gene_length.tab" ftype="tabular"/>
-            <param name="gene_header" value="TRUE"/>
-            <output name="output" file="rpk.tab" ftype="tabular"/>
-        </test>
-        <test>
-            <param name="input" value="counts.tab" ftype="tabular"/>
-            <param name="type_transfo" value="rpk"/>
-            <param name="gene_file" value="gene_length.tab" ftype="tabular"/>
-            <param name="gene_header" value="TRUE"/>
-            <param name="log" value="TRUE"/>
-            <output name="output" file="logrpk.tab" ftype="tabular"/>
+            <param name="input" value="mini.data.counts.tsv" ftype="tabular" />
+            <param name="scale" value="FALSE"/>
+            <param name="factor_options" type="TRUE" />
+            <param name="file" value="mini.data.factor.tsv" ftype="tabular" />          
+            <output name="output" file="center_standardize.tab" ftype="tabular"/>
         </test>
     </tests>
     <help>

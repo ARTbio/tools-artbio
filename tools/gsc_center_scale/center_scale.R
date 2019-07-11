@@ -1,137 +1,89 @@
-if (length(commandArgs(TRUE)) == 0) {
-  system("Rscript cpm_tpm_rpk.R -h", intern = F)
-  q("no")
-}
-
-
-# load packages that are provided in the conda env
 options( show.error.messages=F,
        error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
 loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
 warnings()
 library(optparse)
 
-#Arguments
+# Arguments
 option_list = list(
   make_option(
-    c("-d", "--data"),
+    '--data',
     default = NA,
     type = 'character',
-    help = "Input file that contains count values to transform"
+    help = "Input file that contains values to transform. Must be tabular separated,
+            with columns and row names, variables in rows, observations in columns  [default : '%default' ]"
   ),
   make_option(
-    c("-t", "--type"),
-    default = 'cpm',
-    type = 'character',
-    help = "Transformation type, either cpm, tpm, rpk or none[default : '%default' ]"
-  ),
-  make_option(
-    c("-s", "--sep"),
-    default = '\t',
-    type = 'character',
-    help = "File separator [default : '%default' ]"
-  ),
-  make_option(
-    c("-c", "--colnames"),
+   '--center',
     default = TRUE,
     type = 'logical',
-    help = "Consider first line as header ? [default : '%default' ]"
+    help = "center data to the mean [default : '%default' ]"
   ),
   make_option(
-    c("-f", "--gene"),
-    default = NA,
-    type = 'character',
-    help = "Two column of gene length file"
-  ),
-  make_option(
-    c("-a", "--gene_sep"),
-    default = '\t',
-    type = 'character',
-    help = "Gene length file separator [default : '%default' ]"
-  ),
-  make_option(
-    c("-b", "--gene_header"),
+   '--scale',
     default = TRUE,
     type = 'logical',
-    help = "Consider first line of gene length as header ? [default : '%default' ]"
+    help = "scale data to standard deviation [default : '%default' ]"
   ),
   make_option(
-    c("-l", "--log"),
-    default = FALSE,
-    type = 'logical',
-    help = "Should be log transformed as well ? (log2(data +1)) [default : '%default' ]"
-  ),
-  make_option(
-    c("-o", "--out"),
-    default = "res.tab",
+    '--factor',
+    default = '',
     type = 'character',
-    help = "Output name [default : '%default' ]"
+    help = "A two-column observations|factor_levels table, to group observations to be transformed by levels  [default : '%default' ]"
+  ),
+  make_option(
+    '--output',
+    default = 'res.tab',
+    type = 'character',
+    help = "Table of transformed values [default : '%default' ]"
   )
 )
+
+transform <- function(df, center=TRUE, scale=TRUE) {
+    transfo <- scale(
+        t(df),
+        center=center,
+        scale=center
+        )
+    return(as.data.frame(t(transfo)))
+}
 
 opt = parse_args(OptionParser(option_list = option_list),
                  args = commandArgs(trailingOnly = TRUE))
 
-if (opt$sep == "tab") {opt$sep = "\t"}
-if (opt$gene_sep == "tab") {opt$gene_sep = "\t"}
-
-cpm <- function(count) {
-  t(t(count) / colSums(count)) * 1000000
-}
-
-
-rpk <- function(count, length) {
-  count / (length / 1000)
-}
-
-tpm <- function(count, length) {
-  RPK = rpk(count, length)
-  perMillion_factor = colSums(RPK) / 1000000
-  TPM = RPK / perMillion_factor
-  return(TPM)
-}
-
 data = read.table(
-  opt$data,
-  check.names = FALSE,
-  header = opt$colnames,
-  row.names = 1,
-  sep = opt$sep
+    opt$data,
+    check.names = FALSE,
+    header = TRUE,
+    row.names = 1,
+    sep = '\t'
 )
 
-if (opt$type == "tpm" | opt$type == "rpk") {
-  gene_length = as.data.frame(
-    read.table(
-      opt$gene,
-      h = opt$gene_header,
-      row.names = 1,
-      sep = opt$gene_sep
-    )
-  )
-  gene_length = as.data.frame(gene_length[match(rownames(data), rownames(gene_length)), ], rownames(data))
+if (opt$factor != '') {
+    data.factor = read.table(
+        opt$factor,
+        check.names = FALSE,
+        header = TRUE,
+        sep = '\t'
+        )
+    colnames(data.factor) <- c("cellid", "level")
+    data.transformed <- data.frame(row.names=rownames(data), stringsAsFactors=FALSE)
+    for (group in levels(data.factor$level)){
+        subcells <- as.data.frame(subset(data.factor, level==group, select=cellid))
+        subdata <- as.data.frame(subset(data, select=subcells$cellid))
+        subdata.transformed <- transform(subdata, center=opt$center, scale=opt$scale)
+        data.transformed <- cbind(data.transformed, subdata.transformed)
+    }
+} else {
+    data.transformed <- transform(data, center=opt$center, scale=opt$scale)
 }
 
-
-if (opt$type == "cpm")
-  res = cpm(data)
-if (opt$type == "tpm")
-  res = as.data.frame(apply(data, 2, tpm, length = gene_length), row.names = rownames(data))
-if (opt$type == "rpk")
-  res = as.data.frame(apply(data, 2, rpk, length = gene_length), row.names = rownames(data))
-if (opt$type == "none")
-  res = data
-colnames(res) = colnames(data)
-
-
-if (opt$log == TRUE) {
-  res = log2(res + 1)
-}
 
 write.table(
-  cbind(Genes = rownames(res), res),
-  opt$out,
-  col.names = opt$colnames,
-  row.names = F,
+  cbind(gene=rownames(data.transformed), data.transformed),
+  opt$output,
+  col.names = TRUE,
+  row.names = FALSE,
   quote = F,
   sep = "\t"
 )
