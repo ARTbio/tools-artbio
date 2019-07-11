@@ -92,13 +92,13 @@ option_list = list(
     default = 1.0,
     type = 'numeric',
     help = "theta [default : '%default' ]"
-  ), 
+  ),
   make_option(
     "--Rtsne_max_iter",
     default = 1000,
     type = 'integer',
     help = "max_iter [default : '%default' ]"
-  ), 
+  ),
   make_option(
     "--Rtsne_pca",
     default = TRUE,
@@ -117,18 +117,18 @@ option_list = list(
     type = 'logical',
     help = "Should data be scaled before pca is applied? [default : '%default' ]"
   ),
-  make_option(	
-    "--Rtsne_normalize",	
-    default = TRUE,	
-    type = 'logical',	
-    help = "Should data be normalized internally prior to distance calculations? [default : '%default' ]"	
+  make_option(
+    "--Rtsne_normalize",
+    default = TRUE,
+    type = 'logical',
+    help = "Should data be normalized internally prior to distance calculations? [default : '%default' ]"
   ),
   make_option(
     "--Rtsne_exaggeration_factor",
     default = 12.0,
     type = 'numeric',
     help = " Exaggeration factor used to multiply the P matrix in the first part of the optimization [default : '%default' ]"
-  ), 
+  ),
    make_option(
     "--PCA_npc",
     default = 5,
@@ -224,7 +224,7 @@ option_list = list(
     default = "",
     type = "character",
     help = "Output file of external validation of HCPC clustering with factor levels [default :'%default']"
-  ) 
+  )
 )
 
 opt = parse_args(OptionParser(option_list = option_list),
@@ -237,29 +237,29 @@ if(opt$HCPC_kk == -1) {opt$HCPC_kk <- Inf}
 
 ##Add legend to plot()
 legend.col <- function(col, lev){
- 
+
 opar <- par
- 
+
 n <- length(col)
- 
+
 bx <- par("usr")
- 
+
 box.cx <- c(bx[2] + (bx[2] - bx[1]) / 1000,
 bx[2] + (bx[2] - bx[1]) / 1000 + (bx[2] - bx[1]) / 50)
 box.cy <- c(bx[3], bx[3])
 box.sy <- (bx[4] - bx[3]) / n
- 
+
 xx <- rep(box.cx, each = 2)
- 
+
 par(xpd = TRUE)
 for(i in 1:n){
- 
+
 yy <- c(box.cy[1] + (box.sy * (i - 1)),
 box.cy[1] + (box.sy * (i)),
 box.cy[1] + (box.sy * (i)),
 box.cy[1] + (box.sy * (i - 1)))
 polygon(xx, yy, col = col[i], border = col[i])
- 
+
 }
 par(new = TRUE)
 plot(0, 0, type = "n",
@@ -435,12 +435,11 @@ if (opt$factor != '') {
        legend = as.character(factorColors$factor),
        col = factorColors$color, pch = 16, bty = 'n', xjust = 1, cex=0.7)
     
-    ## Normalized Mutual Information # to be implemented later
+    ## Normalized Mutual Information
     sink(opt$mutual_info)
     res <- external_validation(
        true_labels = as.numeric(contrasting_factor$factor),
        clusters = as.numeric(res.hcpc$data.clust$clust),
-       method = "adjusted_rand_index",
        summary_stats = TRUE
     )
     sink()

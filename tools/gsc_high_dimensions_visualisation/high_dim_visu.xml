@@ -382,18 +382,30 @@ This tool returns the visualisation of a dimensional reduction using either:
 
 * Principal Components Analysis (PCA)
 * Hierarchical Clustering of Principal Components (HCPC)
-* t-distributed Stochastic Neighbor Embedding
+* t-distributed Stochastic Neighbor Embedding (t-SNE)
 
 The tool returns in addition the table of the coordinates of the observations (eg RNAseq libraries)
 in the low dim space, which can be used for post-treatment or to further adjust the provided visualisation.
+
+If HCPC is used, this tool can also return the clustering table. It contains two columns of n observations :
+
+* Observation labels
+* Cluster labels
 
 ** Contrast data with a factor **
 The tool offers the possibility to colour data points according to the levels of a factor.
 To use the option "Factor to contrast data", provide a tabulated-separated, two-column table
 with first column containing the cell/data library identifiers (same identifiers as those
 provided as column headers in the input data table) and second column containing the corresponding
-factor levels value. This table does not need to be sorted in the same order as in the data
+factor levels value (if this vector is numerical, then the color palette used is quantitative). 
+This table does not need to be sorted in the same order as in the data
 table. It may also contain more identifiers than those provided in the data table.
+
+If HCPC visualisation and constrasting data are chosen, an additional text file is given. It contains
+several metrics of external validation of clustering. It will compare the capacity of HCPC clustering
+to recreate classes contained in the factor data file. If the constrasting factor is quantitative,
+the file will be empty. 
+
 
     </help>
     <citations>
@@ -422,6 +434,15 @@ table. It may also contain more identifiers than those provided in the data tabl
             year = {2015},
             note = {R package version 0.15},
             url = {https://github.com/jkrijthe/Rtsne},
+            }
+        </citation>
+        <citation type="bibtex">@Manual{,
+            title = {{ClusterR}: Gaussian Mixture Models, K-Means, Mini-Batch-Kmeans,
+            K-Medoids and Affinity Propagation Clustering},
+            author = {Lampros Mouselimis},
+            year = {2019},
+            note = {R package version 1.1.9},
+            url = {https://github.com/mlampros/ClusterR},
             }
         </citation>
   </citations>
