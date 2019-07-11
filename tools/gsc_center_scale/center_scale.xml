@@ -1,0 +1,105 @@
+<tool id="center_scale" name="Center or scale (standardize) data" version="0.9.0">
+    <description></description>
+    <requirements>
+        <requirement type="package" version="1.6.0">r-optparse</requirement>
+    </requirements>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Tool exception" />
+    </stdio>
+    <command detect_errors="exit_code"><![CDATA[ 
+        Rscript $__tool_directory__/center_scale.R 
+            --data '$input'
+            --center '$center'
+            --scale '$scale'
+            #if $factor.factor_options == 'TRUE':
+               --factor '$file'
+            #end if
+            --output '$output'
+]]></command>
+    <inputs>
+        <param name="input" type="data" format="tabular" label="Input file with values to transform"
+               help="Must be tabular separated with columns and row names, variables in rows, observations in columns" />
+        <param name="center" type="select" label="Center data to mean">
+            <option value="TRUE" selected="true">Yes</option>
+            <option value="FALSE">No</option>
+        </param>
+        <param name="scale" type="select" label="Scale data to standard deviation">
+            <option value="TRUE" selected="true">Yes</option>
+            <option value="FALSE">No</option>
+        </param>
+        <conditional name="factor">
+            <param name="factor_options" type="select" label="group data by factor ?">
+                <option value="TRUE">Yes</option>
+                <option value="FALSE" selected="true">No</option>
+            </param>
+            <when value="TRUE">
+                <param name="file" type="data" format="tabular" label="Grouping map"
+                       help="A two-column observation|factor_level table that assigns group ids to observations" /> 
+            </when>
+            <when value="FALSE">
+            </when>
+        </conditional>
+    </inputs>
+    <outputs>
+        <data name="output" format="tabular" label="scale ${on_string}" />
+    </outputs>
+    <tests>
+        <test>
+            <param name="input" value="mini.data.counts.tsv" ftype="tabular"/>
+            <output name="output" file="full_standardize.tab" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="mini.data.counts.tsv" ftype="tabular"/>
+            <param name="scale" value="FALSE"/>
+            <output name="output" file="full_center.tab" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="mini.data.counts.tsv" ftype="tabular" />
+            <param name="factor_options" value="TRUE" />
+            <param name="file" value="mini.data.factor.tsv" ftype="tabular" />          
+            <output name="output" file="group_standardize.tab" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="mini.data.counts.tsv" ftype="tabular" />
+            <param name="scale" value="FALSE"/>
+            <param name="factor_options" value="TRUE" />
+            <param name="file" value="mini.data.factor.tsv" ftype="tabular" />          
+            <output name="output" file="group_center.tab" ftype="tabular"/>
+        </test>
+    </tests>
+    <help>
+
+**What it does**
+
+The tool perform various normalization operations on a data table, including mean centering,
+standard deviation rescaling, or both (standardization).
+
+In addition, these operations can be performed on subsets of observations, is the user provides
+a two-column table that maps observations to groups (factor levels).
+
+**Inputs**
+
+A data table with observations (samples, library sequencings) in columns (library names
+are column names) and variables (genes) in rows (gene names are row names).
+
+Optionally, a two-column table may be used to map observations to a factor level. In this
+case, normalization operations will be performed by group having same level.
+
+**Outputs**
+
+A table with same numbers of columns and rows as input table, and transformed values.
+
+    </help>
+    <citations>
+        <citation type="bibtex">
+        @Manual{,
+             title = {R: A Language and Environment for Statistical Computing},
+             author = {{R Core Team}},
+             organization = {R Foundation for Statistical Computing},
+             address = {Vienna, Austria},
+             year = {2014},
+             url = {http://www.R-project.org/},
+        }
+        </citation>
+    </citations>
+</tool>
