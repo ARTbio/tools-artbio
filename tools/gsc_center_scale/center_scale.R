@@ -43,7 +43,7 @@ transform <- function(df, center=TRUE, scale=TRUE) {
     transfo <- scale(
         t(df),
         center=center,
-        scale=center
+        scale=scale
         )
     return(as.data.frame(t(transfo)))
 }
@@ -70,12 +70,14 @@ if (opt$factor != '') {
     data.transformed <- data.frame(row.names=rownames(data), stringsAsFactors=FALSE)
     for (group in levels(data.factor$level)){
         subcells <- as.data.frame(subset(data.factor, level==group, select=cellid))
-        subdata <- as.data.frame(subset(data, select=subcells$cellid))
-        subdata.transformed <- transform(subdata, center=opt$center, scale=opt$scale)
+        subdata <- as.data.frame(subset(data, select=as.vector(subcells$cellid)))
+        subdata.transformed <- transform(subdata, center=as.logical(opt$center),
+                                                  scale=as.logical(opt$scale))
         data.transformed <- cbind(data.transformed, subdata.transformed)
     }
 } else {
-    data.transformed <- transform(data, center=opt$center, scale=opt$scale)
+    data.transformed <- transform(data, center=as.logical(opt$center),
+                                        scale=as.logical(opt$scale))
 }
 
 
