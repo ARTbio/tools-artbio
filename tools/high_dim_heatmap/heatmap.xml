@@ -193,6 +193,15 @@ To adapt heatmap.2 to high number of lines, tweak the parameters:
   heatmap panel in the plot layout. This is a bit tricky to adjust, but should be adapted
   when plot height is increased (typically to 8, 10, 15, etc...)
 
+For instance, upload the dataset
+https://raw.githubusercontent.com/ARTbio/tools-artbio/master/tools/high_dim_heatmap/test-data/complex_table.tsv
+to your account and test this tools with:
+
+- `tweak plot height` : 21.0
+- `tweak row label size`: 0.4
+- `tweak line height`: 14
+
+
     ]]></help>
     <citations>
     </citations>
