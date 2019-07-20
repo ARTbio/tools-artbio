@@ -1,0 +1,14 @@
+categories:
+  - Visualization
+description: gplot heatmap.2 function adapted for plotting large heatmaps
+homepage_url: https://github.com/cran/gplots
+long_description: |
+  This tool uses the heatmap.2 function from the R gplots package to create a heatmap.
+  A heatmap is a false color image with a dendrogram added to the left side and/or to the top.
+  Reordering of the rows and columns according to some set of values
+  (row or column means) within the restrictions imposed by the dendrogram may be carried out.
+  3 parameters can be adjust to better plot heatmaps with a high number of rows
+owner: artbio
+name: high_dim_heatmap
+remote_repository_url: https://github.com/artbio/tools-artbio/tree/master/tools/high_dim_heatmap
+type: unrestricted
