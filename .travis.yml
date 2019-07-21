@@ -9,7 +9,7 @@ jobs:
     - stage: lint
       addons: {}
       before_install:
-        - pip install flake8 flake8-import-order planemo
+        - pip install flake8 flake8-import-order planemo docutils==0.14
       install:
         - planemo --version
         - git diff --quiet "$TRAVIS_COMMIT_RANGE" -- ; GIT_DIFF_EXIT_CODE=$?
