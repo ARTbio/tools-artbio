@@ -1,0 +1,13 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: suite_metavisitor_2
+description: Collection of mississippi tools for virus detection or discovery from (small) RNA sequence datasets
+long_description: |
+  Collection of mississippi tools for virus detection or discovery from (small) RNA sequence datasets
+categories:
+  - RNA
+  - Sequence Analysis
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/suites/suite_metavisitor_2
+toolshed:
+  - toolshed

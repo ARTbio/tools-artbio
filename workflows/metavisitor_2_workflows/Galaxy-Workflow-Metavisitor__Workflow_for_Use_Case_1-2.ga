@@ -1,0 +1,909 @@
+{
+    "a_galaxy_workflow": "true", 
+    "uuid": "ec837c44-317a-4ba7-823e-939b1e86c9eb", 
+    "tags": [], 
+    "format-version": "0.1", 
+    "version": 3, 
+    "steps": {
+        "11": {
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/devteam/ncbi_blast_plus/ncbi_blastn_wrapper/0.3.1", 
+            "errors": null, 
+            "uuid": "4f996123-d155-426a-ba26-e649c422431e", 
+            "tool_version": "0.3.1", 
+            "outputs": [
+                {
+                    "type": "tabular", 
+                    "name": "output1"
+                }
+            ], 
+            "post_job_actions": {
+                "HideDatasetActionoutput1": {
+                    "output_name": "output1", 
+                    "action_type": "HideDatasetAction", 
+                    "action_arguments": {}
+                }, 
+                "RenameDatasetActionoutput1": {
+                    "output_name": "output1", 
+                    "action_type": "RenameDatasetAction", 
+                    "action_arguments": {
+                        "newname": "CDS aligned to ${ncbi_guide_ID}"
+                    }
+                }
+            }, 
+            "workflow_outputs": [], 
+            "annotation": "", 
+            "content_id": "toolshed.g2.bx.psu.edu/repos/devteam/ncbi_blast_plus/ncbi_blastn_wrapper/0.3.1", 
+            "input_connections": {
+                "query": {
+                    "output_name": "contigsandsinglets", 
+                    "id": 10
+                }, 
+                "db_opts|histdb": {
+                    "output_name": "outfile", 
+                    "id": 4
+                }
+            }, 
+            "inputs": [
+                {
+                    "name": "db_opts", 
+                    "description": "runtime parameter for tool NCBI BLAST+ blastn"
+                }, 
+                {
+                    "name": "query", 
+                    "description": "runtime parameter for tool NCBI BLAST+ blastn"
+                }
+            ], 
+            "position": {
+                "top": 824, 
+                "left": 2296
+            }, 
+            "tool_state": "{\"evalue_cutoff\": \"\\\"0.001\\\"\", \"output\": \"{\\\"__current_case__\\\": 2, \\\"ext_cols\\\": [\\\"slen\\\"], \\\"ids_cols\\\": null, \\\"misc_cols\\\": null, \\\"out_format\\\": \\\"cols\\\", \\\"std_cols\\\": [\\\"qseqid\\\", \\\"sseqid\\\", \\\"pident\\\", \\\"length\\\", \\\"mismatch\\\", \\\"gapopen\\\", \\\"qstart\\\", \\\"qend\\\", \\\"sstart\\\", \\\"send\\\", \\\"evalue\\\", \\\"bitscore\\\"], \\\"tax_cols\\\": null}\", \"adv_opts\": \"{\\\"__current_case__\\\": 0, \\\"adv_opts_selector\\\": \\\"basic\\\"}\", \"__page__\": null, \"__rerun_remap_job_id__\": null, \"db_opts\": \"{\\\"__current_case__\\\": 1, \\\"database\\\": \\\"\\\", \\\"db_opts_selector\\\": \\\"histdb\\\", \\\"histdb\\\": {\\\"__class__\\\": \\\"RuntimeValue\\\"}, \\\"subject\\\": \\\"\\\"}\", \"blast_type\": \"\\\"blastn\\\"\", \"query\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\"}", 
+            "label": "BLAST contigs against specific virus", 
+            "type": "tool", 
+            "id": 11, 
+            "tool_shed_repository": {
+                "owner": "devteam", 
+                "changeset_revision": "e25d3acf6e68", 
+                "name": "ncbi_blast_plus", 
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            }, 
+            "name": "NCBI BLAST+ blastn"
+        }, 
+        "10": {
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/artbio/cap3/cap3/2.0.0", 
+            "errors": null, 
+            "uuid": "bd3f2dd0-b170-433d-b1e8-2b0f303006a7", 
+            "tool_version": "2.0.0", 
+            "outputs": [
+                {
+                    "type": "fasta", 
+                    "name": "contigsandsinglets"
+                }, 
+                {
+                    "type": "txt", 
+                    "name": "cap3stdout"
+                }, 
+                {
+                    "type": "fasta", 
+                    "name": "contigs"
+                }, 
+                {
+                    "type": "txt", 
+                    "name": "contigsqual"
+                }, 
+                {
+                    "type": "txt", 
+                    "name": "contigslink"
+                }, 
+                {
+                    "type": "txt", 
+                    "name": "ace"
+                }, 
+                {
+                    "type": "txt", 
+                    "name": "info"
+                }, 
+                {
+                    "type": "txt", 
+                    "name": "singlets"
+                }
+            ], 
+            "post_job_actions": {
+                "HideDatasetActioncontigsqual": {
+                    "output_name": "contigsqual", 
+                    "action_type": "HideDatasetAction", 
+                    "action_arguments": {}
+                }, 
+                "RenameDatasetActioncontigsandsinglets": {
+                    "output_name": "contigsandsinglets", 
+                    "action_type": "RenameDatasetAction", 
+                    "action_arguments": {
+                        "newname": "viral CDS"
+                    }
+                }, 
+                "HideDatasetActioncontigslink": {
+                    "output_name": "contigslink", 
+                    "action_type": "HideDatasetAction", 
+                    "action_arguments": {}
+                }, 
+                "HideDatasetActioncontigs": {
+                    "output_name": "contigs", 
+                    "action_type": "HideDatasetAction", 
+                    "action_arguments": {}
+                }, 
+                "HideDatasetActionace": {
+                    "output_name": "ace", 
+                    "action_type": "HideDatasetAction", 
+                    "action_arguments": {}
+                }, 
+                "HideDatasetActionsinglets": {
+                    "output_name": "singlets", 
+                    "action_type": "HideDatasetAction", 
+                    "action_arguments": {}
+                }, 
+                "HideDatasetActioncap3stdout": {
+                    "output_name": "cap3stdout", 
+                    "action_type": "HideDatasetAction", 
+                    "action_arguments": {}
+                }, 
+                "HideDatasetActioninfo": {
+                    "output_name": "info", 
+                    "action_type": "HideDatasetAction", 
+                    "action_arguments": {}
+                }
+            }, 
+            "workflow_outputs": [
+                {
+                    "output_name": "contigsandsinglets", 
+                    "uuid": "e2dff9ee-9235-4087-9a51-30b5b9974537", 
+                    "label": null
+                }
+            ], 
+            "annotation": "Group highly similar viral transcripts", 
+            "content_id": "toolshed.g2.bx.psu.edu/repos/artbio/cap3/cap3/2.0.0", 
+            "input_connections": {
+                "inputSequences": {
+                    "output_name": "fastaOutput", 
+                    "id": 9
+                }
+            }, 
+            "inputs": [
+                {
+                    "name": "inputSequences", 
+                    "description": "runtime parameter for tool cap3"
+                }
+            ], 
+            "position": {
+                "top": 593, 
+                "left": 1963.5
+            }, 
+            "tool_state": "{\"overlapidentity\": \"\\\"90\\\"\", \"inputSequences\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"__rerun_remap_job_id__\": null, \"overlaplength\": \"\\\"40\\\"\", \"__page__\": null}", 
+            "label": "Group similar contigs", 
+            "type": "tool", 
+            "id": 10, 
+            "tool_shed_repository": {
+                "owner": "artbio", 
+                "changeset_revision": "d76a0d8a9eac", 
+                "name": "cap3", 
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            }, 
+            "name": "cap3"
+        }, 
+        "13": {
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/galaxyp/regex_find_replace/regex1/1.0.0", 
+            "errors": null, 
+            "uuid": "c81173fb-317d-4c00-9da8-f0072b62a569", 
+            "tool_version": "1.0.0", 
+            "outputs": [
+                {
+                    "type": "input", 
+                    "name": "out_file1"
+                }
+            ], 
+            "post_job_actions": {
+                "ChangeDatatypeActionout_file1": {
+                    "output_name": "out_file1", 
+                    "action_type": "ChangeDatatypeAction", 
+                    "action_arguments": {
+                        "newtype": "fasta"
+                    }
+                }, 
+                "RenameDatasetActionout_file1": {
+                    "output_name": "out_file1", 
+                    "action_type": "RenameDatasetAction", 
+                    "action_arguments": {
+                        "newname": "Nora_raw_reads_${ncbi_guide_ID}_guided"
+                    }
+                }
+            }, 
+            "workflow_outputs": [
+                {
+                    "output_name": "out_file1", 
+                    "uuid": "e202eeb0-f65c-4295-afe0-44a56634a452", 
+                    "label": null
+                }
+            ], 
+            "annotation": "", 
+            "content_id": "toolshed.g2.bx.psu.edu/repos/galaxyp/regex_find_replace/regex1/1.0.0", 
+            "input_connections": {
+                "input": {
+                    "output_name": "output", 
+                    "id": 12
+                }
+            }, 
+            "inputs": [
+                {
+                    "name": "input", 
+                    "description": "runtime parameter for tool Regex Find And Replace"
+                }
+            ], 
+            "position": {
+                "top": 914, 
+                "left": 2865
+            }, 
+            "tool_state": "{\"input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"__rerun_remap_job_id__\": null, \"checks\": \"[{\\\"__index__\\\": 0, \\\"pattern\\\": \\\">.+\\\", \\\"replacement\\\": \\\">Nora_raw_reads\\\"}]\", \"__page__\": null}", 
+            "label": "Change header", 
+            "type": "tool", 
+            "id": 13, 
+            "tool_shed_repository": {
+                "owner": "galaxyp", 
+                "changeset_revision": "209b7c5ee9d7", 
+                "name": "regex_find_replace", 
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            }, 
+            "name": "Regex Find And Replace"
+        }, 
+        "12": {
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/artbio/blast_to_scaffold/blast2scaffold/1.0.0", 
+            "errors": null, 
+            "uuid": "7f0913f8-f7f9-4ba3-878c-9c502460331d", 
+            "tool_version": "1.0.0", 
+            "outputs": [
+                {
+                    "type": "fasta", 
+                    "name": "output"
+                }
+            ], 
+            "post_job_actions": {
+                "HideDatasetActionoutput": {
+                    "output_name": "output", 
+                    "action_type": "HideDatasetAction", 
+                    "action_arguments": {}
+                }, 
+                "RenameDatasetActionoutput": {
+                    "output_name": "output", 
+                    "action_type": "RenameDatasetAction", 
+                    "action_arguments": {
+                        "newname": "viral CDS"
+                    }
+                }
+            }, 
+            "workflow_outputs": [], 
+            "annotation": "Generate CDS from transcripts", 
+            "content_id": "toolshed.g2.bx.psu.edu/repos/artbio/blast_to_scaffold/blast2scaffold/1.0.0", 
+            "input_connections": {
+                "guideSequence": {
+                    "output_name": "outfile", 
+                    "id": 2
+                }, 
+                "blast_tab": {
+                    "output_name": "output1", 
+                    "id": 11
+                }, 
+                "sequences": {
+                    "output_name": "contigsandsinglets", 
+                    "id": 10
+                }
+            }, 
+            "inputs": [
+                {
+                    "name": "guideSequence", 
+                    "description": "runtime parameter for tool blast_to_scaffold"
+                }, 
+                {
+                    "name": "blast_tab", 
+                    "description": "runtime parameter for tool blast_to_scaffold"
+                }, 
+                {
+                    "name": "sequences", 
+                    "description": "runtime parameter for tool blast_to_scaffold"
+                }
+            ], 
+            "position": {
+                "top": 656, 
+                "left": 2622.5
+            }, 
+            "tool_state": "{\"__page__\": null, \"guideSequence\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"blast_tab\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"__rerun_remap_job_id__\": null, \"sequences\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\"}", 
+            "label": "Generate CDS", 
+            "type": "tool", 
+            "id": 12, 
+            "tool_shed_repository": {
+                "owner": "artbio", 
+                "changeset_revision": "7d96b28eec49", 
+                "name": "blast_to_scaffold", 
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            }, 
+            "name": "blast_to_scaffold"
+        }, 
+        "1": {
+            "tool_id": null, 
+            "errors": null, 
+            "uuid": "462eb78f-9844-42d6-8087-19f2e1e801ca", 
+            "tool_version": null, 
+            "outputs": [], 
+            "workflow_outputs": [
+                {
+                    "output_name": "output", 
+                    "uuid": "6bd2d24e-e12f-41fe-9308-631cc6718143", 
+                    "label": null
+                }
+            ], 
+            "annotation": "", 
+            "content_id": null, 
+            "input_connections": {}, 
+            "inputs": [], 
+            "position": {
+                "top": 963.9833374023438, 
+                "left": 1099.9666748046875
+            }, 
+            "tool_state": "{}", 
+            "label": "viral nucleotide BLAST database (V2)", 
+            "type": "data_input", 
+            "id": 1, 
+            "name": "Input dataset"
+        }, 
+        "0": {
+            "tool_id": null, 
+            "errors": null, 
+            "uuid": "aa5c2a9c-0f52-4884-9f1c-74432b24af61", 
+            "tool_version": null, 
+            "outputs": [], 
+            "workflow_outputs": [
+                {
+                    "output_name": "output", 
+                    "uuid": "1b5f1e3d-c5d0-423d-a69f-8912a6f6dd6b", 
+                    "label": null
+                }
+            ], 
+            "annotation": "", 
+            "content_id": null, 
+            "input_connections": {}, 
+            "inputs": [], 
+            "position": {
+                "top": 215, 
+                "left": 200
+            }, 
+            "tool_state": "{\"collection_type\": \"list\"}", 
+            "label": "Fastq files", 
+            "type": "data_collection_input", 
+            "id": 0, 
+            "name": "Input dataset collection"
+        }, 
+        "3": {
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/artbio/yac_clipper/yac/2.3.0", 
+            "errors": null, 
+            "uuid": "41212793-f400-4bd6-9827-c083025f3e01", 
+            "tool_version": "2.3.0", 
+            "outputs": [
+                {
+                    "type": "input", 
+                    "name": "output"
+                }
+            ], 
+            "post_job_actions": {}, 
+            "workflow_outputs": [
+                {
+                    "output_name": "output", 
+                    "uuid": "daf5f2fc-bac8-4cb0-bca6-4d26da852236", 
+                    "label": null
+                }
+            ], 
+            "annotation": "", 
+            "content_id": "toolshed.g2.bx.psu.edu/repos/artbio/yac_clipper/yac/2.3.0", 
+            "input_connections": {
+                "input": {
+                    "output_name": "output", 
+                    "id": 0
+                }
+            }, 
+            "inputs": [
+                {
+                    "name": "input", 
+                    "description": "runtime parameter for tool Clip adapter"
+                }
+            ], 
+            "position": {
+                "top": 324, 
+                "left": 400.5
+            }, 
+            "tool_state": "{\"out_format\": \"\\\"fasta\\\"\", \"__page__\": null, \"min\": \"\\\"18\\\"\", \"max\": \"\\\"30\\\"\", \"__rerun_remap_job_id__\": null, \"clip_source\": \"{\\\"__current_case__\\\": 0, \\\"clip_sequence\\\": \\\"CTGTAGGCACCATCAATCGT\\\", \\\"clip_source_list\\\": \\\"prebuilt\\\"}\", \"input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"Nmode\": \"\\\"reject\\\"\"}", 
+            "label": null, 
+            "type": "tool", 
+            "id": 3, 
+            "tool_shed_repository": {
+                "owner": "artbio", 
+                "changeset_revision": "f7947c5a18b8", 
+                "name": "yac_clipper", 
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            }, 
+            "name": "Clip adapter"
+        }, 
+        "2": {
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/artbio/fetch_fasta_from_ncbi/retrieve_fasta_from_NCBI/2.3.0", 
+            "errors": null, 
+            "uuid": "13214523-9fb0-4e23-8cdf-f389331ba0c9", 
+            "tool_version": "2.3.0", 
+            "outputs": [
+                {
+                    "type": "fasta", 
+                    "name": "outfile"
+                }, 
+                {
+                    "type": "txt", 
+                    "name": "logfile"
+                }
+            ], 
+            "post_job_actions": {
+                "HideDatasetActionlogfile": {
+                    "output_name": "logfile", 
+                    "action_type": "HideDatasetAction", 
+                    "action_arguments": {}
+                }
+            }, 
+            "workflow_outputs": [
+                {
+                    "output_name": "outfile", 
+                    "uuid": "9c9b23f2-66ae-4eeb-88f1-e4a0a8bd596b", 
+                    "label": null
+                }
+            ], 
+            "annotation": "", 
+            "content_id": "toolshed.g2.bx.psu.edu/repos/artbio/fetch_fasta_from_ncbi/retrieve_fasta_from_NCBI/2.3.0", 
+            "input_connections": {}, 
+            "inputs": [], 
+            "position": {
+                "top": 956, 
+                "left": 1677
+            }, 
+            "tool_state": "{\"__page__\": null, \"__rerun_remap_job_id__\": null, \"queryString\": \"\\\"${ncbi_guide_ID}\\\"\", \"dbname\": \"\\\"nuccore\\\"\", \"dry_run\": \"\\\"false\\\"\"}", 
+            "label": null, 
+            "type": "tool", 
+            "id": 2, 
+            "tool_shed_repository": {
+                "owner": "artbio", 
+                "changeset_revision": "c667d0ee39f5", 
+                "name": "fetch_fasta_from_ncbi", 
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            }, 
+            "name": "Retrieve FASTA from NCBI"
+        }, 
+        "5": {
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/artbio/concatenate_multiple_datasets/cat_multi_datasets/1.4.1", 
+            "errors": null, 
+            "uuid": "06a0d0da-7415-4097-b0df-43c8dee1bc7a", 
+            "tool_version": "1.4.1", 
+            "outputs": [
+                {
+                    "type": "input", 
+                    "name": "paired_output"
+                }, 
+                {
+                    "type": "input", 
+                    "name": "list_output"
+                }, 
+                {
+                    "type": "input", 
+                    "name": "out_file1"
+                }, 
+                {
+                    "type": "_sniff_", 
+                    "name": "paired_out_file"
+                }
+            ], 
+            "post_job_actions": {
+                "HideDatasetActionout_file1": {
+                    "output_name": "out_file1", 
+                    "action_type": "HideDatasetAction", 
+                    "action_arguments": {}
+                }, 
+                "HideDatasetActionpaired_out_file": {
+                    "output_name": "paired_out_file", 
+                    "action_type": "HideDatasetAction", 
+                    "action_arguments": {}
+                }, 
+                "HideDatasetActionpaired_output": {
+                    "output_name": "paired_output", 
+                    "action_type": "HideDatasetAction", 
+                    "action_arguments": {}
+                }, 
+                "HideDatasetActionlist_output": {
+                    "output_name": "list_output", 
+                    "action_type": "HideDatasetAction", 
+                    "action_arguments": {}
+                }, 
+                "ChangeDatatypeActionout_file1": {
+                    "output_name": "out_file1", 
+                    "action_type": "ChangeDatatypeAction", 
+                    "action_arguments": {
+                        "newtype": "fasta"
+                    }
+                }
+            }, 
+            "workflow_outputs": [], 
+            "annotation": "", 
+            "content_id": "toolshed.g2.bx.psu.edu/repos/artbio/concatenate_multiple_datasets/cat_multi_datasets/1.4.1", 
+            "input_connections": {
+                "global_condition|inputs": {
+                    "output_name": "output", 
+                    "id": 3
+                }
+            }, 
+            "inputs": [
+                {
+                    "name": "global_condition", 
+                    "description": "runtime parameter for tool Concatenate multiple datasets"
+                }
+            ], 
+            "position": {
+                "top": 518.5, 
+                "left": 562
+            }, 
+            "tool_state": "{\"dataset_names\": \"\\\"false\\\"\", \"headers\": \"\\\"0\\\"\", \"__page__\": null, \"__rerun_remap_job_id__\": null, \"global_condition\": \"{\\\"__current_case__\\\": 0, \\\"input_type\\\": \\\"singles\\\", \\\"inputs\\\": {\\\"__class__\\\": \\\"RuntimeValue\\\"}}\"}", 
+            "label": "Concatenate read files", 
+            "type": "tool", 
+            "id": 5, 
+            "tool_shed_repository": {
+                "owner": "artbio", 
+                "changeset_revision": "55cf9d9defd1", 
+                "name": "concatenate_multiple_datasets", 
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            }, 
+            "name": "Concatenate multiple datasets"
+        }, 
+        "4": {
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/devteam/ncbi_blast_plus/ncbi_makeblastdb/0.3.1", 
+            "errors": null, 
+            "uuid": "1a39e6e8-8079-4f7a-b4c2-2028e5dbc2dd", 
+            "tool_version": "0.3.1", 
+            "outputs": [
+                {
+                    "type": "data", 
+                    "name": "outfile"
+                }
+            ], 
+            "post_job_actions": {
+                "HideDatasetActionoutfile": {
+                    "output_name": "outfile", 
+                    "action_type": "HideDatasetAction", 
+                    "action_arguments": {}
+                }, 
+                "RenameDatasetActionoutfile": {
+                    "output_name": "outfile", 
+                    "action_type": "RenameDatasetAction", 
+                    "action_arguments": {
+                        "newname": "#{input_file} blast database"
+                    }
+                }
+            }, 
+            "workflow_outputs": [], 
+            "annotation": "", 
+            "content_id": "toolshed.g2.bx.psu.edu/repos/devteam/ncbi_blast_plus/ncbi_makeblastdb/0.3.1", 
+            "input_connections": {
+                "input_file": {
+                    "output_name": "outfile", 
+                    "id": 2
+                }
+            }, 
+            "inputs": [
+                {
+                    "name": "mask_data_file", 
+                    "description": "runtime parameter for tool NCBI BLAST+ makeblastdb"
+                }, 
+                {
+                    "name": "input_file", 
+                    "description": "runtime parameter for tool NCBI BLAST+ makeblastdb"
+                }
+            ], 
+            "position": {
+                "top": 1047, 
+                "left": 1994.5
+            }, 
+            "tool_state": "{\"__page__\": null, \"mask_data_file\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"input_file\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"dbtype\": \"\\\"nucl\\\"\", \"__rerun_remap_job_id__\": null, \"hash_index\": \"\\\"true\\\"\", \"tax\": \"{\\\"__current_case__\\\": 0, \\\"taxselect\\\": \\\"\\\"}\", \"title\": \"\\\"Blastn candidate database\\\"\", \"parse_seqids\": \"\\\"false\\\"\"}", 
+            "label": null, 
+            "type": "tool", 
+            "id": 4, 
+            "tool_shed_repository": {
+                "owner": "devteam", 
+                "changeset_revision": "e25d3acf6e68", 
+                "name": "ncbi_blast_plus", 
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            }, 
+            "name": "NCBI BLAST+ makeblastdb"
+        }, 
+        "7": {
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/artbio/oases/oasesoptimiserv/1.2.2", 
+            "errors": null, 
+            "uuid": "04b99c48-2bf7-4842-b28e-c9085ffe40e9", 
+            "tool_version": "1.2.2", 
+            "outputs": [
+                {
+                    "type": "fasta", 
+                    "name": "transcripts"
+                }
+            ], 
+            "post_job_actions": {
+                "RenameDatasetActiontranscripts": {
+                    "output_name": "transcripts", 
+                    "action_type": "RenameDatasetAction", 
+                    "action_arguments": {
+                        "newname": "Oases Contigs"
+                    }
+                }
+            }, 
+            "workflow_outputs": [
+                {
+                    "output_name": "transcripts", 
+                    "uuid": "704bb7a9-199c-4028-a482-ebc60ab1d02e", 
+                    "label": null
+                }
+            ], 
+            "annotation": "", 
+            "content_id": "toolshed.g2.bx.psu.edu/repos/artbio/oases/oasesoptimiserv/1.2.2", 
+            "input_connections": {
+                "inputs_0|input": {
+                    "output_name": "unaligned", 
+                    "id": 6
+                }
+            }, 
+            "inputs": [], 
+            "position": {
+                "top": 429, 
+                "left": 1181
+            }, 
+            "tool_state": "{\"__page__\": null, \"inputs\": \"[{\\\"__index__\\\": 0, \\\"input\\\": {\\\"__class__\\\": \\\"RuntimeValue\\\"}}]\", \"end_hash_length\": \"\\\"29\\\"\", \"__rerun_remap_job_id__\": null, \"start_hash_length\": \"\\\"13\\\"\"}", 
+            "label": "Assemble reads into contigs", 
+            "type": "tool", 
+            "id": 7, 
+            "tool_shed_repository": {
+                "owner": "artbio", 
+                "changeset_revision": "f7dd852c8f4c", 
+                "name": "oases", 
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            }, 
+            "name": "Oases_optimiser"
+        }, 
+        "6": {
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/artbio/sr_bowtie/bowtieForSmallRNA/2.1.1", 
+            "errors": null, 
+            "uuid": "2d4bdb6b-31ea-4a53-b902-51caceed1512", 
+            "tool_version": "2.1.1", 
+            "outputs": [
+                {
+                    "type": "tabular", 
+                    "name": "output"
+                }, 
+                {
+                    "type": "input", 
+                    "name": "aligned"
+                }, 
+                {
+                    "type": "input", 
+                    "name": "unaligned"
+                }
+            ], 
+            "post_job_actions": {
+                "HideDatasetActionaligned": {
+                    "output_name": "aligned", 
+                    "action_type": "HideDatasetAction", 
+                    "action_arguments": {}
+                }, 
+                "HideDatasetActionoutput": {
+                    "output_name": "output", 
+                    "action_type": "HideDatasetAction", 
+                    "action_arguments": {}
+                }, 
+                "RenameDatasetActionunaligned": {
+                    "output_name": "unaligned", 
+                    "action_type": "RenameDatasetAction", 
+                    "action_arguments": {
+                        "newname": "Non D. melanogaster sequences"
+                    }
+                }
+            }, 
+            "workflow_outputs": [
+                {
+                    "output_name": "unaligned", 
+                    "uuid": "b01c79d3-2252-4625-ba1c-288edd89d842", 
+                    "label": null
+                }
+            ], 
+            "annotation": "Remove reads tat align to host (dm6)", 
+            "content_id": "toolshed.g2.bx.psu.edu/repos/artbio/sr_bowtie/bowtieForSmallRNA/2.1.1", 
+            "input_connections": {
+                "input": {
+                    "output_name": "out_file1", 
+                    "id": 5
+                }
+            }, 
+            "inputs": [
+                {
+                    "name": "input", 
+                    "description": "runtime parameter for tool sR_bowtie"
+                }
+            ], 
+            "position": {
+                "top": 322.5, 
+                "left": 864.5
+            }, 
+            "tool_state": "{\"__page__\": null, \"output_format\": \"\\\"tabular\\\"\", \"v_mismatches\": \"\\\"2\\\"\", \"additional_fasta\": \"\\\"unal\\\"\", \"__rerun_remap_job_id__\": null, \"input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"refGenomeSource\": \"{\\\"__current_case__\\\": 0, \\\"genomeSource\\\": \\\"indexed\\\", \\\"index\\\": \\\"dm6\\\"}\", \"method\": \"\\\"k_option\\\"\"}", 
+            "label": "Align to host", 
+            "type": "tool", 
+            "id": 6, 
+            "tool_shed_repository": {
+                "owner": "artbio", 
+                "changeset_revision": "0281bb245635", 
+                "name": "sr_bowtie", 
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            }, 
+            "name": "sR_bowtie"
+        }, 
+        "9": {
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/artbio/blastparser_and_hits/BlastParser_and_hits/2.6.1", 
+            "errors": null, 
+            "uuid": "32436393-ca05-40be-afd9-451f9cd11e62", 
+            "tool_version": "2.6.1", 
+            "outputs": [
+                {
+                    "type": "tabular", 
+                    "name": "tabularOutput"
+                }, 
+                {
+                    "type": "fasta", 
+                    "name": "fastaOutput"
+                }, 
+                {
+                    "type": "fasta", 
+                    "name": "al_sequences"
+                }, 
+                {
+                    "type": "fasta", 
+                    "name": "un_sequences"
+                }
+            ], 
+            "post_job_actions": {
+                "RenameDatasetActionfastaOutput": {
+                    "output_name": "fastaOutput", 
+                    "action_type": "RenameDatasetAction", 
+                    "action_arguments": {
+                        "newname": "viral contigs"
+                    }
+                }, 
+                "HideDatasetActional_sequences": {
+                    "output_name": "al_sequences", 
+                    "action_type": "HideDatasetAction", 
+                    "action_arguments": {}
+                }, 
+                "HideDatasetActionun_sequences": {
+                    "output_name": "un_sequences", 
+                    "action_type": "HideDatasetAction", 
+                    "action_arguments": {}
+                }
+            }, 
+            "workflow_outputs": [
+                {
+                    "output_name": "tabularOutput", 
+                    "uuid": "fd3bc90d-8222-4e61-871a-ec291d0a1555", 
+                    "label": null
+                }, 
+                {
+                    "output_name": "fastaOutput", 
+                    "uuid": "7b4b468c-d761-405a-a46e-fc25fb784b1d", 
+                    "label": null
+                }
+            ], 
+            "annotation": "", 
+            "content_id": "toolshed.g2.bx.psu.edu/repos/artbio/blastparser_and_hits/BlastParser_and_hits/2.6.1", 
+            "input_connections": {
+                "blast": {
+                    "output_name": "output1", 
+                    "id": 8
+                }, 
+                "sequences": {
+                    "output_name": "transcripts", 
+                    "id": 7
+                }
+            }, 
+            "inputs": [
+                {
+                    "name": "blast", 
+                    "description": "runtime parameter for tool Parse blast output and compile hits"
+                }, 
+                {
+                    "name": "sequences", 
+                    "description": "runtime parameter for tool Parse blast output and compile hits"
+                }
+            ], 
+            "position": {
+                "top": 413, 
+                "left": 1640
+            }, 
+            "tool_state": "{\"__page__\": null, \"flanking\": \"\\\"5\\\"\", \"additional_filters\": \"{\\\"__current_case__\\\": 1, \\\"filter_maxScore\\\": \\\"0.0\\\", \\\"filter_meanScore\\\": \\\"0.0\\\", \\\"filter_relativeCov\\\": \\\"0.0\\\", \\\"filter_term_in\\\": \\\"Nora_virus\\\", \\\"filter_term_out\\\": \\\"JX220408.1\\\", \\\"use_filters\\\": \\\"yes\\\"}\", \"__rerun_remap_job_id__\": null, \"mode\": \"\\\"short\\\"\", \"sequences\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"blast\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\"}", 
+            "label": null, 
+            "type": "tool", 
+            "id": 9, 
+            "tool_shed_repository": {
+                "owner": "artbio", 
+                "changeset_revision": "b4c9c085d709", 
+                "name": "blastparser_and_hits", 
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            }, 
+            "name": "Parse blast output and compile hits"
+        }, 
+        "8": {
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/devteam/ncbi_blast_plus/ncbi_blastn_wrapper/0.3.1", 
+            "errors": null, 
+            "uuid": "37904c73-85c7-40e8-b1d5-e5f3d6a12135", 
+            "tool_version": "0.3.1", 
+            "outputs": [
+                {
+                    "type": "tabular", 
+                    "name": "output1"
+                }
+            ], 
+            "post_job_actions": {
+                "HideDatasetActionoutput1": {
+                    "output_name": "output1", 
+                    "action_type": "HideDatasetAction", 
+                    "action_arguments": {}
+                }, 
+                "RenameDatasetActionoutput1": {
+                    "output_name": "output1", 
+                    "action_type": "RenameDatasetAction", 
+                    "action_arguments": {
+                        "newname": "Blast transcripts to vir2"
+                    }
+                }
+            }, 
+            "workflow_outputs": [], 
+            "annotation": "Align transcripts to viral database to get viral transcripts", 
+            "content_id": "toolshed.g2.bx.psu.edu/repos/devteam/ncbi_blast_plus/ncbi_blastn_wrapper/0.3.1", 
+            "input_connections": {
+                "query": {
+                    "output_name": "transcripts", 
+                    "id": 7
+                }, 
+                "db_opts|histdb": {
+                    "output_name": "output", 
+                    "id": 1
+                }
+            }, 
+            "inputs": [
+                {
+                    "name": "db_opts", 
+                    "description": "runtime parameter for tool NCBI BLAST+ blastn"
+                }, 
+                {
+                    "name": "query", 
+                    "description": "runtime parameter for tool NCBI BLAST+ blastn"
+                }
+            ], 
+            "position": {
+                "top": 677, 
+                "left": 1349
+            }, 
+            "tool_state": "{\"evalue_cutoff\": \"\\\"0.001\\\"\", \"output\": \"{\\\"__current_case__\\\": 2, \\\"ext_cols\\\": [\\\"slen\\\"], \\\"ids_cols\\\": null, \\\"misc_cols\\\": null, \\\"out_format\\\": \\\"cols\\\", \\\"std_cols\\\": [\\\"qseqid\\\", \\\"sseqid\\\", \\\"pident\\\", \\\"length\\\", \\\"mismatch\\\", \\\"gapopen\\\", \\\"qstart\\\", \\\"qend\\\", \\\"sstart\\\", \\\"send\\\", \\\"evalue\\\", \\\"bitscore\\\"], \\\"tax_cols\\\": null}\", \"adv_opts\": \"{\\\"__current_case__\\\": 1, \\\"adv_optional_id_files_opts\\\": {\\\"__current_case__\\\": 0, \\\"adv_optional_id_files_opts_selector\\\": \\\"none\\\"}, \\\"adv_opts_selector\\\": \\\"advanced\\\", \\\"filter_query\\\": \\\"true\\\", \\\"gapextend\\\": \\\"\\\", \\\"gapopen\\\": \\\"\\\", \\\"identity_cutoff\\\": \\\"0.0\\\", \\\"max_hits\\\": \\\"5\\\", \\\"max_hsps\\\": \\\"\\\", \\\"parse_deflines\\\": \\\"false\\\", \\\"qcov_hsp_perc\\\": \\\"0.0\\\", \\\"strand\\\": \\\"-strand both\\\", \\\"ungapped\\\": \\\"false\\\", \\\"window_size\\\": \\\"\\\", \\\"word_size\\\": \\\"\\\"}\", \"__page__\": null, \"__rerun_remap_job_id__\": null, \"db_opts\": \"{\\\"__current_case__\\\": 1, \\\"database\\\": \\\"\\\", \\\"db_opts_selector\\\": \\\"histdb\\\", \\\"histdb\\\": {\\\"__class__\\\": \\\"RuntimeValue\\\"}, \\\"subject\\\": \\\"\\\"}\", \"blast_type\": \"\\\"blastn\\\"\", \"query\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\"}", 
+            "label": "Align to viral database", 
+            "type": "tool", 
+            "id": 8, 
+            "tool_shed_repository": {
+                "owner": "devteam", 
+                "changeset_revision": "e25d3acf6e68", 
+                "name": "ncbi_blast_plus", 
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            }, 
+            "name": "NCBI BLAST+ blastn"
+        }
+    }, 
+    "annotation": "", 
+    "name": "Metavisitor: Workflow for Use Case 1-2"
+}
