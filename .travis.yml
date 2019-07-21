@@ -10,7 +10,8 @@ jobs:
       addons: {}
       before_install: skip
       install:
-        - sudo -i
+        - deactivate
+        - ~/virtualenv/python2.7/bin/activate
         - pip install flake8 flake8-import-order planemo
         - planemo --version
         - git diff --quiet "$TRAVIS_COMMIT_RANGE" -- ; GIT_DIFF_EXIT_CODE=$?
