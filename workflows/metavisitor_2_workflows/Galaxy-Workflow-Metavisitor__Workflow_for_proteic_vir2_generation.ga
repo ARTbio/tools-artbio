@@ -1,0 +1,67 @@
+{
+    "a_galaxy_workflow": "true", 
+    "uuid": "224bad2a-247c-492d-b0ab-7d4ca6241d90", 
+    "tags": [], 
+    "format-version": "0.1", 
+    "version": 0, 
+    "steps": {
+        "0": {
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/artbio/fetch_fasta_from_ncbi/retrieve_fasta_from_NCBI/2.3.0", 
+            "errors": null, 
+            "uuid": "9c3e474c-3e57-4378-a5cc-ef9c6b7b092a", 
+            "tool_version": "2.3.0", 
+            "outputs": [
+                {
+                    "type": "fasta", 
+                    "name": "outfile"
+                }, 
+                {
+                    "type": "txt", 
+                    "name": "logfile"
+                }
+            ], 
+            "post_job_actions": {
+                "RenameDatasetActionoutfile": {
+                    "output_name": "outfile", 
+                    "action_type": "RenameDatasetAction", 
+                    "action_arguments": {
+                        "newname": "Vir2"
+                    }
+                }
+            }, 
+            "workflow_outputs": [
+                {
+                    "output_name": "outfile", 
+                    "uuid": "c65e9a65-8c83-4caa-930a-347711a3e030", 
+                    "label": null
+                }, 
+                {
+                    "output_name": "logfile", 
+                    "uuid": "990bc867-6319-4e49-825c-72093dbd7b14", 
+                    "label": null
+                }
+            ], 
+            "annotation": "", 
+            "content_id": "toolshed.g2.bx.psu.edu/repos/artbio/fetch_fasta_from_ncbi/retrieve_fasta_from_NCBI/2.3.0", 
+            "input_connections": {}, 
+            "inputs": [], 
+            "position": {
+                "top": 275, 
+                "left": 261
+            }, 
+            "tool_state": "{\"__page__\": null, \"__rerun_remap_job_id__\": null, \"queryString\": \"\\\"txid10239[Organism] NOT txid131567[Organism] NOT phage[All Fields] NOT patent[All Fields] NOT chimeric[Title] NOT vector[Title] NOT method[Title] NOT X174[All Fields] AND 30:9000[Sequence length]\\\"\", \"dbname\": \"\\\"protein\\\"\", \"dry_run\": \"\\\"false\\\"\"}", 
+            "label": "Vir2", 
+            "type": "tool", 
+            "id": 0, 
+            "tool_shed_repository": {
+                "owner": "artbio", 
+                "changeset_revision": "c667d0ee39f5", 
+                "name": "fetch_fasta_from_ncbi", 
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            }, 
+            "name": "Retrieve FASTA from NCBI"
+        }
+    }, 
+    "annotation": "", 
+    "name": "Metavisitor: Workflow for proteic vir2 generation"
+}

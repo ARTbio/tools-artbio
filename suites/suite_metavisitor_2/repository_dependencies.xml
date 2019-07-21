@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<repositories>
+    <repository changeset_revision="7d96b28eec49" name="blast_to_scaffold" owner="artbio" />
+    <repository changeset_revision="7d96b28eec49" name="blast_to_scaffold" owner="artbio" />
+    <repository changeset_revision="fffdb903f2d1" name="blast_unmatched" owner="artbio" />
+    <repository changeset_revision="d76a0d8a9eac" name="cap3" owner="artbio" />
+    <repository changeset_revision="e3aee4ba49c6" name="cherry_pick_fasta" owner="artbio" />
+    <repository changeset_revision="55cf9d9defd1" name="concatenate_multiple_datasets" owner="artbio" />
+    <repository changeset_revision="c667d0ee39f5" name="fetch_fasta_from_ncbi" owner="artbio" />
+    <repository changeset_revision="f7dd852c8f4c" name="oases" owner="artbio" />
+    <repository changeset_revision="f1d59113125a" name="sequence_format_converter" owner="artbio" />
+    <repository changeset_revision="14adf24603b6" name="small_rna_maps" owner="artbio" />
+    <repository changeset_revision="0281bb245635" name="sr_bowtie" owner="artbio" />
+    <repository changeset_revision="f7947c5a18b8" name="yac_clipper" owner="artbio" />
+    
+    <repository changeset_revision="86e9af693a33" name="data_manager_bowtie_index_builder" owner="iuc" />
+    <repository changeset_revision="bfd859f04a89" name="khmer_normalize_by_median" owner="iuc" />
+    <repository changeset_revision="1790dcf3c32d" name="sra_tools" owner="iuc" />
+    <repository changeset_revision="c9cfec002f71" name="trinity" owner="iuc" />
+    <repository changeset_revision="b3c7199d8786" name="vsearch" owner="iuc" />
+    
+    <repository changeset_revision="017aba02828d" name="bowtie2" owner="devteam" />
+    <repository changeset_revision="d1d5feb31804" name="data_manager_bowtie2_index_builder" owner="devteam" />
+    <repository changeset_revision="b1bc53e9bbc5" name="data_manager_fetch_genome_dbkeys_all_fasta" owner="devteam" />
+    <repository changeset_revision="de2db1bdfbf8" name="fasta_compute_length" owner="devteam" />
+    <repository changeset_revision="2fd6033d0e9c" name="fasta_filter_by_length" owner="devteam" />
+    <repository changeset_revision="547e8d00f11c" name="fastx_trimmer" owner="devteam" />
+    <repository changeset_revision="e25d3acf6e68" name="ncbi_blast_plus" owner="devteam" />
+    
+    <repository changeset_revision="209b7c5ee9d7" name="regex_find_replace" owner="galaxyp" />
+    <repository changeset_revision="b8d633fbf5f5" name="spades" owner="nml" />
+</repositories>

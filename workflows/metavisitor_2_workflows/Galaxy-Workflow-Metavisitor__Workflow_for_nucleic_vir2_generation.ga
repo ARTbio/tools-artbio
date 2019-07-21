@@ -1,0 +1,318 @@
+{
+    "a_galaxy_workflow": "true", 
+    "uuid": "742e3aa8-0dc5-440d-8120-3b10f4e7308d", 
+    "tags": [], 
+    "format-version": "0.1", 
+    "version": 1, 
+    "steps": {
+        "1": {
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/artbio/fetch_fasta_from_ncbi/retrieve_fasta_from_NCBI/2.3.0", 
+            "errors": null, 
+            "uuid": "25b4eea6-c049-4432-9ebb-5b7c7a17e24b", 
+            "tool_version": "2.3.0", 
+            "outputs": [
+                {
+                    "type": "fasta", 
+                    "name": "outfile"
+                }, 
+                {
+                    "type": "txt", 
+                    "name": "logfile"
+                }
+            ], 
+            "post_job_actions": {}, 
+            "workflow_outputs": [
+                {
+                    "output_name": "outfile", 
+                    "uuid": "b5b6d8a1-5d12-4df9-97e3-f82124301e24", 
+                    "label": null
+                }, 
+                {
+                    "output_name": "logfile", 
+                    "uuid": "8243ff90-8e45-4d12-b9d0-ea17ee0dd3c0", 
+                    "label": null
+                }
+            ], 
+            "annotation": "sequences &gt; 10 000bp", 
+            "content_id": "toolshed.g2.bx.psu.edu/repos/artbio/fetch_fasta_from_ncbi/retrieve_fasta_from_NCBI/2.3.0", 
+            "input_connections": {}, 
+            "inputs": [], 
+            "position": {
+                "top": 563, 
+                "left": 200
+            }, 
+            "tool_state": "{\"__page__\": null, \"__rerun_remap_job_id__\": null, \"queryString\": \"\\\"txid10239[Organism] NOT txid131567[Organism] NOT phage[All Fields] NOT patent[All Fields] NOT chimeric[Title] NOT vector[Title] NOT method[Title] NOT X174[All Fields] AND 10001:1300000[Sequence length]\\\"\", \"dbname\": \"\\\"nuccore\\\"\", \"dry_run\": \"\\\"false\\\"\"}", 
+            "label": "Get long sequences", 
+            "type": "tool", 
+            "id": 1, 
+            "tool_shed_repository": {
+                "owner": "artbio", 
+                "changeset_revision": "c667d0ee39f5", 
+                "name": "fetch_fasta_from_ncbi", 
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            }, 
+            "name": "Retrieve FASTA from NCBI"
+        }, 
+        "0": {
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/artbio/fetch_fasta_from_ncbi/retrieve_fasta_from_NCBI/2.3.0", 
+            "errors": null, 
+            "uuid": "9c3e474c-3e57-4378-a5cc-ef9c6b7b092a", 
+            "tool_version": "2.3.0", 
+            "outputs": [
+                {
+                    "type": "fasta", 
+                    "name": "outfile"
+                }, 
+                {
+                    "type": "txt", 
+                    "name": "logfile"
+                }
+            ], 
+            "post_job_actions": {}, 
+            "workflow_outputs": [
+                {
+                    "output_name": "outfile", 
+                    "uuid": "f1d297ff-bf05-41ac-b262-4901674827a2", 
+                    "label": null
+                }, 
+                {
+                    "output_name": "logfile", 
+                    "uuid": "b27a01c2-0d64-4aae-941d-946dd21e6bd2", 
+                    "label": null
+                }
+            ], 
+            "annotation": "sequences &lt;= 10 000bp", 
+            "content_id": "toolshed.g2.bx.psu.edu/repos/artbio/fetch_fasta_from_ncbi/retrieve_fasta_from_NCBI/2.3.0", 
+            "input_connections": {}, 
+            "inputs": [], 
+            "position": {
+                "top": 241, 
+                "left": 213
+            }, 
+            "tool_state": "{\"__page__\": null, \"__rerun_remap_job_id__\": null, \"queryString\": \"\\\"txid10239[Organism] NOT txid131567[Organism] NOT phage[All Fields] NOT patent[All Fields] NOT chimeric[Title] NOT vector[Title] NOT method[Title] NOT X174[All Fields] AND 301:10000[Sequence length]\\\"\", \"dbname\": \"\\\"nuccore\\\"\", \"dry_run\": \"\\\"false\\\"\"}", 
+            "label": "Get short sequences", 
+            "type": "tool", 
+            "id": 0, 
+            "tool_shed_repository": {
+                "owner": "artbio", 
+                "changeset_revision": "c667d0ee39f5", 
+                "name": "fetch_fasta_from_ncbi", 
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            }, 
+            "name": "Retrieve FASTA from NCBI"
+        }, 
+        "3": {
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/artbio/concatenate_multiple_datasets/cat_multi_datasets/1.4.1", 
+            "errors": null, 
+            "uuid": "94beda09-1785-4da8-84ec-70773fa6eddd", 
+            "tool_version": "1.4.1", 
+            "outputs": [
+                {
+                    "type": "input", 
+                    "name": "paired_output"
+                }, 
+                {
+                    "type": "input", 
+                    "name": "list_output"
+                }, 
+                {
+                    "type": "input", 
+                    "name": "out_file1"
+                }, 
+                {
+                    "type": "_sniff_", 
+                    "name": "paired_out_file"
+                }
+            ], 
+            "post_job_actions": {
+                "HideDatasetActionpaired_out_file": {
+                    "output_name": "paired_out_file", 
+                    "action_type": "HideDatasetAction", 
+                    "action_arguments": {}
+                }, 
+                "RenameDatasetActionout_file1": {
+                    "output_name": "out_file1", 
+                    "action_type": "RenameDatasetAction", 
+                    "action_arguments": {
+                        "newname": "Vir2"
+                    }
+                }, 
+                "HideDatasetActionpaired_output": {
+                    "output_name": "paired_output", 
+                    "action_type": "HideDatasetAction", 
+                    "action_arguments": {}
+                }, 
+                "HideDatasetActionout_file1": {
+                    "output_name": "out_file1", 
+                    "action_type": "HideDatasetAction", 
+                    "action_arguments": {}
+                }, 
+                "HideDatasetActionlist_output": {
+                    "output_name": "list_output", 
+                    "action_type": "HideDatasetAction", 
+                    "action_arguments": {}
+                }
+            }, 
+            "workflow_outputs": [], 
+            "annotation": "", 
+            "content_id": "toolshed.g2.bx.psu.edu/repos/artbio/concatenate_multiple_datasets/cat_multi_datasets/1.4.1", 
+            "input_connections": {
+                "global_condition|inputs": [
+                    {
+                        "output_name": "centroids", 
+                        "id": 2
+                    }, 
+                    {
+                        "output_name": "outfile", 
+                        "id": 1
+                    }
+                ]
+            }, 
+            "inputs": [
+                {
+                    "name": "global_condition", 
+                    "description": "runtime parameter for tool Concatenate multiple datasets"
+                }
+            ], 
+            "position": {
+                "top": 571.5, 
+                "left": 735
+            }, 
+            "tool_state": "{\"dataset_names\": \"\\\"false\\\"\", \"headers\": \"\\\"0\\\"\", \"__page__\": null, \"__rerun_remap_job_id__\": null, \"global_condition\": \"{\\\"__current_case__\\\": 0, \\\"input_type\\\": \\\"singles\\\", \\\"inputs\\\": {\\\"__class__\\\": \\\"RuntimeValue\\\"}}\"}", 
+            "label": "Vir2", 
+            "type": "tool", 
+            "id": 3, 
+            "tool_shed_repository": {
+                "owner": "artbio", 
+                "changeset_revision": "55cf9d9defd1", 
+                "name": "concatenate_multiple_datasets", 
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            }, 
+            "name": "Concatenate multiple datasets"
+        }, 
+        "2": {
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/iuc/vsearch/vsearch_clustering/2.8.3.0", 
+            "errors": null, 
+            "uuid": "6fddbef5-bc89-4574-a0cf-335aee053e4c", 
+            "tool_version": "2.8.3.0", 
+            "outputs": [
+                {
+                    "type": "fasta", 
+                    "name": "msaout"
+                }, 
+                {
+                    "type": "fasta", 
+                    "name": "consout"
+                }, 
+                {
+                    "type": "fasta", 
+                    "name": "centroids"
+                }, 
+                {
+                    "type": "fasta", 
+                    "name": "alnout"
+                }, 
+                {
+                    "type": "fasta", 
+                    "name": "notmatched"
+                }, 
+                {
+                    "type": "fasta", 
+                    "name": "matched"
+                }, 
+                {
+                    "type": "tabular", 
+                    "name": "blast6out"
+                }, 
+                {
+                    "type": "fasta", 
+                    "name": "fastapairs"
+                }, 
+                {
+                    "type": "tabular", 
+                    "name": "uc_outfile"
+                }
+            ], 
+            "post_job_actions": {
+                "HideDatasetActionfastapairs": {
+                    "output_name": "fastapairs", 
+                    "action_type": "HideDatasetAction", 
+                    "action_arguments": {}
+                }, 
+                "HideDatasetActionconsout": {
+                    "output_name": "consout", 
+                    "action_type": "HideDatasetAction", 
+                    "action_arguments": {}
+                }, 
+                "HideDatasetActionmsaout": {
+                    "output_name": "msaout", 
+                    "action_type": "HideDatasetAction", 
+                    "action_arguments": {}
+                }, 
+                "HideDatasetActionalnout": {
+                    "output_name": "alnout", 
+                    "action_type": "HideDatasetAction", 
+                    "action_arguments": {}
+                }, 
+                "HideDatasetActionblast6out": {
+                    "output_name": "blast6out", 
+                    "action_type": "HideDatasetAction", 
+                    "action_arguments": {}
+                }, 
+                "HideDatasetActionuc_outfile": {
+                    "output_name": "uc_outfile", 
+                    "action_type": "HideDatasetAction", 
+                    "action_arguments": {}
+                }, 
+                "HideDatasetActionnotmatched": {
+                    "output_name": "notmatched", 
+                    "action_type": "HideDatasetAction", 
+                    "action_arguments": {}
+                }, 
+                "HideDatasetActionmatched": {
+                    "output_name": "matched", 
+                    "action_type": "HideDatasetAction", 
+                    "action_arguments": {}
+                }
+            }, 
+            "workflow_outputs": [
+                {
+                    "output_name": "centroids", 
+                    "uuid": "091f386f-32e1-4270-8754-9da84c187b82", 
+                    "label": null
+                }
+            ], 
+            "annotation": "", 
+            "content_id": "toolshed.g2.bx.psu.edu/repos/iuc/vsearch/vsearch_clustering/2.8.3.0", 
+            "input_connections": {
+                "infile": {
+                    "output_name": "outfile", 
+                    "id": 0
+                }
+            }, 
+            "inputs": [
+                {
+                    "name": "infile", 
+                    "description": "runtime parameter for tool VSearch clustering"
+                }
+            ], 
+            "position": {
+                "top": 232, 
+                "left": 463.5
+            }, 
+            "tool_state": "{\"sizein\": \"\\\"false\\\"\", \"cons_truncate\": \"\\\"false\\\"\", \"__page__\": null, \"maxrejects\": \"\\\"32\\\"\", \"usersort\": \"\\\"false\\\"\", \"qmask\": \"\\\"dust\\\"\", \"iddef\": \"\\\"2\\\"\", \"__rerun_remap_job_id__\": null, \"clustering_mode\": \"{\\\"__current_case__\\\": 0, \\\"clustering_mode_select\\\": \\\"cluster_fast\\\"}\", \"id\": \"\\\"0.95\\\"\", \"sizeout\": \"\\\"false\\\"\", \"strand\": \"\\\"plus\\\"\", \"outputs\": \"[\\\"--centroids\\\"]\", \"maxaccepts\": \"\\\"1\\\"\", \"infile\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"uc\": \"\\\"false\\\"\"}", 
+            "label": "Get centroids", 
+            "type": "tool", 
+            "id": 2, 
+            "tool_shed_repository": {
+                "owner": "iuc", 
+                "changeset_revision": "b3c7199d8786", 
+                "name": "vsearch", 
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            }, 
+            "name": "VSearch clustering"
+        }
+    }, 
+    "annotation": "", 
+    "name": "Metavisitor: Workflow for nucleic vir2 generation"
+}
