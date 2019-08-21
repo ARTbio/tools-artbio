@@ -1,0 +1,204 @@
+<tool id="sashimi_plot" name="Sashimi plot" version="0.1.0">
+  <description>: visualization of splicing events across multiple samples</description>
+  <requirements>
+      <requirement type="package" version="3">python</requirement>
+      <requirement type="package" version="1.3">samtools</requirement>
+      <requirement type="package" version="2.2.1=r3.4.1_0">r-ggplot2</requirement>
+      <requirement type="package" version="1.10.4=r3.4.1_0">r-data.table</requirement>
+      <requirement type="package" version="2.2.1=r3.4.1_0">r-gridextra</requirement>
+  </requirements>
+  <stdio>
+      <exit_code range="1:" level="fatal" description="Tool exception" />
+  </stdio>
+  <command detect_errors="exit_code"><![CDATA[
+       touch index_bams.tsv &&
+       #for $factor in $rep_factor:
+           #for $sample in $factor.rep_sample:
+               echo -e '${sample.sampleName}\t${sample.bamFile}\t${factor.factorName}' >> index_bams.tsv &&
+               samtools index ${sample.bamFile} &&
+               cp ${sample.bamFile}* /home/lea/sashimi/. &&
+           #end for
+       #end for
+
+       python $__tool_directory__/sashimi-plot.py 
+           -b index_bams.tsv 
+           -g ${gtf_file} 
+           -c ${region}
+           #if $adv_opts.adv_opts_selector=="advanced": 
+               -M ${adv_opts.min_coverage}
+               -C ${adv_opts.color_levels}
+               -O ${adv_opts.overlap.overlay}
+               #if $adv_opts.overlap.overlay=="3" and not $adv_opts.overlap.agg=="":
+                   -A ${adv_opts.overlap.agg}
+               #end if
+               ${adv_opts.shrink}
+               --alpha ${adv_opts.alpha}
+               --base-size=${adv_opts.base_size}
+               --ann-height=${adv_opts.ann_height}
+               --height=${adv_opts.height} 
+               --width=${adv_opts.width} 
+           #end if 
+           -o plot &&
+       mv plot.pdf ${plot}
+ 
+  ]]></command>
+  <inputs>
+      <param format="gtf" name="gtf_file" type="data" label="Genome annotation" help="" />
+      <repeat name="rep_factor" title="Genotype" min="1">
+          <param name="factorName" label="Factor name" type="text" help="Specify a factor level, typical values could be 'HOM', 'HET'" />
+          <repeat name="rep_sample" title="Bam file" min="1">
+              <param name="sampleName" type="text" label="Sample Name" help="Track name on plot"/>
+              <param name="bamFile" type="data" format="bam" multiple="false" label="Alignment File" help=""/>
+          </repeat>
+      </repeat>
+      <conditional name="adv_opts">
+          <param name="adv_opts_selector" type="select" label="Advanced Options">
+              <option value="basic" selected="True">Hide Advanced Options</option>
+              <option value="advanced">Show Advanced Options</option>
+          </param>
+          <when value="basic" />
+          <when value="advanced">
+              <param name="shrink" type="boolean" label="Intron shrinkage" truevalue="--shrink" falsevalue="" checked="false" 
+                  help="Shrink the introns by a factor for nicer display"/>
+              <param name="min_coverage" label="Minimum coverage" type="integer" value="1" help="Minimum number of reads supporting a junction to be drawn [default=1]"/>
+              <param name="color_levels" label="How to color samples ?" type="select">
+                  <option value="3" selected="True">By Genotype</option>
+                  <option value="1" >By Sample</option>
+              </param>
+              <conditional name="overlap">
+                  <param name="overlay" label="Overlay sample by Genotype ?" type="boolean" truevalue="3" falsevalue="1" checked="false" />
+                  <when value="3">
+                      <param name="agg" label="Aggregate function for overlay" type="select" help="Use mean_j | median_j to keep density overlay but aggregate junction counts">
+                          <option value="" selected="True">No aggregation</option>
+                          <option value="mean" >Mean counts</option>
+                          <option value="median" >Median counts</option>
+                          <option value="mean_j" >Mean of counts supporting junctions</option>
+                          <option value="median_j" >Median of counts supporting junctions</option>
+                      </param>
+                  </when>
+                  <when value="1"/> 
+              </conditional>
+              <param name="alpha" label="Transparency level for density histogram" type="float" value="0.5" help="default=0.5"/>
+              <param name="base_size" label="Base font size" type="float" value="14" help="Base font size of the plot in pch [default=14]"/>
+              <param name="ann_height" label="Height of annotation" type="float" value="1.5" help="Height of annotation plot (transcripts visualisation) in inches [default=1.5]"/>
+              <param name="height" label="Height of sashimi plot" type="float" value="2" help="Height of the individual signal plot (sashimi vizualisation) in inches [default=2]"/>
+              <param name="width" label="Width" type="float" value="10" help="Width of the plot in inches [default=10]"/>
+          </when>
+      </conditional>
+      <param name="region" type="text" help="Must be the following format : chromosome:start-end"/>
+  </inputs>
+  <outputs>
+    <data name="plot" format="pdf" label="Sashimi plot" />
+  </outputs>
+  <tests>
+      <test>
+          <param name="gtf_file" value="annotation.gtf" ftype="gtf" />
+          <repeat name="rep_factor">
+              <param name="factorName" value="Endothelial" />
+              <repeat name="rep_sample">
+                  <param name="sampleName" value="sample1" />
+                  <param name="bamFile" value="ENCFF450AIU.chr10_27035000_27050000.bam" ftype="bam" />
+              </repeat>
+              <repeat name="rep_sample">
+                  <param name="sampleName" value="sample2" />
+                  <param name="bamFile" value="ENCFF914GVK.chr10_27035000_27050000.bam" ftype="bam" />
+              </repeat>
+          </repeat>
+          <repeat name="rep_factor">
+              <param name="factorName" value="Epithelial" />
+              <repeat name="rep_sample">
+                  <param name="sampleName" value="sample3" />
+                  <param name="bamFile" value="ENCFF756PUW.chr10_27035000_27050000.bam" ftype="bam" />
+              </repeat>
+              <repeat name="rep_sample">
+                  <param name="sampleName" value="sample4"/>
+                  <param name="bamFile" value="ENCFF325HFX.chr10_27035000_27050000.bam" ftype="bam" />
+              </repeat>
+          </repeat>
+          <param name="region" value="chr10:27040584-27048100" />
+          <output name="plot" value="default.pdf" ftype="pdf" />
+      </test>
+      <test>
+          <param name="gtf_file" value="annotation.gtf" ftype="gtf" />
+          <repeat name="rep_factor">
+              <param name="factorName" value="Endothelial" />
+              <repeat name="rep_sample">
+                  <param name="sampleName" value="sample1" />
+                  <param name="bamFile" value="ENCFF450AIU.chr10_27035000_27050000.bam" ftype="bam" />
+              </repeat>
+              <repeat name="rep_sample">
+                  <param name="sampleName" value="sample2" />
+                  <param name="bamFile" value="ENCFF914GVK.chr10_27035000_27050000.bam" ftype="bam" />
+              </repeat>
+          </repeat>
+          <repeat name="rep_factor">
+              <param name="factorName" value="Epithelial" />
+              <repeat name="rep_sample">
+                  <param name="sampleName" value="sample3" />
+                  <param name="bamFile" value="ENCFF756PUW.chr10_27035000_27050000.bam" ftype="bam" />
+              </repeat>
+              <repeat name="rep_sample">
+                  <param name="sampleName" value="sample4"/>
+                  <param name="bamFile" value="ENCFF325HFX.chr10_27035000_27050000.bam" ftype="bam" />
+              </repeat>
+          </repeat>
+          <param name="region" value="chr10:27040584-27048100" />
+          <param name="adv_opts_selector" value="advanced" />
+          <param name="min_coverage" value="10" />
+          <param name="color_levels" value="3" />
+          <param name="alpha" value="0.25" />
+          <param name="base_size" value="20" />
+          <param name="ann_height" value="4" />
+          <param name="height" value="3" />
+          <param name="width" value="18" />
+          <param name="overlay" value="True" />
+          <output name="plot" file="overlay_without_aggregation.pdf" ftype="pdf" />
+      </test>
+      <test>
+          <param name="gtf_file" value="annotation.gtf" ftype="gtf" />
+          <repeat name="rep_factor">
+              <param name="factorName" value="Endothelial" />
+              <repeat name="rep_sample">
+                  <param name="sampleName" value="sample1" />
+                  <param name="bamFile" value="ENCFF450AIU.chr10_27035000_27050000.bam" ftype="bam" />
+              </repeat>
+              <repeat name="rep_sample">
+                  <param name="sampleName" value="sample2" />
+                  <param name="bamFile" value="ENCFF914GVK.chr10_27035000_27050000.bam" ftype="bam" />
+              </repeat>
+          </repeat>
+          <repeat name="rep_factor">
+              <param name="factorName" value="Epithelial" />
+              <repeat name="rep_sample">
+                  <param name="sampleName" value="sample3" />
+                  <param name="bamFile" value="ENCFF756PUW.chr10_27035000_27050000.bam" ftype="bam" />
+              </repeat>
+              <repeat name="rep_sample">
+                  <param name="sampleName" value="sample4"/>
+                  <param name="bamFile" value="ENCFF325HFX.chr10_27035000_27050000.bam" ftype="bam" />
+              </repeat>
+          </repeat>
+          <param name="region" value="chr10:27040584-27048100" />
+          <param name="adv_opts_selector" value="advanced" />
+          <param name="color_levels" value="3" />
+          <param name="ann_height" value="3" />
+          <param name="height" value="3" />
+          <param name="overlay" value="True" />
+          <param name="agg" value="mean" />
+          <param name="shrink" value="True" />
+          <output name="plot" file="overlay_with_aggregation.pdf" ftype="pdf" />
+      </test>
+  </tests>
+  <help>
+
+.. class:: infomark
+
+**What it does**
+
+Generate a sashimi plot from bam files in order to visualize splicing events.
+  </help>
+  <citations>
+      <citation type="doi">10.1371/journal.pcbi.1006360</citation>
+  </citations>
+</tool>
+

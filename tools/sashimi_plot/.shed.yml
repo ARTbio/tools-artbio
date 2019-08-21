@@ -1,0 +1,15 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: sashimi_plot
+description: Generates a sashimi plot from bam files.
+long_description: |
+  Generates a sashimi plot to visualize splicing event across samples.
+categories:
+  - RNA
+  - Transcriptomics
+  - Graphics
+  - Visualization
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/sashimi_plot
+toolshed:
+  - toolshed
