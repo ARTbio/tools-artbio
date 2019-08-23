@@ -261,8 +261,8 @@ def shrink_density(x, y, introns):
         new_x += [int(i-shift) for i in x[start:end]]
         new_y += y[start:end]
         start = x.index(b)
-        l = (b-a)
-        shift += l-l**0.7
+        L = (b-a)
+        shift += L-L**0.7
     new_x += [int(i-shift) for i in x[start:]]
     new_y += y[start:]
     return new_x, new_y
@@ -275,8 +275,8 @@ def shrink_junctions(dons, accs, introns):
     s = set()
     junctions = list(zip(dons, accs))
     for a, b in introns:
-        l = b - a
-        shift_acc += l-int(l**0.7)
+        L = b - a
+        shift_acc += L-int(L**0.7)
         for i, (don, acc) in enumerate(junctions):
             if a >= don and b <= acc:
                 if (don, acc) not in s:
@@ -338,8 +338,8 @@ def make_introns(transcripts, exons, intersected_introns=None):
         for tx, (tx_start, tx_end, strand) in new_transcripts.items():
             total_shift = 0
             for a, b in intersected_introns:
-                l = b - a
-                shift = l - int(l**0.7)
+                L = b - a
+                shift = L - int(L**0.7)
                 total_shift += shift
                 for i, (exon_start, exon_end, strand) in \
                         enumerate(exons.get(tx, [])):
@@ -348,8 +348,8 @@ def make_introns(transcripts, exons, intersected_introns=None):
                         if b > exon_end:
                             if i == len(exons[tx])-1:
                                 total_shift = total_shift - shift + \
-                                             (exon_start - a)*(1-int(l**-0.3))
-                            shift = (exon_start - a)*(1-int(l**-0.3))
+                                             (exon_start - a)*(1-int(L**-0.3))
+                            shift = (exon_start - a)*(1-int(L**-0.3))
                             new_exon_end = new_exons[tx][i][1] - shift
                         new_exon_start = new_exons[tx][i][0] - shift
                     if b <= exon_end:
