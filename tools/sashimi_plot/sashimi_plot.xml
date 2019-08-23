@@ -16,7 +16,6 @@
            #for $sample in $factor.rep_sample:
                echo -e '${sample.sampleName}\t${sample.bamFile}\t${factor.factorName}' >> index_bams.tsv &&
                samtools index ${sample.bamFile} &&
-               cp ${sample.bamFile}* /home/lea/sashimi/. &&
            #end for
        #end for
 
