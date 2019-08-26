@@ -140,7 +140,7 @@ colnames(results)[1] <- "genes"
 
 # Save files
 write.table(
-  results,
+  results[order(results$p.adjust),],
   opt$output,
   sep = "\t",
   quote = F,
