@@ -194,7 +194,7 @@
 
 **What it does**
 
-Generate a sashimi plot from bam files in order to visualize splicing events.
+Generate a sashimi plot from bam files in order to visualize splicing events using ggsashimi.
   </help>
   <citations>
       <citation type="doi">10.1371/journal.pcbi.1006360</citation>
