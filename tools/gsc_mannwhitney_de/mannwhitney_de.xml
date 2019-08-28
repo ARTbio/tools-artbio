@@ -120,7 +120,7 @@ Percentage_detection (number of cells where the gene is detected (expression val
            statistic W statistic of Mann-Whitney test
              p.value p-value of Mann-Whitney test
             p.adjust p-values adjusted from the BH correction
-         Significant TRUE/FALSE vector (if p-adjust inferior to FDR cut-off then the value is TRUE) 
+         Significant if p-adjust superior to FDR cut-off then the value is *NS*, if inferior then it's either *UP* or *DOWN* depending on the sign of fold change 
 ==================== ======================================================================================================
 
     </help>
