@@ -138,9 +138,14 @@ gene_stats <- descriptive_stats(data.counts)
 results <- merge(gene_stats, MW_test, by = "row.names")
 colnames(results)[1] <- "genes"
 
+## Annotate Significant column
+results$Significant[results$Significant == T & !is.na(results$Significant)] <- ifelse(subset(results, Significant == T)$log2FC > 0, "UP", "DOWN")
+results$Significant[results$Significant == F & !is.na(results$Significant)] <- "NS"
+
+
 # Save files
 write.table(
-  results,
+  results[order(results$p.adjust),],
   opt$output,
   sep = "\t",
   quote = F,
