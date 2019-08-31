@@ -207,15 +207,6 @@
     </outputs>
     <tests>
         <!-- test first (for developpers) -->
-        <test>
-            <param name="input" value="cpm_input.tsv" ftype="txt"/>
-            <param name="labels" value="no" />
-            <param name="HCPC_npc" value="5"/>
-            <param name="HCPC_ncluster" value="-1"/>
-            <param name="visu_choice" value="HCPC" />
-            <output name="pdf_out" file="hcpc.nolabels.pdf" compare="sim_size" ftype="pdf"/>
-            <output name="HCPC_cluster_description" file="hcpc.cluster_description.tab" ftype="tabular"/>            
-        </test>
         <!-- test PCA -->
         <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
