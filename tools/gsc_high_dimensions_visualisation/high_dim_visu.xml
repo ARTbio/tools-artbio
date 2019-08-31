@@ -346,7 +346,6 @@
             <param name="Rtsne_perplexity" value="10"/>
             <param name="Rtsne_theta" value="1" />
             <output name="pdf_out" file="tsne.labels.pdf" ftype="pdf" compare="sim_size" delta="500"/>
-            <output name="HCPC_clust" file="hcpc.clusters.tab" ftype="tabular"/>
         </test>
         <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
@@ -356,7 +355,6 @@
             <param name="Rtsne_perplexity" value="10"/>
             <param name="Rtsne_theta" value="1" />
             <output name="pdf_out" file="tsne.nolabels.pdf" ftype="pdf" compare="sim_size" delta="500"/>
-            <output name="HCPC_clust" file="hcpc.clusters.tab" ftype="tabular"/>
         </test>
                 <!-- test factor contrasting on t-SNE -->
         <test>
