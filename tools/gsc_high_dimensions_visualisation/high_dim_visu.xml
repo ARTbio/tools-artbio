@@ -7,6 +7,7 @@
         <requirement type="package" version="0.15=r351he1b5a44_0">r-rtsne</requirement>
         <requirement type="package" version="0.4.7=r351h6115d3f_0">r-ggfortify</requirement>
         <requirement type="package" version="1.1.9=r351h0357c0b_0">r-clusterr</requirement>
+        <requirement type="package" version="1.11.6=r351hc070d10_0">r-data.table</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
@@ -53,6 +54,7 @@
                 --HCPC_max '$visualisation.HCPC_max'
                 --HCPC_clusterCA '$visualisation.HCPC_clusterCA'
                 --HCPC_kk '$visualisation.HCPC_kk'
+                --HCPC_cluster_description '$HCPC_cluster_description'
                 #if $visualisation.res_clustering == "yes":
                     --HCPC_clust '$HCPC_clust'
                 #end if 
@@ -65,7 +67,7 @@
             #end if
             
             #if $visualisation.visu_choice == "HCPC" and $factor_condition.factor_choice == "Yes":
-                --mutual_info '$mutual_info'
+                --HCPC_mutual_info '$HCPC_mutual_info'
             #end if            
 
             --pdf_out '$pdf_out'
@@ -160,7 +162,8 @@
                        help="an integer. The least possible number of clusters suggested. (default=3)" />
                 <param name="HCPC_max" value="-1" type="text" label="max number of clusters"
                        help="The higher possible number of clusters suggested, by default the minimum between 10 and the number of individuals divided by 2. (default=-1)" />
-				<param name="HCPC_clusterCA"  type="select" label="clusterCA, Clustering against rows or columns" help="default(rows)" > 
+				<param name="HCPC_clusterCA"  type="select" label="cluster.CA, Clustering against rows or columns"
+				       help="A string equals to 'rows' or 'columns' for the clustering of Correspondence Analysis results.default(rows)"> 
 					<option value="rows" selected="true">Rows</option>
 					<option value="cols">Columns</option>
 				</param>
@@ -192,14 +195,27 @@
         <data name="table_coordinates" format="tabular" label="Scatter plot coordinates from ${visualisation.visu_choice} of ${on_string}" >
             <filter>coord == 'yes'</filter>
         </data>
-        <data name="mutual_info" format="txt" label="External validation of clustering from ${visualisation.visu_choice} of ${on_string}" >
+        <data name="HCPC_mutual_info" format="txt" label="External validation of clustering from ${visualisation.visu_choice} of ${on_string}" >
             <filter>visualisation['visu_choice'] == 'HCPC' and factor_condition['factor_choice'] == 'Yes'</filter>
         </data>
         <data name="HCPC_clust" format="tabular" label="Clustering table from ${visualisation.visu_choice} of ${on_string}" >
             <filter>visualisation['visu_choice'] == 'HCPC' and visualisation['res_clustering'] == 'yes'</filter>
         </data>
+        <data name="HCPC_cluster_description" format="tabular" label="Cluster information from ${visualisation.visu_choice}" >
+            <filter>visualisation['visu_choice'] == 'HCPC' </filter>
+        </data>
     </outputs>
     <tests>
+        <!-- test first (for developpers) -->
+        <test>
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="no" />
+            <param name="HCPC_npc" value="5"/>
+            <param name="HCPC_ncluster" value="-1"/>
+            <param name="visu_choice" value="HCPC" />
+            <output name="pdf_out" file="hcpc.nolabels.pdf" compare="sim_size" ftype="pdf"/>
+            <output name="HCPC_cluster_description" file="hcpc.cluster_description.tab" ftype="tabular"/>            
+        </test>
         <!-- test PCA -->
         <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
@@ -291,7 +307,7 @@
             <param name="factor_choice" value="Yes" />
             <param name="factor" value="factor.tsv" ftype="txt"/>
             <output name="pdf_out" file="hcpc.nolabels.factor.pdf" compare="sim_size" ftype="pdf"/>
-            <output name="mutual_info" file="hcpc.factor.extval.txt" ftype="txt"/>
+            <output name="HCPC_mutual_info" file="hcpc.factor.extval.txt" ftype="txt"/>
             <output name="HCPC_clust" file="hcpc.clusters.tab" ftype="tabular"/>
         </test>
         <test>
@@ -301,6 +317,7 @@
             <param name="HCPC_ncluster" value="-1"/>
             <param name="visu_choice" value="HCPC" />
             <output name="pdf_out" file="hcpc.nolabels.pdf" compare="sim_size" ftype="pdf"/>
+            <output name="HCPC_cluster_description" file="hcpc.cluster_description.tab" ftype="tabular"/>            
         </test>
         <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
