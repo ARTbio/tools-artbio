@@ -163,7 +163,7 @@ option_list = list(
     "--HCPC_metric",
     default = 'euclidean',
     type = 'character',
-    help = "Metric to be used for calculating dissimilarities between observations, available 'euclidian' or 'manhattan' [default : '%default' ]"
+    help = "Metric to be used for calculating dissimilarities between observations, available 'euclidean' or 'manhattan' [default : '%default' ]"
   ),
   make_option(
     "--HCPC_method",

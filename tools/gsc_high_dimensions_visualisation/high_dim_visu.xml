@@ -319,7 +319,7 @@
             <param name="visu_choice" value="HCPC" />
             <param name="coord" value="yes" />
             <param name="HCPC_method" value="single"/>
-            <param name="HCPC_metric" value="euclidian"/>
+            <param name="HCPC_metric" value="euclidean"/>
             <param name="HCPC_npc" value="4" />
             <param name="HCPC_clusterCA" value="cols" />
             <output name="pdf_out" file="hcpc-3.labels.pdf" compare="sim_size" ftype="pdf"/>
