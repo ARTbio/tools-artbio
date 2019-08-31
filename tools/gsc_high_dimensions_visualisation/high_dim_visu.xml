@@ -1,4 +1,4 @@
-<tool id="high_dimensions_visualisation" name="Generate PCA, tSNE and HCPC" version="0.9.4">
+<tool id="high_dimensions_visualisation" name="Generate PCA, tSNE and HCPC" version="0.9.5">
     <description>from highly dimensional expression data</description>
     <requirements>
         <requirement type="package" version="1.6.2=r35h6115d3f_0">r-optparse</requirement>
@@ -134,34 +134,42 @@
                 <param name="HCPC_npc" value="5" type="integer" label="Number of principal components to keep"
                        help="The number of dimensions which are kept for HCPC analysis (default=5)" />
                 <param name="HCPC_ncluster" value="-1" type="integer" label="Number of clusters in Hierar. Clustering"
-                       help="nb.clust, the number of clusters to consider in the hierarchical clustering. (default : -1, let HCPC to optimize the number)" />
-				<param name="HCPC_metric"  type="select" label="Dissimilarity metric" help="Metric to be used for calculating dissimilarities between observations, available 'euclidian' or 'manhattan'? " > 
-					<option value="euclidian" selected="true">euclidian</option>
+                       help="nb.clust - an integer. If 0, the tree is cut at the level the user clicks on (not working in Galaxy). If -1, the tree is
+                             automatically cut at the suggested level (see details). If a (positive) integer, the tree is cut with nb.cluters clusters." />
+				<param name="HCPC_metric"  type="select" label="Dissimilarity metric" help="Metric to be used for calculating dissimilarities between observations, can be 'euclidean' or 'manhattan' " > 
+					<option value="euclidean" selected="true">euclidean</option>
 					<option value="manhattan">manhattan</option>
 				</param>
-			    <param name="HCPC_method"  type="select" label="Clustering method" help="Clustering method between 'ward', 'average', 'single', 'complete', 'weighted' " > 
+			    <param name="HCPC_method"  type="select" label="Clustering method" help="character string defining the clustering method.
+			           The four methods implemented are 'average' ([unweighted pair-]group [arithMetic] average method, aka ‘UPGMA’),
+			           'single' (single linkage), 'complete' (complete linkage), and 'ward' (Ward's method).
+			           The default with this Galaxy tool is is 'ward'." > 
 					<option value="ward" selected="true">ward</option>
 					<option value="average">average</option>
 					<option value="single">single</option>
 					<option value="complete">complete</option>
-					<option value="weighted">weighted</option>
 				</param>
-				<param name="HCPC_consol"  type="select" label="k-means consolidation" help="If TRUE, a k-means consolidation is performed" > 
+				<param name="HCPC_consol"  type="select" label="k-means consolidation" help="a boolean. If TRUE, a k-means consolidation is performed
+				       (consolidation cannot be performed if kk is used and equals a number)." > 
 					<option value="TRUE" selected="true">Yes</option>
 					<option value="FALSE">False</option>
 				</param>
 				<param name="HCPC_itermax" value="10" type="integer" label="Maximum number of iterations for consolidation"
-                       help=" (default=10)" />
+                       help="An integer. The maximum number of iterations for the consolidation. (default=10)" />
                 <param name="HCPC_min" value="3" type="integer" label="min number of clusters"
-                       help=" The least possible number of clusters suggested (default=3)" />
+                       help="an integer. The least possible number of clusters suggested. (default=3)" />
                 <param name="HCPC_max" value="-1" type="text" label="max number of clusters"
-                       help=" The higher possible number of clusters suggested, by default the minimum between 10 and the number of individuals divided by 2. (default=-1)" />
+                       help="The higher possible number of clusters suggested, by default the minimum between 10 and the number of individuals divided by 2. (default=-1)" />
 				<param name="HCPC_clusterCA"  type="select" label="clusterCA, Clustering against rows or columns" help="default(rows)" > 
 					<option value="rows" selected="true">Rows</option>
 					<option value="cols">Columns</option>
 				</param>
-				 <param name="HCPC_kk" value="-1" type="text" label="kk, Number of clusters used in a Kmeans preprocessing "
-                       help="No k-means consolidation is done if a kk value is provided (default=-1)" />
+				 <param name="HCPC_kk" value="Inf" type="text" label="kk, Number of clusters used in a Kmeans preprocessing "
+                       help="An integer corresponding to the number of clusters used in a Kmeans preprocessing before the
+                             hierarchical clustering; the top of the hierarchical tree is then constructed from this partition.
+                             This is very useful if the number of individuals is high. Note that consolidation cannot be performed
+                             if kk is different from Inf and some graphics are not drawn. Inf is used by default and no preprocessing
+                             is done, all the graphical outputs are then given." />
                 <param label="Return HCPC clustering table" name="res_clustering" type="select">
                     <option value="no" selected="True">No</option>
                     <option value="yes">Yes</option>

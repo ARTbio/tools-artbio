@@ -209,7 +209,7 @@ option_list = list(
   ),
   make_option(
     "--HCPC_kk",
-    default = -1,
+    default = Inf,
     type = 'numeric',
     help = "The maximum number of iterations for the consolidation [default :'%default']"
   ),
