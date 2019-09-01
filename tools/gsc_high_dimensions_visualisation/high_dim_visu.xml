@@ -299,7 +299,7 @@
             <param name="factor_choice" value="Yes" />
             <param name="factor" value="factor.tsv" ftype="txt"/>
             <output name="pdf_out" file="hcpc.nolabels.factor.pdf" compare="sim_size" ftype="pdf"/>
-            <output name="mutual_info" file="hcpc.factor.extval.txt" ftype="txt"/>
+            <output name="HCPC_mutual_info" file="hcpc.factor.extval.txt" ftype="txt"/>
             <output name="HCPC_clust" file="hcpc.clusters.tab" ftype="tabular"/>
             <output name="HCPC_cluster_description" file="hcpc.cluster_description.1.tab" ftype="tabular"/>
         </test>
