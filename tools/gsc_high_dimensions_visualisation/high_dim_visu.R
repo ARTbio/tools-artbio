@@ -443,7 +443,7 @@ if (opt$factor != '') {
        col = factorColors$color, pch = 16, bty = 'n', xjust = 1, cex=0.7)
     
     ## Normalized Mutual Information
-    sink(opt$mutual_info)
+    sink(opt$HCPC_mutual_info)
     res <- external_validation(
        true_labels = as.numeric(contrasting_factor$factor),
        clusters = as.numeric(res.hcpc$data.clust$clust),
