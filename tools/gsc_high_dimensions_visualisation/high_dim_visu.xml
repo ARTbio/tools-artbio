@@ -207,6 +207,19 @@
     </outputs>
     <tests>
         <!-- test first (for developpers) -->
+        <test>
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="yes" />
+            <param name="visu_choice" value="HCPC" />
+            <param name="coord" value="yes" />
+            <param name="HCPC_method" value="single"/>
+            <param name="HCPC_metric" value="euclidean"/>
+            <param name="HCPC_npc" value="4" />
+            <param name="HCPC_clusterCA" value="cols" />
+            <output name="pdf_out" file="hcpc-3.labels.pdf" compare="sim_size" ftype="pdf"/>
+            <output name="table_coordinates" file="hcpc-3.coord.tab" ftype="tabular"/>
+            <output name="HCPC_cluster_description" file="hcpc.cluster_description.5.tab" ftype="tabular"/>
+        </test>
         <!-- test PCA -->
         <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
@@ -286,7 +299,7 @@
             <param name="HCPC_npc" value="5"/>
             <param name="HCPC_ncluster" value="-1"/>
             <output name="pdf_out" file="hcpc.labels.pdf" compare="sim_size" ftype="pdf"/>
-            <output name="HCPC_clust" file="hcpc.clusters.tab" ftype="tabular"/>
+            <output name="HCPC_cluster_description" file="hcpc.cluster_description.1.tab" ftype="tabular"/>
         </test>
         <!-- test factor contrasting on HCPC -->
         <test>
@@ -299,8 +312,9 @@
             <param name="factor_choice" value="Yes" />
             <param name="factor" value="factor.tsv" ftype="txt"/>
             <output name="pdf_out" file="hcpc.nolabels.factor.pdf" compare="sim_size" ftype="pdf"/>
-            <output name="HCPC_mutual_info" file="hcpc.factor.extval.txt" ftype="txt"/>
+            <output name="mutual_info" file="hcpc.factor.extval.txt" ftype="txt"/>
             <output name="HCPC_clust" file="hcpc.clusters.tab" ftype="tabular"/>
+            <output name="HCPC_cluster_description" file="hcpc.cluster_description.1.tab" ftype="tabular"/>
         </test>
         <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
@@ -309,8 +323,7 @@
             <param name="HCPC_ncluster" value="-1"/>
             <param name="visu_choice" value="HCPC" />
             <output name="pdf_out" file="hcpc.nolabels.pdf" compare="sim_size" ftype="pdf"/>
-            <output name="HCPC_cluster_description" file="hcpc.cluster_description.tab" ftype="tabular"/>            
-            <output name="HCPC_clust" file="hcpc.clusters.tab" ftype="tabular"/>
+            <output name="HCPC_cluster_description" file="hcpc.cluster_description.1.tab" ftype="tabular"/>
         </test>
         <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
@@ -322,7 +335,7 @@
             <param name="HCPC_npc" value="4" />
             <output name="pdf_out" file="hcpc-2.labels.pdf" ftype="pdf"/>
             <output name="table_coordinates" file="hcpc-2.coord.tab" ftype="tabular"/>
-            <output name="HCPC_clust" file="hcpc.clusters.tab" ftype="tabular"/>
+            <output name="HCPC_cluster_description" file="hcpc.cluster_description.4.tab" ftype="tabular"/>
         </test>
         <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
@@ -335,7 +348,7 @@
             <param name="HCPC_clusterCA" value="cols" />
             <output name="pdf_out" file="hcpc-3.labels.pdf" compare="sim_size" ftype="pdf"/>
             <output name="table_coordinates" file="hcpc-3.coord.tab" ftype="tabular"/>
-            <output name="HCPC_clust" file="hcpc.clusters.tab" ftype="tabular"/>
+            <output name="HCPC_cluster_description" file="hcpc.cluster_description.5.tab" ftype="tabular"/>
         </test>
         <!-- test t-SNE -->
         <test>
