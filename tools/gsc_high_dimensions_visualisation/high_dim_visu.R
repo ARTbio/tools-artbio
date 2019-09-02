@@ -2,7 +2,6 @@
 options( show.error.messages=F,
        error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
 loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
-requiredPackages = c('optparse', 'Rtsne', 'ggplot2', 'ggfortify')
 warnings()
 library(optparse)
 library(FactoMineR)
@@ -12,6 +11,7 @@ library(ggplot2)
 library(ggfortify)
 library(RColorBrewer)
 library(ClusterR)
+library(data.table)
 
 # Arguments
 option_list = list(
@@ -161,9 +161,9 @@ option_list = list(
   ),
   make_option(
     "--HCPC_metric",
-    default = 'euclidian',
+    default = 'euclidean',
     type = 'character',
-    help = "Metric to be used for calculating dissimilarities between observations, available 'euclidian' or 'manhattan' [default : '%default' ]"
+    help = "Metric to be used for calculating dissimilarities between observations, available 'euclidean' or 'manhattan' [default : '%default' ]"
   ),
   make_option(
     "--HCPC_method",
@@ -209,7 +209,7 @@ option_list = list(
   ),
   make_option(
     "--HCPC_kk",
-    default = -1,
+    default = Inf,
     type = 'numeric',
     help = "The maximum number of iterations for the consolidation [default :'%default']"
   ),
@@ -220,10 +220,16 @@ option_list = list(
     help = "Output result of HCPC clustering : two column table (cell identifiers and clusters) [default :'%default']"
   ),
   make_option(
-    "--mutual_info",
+    "--HCPC_mutual_info",
     default = "",
     type = "character",
     help = "Output file of external validation of HCPC clustering with factor levels [default :'%default']"
+  ),
+  make_option(
+    "--HCPC_cluster_description",
+    default = "",
+    type = "character",
+    help = "Output file with variables most contributing to clustering [default :'%default']"
   )
 )
 
@@ -436,7 +442,7 @@ if (opt$factor != '') {
        col = factorColors$color, pch = 16, bty = 'n', xjust = 1, cex=0.7)
     
     ## Normalized Mutual Information
-    sink(opt$mutual_info)
+    sink(opt$HCPC_mutual_info)
     res <- external_validation(
        true_labels = as.numeric(contrasting_factor$factor),
        clusters = as.numeric(res.hcpc$data.clust$clust),
@@ -448,6 +454,7 @@ if (opt$factor != '') {
     legend.col(col = rev(brewer.pal(n = 11, name = "RdYlGn")), lev = cut(contrasting_factor$factor, 11, label = FALSE))
   }
 }
+
 ## Clusters to which individual observations belong # used ?
 # Clust <- data.frame(Cluster = res.hcpc$data.clust[, (nrow(data) + 1)],
 #                     Observation = rownames(res.hcpc$data.clust))
@@ -484,6 +491,31 @@ dev.off()
  
  }
 
+# Description of cluster by most contributing variables / gene expressions
+
+# first transform list of vectors in a list of dataframes
+extract_description <- lapply(res.hcpc$desc.var$quanti, as.data.frame)
+# second, transfer rownames (genes) to column in the dataframe, before rbinding
+extract_description_w_genes <- Map(cbind,
+                                   extract_description,
+                                   genes= lapply(extract_description, rownames)
+                                   )
+# Then use data.table to collapse all generated dataframe, with the cluster id in first column
+# using the {data.table} rbindlist function
+cluster_description <- rbindlist(extract_description_w_genes, idcol = "cluster_id")
+cluster_description = cluster_description[ ,c(8, 1, 2, 3,4,5,6,7)] # reorganize columns
+
+
+# Finally, output cluster description data frame
+write.table(
+    cluster_description,
+    file = opt$HCPC_cluster_description,
+    sep = "\t",
+    quote = F,
+    col.names = T,
+    row.names = F
+    )
+
 }
 
 ## Return coordinates file to user
@@ -509,15 +541,4 @@ if(opt$HCPC_clust != ""){
     col.names = T,
     row.names = F
     )
-}  
-
-
-
-
-
-
-
-
-
-
-
+}

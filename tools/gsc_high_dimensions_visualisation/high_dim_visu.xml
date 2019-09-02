@@ -1,4 +1,4 @@
-<tool id="high_dimensions_visualisation" name="Generate PCA, tSNE and HCPC" version="0.9.4">
+<tool id="high_dimensions_visualisation" name="Generate PCA, tSNE and HCPC" version="0.9.5">
     <description>from highly dimensional expression data</description>
     <requirements>
         <requirement type="package" version="1.6.2=r35h6115d3f_0">r-optparse</requirement>
@@ -7,6 +7,7 @@
         <requirement type="package" version="0.15=r351he1b5a44_0">r-rtsne</requirement>
         <requirement type="package" version="0.4.7=r351h6115d3f_0">r-ggfortify</requirement>
         <requirement type="package" version="1.1.9=r351h0357c0b_0">r-clusterr</requirement>
+        <!--<requirement type="package" version="1.11.6=r351hc070d10_0">r-data.table</requirement>-->
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
@@ -53,6 +54,7 @@
                 --HCPC_max '$visualisation.HCPC_max'
                 --HCPC_clusterCA '$visualisation.HCPC_clusterCA'
                 --HCPC_kk '$visualisation.HCPC_kk'
+                --HCPC_cluster_description '$HCPC_cluster_description'
                 #if $visualisation.res_clustering == "yes":
                     --HCPC_clust '$HCPC_clust'
                 #end if 
@@ -65,7 +67,7 @@
             #end if
             
             #if $visualisation.visu_choice == "HCPC" and $factor_condition.factor_choice == "Yes":
-                --mutual_info '$mutual_info'
+                --HCPC_mutual_info '$HCPC_mutual_info'
             #end if            
 
             --pdf_out '$pdf_out'
@@ -134,34 +136,43 @@
                 <param name="HCPC_npc" value="5" type="integer" label="Number of principal components to keep"
                        help="The number of dimensions which are kept for HCPC analysis (default=5)" />
                 <param name="HCPC_ncluster" value="-1" type="integer" label="Number of clusters in Hierar. Clustering"
-                       help="nb.clust, the number of clusters to consider in the hierarchical clustering. (default : -1, let HCPC to optimize the number)" />
-				<param name="HCPC_metric"  type="select" label="Dissimilarity metric" help="Metric to be used for calculating dissimilarities between observations, available 'euclidian' or 'manhattan'? " > 
-					<option value="euclidian" selected="true">euclidian</option>
+                       help="nb.clust - an integer. If 0, the tree is cut at the level the user clicks on (not working in Galaxy). If -1, the tree is
+                             automatically cut at the suggested level (see details). If a (positive) integer, the tree is cut with nb.cluters clusters." />
+				<param name="HCPC_metric"  type="select" label="Dissimilarity metric" help="Metric to be used for calculating dissimilarities between observations, can be 'euclidean' or 'manhattan' " > 
+					<option value="euclidean" selected="true">euclidean</option>
 					<option value="manhattan">manhattan</option>
 				</param>
-			    <param name="HCPC_method"  type="select" label="Clustering method" help="Clustering method between 'ward', 'average', 'single', 'complete', 'weighted' " > 
+			    <param name="HCPC_method"  type="select" label="Clustering method" help="character string defining the clustering method.
+			           The four methods implemented are 'average' ([unweighted pair-]group [arithMetic] average method, aka ‘UPGMA’),
+			           'single' (single linkage), 'complete' (complete linkage), and 'ward' (Ward's method).
+			           The default with this Galaxy tool is is 'ward'." > 
 					<option value="ward" selected="true">ward</option>
 					<option value="average">average</option>
 					<option value="single">single</option>
 					<option value="complete">complete</option>
-					<option value="weighted">weighted</option>
 				</param>
-				<param name="HCPC_consol"  type="select" label="k-means consolidation" help="If TRUE, a k-means consolidation is performed" > 
+				<param name="HCPC_consol"  type="select" label="k-means consolidation" help="a boolean. If TRUE, a k-means consolidation is performed
+				       (consolidation cannot be performed if kk is used and equals a number)." > 
 					<option value="TRUE" selected="true">Yes</option>
 					<option value="FALSE">False</option>
 				</param>
 				<param name="HCPC_itermax" value="10" type="integer" label="Maximum number of iterations for consolidation"
-                       help=" (default=10)" />
+                       help="An integer. The maximum number of iterations for the consolidation. (default=10)" />
                 <param name="HCPC_min" value="3" type="integer" label="min number of clusters"
-                       help=" The least possible number of clusters suggested (default=3)" />
+                       help="an integer. The least possible number of clusters suggested. (default=3)" />
                 <param name="HCPC_max" value="-1" type="text" label="max number of clusters"
-                       help=" The higher possible number of clusters suggested, by default the minimum between 10 and the number of individuals divided by 2. (default=-1)" />
-				<param name="HCPC_clusterCA"  type="select" label="clusterCA, Clustering against rows or columns" help="default(rows)" > 
+                       help="The higher possible number of clusters suggested, by default the minimum between 10 and the number of individuals divided by 2. (default=-1)" />
+				<param name="HCPC_clusterCA"  type="select" label="cluster.CA, Clustering against rows or columns"
+				       help="A string equals to 'rows' or 'columns' for the clustering of Correspondence Analysis results.default(rows)"> 
 					<option value="rows" selected="true">Rows</option>
 					<option value="cols">Columns</option>
 				</param>
-				 <param name="HCPC_kk" value="-1" type="text" label="kk, Number of clusters used in a Kmeans preprocessing "
-                       help="No k-means consolidation is done if a kk value is provided (default=-1)" />
+				 <param name="HCPC_kk" value="Inf" type="text" label="kk, Number of clusters used in a Kmeans preprocessing "
+                       help="An integer corresponding to the number of clusters used in a Kmeans preprocessing before the
+                             hierarchical clustering; the top of the hierarchical tree is then constructed from this partition.
+                             This is very useful if the number of individuals is high. Note that consolidation cannot be performed
+                             if kk is different from Inf and some graphics are not drawn. Inf is used by default and no preprocessing
+                             is done, all the graphical outputs are then given." />
                 <param label="Return HCPC clustering table" name="res_clustering" type="select">
                     <option value="no" selected="True">No</option>
                     <option value="yes">Yes</option>
@@ -184,14 +195,18 @@
         <data name="table_coordinates" format="tabular" label="Scatter plot coordinates from ${visualisation.visu_choice} of ${on_string}" >
             <filter>coord == 'yes'</filter>
         </data>
-        <data name="mutual_info" format="txt" label="External validation of clustering from ${visualisation.visu_choice} of ${on_string}" >
+        <data name="HCPC_mutual_info" format="txt" label="External validation of clustering from ${visualisation.visu_choice} of ${on_string}" >
             <filter>visualisation['visu_choice'] == 'HCPC' and factor_condition['factor_choice'] == 'Yes'</filter>
         </data>
         <data name="HCPC_clust" format="tabular" label="Clustering table from ${visualisation.visu_choice} of ${on_string}" >
             <filter>visualisation['visu_choice'] == 'HCPC' and visualisation['res_clustering'] == 'yes'</filter>
         </data>
+        <data name="HCPC_cluster_description" format="tabular" label="Cluster information from ${visualisation.visu_choice}" >
+            <filter>visualisation['visu_choice'] == 'HCPC' </filter>
+        </data>
     </outputs>
     <tests>
+        <!-- test first (for developpers) -->
         <!-- test PCA -->
         <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
@@ -271,6 +286,7 @@
             <param name="HCPC_npc" value="5"/>
             <param name="HCPC_ncluster" value="-1"/>
             <output name="pdf_out" file="hcpc.labels.pdf" compare="sim_size" ftype="pdf"/>
+            <output name="HCPC_cluster_description" file="hcpc.cluster_description.1.tab" ftype="tabular"/>
         </test>
         <!-- test factor contrasting on HCPC -->
         <test>
@@ -283,8 +299,9 @@
             <param name="factor_choice" value="Yes" />
             <param name="factor" value="factor.tsv" ftype="txt"/>
             <output name="pdf_out" file="hcpc.nolabels.factor.pdf" compare="sim_size" ftype="pdf"/>
-            <output name="mutual_info" file="hcpc.factor.extval.txt" ftype="txt"/>
+            <output name="HCPC_mutual_info" file="hcpc.factor.extval.txt" ftype="txt"/>
             <output name="HCPC_clust" file="hcpc.clusters.tab" ftype="tabular"/>
+            <output name="HCPC_cluster_description" file="hcpc.cluster_description.1.tab" ftype="tabular"/>
         </test>
         <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
@@ -293,6 +310,7 @@
             <param name="HCPC_ncluster" value="-1"/>
             <param name="visu_choice" value="HCPC" />
             <output name="pdf_out" file="hcpc.nolabels.pdf" compare="sim_size" ftype="pdf"/>
+            <output name="HCPC_cluster_description" file="hcpc.cluster_description.1.tab" ftype="tabular"/>
         </test>
         <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
@@ -304,6 +322,7 @@
             <param name="HCPC_npc" value="4" />
             <output name="pdf_out" file="hcpc-2.labels.pdf" ftype="pdf"/>
             <output name="table_coordinates" file="hcpc-2.coord.tab" ftype="tabular"/>
+            <output name="HCPC_cluster_description" file="hcpc.cluster_description.4.tab" ftype="tabular"/>
         </test>
         <test>
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
@@ -311,11 +330,12 @@
             <param name="visu_choice" value="HCPC" />
             <param name="coord" value="yes" />
             <param name="HCPC_method" value="single"/>
-            <param name="HCPC_metric" value="euclidian"/>
+            <param name="HCPC_metric" value="euclidean"/>
             <param name="HCPC_npc" value="4" />
             <param name="HCPC_clusterCA" value="cols" />
             <output name="pdf_out" file="hcpc-3.labels.pdf" compare="sim_size" ftype="pdf"/>
             <output name="table_coordinates" file="hcpc-3.coord.tab" ftype="tabular"/>
+            <output name="HCPC_cluster_description" file="hcpc.cluster_description.5.tab" ftype="tabular"/>
         </test>
         <!-- test t-SNE -->
         <test>
