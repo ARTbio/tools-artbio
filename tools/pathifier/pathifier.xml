@@ -1,0 +1,113 @@
+<tool id="pathifier" name="Pathifier" version="0.1.0">
+    <description>: Quantify deregulation of pathways in cancer</description>
+    <requirements>
+        <requirement type="package" version="1.6.2=r35h6115d3f_0">r-optparse</requirement>
+        <requirement type="package" version="1.22.0=r351_0">bioconductor-pathifier</requirement>
+        <requirement type="package" version="1.0.12=r351h6115d3f_0">r-pheatmap</requirement>
+    </requirements>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Tool exception" />
+    </stdio>
+    <command detect_errors="exit_code"><![CDATA[ 
+        Rscript $__tool_directory__/pathifier.R 
+            --exp '$input'
+            --sep '$input_sep'
+            --genes '$genes'
+
+            #if $reference.is_normal == "Yes":
+                --is_normal 'TRUE'
+                --normals '$reference.normals'
+            #end if
+
+            --max_stability '$max_stability'
+            --attempts '$attempts'
+            --min_std '$min_std'
+            --min_exp '$min_exp'
+
+            --heatmap_cluster_cells '$heatmap_cluster_cells'
+            --heatmap_cluster_pathways '$heatmap_cluster_pathways'
+            --heatmap_show_cell_labels '$heatmap_show_cell_labels'
+            --heatmap_show_pathway_labels '$heatmap_show_pathway_labels'
+
+            --pds '$pds'
+            --logfile '$logfile'
+            --heatmap_pdf '$heatmap_pdf'
+            
+]]></command>
+    <inputs>
+        <param name="input" type="data" format="txt,tabular" label="expression data"/>
+        <param name="input_sep" type="select" label="Input column separator">
+            <option value="tab" selected="true">Tabs</option>
+            <option value=",">Comma</option>
+        </param>
+        <param name="genes" type="data" format="txt" label="Gene sets Pathways" 
+               help="Must be in gmt format (one pathway per line : Name, description, genes (one by column), tab separated)" />
+        <conditional name="reference">
+            <param name="is_normal" label="Do you have non cancer transcriptomes in your data set ?" type="boolean" truevalue="Yes" falsevalue="" checked="false" />
+            <when value="Yes">
+                <param name="normals" type="data" format="tabular" label="Sample status"
+                       help="A two-column data frame, first column contains data labels, second column the levels of sample status : 1 = Healthy, 0 = Tumor (no header)" />
+            </when>
+            <when value="">
+            </when>
+        </conditional>
+        <param name="max_stability" label="Throw away components leading to low stability of sampling noise" type="boolean" truevalue="TRUE" falsevalue="FALSE" checked="true" />
+        <param name="attempts" type="integer" label="Number of runs to determine stability" value="1000"/>
+        <param name="min_std" type="text" value="0.4" label="Minimum of standard deviation to filter out low variable genes"
+               help="Use 'data' to use the minimum std of your data" />
+        <param name="min_exp" type="text" value="4" label="Minimum of gene expression to filter out low variable genes"
+               help="Use 'data' to use the minimum expression of your data" />
+        <param name="heatmap_cluster_cells" label="Cluster samples on heatmap" type="boolean" truevalue="TRUE" falsevalue="FALSE" checked="true" />
+        <param name="heatmap_cluster_pathways" label="Cluster pathways on heatmap" type="boolean" truevalue="TRUE" falsevalue="FALSE" checked="true" />
+        <param name="heatmap_show_cell_labels" label="Show sample labels on heatmap" type="boolean" truevalue="TRUE" falsevalue="FALSE" checked="false" />
+        <param name="heatmap_show_pathway_labels" label="Cluster pathway labels on heatmap" type="boolean" truevalue="TRUE" falsevalue="FALSE" checked="true" />
+        <param label="Return log file of pathifier" name="log" type="select" >
+            <option value="no" selected="True">No</option>
+            <option value="yes">Yes</option>
+        </param>
+             
+    </inputs>
+    <outputs>
+        <data name="pds" format="tabular" label="Pathifier Deregulation Score (PDS) of ${on_string}" />
+        <data name="logfile" format="txt" label="Pathifier log file of ${on_string}" >
+            <filter>log == 'yes'</filter>
+        </data>
+        <data name="heatmap_pdf" format="pdf" label="Heatmap of Pathifier Deregulation Score (PDS) of ${on_string}" />
+    </outputs>
+    <tests>
+        <test>
+            <param name="input" value="sheffer.tsv" ftype="tabular"/>
+            <param name="genes" value="kegg_pathways.gmt" ftype="txt" />
+            <param name="is_normal" value="True" />
+            <param name="normals" value="normals.tsv" ftype="tabular" />
+            <param name="log" value="yes" />
+            <param name="attempts" value="100" />
+            <output name="logfile" file="sheffer.kegg.log" ftype="txt"/>
+            <output name="pds" file="sheffer.kegg.tsv" ftype="tabular"/>
+            <output name="heatmap_pdf" file="sheffer.kegg.pdf" ftype="pdf" compare="sim_size" />
+        </test>
+    </tests>
+    <help>
+
+**What it does**
+
+Takes as an input a matrix of n observations (columns, generally n RNAseq library) of k variables
+(rows, generally k genes).
+
+k variables define a space of k dimensions. Any observation
+of k expression values for k genes (the purpose of one RNAseq experiment) can be assigned
+to a position in the k-dim space, of coordinates c1, c2, c3, ..., ck.
+
+
+    </help>
+    <citations>
+        <citation type="bibtex">@Manual{,
+            title = {{pathifier}: Quantify deregulation of pathways in cancer},
+            author = {Yotam Drier},
+            year = {2013-06-27},
+            note = {R package version 1.22.0},
+            url = {https://git.bioconductor.org/packages/pathifier},
+            }
+        </citation>
+  </citations>
+</tool>
