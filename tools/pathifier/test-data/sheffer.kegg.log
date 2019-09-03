@@ -1,0 +1,4 @@
+robust_score_bydist. min_exp= 4 , min_std= 0.4 
+pathway  1 > sig: 0.06070369 
+pathway  2 > sig: 0.1010493 
+2 pathways processed with start= by ranks 
