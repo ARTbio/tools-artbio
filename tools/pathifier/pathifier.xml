@@ -4,6 +4,8 @@
         <requirement type="package" version="1.6.2=r35h6115d3f_0">r-optparse</requirement>
         <requirement type="package" version="1.22.0=r351_0">bioconductor-pathifier</requirement>
         <requirement type="package" version="1.0.12=r351h6115d3f_0">r-pheatmap</requirement>
+        <requirement type="package" version="0.3_41=r351h6115d3f_0">r-scatterplot3d</requirement>
+        <requirement type="package" version="1.4.0=r351h6115d3f_0">r-ggally</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
@@ -32,6 +34,7 @@
             --pds '$pds'
             --logfile '$logfile'
             --heatmap_pdf '$heatmap_pdf'
+            --scatterplot '$scatterplot'
             
 ]]></command>
     <inputs>
@@ -73,6 +76,7 @@
             <filter>log == 'yes'</filter>
         </data>
         <data name="heatmap_pdf" format="pdf" label="Heatmap of Pathifier Deregulation Score (PDS) of ${on_string}" />
+        <data name="scatterplot" format="pdf" label="Pathifier Deregulation Score (PDS) curves of ${on_string}" />
     </outputs>
     <tests>
         <test>

@@ -11,6 +11,8 @@ loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
 library(pathifier)
 library(optparse)
 library(pheatmap)
+library(scatterplot3d)
+library(GGally)
 
 option_list <- list(
   make_option(
@@ -29,6 +31,7 @@ option_list <- list(
     help = "Gene sets Pathways : gmt format (one pathway per line : Name, description, genes (one by column), tab separated)"),
   make_option(
     "--is_normal", 
+    default = F,
     type = "logical", 
     help = "Define normals cells in your data"),
   make_option(
@@ -96,6 +99,12 @@ option_list <- list(
     type = "logical",
     default = FALSE,
     help = "Print row names (pathways) on the heatmap [default : '%default' ]"
+  ),
+  make_option(
+    "--scatterplot",
+    type = "character",
+    default = "./PDS_curves.pdf",
+    help = "Curveof PDS in pdf [default : '%default' ]"
   ),
   make_option(
     "--heatmap_pdf",
@@ -180,6 +189,21 @@ if(args$is_normal == T){
                                         logfile = args$logfile,
                                         min_std = args$min_std,
                                         min_exp = args$min_exp)
+
+  pdf(args$scatterplot)
+  for(i in pathwaynames){
+    DF <- data.frame(PDS$curves[[i]][,1:3], normal = normals, score = as.numeric(PDS$scores[[i]]))
+    scatterplot3d(PDS$curves[[i]][,1:3], main = paste("Principal curve of", i), box = F, pch = 19, color = ifelse(normals == T, "blue", "red"))
+    p <- ggpairs(data = DF, 
+                 columns = 1:3, 
+                 upper = list(continuous = "points", mapping = aes(color = score)), 
+                 lower = list(continuous = "points", mapping = aes(color = normal)),
+                 title = paste("Principal curve of", i),
+                 legend = 3)
+    print(p)
+  }
+  dev.off()
+
 } else{
   PDS <- quantify_pathways_deregulation(exp.matrix.filtered, 
                                         allgenes,
@@ -190,9 +214,21 @@ if(args$is_normal == T){
                                         logfile = args$logfile,
                                         min_std = args$min_std,
                                         min_exp = args$min_exp)
+  
+  pdf(args$scatterplot)
+  for(i in pathwaynames){
+    DF <- data.frame(PDS$curves[[i]][,1:3], score = as.numeric(PDS$scores[[i]]))
+    scatterplot3d(PDS$curves[[i]][,1:3], box = F, main = paste("Principal curve of", i), pch = 19)
+    p <- ggpairs(data = DF, 
+                 columns = 1:3,
+                 upper = list(continuous = "points", mapping = aes(color = score)),
+                 lower = NULL, 
+                 title = paste("Principal curve of", i), 
+                 legend = 3)
+    print(p)
+  }
+  dev.off()
 }
-
-
 
 
 PDS_scores <- mapply(FUN = cbind, PDS$scores)
