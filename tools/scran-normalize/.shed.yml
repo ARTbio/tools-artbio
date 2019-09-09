@@ -1,0 +1,12 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: scran-normalize
+description: Normalize raw counts using scran  
+long_description: |
+  Normalizes raw counts expression matrix using deconvolution size factors
+categories:
+  - Transcriptomics
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/scran-normalize
+toolshed:
+  - toolshed
