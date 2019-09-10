@@ -14,7 +14,7 @@
             -o ${output}
 ]]></command>
     <inputs>
-        <param name="input" type="data" format="txt,tabular" label="Raw counts of expression data"/>
+        <param name="input" type="data" format="txt,tabular" label="Raw counts of expression data" help = "Must have an header"/>
         <param name="input_sep" type="select" label="Input column separator">
             <option value="tab" selected="true">Tabulation</option>
             <option value=",">Comma</option>

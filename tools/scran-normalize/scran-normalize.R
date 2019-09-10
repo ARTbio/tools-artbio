@@ -6,7 +6,6 @@ warnings()
 
 library(optparse)
 library(scran)
-print("ok")
 
 #Arguments
 option_list = list(
@@ -34,7 +33,7 @@ opt = parse_args(OptionParser(option_list = option_list),
                  args = commandArgs(trailingOnly = TRUE))
 
 if (opt$sep == "tab") {opt$sep = "\t"}
-print(opt$sep)
+
 data = read.table(
   opt$data,
   check.names = FALSE,
