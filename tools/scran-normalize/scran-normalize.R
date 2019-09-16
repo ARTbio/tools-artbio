@@ -50,7 +50,7 @@ sce <- computeSumFactors(sce)
 
 sce <- normalize(sce)
 
-logcounts <- data.frame(genes = rownames(sce), logcounts(sce), check.names = F)
+logcounts <- data.frame(genes = rownames(sce), round(logcounts(sce), digits=5), check.names = F)
 
 
 write.table(
