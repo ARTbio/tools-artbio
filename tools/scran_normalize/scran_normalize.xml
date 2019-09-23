@@ -36,6 +36,12 @@
 
 Takes a raw count expression matrix and returns a table of normalized expression values.
 
+Cell-specific biases are normalized using the computeSumFactors method, which implements the
+deconvolution strategy for scaling normalization (A. T. Lun, Bach, and Marioni 2016).
+
+This computes size factors that are used to scale the counts in each cell. The assumption is that 
+most genes are not differentially expressed (DE) between cells, such that any differences in 
+expression across the majority of genes represents some technical bias that should be removed.
 
 Note: First header row must NOT start with a '#' comment character
 
