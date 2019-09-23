@@ -22,6 +22,25 @@ option_list = list(
     help = "File separator [default : '%default' ]"
   ),
   make_option(
+    "--cluster",
+    default=FALSE,
+    action="store_true",
+    type = 'logical',
+    help = "Whether to calculate the size factor per cluster or on all cell"
+  ),
+  make_option(
+    c("-m", "--method"),
+    default = 'hclust',
+    type = 'character',
+    help = "The clustering method to use for grouping cells into cluster : hclust or igraph [default : '%default' ]"
+  ),
+  make_option(
+    "--size",
+    default = 100,
+    type = 'integer',
+    help = "Minimal number of cells in each cluster : hclust or igraph [default : '%default' ]"
+  ),
+  make_option(
     c("-o", "--out"),
     default = "res.tab",
     type = 'character',
@@ -45,8 +64,17 @@ data = read.table(
 ## Import data as a SingleCellExperiment object
 sce <- SingleCellExperiment(list(counts=as.matrix(data)))
 
-## Compute sum factors
-sce <- computeSumFactors(sce)
+
+if(opt$cluster){
+  clusters <- quickCluster(sce, min.size = opt$size, method = opt$method)
+
+  ## Compute sum factors
+  sce <- computeSumFactors(sce, cluster = clusters)
+} else {
+
+  ## Compute sum factors
+  sce <- computeSumFactors(sce)
+}
 
 sce <- normalize(sce)
 
