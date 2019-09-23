@@ -1,4 +1,4 @@
-<tool id="scran-normalize" name="scran-normalize" version="0.1.0">
+<tool id="scran_normalize" name="scran_normalize" version="0.1.0">
     <description>Normalize raw counts expression values using deconvolution size factors</description>
     <requirements>
         <requirement type="package" version="1.6.2">r-optparse</requirement>
