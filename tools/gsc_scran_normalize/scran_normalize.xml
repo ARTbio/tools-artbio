@@ -48,6 +48,20 @@
             <param name="input" value="counts.tab" ftype="tabular"/>
             <output name="output" file="logcounts.tab" ftype="tabular"/>
         </test>
+        <test>
+            <param name="input" value="counts.tab" ftype="tabular"/>
+            <param name="cluster" value="Yes"/>
+            <param name="method" value="igraph"/>
+            <param name="size" value="25"/>
+            <output name="output" file="logcounts_igraph.tsv" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="input" value="counts.tab" ftype="tabular"/>
+            <param name="cluster" value="Yes"/>
+            <param name="method" value="hclust"/>
+            <param name="size" value="25"/>
+            <output name="output" file="logcounts_hclust.tsv" ftype="tabular"/>
+        </test>
     </tests>
     <help>
 
