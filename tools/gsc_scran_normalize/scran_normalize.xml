@@ -67,14 +67,19 @@
 
 **What it does**
 
-Takes a raw count expression matrix and returns a table of normalized expression values.
-
-Cell-specific biases are normalized using the computeSumFactors method, which implements the
-deconvolution strategy for scaling normalization (A. T. Lun, Bach, and Marioni 2016).
+Takes a raw count expression matrix and returns a table of log transformed scran-normalized expression values.
 
 This computes size factors that are used to scale the counts in each cell. The assumption is that 
 most genes are not differentially expressed (DE) between cells, such that any differences in 
 expression across the majority of genes represents some technical bias that should be removed.
+
+Cell-specific biases are normalized using the computeSumFactors method, which implements the
+deconvolution strategy for scaling normalization (A. T. Lun, Bach, and Marioni 2016). It creates a reference : 
+  - if no clustering step : the average count of all transcriptomes 
+  - if you choose to cluster your cells : the average count of each cluster. 
+Then it pools cells and then sum their expression profiles. The size factor is described as the median ration
+between the count sums and the average across all genes. Finally it constructs a linear distribution (deconvolution method)
+of size factors by taking multiple pools of cells.
 
 You can apply this method on cell cluster instead of your all set of cells by using quickCluster.
 It defines cluster using distances based on Spearman correlation on counts between cells, there is two available methods : 
