@@ -1,12 +1,12 @@
-<tool id="small_rna_maps" name="small_rna_maps" version="2.14.0_test">
+<tool id="small_rna_maps" name="small_rna_maps" version="2.15.0">
   <description></description>
   <requirements>
         <requirement type="package" version="1.11.2=py27_0">numpy</requirement>
-        <requirement type="package" version="0.11.2.1=py27_0">pysam</requirement>
+        <requirement type="package" version="0.15.3=py27hda2845c_1">pysam</requirement>
         <requirement type="package" version="1.3.2=r3.3.2_0">r-optparse</requirement>
         <requirement type="package" version="0.6_28=r3.3.2_0">r-latticeextra</requirement>
         <requirement type="package" version="2.2.1=r3.3.2_0">r-gridextra</requirement>
-        <requirement type="package" version="1.4.2=r3.3.2_0">r-reshape2</requirement>
+        <requirement type="package" version="1.4.3=r3.3.2_0">r-reshape2</requirement>
         <requirement type="package" version="0.6.6">sambamba</requirement>
   </requirements>
   <stdio>
@@ -79,7 +79,9 @@
     <param name="inputs" type="data" format="bam" label="Select a alignment files to parse" multiple="true"
            help="maps from these bam inputs will be collected in a single pdf output" />
     <param name="normalization" type="text" label="Enter a size/normalization factor."
-        help="Enter normalisation factors separated by space eg [0.75 1.23 1.1], no normalization if no values" value="1"/>
+           help="Enter normalisation factors separated by space eg [0.75 1.23 1.1], no normalization if no values,
+                 ignored if a single sample"
+           value="1"/>
     <param name="minsize" type="integer" label="Minimal size of reads for inclusion in analysis"
            value="19" help="default value: 19" />
     <param name="maxsize" type="integer" label="Maximal size of reads for inclusion in analysis"
