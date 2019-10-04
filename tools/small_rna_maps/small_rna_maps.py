@@ -243,9 +243,9 @@ class Map:
                         map_dictionary[(chrom, pos+1, 'F')] = []
         for key in map_dictionary:
             coverage = self.bam_object.count_coverage(
-                                                reference=key[0],
+                                                contig=key[0],
                                                 start=key[1]-1,
-                                                end=key[1],
+                                                stop=key[1],
                                                 quality_threshold=quality)
             """ Add the 4 coverage values """
             coverage = [sum(x) for x in zip(*coverage)]
@@ -298,7 +298,7 @@ class Map:
                     sizeness[size] += sizedic[chrom][polarity][size]
             Strandbias = strandness['F'] + strandness['R']
             if Strandbias:
-                Strandbias = strandness['F'] / float(Strandbias)
+                Strandbias = round(strandness['F'] / float(Strandbias), 2)
             else:
                 Strandbias = 2
             Mean = numpy.mean(sizeness.values())
@@ -313,10 +313,10 @@ class Map:
                     try:
                         line = [self.sample_name, chrom, polarity, size,
                                 sizedic[chrom][polarity][size],
-                                Strandbias, sizeness[size]]
+                                Strandbias, round(sizeness[size], 3)]
                     except KeyError:
                         line = [self.sample_name, chrom, polarity, size, 0,
-                                Strandbias, sizeness[size]]
+                                Strandbias, round(sizeness[size], 3)]
                     line = [str(i) for i in line]
                     out.write('\t'.join(line) + '\n')
 
