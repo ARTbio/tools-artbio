@@ -1,4 +1,4 @@
-<tool id="small_rna_maps" name="small_rna_maps" version="2.15.0">
+<tool id="small_rna_maps" name="small_rna_maps" version="2.16.0">
   <description></description>
   <requirements>
         <requirement type="package" version="1.11.2=py27_0">numpy</requirement>
@@ -302,8 +302,8 @@
             <output file="input_single_chr_x_6_single_plot_coverage.pdf" name="output_pdf" />
         </test>
         <test> <!-- 13 -->
-            <param name="inputs" value="input1.bam,input2.bam" ftype="bam" />
-            <param name="normalization" value="1.0 1.0" />
+            <param name="inputs" value="size1.bam,size2.bam" ftype="bam" />
+            <param name="normalization" value="2.0 1.0" />
             <param name="plots_options_selector" value="global" />
             <param name="mergestrands" value="nomerge" />
             <param name="first_plot" value="Size" />
@@ -311,8 +311,8 @@
             <output file="global_nomerge.pdf" name="output_pdf" />
         </test>
         <test> <!-- 14 -->
-            <param name="inputs" value="input1.bam,input2.bam" ftype="bam" />
-            <param name="normalization" value="1.0 1.0" />
+            <param name="inputs" value="size1.bam,size2.bam" ftype="bam" />
+            <param name="normalization" value="2.0 1.0" />
             <param name="plots_options_selector" value="global" />
             <param name="mergestrands" value="merge" />
             <param name="first_plot" value="Size" />

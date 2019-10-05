@@ -26,9 +26,12 @@ parser <- OptionParser(usage = "%prog [options] file", option_list = option_list
 args = parse_args(parser)
 
 # data frames implementation
+
 ## first table
 Table = read.delim(args$first_dataframe, header=T, row.names=NULL)
 colnames(Table)[1] <- "Dataset"
+dropcol <- c("Strandness", "z.score") # not used by this Rscript and is dropped for backward compatibility
+Table <- Table[,!(names(Table) %in% dropcol)]
 if (args$first_plot_method == "Counts" | args$first_plot_method == "Size") {
   Table <- within(Table, Counts[Polarity=="R"] <- (Counts[Polarity=="R"]*-1))
 }
@@ -42,6 +45,9 @@ if (args$normalization != "") {
 if (args$first_plot_method == "Counts" | args$first_plot_method == "Size" | args$first_plot_method == "Coverage") {
   i = 1
   for (sample in samples) {
+    # Warning
+    # Here the column is hard coded as the last column (dangerous)
+    # because its name changes with the method
     Table[, length(Table)][Table$Dataset==sample] <- Table[, length(Table)][Table$Dataset==sample]*norm_factors[i]
     i = i + 1
   }
@@ -50,10 +56,13 @@ genes=unique(Table$Chromosome)
 per_gene_readmap=lapply(genes, function(x) subset(Table, Chromosome==x))
 per_gene_limit=lapply(genes, function(x) c(1, unique(subset(Table, Chromosome==x)$Chrom_length)) )
 n_genes=length(per_gene_readmap)
+
 # second table
 if (args$extra_plot_method != '') {
   ExtraTable=read.delim(args$extra_dataframe, header=T, row.names=NULL)
   colnames(ExtraTable)[1] <- "Dataset"
+  dropcol <- c("Strandness", "z.score") # not used by this Rscript and is dropped for backward compatibility
+  Table <- Table[,!(names(Table) %in% dropcol)]
   if (args$extra_plot_method == "Counts" | args$extra_plot_method=='Size') {
     ExtraTable <- within(ExtraTable, Counts[Polarity=="R"] <- (Counts[Polarity=="R"]*-1))
   }
