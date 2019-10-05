@@ -143,10 +143,10 @@ plot_unit = function(df, method=args$first_plot_method, ...) {
   } else if (method != "Size") {
     p = xyplot(eval(as.name(method))~Coordinate|factor(Dataset, levels=unique(Dataset))+factor(Chromosome, levels=unique(Chromosome)),
                data=df,
-               type='p',
+               type= ifelse(method=='Coverage', 'l', 'p'),
                pch=19,
                cex=0.35,
-               scales= list(relation="free", x=list(rot=0, cex=0.7, tck=0.5), y=list(tick.number=4, rot=90, cex=0.7)),
+               scales= list(relation="free", x=list(rot=0, cex=0.7, axs="i", tck=0.5), y=list(tick.number=4, rot=90, cex=0.7)),
                xlab=NULL, main=NULL, ylab=NULL, ylim=ylimits,
                as.table=T,
                origin = 0,
@@ -155,6 +155,7 @@ plot_unit = function(df, method=args$first_plot_method, ...) {
                col=c("red","blue"),
                par.strip.text = list(cex=0.7),
                ...)
+    p=combineLimits(p)
   } else {
     p = barchart(Counts~as.factor(Size)|factor(Dataset, levels=unique(Dataset))+Chromosome, data = df, origin = 0,
                  horizontal=FALSE,

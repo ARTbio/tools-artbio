@@ -242,6 +242,8 @@ class Map:
                     if not map_dictionary[(chrom, pos+1, 'F')]:
                         map_dictionary[(chrom, pos+1, 'F')] = []
         for key in map_dictionary:
+            if 'R' in key:
+                continue
             coverage = self.bam_object.count_coverage(
                                                 contig=key[0],
                                                 start=key[1]-1,
