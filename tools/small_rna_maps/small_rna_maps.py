@@ -238,8 +238,8 @@ class Map:
             coverage_dictionary[(chrom, self.chromosomes[chrom], 'F')] = 0
             for read in self.bam_object.fetch(chrom):
                 positions = sorted(read.positions) # list of covered positions
-                # add flanking position at 0 to join
-                # the base line when plotting graph
+                #  add flanking position at 0 to join
+                #  the base line when plotting graph
                 flanking = []
                 for i in range(len(positions)-1):
                     right = positions[i+1]
@@ -252,7 +252,7 @@ class Map:
                 positions = sorted(positions + flanking)
                 if positions[0] > 0:
                     positions.insert(0, positions[0]-1)
-                if positions[-1] < self.chromosomes[chrom] -1:
+                if positions[-1] < self.chromosomes[chrom] - 1:
                     positions.append(positions[-1]+1)
                 for pos in positions:
                     if not map_dictionary[(chrom, pos+1, 'F')]:
