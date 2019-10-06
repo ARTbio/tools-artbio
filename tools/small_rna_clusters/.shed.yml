@@ -1,0 +1,21 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: small_rna_clusters
+description: clusters small rna reads in alignment BAM files
+long_description: |
+  Groups small rna reads in alignment BAM files to find potential small RNA producing
+  loci. Provides also various visualizations of clusters to estimate their biological
+  significance.
+
+categories:
+  - RNA
+  - SAM
+  - Graphics
+  - Next Gen Mappers
+
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/small_rna_clusters
+toolshed:
+  - testtoolshed
+  - toolshed
+

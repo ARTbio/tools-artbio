@@ -1,0 +1,248 @@
+<tool id="small_rna_clusters" name="small_rna_clusters" version="0.9.0">
+  <description></description>
+  <requirements>
+        <requirement type="package" version="1.11.2=py27_0">numpy</requirement>
+        <requirement type="package" version="0.15.3=py27hda2845c_1">pysam</requirement>
+        <requirement type="package" version="1.6.4=r36h6115d3f_0">r-optparse</requirement>
+        <requirement type="package" version="0.6_28=r36h6115d3f_1002">r-latticeextra</requirement>
+        <requirement type="package" version="2.3=r36h6115d3f_1002">r-gridextra</requirement>
+        <requirement type="package" version="1.4.3=r36h29659fb_0">r-reshape2</requirement>
+        <requirement type="package" version="0.6.6">sambamba</requirement>
+        <requirement type="package" version="1.9=h10a08f8_12">samtools</requirement>
+        <requirement type="package" version="64.2=he1b5a44_1">icu</requirement>
+  </requirements>
+  <stdio>
+      <exit_code range="1:" level="fatal" description="Tool exception" />
+  </stdio>
+  <command detect_errors="exit_code"><![CDATA[
+          #import json
+          #import os
+          #for $file in $inputs
+              sambamba view -t \${GALAXY_SLOTS} -F "not unmapped and sequence_length >= ${minsize} and sequence_length <= ${maxsize}" -f bam '$file' -o '$file.element_identifier' &&
+              samtools index '$file.element_identifier' &&
+          #end for
+
+          python '$__tool_directory__'/small_rna_maps.py
+              --inputs ${ ' '.join(['"%s"' % x.element_identifier for x in $inputs]) }
+              #set $labels = list()
+              #for $file in $inputs:
+                  $labels.append(str($file.element_identifier))
+              #end for
+              --sample_names ${ ' '.join(['"%s"' % x for x in $labels]) }
+              --minsize $minsize
+              --maxsize $maxsize
+              --plot_methods 'Counts'
+              --outputs '$output_tab'
+              --cluster ${plots_options.cluster}
+              --bed '$output_bed'
+              --bed_skipsize ${plots_options.skip_size}
+              --bed_skipcounts ${plots_options.skip_counts}
+              --bed_skipdensity ${plots_options.skip_density}
+              ${plots_options.strandness} &&
+              
+
+          Rscript '$__tool_directory__'/small_rna_maps.r
+              --first_dataframe '$output_tab'
+              --extra_dataframe '$extra_output_tab'
+              #if len(str($normalization)) != 1:
+              --normalization "${ ' '.join( [factor for factor in $normalization.split()]) }"
+              #else:
+              --normalization "${ ' '.join( ["1" for factor in $inputs] )}"
+              #end if
+              #if $ylimits_cond.ylimits == "no":
+                  --ymin '' --ymax ''
+              #else:
+                  --ymin '${ylimits_cond.ymin}' --ymax '${ylimits_cond.ymax}'
+              #end if
+              #if str($plots_options.plots_options_selector ) == "two_plot":
+                  --first_plot_method '${plots_options.first_plot}'
+                  --extra_plot_method '${plots_options.extra_plot}'
+              #elif str($plots_options.plots_options_selector ) == "global":
+                  --first_plot_method 'Size'
+                  --extra_plot_method ''
+                  --global '${plots_options.mergestrands}'
+              #else:
+                  --first_plot_method '${plots_options.first_plot}'
+                  --extra_plot_method ''
+              #end if
+              --output_pdf '$output_pdf'
+  ]]></command>
+ <inputs>
+    <param name="inputs" type="data" format="bam" label="Select a alignment files to parse" multiple="true"
+           help="maps from these bam inputs will be collected in a single pdf output" />
+    <param name="normalization" type="text" label="Enter a size/normalization factor."
+           help="Enter normalisation factors separated by space eg [0.75 1.23 1.1], no normalization if no values,
+                 ignored if a single sample"
+           value="1"/>
+    <param name="minsize" type="integer" label="Minimal size of reads for inclusion in analysis"
+           value="19" help="default value: 19" />
+    <param name="maxsize" type="integer" label="Maximal size of reads for inclusion in analysis"
+           value="29" help="default value: 29" />
+    <param name="first_plot" type="hidden" value="Counts"/>
+    <param name="cluster" type="integer" label="Clustering distance in nucleotides" value="1"
+           help="Sets the distance (in nt) below which reads are clustered to a single median position" />
+    <param name="strandness" argument="--nostrand" type="boolean" truevalue="--nostrand" falsevalue="" checked="false"
+           label="Ignore polarity of reads ?" help="Set if you wish to cluster reads regardless of whether they are forward or reverse"/>
+    <param name="skip_size" type="integer" label="do not report clusters whose size is less than the specified value" value="1"
+           help="Cluster size threshod (in nucleotides) for reporting. Set to 1 (default) reports all clusters, including singlets" />
+    <param name="skip_counts" type="integer" label="do not report cluster with a number of reads lower than the specified value" value="1"
+           help="Number-of-reads threshod (in nucleotides) for cluster reporting. Set to 1 (default) reports all clusters, irrespective of their counts" />
+     <param name="skip_density" type="float" label="do not report cluster with density equal or less than the specified value" value="0"
+           help="Density threshod (in reads per nucleotides) for reporting. Set to 0 (default) reports all cluster densities" />
+ </inputs>
+
+ <outputs>
+    <data format="tabular" name="output_tab" label="$plots_options.first_plot dataframe" />
+    <data format="bed" name="output_bed" label="bed file for clusters" >
+        <filter>plots_options['plots_options_selector'] == 'cluster'</filter>
+    </data>
+    <data format="tabular" name="extra_output_tab" label="$plots_options.extra_plot dataframe">
+        <filter>plots_options['plots_options_selector'] == 'two_plot'</filter>
+    </data>
+    <data format="pdf" name="output_pdf" label="small RNA maps" />
+</outputs>
+
+    <tests>
+        <test> <!-- 0 -->
+            <param name="inputs" value="input1.bam" ftype="bam" />
+            <param name="normalization" value="1.0" />
+            <param name="plots_options_selector" value="cluster" />
+            <param name="first_plot" value="Counts" />
+            <param name="cluster" value="5" />
+            <param name="skip_size" value="1" />
+            <param name="strandness" value="false" />
+            <output file="clustering.tab" name="output_tab" />
+            <output file="clustering.pdf" name="output_pdf" />
+            <output file="bed1.bed" name="output_bed" />
+        </test>
+        <test> <!-- 1 -->
+            <param name="inputs" value="input1.bam" ftype="bam" />
+            <param name="normalization" value="1.0" />
+            <param name="plots_options_selector" value="cluster" />
+            <param name="first_plot" value="Counts" />
+            <param name="cluster" value="5" />
+            <param name="skip_size" value="1" />
+            <param name="strandness" value="true" />
+            <output file="clustering_unstranded.tab" name="output_tab" />
+            <output file="clustering_unstranded.pdf" name="output_pdf" />
+            <output file="bed2.bed" name="output_bed" />
+        </test>
+        <test> <!-- 2 -->
+            <param name="inputs" value="input1.bam" ftype="bam" />
+            <param name="normalization" value="1.0" />
+            <param name="plots_options_selector" value="cluster" />
+            <param name="first_plot" value="Counts" />
+            <param name="cluster" value="5" />
+            <param name="skip_size" value="2" />
+            <param name="strandness" value="false" />
+            <output file="clustering.tab" name="output_tab" />
+            <output file="clustering.pdf" name="output_pdf" />
+            <output file="bed3.bed" name="output_bed" />
+        </test>
+        <test> <!-- 3 -->
+            <param name="inputs" value="input1.bam" ftype="bam" />
+            <param name="normalization" value="1.0" />
+            <param name="plots_options_selector" value="cluster" />
+            <param name="first_plot" value="Counts" />
+            <param name="cluster" value="5" />
+            <param name="skip_size" value="2" />
+            <param name="skip_counts" value="3" />
+            <param name="skip_density" value="1.0" />
+            <param name="strandness" value="false" />
+            <output file="clustering.tab" name="output_tab" />
+            <output file="clustering.pdf" name="output_pdf" />
+            <output file="bed4.bed" name="output_bed" />
+        </test>
+        <test> <!-- 4 -->
+            <param name="inputs" value="input1.bam" ftype="bam" />
+            <param name="normalization" value="1.0" />
+            <param name="plots_options_selector" value="cluster" />
+            <param name="first_plot" value="Counts" />
+            <param name="cluster" value="5" />
+            <param name="skip_size" value="2" />
+            <param name="skip_counts" value="2" />
+            <param name="skip_density" value="0.4" />
+            <param name="strandness" value="true" />
+            <output file="clustering_unstranded.tab" name="output_tab" />
+            <output file="clustering_unstranded.pdf" name="output_pdf" />
+            <output file="bed5.bed" name="output_bed" />
+        </test>
+    </tests>
+<help>
+
+**What it does**
+
+Plots mapping statistics of read alignments along reference chromosomes or genes or arbitrary regions :
+
+ - counts
+ - mean sizes
+ - median sizes
+ - coverage depth
+ - size distribution
+
+Read counts, mean sizes and median sizes are computed by counting the number of 5' end of reads
+in each position of a chromosome reference.
+Coverage depths are computed from the input bam alignment files using the python pysam module.
+
+The metrics mentioned above can be plotted either separately:
+
+.. image:: one_plot.png
+
+Or in all possible pairwise combinations:
+
+.. image:: two_plot.png
+
+For comparison purposes, values from bam alignment files can be normalized by a size factor
+before plotting (Normalisation field)
+
+*Cluster mode*
+
+Cluster of read alignments are aggregated along regions of *variable* lengths. The Clustering
+algorithm works as follows:
+
+A read is clustered with the following read on the genomic reference if the two reads are
+separated by at maximum the clustering distance (set in nucleotides). If clustered, the step is
+repeated with the following read until clustering fails. A new cluster is then searched.
+
+For clustering procedure, one has the possibility to consider the polarity of reads (only forward
+reads or reverse reads can be clustered separately), or to ignore this polarity.
+
+Cluster reads are plotted as for single reads, their coordinate being the median of extrem coordinates of the cluster.
+
+In addition, cluster are reported in a bed file, where clusters can be filtered out upon various parameters,
+cluster size, cluster read number or cluster read density (number of reads divided by the length of the cluster).
+
+**Inputs**
+
+bam alignment files that must be
+
+  - single-read
+  - sorted
+  - mapped to the same reference
+
+.. class:: warningmark
+
+This tools follows a "map-reduce" procedure: multiple inputs, that can be arranged as a data collection,
+are visualised side by side in a single pdf file.
+ 
+
+
+**Output**
+
+A pdf file generated by the R package lattice and one or two dataframes used to plot the data.
+
+</help>
+
+<citations>
+    <citation type="doi">10.1093/bioinformatics/btp352</citation>
+     <citation type="bibtex">@Book{,
+    title = {Lattice: Multivariate Data Visualization with R},
+    author = {Deepayan Sarkar},
+    publisher = {Springer},
+    address = {New York},
+    year = {2008},
+    note = {ISBN 978-0-387-75968-5},
+    url = {http://lmdvr.r-forge.r-project.org},
+  }</citation>
+</citations>
+</tool>
