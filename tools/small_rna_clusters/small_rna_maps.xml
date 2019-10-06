@@ -33,47 +33,24 @@
               --maxsize $maxsize
               --plot_methods 'Counts'
               --outputs '$output_tab'
-              --cluster ${plots_options.cluster}
+              --cluster $cluster
               --bed '$output_bed'
-              --bed_skipsize ${plots_options.skip_size}
-              --bed_skipcounts ${plots_options.skip_counts}
-              --bed_skipdensity ${plots_options.skip_density}
-              ${plots_options.strandness} &&
+              --bed_skipsize $skip_size
+              --bed_skipcounts $skip_counts
+              --bed_skipdensity $skip_density
+              $strandness &&
               
 
           Rscript '$__tool_directory__'/small_rna_maps.r
               --first_dataframe '$output_tab'
-              --extra_dataframe '$extra_output_tab'
-              #if len(str($normalization)) != 1:
-              --normalization "${ ' '.join( [factor for factor in $normalization.split()]) }"
-              #else:
-              --normalization "${ ' '.join( ["1" for factor in $inputs] )}"
-              #end if
-              #if $ylimits_cond.ylimits == "no":
-                  --ymin '' --ymax ''
-              #else:
-                  --ymin '${ylimits_cond.ymin}' --ymax '${ylimits_cond.ymax}'
-              #end if
-              #if str($plots_options.plots_options_selector ) == "two_plot":
-                  --first_plot_method '${plots_options.first_plot}'
-                  --extra_plot_method '${plots_options.extra_plot}'
-              #elif str($plots_options.plots_options_selector ) == "global":
-                  --first_plot_method 'Size'
-                  --extra_plot_method ''
-                  --global '${plots_options.mergestrands}'
-              #else:
-                  --first_plot_method '${plots_options.first_plot}'
-                  --extra_plot_method ''
-              #end if
+              --ymin '' --ymax ''
+              --first_plot_method 'Counts'
+              --extra_plot_method ''
               --output_pdf '$output_pdf'
   ]]></command>
  <inputs>
     <param name="inputs" type="data" format="bam" label="Select a alignment files to parse" multiple="true"
            help="maps from these bam inputs will be collected in a single pdf output" />
-    <param name="normalization" type="text" label="Enter a size/normalization factor."
-           help="Enter normalisation factors separated by space eg [0.75 1.23 1.1], no normalization if no values,
-                 ignored if a single sample"
-           value="1"/>
     <param name="minsize" type="integer" label="Minimal size of reads for inclusion in analysis"
            value="19" help="default value: 19" />
     <param name="maxsize" type="integer" label="Maximal size of reads for inclusion in analysis"
@@ -96,18 +73,12 @@
     <data format="bed" name="output_bed" label="bed file for clusters" >
         <filter>plots_options['plots_options_selector'] == 'cluster'</filter>
     </data>
-    <data format="tabular" name="extra_output_tab" label="$plots_options.extra_plot dataframe">
-        <filter>plots_options['plots_options_selector'] == 'two_plot'</filter>
-    </data>
     <data format="pdf" name="output_pdf" label="small RNA maps" />
 </outputs>
 
     <tests>
         <test> <!-- 0 -->
             <param name="inputs" value="input1.bam" ftype="bam" />
-            <param name="normalization" value="1.0" />
-            <param name="plots_options_selector" value="cluster" />
-            <param name="first_plot" value="Counts" />
             <param name="cluster" value="5" />
             <param name="skip_size" value="1" />
             <param name="strandness" value="false" />
@@ -117,9 +88,6 @@
         </test>
         <test> <!-- 1 -->
             <param name="inputs" value="input1.bam" ftype="bam" />
-            <param name="normalization" value="1.0" />
-            <param name="plots_options_selector" value="cluster" />
-            <param name="first_plot" value="Counts" />
             <param name="cluster" value="5" />
             <param name="skip_size" value="1" />
             <param name="strandness" value="true" />
@@ -129,9 +97,6 @@
         </test>
         <test> <!-- 2 -->
             <param name="inputs" value="input1.bam" ftype="bam" />
-            <param name="normalization" value="1.0" />
-            <param name="plots_options_selector" value="cluster" />
-            <param name="first_plot" value="Counts" />
             <param name="cluster" value="5" />
             <param name="skip_size" value="2" />
             <param name="strandness" value="false" />
@@ -141,9 +106,6 @@
         </test>
         <test> <!-- 3 -->
             <param name="inputs" value="input1.bam" ftype="bam" />
-            <param name="normalization" value="1.0" />
-            <param name="plots_options_selector" value="cluster" />
-            <param name="first_plot" value="Counts" />
             <param name="cluster" value="5" />
             <param name="skip_size" value="2" />
             <param name="skip_counts" value="3" />
@@ -155,9 +117,6 @@
         </test>
         <test> <!-- 4 -->
             <param name="inputs" value="input1.bam" ftype="bam" />
-            <param name="normalization" value="1.0" />
-            <param name="plots_options_selector" value="cluster" />
-            <param name="first_plot" value="Counts" />
             <param name="cluster" value="5" />
             <param name="skip_size" value="2" />
             <param name="skip_counts" value="2" />
