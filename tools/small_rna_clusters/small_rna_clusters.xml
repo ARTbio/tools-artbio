@@ -1,7 +1,6 @@
 <tool id="small_rna_clusters" name="small_rna_clusters" version="0.9.0">
   <description></description>
   <requirements>
-        <requirement type="package" version="1.11.2=py27_0">numpy</requirement>
         <requirement type="package" version="0.15.3=py27hda2845c_1">pysam</requirement>
         <requirement type="package" version="1.6.4=r36h6115d3f_0">r-optparse</requirement>
         <requirement type="package" version="0.6_28=r36h6115d3f_1002">r-latticeextra</requirement>

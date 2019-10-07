@@ -1,8 +1,6 @@
 import argparse
 from collections import defaultdict
 
-import numpy
-
 import pysam
 
 
@@ -230,7 +228,7 @@ def main(inputs, samples, outputs, minsize, maxsize, cluster,
          nostrand, bedfile=None, bed_skipsize=0):
     out = open(outputs, 'w')
     header = ["# Dataset", "Chromosome", "Chrom_length", "Coordinate",
-              "Polarity", "Counts", "Start-End", "Cluster Size","density"]
+              "Polarity", "Counts", "Start-End", "Cluster Size", "density"]
     out.write('\t'.join(header) + '\n')
     for input, sample in zip(inputs, samples):
         mapobj = Map(input, sample, minsize, maxsize, cluster, nostrand)
