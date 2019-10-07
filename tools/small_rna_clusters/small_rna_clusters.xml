@@ -22,7 +22,7 @@
               samtools index '$file.element_identifier' &&
           #end for
 
-          python '$__tool_directory__'/small_rna_maps.py
+          python '$__tool_directory__'/small_rna_clusters.py
               --inputs ${ ' '.join(['"%s"' % x.element_identifier for x in $inputs]) }
               #set $labels = list()
               #for $file in $inputs:
@@ -31,7 +31,6 @@
               --sample_names ${ ' '.join(['"%s"' % x for x in $labels]) }
               --minsize $minsize
               --maxsize $maxsize
-              --plot_methods 'Counts'
               --outputs '$output_tab'
               --cluster $cluster
               --bed '$output_bed'
@@ -41,11 +40,9 @@
               $strandness &&
               
 
-          Rscript '$__tool_directory__'/small_rna_maps.r
+          Rscript '$__tool_directory__'/small_rna_clusters.r
               --first_dataframe '$output_tab'
-              --ymin '' --ymax ''
               --first_plot_method 'Counts'
-              --extra_plot_method ''
               --output_pdf '$output_pdf'
   ]]></command>
  <inputs>
@@ -69,107 +66,87 @@
  </inputs>
 
  <outputs>
-    <data format="tabular" name="output_tab" label="$plots_options.first_plot dataframe" />
-    <data format="bed" name="output_bed" label="bed file for clusters" >
-        <filter>plots_options['plots_options_selector'] == 'cluster'</filter>
-    </data>
+    <data format="tabular" name="output_tab" label="Counts Dataframe" />
+    <data format="bed" name="output_bed" label="bed file for clusters" />
     <data format="pdf" name="output_pdf" label="small RNA maps" />
 </outputs>
 
     <tests>
         <test> <!-- 0 -->
-            <param name="inputs" value="input1.bam" ftype="bam" />
-            <param name="cluster" value="5" />
+            <param name="inputs" value="input1.bam,input2.bam" ftype="bam" />
+            <param name="cluster" value="500" />
             <param name="skip_size" value="1" />
             <param name="strandness" value="false" />
-            <output file="clustering.tab" name="output_tab" />
-            <output file="clustering.pdf" name="output_pdf" />
-            <output file="bed1.bed" name="output_bed" />
+            <output file="clustering_0.tab" name="output_tab" />
+            <output file="clustering_0.pdf" name="output_pdf" />
+            <output file="bed_0.bed" name="output_bed" />
         </test>
         <test> <!-- 1 -->
-            <param name="inputs" value="input1.bam" ftype="bam" />
-            <param name="cluster" value="5" />
+            <param name="inputs" value="input1.bam,input2.bam" ftype="bam" />
+            <param name="cluster" value="500" />
             <param name="skip_size" value="1" />
             <param name="strandness" value="true" />
-            <output file="clustering_unstranded.tab" name="output_tab" />
-            <output file="clustering_unstranded.pdf" name="output_pdf" />
-            <output file="bed2.bed" name="output_bed" />
+            <output file="clustering_1.tab" name="output_tab" />
+            <output file="clustering_1.pdf" name="output_pdf" />
+            <output file="bed_1.bed" name="output_bed" />
         </test>
         <test> <!-- 2 -->
-            <param name="inputs" value="input1.bam" ftype="bam" />
-            <param name="cluster" value="5" />
-            <param name="skip_size" value="2" />
+            <param name="inputs" value="input1.bam,input2.bam" ftype="bam" />
+            <param name="cluster" value="500" />
+            <param name="skip_size" value="1000" />
             <param name="strandness" value="false" />
-            <output file="clustering.tab" name="output_tab" />
-            <output file="clustering.pdf" name="output_pdf" />
-            <output file="bed3.bed" name="output_bed" />
+            <output file="clustering_2.tab" name="output_tab" />
+            <output file="clustering_2.pdf" name="output_pdf" />
+            <output file="bed_2.bed" name="output_bed" />
         </test>
         <test> <!-- 3 -->
-            <param name="inputs" value="input1.bam" ftype="bam" />
-            <param name="cluster" value="5" />
-            <param name="skip_size" value="2" />
-            <param name="skip_counts" value="3" />
-            <param name="skip_density" value="1.0" />
+            <param name="inputs" value="input1.bam,input2.bam" ftype="bam" />
+            <param name="cluster" value="500" />
+            <param name="skip_size" value="1000" />
+            <param name="skip_counts" value="200" />
+            <param name="skip_density" value="0.1" />
             <param name="strandness" value="false" />
-            <output file="clustering.tab" name="output_tab" />
-            <output file="clustering.pdf" name="output_pdf" />
-            <output file="bed4.bed" name="output_bed" />
+            <output file="clustering_3.tab" name="output_tab" />
+            <output file="clustering_3.pdf" name="output_pdf" />
+            <output file="bed_3.bed" name="output_bed" />
         </test>
         <test> <!-- 4 -->
-            <param name="inputs" value="input1.bam" ftype="bam" />
-            <param name="cluster" value="5" />
-            <param name="skip_size" value="2" />
-            <param name="skip_counts" value="2" />
-            <param name="skip_density" value="0.4" />
+            <param name="inputs" value="input1.bam,input2.bam" ftype="bam" />
+            <param name="cluster" value="2000" />
+            <param name="skip_size" value="2000" />
+            <param name="skip_counts" value="100" />
+            <param name="skip_density" value="0.1" />
             <param name="strandness" value="true" />
-            <output file="clustering_unstranded.tab" name="output_tab" />
-            <output file="clustering_unstranded.pdf" name="output_pdf" />
-            <output file="bed5.bed" name="output_bed" />
+            <output file="clustering_4.tab" name="output_tab" />
+            <output file="clustering_4.pdf" name="output_pdf" />
+            <output file="bed_4.bed" name="output_bed" />
         </test>
     </tests>
 <help>
-
 **What it does**
 
-Plots mapping statistics of read alignments along reference chromosomes or genes or arbitrary regions :
+Clusters of read alignments (provided as bam files) are aggregated along regions of
+*variable* lengths. The Clustering algorithm works as follows:
 
- - counts
- - mean sizes
- - median sizes
- - coverage depth
- - size distribution
+A read is clustered with the next read on the genomic reference if the two reads are
+separated by *at maximum* the clustering distance (set in nucleotides). If clustered, the
+step is repeated with the following read until clustering fails. A new cluster is then
+searched.
 
-Read counts, mean sizes and median sizes are computed by counting the number of 5' end of reads
-in each position of a chromosome reference.
-Coverage depths are computed from the input bam alignment files using the python pysam module.
+For clustering procedure, one has the possibility to consider the polarity of reads
+(default setting, only forward reads or reverse reads can be clustered, separately), or to
+ignore this polarity.
 
-The metrics mentioned above can be plotted either separately:
+Clusters of reads are plotted as single bars, their coordinates being the medians of
+the flanking coordinates of the clusters.
 
-.. image:: one_plot.png
+In addition, cluster are reported in a bed file. There, clusters can be filtered out upon
+various parameters: cluster size, cluster read number or cluster read density (number of
+reads divided by the length of the cluster).
 
-Or in all possible pairwise combinations:
-
-.. image:: two_plot.png
-
-For comparison purposes, values from bam alignment files can be normalized by a size factor
-before plotting (Normalisation field)
-
-*Cluster mode*
-
-Cluster of read alignments are aggregated along regions of *variable* lengths. The Clustering
-algorithm works as follows:
-
-A read is clustered with the following read on the genomic reference if the two reads are
-separated by at maximum the clustering distance (set in nucleotides). If clustered, the step is
-repeated with the following read until clustering fails. A new cluster is then searched.
-
-For clustering procedure, one has the possibility to consider the polarity of reads (only forward
-reads or reverse reads can be clustered separately), or to ignore this polarity.
-
-Cluster reads are plotted as for single reads, their coordinate being the median of extrem coordinates of the cluster.
-
-In addition, cluster are reported in a bed file, where clusters can be filtered out upon various parameters,
-cluster size, cluster read number or cluster read density (number of reads divided by the length of the cluster).
+Note that bed filtering options only affect the number of reported line in the bed file.
+All clusters are shown in the plot. **i.e. the only parameter that affects the number of
+found clusters is the clustering distance.**
 
 **Inputs**
 
@@ -181,15 +158,14 @@ bam alignment files that must be
 
 .. class:: warningmark
 
-This tools follows a "map-reduce" procedure: multiple inputs, that can be arranged as a data collection,
-are visualised side by side in a single pdf file.
+This tools follows a "map-reduce" procedure: multiple inputs, which can be arranged in a
+data collection, are visualised side by side in a single pdf file and are reported in a
+single bed file.
  
-
-
 **Output**
 
-A pdf file generated by the R package lattice and one or two dataframes used to plot the data.
-
+A pdf file generated by the R package lattice, a dataframe used to plot the clusters, and
+a bed file that reports significant clusters.
 </help>
 
 <citations>

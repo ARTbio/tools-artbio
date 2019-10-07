@@ -37,11 +37,8 @@ def Parser():
                             help='Skip clusters of size equal or less than\
                             specified integer in the bed output. \
                             Default = 0, not skipping')
-    the_parser.add_argument('--outputs', nargs='+', action='store',
+    the_parser.add_argument('--outputs', action='store',
                             help='list of two output paths (only two)')
-    the_parser.add_argument('-M', '--plot_methods', nargs='+', action='store',
-                            help='list of 2 plot methods (only two) among:\
-                            Counts, Max, Mean, Median, Coverage and Size')
     the_parser.add_argument('--nostrand', action='store_true',
                             help='Consider reads regardless their polarity')
 
@@ -171,105 +168,6 @@ class Map:
                     R_clust_dic[centcoor][-1]]]
         return clustered_dic
 
-    def compute_readcount(self, map_dictionary, out):
-        '''
-        takes a map_dictionary as input and writes
-        a readmap_dictionary {(chromosome,read_position,polarity):
-                              number_of_reads}
-        in an open file handler out
-        '''
-        readmap_dictionary = dict()
-        for key in map_dictionary:
-            readmap_dictionary[key] = len(map_dictionary[key])
-        self.write_table(readmap_dictionary, out)
-
-    def compute_max(self, map_dictionary, out):
-        '''
-        takes a map_dictionary as input and writes
-        a max_dictionary {(chromosome,read_position,polarity):
-                              max_of_number_of_read_at_any_position}
-        Not clear this function is still required
-        '''
-        merge_keylist = [(i[0], 0) for i in map_dictionary.keys()]
-        max_dictionary = dict(merge_keylist)
-        for key in map_dictionary:
-            if len(map_dictionary[key]) > max_dictionary[key[0]]:
-                max_dictionary[key[0]] = len(map_dictionary[key])
-        self.write_table(max_dictionary, out)
-
-    def compute_mean(self, map_dictionary, out):
-        '''
-        takes a map_dictionary as input and returns
-        a mean_dictionary {(chromosome,read_position,polarity):
-                                                mean_value_of_reads}
-        '''
-        mean_dictionary = dict()
-        for key in map_dictionary:
-            if len(map_dictionary[key]) == 0:
-                mean_dictionary[key] = 0
-            else:
-                mean_dictionary[key] = round(numpy.mean(map_dictionary[key]),
-                                             1)
-        self.write_table(mean_dictionary, out)
-
-    def compute_median(self, map_dictionary, out):
-        '''
-        takes a map_dictionary as input and returns
-        a mean_dictionary {(chromosome,read_position,polarity):
-                                                    mean_value_of_reads}
-        '''
-        median_dictionary = dict()
-        for key in map_dictionary:
-            if len(map_dictionary[key]) == 0:
-                median_dictionary[key] = 0
-            else:
-                median_dictionary[key] = numpy.median(map_dictionary[key])
-        self.write_table(median_dictionary, out)
-
-    def compute_coverage(self, map_dictionary, out, quality=15):
-        '''
-        takes a map_dictionary as input and returns
-        a coverage_dictionary {(chromosome,read_position,polarity):
-                                                coverage}
-        '''
-        coverage_dictionary = dict()
-        for chrom in self.chromosomes:
-            coverage_dictionary[(chrom, 1, 'F')] = 0
-            coverage_dictionary[(chrom, self.chromosomes[chrom], 'F')] = 0
-            for read in self.bam_object.fetch(chrom):
-                positions = read.positions  # a list of covered positions
-                for pos in positions:
-                    if not map_dictionary[(chrom, pos+1, 'F')]:
-                        map_dictionary[(chrom, pos+1, 'F')] = []
-        for key in map_dictionary:
-            if 'R' in key:
-                continue
-            coverage = self.bam_object.count_coverage(
-                                                contig=key[0],
-                                                start=key[1]-1,
-                                                stop=key[1],
-                                                quality_threshold=quality)
-            """ Add the 4 coverage values """
-            coverage = [sum(x) for x in zip(*coverage)]
-            coverage_dictionary[key] = coverage[0]
-        self.write_table(coverage_dictionary, out)
-
-    def compute_size(self, map_dictionary, out):
-        '''
-        Takes a map_dictionary and returns a dictionary of sizes:
-        {chrom: {polarity: {size: nbre of reads}}}
-        '''
-        size_dictionary = defaultdict(lambda: defaultdict(
-                                      lambda: defaultdict(int)))
-        #  to track empty chromosomes
-        for chrom in self.chromosomes:
-            if self.bam_object.count(chrom) == 0:
-                size_dictionary[chrom]['F'][10] = 0
-        for key in map_dictionary:
-            for size in map_dictionary[key]:
-                size_dictionary[key[0]][key[2]][size] += 1
-        self.write_size_table(size_dictionary, out)
-
     def write_table(self, mapdict, out):
         '''
         Writer of a tabular file
@@ -282,45 +180,6 @@ class Map:
                     key[1], key[2], mapdict[key]]
             line = [str(i) for i in line]
             out.write('\t'.join(line) + '\n')
-
-    def write_size_table(self, sizedic, out):
-        '''
-        Writer of a tabular file
-        Dataset, Chromosome, Chrom_length, <category (size)>, <some value>
-        from a dictionary of sizes: {chrom: {polarity: {size: nbre of reads}}}
-        out is an *open* file handler
-        '''
-        for chrom in sorted(sizedic):
-            sizes = range(self.minsize, self.maxsize+1)
-            strandness = defaultdict(int)
-            sizeness = defaultdict(int)
-            for polarity in sizedic[chrom]:
-                for size in sizes:
-                    strandness[polarity] += sizedic[chrom][polarity][size]
-                    sizeness[size] += sizedic[chrom][polarity][size]
-            Strandbias = strandness['F'] + strandness['R']
-            if Strandbias:
-                Strandbias = round(strandness['F'] / float(Strandbias), 2)
-            else:
-                Strandbias = 2
-            Mean = numpy.mean(sizeness.values())
-            StDev = numpy.std(sizeness.values())
-            for size in sizeness:
-                if StDev:
-                    sizeness[size] = (sizeness[size] - Mean) / StDev
-                else:
-                    sizeness[size] = 0
-            for polarity in sorted(sizedic[chrom]):
-                for size in sizes:
-                    try:
-                        line = [self.sample_name, chrom, polarity, size,
-                                sizedic[chrom][polarity][size],
-                                Strandbias, round(sizeness[size], 3)]
-                    except KeyError:
-                        line = [self.sample_name, chrom, polarity, size, 0,
-                                Strandbias, round(sizeness[size], 3)]
-                    line = [str(i) for i in line]
-                    out.write('\t'.join(line) + '\n')
 
     def write_cluster_table(self, clustered_dic, out, bedpath):
         '''
@@ -367,35 +226,16 @@ class Map:
         bed.close()
 
 
-def main(inputs, samples, methods, outputs, minsize, maxsize, cluster,
+def main(inputs, samples, outputs, minsize, maxsize, cluster,
          nostrand, bedfile=None, bed_skipsize=0):
-    for method, output in zip(methods, outputs):
-        out = open(output, 'w')
-        if method == 'Size':
-            header = ["# Dataset", "Chromosome", "Polarity", method, "Counts",
-                      "Strandness", "z-score"]
-        elif cluster:
-            header = ["# Dataset", "Chromosome", "Chrom_length", "Coordinate",
-                      "Polarity", method, "Start-End", "Cluster Size",
-                      "density"]
-        else:
-            header = ["# Dataset", "Chromosome", "Chrom_length", "Coordinate",
-                      "Polarity", method]
-        out.write('\t'.join(header) + '\n')
-        for input, sample in zip(inputs, samples):
-            mapobj = Map(input, sample, minsize, maxsize, cluster, nostrand)
-            token = {"Counts": mapobj.compute_readcount,
-                     "Max": mapobj.compute_max,
-                     "Mean": mapobj.compute_mean,
-                     "Median": mapobj.compute_median,
-                     "Coverage": mapobj.compute_coverage,
-                     "Size": mapobj.compute_size,
-                     "cluster": mapobj.write_cluster_table}
-            if cluster:
-                token["cluster"](mapobj.map_dict, out, bedfile)
-            else:
-                token[method](mapobj.map_dict, out)
-        out.close()
+    out = open(outputs, 'w')
+    header = ["# Dataset", "Chromosome", "Chrom_length", "Coordinate",
+              "Polarity", "Counts", "Start-End", "Cluster Size","density"]
+    out.write('\t'.join(header) + '\n')
+    for input, sample in zip(inputs, samples):
+        mapobj = Map(input, sample, minsize, maxsize, cluster, nostrand)
+        mapobj.write_cluster_table(mapobj.map_dict, out, bedfile)
+    out.close()
 
 
 if __name__ == "__main__":
@@ -404,5 +244,5 @@ if __name__ == "__main__":
     if len(set(args.sample_names)) != len(args.sample_names):
         args.sample_names = [name + '_' + str(i) for
                              i, name in enumerate(args.sample_names)]
-    main(args.inputs, args.sample_names, args.plot_methods, args.outputs,
+    main(args.inputs, args.sample_names, args.outputs,
          args.minsize, args.maxsize, args.cluster, args.nostrand, args.bed)
