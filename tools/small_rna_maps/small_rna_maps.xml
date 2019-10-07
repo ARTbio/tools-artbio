@@ -1,4 +1,4 @@
-<tool id="small_rna_maps" name="small_rna_maps" version="2.16.0">
+<tool id="small_rna_maps" name="small_rna_maps" version="2.16.1">
   <description></description>
   <requirements>
         <requirement type="package" version="1.11.2=py27_0">numpy</requirement>
@@ -303,6 +303,14 @@
         </test>
         <test> <!-- 13 -->
             <param name="inputs" value="size1.bam,size2.bam" ftype="bam" />
+            <param name="normalization" value="1.0 2.5" />
+            <param name="plots_options_selector" value="one_plot" />
+            <param name="first_plot" value="Coverage" />
+            <output file="coverage.tab" name="output_tab" />
+            <output file="coverage.pdf" name="output_pdf" />
+        </test>
+        <test> <!-- 14 -->
+            <param name="inputs" value="size1.bam,size2.bam" ftype="bam" />
             <param name="normalization" value="2.0 1.0" />
             <param name="plots_options_selector" value="global" />
             <param name="mergestrands" value="nomerge" />
@@ -310,7 +318,7 @@
             <output file="size12.tab" name="output_tab" />
             <output file="global_nomerge.pdf" name="output_pdf" />
         </test>
-        <test> <!-- 14 -->
+        <test> <!-- 15 -->
             <param name="inputs" value="size1.bam,size2.bam" ftype="bam" />
             <param name="normalization" value="2.0 1.0" />
             <param name="plots_options_selector" value="global" />
