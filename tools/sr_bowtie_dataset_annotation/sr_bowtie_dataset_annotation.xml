@@ -1,4 +1,4 @@
-<tool id="sr_bowtie_dataset_annotation" name="Annotate smRNA dataset" version="2.3.0">
+<tool id="sr_bowtie_dataset_annotation" name="Annotate smRNA dataset" version="2.4.0">
   <description>by iterative alignments with sRbowtie</description>
   <requirements>
         <requirement type="package" version="1.1.2">bowtie</requirement>
