@@ -12,11 +12,13 @@ def Parser():
         description="Cherry pick fasta sequences")
     the_parser.add_argument('--input', action="store", type=str,
                             help="input fasta file")
+    the_parser.add_argument('--searchfor', action="store", type=str,
+                            help="with or without")
     the_parser.add_argument('--query-string', dest="query_string",
                             action="store", type=str,
-                            help="header containing the string will be\
-                                  extracted as well as the corresponding\
-                                  sequence")
+                            help="header containing the string will be \
+                                  extracted or excluded as well as the \
+                                  corresponding sequence")
     the_parser.add_argument(
         '--output', action="store", type=str, help="output fasta file")
     args = the_parser.parse_args()
@@ -30,9 +32,14 @@ def __main__():
     CrudeFasta = open(args.input, "r").read()
     Output = open(args.output, "w")
     FastaListe = CrudeFasta.split(">")
-    for sequence in FastaListe:
-        if search_term in sequence:
-            Output.write(">%s\n" % sequence.rstrip())
+    if args.searchfor == 'with':
+        for sequence in FastaListe:
+            if search_term in sequence:
+                Output.write(">%s\n" % sequence.rstrip())
+    else:
+        for sequence in FastaListe:
+            if search_term not in sequence:
+                Output.write(">%s\n" % sequence.rstrip())
     Output.close()
 
 

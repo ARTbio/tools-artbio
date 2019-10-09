@@ -1,28 +1,34 @@
-<tool id="cherry_pick_fasta" name="Pick Fasta sequences" version="1.0.0">
-  <description>with header satisfying a query string</description>
+<tool id="cherry_pick_fasta" name="Pick Fasta sequences" version="2.0.0">
+  <description>with header satisfying a string query</description>
   <command interpreter="python">cherry_pick_fasta.py
                                    --input $input
+                                   --searchfor $searchfor
                                    --query-string "$query"
                                    --output $output
   </command>
 
   <inputs>
-    <param name="query" type="text" size="30" value="" label="Select sequences with this string in their header" help="exemple: gi|40557596">
-    <sanitizer>
-        <valid initial="string.printable">
-          <remove value="&quot;"/>
-          <remove value="\"/>
-        </valid>
-        <mapping initial="none">
-          <add source="&quot;" target="\&quot;"/>
-          <add source="\" target="\\"/>
-        </mapping>
+      <param name="query" type="text" size="30" value="" label="Search string" help="exemple: gi|40557596">
+      <sanitizer>
+          <valid initial="string.printable">
+              <remove value="&quot;"/>
+              <remove value="\"/>
+          </valid>
+          <mapping initial="none">
+              <add source="&quot;" target="\&quot;"/>
+              <add source="\" target="\\"/>
+          </mapping>
       </sanitizer>
     </param>
+    <param name="searchfor" type="select" label="retrieve sequences whose headers contain or do not contain the search string">
+        <option value="with" selected="true">contain</option>
+        <option value="without">do not contain</option>
+    </param>
+
     <param format="fasta" label="Source file" name="input" type="data" />
   </inputs>
   <outputs>
-    <data name="output" format="fasta" label="${tool.name} on ${on_string} including '${query.value}' in header" />
+    <data name="output" format="fasta" label="Fasta sequences '${searchfor.value}' '${query.value}' in header" />
   </outputs>
   <tests>
     <test>
@@ -30,15 +36,23 @@
         <param name="query" value="gi|81971654" />
         <output name="output" ftype="fasta" file="output.fa" />
     </test>
+    <test>
+        <param ftype="fasta" name="input" value="input.fa" />
+        <param name="query" value="RNA" />
+        <param name="searchfor" value="without" />
+        <output name="output" ftype="fasta" file="output_without.fa" />
+    </test>
   </tests>
+
   <help>
 **What it does**
 
-This tool retrieves nucleotide/peptide sequences from a fasta file whose headers match a given query string.
+This tool retrieves nucleotide/peptide sequences from a fasta file whose headers match
+or do not match a given string.
 
-It is Copyright © 2015 `CNRS and University Pierre et Marie Curie`_ and is released under the `MIT license`_.
+It is Copyright © 2019 `CNRS and Sorbonne-Université`_ and is released under the `MIT license`_.
 
-.. _CNRS and University Pierre et Marie Curie: http://www.upmc.fr/en/index.html
+.. _CNRS and  Sorbonne-Université: http://www.sorbonne-universite.fr/en
 .. _MIT license: http://opensource.org/licenses/MIT
 
   </help>
