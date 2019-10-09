@@ -12,27 +12,78 @@ def Parser():
         description="Cherry pick fasta sequences")
     the_parser.add_argument('--input', action="store", type=str,
                             help="input fasta file")
+    the_parser.add_argument('--searchfor', action="store", type=str,
+                            help="with, without, or withlist, withoutlist")
     the_parser.add_argument('--query-string', dest="query_string",
                             action="store", type=str,
-                            help="header containing the string will be\
-                                  extracted as well as the corresponding\
-                                  sequence")
+                            help="headers containing the string will be \
+                                  extracted or excluded as well as the \
+                                  corresponding sequence")
+    the_parser.add_argument('--query-file', dest="query_file",
+                            action="store", type=str,
+                            help="headers containing any of the strings provided in the \
+                                  text file (1 string per line) will be \
+                                  extracted or excluded as well as the \
+                                  corresponding sequence")
+
     the_parser.add_argument(
         '--output', action="store", type=str, help="output fasta file")
     args = the_parser.parse_args()
     return args
 
 
+def parse_fasta_with(query, FastaListe):
+    if not isinstance(query, list):
+        query = [query]
+    accumulator = []
+    for sequence in FastaListe:
+        for string in query:
+            if string in sequence:
+                accumulator.append(sequence)
+                continue
+    return accumulator
+
+
+def complement_fasta(fullfasta, subfasta):
+    return list(set(fullfasta) - set(subfasta))
+
+
+def getquerylist(file):
+    querylist = []
+    for line in open(file, 'r'):
+        querylist.append(line.rstrip())
+    return querylist
+
+
 def __main__():
     """ main function """
     args = Parser()
-    search_term = args.query_string
+    searchterm = args.query_string
     CrudeFasta = open(args.input, "r").read()
     Output = open(args.output, "w")
-    FastaListe = CrudeFasta.split(">")
-    for sequence in FastaListe:
-        if search_term in sequence:
-            Output.write(">%s\n" % sequence.rstrip())
+    FastaListe = CrudeFasta.split(">")[1:]
+    if args.query_string:
+        if args.searchfor == 'with':
+            contList = parse_fasta_with(searchterm, FastaListe)
+            contFasta = ">%s" % ">".join(contList)
+            Output.write(contFasta)
+        elif args.searchfor == 'without':
+            notcontList = complement_fasta(FastaListe,
+                                           parse_fasta_with(searchterm,
+                                                            FastaListe))
+            notcontFasta = ">%s" % ">".join(notcontList)
+            Output.write(notcontFasta)
+    if args.query_file:
+        searchlist = getquerylist(args.query_file)
+        if args.searchfor == 'with':
+            contList = parse_fasta_with(searchlist, FastaListe)
+            contFasta = ">%s" % ">".join(contList)
+            Output.write(contFasta)
+        elif args.searchfor == 'without':
+            notcontList = complement_fasta(FastaListe, parse_fasta_with(
+                                           searchlist, FastaListe))
+            notcontFasta = ">%s" % ">".join(notcontList)
+            Output.write(notcontFasta)
     Output.close()
 
 
