@@ -80,7 +80,7 @@ def __main__():
             contFasta = ">%s" % ">".join(contList)
             Output.write(contFasta)
         elif args.searchfor == 'without':
-            notcontList = complement_fasta(FastaListe,parse_fasta_with(
+            notcontList = complement_fasta(FastaListe, parse_fasta_with(
                                            searchlist, FastaListe))
             notcontFasta = ">%s" % ">".join(notcontList)
             Output.write(notcontFasta)
