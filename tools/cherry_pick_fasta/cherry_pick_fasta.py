@@ -48,23 +48,42 @@ def complement_fasta(fullfasta, subfasta):
     return list(set(fullfasta) - set(subfasta))
 
 
+def getquerylist(file):
+    querylist = []
+    for line in open(file, 'r'):
+        querylist.append(line.rstrip())
+    return querylist
+
+
 def __main__():
     """ main function """
     args = Parser()
-    search_term = args.query_string
+    searchterm = args.query_string
     CrudeFasta = open(args.input, "r").read()
     Output = open(args.output, "w")
     FastaListe = CrudeFasta.split(">")[1:]
-    if args.searchfor == 'with':
-        contList = parse_fasta_with(search_term, FastaListe)
-        contFasta = ">%s" % ">".join(contList)
-        Output.write(contFasta)
-    elif args.searchfor == 'without':
-        notcontList = complement_fasta(FastaListe,
-                                       parse_fasta_with(search_term,
-                                                        FastaListe))
-        notcontFasta = ">%s" % ">".join(notcontList)
-        Output.write(notcontFasta)
+    if args.query_string:
+        if args.searchfor == 'with':
+            contList = parse_fasta_with(searchterm, FastaListe)
+            contFasta = ">%s" % ">".join(contList)
+            Output.write(contFasta)
+        elif args.searchfor == 'without':
+            notcontList = complement_fasta(FastaListe,
+                                           parse_fasta_with(searchterm,
+                                                            FastaListe))
+            notcontFasta = ">%s" % ">".join(notcontList)
+            Output.write(notcontFasta)
+    if args.query_file:
+        searchlist = getquerylist(args.query_file)
+        if args.searchfor == 'with':
+            contList = parse_fasta_with(searchlist, FastaListe)
+            contFasta = ">%s" % ">".join(contList)
+            Output.write(contFasta)
+        elif args.searchfor == 'without':
+            notcontList = complement_fasta(FastaListe,parse_fasta_with(
+                                           searchlist, FastaListe))
+            notcontFasta = ">%s" % ">".join(notcontList)
+            Output.write(notcontFasta)
     Output.close()
 
 
