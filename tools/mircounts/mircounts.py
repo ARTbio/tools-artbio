@@ -43,8 +43,8 @@ def get_pre_mir_coverage(bamfile, quality=10):
     """
     coverage = dict()
     for ref_name, ref_len in zip(bamfile.references, bamfile.lengths):
-        coverage[ref_name] = bamfile.count_coverage(reference=ref_name,
-                                                    start=0, end=ref_len,
+        coverage[ref_name] = bamfile.count_coverage(contig=ref_name,
+                                                    start=0, stop=ref_len,
                                                     quality_threshold=quality)
         """ Add the 4 coverage values """
         coverage[ref_name] = [sum(x) for x in
@@ -68,9 +68,9 @@ def get_mir_counts(bamfile, gff_file):
                 mir_start = int(gff_fields[3])
                 mir_end = int(gff_fields[4])
                 # GFF is 1-based, pysam is 0-based.
-                counts[mir_name] = bamfile.count(reference=premir_name,
+                counts[mir_name] = bamfile.count(contig=premir_name,
                                                  start=mir_start-1,
-                                                 end=mir_end-1)
+                                                 stop=mir_end-1)
     return counts
 
 

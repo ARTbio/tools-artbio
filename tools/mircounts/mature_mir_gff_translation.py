@@ -10,9 +10,6 @@ def Parser():
     the_parser.add_argument(
         '--output', action="store", type=str,
         help="output GFF3 file with converted mature mir coordinates")
-    the_parser.add_argument(
-        '--basename', action="store", type=str,
-        help="basename of the parsed gff file returned")
     args = the_parser.parse_args()
     return args
 
@@ -43,6 +40,8 @@ def convert_and_print_gff(gff_input_file, output):
             gff_dict[ID]["primary"] = line[:-1]
             gff_dict[ID]["miRNAs"] = []
         elif gff_fields[2] == "miRNA":
+            if "_" in ID:
+                continue
             parent_ID = gff_fields[8].split("erives_from=")[1]
             gff_dict[parent_ID]["miRNAs"].append(line[:-1])
     # Now reorganise features and recalculate coordinates of premirs and mirs
@@ -70,8 +69,10 @@ def convert_and_print_gff(gff_input_file, output):
             # ensure their is only 2 child miRNAs at best
             if len(gff_dict[ID]["miRNAs"]) > 2:
                 gff_dict[ID]["miRNAs"] = gff_dict[ID]["miRNAs"][:2]
-            # sort child miRNAs 5p first 3p second
-            if gff_dict[ID]["miRNAs"][0].find('5p') == -1:
+            # sort child miRNAs 5p first 3p second,
+            # if there are two miR mature at least !
+            if len(gff_dict[ID]["miRNAs"]) > 1 and \
+                    gff_dict[ID]["miRNAs"][0].find('5p') == -1:
                 gff_dict[ID]["miRNAs"] = gff_dict[ID]["miRNAs"][::-1]
             for mir in gff_dict[ID]["miRNAs"]:
                 mir_fields = mir.split('\t')
