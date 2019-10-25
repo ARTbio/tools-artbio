@@ -1,4 +1,5 @@
-# Wrapper of the variant caller 'MANTA', for use it as a Galaxy-based tool
+Wrapper of the variant caller 'MANTA', for use it as a Galaxy-based tool :
+--------------------------------------------------------------------------
 
 Run the following commands in a terminal:
 
