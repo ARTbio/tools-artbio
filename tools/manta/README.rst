@@ -2,11 +2,9 @@
 
 Run the following commands in a terminal:
 
-```
 unzip test-data.zip
 
 planemo s
-````
 
 Open in your browser:
 
