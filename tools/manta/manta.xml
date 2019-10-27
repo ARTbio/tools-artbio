@@ -13,8 +13,9 @@
         @set_reference_fasta_filename@
 
 	#import os
+	#import random
         #set job_dir=os.getcwd()
-        #set run_dir =job_dir + '/MantaWorkflow'
+	#set run_dir = job_dir + '/MantaWorkflow_' + (' ' + str(random.randint(1,100000))).strip()
 	#set config_file = $__tool_directory__ + '/configManta.py.ini'
 	#set config_file_custom = $__tool_directory__ + '/customized.ini'	
 	#set $input_normal = 'normal.bam'
