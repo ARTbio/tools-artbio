@@ -176,6 +176,7 @@
 
     <tests>
       <test>
+        <param name="callMemMb" value="1000"/>
         <param name="bam_input_selector" value="tumor_bam"/>
         <param name="normal_bam_file" ftype="bam" value="HCC1954_normal.bam"/>
         <param name="tumor_bam_file" ftype="bam" value="HCC1954_tumor.bam"/>
