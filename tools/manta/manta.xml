@@ -178,11 +178,19 @@
 
     <tests>
       <test>
-        <param name="normal_bam_file" ftype="bam" value="HCC1954_normal.bam"/>
-        <param name="tumor_bam_file" ftype="bam" value="HCC1954_tumor.bam"/>
-        <param name="reference_source_selector"  value="history"/>
-        <param name="ref_file" ftype="fasta" value="hg19_region.fa"/>
-        <param name="configuration_switch" value="Default"/>
+        <conditional name="reference_source">
+                <param name="reference_source_selector" value="history"/>
+                <param name="ref_file" ftype="fasta" value="hg19_region.fa"/>
+        </conditional>
+        <conditional name="bam_input">
+                <param name="bam_input_selector" value="tumor_bam"/>
+                <param name="normal_bam_file" ftype="bam" value="HCC1954_normal.bam"/>
+                <param name="tumor_bam_file" ftype="bam" value="HCC1954_tumor.bam"/>
+        </conditional>
+        <conditional name="set_configuration">
+                <param name="set_configuration_switch" value="Default_config_file"/>
+        </conditional>
+        <param name="O1_check" value="True"/>           
         <output name="out_vcf1" file="candidateSV.vcf.gz"/>
       </test>
     </tests>
