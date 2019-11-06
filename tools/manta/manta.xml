@@ -14,7 +14,7 @@
 
 	#import os
 	#import random
-        #set job_dir=os.getcwd()
+    #set job_dir=os.getcwd()
 	#set run_dir = job_dir + '/MantaWorkflow_' + (' ' + str(random.randint(1,100000))).strip()
 	#set config_file = $__tool_directory__ + '/configManta.py.ini'
 	#set config_file_custom = $__tool_directory__ + '/customized.ini'	
@@ -22,10 +22,10 @@
 	#set $input_tumor = 'tumor.bam'
 
 	#if str( $bam_input.bam_input_selector ) == "not_tumor_bam":
-	ln -s '$bam_input.normal_bam_file' $input_normal &&
+	    ln -s '$bam_input.normal_bam_file' $input_normal &&
         ln -s '$bam_input.normal_bam_file.metadata.bam_index' normal.bai &&
 	#else if str( $bam_input.bam_input_selector ) == "tumor_bam":
-	ln -s '$bam_input.normal_bam_file' $input_normal &&
+	    ln -s '$bam_input.normal_bam_file' $input_normal &&
         ln -s '$bam_input.normal_bam_file.metadata.bam_index' normal.bai &&
         ln -s '$bam_input.tumor_bam_file' $input_tumor &&
         ln -s '$bam_input.tumor_bam_file.metadata.bam_index' tumor.bai &&
@@ -50,8 +50,6 @@
 	sed -i 's/useOverlapPairEvidence = 0/useOverlapPairEvidence = $set_configuration.useOverlapPairEvidence/' ${config_file_custom} &&
 	#end if
 
-
-
 	configManta.py
 	--referenceFasta='${reference_fasta_filename}'
 
@@ -64,14 +62,14 @@
 	--config=${config_file}
 
 	#if str( $bam_input.bam_input_selector ) == "not_tumor_bam":
-	--bam=$input_normal
+	    --bam=$input_normal
 	#else if str( $bam_input.bam_input_selector ) == "tumor_bam":
-	--bam=$input_normal
-	--tumorBam=$input_tumor
+	    --bam=$input_normal
+	    --tumorBam=$input_tumor
         #end if
 
 	--runDir='${run_dir}'
-        --scanSizeMb=${advanced.scanSizeMb}
+    --scanSizeMb=${advanced.scanSizeMb}
 	--callMemMb=${advanced.callMemMb} &&
 
 	ln -s -f '${run_dir}/runWorkflow.py' '${run_manta_workflow}' &&
@@ -150,8 +148,8 @@
 
       <param name="runworkflow_file_check" type="boolean" label="output manta run_workflow file" checked="False" help="Show run_workflow file on history"/>
       <param name="config_file_check" type="boolean" label="output conf file" checked="False" help="Show configuration file on history"/>
-      <param name="O1_check" type="boolean" label="snvs filtred" checked="False" help="Show filtred snvs"/>
-      <param name="O2_check" type="boolean" label="indels filtred" checked="False" help="Show filtred indels"/>
+      <param name="O1_check" type="boolean" label="snvs filtred" checked="True" help="Show filtred snvs"/>
+      <param name="O2_check" type="boolean" label="indels filtred" checked="True" help="Show filtred indels"/>
       <param name="O3_check" type="boolean" label="all snvs" checked="False" help="Show snvs"/>
 
     </inputs>
@@ -178,12 +176,14 @@
 
     <tests>
       <test>
+        <param name="bam_input_selector" value="tumor_bam"/>
         <param name="normal_bam_file" ftype="bam" value="HCC1954_normal.bam"/>
         <param name="tumor_bam_file" ftype="bam" value="HCC1954_tumor.bam"/>
         <param name="reference_source_selector"  value="history"/>
         <param name="ref_file" ftype="fasta" value="hg19_region.fa"/>
         <param name="configuration_switch" value="Default"/>
-        <output name="out_vcf1" file="candidateSV.vcf.gz"/>
+        <output name="out_vcf1" file="candidateSV.vcf.gz" decompress="true" lines_diff="4"/>
+        <output name="out_vcf2" file="diploidSV.vcf.gz" decompress="true" lines_diff="4"/>
       </test>
     </tests>
 
