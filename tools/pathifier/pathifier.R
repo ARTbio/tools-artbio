@@ -192,8 +192,12 @@ if(args$is_normal == T){
 
   pdf(args$scatterplot)
   for(i in pathwaynames){
-    DF <- data.frame(PDS$curves[[i]][,1:3], normal = normals, score = as.numeric(PDS$scores[[i]]))
-    scatterplot3d(PDS$curves[[i]][,1:3], main = paste("Principal curve of", i), box = F, pch = 19, color = ifelse(normals == T, "blue", "red"))
+    DF <- data.frame(PDS$curves[[i]][,1:3], normal = normals, score = as.numeric(PDS$scores[[i]]), curve_order = as.vector(PDS$curves_order[[i]]))
+    # sc3 <- scatterplot3d(DF[DF$curve_order,1:3], main = paste("Principal curve of", i), box = F, type = "l", pch = " ")#, color = DF$score)#, pch = ifelse(DF$normal, 22, 21))
+    # sc3$points(DF[,1:3], box = F, pch = ifelse(DF$normal, 22, 21), cex = ifelse(DF$normal, 2, 1.5), ifelse(DF$normal, "blue", "red"))
+    ordered <- DF[DF$curve_order,]
+    sc3 <- scatterplot3d(ordered[,1:3], main = paste("Principal curve of", i), box = F, pch = 19, type = "l")
+    sc3$points3d(ordered[,1:3], box = F, pch = ifelse(ordered$normal, 19, 8), col = ifelse(ordered$normal, "blue", "red"))
     p <- ggpairs(data = DF, 
                  columns = 1:3, 
                  upper = list(continuous = "points", mapping = aes(color = score)), 
@@ -217,8 +221,21 @@ if(args$is_normal == T){
   
   pdf(args$scatterplot)
   for(i in pathwaynames){
-    DF <- data.frame(PDS$curves[[i]][,1:3], score = as.numeric(PDS$scores[[i]]))
-    scatterplot3d(PDS$curves[[i]][,1:3], box = F, main = paste("Principal curve of", i), pch = 19)
+    DF <- data.frame(PDS$curves[[i]][,1:3], score = as.numeric(PDS$scores[[i]]), curve_order = as.vector(PDS$curves_order[[i]]))
+    #scatterplot3d(DF[,1:3], box = F, main = paste("Principal curve of", i), pch = 19, type = "h", color = DF$score)
+    #scatterplot3d(DF[DF$curve_order,1:3], main = paste("Principal curve of", i), box = F, pch = 19, type = "l", add = T)
+    ordered <- DF[DF$curve_order,]
+
+    # Construct continuous color scale
+    myColorRamp <- function(colors, values) {
+        v <- (values - min(values))/diff(range(values))
+        x <- colorRamp(colors)(v)
+        rgb(x[,1], x[,2], x[,3], maxColorValue = 255)
+    }
+    cols <- myColorRamp(c("blue", "red"), ordered$score) 
+
+    sc3 <- scatterplot3d(ordered[,1:3], main = paste("Principal curve of", i), box = F, pch = 19, type = "l")
+    sc3$points3d(ordered[,1:3], box = F, pch = 19, col = cols)
     p <- ggpairs(data = DF, 
                  columns = 1:3,
                  upper = list(continuous = "points", mapping = aes(color = score)),
@@ -238,18 +255,34 @@ dimnames(PDS_scores) <- list(colnames(exp.matrix.filtered), names(PDS$scores))
 
 ## plot heatmap
 pdf(args$heatmap_pdf)
-pheatmap(t(PDS_scores),
-         main = "Heatmap of Pathway Deregulation Score",   # heat map title
-         cluster_rows = args$heatmap_cluster_pathways,     # apply clustering method
-         cluster_cols = args$heatmap_cluster_cells,        # apply clustering method
+if(ncol(PDS_scores) == 1){
+    PDS_scores <- cbind.data.frame(PDS_scores, PDS_scores)
+    pheatmap(t(PDS_scores),
+             main = paste("Heatmap of Pathway Deregulation Score on", names(PDS$scores)),   # heat map title
+             cluster_rows = F,                                                              # apply clustering method
+             cluster_cols = args$heatmap_show_cell_labels,                                  # apply clustering method
+
+             #Additional Options
+             ## Color labeled columns
+             # annotation_col = cell_metadata,
+             # annotation_colors = cell_metadata_color,
+             show_rownames = F,
+             show_colnames = args$heatmap_show_cell_labels
+    )
+}else {
+    pheatmap(t(PDS_scores),
+             main = "Heatmap of Pathway Deregulation Score",   # heat map title
+             cluster_rows = args$heatmap_cluster_pathways,     # apply clustering method
+             cluster_cols = args$heatmap_cluster_cells,        # apply clustering method
                    
-         #Additional Options
-         ## Color labeled columns
-         # annotation_col = cell_metadata,
-         # annotation_colors = cell_metadata_color,
-         show_rownames = args$heatmap_show_pathway_labels,
-         show_colnames = args$heatmap_show_cell_labels
-)
+             #Additional Options
+             ## Color labeled columns
+             # annotation_col = cell_metadata,
+             # annotation_colors = cell_metadata_color,
+             show_rownames = args$heatmap_show_pathway_labels,
+             show_colnames = args$heatmap_show_cell_labels
+    )
+}
 dev.off()
 
 
