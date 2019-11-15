@@ -12,7 +12,7 @@ library(pathifier)
 library(optparse)
 library(pheatmap)
 library(scatterplot3d)
-library(GGally)
+library(circlize)
 
 option_list <- list(
   make_option(
@@ -101,16 +101,10 @@ option_list <- list(
     help = "Print row names (pathways) on the heatmap [default : '%default' ]"
   ),
   make_option(
-    "--scatterplot",
+    "--plot",
     type = "character",
-    default = "./PDS_curves.pdf",
-    help = "Curveof PDS in pdf [default : '%default' ]"
-  ),
-  make_option(
-    "--heatmap_pdf",
-    type = "character",
-    default = "./PDS_heatmap.pdf",
-    help = "Heatmap pdf [default : '%default' ]"
+    default = "./plot.pdf",
+    help = "Pathifier visualization [default : '%default' ]"
   )
 )
 parser <- OptionParser(usage = "%prog [options] file", option_list=option_list)
@@ -177,6 +171,54 @@ if(args$min_exp == "data"){
 } else args$min_exp <- as.numeric(args$min_exp)
 
 
+# Open pdf
+pdf(args$plot)
+
+# Construct continuous color scale
+myColorRamp <- function(colors, values) {
+    v <- (values - min(values))/diff(range(values))
+    x <- colorRamp(colors)(v)
+    rgb(x[,1], x[,2], x[,3], maxColorValue = 255)
+}
+
+col_score_fun = colorRamp2(c(0, 0.5, 1), c("blue", "yellow", "red"))
+
+#Continous color scale legend
+legend.col <- function(col, lev){
+ 
+opar <- par
+ 
+n <- length(col)
+ 
+bx <- par("usr")
+ 
+box.cx <- c(bx[2] + (bx[2] - bx[1]) / 1000,
+bx[2] + (bx[2] - bx[1]) / 1000 + (bx[2] - bx[1]) / 50)
+box.cy <- c(bx[3], bx[3])
+box.sy <- (bx[4] - bx[3]) / n
+ 
+xx <- rep(box.cx, each = 2)
+ 
+par(xpd = TRUE)
+for(i in 1:n){
+ 
+yy <- c(box.cy[1] + (box.sy * (i - 1)),
+box.cy[1] + (box.sy * (i)),
+box.cy[1] + (box.sy * (i)),
+box.cy[1] + (box.sy * (i - 1)))
+polygon(xx, yy, col = col[i], border = col[i])
+ 
+}
+par(new = TRUE)
+plot(0, 0, type = "n",
+ylim = c(min(lev), max(lev)),
+yaxt = "n", ylab = "",
+xaxt = "n", xlab = "",
+frame.plot = FALSE)
+axis(side = 4, las = 2, tick = FALSE, line = .25)
+par <- opar
+}
+
 # Run Pathifier
 if(args$is_normal == T){
   PDS <- quantify_pathways_deregulation(exp.matrix.filtered, 
@@ -190,23 +232,19 @@ if(args$is_normal == T){
                                         min_std = args$min_std,
                                         min_exp = args$min_exp)
 
-  pdf(args$scatterplot)
   for(i in pathwaynames){
-    DF <- data.frame(PDS$curves[[i]][,1:3], normal = normals, score = as.numeric(PDS$scores[[i]]), curve_order = as.vector(PDS$curves_order[[i]]))
-    # sc3 <- scatterplot3d(DF[DF$curve_order,1:3], main = paste("Principal curve of", i), box = F, type = "l", pch = " ")#, color = DF$score)#, pch = ifelse(DF$normal, 22, 21))
-    # sc3$points(DF[,1:3], box = F, pch = ifelse(DF$normal, 22, 21), cex = ifelse(DF$normal, 2, 1.5), ifelse(DF$normal, "blue", "red"))
+    DF <- data.frame(PDS$curves[[i]][,1:3], normal = normals, PDS = as.numeric(PDS$scores[[i]]), curve_order = as.vector(PDS$curves_order[[i]]))
     ordered <- DF[DF$curve_order,]
+
+    cols_score <- myColorRamp(c("blue", "red"), ordered$PDS)
+    sc3_score <- scatterplot3d(ordered[,1:3], main = paste("Principal curve of", i), box = F, pch = 19, type = "l")
+    sc3_score$points3d(ordered[,1:3], box = F, pch = 19, col = cols_score)
+    #legend.col(cols_score, levels = ordered$PDS)
+
+    cols_status <- ifelse(ordered$normal, "blue", "red")
     sc3 <- scatterplot3d(ordered[,1:3], main = paste("Principal curve of", i), box = F, pch = 19, type = "l")
-    sc3$points3d(ordered[,1:3], box = F, pch = ifelse(ordered$normal, 19, 8), col = ifelse(ordered$normal, "blue", "red"))
-    p <- ggpairs(data = DF, 
-                 columns = 1:3, 
-                 upper = list(continuous = "points", mapping = aes(color = score)), 
-                 lower = list(continuous = "points", mapping = aes(color = normal)),
-                 title = paste("Principal curve of", i),
-                 legend = 3)
-    print(p)
+    sc3$points3d(ordered[,1:3], box = F, pch = ifelse(ordered$normal, 19, 8), col = cols_status)
   }
-  dev.off()
 
 } else{
   PDS <- quantify_pathways_deregulation(exp.matrix.filtered, 
@@ -219,32 +257,25 @@ if(args$is_normal == T){
                                         min_std = args$min_std,
                                         min_exp = args$min_exp)
   
-  pdf(args$scatterplot)
   for(i in pathwaynames){
-    DF <- data.frame(PDS$curves[[i]][,1:3], score = as.numeric(PDS$scores[[i]]), curve_order = as.vector(PDS$curves_order[[i]]))
-    #scatterplot3d(DF[,1:3], box = F, main = paste("Principal curve of", i), pch = 19, type = "h", color = DF$score)
-    #scatterplot3d(DF[DF$curve_order,1:3], main = paste("Principal curve of", i), box = F, pch = 19, type = "l", add = T)
+    DF <- data.frame(PDS$curves[[i]][,1:3], PDS = as.numeric(PDS$scores[[i]]), curve_order = as.vector(PDS$curves_order[[i]]))
     ordered <- DF[DF$curve_order,]
 
-    # Construct continuous color scale
-    myColorRamp <- function(colors, values) {
-        v <- (values - min(values))/diff(range(values))
-        x <- colorRamp(colors)(v)
-        rgb(x[,1], x[,2], x[,3], maxColorValue = 255)
-    }
-    cols <- myColorRamp(c("blue", "red"), ordered$score) 
+    cols <- myColorRamp(c("blue", "yellow", "red"), ordered$PDS) 
+
+    sc3 <- scatterplot3d(ordered[,1:3], main = paste("Principal curve of", i), box = F, pch = 19, type = "l")
+    sc3$points3d(ordered[,1:3], box = F, pch = 19, col = col_score_fun(ordered$PDS))
+    #legend.col(col_score_fun(ordered$PDS), levels = ordered$PDS)
+    sc3.coords <- sc3$xyz.convert(ordered[,1:3])
+    text(sc3.coords$x, sc3.coords$y, labels = as.character(round(ordered$PDS, 3)), pos = 2, offset = 0.5, box = F)
 
     sc3 <- scatterplot3d(ordered[,1:3], main = paste("Principal curve of", i), box = F, pch = 19, type = "l")
     sc3$points3d(ordered[,1:3], box = F, pch = 19, col = cols)
-    p <- ggpairs(data = DF, 
-                 columns = 1:3,
-                 upper = list(continuous = "points", mapping = aes(color = score)),
-                 lower = NULL, 
-                 title = paste("Principal curve of", i), 
-                 legend = 3)
-    print(p)
+    #legend.col(cols, levels = ordered$PDS)
+    sc3.coords <- sc3$xyz.convert(ordered[,1:3])
+    text(sc3.coords$x, sc3.coords$y, labels = as.character(round(ordered$PDS, 3)), pos = 2, offset = 0.5, box = F)
+
   }
-  dev.off()
 }
 
 
@@ -253,23 +284,8 @@ dimnames(PDS_scores) <- list(colnames(exp.matrix.filtered), names(PDS$scores))
 
 
 
-## plot heatmap
-pdf(args$heatmap_pdf)
-if(ncol(PDS_scores) == 1){
-    PDS_scores <- cbind.data.frame(PDS_scores, PDS_scores)
-    pheatmap(t(PDS_scores),
-             main = paste("Heatmap of Pathway Deregulation Score on", names(PDS$scores)),   # heat map title
-             cluster_rows = F,                                                              # apply clustering method
-             cluster_cols = args$heatmap_show_cell_labels,                                  # apply clustering method
-
-             #Additional Options
-             ## Color labeled columns
-             # annotation_col = cell_metadata,
-             # annotation_colors = cell_metadata_color,
-             show_rownames = F,
-             show_colnames = args$heatmap_show_cell_labels
-    )
-}else {
+## plot heatmap 
+if(ncol(PDS_scores) > 1){
     pheatmap(t(PDS_scores),
              main = "Heatmap of Pathway Deregulation Score",   # heat map title
              cluster_rows = args$heatmap_cluster_pathways,     # apply clustering method
@@ -280,7 +296,9 @@ if(ncol(PDS_scores) == 1){
              # annotation_col = cell_metadata,
              # annotation_colors = cell_metadata_color,
              show_rownames = args$heatmap_show_pathway_labels,
-             show_colnames = args$heatmap_show_cell_labels
+             show_colnames = args$heatmap_show_cell_labels,
+             border_color = NA,
+             legend = TRUE
     )
 }
 dev.off()
