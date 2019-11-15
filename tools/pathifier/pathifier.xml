@@ -55,9 +55,9 @@
             </when>
         </conditional>
         <param name="max_stability" label="Throw away components leading to low stability of sampling noise" type="boolean" truevalue="TRUE" falsevalue="FALSE" checked="true" />
-        <param name="attempts" type="integer" label="Number of runs to determine stability" value="1000"/>
+        <param name="attempts" type="integer" label="Number of runs to determine stability" value="100"/>
         <param name="min_std" type="text" value="0.4" label="Minimum of standard deviation to filter out low variable genes"
-               help="Use 'data' to use the minimum std of your data" />
+               help="Use 'data' to use the minimum standard deviation of your data" />
         <param name="min_exp" type="text" value="4" label="Minimum of gene expression to filter out low variable genes"
                help="Use 'data' to use the minimum expression of your data" />
         <param name="heatmap_cluster_cells" label="Cluster samples on heatmap" type="boolean" truevalue="TRUE" falsevalue="FALSE" checked="true" />
@@ -95,13 +95,29 @@
 
 **What it does**
 
-Takes as an input a matrix of n observations (columns, generally n RNAseq library) of k variables
-(rows, generally k genes).
+Pathifier is an algorithm that infers pathway deregulation scores for each tumor sample on the basis of 
+expression data. This score is determined, in a context-specific manner, for every particular dataset
+and type of cancer that is being investigated. The algorithm  transforms gene-level information into
+pathway-level information, generating a compact and biologically relevant representation of each sample.
 
-k variables define a space of k dimensions. Any observation
-of k expression values for k genes (the purpose of one RNAseq experiment) can be assigned
-to a position in the k-dim space, of coordinates c1, c2, c3, ..., ck.
+**Inputs**
 
+Takes as inputs :
+    * a matrix of n observations (columns, generally n RNAseq library) of k variables (rows, generally k genes).
+    * a Gene Matrix Transposed file (GMT format) where each row represents a gene set :
+        * first column : gene set name (pathway name)
+        * second : description of gene set
+        * third and + : list of genes that composed the gene, set tab-separated  
+    * (Optional) a two column table to described either your transcriptome status (cancer or not) with no header : 
+        * first column : sample labels
+        * second : levels of sample status : 1 = Healthy, 0 = Tumor
+
+**Outputs**
+
+This tool gives you several outputs : 
+    * Pathway Deregulation Score (PDS) table : one by pathway (column) and by transcriptome (row)
+    * Heatmap of PDS (pdf) : vizualization of PDS score that allows (through clustering) to see pattern in pathway deregulation
+    * (Optional) Log file of Pathifier algorithm
 
     </help>
     <citations>
