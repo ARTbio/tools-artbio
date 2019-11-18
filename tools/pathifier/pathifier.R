@@ -175,49 +175,7 @@ if(args$min_exp == "data"){
 pdf(args$plot)
 
 # Construct continuous color scale
-myColorRamp <- function(colors, values) {
-    v <- (values - min(values))/diff(range(values))
-    x <- colorRamp(colors)(v)
-    rgb(x[,1], x[,2], x[,3], maxColorValue = 255)
-}
-
-col_score_fun = colorRamp2(c(0, 0.5, 1), c("blue", "yellow", "red"))
-
-#Continous color scale legend
-legend.col <- function(col, lev){
- 
-opar <- par
- 
-n <- length(col)
- 
-bx <- par("usr")
- 
-box.cx <- c(bx[2] + (bx[2] - bx[1]) / 1000,
-bx[2] + (bx[2] - bx[1]) / 1000 + (bx[2] - bx[1]) / 50)
-box.cy <- c(bx[3], bx[3])
-box.sy <- (bx[4] - bx[3]) / n
- 
-xx <- rep(box.cx, each = 2)
- 
-par(xpd = TRUE)
-for(i in 1:n){
- 
-yy <- c(box.cy[1] + (box.sy * (i - 1)),
-box.cy[1] + (box.sy * (i)),
-box.cy[1] + (box.sy * (i)),
-box.cy[1] + (box.sy * (i - 1)))
-polygon(xx, yy, col = col[i], border = col[i])
- 
-}
-par(new = TRUE)
-plot(0, 0, type = "n",
-ylim = c(min(lev), max(lev)),
-yaxt = "n", ylab = "",
-xaxt = "n", xlab = "",
-frame.plot = FALSE)
-axis(side = 4, las = 2, tick = FALSE, line = .25)
-par <- opar
-}
+col_score_fun = colorRamp2(c(0, 0.5, 1), c("#4575B4", "#FFFFBF", "#D73027"))
 
 # Run Pathifier
 if(args$is_normal == T){
@@ -236,14 +194,26 @@ if(args$is_normal == T){
     DF <- data.frame(PDS$curves[[i]][,1:3], normal = normals, PDS = as.numeric(PDS$scores[[i]]), curve_order = as.vector(PDS$curves_order[[i]]))
     ordered <- DF[DF$curve_order,]
 
-    cols_score <- myColorRamp(c("blue", "red"), ordered$PDS)
-    sc3_score <- scatterplot3d(ordered[,1:3], main = paste("Principal curve of", i), box = F, pch = 19, type = "l")
-    sc3_score$points3d(ordered[,1:3], box = F, pch = 19, col = cols_score)
-    #legend.col(cols_score, levels = ordered$PDS)
+#    boxplot(PDS~normal, data = ordered)
+#    boxplot(PDS~normal, data = DF)
+
+    layout(cbind(1:2, 1:2), heights = c(7, 1))
+    sc3 <- scatterplot3d(ordered[,1:3], main = paste("Principal curve of", i), box = F, pch = 19, type = "l")
+    sc3$points3d(ordered[,1:3], box = F, pch = 19, col = col_score_fun(ordered$PDS))
+
+    # Plot color scale legend
+    par(mar=c(5, 3, 0, 3))
+    plot(seq(min(ordered$PDS), max(ordered$PDS), length = 100), rep(0, 100), pch = 15,
+        axes = TRUE, yaxt = "n", xlab = "Color scale of PDS", ylab = "", bty = "n",
+        col = col_score_fun(seq(min(ordered$PDS), max(ordered$PDS), length = 100)))
+
 
     cols_status <- ifelse(ordered$normal, "blue", "red")
-    sc3 <- scatterplot3d(ordered[,1:3], main = paste("Principal curve of", i), box = F, pch = 19, type = "l")
-    sc3$points3d(ordered[,1:3], box = F, pch = ifelse(ordered$normal, 19, 8), col = cols_status)
+    sc3 <- scatterplot3d(ordered[,1:3], main = paste("Principal curve of", i), box = F, pch = "", type = "l")
+    sc3$points3d(ordered[,1:3], box = F, pch = ifelse(ordered$normal, 19, 8), col = ifelse(ordered$normal, "blue", "red"))
+    legend("topright", pch = c(19, 8), yjust=0, legend = c("normal", "cancer"), col = c("blue", "red"), cex = 1.1)
+
+
   }
 
 } else{
@@ -261,19 +231,15 @@ if(args$is_normal == T){
     DF <- data.frame(PDS$curves[[i]][,1:3], PDS = as.numeric(PDS$scores[[i]]), curve_order = as.vector(PDS$curves_order[[i]]))
     ordered <- DF[DF$curve_order,]
 
-    cols <- myColorRamp(c("blue", "yellow", "red"), ordered$PDS) 
-
+    layout(cbind(1:2, 1:2), heights = c(7, 1))
     sc3 <- scatterplot3d(ordered[,1:3], main = paste("Principal curve of", i), box = F, pch = 19, type = "l")
     sc3$points3d(ordered[,1:3], box = F, pch = 19, col = col_score_fun(ordered$PDS))
-    #legend.col(col_score_fun(ordered$PDS), levels = ordered$PDS)
-    sc3.coords <- sc3$xyz.convert(ordered[,1:3])
-    text(sc3.coords$x, sc3.coords$y, labels = as.character(round(ordered$PDS, 3)), pos = 2, offset = 0.5, box = F)
 
-    sc3 <- scatterplot3d(ordered[,1:3], main = paste("Principal curve of", i), box = F, pch = 19, type = "l")
-    sc3$points3d(ordered[,1:3], box = F, pch = 19, col = cols)
-    #legend.col(cols, levels = ordered$PDS)
-    sc3.coords <- sc3$xyz.convert(ordered[,1:3])
-    text(sc3.coords$x, sc3.coords$y, labels = as.character(round(ordered$PDS, 3)), pos = 2, offset = 0.5, box = F)
+    # Plot color scale legend
+    par(mar=c(5, 3, 0, 3))
+    plot(seq(min(ordered$PDS), max(ordered$PDS), length = 100), rep(0, 100), pch = 15,
+        axes = TRUE, yaxt = "n", xlab = "Color scale of PDS", ylab = "", bty = "n",
+        col = col_score_fun(seq(min(ordered$PDS), max(ordered$PDS), length = 100)))
 
   }
 }
