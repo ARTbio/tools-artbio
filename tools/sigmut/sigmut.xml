@@ -1,0 +1,473 @@
+﻿<tool id="SigProfiler" name="SigProfiler" version="1.0">
+	<description>SigProfiler performs the mutational signature characterization from VCF files.</description>
+
+	<macros>
+		<import>sigmut_macros.xml</import>
+	</macros>
+	<expand macro="requirements"/>
+	<expand macro="stdio"/>
+
+	<command detect_errors="exit_code"><![CDATA[
+		@VERSION@
+		@pipefail@
+		#import os
+		#import random
+		#import datetime
+                #set job_dir=os.getcwd()
+		#set run_dir = job_dir + (' ' + str(random.randint(1,100000))).strip() + '/'
+		#set job_num = "Job_" + (' ' + str(random.randint(1,500))).strip()
+		
+		mkdir $run_dir &&
+
+		#if str( $set_analysis.choices ) == "install_genome":
+		ln -s -f '$__tool_directory__/lib_repo/install.log' '${logref}' &&
+		##ln -s -f '$__tool_directory__/lib_repo/references/chromosomes/tsb/$set_analysis.refgendwn/1.txt' '${dwn_gnmref}' &&
+		#else if str( $set_analysis.choices ) == "get_sigmut":
+		#set err_file = $run_dir + "logs/SigProfilerMatrixGenerator_" + $job_num + "_" + str($set_analysis.refgendat) + str(datetime.date.today()) + ".err"
+		#set log_file = $run_dir + "logs/SigProfilerMatrixGenerator_" + $job_num + "_" + str($set_analysis.refgendat) + str(datetime.date.today()) + ".out"
+		
+		#set plot1 = $run_dir + "output/plots/SBS_6_plots_" + $job_num + ".pdf" 
+		#set plot2 = $run_dir + "output/plots/SBS_24_plots_" + $job_num + ".pdf"
+		#set plot3 = $run_dir + "output/plots/SBS_78_plots_" + $job_num + ".pdf"
+		#set plot4 = $run_dir + "output/plots/SBS_96_plots_" + $job_num + ".pdf"
+		#set plot5 = $run_dir + "output/plots/SBS_186_plots_" + $job_num + ".pdf"
+		#set plot6 = $run_dir + "output/plots/SBS_384_plots_" + $job_num + ".pdf"
+		#set plot7 = $run_dir + "output/plots/SBS_1536_plots_" + $job_num + ".pdf"
+		
+		#set exo1 = $run_dir + "output/DBS/" + $job_num + ".DBS78" + ".exome" 
+		#set exo2 = $run_dir + "output/DBS/" + $job_num + ".DBS186" + ".exome"
+		#set exo3 = $run_dir + "output/DBS/" + $job_num + ".DBS1248" + ".exome"
+		#set exo4 = $run_dir + "output/DBS/" + $job_num + ".DBS2976" + ".exome"
+
+		#set exo5 = $run_dir + "output/SBS/" + $job_num + ".SBS6" + ".exome"
+		#set exo6 = $run_dir + "output/SBS/" + $job_num + ".SBS24" + ".exome"
+		#set exo7 = $run_dir + "output/SBS/" + $job_num + ".SBS96" + ".exome"
+		#set exo8 = $run_dir + "output/SBS/" + $job_num + ".SBS384" + ".exome"
+		#set exo9 = $run_dir + "output/SBS/" + $job_num + ".SBS1536" + ".exome"
+		#set exo10 = $run_dir + "output/SBS/" + $job_num + ".SBS6144" + ".exome"
+
+		#set exo11 = $run_dir + "output/vcf_files/DBS/" + $job_num + "_" + "DBS_exome.vcf"
+		#set exo12 = $run_dir + "output/vcf_files/SNV/" + $job_num + "_" + "SNV_exome.vcf"
+		
+		#set tsb1  = $run_dir + "output/TSB/strandBiasTest_24.txt"
+		#set tsb2  = $run_dir + "output/TSB/strandBiasTest_384.txt"
+		#set tsb3  = $run_dir + "output/TSB/strandBiasTest_6144.txt"
+		#set tsb4  = $run_dir + "output/TSB/significantResults_strandBiasTest.txt"
+
+		#set seqinf1 = $run_dir + "output/DBS/" + $job_num + ".DBS78" + ".all" 
+		#set seqinf2 = $run_dir + "output/DBS/" + $job_num + ".DBS186" + ".all"
+		#set seqinf3 = $run_dir + "output/DBS/" + $job_num + ".DBS1248" + ".all"
+		#set seqinf4 = $run_dir + "output/DBS/" + $job_num + ".DBS2976" + ".all"
+
+		#set seqinf5 = $run_dir + "output/SBS/" + $job_num + ".SBS6" + ".all"
+		#set seqinf6 = $run_dir + "output/SBS/" + $job_num + ".SBS24" + ".all"
+		#set seqinf7 = $run_dir + "output/SBS/" + $job_num + ".SBS96" + ".all"
+		#set seqinf8 = $run_dir + "output/SBS/" + $job_num + ".SBS384" + ".all"
+		#set seqinf9 = $run_dir + "output/SBS/" + $job_num + ".SBS1536" + ".all"
+		#set seqinf10 = $run_dir + "output/SBS/" + $job_num + ".SBS6144" + ".all"
+
+		## chrom_based	=> 2 directories, 240 files
+		## gs 		=> 6 directories, 82 files
+
+		ln -s -f '$log_file' '${logsmt}' &&
+
+		#if str($set_analysis.plot) == "true":
+		ln -s -f '$plot1' '${P6}' &&
+		ln -s -f '$plot2' '${P24}' &&
+		ln -s -f '$plot3' '${P78}' &&
+		ln -s -f '$plot4' '${P96}' &&
+		ln -s -f '$seqinf1' '${SeqInf1}' &&
+                ln -s -f '$seqinf2' '${SeqInf2}' &&
+                ln -s -f '$seqinf3' '${SeqInf3}' &&
+                ln -s -f '$seqinf4' '${SeqInf4}' &&
+                ln -s -f '$seqinf5' '${SeqInf5}' &&
+                ln -s -f '$seqinf6' '${SeqInf6}' &&
+                ln -s -f '$seqinf7' '${SeqInf7}' &&
+                ln -s -f '$seqinf8' '${SeqInf8}' &&
+                ln -s -f '$seqinf9' '${SeqInf9}' &&
+                ln -s -f '$seqinf10' '${SeqInf10}' &&
+		#end if
+
+		#if str($set_analysis.exome) == "true":
+		ln -s -f '$exo1' '${Exo1}' &&
+		ln -s -f '$exo2' '${Exo2}' &&
+		ln -s -f '$exo3' '${Exo3}' &&
+		ln -s -f '$exo4' '${Exo4}' &&
+		ln -s -f '$exo5' '${Exo5}' &&
+		ln -s -f '$exo6' '${Exo6}' &&
+		ln -s -f '$exo7' '${Exo7}' &&
+		ln -s -f '$exo8' '${Exo8}' &&
+		ln -s -f '$exo9' '${Exo9}' &&
+		ln -s -f '$exo10' '${Exo10}' &&
+		ln -s -f '$exo11' '${Exo11}' &&
+		ln -s -f '$exo12' '${Exo12}' &&
+		#end if
+
+		#if str($set_analysis.tsb_stat) == "true":
+                ln -s -f '$tsb1' '${TSB24}' &&
+                ln -s -f '$tsb2' '${TSB384}' &&
+                ln -s -f '$tsb3' '${TSB6144}' &&
+		ln -s -f '$tsb4' '${sigRes}' &&
+		#end if
+
+
+		#if str($set_analysis.seqInfo) == "true":
+		ln -s -f '$seqinf1' '${SeqInf1}' &&
+		ln -s -f '$seqinf2' '${SeqInf2}' &&
+		ln -s -f '$seqinf3' '${SeqInf3}' &&
+		ln -s -f '$seqinf4' '${SeqInf4}' &&
+		ln -s -f '$seqinf5' '${SeqInf5}' &&
+		ln -s -f '$seqinf6' '${SeqInf6}' &&
+		ln -s -f '$seqinf7' '${SeqInf7}' &&
+		ln -s -f '$seqinf8' '${SeqInf8}' &&
+		ln -s -f '$seqinf9' '${SeqInf9}' &&
+		ln -s -f '$seqinf10' '${SeqInf10}' &&
+		#end if
+
+
+		#if str( $set_analysis.vcfile_input.vcfile ) == "maf":
+                #set $infile = $run_dir + 'snps.maf'
+                ln -s -f '$set_analysis.vcfile_input.maf_file' '$infile' &&
+                #else if str( $set_analysis.vcfile_input.vcfile ) == "icgc":
+		#set $infile = $run_dir + 'snps.txt'
+		ln -s -f '$set_analysis.vcfile_input.icgc_file' '$infile' &&
+                #else if str( $set_analysis.vcfile_input.vcfile ) == "vcf":
+                #set $infile = $run_dir + 'snps.vcf'
+                ln -s -f '$set_analysis.vcfile_input.vcf_file' '$infile' &&
+		#end if
+
+		#end if
+		
+		python $__tool_directory__/sigprofiler.py	
+		#if str( $set_analysis.choices ) == "install_genome":
+		-ig $set_analysis.refgendwn
+		#else if str( $set_analysis.choices ) == "get_sigmut":
+		-n $job_num
+		-g $set_analysis.refgendat
+		-f $run_dir
+
+		#if str( $set_analysis.exome ) == "true":
+		-e
+		#end if
+		#if str( $set_analysis.chrom_based ) == "true":
+		-c
+		#end if
+		#if str( $set_analysis.plot ) == "true":
+		-p
+		#end if
+		#if str( $set_analysis.tsb_stat ) == "true":
+		-t
+		#end if
+		#if str( $set_analysis.gs ) == "true":
+		-s
+		#end if
+		##-b $set_analysis.bed
+		#end if
+		]]></command>
+
+	<inputs>
+		<conditional name="set_analysis">
+			<param name="choices" type="select" label="Which of the following jobs do you want perform?">
+				<option value="install_genome">Install 'de novo' a reference genome </option>
+				<option value="get_sigmut">Obtain the mutational signatures from VCF files</option>
+			</param>
+			<when value="install_genome">
+				<param name="refgendwn" type="select" label="Reference genome" help="Get data from any of the following reference genomes:">
+					<option value="GRCh37">GRCh37.p13 [GRCh37] Assembly GCA_000001405.14 </option>
+					<option value="GRCh38">GRCh38.p12 [GRCh38] Assembly GCA_000001405.27 </option>
+					<option value="mm9">GRCm37 [mm9] Assembly GCA_000001635.18 </option>
+					<option value="mm10">GRCm38.p6 [mm10] Assembly GCA_000001635.8 </option>
+				</param>
+			</when>
+
+			<when value="get_mat">
+			</when>
+
+			<when value="get_sigmut">
+				<conditional name="vcfile_input">
+					<param name="vcfile" type="select" label="VC file" help="Select the format of your input data">
+						<option value="maf">Mutation Annotation Format</option>
+						<option value="icgc">Tab-separated file</option>
+						<option value="vcf">Variant Call Format</option>
+					</param>
+					<when value='maf'>
+						<param name="maf_file" type="data" format="maf" label="select VC file" help="Select the input file in MAF format." />
+					</when>
+					<when value='icgc'>
+						<param name="icgc_file" type="data" format="txt" label="select VC file" help="Select the input file in ICGC format." />
+					</when>
+					<when value='vcf'>
+						<param name="vcf_file" type="data" format="vcf" label="select VC file" help="Select the input file in VCF format." />
+					</when>
+				</conditional>
+
+				<param name="refgendat" type="select" label="Reference genome to be analyzed" help="Use the following reference genome:">
+					<option value="GRCh37">GRCh37.p13 [GRCh37] </option>
+					<option value="GRCh38">GRCh38.p12 [GRCh38] </option>
+					<option value="mm9">GRCm37 [mm9] </option>
+					<option value="mm10">GRCm38.p6 [mm10] </option>
+				</param>
+
+				<conditional name="bed_input">
+					<param name="bedfile" type="select" label="BED file" help="Input a BED file">
+						<option value="yes">Yes</option>
+						<option value="no" selected="true">No</option>
+					</param>
+					<when value='yes'>
+						<param name="bed_file" format="bed" type="data" label="Use a BED file containing the set of regions" help="Provide a BED file"/>
+					</when>
+				</conditional>
+				<param name="plot" type="boolean" truevalue="true" label="Produce plot results?" checked="False" help="Show plots"/>
+				<param name="exome" type="boolean" label="Use only the exome?" checked="False" help="Use exome"/>
+				<param name="chrom_based" type="boolean" label="Create the matrices on a per chromosome basis?" checked="False" help="Show snvs"/>
+				<param name="tsb_stat" type="boolean" truevalue="true" label="Performs a transcriptional strand bias test?" checked="False" help="Show snvs"/>
+				<param name="seqInfo" type="boolean" truevalue="true" label="Export sequence information?" checked="False" help="Show sequence information"/>
+				<param name="gs" type="boolean" label="Performs gene strand bias test?" checked="False" help="Show snvs"/>
+			</when>
+		</conditional>
+	</inputs>
+
+	<outputs>
+		<data format="txt" name="logref" label="Log file: Install a Reference Genome">
+			<filter>set_analysis['choices'] == 'install_genome'</filter>
+		</data>
+
+                <data format="txt" name="logsmt" label="Log file: Calculate Mutational Signatures">
+                        <filter>set_analysis['choices'] == 'get_sigmut'</filter>
+                </data>
+
+		<data format="pdf" name="P6" label="--> Plot 6 Sig. Mut.">
+			<filter>set_analysis['plot'] is True</filter>
+		</data>
+
+		<data format="pdf" name="P24" label="--> Plot 24 Sig. Mut.">
+			<filter>set_analysis['plot'] is True</filter>
+		</data>
+
+		<data format="pdf" name="P78" label="--> Plot 78 Sig. Mut.">
+			<filter>set_analysis['plot'] is True</filter>
+		</data>
+
+		<data format="pdf" name="P96" label="--> Plot 96 Sig. Mut.">
+			<filter>set_analysis['plot'] is True</filter>
+		</data>
+
+
+		<data format="txt" name="Exo11" label="--> DBS_exome.vcf">
+			<filter>set_analysis['exome'] is True</filter>
+		</data>
+
+		<data format="txt" name="Exo12" label="--> SNV_exome.vcf">
+			<filter>set_analysis['exome'] is True</filter>
+		</data>
+
+		<data format="txt" name="Exo1" label="--> DBS 78 Sig. Mut. EXOME">
+			<filter>set_analysis['exome'] is True</filter>
+		</data>
+
+		<data format="txt" name="Exo2" label="--> DBS 186 Sig. Mut. EXOME">
+			<filter>set_analysis['exome'] is True</filter>
+		</data>
+
+		<data format="txt" name="Exo3" label="--> DBS 1248 Sig. Mut. EXOME">
+			<filter>set_analysis['exome'] is True</filter>
+		</data>
+
+		<data format="txt" name="Exo4" label="--> DBS 2976 Sig. Mut. EXOME">
+			<filter>set_analysis['exome'] is True</filter>
+		</data>
+
+		<data format="txt" name="Exo5" label="--> SBS 6 Sig. Mut. EXOME">
+			<filter>set_analysis['exome'] is True</filter>
+		</data>
+
+		<data format="txt" name="Exo6" label="--> SBS 24 Sig. Mut. EXOME">
+			<filter>set_analysis['exome'] is True</filter>
+		</data>
+
+		<data format="txt" name="Exo7" label="--> SBS 96 Sig. Mut. EXOME">
+			<filter>set_analysis['exome'] is True</filter>
+		</data>
+
+		<data format="txt" name="Exo8" label="--> SBS 384 Sig. Mut. EXOME">
+			<filter>set_analysis['exome'] is True</filter>
+		</data>
+
+		<data format="txt" name="Exo9" label="--> SBS 1536 Sig. Mut. EXOME">
+			<filter>set_analysis['exome'] is True</filter>
+		</data>
+
+		<data format="txt" name="Exo10" label="--> SBS 6144 Sig. Mut. EXOME">
+			<filter>set_analysis['exome'] is True</filter>
+		</data>
+
+
+		<data format="txt" name="sigRes" label="--> TSB: Significant Results">
+			<filter>set_analysis['tsb_stat'] is True</filter>
+		</data>
+
+		<data format="txt" name="TSB24" label="--> TSB: 24 Sig. Mut.">
+			<filter>set_analysis['tsb_stat'] is True</filter>
+		</data>
+
+		<data format="txt" name="TSB384" label="--> TSB: 96 Sig. Mut.">
+			<filter>set_analysis['tsb_stat'] is True</filter>
+		</data>
+
+                <data format="txt" name="TSB6144" label="--> TSB: 1536 Sig. Mut.">
+                        <filter>set_analysis['tsb_stat'] is True</filter>
+                </data>
+
+
+		<data format="txt" name="SeqInf1" label="--> DBS 78 Sig. Mut. ALL">
+			<filter>set_analysis['seqInfo'] is True || set_analysis['plot'] is True</filter>
+		</data>
+
+		<data format="txt" name="SeqInf2" label="--> DBS 186 Sig. Mut. ALL">
+			<filter>set_analysis['seqInfo'] is True || set_analysis['plot'] is True</filter>
+		</data>
+
+		<data format="txt" name="SeqInf3" label="--> DBS 1248 Sig. Mut. ALL">
+			<filter>set_analysis['seqInfo'] is True || set_analysis['plot'] is True</filter>
+		</data>
+
+		<data format="txt" name="SeqInf4" label="--> DBS 2976 Sig. Mut. ALL">
+			<filter>set_analysis['seqInfo'] is True || set_analysis['plot'] is True</filter>
+		</data>
+
+		<data format="txt" name="SeqInf5" label="--> SBS 6 Sig. Mut. ALL">
+			<filter>set_analysis['seqInfo'] is True || set_analysis['plot'] is True</filter>
+		</data>
+
+		<data format="txt" name="SeqInf6" label="--> SBS 24 Sig. Mut. ALL">
+			<filter>set_analysis['seqInfo'] is True || set_analysis['plot'] is True</filter>
+		</data>
+
+		<data format="txt" name="SeqInf7" label="--> SBS 96 Sig. Mut. ALL">
+			<filter>set_analysis['seqInfo'] is True || set_analysis['plot'] is True</filter>
+		</data>
+
+		<data format="txt" name="SeqInf8" label="--> SBS 384 Sig. Mut. ALL">
+			<filter>set_analysis['seqInfo'] is True || set_analysis['plot'] is True</filter>
+		</data>
+
+		<data format="txt" name="SeqInf9" label="--> SBS 1536 Sig. Mut. ALL">
+			<filter>set_analysis['seqInfo'] is True || set_analysis['plot'] is True</filter>
+		</data>
+
+		<data format="txt" name="SeqInf10" label="--> SBS 6144 Sig. Mut. ALL">
+			<filter>set_analysis['seqInfo'] is True || set_analysis['plot'] is True</filter>
+		</data>
+
+
+	</outputs>
+
+	<tests>
+		<test>
+			<conditional name="set_analysis">
+				<param name="choices" value="install_genome"/>
+				<param name="refgendwn" ftype="fasta" value="GRCh37"/>
+			</conditional>
+		</test>
+
+		<test>
+			<conditional name="set_analysis">
+				<param name="choices" value="install_genome"/>
+				<param name="refgendwn" ftype="fasta" value="GRCh38"/>
+			</conditional>
+		</test>
+
+
+		<test>
+			<conditional name="set_analysis">
+				<param name="choices" value="get_sigmut"/>
+				<param name="refgendat" ftype="fasta" value="GRCh37"/>
+				<conditional name="vcfile_input">
+					<param name="vcfile" value="icgc"/>
+					<param name="icgc_file" ftype="txt" value="test_matrix.txt"/>
+				</conditional>
+				<conditional name="bed_input">
+					<param name="bedfile" value="no"/>	
+				</conditional>
+				<param name="plot" value="True"/>
+			</conditional>
+
+		<output name="P6" format="pdf" file="SBS_6.pdf" lines_diff="5"/>
+		<output name="P24" format="pdf" file="SBS_24.pdf" lines_diff="5"/>
+		<output name="P78" format="pdf" file="SBS_78.pdf" lines_diff="5"/>
+		<output name="P96" format="pdf" file="SBS_96.pdf" lines_diff="5"/>
+		<output name="P186" format="pdf" file="SBS_186.pdf" lines_diff="5"/>
+		<output name="P384" format="pdf" file="SBS_384.pdf" lines_diff="5"/>
+		<output name="P1536" format="pdf" file="SBS_1536.pdf" lines_diff="5"/>
+
+		</test>
+
+
+		<test>
+                        <conditional name="set_analysis">
+                                <param name="choices" value="get_sigmut"/>
+                                <param name="refgendat" ftype="fasta" value="GRCh37"/>
+                                <conditional name="vcfile_input">
+                                        <param name="vcfile" value="icgc"/>
+                                        <param name="icgc_file" ftype="txt" value="test_matrix.txt"/>
+                                </conditional>
+                                <conditional name="bed_input">
+                                        <param name="bedfile" value="no"/>
+                                </conditional>
+                                <param name="tsb_stat" value="True"/>
+                        </conditional>
+
+		<output format="txt" name="sigRes" file="significantResults_strandBiasTest.txt" />
+		<output format="txt" name="TSB24" file="strandBiasTest_24.txt"/>
+		<output format="txt" name="TSB384" file="strandBiasTest_384.txt"/>
+		<output format="txt" name="TSB6144" file="strandBiasTest_6144.txt"/>
+		</test>
+
+	</tests>
+
+	<help><![CDATA[
+
+		**SigProfiler**
+
+		This script configures the SigProfiler analysis pipeline.
+		You must specify a VCF file for at least one sample.
+
+
+		**Options**
+		--version             show program's version number and exit
+
+		-h, --help            show this help message and exit
+
+		--install_genome	Install de novo any of the following reference
+		genomes: 'GRCh37', 'GRCh38', 'mm9' or 'mm10'.
+
+		--name=APPENDIX	Provide a project name
+
+		--genome=NAME		Provide a reference genome (ex: GRCh37, GRCh38,
+		mm9 or mm10).
+
+		--files=Abs_path	Path where the input vcf files are located
+
+		--exome		Use only the exome or not
+
+		--bed=FILE		BED file containing the set of regions to be used
+		in generating the matrices
+
+		--chrom		Create the matrices on a per chromosome basis
+
+		--plot		Generate the plots for each context
+
+		--tsb			Performs a transcriptional strand bias test for the
+		24, 384, and 6144 contexts
+
+		--gs			Performs a gene strand bias test
+
+		For further info see: https://github.com/AlexandrovLab/SigProfilerMatrixGenerator
+
+		]]></help>
+
+	<citations>
+		<citation type="doi">10.1186/s12864-019-6041-2</citation>
+	</citations>
+
+$gnm</tool>

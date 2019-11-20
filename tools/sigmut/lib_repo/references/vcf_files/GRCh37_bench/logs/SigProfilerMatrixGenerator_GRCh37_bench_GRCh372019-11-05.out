@@ -1,0 +1,59 @@
+THIS FILE CONTAINS THE METADATA ABOUT SYSTEM AND RUNTIME
+
+
+-------System Info-------
+Operating System Name: Linux
+Nodename: ARTbio
+Release: 5.0.0-32-generic
+Version: #34~18.04.2-Ubuntu SMP Thu Oct 10 10:36:02 UTC 2019
+
+-------Python and Package Versions------- 
+Python Version: 3.7.3
+SigProfilerMatrixGenerator Version: 1.0.21
+SigProfilerPlotting version: 1.0.10
+matplotlib version: 3.1.0
+statsmodels version: 0.10.0
+scipy version: 1.3.0
+pandas version: 0.24.2
+numpy version: 1.16.4
+
+-------Vital Parameters Used for the execution -------
+Project: GRCh37_bench
+Genome: GRCh37
+Input File Path: /home/lpanunzi/Desktop/Alexandrov/Galaxy_based/lib/SigProfilerMatrixGenerator/lib_repo/references/vcf_files/GRCh37_bench/
+exome: False
+bed_file: None
+chrom_based: False
+plot: False
+tsb_stat: False
+seqInfo: False
+
+-------Date and Time Data------- 
+Date and Clock time when the execution started: 2019-11-05 10:14:29.784109
+
+
+-------Runtime Checkpoints------- 
+Chromosome 12 done
+Chromosome 13 done
+Chromosome 20 done
+Chromosome Y done
+Chromosome 3 done
+Chromosome 15 done
+Chromosome 14 done
+Chromosome 10 done
+Chromosome 21 done
+Chromosome 1 done
+Chromosome 6 done
+Chromosome 16 done
+Chromosome X done
+Chromosome 5 done
+Chromosome 18 done
+Chromosome 17 done
+Chromosome 7 done
+Chromosome 19 done
+Chromosome 2 done
+Chromosome 4 done
+Chromosome 22 done
+Chromosome 9 done
+Chromosome 8 done
+Chromosome 11 done
