@@ -194,8 +194,11 @@ if(args$is_normal == T){
     DF <- data.frame(PDS$curves[[i]][,1:3], normal = normals, PDS = as.numeric(PDS$scores[[i]]), curve_order = as.vector(PDS$curves_order[[i]]))
     ordered <- DF[DF$curve_order,]
 
-#    boxplot(PDS~normal, data = ordered)
-#    boxplot(PDS~normal, data = DF)
+
+#    par(mar = rep(2, 4))
+#    par(mfrow=c(4,2))
+#    boxplot(PDS~normal, data = ordered, box = F)
+#    boxplot(PDS~normal, data = DF, box = F)
 
     layout(cbind(1:2, 1:2), heights = c(7, 1))
     sc3 <- scatterplot3d(ordered[,1:3], main = paste("Principal curve of", i), box = F, pch = 19, type = "l")
@@ -213,6 +216,10 @@ if(args$is_normal == T){
     sc3$points3d(ordered[,1:3], box = F, pch = ifelse(ordered$normal, 19, 8), col = ifelse(ordered$normal, "blue", "red"))
     legend("topright", pch = c(19, 8), yjust=0, legend = c("normal", "cancer"), col = c("blue", "red"), cex = 1.1)
 
+    ## annotation for heatmap
+    sample_status <- data.frame(Status = factor(ifelse(DF$normal, "normal", "tumor")))
+    rownames(sample_status) <- colnames(exp.matrix.filtered)
+    color_status_heatmap <- list(Status = c(normal = "blue", tumor = "red"))
 
   }
 
@@ -248,8 +255,6 @@ if(args$is_normal == T){
 PDS_scores <- mapply(FUN = cbind, PDS$scores)
 dimnames(PDS_scores) <- list(colnames(exp.matrix.filtered), names(PDS$scores))
 
-
-
 ## plot heatmap 
 if(ncol(PDS_scores) > 1){
     pheatmap(t(PDS_scores),
@@ -259,8 +264,8 @@ if(ncol(PDS_scores) > 1){
                    
              #Additional Options
              ## Color labeled columns
-             # annotation_col = cell_metadata,
-             # annotation_colors = cell_metadata_color,
+#             annotation_col = ifelse(exists("sample_status"), sample_status, NA),
+#             annotation_colors = ifelse(exists("sample_status"), color_status_heatmap, NA),
              show_rownames = args$heatmap_show_pathway_labels,
              show_colnames = args$heatmap_show_cell_labels,
              border_color = NA,

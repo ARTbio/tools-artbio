@@ -86,7 +86,7 @@
             <param name="attempts" value="100" />
             <output name="logfile" file="sheffer.kegg.log" ftype="txt"/>
             <output name="pds" file="sheffer.kegg.tsv" ftype="tabular"/>
-            <output name="heatmap_pdf" file="sheffer.kegg.pdf" ftype="pdf" compare="sim_size" />
+            <output name="plot" file="plot.pdf" ftype="pdf" compare="sim_size" />
         </test>
     </tests>
     <help>
@@ -97,6 +97,11 @@ Pathifier is an algorithm that infers pathway deregulation scores for each tumor
 expression data. This score is determined, in a context-specific manner, for every particular dataset
 and type of cancer that is being investigated. The algorithm  transforms gene-level information into
 pathway-level information, generating a compact and biologically relevant representation of each sample.
+
+For each pathway analysed, the dataset is projected into the pathway gene space through a Principal 
+Component analysis (PCA) and then compute the principal curve. All transcriptomes are projected on 
+the nearest point of this curve. Pathifier finally computes a score based on the distance of each point
+(transcriptome) along the curve from the origin. 
 
 **Inputs**
 
@@ -114,7 +119,9 @@ Takes as inputs :
 
 This tool gives you several outputs : 
     * Pathway Deregulation Score (PDS) table : one by pathway (column) and by transcriptome (row)
-    * Heatmap of PDS (pdf) : vizualization of PDS score that allows (through clustering) to see pattern in pathway deregulation
+    * Visualization of PDS (pdf) : 
+        * Principal curve of different PDS 
+        * Heatmap of PDS that allows (through clustering) to see pattern in pathway deregulation
     * (Optional) Log file of Pathifier algorithm
 
     </help>
