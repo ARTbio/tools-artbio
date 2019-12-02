@@ -251,8 +251,8 @@ if(args$is_normal == T){
   }
 }
 
-
-PDS_scores <- mapply(FUN = cbind, PDS$scores)
+## Create dataframe from Pathifier list and round score to 4 digits
+PDS_scores <- mapply(FUN = function(x) cbind(round(x, 4)), PDS$scores)
 dimnames(PDS_scores) <- list(colnames(exp.matrix.filtered), names(PDS$scores))
 
 ## plot heatmap 
@@ -274,6 +274,8 @@ if(ncol(PDS_scores) > 1){
 }
 dev.off()
 
+
+#scores <- cbind.data.frame(sample = rownames(PDS_scores), PDS_scores, stringsAsFactors = F)
 
 ## write table
 write.table(PDS_scores,
