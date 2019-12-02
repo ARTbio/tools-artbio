@@ -82,7 +82,7 @@
             <param name="genes" value="kegg_pathways.gmt" ftype="txt" />
             <param name="is_normal" value="True" />
             <param name="normals" value="normals.tsv" ftype="tabular" />
-            <param name="log" value="yes" />
+            <param name="log" value="yes" compare="sim_size" />
             <param name="attempts" value="100" />
             <output name="logfile" file="sheffer.kegg.log" ftype="txt"/>
             <output name="pds" file="sheffer.kegg.tsv" ftype="tabular"/>
