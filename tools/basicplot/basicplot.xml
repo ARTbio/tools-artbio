@@ -1,4 +1,4 @@
-<tool id="Basicplot" name="basicplot" version="0.9.1">
+<tool id="Basicplot" name="basicplot" version="1.0.0">
 	<description>Basic plot</description>
         <requirements>
             <requirement type="package" version="3.5.0">r-base</requirement>
