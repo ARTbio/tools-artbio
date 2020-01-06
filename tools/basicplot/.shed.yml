@@ -1,13 +1,14 @@
 # .shed.yml supporting automatic pushes.
-owner: chaimae_eljaouhari
+owner: artbio
 name: basicplot
 description: Graphics
 long_description: |
   Take on tabular file of numerical data as input and produces pairwise plots of numerical data, in log-log scale.
+  This tool originally developped by chaimae_eljaouhari is now (2020-01-06) maintened by artbio 
 categories:
   - Graphics
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/chamaelj/tools-artbio/tree/master/tools/basicplot
+remote_repository_url: https://github.com/artbio/tools-artbio/tree/master/tools/basicplot
 toolshed:
 - toolshed
 - testtoolshed
