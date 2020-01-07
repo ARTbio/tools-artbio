@@ -1,10 +1,11 @@
 # .shed.yml supporting automatic pushes.
-owner: mvdbeek
+owner: artbio
 name: get_reference_fasta
 description: Obtain reference genome sequence.
 long_description: |
   Places the reference genome sequence in the current history.
   Useful for sharing purposes or tools that work directly on fasta files.
+  This tool was originally developed by mvdbeek and is now maintained by artbio
 categories:
   - Data Source
   - Fasta Manipulation
