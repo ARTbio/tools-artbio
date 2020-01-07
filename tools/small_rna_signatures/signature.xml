@@ -1,4 +1,4 @@
-<tool id="signature" name="Small RNA Signatures" version="3.2.0">
+<tool id="signature" name="Small RNA Signatures" version="3.2.1">
     <description />
     <requirements>
         <requirement type="package" version="1.11.2=py27_0">numpy</requirement>
@@ -89,7 +89,7 @@
 
 Compute small RNA (piRNA, siRNA, ...) signatures.
 
-This tool computes (i) the number of pairs **aligned** reads by overlap classes (in nt) and associated the z-scores,
+This tool computes (i) the number of pairs **aligned** reads by overlap classes (in nt) and associated z-scores,
 and (ii) the ping-pong signal (`Brennecke et al, 2009`_) and associated z-scores.
 
 **Note** that the number of pairs of aligned reads is disctint from the number of pairs of reads
@@ -97,7 +97,7 @@ when these reads can be aligned at multiple positions in the genome. The two val
 when the analysis is restricted to uniquely mapping reads.
 
 Options set the min and max size of both the query small rna class and the target small rna class, 
-the range over which to compute the signatures, and whether the signatures should be reported at 
+the range of overlaps (in nt) over which to compute the signatures, and whether the signatures should be reported at 
 genome-wide level or by item (chromosomes, genes, etc.). For details on computational algorithmes 
 for piRNA and siRNA signatures, see `Antoniewski (2014)`_.
 
@@ -110,10 +110,10 @@ A **sorted** BAM alignment file.
 
 **Outputs**
 
-**Global**: The number of pairs founds, the ping-pong signal and the associated z-scores 
+**Global**: The number of pairs found, the ping-pong signal and the associated z-scores 
 are computed at genome-wide level and returned in a pdf file.
 
-**Lattice**: The number of pairs founds, the ping-pong signals and the associated z-scores 
+**Lattice**: The number of pairs found, the ping-pong signals and the associated z-scores 
 are computed for each items described in the BAM alignment input and returned in a pdf file as a lattice graph.
 
 
