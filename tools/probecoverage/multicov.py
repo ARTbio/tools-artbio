@@ -28,7 +28,7 @@ def compute_coverage(bam, bed, quality=10):
         end = fields[2]
         coverage = bam_object.count_coverage(reference=chr,
                                              start=int(start)-1,
-                                             end=int(end),
+                                             stop=int(end),
                                              quality_threshold=quality)
         """ Add the 4 coverage values """
         coverage = [sum(x) for x in zip(*coverage)]
