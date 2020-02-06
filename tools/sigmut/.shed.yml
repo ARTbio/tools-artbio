@@ -1,0 +1,15 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: sigmut
+description: SigMut creates mutational matrices for all types of somatic mutations.
+long_description: |
+  This tool takes a MAF, VCF or table file for analyzing the mutational
+  signatures. This tool currently supports the following genomes:: GRCh38,
+  GRCh37, mm10, mm9 and rn6.
+categories:
+  - Sequence analysis
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/sigmut
+toolshed:
+  - testtoolshed
+  - toolshed
