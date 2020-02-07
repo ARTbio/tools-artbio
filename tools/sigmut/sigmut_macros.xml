@@ -1,16 +1,11 @@
 <macros>
       
-    <token name="@VERSION@">11.19</token>
+    <token name="@VERSION@">1.0</token>
 
     <token name="@pipefail@"><![CDATA[set -o | grep -q pipefail && set -o pipefail;]]></token>
 
     <xml name="requirements">
         <requirements>
-		<requirement type="package" version="1.17.5">numpy</requirement>
-		<requirement type="package" version="1.3.1">scipy</requirement>
-		<requirement type="package" version="0.25.3">pandas</requirement>
-		<requirement type="package" version="0.10.1">statsmodels</requirement>
-		<requirement type="package" version="3.1.2">matplotlib</requirement>
 		<requirement type="package" version="1.0">sigmut</requirement>
         </requirements>
     </xml>
