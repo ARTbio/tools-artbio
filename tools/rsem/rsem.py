@@ -158,7 +158,7 @@ class RsemReference(Html):
         if len(rvalb) > 0:
             rval += rvalb
         rval.append('</ul></body></html>')
-        fh = file(dataset.file_name, 'w')
+        fh = open(dataset.file_name, 'w')
         fh.write("\n".join(rval))
         fh.write('\n')
         fh.close()
@@ -270,7 +270,7 @@ class RsemBt2Reference(Html):
         if len(rvalb) > 0:
             rval += rvalb
         rval.append('</ul></body></html>')
-        fh = file(dataset.file_name, 'w')
+        fh = open(dataset.file_name, 'w')
         fh.write("\n".join(rval))
         fh.write('\n')
         fh.close()
