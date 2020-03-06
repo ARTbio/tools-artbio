@@ -1,4 +1,4 @@
-<tool id="sashimi_plot" name="Sashimi plot" version="0.1.0">
+<tool id="sashimi_plot" name="Sashimi plot" version="0.1.1">
   <description>: visualization of splicing events across multiple samples</description>
   <requirements>
     <requirement type="package" version="3">python</requirement>
@@ -79,7 +79,7 @@
         </conditional>
         <param name="alpha" label="Transparency level for density histogram" type="float" value="0.5" help="default=0.5"/>
         <param name="base_size" label="Base font size" type="float" value="14" help="Base font size of the plot in pch [default=14]"/>
-        <param name="ann_height" label="Height of annotation" type="float" value="1.5" help="Height of annotation plot (transcripts visualisation) in inches [default=1.5]"/>
+        <param name="ann_height" label="Height of annotation" type="float" value="1.5" help="Height of annotation plot (transcript visualisation) in inches [default=1.5]"/>
         <param name="height" label="Height of sashimi plot" type="float" value="2" help="Height of the individual signal plot (sashimi vizualisation) in inches [default=2]"/>
         <param name="width" label="Width" type="float" value="10" help="Width of the plot in inches [default=10]"/>
       </when>

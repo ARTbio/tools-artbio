@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-<tool_dependency>
-  <package name="meme" version="4.10.0_4">
-      <repository  name="package_meme_4_10_0" owner="iuc" />
-    </package>
-</tool_dependency>

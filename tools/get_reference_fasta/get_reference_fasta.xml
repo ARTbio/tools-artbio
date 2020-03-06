@@ -1,4 +1,4 @@
-<tool id="get_fasta_reference" name="get fasta reference"  version="0.1.1">
+<tool id="get_fasta_reference" name="get fasta reference"  version="0.2.1">
 <description>Obtain reference genome sequence</description>
     <stdio>
         <exit_code range="1:" />
@@ -24,4 +24,7 @@
 Places the reference genome sequence in the current history.    
 Useful for sharing purposes or tools that work directly on fasta files.
     ]]></help>
+    <citations>
+        <citation type="doi">10.1186/gb-2010-11-8-r86</citation>
+    </citations>
 </tool>
