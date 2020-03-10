@@ -195,11 +195,6 @@ if(args$is_normal == T){
     ordered <- DF[DF$curve_order,]
 
 
-#    par(mar = rep(2, 4))
-#    par(mfrow=c(4,2))
-#    boxplot(PDS~normal, data = ordered, box = F)
-#    boxplot(PDS~normal, data = DF, box = F)
-
     layout(cbind(1:2, 1:2), heights = c(7, 1))
     sc3 <- scatterplot3d(ordered[,1:3], main = paste("Principal curve of", i), box = F, pch = 19, type = "l")
     sc3$points3d(ordered[,1:3], box = F, pch = 19, col = col_score_fun(ordered$PDS))
@@ -248,6 +243,10 @@ if(args$is_normal == T){
         axes = TRUE, yaxt = "n", xlab = "Color scale of PDS", ylab = "", bty = "n",
         col = col_score_fun(seq(min(ordered$PDS), max(ordered$PDS), length = 100)))
 
+
+  ## annotation for heatmap (for the moment none for this situation)
+  sample_status <- NA
+  color_status_heatmap <- NA
   }
 }
 
@@ -264,8 +263,8 @@ if(ncol(PDS_scores) > 1){
                    
              #Additional Options
              ## Color labeled columns
-#             annotation_col = ifelse(exists("sample_status"), sample_status, NA),
-#             annotation_colors = ifelse(exists("sample_status"), color_status_heatmap, NA),
+             annotation_col = sample_status,
+             annotation_colors = color_status_heatmap,
              show_rownames = args$heatmap_show_pathway_labels,
              show_colnames = args$heatmap_show_cell_labels,
              border_color = NA,
@@ -274,8 +273,6 @@ if(ncol(PDS_scores) > 1){
 }
 dev.off()
 
-
-#scores <- cbind.data.frame(sample = rownames(PDS_scores), PDS_scores, stringsAsFactors = F)
 
 ## write table
 write.table(PDS_scores,
