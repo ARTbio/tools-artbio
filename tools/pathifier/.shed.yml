@@ -3,8 +3,8 @@ owner: artbio
 name: pathifier
 description: pathifier
 long_description: |
-  pathifier is a method to reduce dimension of dataset, cop with curse dimensionality
-  and find signatures in patient transcriptome data
+  pathifier is a method to reduce dimension of dataset, cope with curse of dimensionality
+  and find gene expression signatures in patient transcriptome data
 categories:
   - Transcriptomics
   - Statistics # Check the category exists

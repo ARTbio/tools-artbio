@@ -45,7 +45,8 @@
         <param name="genes" type="data" format="txt" label="Gene sets Pathways" 
                help="Must be in gmt format (one pathway per line : Name, description, genes (one by column), tab separated)" />
         <conditional name="reference">
-            <param name="is_normal" label="Do you have non cancer transcriptomes in your data set ?" type="boolean" truevalue="Yes" falsevalue="" checked="false" />
+            <param name="is_normal" label="Do you have non cancer transcriptomes in your data set ?" type="boolean" truevalue="Yes" falsevalue="" checked="false" 
+                   help="If set the starting curve depends on the matrix of points with in a certain row order (first 'normal' then 'cancer' samples), otherwise the first principal component is used. See help for more informations"/>
             <when value="Yes">
                 <param name="normals" type="data" format="tabular" label="Sample status"
                        help="A two-column data frame, first column contains data labels, second column the levels of sample status : 1 = Healthy, 0 = Tumor (no header)" />
@@ -53,7 +54,8 @@
             <when value="">
             </when>
         </conditional>
-        <param name="max_stability" label="Throw away components leading to low stability of sampling noise" type="boolean" truevalue="TRUE" falsevalue="FALSE" checked="true" />
+        <param name="max_stability" label="Throw away components leading to low stability of sampling noise" type="boolean" truevalue="TRUE" 
+               falsevalue="FALSE" checked="true" />
         <param name="attempts" type="integer" label="Number of runs to determine stability" value="100"/>
         <param name="min_std" type="text" value="0.4" label="Minimum of standard deviation to filter out low variable genes"
                help="Use 'data' to use the minimum standard deviation of your data" />
@@ -88,37 +90,46 @@
             <output name="pds" file="sheffer.kegg.tsv" ftype="tabular"/>
             <output name="plot" file="plot.pdf" ftype="pdf" compare="sim_size" />
         </test>
+        <test>
+            <param name="input" value="sheffer_noref.tsv" ftype="tabular"/>
+            <param name="genes" value="kegg_pathways.gmt" ftype="txt" />
+            <param name="is_normal" value="" />
+            <param name="log" value="no" />
+            <param name="attempts" value="50" />
+            <param name="min_exp" value="data" />
+            <param name="min_std" value="data" />
+            <output name="pds" file="sheffer.kegg_noref.tsv" ftype="tabular"/>
+            <output name="plot" file="plot_noref.pdf" ftype="pdf" compare="sim_size" />
+        </test>
     </tests>
     <help>
 
 **What it does**
 
-Pathifier is an algorithm that infers pathway deregulation scores for each tumor sample on the basis of 
-expression data. This score is determined, in a context-specific manner, for every particular dataset
+Pathifier is an algorithm that infers pathway deregulation scores for each (tumor) sample on the basis
+of expression data. This score is determined, in a context-specific manner, for every particular dataset
 and type of cancer that is being investigated. The algorithm  transforms gene-level information into
 pathway-level information, generating a compact and biologically relevant representation of each sample.
 
-For each pathway analysed, the dataset is projected into the pathway gene space through a Principal 
-Component analysis (PCA) and then compute the principal curve. All transcriptomes are projected on 
-the nearest point of this curve. Pathifier finally computes a score based on the distance of each point
-(transcriptome) along the curve from the origin. 
+For each pathway analysed, the transcriptome datasets are plotted in the gene pathway space using a
+Principal Component analysis (PCA) and a principal curve is regressed from these points. All transcriptomes 
+are projected on the nearest point of this curve. Pathifier finally computes a score which corresponds to 
+the distance (normalized to 1) of each point (transcriptome) to the curve origin. 
 
 **Inputs**
 
-Takes as inputs :
-    * a matrix of n observations (columns, generally n RNAseq library) of k variables (rows, generally k genes).
+    * a matrix of n columns of observations (generally RNAseq experiments) and k rows of variables (generally k genes).
     * a Gene Matrix Transposed file (GMT format) where each row represents a gene set :
         * first column : gene set name (pathway name)
         * second : description of gene set
-        * third and + : list of genes that composed the gene, set tab-separated  
+        * third and + : list of genes that composed the gene set tab-separated  
     * (Optional) a two column table to described either your transcriptome status (cancer or not) with no header : 
         * first column : sample labels
         * second : levels of sample status : 1 = Healthy, 0 = Tumor
 
 **Outputs**
 
-This tool gives you several outputs : 
-    * Pathway Deregulation Score (PDS) table : one by pathway (column) and by transcriptome (row)
+    * Table of Pathway Deregulation Scores : one by pathway (column) and by transcriptome (row)
     * Visualization of PDS (pdf) : 
         * Principal curve of different PDS 
         * Heatmap of PDS that allows (through clustering) to see pattern in pathway deregulation
