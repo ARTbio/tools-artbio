@@ -494,9 +494,152 @@
 
 		**SigProfiler**
 
-		This script configures the SigProfiler analysis pipeline.
-		You must specify a VCF file for at least one sample.
+		Background:
 
+		Cancer genomes evince somatic mutations, which are imprinted by
+		different mutational processes, that give rise to diverse
+		mutational signatures. Their analysis from single base
+		substitutions and their immediate sequencing context, allows the
+		classification of small mutational events (including
+		substitutions, insertions, deletions, and doublet substitutions)
+		for better understanding the mutational processes that have
+		shaped a cancer genome.
+
+		In this sense, SigProfiler constitutes a Galaxy-based wrapper of
+		a computational method developed by Ludmil B. Alexandrov, that
+		allow the exploration and visualization of mutational patterns
+		for all types of small mutational events. Specifically, the
+		following actions can be performed using SigProfiler wrapper:
+
+		1. Identify and categorize the mutations based on possible
+		single nucleotide variants (SNVs), double base substitutions
+		(DBS), and insertions/deletions and provides further
+		transcriptional strand bias categorization. Afterwards, the
+		classification of these mutations are integrated into distinct
+		matrices.
+		SigProfiler provides matrix generation support for SBS-6,
+		SBS-96, SBS-1536, DBS-78 and DBS-1248. In addition, the
+		generation of mutational matrices of indels including
+		ID-28 and ID-83 are procured. Besides, an ID-8628 matrix that
+		extends the ID-83 classification is generated.
+		SigProfiler examines transcriptional strand bias for single base
+		substitutions, doublet base substitutions, and small indels. It
+		is evaluated whether a mutation occurs on the transcribed or the
+		non-transcribed strand of well-annotated protein coding genes of
+		a reference genome. Mutations found in the transcribed regions
+		of the genome are further subclassified as: (i) transcribed,
+		(ii) un-transcribed, (iii) bi-directional, or (iv) unknown.
+	       
+		2. Generation of plots of all types of mutational signatures as
+		well as all types of mutational patterns in cancer genomes.  
+
+		Additional Information:
+
+		Classification of Single Base substitutions (SBSs):
+		Single base substitutions (SBSs) are single DNA base-pairs
+		substituted with another single DNA base-pairs. The most
+		basic classification catalogues SBSs into six distinct
+		categories, including: C:G > A:T, C:G > G:C, C:G > T:A,
+		T:A > A:T, T:A > C:G, and T:A > G:C. In practice, a C:G > A:T
+		substitution is denoted as either a C > A mutation using the
+		pyrimidine base or as a G > T mutation using the purine base.
+		In consequence, the most commonly used SBS-6 classification of
+		single base substitutions can be written as: C > A, C > G,
+		C > T, T > A, T > C, and T > G.
+		Additionally, the SBS-6 classification can be further
+		expanded by considering the base-pairs immediately
+		adjacent 5′ and 3′ to the somatic mutation. Therefore, an
+		extended classification for analysis of mutational signatures is
+		SBS-96, where each of the classes in SBS-6 is further elaborated
+		using one base adjacent at the 5′ of the mutation and one base
+		adjacent at the 3′ of the mutation.
+		Logically, SBS-96 can be further elaborated by including
+		additional 5′ and 3′ adjacent context. Each of the six single
+		base substitutions in SBS-6 has 256 possible pentanucleotides
+		resulting in a classification with 1536 possible channels.
+	       
+		Classification of Doublet Base substitutions (DBSs):
+		Doublet base substitutions (DBSs) are somatic mutations in which
+		a set of two adjacent DNA base-pairs is simultaneously
+		substituted with another set of two adjacent DNA base-pairs. An
+		example of a DBS is a set of CT:GA base-pairs mutating to a set
+		of AA:TT base-pairs, which is usually denoted as CT:GA > AA:TT.
+		It should be noted that a CT:GA > AA:TT mutation can be
+		equivalently written as either a CT > AA mutation.  Overall, the
+		basic classification catalogues DBSs into 78 distinct categories
+		denoted as the DBS-78 matrix.
+		Similarly, we can expand the characterization of DBS mutations
+		by considering the 5′ and 3′ adjacent contexts. With
+		seventy-eight possible DBS mutations having sixteen possible
+		tetranucleotides each, this context expansion results in 1248
+		possible channels denoted as the DBS-1248 context.
+		
+		Classification of small insertions and deletions (IDs):
+		A somatic insertion is the incorporation of a set of base-pairs
+		that lengthens a chromosome, while a somatic deletion is the
+		removing of a set of existing base-pairs from a given location
+		of a chromosome.
+		Unfortunately, indel classification cannot be performed
+		analogously to SBS or DBS classifications, where the immediate
+		sequencing context flanking each mutation was
+		utilized to subclassify these mutational events.
+		Consequently, indels (IDs) are classified as single base-pair
+		or longer events. They can be further subclassified as either a
+		C:G or a T:A indel, while longer indels can also be
+		subclassified based on their lengths: 2 bp, 3 bp, 4 bp, and
+		5 + bp.
+
+		Incorporation of transcription Strand Bias (TSB):
+		The mutational classifications described above allow the
+		characterization of mutational patterns of single base
+		substitutions, doublet base substitutions, and small insertions
+		and deletions. Nevertheless, these classifications can be
+		further elaborated by incorporating strand bias. Mutations
+		from the same type are expected to be equally distributed across the two
+		DNA strands. However, in many cases an asymmetric number of mutations are
+		observed due to either one of the strands being preferentially
+		repaired or one of the strands having a higher propensity for
+		being damaged. To sub-classify mutations based on their
+		transcriptional strand bias, the pyrimidine orientation with
+		respect to the locations of well-annotated protein coding genes
+		on a genome is considered.
+
+		Running SigProfiler:
+		
+		1. Reference Genomes:
+		Before using SigProfiler, the installation of a reference genome
+		is demanded. By default, the tool supports the following
+		reference genomes:
+
+                Human: GRCh37 & GRCh38
+
+                Mouse: mm9 & mm10
+
+                Rat: rn6
+
+                Nematode: c_elegans
+
+                A right command line should look like:
+
+                sigprofiler -ig GRCh37
+
+		2. Mutational signatures calculation:
+		
+		After successful installation of a reference genome, SigProfiler
+		can be applied to files containing somatic mutations in multiple
+		formats, for transforming these mutational catalogues into mutational
+		matrices. Specifically, the tool can read data formats such as
+		Variant Calling Format (VCF) and Mutation Annotation Format
+		(MAF) and the following parameters should be provided for
+		generating the diverse matrices and plots:
+		
+		--name | -n = Project name
+		--genome | -g = Reference Genome
+		-files | -f = Absolute path where the input mutation files are located
+
+		A right command line should look like:
+
+		sigprofiler -n MYPROJECT -g GRCh37 -f /path_to_folder_with_VCF_files/ -p
 
 		**Options**
 		--version             	show program's version number and exit
