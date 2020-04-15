@@ -1,0 +1,53 @@
+<tool id="scrublet" name="Scrublet" version="0.0.1">
+  <description>: visualization of splicing events across multiple samples</description>
+  <requirements>
+    <requirement type="package" version="3">python</requirement>
+    <requirement type="package" version="1.3">scrublet</requirement>
+    <requirement type="package" version="2.2.1=r3.4.1_0">argparse</requirement>
+    <requirement type="package" version="1.10.4=r3.4.1_0">matplotlib</requirement>
+    <requirement type="package" version="2.2.1=r3.4.1_0">scipy.io</requirement>
+    <requirement type="package" version="2.2.1=r3.4.1_0">pandas</requirement>
+    <requirement type="package" version="2.2.1=r3.4.1_0">numpy</requirement>
+  </requirements>
+  <stdio>
+    <exit_code range="1:" level="fatal" description="Tool exception" />
+  </stdio>
+  <command detect_errors="exit_code"><![CDATA[
+       python $__tool_directory__/Scrublet_param.py 
+           --input_barcodes ${input_barcodes}
+           --input_features ${input_features}
+           --input_matrix ${input_matrix}
+           --expected_doublet_rate ${expected_doublet_rate}
+           --doublet_threshold ${doublet_threshold}
+           --output_csv ${output_csv}
+           --output_hist ${output_hist}
+           --output_umap ${output_umap}
+ 
+  ]]></command>
+  <inputs>
+    <param name="input_barcodes" type="data" format="tsv" label="Barcode names" help="" />
+    <param name="input_features" type="data" format="tsv" label="Feature names"/>
+    <param name="input_matrix" type="data" format="text" label="10X UMI matrix"/>
+    <param name="expected_doublet_rate" type="float" label="Expected doublet rate" help="" />
+    <param name="doublet_threshold" type="float" label="Doublet score threshold" help="" />
+  </inputs>
+  <outputs>
+    <data name="output_csv" format="csv" label="Scrublet doublet scores on ${on_string}" />
+    <data name="output_hist" format="pdf" label="Scrublet histogram doublet scores on ${on_string}" />
+    <data name="output_umap" format="pdf" label="Scrublet umap on ${on_string}" />
+  </outputs>
+  <tests>
+  </tests>
+  <help>
+
+.. class:: infomark
+
+**What it does**
+
+Generate doublet prediction from 10X matrix  based on the Scrublet algorithm.
+  </help>
+  <citations>
+      <citation type="doi">doi.org/10.1101/357368</citation>
+  </citations>
+</tool>
+
