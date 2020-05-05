@@ -27,7 +27,7 @@
         #if $analysis_type.analysis_type_list == "one_sample":
 
             #if $seq_method.seq_method_list == "paired-end":
-                samtools view -@ \${GALAXY_SLOTS:-4} -u -F 1294 '$one_sample_bam' | samtools sort -@ \${GALAXY_SLOTS:-4} -O bam -o input.discordants.bam &&
+                samtools view -@ \${GALAXY_SLOTS:-4} -u -F 1294 -o input.discordants.temp.bam '$one_sample_bam' && samtools sort -@ \${GALAXY_SLOTS:-4} -O bam -o input.discordants.bam input.discordants.temp.bam &&
                 samtools view -@ \${GALAXY_SLOTS:-4} -h '$one_sample_bam' | python $__tool_directory__/extractSplitReads_BwaMem.py -i stdin | samtools sort -@ \${GALAXY_SLOTS:-4} -O bam -o input.splitters.bam &&
                 samtools view -@ \${GALAXY_SLOTS:-4} '$one_sample_bam'
                     |python $__tool_directory__/pairend_distro.py -r $analysis_type.readLength -X 4 -N $seq_method.additional_params.samplingValue -o input.lib.histo > meandev.txt &&
