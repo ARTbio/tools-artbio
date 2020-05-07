@@ -1,0 +1,6 @@
+wget: missing URL
+Usage: wget [OPTION]... [URL]...
+
+Try `wget --help' for more options.
+
+Redirecting output to ‘wget-log’.
