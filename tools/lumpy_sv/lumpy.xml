@@ -1,4 +1,4 @@
-<tool id="lumpy" name="lumpy-sv" version="1.1.0">
+<tool id="lumpy" name="lumpy-sv" version="1.2.0">
     <description>find structural variants</description>
     <requirements>
         <requirement type="package" version="0.2.13">lumpy-sv</requirement>
@@ -153,7 +153,7 @@
         <data format="bam" name="discordants" label="Lumpy on ${on_string}: Discordant Pairs (Bam format)" from_work_dir="input.discordants.bam">
             <filter>seq_method['seq_method_list'] == "paired-end"</filter>
         </data>
-        <data format="bam" name="discordantsB" label="Lumpy on ${on_string}: Discordant Pairs (Bam format)" from_work_dir="input.discordants.B.bam">
+        <data format="bam" name="discordantsB" label="Lumpy on ${on_string}: Discordant Pairs (Bam format)" from_work_dir="input.B.discordants.bam">
             <filter>seq_method['seq_method_list'] == "paired-end"</filter>
             <filter>analysis_type['analysis_type_list'] == "two_sample"</filter>
         </data>
@@ -165,6 +165,18 @@
     </outputs>
 
     <tests>
+        <test>
+            <param name="analysis_type_list" value="two_sample" />
+            <param name="input_file" value="sample_Del.bam" ftype="bam"/>
+            <param name="input_fileB" value="sample_cle.bam" ftype="bam"/>
+            <param name="seq_method_list" value="paired-end" />
+            <param name="mw" value="4"/>
+            <param name="tt" value="0"/>
+            <param name="back_distance" value="10"/>
+            <param name="weight" value="1" />
+            <param name="min_mapping_threshold" value="20" />
+            <output name="vcf_call" file="output_two.paired_end.vcf" ftype="vcf"/>
+        </test>
         <test>
             <param name="analysis_type_list" value="one_sample" />
             <param name="input_file" value="sr.input.bam" ftype="bam"/>
