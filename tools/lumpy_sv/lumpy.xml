@@ -1,4 +1,4 @@
-<tool id="lumpy" name="lumpy-sv" version="1.1.0">
+<tool id="lumpy" name="lumpy-sv" version="1.2.0">
     <description>find structural variants</description>
     <requirements>
         <requirement type="package" version="0.2.13">lumpy-sv</requirement>
