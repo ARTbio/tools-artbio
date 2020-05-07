@@ -1,0 +1,14 @@
+owner: artbio
+name: artbio_mutect2
+description: Find somatic variations
+long_description: |
+  MuTect2 is a somatic SNP and indel caller that combines the DREAM 
+  challenge-winning somatic genotyping engine of the original MuTect
+  with the assembly-based machinery of HaplotypeCaller.
+categories:
+  - Variant Analysis
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/artbio_mutect2
+toolshed:
+  - testtoolshed
+  - toolshed
