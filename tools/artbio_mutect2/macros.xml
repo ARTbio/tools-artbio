@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <macros>
     <token name="@VERSION@">4.1.4.0</token>
-    <token name="@WRAPPER_VERSION@">@VERSION@+galaxy1</token>
+    <token name="@WRAPPER_VERSION@">@VERSION@+artbio2</token>
 
     <xml name="requirements">
         <requirements>
@@ -352,7 +352,7 @@
     ]]></template>
 
     <xml name="gatk_normal_bam_req_params">
-        <param name="normal" argument="--normal" type="data" format="bam,sam" label="Input Tumor BAM/SAM/CRAM file" />
+        <param name="normal" argument="--normal" type="data" format="bam,sam" label="Input Normal BAM/SAM/CRAM file" />
     </xml>
 
     <template name="picard_normal_bam_index"><![CDATA[
