@@ -19,7 +19,7 @@
             ln -s '$reference_source.reference_sequence' reference.fa &&
             samtools faidx reference.fa &&
             gatk CreateSequenceDictionary --REFERENCE="reference.fa" --OUTPUT="reference.dict" &&
-        #else if str($reference_source.reference_source_selector) == 'history'
+        #else if str($reference_source.reference_source_selector) == 'cached'
             ln -s '$reference_source.reference_sequence.fields.path' reference.fa &&
             samtools faidx reference.fa &&
             gatk CreateSequenceDictionary --REFERENCE="reference.fa" --OUTPUT="reference.dict" &&
