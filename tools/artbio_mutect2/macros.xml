@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <macros>
     <token name="@VERSION@">4.1.4.1</token>
-    <token name="@WRAPPER_VERSION@">@VERSION@+artbio2</token>
+    <token name="@WRAPPER_VERSION@">@VERSION@+artbio3</token>
 
     <xml name="requirements">
         <requirements>
