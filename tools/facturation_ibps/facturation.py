@@ -8,6 +8,10 @@ import openpyxl
 
 import pandas as pd
 
+import warnings
+
+warnings.filterwarnings("ignore")
+
 
 def Parser():
     the_parser = argparse.ArgumentParser()
@@ -27,7 +31,7 @@ def main(template, input_file, output_file, reduction):
     """Script de parsing des fichiers de facturation de l'IBPS"""
 
     # ouverture fichier input
-    with open(input_file, 'r') as file_object:
+    with open(input_file, 'rb') as file_object:
         facture_html = file_object.read()
     # convert to unicode utf-8, remove &nbsp and €
     facture_html = facture_html.decode('utf-8')
@@ -35,11 +39,11 @@ def main(template, input_file, output_file, reduction):
     facture_html = facture_html.replace(r' &euro;', '')
     facture_html = facture_html.replace(u' \u20ac', '')
     # parsing de la référence, de la date et de la période de facturation
-    date = re.search(r'Paris le (.*?)</p>'.decode('utf-8'),
+    date = re.search(r'Paris le (.*?)</p>',
                      facture_html).group(1)
-    periode = re.search(r'de la prestation (.*?)</p>'.decode('utf-8'),
+    periode = re.search(r'de la prestation (.*?)</p>',
                         facture_html).group(1)
-    ref = re.search(r'rence interne d.*? :\s*(.*?)<'.decode('utf-8'),
+    ref = re.search(r'rence interne d.*? :\s*(.*?)<',
                     facture_html).group(1)
 
     # parsing des tableaux html avec pandas
@@ -68,7 +72,7 @@ def main(template, input_file, output_file, reduction):
 
     # ouverture fichier output
     facture_output = openpyxl.load_workbook(
-        template, data_only=False, keep_vba=False)
+        template, data_only='True', keep_vba=False)
     ws = facture_output.worksheets[0]
 
     # rajout de l'image de SU qui ne survit pas à la conversion
