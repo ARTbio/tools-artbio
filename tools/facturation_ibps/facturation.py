@@ -3,12 +3,12 @@
 
 import argparse
 import re
+import warnings
 
 import openpyxl
 
 import pandas as pd
 
-import warnings
 
 warnings.filterwarnings("ignore")
 
