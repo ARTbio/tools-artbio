@@ -62,11 +62,11 @@ flag_mask = required | restricted
 L = []
 c = 0
 
-for l in sys.stdin:
+for len in sys.stdin:
     if c >= options.N:
         break
 
-    A = l.rstrip().split('\t')
+    A = len.rstrip().split('\t')
     flag = int(A[SAM_FLAG])
     refname = A[SAM_REFNAME]
     mate_refname = A[SAM_MATE_REFNAME]

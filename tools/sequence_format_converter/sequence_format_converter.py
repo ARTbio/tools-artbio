@@ -38,7 +38,7 @@ class Sequencing:
         reference = ['A', 'T', 'G', 'C', 'N']
         format = ''
         try:
-            for l in range(4):
+            for n in range(4):
                 block.append(input.readline()[:-1])
         except IndexError:
             logging.info("File hasn't at leat four lines !")
