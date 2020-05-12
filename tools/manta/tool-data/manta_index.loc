@@ -1,0 +1,15 @@
+#This file lists the locations and dbkeys of all the fasta files
+#under the "genome" directory (a directory that contains a directory
+#for each build). 
+This file has the format (white space characters are TAB characters):
+#
+#<unique_build_id>      <dbkey>         <display_name>  <file_path>
+#
+#So, it could look something like this:
+#
+#hg19canon      hg19            Human (Homo sapiens): hg19 Canonical            /path/to/genome/hg19/hg19canon.fa
+#hg19full       hg19            Human (Homo sapiens): hg19 Full                 /path/to/genome/hg19/hg19full.fa
+#
+#Your .loc file should contain an entry for each individual
+#fasta file. So there will be multiple fasta files for each build,
+#such as with hg19 above.
