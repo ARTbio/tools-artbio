@@ -105,6 +105,12 @@ option_list <- list(
     type = "character",
     default = "./plot.pdf",
     help = "Pathifier visualization [default : '%default' ]"
+  ),
+  make_option(
+    "--rdata",
+    type = "character",
+    default = "./results.rdata",
+    help = "Pathifier object (S4) [default : '%default' ]"
   )
 )
 parser <- OptionParser(usage = "%prog [options] file", option_list=option_list)
@@ -282,3 +288,6 @@ write.table(PDS_scores,
             quote = F,
             sep = "\t"
 )
+
+## write S4 pathifier object
+save(PDS, file = args$rdata)
