@@ -237,15 +237,33 @@ class Map:
             coverage_dictionary[(chrom, 1, 'F')] = 0
             coverage_dictionary[(chrom, self.chromosomes[chrom], 'F')] = 0
             for read in self.bam_object.fetch(chrom):
-                positions = read.positions  # a list of covered positions
+                positions = sorted(read.positions)  # list of covered positions
+                #  add flanking position at 0 to join
+                #  the base line when plotting graph
+                flanking = []
+                for i in range(len(positions)-1):
+                    right = positions[i+1]
+                    left = positions[i]
+                    if positions[i+1] - positions[i] > 2:
+                        flanking.insert(0, right-1)
+                        flanking.insert(0, left+1)
+                    elif positions[i+1] - positions[i] == 2:
+                        flanking.insert(0, left+1)
+                positions = sorted(positions + flanking)
+                if positions[0] > 0:
+                    positions.insert(0, positions[0]-1)
+                if positions[-1] < self.chromosomes[chrom] - 1:
+                    positions.append(positions[-1]+1)
                 for pos in positions:
                     if not map_dictionary[(chrom, pos+1, 'F')]:
                         map_dictionary[(chrom, pos+1, 'F')] = []
         for key in map_dictionary:
+            if 'R' in key:
+                continue
             coverage = self.bam_object.count_coverage(
-                                                reference=key[0],
+                                                contig=key[0],
                                                 start=key[1]-1,
-                                                end=key[1],
+                                                stop=key[1],
                                                 quality_threshold=quality)
             """ Add the 4 coverage values """
             coverage = [sum(x) for x in zip(*coverage)]
@@ -298,7 +316,7 @@ class Map:
                     sizeness[size] += sizedic[chrom][polarity][size]
             Strandbias = strandness['F'] + strandness['R']
             if Strandbias:
-                Strandbias = strandness['F'] / float(Strandbias)
+                Strandbias = round(strandness['F'] / float(Strandbias), 2)
             else:
                 Strandbias = 2
             Mean = numpy.mean(sizeness.values())
@@ -313,10 +331,10 @@ class Map:
                     try:
                         line = [self.sample_name, chrom, polarity, size,
                                 sizedic[chrom][polarity][size],
-                                Strandbias, sizeness[size]]
+                                Strandbias, round(sizeness[size], 3)]
                     except KeyError:
                         line = [self.sample_name, chrom, polarity, size, 0,
-                                Strandbias, sizeness[size]]
+                                Strandbias, round(sizeness[size], 3)]
                     line = [str(i) for i in line]
                     out.write('\t'.join(line) + '\n')
 

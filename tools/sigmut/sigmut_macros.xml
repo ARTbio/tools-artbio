@@ -1,0 +1,23 @@
+<macros>
+      
+    <token name="@VERSION@">0.9.1</token>
+
+    <token name="@pipefail@"><![CDATA[set -o | grep -q pipefail && set -o pipefail;]]></token>
+
+    <xml name="requirements">
+        <requirements>
+		<requirement type="package" version="1.0">sigmut</requirement>
+        </requirements>
+    </xml>
+
+    <xml name="stdio">
+        <stdio>
+            <exit_code range="1:" />
+            <exit_code range=":-1" />
+            <regex match="Error:" />
+            <regex match="Exception:" />
+            <regex match="\[bns_restore_core\] Parse error reading" />
+        </stdio>
+    </xml>
+
+</macros>

@@ -43,10 +43,13 @@ def get_fasta_dic(gzipfile):
 def convert_and_print_hairpins(gzipfile, basename, fasta_output):
     raw_fasta_dict = get_fasta_dic(gzipfile)
     parsed_fasta_dict = {}
-    trs = str.maketrans("uU", "tT")
     for head in raw_fasta_dict:
         if basename in head:
-            parsed_fasta_dict[head] = raw_fasta_dict[head].translate(trs)
+            parsed_fasta_dict[head] = raw_fasta_dict[head]
+            parsed_fasta_dict[head] = ''.join(
+                [i if i != 'u' else 't' for i in parsed_fasta_dict[head]])
+            parsed_fasta_dict[head] = ''.join(
+                [i if i != 'U' else 'T' for i in parsed_fasta_dict[head]])
     with open(fasta_output, "w") as output:
         for head in sorted(parsed_fasta_dict):
             output.write('>%s\n%s\n' % (head, parsed_fasta_dict[head]))

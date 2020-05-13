@@ -1,44 +1,94 @@
-<tool id="cherry_pick_fasta" name="Pick Fasta sequences" version="1.0.0">
-  <description>with header satisfying a query string</description>
+<tool id="cherry_pick_fasta" name="Pick Fasta sequences" version="2.0.0">
+  <description>with header satisfying a string query</description>
   <command interpreter="python">cherry_pick_fasta.py
                                    --input $input
-                                   --query-string "$query"
+                                   --searchfor '$search.searchfor'
+                                   #if $search.options_selector == 'single':
+                                       --query-string '$search.query'
+                                   #else:
+                                       --query-file '$search.query'
+                                   #end if
                                    --output $output
   </command>
 
   <inputs>
-    <param name="query" type="text" size="30" value="" label="Select sequences with this string in their header" help="exemple: gi|40557596">
-    <sanitizer>
-        <valid initial="string.printable">
-          <remove value="&quot;"/>
-          <remove value="\"/>
-        </valid>
-        <mapping initial="none">
-          <add source="&quot;" target="\&quot;"/>
-          <add source="\" target="\\"/>
-        </mapping>
-      </sanitizer>
-    </param>
-    <param format="fasta" label="Source file" name="input" type="data" />
+    <param name="input" type="data" format="fasta" label="Source file" help="Fasta file to parse" />
+
+    <conditional name="search">
+        <param name="options_selector" type="select" display="radio" label="by single term or file of terms">
+            <option value="single" selected="True">single term</option>
+            <option value="textdataset">terms in a text dataset</option>
+        </param>
+        <when value="single">
+            <param name="query" type="text" size="30" value="" label="Search string" help="exemple: gi|40557596">
+                <sanitizer>
+                    <valid initial="string.printable">
+                        <remove value="&quot;"/>
+                        <remove value="\"/>
+                    </valid>
+                    <mapping initial="none">
+                        <add source="&quot;" target="\&quot;"/>
+                        <add source="\" target="\\"/>
+                    </mapping>
+                </sanitizer>
+            </param>
+            <param name="searchfor" type="select" label="retrieve sequences whose headers contain or do not contain the search string">
+                <option value="with" selected="true">contain</option>
+                <option value="without">do not contain</option>
+            </param>
+        </when>
+        <when value="textdataset">
+            <param name="query" type="data" format="txt" label="term dataset" help="a list of term to search for, one term per line" />
+            <param name="searchfor" type="select" label="retrieve sequences whose headers contain or do not contain the search list">
+                <option value="with" selected="true">contain</option>
+                <option value="without">do not contain</option>
+            </param>
+        </when>
+    </conditional>
   </inputs>
   <outputs>
-    <data name="output" format="fasta" label="${tool.name} on ${on_string} including '${query.value}' in header" />
+    <data name="output" format="fasta" label="Fasta sequences ${search.searchfor.value} ${search.options_selector} term(s) in header" />
   </outputs>
   <tests>
     <test>
         <param ftype="fasta" name="input" value="input.fa" />
+        <!-- <param name="options_selector" value="textdataset" /> -->
         <param name="query" value="gi|81971654" />
+        <param name="searchfor" value="with" />
         <output name="output" ftype="fasta" file="output.fa" />
     </test>
+    <test>
+        <param ftype="fasta" name="input" value="input.fa" />
+        <!-- <param name="options_selector" value="textdataset" /> -->
+        <param name="query" value="RNA" />
+        <param name="searchfor" value="without" />
+        <output name="output" ftype="fasta" file="output_without.fa" />
+    </test>
+    <test>
+        <param ftype="fasta" name="input" value="input.fa" />
+        <param name="options_selector" value="textdataset" />
+        <param name="query" ftype="txt" value="termlist.txt" />
+        <param name="searchfor" value="without" />
+        <output name="output" ftype="fasta" file="output_termlist.fa" />
+    </test>
+    <test>
+        <param ftype="fasta" name="input" value="input.fa" />
+        <param name="options_selector" value="textdataset" />
+        <param name="query" ftype="txt" value="termlist.txt" />
+        <param name="searchfor" value="without" />
+        <output name="output" ftype="fasta" file="output_termlist_without.fa" />
+    </test>
   </tests>
+
   <help>
 **What it does**
 
-This tool retrieves nucleotide/peptide sequences from a fasta file whose headers match a given query string.
+This tool retrieves nucleotide/peptide sequences from a fasta file whose headers match
+or do not match a given string.
 
-It is Copyright © 2015 `CNRS and University Pierre et Marie Curie`_ and is released under the `MIT license`_.
+It is Copyright © 2019 `CNRS and Sorbonne-Université`_ and is released under the `MIT license`_.
 
-.. _CNRS and University Pierre et Marie Curie: http://www.upmc.fr/en/index.html
+.. _CNRS and  Sorbonne-Université: http://www.sorbonne-universite.fr/en
 .. _MIT license: http://opensource.org/licenses/MIT
 
   </help>

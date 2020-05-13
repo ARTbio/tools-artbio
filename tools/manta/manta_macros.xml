@@ -1,0 +1,96 @@
+<macros>
+
+    <token name="@VERSION@">1.6</token>
+    <token name="@WRAPPER_VERSION@">@VERSION@+galaxy2</token>
+    <token name="@pipefail@"><![CDATA[set -o | grep -q pipefail && set -o pipefail;]]></token>
+
+    <token name="@set_reference_fasta_filename@"><![CDATA[
+    #set $reference_fasta_filename = "localref.fa"
+
+    #if str( $reference_source.reference_source_selector ) == "history":
+    ln -s -f '${reference_source.ref_file}' '${reference_fasta_filename}' &&
+    samtools faidx '${reference_fasta_filename}' 2>&1 || echo "Error running samtools faidx for Manta" >&2 &&
+    #else:
+    #set $reference_fasta_filename = str( $reference_source.index.fields.path )
+    #end if
+    ]]></token>
+
+    <token name="@set_configuration_file@"><![CDATA[
+    #if str( $configuration.configuration_switch ) == "Custom_config_file":
+    #set $config_file = '$configuration.CustomConfigFile'
+    #else if str( $configuration.configuration_switch )== "Customized":
+    #set $config_file = '$configuration.Customized'
+    #else:
+    #set $config_file = $__tool_directory__ + '/configManta.py.ini'
+    #end if
+    ]]></token>
+
+
+    <xml name="requirements">
+        <requirements>
+            <requirement type="package" version="1.7">samtools</requirement>
+            <requirement type="package" version="@VERSION@">manta</requirement>
+        </requirements>
+    </xml>
+
+    <xml name="stdio">
+        <stdio>
+            <exit_code range="1:" />
+            <exit_code range=":-1" />
+            <regex match="Error:" />
+            <regex match="Exception:" />
+            <regex match="\[bns_restore_core\] Parse error reading" />
+        </stdio>
+    </xml>
+
+    <macro name="reference_source_conditional">
+        <conditional name="reference_source">
+            <param name="reference_source_selector" type="select" label="Will you select a reference genome from your history or use a built-in index?" help="Built-ins were indexed using default options. See `Indexes` section of help below">
+                <option value="cached">Use a built-in genome index</option>
+                <option value="history">Use a genome from history and build index</option>
+            </param>
+            <when value="cached">
+                <param name="index" type="select" label="Using reference genome" help="Select genome from the list">
+                    <options from_data_table="manta_indexes">
+                        <filter type="sort_by" column="2" />
+                        <validator type="no_options" message="No indexes are available" />
+                    </options>
+                    <validator type="no_options" message="A built-in reference genome is not available for the build associated with the selected input file"/>
+                </param>
+            </when>
+            <when value="history">
+                <param name="ref_file" type="data" format="fasta" label="Use the following dataset as the reference sequence"
+                    help="You can upload a FASTA sequence to the history and use it as reference" />
+            </when>
+        </conditional>
+    </macro>
+
+    <macro name="manta_configuration">
+        <conditional name="configuration">
+            <param name="configuration_switch" type="select" label="How do you want to configure manta?">
+                <option value="Custom_config_file">Upload a different config file</option>
+                <option value="Customized">Customize the options</option>
+            </param>
+            <when value="Custom_config_file">
+                <param format="ini" name="CustomConfigFile" type="data" label="config file"/>
+            </when>
+            <when value="Customized">
+                <param name="minCandidateVariantSize" type="integer" value="8" label="minCandidateVariantSize" help="Run discovery and candidate reporting for all SVs/indels at or above this size."/>
+                <param name="rnaMinCandidateVariantSize" type="integer" value="1000" label="rnaMinCandidateVariantSize" help="Separate option (to provide different default) used for runs in RNA-mode."/>
+                <param name="minEdgeObservations" type="integer" value="3" label="minEdgeObservations" help="Remove all edges from the graph unless they're supported by this many 'observations'."/>
+                <param name="graphNodeMaxEdgeCount" type="integer" value="10" label="graphNodeMaxEdgeCount" help="If both nodes of an edge have an edge count higher than this, then skip evaluation of the edge."/>
+                <param name="minCandidateSpanningCount" type="integer" value="3" label="minCandidateSpanningCount" help="Run discovery and candidate reporting for all SVs/indels with at least this many spanning support observations."/>
+                <param name="minScoredVariantSize" type="integer" value="50" label="minScoredVariantSize" help="After candidate identification, only score and report SVs/indels at or above this size."/>
+                <param name="minDiploidVariantScore" type="integer" value="10" label="minDiploidVariantScore" help="Minimum VCF 'QUAL' score for a variant to be included in the diploid vcf."/>
+                <param name="minPassDiploidVariantScore" type="integer" value="20" label="minPassDiploidVariantScore" help="VCF 'QUAL' score below which a variant is marked as filtered in the diploid vcf."/>
+                <param name="minPassDiploidGTScore" type="integer" value="15" label="minPassDiploidGTScore" help="Minimum genotype quality score below which single samples are filtered for a variant in the diploid vcf."/>
+                <param name="minSomaticScore" type="integer" value="10" label="minSomaticScore" help="Somatic quality scores below this level are not included in the somatic vcf."/>
+                <param name="minPassSomaticScore" type="integer" value="30" label="minPassSomaticScore" help="Somatic quality scores below this level are filtered in the somatic vcf."/>
+                <param name="enableRemoteReadRetrievalForInsertionsInGermlineCallingModes" type="integer" value="1" label="enableRemoteReadRetrievalForInsertionsInGermlineCallingModes" help="Remote read retrieval is used ot improve the assembly of putative insertions by retrieving any mate reads in remote locations with poor mapping quality. This feature can be enabled/disabled separately for germline and cancer calling below."/>
+                <param name="enableRemoteReadRetrievalForInsertionsInCancerCallingModes" type="integer" value="0" label="enableRemoteReadRetrievalForInsertionsInCancerCallingModes" help="Here 'CancerCallingModes' includes tumor-normal subtraction and tumor-only calling. 'GermlineCallingModes' includes all other calling modes."/>
+                <param name="useOverlapPairEvidence" type="integer" value="0" label="useOverlapPairEvidence" help="Set if an overlapping read pair will be considered as evidence. Set this value &lt;= 0 to skip overlapping read pairs."/>
+            </when>
+        </conditional>
+    </macro>
+
+</macros>

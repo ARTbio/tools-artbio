@@ -1,0 +1,15 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: manta
+description: Structural variant and indel caller for mapped sequencing data
+long_description: |
+  This tool takes a sorted bam alignment file from paired-end sequencing reads
+  and calls structural variants (SVs) and indels. It discovers large-scale SVs,
+  medium-sized indels and large insertions in a very fast analysis.
+categories:
+  - Variant Analysis
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/manta
+toolshed:
+  - testtoolshed
+  - toolshed
