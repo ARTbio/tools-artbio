@@ -103,10 +103,12 @@
             <param name="genes" value="kegg_pathways.gmt" ftype="txt" />
             <param name="is_normal" value="" />
             <param name="log" value="no" />
+            <param name="rdata" value="yes" />
             <param name="attempts" value="50" />
             <param name="min_exp" value="data" />
             <param name="min_std" value="data" />
             <output name="pds" file="sheffer.kegg_noref.tsv" ftype="tabular"/>
+            <output name="rdatafile" file="sheffer.kegg_noref.rdata" ftype="rdata"/>
             <output name="plot" file="plot_noref.pdf" ftype="pdf" compare="sim_size" />
         </test>
     </tests>
