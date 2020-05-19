@@ -1,0 +1,160 @@
+<tool id="sambamba_filter" name="Filter BAM or SAM" version="1.1">
+    <requirements>
+        <requirement type="package" version="0.4.7">sambamba</requirement>
+    </requirements>
+    <description>
+        on flags, fields, and tags using Sambamba
+    </description>
+    <version_command>sambamba 2>&amp;1 | grep "sambamba v" | sed 's/^sambamba v\(.*\)/\1/'</version_command>
+    <command>
+        #if $query != None:
+            #set $query = $query.replace('__sq__', '\'')
+            #set $query = $query.replace('__ob__', '[')
+            #set $query = $query.replace('__cb__', ']')
+            #set $query = $query.replace('__dq__', '"')
+            #set $query = $query.replace('__oc__', '{')
+            #set $query = $query.replace('__cc__', '}')
+            #set $query = $query.replace('__gt__', chr(62))
+            #set $query = $query.replace('__lt__', chr(60))
+        #end if
+        #set $input1 = 'input.bam'
+        ln -s $input $input1 &amp;&amp;
+        ln -s $input.metadata.bam_index input.bai &amp;&amp;
+        sambamba view -t \${GALAXY_SLOTS:-8}
+        #if $query != "":
+            --filter="$query"
+        #end if
+         -f bam -o $outfile $input1 $region
+    </command>
+    <inputs>
+        <param name="input" type="data" format="bam" label="BAM or SAM file to filter"/>
+        <param name="query" type="text" size="80">
+            <label>Filter expression</label>
+            <help>See below for query syntax.</help>
+        </param>
+     
+        <param name="region" type="text" size="40" label="Region in format chr:beg-end">
+        <help>
+            Regions can be specified as 'chr2' (the whole chr2), 'chr2:1000000' (region starting from 1,000,000bp) or 'chr2:1,000,000-2,000,000' (region between 1,000,000 and 2,000,000bp including the end points). The coordinates are 1-based.
+        </help>
+        </param>
+    </inputs>
+    <outputs>
+        <data name="outfile" format="bam"></data>
+    </outputs>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Error occured" />
+    </stdio>
+    <tests>
+        <test>
+            <param name="input" value="ex1_header.sam" ftype="sam" />
+            <param name="query" value="[H0] == 1 and read_name =~ /^EAS51_62/" />
+            <param name="format" value="bam" />
+            <param name="region" value="" />
+            <output name="outfile" file="ex1_header_filtered.bam" ftype="bam" />
+        </test>
+        <test>
+            <param name="input" value="c1215_fixmate.bam" ftype="bam" />
+            <param name="query" value="[MD] =~ /^\d+T\d+A\d+/ and first_of_pair" />
+            <param name="format" value="sam" />
+            <param name="region" value="AL096846:1000-5000" />
+            <output name="outfile" file="c1215_fixmate_filtered.sam" ftype="sam" />     
+        </test>
+    </tests>
+    <help>
+Sambamba Filter Overview
+========================
+
+This tool uses the sambamba_ ``view`` command to filter BAM/SAM on flags, fields, tags, and region. Input is SAM or BAM file.
+
+
+Filter Syntax 
+=============
+
+A *filter expression* is a number of *basic conditions* linked by ``and``, ``or``, ``not`` logical operators, and enclosed in parentheses where needed.
+
+*Basic condition* is a one for a single record field, tag, or flag.
+
+You can use ``==,`` ``!=,`` ``&gt;``, ``&lt;``, ``&gt;=``, ``&lt;=`` comparison operators for both integers and strings.
+
+Strings are delimited by single quotes, if you need a single quote inside a string, escape it with ``\\``.
+
+Examples of filter expressions
+------------------------------
+
+::
+
+    mapping_quality >= 30 and ([RG] =~ /^abcd/ or [NM] == 7)
+    read_name == 'abc\'def'
+
+Basic conditions for flags
+--------------------------
+
+The following flag names are recognized:
+  * paired
+  * proper_pair
+  * unmapped
+  * mate_is_unmapped
+  * reverse_strand
+  * mate_is_reverse_strand
+  * first_of_pair
+  * second_of_pair
+  * secondary_alignment
+  * failed_quality_control
+  * duplicate
+
+Example
+~~~~~~~
+
+::
+
+    not (unmapped or mate_is_unmapped) and first_of_pair
+
+Basic conditions for fields
+---------------------------
+
+Conditions for integer and string fields are supported.
+
+List of integer fields:
+  * ref_id
+  * position
+  * mapping_quality
+  * sequence_length
+  * mate_ref_id
+  * mate_position
+  * template_length
+
+
+List of string fields:
+  * read_name
+  * sequence
+  * cigar
+
+
+Example
+~~~~~~~
+
+::
+
+    ref_id == 3 and mapping_quality >= 50 and sequence_length >= 80
+
+Basic conditions for tags
+-------------------------
+
+Tags are denoted by their names in square brackets, for instance, ``[RG]`` or ``[Q2].`` They support conditions for both integers and strings, i.e. the tag must also hold value of the corresponding type.
+
+In order to do filtering based on the presence of a particular tag, you can use special ``null`` value.
+
+Example
+~~~~~~~
+
+::
+
+    [RG] != null and [AM] == 37
+
+-----
+
+.. _sambamba: http://github.com/lomereiter/sambamba
+
+    </help>
+</tool>

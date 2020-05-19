@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<tool_dependency>
+  <package name="sambamba" version="0.4.7">
+    <install version="1.0">
+      <actions_group>
+        <actions os="darwin" architecture="x86_64">
+          <action type="download_by_url">
+            https://github.com/lomereiter/sambamba/releases/download/v0.4.7/sambamba_v0.4.7_osx.tar.bz2
+          </action>
+          <action type="move_file" rename_to="sambamba">
+            <source>sambamba_v0.4.7</source>
+            <destination>$INSTALL_DIR/bin</destination>
+          </action>
+        </actions>
+        <actions os="linux" architecture="x86_64">
+          <action type="download_by_url">
+            https://github.com/lomereiter/sambamba/releases/download/v0.4.7/sambamba_v0.4.7_centos5.tar.bz2
+          </action>
+          <action type="move_file" rename_to="sambamba">
+            <source>sambamba_v0.4.7</source>
+            <destination>$INSTALL_DIR/bin</destination>
+          </action>
+        </actions>
+        <action type="set_environment">
+          <environment_variable name="PATH" action="prepend_to">$INSTALL_DIR/bin</environment_variable>
+        </action>
+      </actions_group>
+    </install>
+    <readme>
+      Downloads the precompiled 64bit Linux or Mac OS X binaries from the official repository 'Releases' section.
+    </readme>
+  </package>
+</tool_dependency>
