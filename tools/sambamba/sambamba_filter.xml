@@ -1,12 +1,15 @@
-<tool id="sambamba_filter" name="Filter BAM or SAM" version="1.1">
-    <requirements>
-        <requirement type="package" version="0.4.7">sambamba</requirement>
-    </requirements>
+<tool id="sambambasampleorfilter" name="Sample or Filter BAM" version="0.1">
     <description>
         on flags, fields, and tags using Sambamba
     </description>
+    <requirements>
+        <requirement type="package" version="0.7.1">sambamba</requirement>
+    </requirements>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Error occured" />
+    </stdio>
     <version_command>sambamba 2>&amp;1 | grep "sambamba v" | sed 's/^sambamba v\(.*\)/\1/'</version_command>
-    <command>
+    <command detect_errors="exit_code"><![CDATA[
         #if $query != None:
             #set $query = $query.replace('__sq__', '\'')
             #set $query = $query.replace('__ob__', '[')
@@ -17,34 +20,61 @@
             #set $query = $query.replace('__gt__', chr(62))
             #set $query = $query.replace('__lt__', chr(60))
         #end if
-        #set $input1 = 'input.bam'
-        ln -s $input $input1 &amp;&amp;
-        ln -s $input.metadata.bam_index input.bai &amp;&amp;
-        sambamba view -t \${GALAXY_SLOTS:-8}
-        #if $query != "":
-            --filter="$query"
-        #end if
-         -f bam -o $outfile $input1 $region
-    </command>
+        ln -s $input input.bam &&
+        ln -s $input.metadata.bam_index input.bai &&
+        #if $sambamba_options.selector == 'filter'
+            sambamba view -t \${GALAXY_SLOTS:-4}
+            #if $query != "":
+                --filter="$query"
+                -f '$format' -o $outfile input.bam $region
+            #end if
+         #else
+             sambamba view -h -t \${GALAXY_SLOTS:-4} -f '$format'
+             --subsampling-seed='$seed'
+             -s $fraction -o $outfile input.bam
+         #end if
+    ]]></command>
     <inputs>
         <param name="input" type="data" format="bam" label="BAM or SAM file to filter"/>
-        <param name="query" type="text" size="80">
-            <label>Filter expression</label>
-            <help>See below for query syntax.</help>
-        </param>
-     
-        <param name="region" type="text" size="40" label="Region in format chr:beg-end">
-        <help>
-            Regions can be specified as 'chr2' (the whole chr2), 'chr2:1000000' (region starting from 1,000,000bp) or 'chr2:1,000,000-2,000,000' (region between 1,000,000 and 2,000,000bp including the end points). The coordinates are 1-based.
-        </help>
-        </param>
+        <conditional name="sambamba_options">
+            <param name="selector" type="select" label="Sample or Filter alignments ?">
+                <option value="sample">Down-sample bam or sam alignments</option>
+                <option value="filter">Filter bam or sam alignements</option>
+            </param>
+            <when value="filter">
+                <param name="query" type="text" size="80">
+                    <label>Filter expression</label>
+                    <help>See below for query syntax.</help>
+                </param>
+                <param name="region" type="text" size="40" label="Region in format chr:beg-end">
+                    <help>
+                    Regions can be specified as 'chr2' (the whole chr2), 'chr2:1000000'
+                    (region starting from 1,000,000bp) or 'chr2:1,000,000-2,000,000'
+                    (region between 1,000,000 and 2,000,000bp including the end points).
+                    The coordinates are 1-based.
+                    </help>
+                </param>
+            </when>
+            <when value="sample">
+                <param name="seed" type="integer" size="10">
+                    <label>Seed value for randomisation</label>
+                    <help>
+                    Be careful at selecting different seed values if you
+                    re-subsample a subsample output of this tool
+                    </help>
+                </param>
+                <param name="fraction" type="float" size="10" label="fraction to retrieve after subsampling">
+                    <help>
+                    Use a real number between 0 and 1 to indicate the relative size of
+                    the fraction you wish to retrieve
+                    </help>
+                </param>
+            </when>
+        </conditional>
     </inputs>
     <outputs>
         <data name="outfile" format="bam"></data>
     </outputs>
-    <stdio>
-        <exit_code range="1:" level="fatal" description="Error occured" />
-    </stdio>
     <tests>
         <test>
             <param name="input" value="ex1_header.sam" ftype="sam" />
@@ -157,4 +187,7 @@ Example
 .. _sambamba: http://github.com/lomereiter/sambamba
 
     </help>
+    <citations>
+        <citation type="doi">10.1093/bioinformatics/btv098</citation>
+    </citations>
 </tool>
