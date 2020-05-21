@@ -1,4 +1,4 @@
-<tool id="sambambasampleorfilter" name="Sample or Filter BAM" version="0.2">
+<tool id="sambamba_sample_or_filter" name="Sample or Filter BAM" version="0.3">
     <description>
         on flags, fields, and tags using Sambamba
     </description>
@@ -95,7 +95,23 @@
             <param name="region" value="AL096846:1000-5000" />
             <output name="outfile" file="c1215_fixmate_filtered.sam" ftype="sam" lines_diff="2"/>     
         </test>
-    </tests>
+         <test>
+            <param name="input" value="ex1_header.sam" ftype="sam" />
+            <param name="selector" value="sample" />
+            <param name="seed" value="123" />
+            <param name="fraction" value="0.1" />
+            <param name="format" value="bam" />
+            <output name="outfile" file="ex1_header_sampled.bam" ftype="bam" />
+        </test>
+        <test>
+            <param name="input" value="c1215_fixmate.bam" ftype="bam" />
+            <param name="selector" value="sample" />
+            <param name="seed" value="123" />
+            <param name="fraction" value="0.1" />
+            <param name="format" value="sam" />
+            <output name="outfile" file="c1215_fixmate_sampled.sam" ftype="sam" lines_diff="2"/>     
+        </test>
+   </tests>
     <help>
 Sambamba Filter Overview
 ========================
