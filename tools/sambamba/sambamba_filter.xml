@@ -1,4 +1,4 @@
-<tool id="sambamba_sample_or_filter" name="Sample or Filter BAM" version="0.3">
+<tool id="sambamba_sample_or_filter" name="Sample or Filter BAM" version="0.4">
     <description>
         on flags, fields, and tags using Sambamba
     </description>
@@ -26,14 +26,14 @@
     ]]></command>
     <inputs>
         <param name="input" type="data" format="bam" label="BAM or SAM file to filter"/>
-        <param name="format" type="select" label="format of sampled output">
+        <param name="format" type="select" label="format of the tool output">
             <option value="bam">BAM</option>
             <option value="sam">SAM</option>
         </param>
         <conditional name="sambamba_options">
-            <param name="selector" type="select" label="Sample or Filter alignments ?">
+            <param name="selector" type="select" label="Filter or Down-sample alignments">
                 <option value="sample">Down-sample bam or sam alignments</option>
-                <option value="filter">Filter bam or sam alignements</option>
+                <option value="filter" selected="true">Filter bam or sam alignements</option>
             </param>
             <when value="filter">
                 <param name="query" type="text" size="80">
@@ -203,7 +203,27 @@ Example
 
     [RG] != null and [AM] == 37
 
------
+Down-sampling 
+=============
+
+The tool is using the following sambamba command line for sampling:
+
+::
+
+    sambamba view -h -t &lt;number of Galaxy threads configured in job_conf.xml&gt; -f &lt;bam or sam&gt;
+    --subsampling-seed=&lt;an integer&gt;
+    -s &lt;a real number between 0 and 1&gt; -o &lt;bam or sam output&gt; input_file
+    
+Warnings
+--------
+
+The tool does not down-sample at a user given **number of lines**, because sambamba does not
+expose this functionality. For tool performances, we decided not to add it in this wrapper.
+
+If you down-sample a dataset that has been *already down-sampled* with this tool, it is
+important that you choose **another seed** for randomisation. Otherwise, the new subsampling
+was reported not to conform the indicated fraction.
+
 
 .. _sambamba: http://github.com/lomereiter/sambamba
 
