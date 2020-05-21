@@ -1,0 +1,13 @@
+owner: artbio
+name: sambamba
+description: filter BAM/SAM on flags, fields, tags, and region, or down-sample BAM/SAM 
+long_description: |
+  This tools uses sambaba to downsample BAM/SAM or filter BAM/SAM
+  on flags, fields, tags, and region 
+categories:
+  - SAM
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/sambamba
+toolshed:
+  - testtoolshed
+  - toolshed
