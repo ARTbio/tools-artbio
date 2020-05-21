@@ -1,4 +1,4 @@
-<tool id="sambambasampleorfilter" name="Sample or Filter BAM" version="0.1">
+<tool id="sambambasampleorfilter" name="Sample or Filter BAM" version="0.2">
     <description>
         on flags, fields, and tags using Sambamba
     </description>
@@ -8,34 +8,28 @@
     <stdio>
         <exit_code range="1:" level="fatal" description="Error occured" />
     </stdio>
-    <version_command>sambamba 2>&amp;1 | grep "sambamba v" | sed 's/^sambamba v\(.*\)/\1/'</version_command>
+    <!-- <version_command>sambamba 2>&amp;1 | grep "sambamba v" | sed 's/^sambamba v\(.*\)/\1/'</version_command> -->
     <command detect_errors="exit_code"><![CDATA[
-        #if $query != None:
-            #set $query = $query.replace('__sq__', '\'')
-            #set $query = $query.replace('__ob__', '[')
-            #set $query = $query.replace('__cb__', ']')
-            #set $query = $query.replace('__dq__', '"')
-            #set $query = $query.replace('__oc__', '{')
-            #set $query = $query.replace('__cc__', '}')
-            #set $query = $query.replace('__gt__', chr(62))
-            #set $query = $query.replace('__lt__', chr(60))
-        #end if
         ln -s $input input.bam &&
         ln -s $input.metadata.bam_index input.bai &&
         #if $sambamba_options.selector == 'filter'
-            sambamba view -t \${GALAXY_SLOTS:-4}
-            #if $query != "":
-                --filter="$query"
-                -f '$format' -o $outfile input.bam $region
+            sambamba view -h -t \${GALAXY_SLOTS:-4}
+            #if $sambamba_options.query != '':
+                --filter='$sambamba_options.query'
+                -f '$format' -o $outfile input.bam $sambamba_options.region
             #end if
          #else
              sambamba view -h -t \${GALAXY_SLOTS:-4} -f '$format'
-             --subsampling-seed='$seed'
-             -s $fraction -o $outfile input.bam
+             --subsampling-seed='$sambamba_options.seed'
+             -s '$sambamba_options.fraction' -o '$outfile' input.bam
          #end if
     ]]></command>
     <inputs>
         <param name="input" type="data" format="bam" label="BAM or SAM file to filter"/>
+        <param name="format" type="select" label="format of sampled output">
+            <option value="bam">BAM</option>
+            <option value="sam">SAM</option>
+        </param>
         <conditional name="sambamba_options">
             <param name="selector" type="select" label="Sample or Filter alignments ?">
                 <option value="sample">Down-sample bam or sam alignments</option>
@@ -43,6 +37,11 @@
             </param>
             <when value="filter">
                 <param name="query" type="text" size="80">
+                    <sanitizer invalid_char="X">
+                        <valid initial="string.ascii_letters,string.digits, string.punctuation">
+                            <add value=" " />
+                        </valid>
+                    </sanitizer>
                     <label>Filter expression</label>
                     <help>See below for query syntax.</help>
                 </param>
@@ -56,14 +55,14 @@
                 </param>
             </when>
             <when value="sample">
-                <param name="seed" type="integer" size="10">
+                <param name="seed" type="integer" value="123" size="10">
                     <label>Seed value for randomisation</label>
                     <help>
                     Be careful at selecting different seed values if you
                     re-subsample a subsample output of this tool
                     </help>
                 </param>
-                <param name="fraction" type="float" size="10" label="fraction to retrieve after subsampling">
+                <param name="fraction" type="float" value="0.1" max="1" size="10" label="fraction to retrieve after subsampling">
                     <help>
                     Use a real number between 0 and 1 to indicate the relative size of
                     the fraction you wish to retrieve
@@ -73,11 +72,16 @@
         </conditional>
     </inputs>
     <outputs>
-        <data name="outfile" format="bam"></data>
+        <data name="outfile" format="bam">
+            <change_format>
+                <when input="format" value="sam" format="sam" />
+            </change_format>
+        </data>
     </outputs>
     <tests>
         <test>
             <param name="input" value="ex1_header.sam" ftype="sam" />
+            <param name="selector" value="filter" />
             <param name="query" value="[H0] == 1 and read_name =~ /^EAS51_62/" />
             <param name="format" value="bam" />
             <param name="region" value="" />
@@ -85,10 +89,11 @@
         </test>
         <test>
             <param name="input" value="c1215_fixmate.bam" ftype="bam" />
+            <param name="selector" value="filter" />
             <param name="query" value="[MD] =~ /^\d+T\d+A\d+/ and first_of_pair" />
             <param name="format" value="sam" />
             <param name="region" value="AL096846:1000-5000" />
-            <output name="outfile" file="c1215_fixmate_filtered.sam" ftype="sam" />     
+            <output name="outfile" file="c1215_fixmate_filtered.sam" ftype="sam" lines_diff="2"/>     
         </test>
     </tests>
     <help>

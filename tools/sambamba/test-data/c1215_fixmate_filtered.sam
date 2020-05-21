@@ -1,4 +1,5 @@
 @HD	VN:1.3	SO:coordinate
+@PG	ID:sambamba	CL:view -h -t 1 --filter=[MD] =~ /^\d+T\d+A\d+/ and first_of_pair -f sam -o /tmp/tmpzrv_byjx/files/a/d/c/dataset_adced56a-6b20-49ec-ae55-b745ffd1b703.dat input.bam AL096846:1000-5000	VN:1.0
 AL096846_1043_1176_1df2	83	AL096846	1142	60	35M	=	1043	-134	AAGGCACCTACTTTGACATTCGCGTCTCTCTTAGC	<2<<).<<4<5<<<<;<<<<<<77<;<<<<<<<<<	XT:A:U	NM:i:2	X0:i:1	X1:i:0	XM:i:2	XO:i:0	XG:i:0	MD:Z:4T8A21
 AL096846_1080_1249_1915	83	AL096846	1215	60	35M	=	1080	-170	CTGACTTGTCGACGGATTTGACTAAGAAAATTTTA	<<<:5:;77;<<&&<<<<<<<<<<<<<<<<<<<<<	XT:A:U	NM:i:2	X0:i:1	X1:i:0	XM:i:2	XO:i:0	XG:i:0	MD:Z:2T9A22
 AL096846_1123_1300_24a3	83	AL096846	1268	37	2S33M	=	1123	-178	TGCCGTTATCGCTTAGCAGATTCTAGTCAATTGCC	:<:5<:;&..<7;<<<<<<<<<<<;<<<<<<<<<<	XT:A:M	NM:i:2	XM:i:2	XO:i:0	XG:i:0	MD:Z:5T8A18
