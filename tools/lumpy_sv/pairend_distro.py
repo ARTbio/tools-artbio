@@ -81,7 +81,7 @@ for length in sys.stdin:
 min_elements = 1000
 if len(L) < min_elements:
     sys.stderr.write("Warning: only %s elements in distribution (min: %s)\n" %
-                     (len(L), min_elements))
+                     (str(len(L)), str(min_elements)))
     mean = "NA"
     stdev = "NA"
 
@@ -94,8 +94,8 @@ else:
     L = L[L < upper_cutoff]
     new_len = len(L)
     removed = c - new_len
-    sys.stderr.write("Removed %d outliers with isize >= %d\n" %
-                     (removed, upper_cutoff))
+    sys.stderr.write("Removed %s outliers with isize >= %s\n" %
+                     (str(removed), str(upper_cutoff)))
     c = new_len
 
     mean = np.mean(L)

@@ -9,7 +9,7 @@ long_description: |
 categories:
   - Variant Analysis
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/lumpy-sv
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/lumpy_sv
 toolshed:
   - testtoolshed
   - toolshed
