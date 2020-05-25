@@ -1,4 +1,4 @@
-<tool id="sambamba_sample_or_filter" name="Sample or Filter BAM" version="0.4">
+<tool id="sambamba_sample_or_filter" name="Sample or Filter BAM" version="0.5">
     <description>
         on flags, fields, and tags using Sambamba
     </description>
@@ -16,8 +16,8 @@
             sambamba view -h -t \${GALAXY_SLOTS:-4}
             #if $sambamba_options.query != '':
                 --filter='$sambamba_options.query'
-                -f '$format' -o $outfile input.bam $sambamba_options.region
             #end if
+                -f '$format' -o $outfile input.bam $sambamba_options.region
          #else
              sambamba view -h -t \${GALAXY_SLOTS:-4} -f '$format'
              --subsampling-seed='$sambamba_options.seed'
@@ -93,7 +93,15 @@
             <param name="query" value="[MD] =~ /^\d+T\d+A\d+/ and first_of_pair" />
             <param name="format" value="sam" />
             <param name="region" value="AL096846:1000-5000" />
-            <output name="outfile" file="c1215_fixmate_filtered.sam" ftype="sam" lines_diff="2"/>     
+            <output name="outfile" file="c1215_fixmate_filtered.sam" ftype="sam" lines_diff="2"/>
+        </test>
+        <test>
+            <param name="input" value="c1215_fixmate.bam" ftype="bam" />
+            <param name="selector" value="filter" />
+            <param name="query" value='' />
+            <param name="format" value="sam" />
+            <param name="region" value="AL096846:1000-5000" />
+            <output name="outfile" file="c1215_fixmate_region-filtered.sam" ftype="sam" lines_diff="2"/>
         </test>
          <test>
             <param name="input" value="ex1_header.sam" ftype="sam" />
@@ -109,7 +117,7 @@
             <param name="seed" value="123" />
             <param name="fraction" value="0.1" />
             <param name="format" value="sam" />
-            <output name="outfile" file="c1215_fixmate_sampled.sam" ftype="sam" lines_diff="2"/>     
+            <output name="outfile" file="c1215_fixmate_sampled.sam" ftype="sam" lines_diff="2"/>
         </test>
    </tests>
     <help>
