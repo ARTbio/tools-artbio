@@ -12,73 +12,57 @@
     @VERSION@
     @pipefail@
     @set_reference_fasta_filename@
-
-    #import os
-    #import random
-    #set job_dir=os.getcwd()
-    #set run_dir = job_dir + '/MantaWorkflow_' + (' ' + str(random.randint(1,100000))).strip()
-    #set config_file = $__tool_directory__ + '/configManta.py.ini'
-    #set config_file_custom = $__tool_directory__ + '/customized.ini'   
-    #set $input_normal = 'normal.bam'
-    #set $input_tumor = 'tumor.bam'
-
+    #set run_dir = './MantaWorkflow'
+    cp $__tool_directory__/configManta.py.ini configManta.py.ini &&
     #if str( $bam_input.bam_input_selector ) == "not_tumor_bam":
-    ln -s '$bam_input.normal_bam_file' $input_normal &&
+    ln -s '$bam_input.normal_bam_file' normal.bam &&
     ln -s '$bam_input.normal_bam_file.metadata.bam_index' normal.bai &&
     #else if str( $bam_input.bam_input_selector ) == "tumor_bam":
-    ln -s '$bam_input.normal_bam_file' $input_normal &&
+    ln -s '$bam_input.normal_bam_file' normal.bam &&
     ln -s '$bam_input.normal_bam_file.metadata.bam_index' normal.bai &&
-    ln -s '$bam_input.tumor_bam_file' $input_tumor &&
+    ln -s '$bam_input.tumor_bam_file' tumor.bam &&
     ln -s '$bam_input.tumor_bam_file.metadata.bam_index' tumor.bai &&
     #end if
 
-    cp ${config_file} ${config_file_custom} &&
-
     #if str( $set_configuration.set_configuration_switch ) == "Customized":
-    sed -i 's/minCandidateVariantSize = 8/minCandidateVariantSize = $set_configuration.minCandidateVariantSize/' ${config_file_custom} &&
-    sed -i 's/rnaMinCandidateVariantSize = 1000/rnaMinCandidateVariantSize = $set_configuration.rnaMinCandidateVariantSize/' ${config_file_custom} &&
-    sed -i 's/minEdgeObservations = 3/minEdgeObservations = $set_configuration.minEdgeObservations/' ${config_file_custom} &&
-    sed -i 's/graphNodeMaxEdgeCount = 10/graphNodeMaxEdgeCount = $set_configuration.graphNodeMaxEdgeCount/' ${config_file_custom} &&
-    sed -i 's/minCandidateSpanningCount = 3/minCandidateSpanningCount = $set_configuration.minCandidateSpanningCount/' ${config_file_custom} &&
-    sed -i 's/minScoredVariantSize = 50/minScoredVariantSize = $set_configuration.minScoredVariantSize/' ${config_file_custom} &&
-    sed -i 's/minDiploidVariantScore = 10/minDiploidVariantScore = $set_configuration.minDiploidVariantScore/' ${config_file_custom} &&
-    sed -i 's/minPassDiploidVariantScore = 20/minPassDiploidVariantScore = $set_configuration.minPassDiploidVariantScore/' ${config_file_custom} &&
-    sed -i 's/minPassDiploidGTScore = 15/minPassDiploidGTScore = $set_configuration.minPassDiploidGTScore/' ${config_file_custom} &&
-    sed -i 's/minSomaticScore = 10/minSomaticScore = $set_configuration.minSomaticScore/' ${config_file_custom} &&
-    sed -i 's/minPassSomaticScore = 30/minPassSomaticScore = $set_configuration.minPassSomaticScore/' ${config_file_custom} &&
-    sed -i 's/enableRemoteReadRetrievalForInsertionsInGermlineCallingModes = 1/enableRemoteReadRetrievalForInsertionsInGermlineCallingModes = $set_configuration.enableRemoteReadRetrievalForInsertionsInGermlineCallingModes/' ${config_file_custom} &&
-    sed -i 's/enableRemoteReadRetrievalForInsertionsInCancerCallingModes = 0/enableRemoteReadRetrievalForInsertionsInCancerCallingModes = $set_configuration.enableRemoteReadRetrievalForInsertionsInCancerCallingModes/' ${config_file_custom} &&
-    sed -i 's/useOverlapPairEvidence = 0/useOverlapPairEvidence = $set_configuration.useOverlapPairEvidence/' ${config_file_custom} &&
+        sed -i 's/minCandidateVariantSize = 8/minCandidateVariantSize = $set_configuration.minCandidateVariantSize/' ./configManta.py.ini &&
+        sed -i 's/rnaMinCandidateVariantSize = 1000/rnaMinCandidateVariantSize = $set_configuration.rnaMinCandidateVariantSize/' ./configManta.py.ini &&
+        sed -i 's/minEdgeObservations = 3/minEdgeObservations = $set_configuration.minEdgeObservations/' ./configManta.py.ini &&
+        sed -i 's/graphNodeMaxEdgeCount = 10/graphNodeMaxEdgeCount = $set_configuration.graphNodeMaxEdgeCount/' ./configManta.py.ini &&
+        sed -i 's/minCandidateSpanningCount = 3/minCandidateSpanningCount = $set_configuration.minCandidateSpanningCount/' ./configManta.py.ini &&
+        sed -i 's/minScoredVariantSize = 50/minScoredVariantSize = $set_configuration.minScoredVariantSize/' ./configManta.py.ini &&
+        sed -i 's/minDiploidVariantScore = 10/minDiploidVariantScore = $set_configuration.minDiploidVariantScore/' ./configManta.py.ini &&
+        sed -i 's/minPassDiploidVariantScore = 20/minPassDiploidVariantScore = $set_configuration.minPassDiploidVariantScore/' ./configManta.py.ini &&
+        sed -i 's/minPassDiploidGTScore = 15/minPassDiploidGTScore = $set_configuration.minPassDiploidGTScore/' ./configManta.py.ini &&
+        sed -i 's/minSomaticScore = 10/minSomaticScore = $set_configuration.minSomaticScore/' ./configManta.py.ini &&
+        sed -i 's/minPassSomaticScore = 30/minPassSomaticScore = $set_configuration.minPassSomaticScore/' ./configManta.py.ini &&
+        sed -i 's/enableRemoteReadRetrievalForInsertionsInGermlineCallingModes = 1/enableRemoteReadRetrievalForInsertionsInGermlineCallingModes = $set_configuration.enableRemoteReadRetrievalForInsertionsInGermlineCallingModes/' ./configManta.py.ini &&
+        sed -i 's/enableRemoteReadRetrievalForInsertionsInCancerCallingModes = 0/enableRemoteReadRetrievalForInsertionsInCancerCallingModes = $set_configuration.enableRemoteReadRetrievalForInsertionsInCancerCallingModes/' ./configManta.py.ini &&
+        sed -i 's/useOverlapPairEvidence = 0/useOverlapPairEvidence = $set_configuration.useOverlapPairEvidence/' ./configManta.py.ini &&
     #end if
-
-    configManta.py
-    --referenceFasta='${reference_fasta_filename}'
 
     #if str( $set_configuration.set_configuration_switch ) == "Custom_config_file":
-    #set config_file = $set_configuration.CustomConfigFile
-    #else if str( $set_configuration.set_configuration_switch ) == "Customized":
-    #set config_file = config_file_custom
+        cp '$set_configuration.CustomConfigFile' ./configManta.py.ini &&
     #end if
-
-    --config=${config_file}
-
-    #if str( $bam_input.bam_input_selector ) == "not_tumor_bam":
-    --bam=$input_normal
-    #else if str( $bam_input.bam_input_selector ) == "tumor_bam":
-    --bam=$input_normal
-    --tumorBam=$input_tumor
-    #end if
-
-    --runDir='${run_dir}'
-    --scanSizeMb=${advanced.scanSizeMb}
-    --callMemMb=${advanced.callMemMb} &&
+    
+    configManta.py --referenceFasta='${reference_fasta_filename}'
+                   --config='./configManta.py.ini'
+                   #if str( $bam_input.bam_input_selector ) == "not_tumor_bam":
+                       --bam='normal.bam'
+                   #else if str( $bam_input.bam_input_selector ) == "tumor_bam":
+                       --bam='normal.bam'
+                       --tumorBam='tumor.bam'
+                   #end if
+                  --runDir='${run_dir}'
+                  --scanSizeMb=${advanced.scanSizeMb}
+                  --callMemMb=${advanced.callMemMb} &&
 
     ln -s -f '${run_dir}/runWorkflow.py' '${run_manta_workflow}' &&
-    ln -s -f '${config_file}' '${set_conf_file}' &&
-    python2 '${run_dir}/runWorkflow.py' -m local -j 8 &&
-    ln -s -f '${run_dir}/results/variants/candidateSV.vcf.gz' '${out_vcf1}' &&
-    ln -s -f '${run_dir}/results/variants/diploidSV.vcf.gz' '${out_vcf2}' &&
-    ln -s -f '${run_dir}/results/variants/candidateSmallIndels.vcf.gz' '${out_vcf3}'
+    ln -s -f './configManta.py.ini' '${set_conf_file}' &&
+    python2 '${run_dir}/runWorkflow.py' -m local -j \${GALAXY_SLOTS:-4} &&
+    cp '${run_dir}/results/variants/candidateSV.vcf.gz' '${out_vcf1}' &&
+    cp '${run_dir}/results/variants/diploidSV.vcf.gz' '${out_vcf2}' &&
+    cp '${run_dir}/results/variants/candidateSmallIndels.vcf.gz' '${out_vcf3}'
 
     ]]></command>
 
@@ -178,6 +162,25 @@
     <tests>
                 <test>
                         <conditional name="reference_source">
+                                <param name="reference_source_selector" value="cached"/>
+                                <param name="index" value="hg19"/>
+                        </conditional>
+
+                        <conditional name="bam_input">
+                                <param name="bam_input_selector" value="tumor_bam" dbkey="hg19"/>
+                                <param name="normal_bam_file" ftype="bam" value="HCC1954_normal.bam"/>
+                                <param name="tumor_bam_file" ftype="bam" value="HCC1954_tumor.bam"/>
+                        </conditional>
+
+                        <conditional name="set_configuration">
+                                <param name="set_configuration_switch" value="Default_config_file"/>
+                        </conditional>
+                        <param name="callMemMb" value="1000"/>
+                        <param name="O3_check" value="True"/>
+                        <output name="out_vcf3" file="candidateSmallIndels.vcf.gz" decompress="true" lines_diff="4"/>
+                </test>
+                <test>
+                        <conditional name="reference_source">
                                 <param name="reference_source_selector" value="history"/>
                                 <param name="ref_file" ftype="fasta" value="hg19_region.fa"/>
                         </conditional>
@@ -203,25 +206,6 @@
 
                         <conditional name="bam_input">
                                 <param name="bam_input_selector" value="tumor_bam"/>
-                                <param name="normal_bam_file" ftype="bam" value="HCC1954_normal.bam"/>
-                                <param name="tumor_bam_file" ftype="bam" value="HCC1954_tumor.bam"/>
-                        </conditional>
-
-                        <conditional name="set_configuration">
-                                <param name="set_configuration_switch" value="Default_config_file"/>
-                        </conditional>
-                        <param name="callMemMb" value="1000"/>
-                        <param name="O3_check" value="True"/>
-                        <output name="out_vcf3" file="candidateSmallIndels.vcf.gz" decompress="true" lines_diff="4"/>
-                </test>
-                <test>
-                        <conditional name="reference_source">
-                                <param name="reference_source_selector" value="cached"/>
-                                <param name="index" value="hg19"/>
-                        </conditional>
-
-                        <conditional name="bam_input">
-                                <param name="bam_input_selector" value="tumor_bam" dbkey="hg19"/>
                                 <param name="normal_bam_file" ftype="bam" value="HCC1954_normal.bam"/>
                                 <param name="tumor_bam_file" ftype="bam" value="HCC1954_tumor.bam"/>
                         </conditional>
