@@ -1,7 +1,7 @@
 <macros>
 
     <token name="@VERSION@">1.6</token>
-    <token name="@WRAPPER_VERSION@">@VERSION@+galaxy3</token>
+    <token name="@WRAPPER_VERSION@">@VERSION@+galaxy4</token>
     <token name="@pipefail@"><![CDATA[set -o | grep -q pipefail && set -o pipefail;]]></token>
 
     <token name="@set_reference_fasta_filename@"><![CDATA[
@@ -51,7 +51,7 @@
             </param>
             <when value="cached">
                 <param name="index" type="select" label="Using reference genome" help="Select genome from the list">
-                    <options from_data_table="all_fasta">
+                    <options from_data_table="fasta_indexes">
                         <filter type="sort_by" column="2" />
                         <validator type="no_options" message="No indexes are available" />
                     </options>
