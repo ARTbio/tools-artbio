@@ -141,7 +141,6 @@
     </inputs>
 
     <outputs>
-somaticSV.vcf.gz
         <data format="txt" name="run_manta_workflow" label="Parameters for running Manta">
             <filter>runworkflow_file_check == True</filter>
         </data>
