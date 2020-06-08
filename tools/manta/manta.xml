@@ -24,25 +24,26 @@
     ln -s '$bam_input.tumor_bam_file.metadata.bam_index' tumor.bai &&
     #end if
 
-##    #if str( $set_configuration.set_configuration_switch ) == "Customized":
-##        sed -i 's/minCandidateVariantSize = 8/minCandidateVariantSize = $set_configuration.minCandidateVariantSize/' ./configManta.py.ini &&
-##        sed -i 's/rnaMinCandidateVariantSize = 1000/rnaMinCandidateVariantSize = $set_configuration.rnaMinCandidateVariantSize/' ./configManta.py.ini &&
-##        sed -i 's/minEdgeObservations = 3/minEdgeObservations = $set_configuration.minEdgeObservations/' ./configManta.py.ini &&
-##        sed -i 's/graphNodeMaxEdgeCount = 10/graphNodeMaxEdgeCount = $set_configuration.graphNodeMaxEdgeCount/' ./configManta.py.ini &&
-##        sed -i 's/minCandidateSpanningCount = 3/minCandidateSpanningCount = $set_configuration.minCandidateSpanningCount/' ./configManta.py.ini &&
-##        sed -i 's/minScoredVariantSize = 50/minScoredVariantSize = $set_configuration.minScoredVariantSize/' ./configManta.py.ini &&
-##        sed -i 's/minDiploidVariantScore = 10/minDiploidVariantScore = $set_configuration.minDiploidVariantScore/' ./configManta.py.ini &&
-##        sed -i 's/minPassDiploidVariantScore = 20/minPassDiploidVariantScore = $set_configuration.minPassDiploidVariantScore/' ./configManta.py.ini &&
-##        sed -i 's/minPassDiploidGTScore = 15/minPassDiploidGTScore = $set_configuration.minPassDiploidGTScore/' ./configManta.py.ini &&
-##        sed -i 's/minSomaticScore = 10/minSomaticScore = $set_configuration.minSomaticScore/' ./configManta.py.ini &&
-##        sed -i 's/minPassSomaticScore = 30/minPassSomaticScore = $set_configuration.minPassSomaticScore/' ./configManta.py.ini &&
-##        sed -i 's/enableRemoteReadRetrievalForInsertionsInGermlineCallingModes = 1/enableRemoteReadRetrievalForInsertionsInGermlineCallingModes = $set_configuration.enableRemoteReadRetrievalForInsertionsInGermlineCallingModes/' ./configManta.py.ini &&
-##        sed -i 's/enableRemoteReadRetrievalForInsertionsInCancerCallingModes = 0/enableRemoteReadRetrievalForInsertionsInCancerCallingModes = $set_configuration.enableRemoteReadRetrievalForInsertionsInCancerCallingModes/' ./configManta.py.ini &&
-##        sed -i 's/useOverlapPairEvidence = 0/useOverlapPairEvidence = $set_configuration.useOverlapPairEvidence/' ./configManta.py.ini &&
-##    #end if
-
     #if str( $set_configuration.set_configuration_switch ) == "Custom_config_file":
         cp '$set_configuration.CustomConfigFile' ./configManta.py.ini &&
+    #end if
+    #if str( $set_configuration.set_configuration_switch ) == "Customized":
+        rm ./configManta.py.ini &&
+        python $__tool_directory__/customConfigManta.py
+        --minCandidateVariantSize '$set_configuration.minCandidateVariantSize'
+        --rnaMinCandidateVariantSize '$set_configuration.rnaMinCandidateVariantSize'
+        --minEdgeObservations '$set_configuration.minEdgeObservations'
+        --graphNodeMaxEdgeCount '$set_configuration.graphNodeMaxEdgeCount'
+        --minCandidateSpanningCount '$set_configuration.minCandidateSpanningCount'
+        --minScoredVariantSize '$set_configuration.minScoredVariantSize'
+        --minDiploidVariantScore '$set_configuration.minDiploidVariantScore'
+        --minPassDiploidVariantScore '$set_configuration.minPassDiploidVariantScore'
+        --minPassDiploidGTScore '$set_configuration.minPassDiploidGTScore'
+        --minSomaticScore '$set_configuration.minSomaticScore'
+        --minPassSomaticScore '$set_configuration.minPassSomaticScore'
+        --enableRemoteReadRetrievalForInsertionsInGermlineCallingModes '$set_configuration.enableRemoteReadRetrievalForInsertionsInGermlineCallingModes'
+        --enableRemoteReadRetrievalForInsertionsInCancerCallingModes '$set_configuration.enableRemoteReadRetrievalForInsertionsInCancerCallingModes'
+        --useOverlapPairEvidence '$set_configuration.useOverlapPairEvidence' &&
     #end if
     
     configManta.py --referenceFasta='${reference_fasta_filename}'
@@ -55,26 +56,8 @@
                    #end if
                       --runDir='${run_dir}'
                       --scanSizeMb=${advanced.scanSizeMb}
-                      --callMemMb=${advanced.callMemMb}
-                  #if str( $set_configuration.set_configuration_switch ) == "Customized":
-                      --minCandidateVariantSize = '$set_configuration.minCandidateVariantSize/'
-                      --rnaMinCandidateVariantSize = '$set_configuration.rnaMinCandidateVariantSize/'
-                      --minEdgeObservations = '$set_configuration.minEdgeObservations'
-                      --graphNodeMaxEdgeCount = '$set_configuration.graphNodeMaxEdgeCount'
-                      --minCandidateSpanningCount = '$set_configuration.minCandidateSpanningCount'
-                      --minScoredVariantSize = '$set_configuration.minScoredVariantSize'
-                      --minDiploidVariantScore = '$set_configuration.minDiploidVariantScore'
-                      --minPassDiploidVariantScore = '$set_configuration.minPassDiploidVariantScore'
-                      --minPassDiploidGTScore = '$set_configuration.minPassDiploidGTScore'
-                      --minSomaticScore = '$set_configuration.minSomaticScore'
-                      --minPassSomaticScore = '$set_configuration.minPassSomaticScore'
-                      --enableRemoteReadRetrievalForInsertionsInGermlineCallingModes = '$set_configuration.enableRemoteReadRetrievalForInsertionsInGermlineCallingModes'
-                      --enableRemoteReadRetrievalForInsertionsInCancerCallingModes = '$set_configuration.enableRemoteReadRetrievalForInsertionsInCancerCallingModes'
-                      --useOverlapPairEvidence = '$set_configuration.useOverlapPairEvidence'
-                  #end if
-                  &&
-    ln -s -f '${run_dir}/runWorkflow.py' '${run_manta_workflow}' &&
-    ln -s -f './configManta.py.ini' '${set_conf_file}' &&
+                      --callMemMb=${advanced.callMemMb} &&
+
     python2 '${run_dir}/runWorkflow.py' -m local -j \${GALAXY_SLOTS:-4}
 
     ]]></command>
@@ -82,7 +65,7 @@
     <inputs>
         <expand macro="reference_source_conditional" />
         <conditional name="bam_input">
-            <param name="bam_input_selector" type="select" label="Just 'normal' BAM file or 'normal' + 'tumor' BAM files" help="Select between a single normal BAM file or a pair of normal / tumor BAM files">
+            <param name="bam_input_selector" type="select" label="Single 'normal' or 'normal vs tumor' analysis" help="Select between a single normal BAM file or a pair of normal/tumor BAM files">
                 <option value="not_tumor_bam">Normal</option>
                 <option value="tumor_bam">Normal + Tumor</option>
             </param>
@@ -132,37 +115,30 @@
                 <param name="useOverlapPairEvidence" type="integer" value="0" label="useOverlapPairEvidence" help="Set if an overlapping read pair will be considered as evidence. Set this value &lt;= 0 to skip overlapping read pairs."/>
             </when>
         </conditional>
-        <param name="runworkflow_file_check" type="boolean" label="output manta run_workflow file" checked="False" help="Show run_workflow file on history"/>
         <param name="config_file_check" type="boolean" label="output conf file" checked="False" help="Show configuration file on history"/>
-        <param name="candidateSV_check" type="boolean" label="Unscored candidate SV and indels" checked="False"
-               help="Show unfiltered structural variants"/>
-        <param name="candidateSmallIndels_check" type="boolean" label="all snvs" checked="False"
-               help="Subset of the Unscored candidate SV and indels, containing only simple insertion and deletion variants"/>
-        <param name="diploidSV_check" type="boolean" label="filtered variants in diploid model" checked="False"
+        <param name="candidateSV_check" type="boolean" label="Unfiltered structural variants" checked="False"
+               help="All unscored structural variant candidates"/>
+        <param name="candidateSmallIndels_check" type="boolean" label="Unfiltered small indel candidates" checked="False"
+               help="Subset of the unscored candidates, containing only small indel variants"/>
+        <param name="diploidSV_check" type="boolean" label="Score-filtered variants in diploid model" checked="False"
                help="Show filtered variants in a diploid (only normal) model. In the case of a tumor/normal subtraction, the scores in this file *do not*
                      reflect any information from the tumor sample" />
-        <param name="somaticSV_check" type="boolean" label="SVs and indels scored under a somatic variant model" checked="False"
-               help="This file will only be produced if a tumor sample alignment file is supplied during configuration"/>
     </inputs>
     <outputs>
-        <data format="txt" name="run_manta_workflow" label="Parameters for running Manta">
-            <filter>runworkflow_file_check == True</filter>
-        </data>
-
-        <data format="tabular" name="set_conf_file" label="conf_file.ini">
+        <data format="tabular" name="conf_file" label="conf_file.ini" from_work_dir="./configManta.py.ini">
             <filter>config_file_check == True</filter>
         </data>
-        <data format="vcf_bgzip" name="candidateSV" label="Manta unfiltered SVs" from_work_dir="MantaWorkflow/results/variants/candidateSV.vcf.gz">
+        <data format="vcf_bgzip" name="candidateSV" label="Manta unfiltered variants" from_work_dir="MantaWorkflow/results/variants/candidateSV.vcf.gz">
             <filter>candidateSV_check == True</filter>
         </data>
-        <data format="vcf_bgzip" name="candidateSmallIndels" label="Manta unfiltered Small Indels" from_work_dir="MantaWorkflow/results/variants/candidateSmallIndels.vcf.gz">
+        <data format="vcf_bgzip" name="candidateSmallIndels" label="Manta unfiltered indels" from_work_dir="MantaWorkflow/results/variants/candidateSmallIndels.vcf.gz">
             <filter>candidateSmallIndels_check == True</filter>
         </data>
-        <data format="vcf_bgzip" name="diploidSV" label="Manta SVs (diploid model)" from_work_dir="MantaWorkflow/results/variants/diploidSV.vcf.gz">
+        <data format="vcf_bgzip" name="diploidSV" label="Score-filtered Variants (diploid model)" from_work_dir="MantaWorkflow/results/variants/diploidSV.vcf.gz">
             <filter>diploidSV_check == True</filter>
         </data>
-        <data format="vcf_bgzip" name="somaticSV" label="Manta SVs (somatic model)" from_work_dir="MantaWorkflow/results/variants/somaticSV.vcf.gz">
-            <filter>somaticSV_check == True</filter>
+        <data format="vcf_bgzip" name="somaticSV" label="Score-filtered Variants (somatic model)" from_work_dir="MantaWorkflow/results/variants/somaticSV.vcf.gz">
+            <filter>bam_input['bam_input_selector'] == 'tumor_bam'</filter>
         </data>
     </outputs>
     <tests>
@@ -175,11 +151,22 @@
                 <param name="set_configuration_switch" value="Default_config_file"/>
                 <param name="callMemMb" value="1000"/>
                 <param name="candidateSmallIndels_check" value="True"/>
-                <param name="somaticSV_check" value="True"/>
                 <output name="candidateSmallIndels" file="candidateSmallIndels.vcf.gz" decompress="true" lines_diff="4"/>
                 <output name="somaticSV" file="somaticSV.vcf.gz" decompress="true" lines_diff="4"/>
         </test>
-        <test>
+         <test>
+                <param name="reference_source_selector" value="cached"/>
+                <param name="index" value="hg19"/>
+                <param name="bam_input_selector" value="tumor_bam" dbkey="hg19"/>
+                <param name="normal_bam_file" ftype="bam" value="HCC1954_normal.bam"/>
+                <param name="tumor_bam_file" ftype="bam" value="HCC1954_tumor.bam"/>
+                <param name="set_configuration_switch" value="Customized"/>
+                <param name="callMemMb" value="1000"/>
+                <param name="candidateSmallIndels_check" value="True"/>
+                <output name="candidateSmallIndels" file="candidateSmallIndels.vcf.gz" decompress="true" lines_diff="4"/>
+                <output name="somaticSV" file="somaticSV.vcf.gz" decompress="true" lines_diff="4"/>
+        </test>
+       <test>
                 <param name="reference_source_selector" value="cached"/>
                 <param name="index" value="hg19"/>
                 <param name="bam_input_selector" value="tumor_bam" dbkey="hg19"/>
@@ -189,6 +176,7 @@
                 <param name="callMemMb" value="1000"/>
                 <param name="candidateSmallIndels_check" value="True"/>
                 <output name="candidateSmallIndels" file="candidateSmallIndels.vcf.gz" decompress="true" lines_diff="4"/>
+                <output name="somaticSV" file="somaticSV.vcf.gz" decompress="true" lines_diff="4"/>
         </test>
         <test>
                 <param name="reference_source_selector" value="history"/>
@@ -200,6 +188,7 @@
                 <param name="callMemMb" value="1000"/>
                 <param name="candidateSV_check" value="True"/>
                 <output name="candidateSV" file="candidateSV.vcf.gz" decompress="true" lines_diff="4"/>
+                <output name="somaticSV" file="somaticSV.vcf.gz" decompress="true" lines_diff="4"/>
         </test>
         <test>
                 <param name="reference_source_selector" value="history"/>
@@ -211,6 +200,7 @@
                 <param name="callMemMb" value="1000"/>
                 <param name="candidateSmallIndels_check" value="True"/>
                 <output name="candidateSmallIndels" file="candidateSmallIndels.vcf.gz" decompress="true" lines_diff="4"/>
+                <output name="somaticSV" file="somaticSV.vcf.gz" decompress="true" lines_diff="4"/>
         </test>
     </tests>
     <help><![CDATA[
