@@ -59,10 +59,7 @@
 
     ln -s -f '${run_dir}/runWorkflow.py' '${run_manta_workflow}' &&
     ln -s -f './configManta.py.ini' '${set_conf_file}' &&
-    python2 '${run_dir}/runWorkflow.py' -m local -j \${GALAXY_SLOTS:-4} &&
-    cp '${run_dir}/results/variants/candidateSV.vcf.gz' '${out_vcf1}' &&
-    cp '${run_dir}/results/variants/diploidSV.vcf.gz' '${out_vcf2}' &&
-    cp '${run_dir}/results/variants/candidateSmallIndels.vcf.gz' '${out_vcf3}'
+    python2 '${run_dir}/runWorkflow.py' -m local -j \${GALAXY_SLOTS:-4}
 
     ]]></command>
 
@@ -85,7 +82,7 @@
             </when>
         </conditional>
 
-        <param name="additional_param" type="select" multiple="true" display="checkboxes" label="Additional outputs" help="Additional parameters.">
+        <param name="additional_param" type="select" multiple="true" display="checkboxes" label="Additional parameters" >
             <option value="exome">Set options for WES input: turn off depth filters</option>
             <option value="rna">Set options for RNA-Seq input. Must specify exactly one bam input file</option>
             <option value="unstrandedRNA">Set if RNA-Seq input is unstranded: Allows splice-junctions on either strand</option>
@@ -95,8 +92,7 @@
 
             <param name="callMemMb" type="integer" value="8000" label="Set default task memory requirements" help="The maximum memory size to assign to tasks" />
             <param name="scanSizeMb" type="integer" value="12" label="Set maximum sequence region size" help="The maximum sequence region size (in megabases) scanned by each task during SV Locus graph generation. (default: 12)" />
-            <param name="retainTempFiles" type="boolean" checked="False" truevalue="-s" falsevalue="" label="Keep all temporary files" help="Click yes so all temporary files (for workflow debugging) will be kept."/>
-            <param name="generateEvidenceBam" type="boolean" checked="False" truevalue="-s" falsevalue="" label="Generate a bam of supporting reads for all SVs" help="Click yes for generating a BAM of supporting reads for all SVs."/>
+            <!-- <param name="generateEvidenceBam" type="boolean" checked="False" truevalue="-s" falsevalue="" label="Generate a bam of supporting reads for all SVs" help="Click yes for generating a BAM of supporting reads for all SVs."/> -->
 
         </section>
 
@@ -104,9 +100,9 @@
 
         <conditional name="set_configuration">
             <param name="set_configuration_switch" type="select" label="Do you want to change default configuration settings?">
-                <option value="Default_config_file">Default</option>    
-                <option value="Custom_config_file">Upload a different config file</option>
-                <option value="Customized">Customize the options</option>
+                <option value="Default_config_file">Default Manta Configuration File</option>    
+                <option value="Custom_config_file">Upload your Own Configuration File</option>
+                <option value="Customized">Customize a Configuration File using this Galaxy Form</option>
             </param>
             <when value="Default_config_file">
             </when>
@@ -133,14 +129,18 @@
 
         <param name="runworkflow_file_check" type="boolean" label="output manta run_workflow file" checked="False" help="Show run_workflow file on history"/>
         <param name="config_file_check" type="boolean" label="output conf file" checked="False" help="Show configuration file on history"/>
-        <param name="O1_check" type="boolean" label="snvs filtred" checked="False" help="Show filtred snvs"/>
-        <param name="O2_check" type="boolean" label="indels filtred" checked="False" help="Show filtred indels"/>
-        <param name="O3_check" type="boolean" label="all snvs" checked="False" help="Show snvs"/>
-        
+        <param name="candidateSV_check" type="boolean" label="Unscored candidate SV and indels" checked="False"
+               help="Show unfiltered structural variants"/>
+        <param name="candidateSmallIndels_check" type="boolean" label="all snvs" checked="False"
+               help="Subset of the Unscored candidate SV and indels, containing only simple insertion and deletion variants"/>
+        <param name="diploidSV_check" type="boolean" label="filtered variants in diploid model" checked="False"
+               help="Show filtered variants in a diploid (only normal) model. In the case of a tumor/normal subtraction, the scores in this file *do not*
+                     reflect any information from the tumor sample" />
+        <param name="somaticSV_check" type="boolean" label="SVs and indels scored under a somatic variant model" checked="False"
+               help="This file will only be produced if a tumor sample alignment file is supplied during configuration"/>
     </inputs>
 
     <outputs>
-
         <data format="txt" name="run_manta_workflow" label="Parameters for running Manta">
             <filter>runworkflow_file_check == True</filter>
         </data>
@@ -148,84 +148,117 @@
         <data format="tabular" name="set_conf_file" label="conf_file.ini">
             <filter>config_file_check == True</filter>
         </data>
-        <data format="vcf_bgzip" name="out_vcf1" label="${tool.name} on ${on_string} (Generating the candidateSV.vcf file)" from_work_dir="MantaWorkflow/results/variants/candidateSV.vcf.gz">
-            <filter>O1_check == True</filter>
+        <data format="vcf_bgzip" name="candidateSV" label="Manta unfiltered SVs" from_work_dir="MantaWorkflow/results/variants/candidateSV.vcf.gz">
+            <filter>candidateSV_check == True</filter>
         </data>
-        <data format="vcf_bgzip" name="out_vcf2" label="${tool.name} on ${on_string} (Generating the diploidSV.vcf file)" from_work_dir="MantaWorkflow/results/variants/diploidSV.vcf.gz">
-            <filter>O2_check == True</filter>
+        <data format="vcf_bgzip" name="candidateSmallIndels" label="Manta unfiltered Small Indels" from_work_dir="MantaWorkflow/results/variants/candidateSmallIndels.vcf.gz">
+            <filter>candidateSmallIndels_check == True</filter>
         </data>
-        <data format="vcf_bgzip" name="out_vcf3" label="${tool.name} on ${on_string} (Generating the candidateSmallIndels.vcf file)" from_work_dir="MantaWorkflow/results/variants/candidateSmallIndels.vcf.gz">
-            <filter>O3_check == True</filter>
+        <data format="vcf_bgzip" name="diploidSV" label="Manta SVs (diploid model)" from_work_dir="MantaWorkflow/results/variants/diploidSV.vcf.gz">
+            <filter>diploidSV_check == True</filter>
+        </data>
+        <data format="vcf_bgzip" name="somaticSV" label="Manta SVs (somatic model)" from_work_dir="MantaWorkflow/results/variants/somaticSV.vcf.gz">
+            <filter>somaticSV_check == True</filter>
         </data>
     </outputs>
 
     <tests>
-                <test>
-                        <conditional name="reference_source">
-                                <param name="reference_source_selector" value="cached"/>
-                                <param name="index" value="hg19"/>
-                        </conditional>
+        <test>
+                <param name="reference_source_selector" value="cached"/>
+                <param name="index" value="hg19"/>
+                <param name="bam_input_selector" value="tumor_bam" dbkey="hg19"/>
+                <param name="normal_bam_file" ftype="bam" value="HCC1954_normal.bam"/>
+                <param name="tumor_bam_file" ftype="bam" value="HCC1954_tumor.bam"/>
+                <param name="set_configuration_switch" value="Default_config_file"/>
+                <param name="callMemMb" value="1000"/>
+                <param name="candidateSmallIndels_check" value="True"/>
+                <param name="somaticSV_check" value="True"/>
+                <output name="candidateSmallIndels" file="candidateSmallIndels.vcf.gz" decompress="true" lines_diff="4"/>
+                <output name="somaticSV" file="somaticSV.vcf.gz" decompress="true" lines_diff="4"/>
+        </test>
+        <test>
+                <param name="reference_source_selector" value="cached"/>
+                <param name="index" value="hg19"/>
+                <param name="bam_input_selector" value="tumor_bam" dbkey="hg19"/>
+                <param name="normal_bam_file" ftype="bam" value="HCC1954_normal.bam"/>
+                <param name="tumor_bam_file" ftype="bam" value="HCC1954_tumor.bam"/>
+                <param name="set_configuration_switch" value="Default_config_file"/>
+                <param name="callMemMb" value="1000"/>
+                <param name="candidateSmallIndels_check" value="True"/>
+                <output name="candidateSmallIndels" file="candidateSmallIndels.vcf.gz" decompress="true" lines_diff="4"/>
+        </test>
+        <test>
+                <param name="reference_source_selector" value="history"/>
+                <param name="ref_file" ftype="fasta" value="hg19_region.fa"/>
+                <param name="bam_input_selector" value="tumor_bam"/>
+                <param name="normal_bam_file" ftype="bam" value="HCC1954_normal.bam"/>
+                <param name="tumor_bam_file" ftype="bam" value="HCC1954_tumor.bam"/>
+                <param name="set_configuration_switch" value="Default_config_file"/>
+                <param name="callMemMb" value="1000"/>
+                <param name="candidateSV_check" value="True"/>
+                <output name="candidateSV" file="candidateSV.vcf.gz" decompress="true" lines_diff="4"/>
+        </test>
+        <test>
+                <param name="reference_source_selector" value="history"/>
+                <param name="ref_file" ftype="fasta" value="hg19_region.fa"/>
+                <param name="bam_input_selector" value="tumor_bam"/>
+                <param name="normal_bam_file" ftype="bam" value="HCC1954_normal.bam"/>
+                <param name="tumor_bam_file" ftype="bam" value="HCC1954_tumor.bam"/>
+                <param name="set_configuration_switch" value="Default_config_file"/>
+                <param name="callMemMb" value="1000"/>
+                <param name="candidateSmallIndels_check" value="True"/>
+                <output name="candidateSmallIndels" file="candidateSmallIndels.vcf.gz" decompress="true" lines_diff="4"/>
+        </test>
+ </tests>
 
-                        <conditional name="bam_input">
-                                <param name="bam_input_selector" value="tumor_bam" dbkey="hg19"/>
-                                <param name="normal_bam_file" ftype="bam" value="HCC1954_normal.bam"/>
-                                <param name="tumor_bam_file" ftype="bam" value="HCC1954_tumor.bam"/>
-                        </conditional>
-
-                        <conditional name="set_configuration">
-                                <param name="set_configuration_switch" value="Default_config_file"/>
-                        </conditional>
-                        <param name="callMemMb" value="1000"/>
-                        <param name="O3_check" value="True"/>
-                        <output name="out_vcf3" file="candidateSmallIndels.vcf.gz" decompress="true" lines_diff="4"/>
-                </test>
-                <test>
-                        <conditional name="reference_source">
-                                <param name="reference_source_selector" value="history"/>
-                                <param name="ref_file" ftype="fasta" value="hg19_region.fa"/>
-                        </conditional>
-
-                        <conditional name="bam_input">
-                                <param name="bam_input_selector" value="tumor_bam"/>
-                                <param name="normal_bam_file" ftype="bam" value="HCC1954_normal.bam"/>
-                                <param name="tumor_bam_file" ftype="bam" value="HCC1954_tumor.bam"/>
-                        </conditional>
-
-                        <conditional name="set_configuration">
-                                <param name="set_configuration_switch" value="Default_config_file"/>
-                        </conditional>
-                        <param name="callMemMb" value="1000"/>
-                        <param name="O1_check" value="True"/>
-                        <output name="out_vcf1" file="candidateSV.vcf.gz" decompress="true" lines_diff="4"/>
-                </test>
-                <test>
-                        <conditional name="reference_source">
-                                <param name="reference_source_selector" value="history"/>
-                                <param name="ref_file" ftype="fasta" value="hg19_region.fa"/>
-                        </conditional>
-
-                        <conditional name="bam_input">
-                                <param name="bam_input_selector" value="tumor_bam"/>
-                                <param name="normal_bam_file" ftype="bam" value="HCC1954_normal.bam"/>
-                                <param name="tumor_bam_file" ftype="bam" value="HCC1954_tumor.bam"/>
-                        </conditional>
-
-                        <conditional name="set_configuration">
-                                <param name="set_configuration_switch" value="Default_config_file"/>
-                        </conditional>
-                        <param name="callMemMb" value="1000"/>
-                        <param name="O3_check" value="True"/>
-                        <output name="out_vcf3" file="candidateSmallIndels.vcf.gz" decompress="true" lines_diff="4"/>
-                </test>
-        </tests>
-        
     <help><![CDATA[
-**Manta**
-This script configures the Manta SV analysis pipeline.
-You must specify a BAM or CRAM file for at least one sample.
-Configuration will produce a workflow run script which
-can execute the workflow on a single node or through
-sge and resume any interrupted execution.
+**Outputs**
+  The primary Manta outputs are a set of VCF 4.1 files. Currently there are 3 VCF files
+  created for a germline analysis, and an additional somatic VCF is produced for a
+  tumor/normal subtraction. These files are:
+  
+  - diploidSV.vcf.gz
+      SVs and indels scored and genotyped under a diploid model for the set of samples in a
+      joint diploid sample analysis or for the normal sample in a tumor/normal subtraction
+      analysis. **In the case of a tumor/normal subtraction, the scores in this file do not
+      reflect any information from the tumor sample.**
+  
+  - somaticSV.vcf.gz
+      SVs and indels scored under a somatic variant model. This file will only be produced
+      if a tumor sample alignment file is supplied during configuration
+  
+  - candidateSV.vcf.gz
+      Unscored SV and indel candidates. Only a minimal amount of supporting evidence is
+      required for an SV to be entered as a candidate in this file. An SV or indel must be a
+      candidate to be considered for scoring, therefore an SV cannot appear in the other VCF
+      outputs if it is not present in this file. Note that by default this file includes
+      indels of size 8 and larger. The smallest indels in this set are intended to be passed
+      on to a small variant caller without scoring by manta itself (by default manta scoring
+      starts at size 50).
+  
+  - candidateSmallIndels.vcf.gz
+      Subset of the candidateSV.vcf.gz file containing only simple insertion and deletion
+      variants less than the minimum scored variant size (50 by default). Passing this file
+      to a small variant caller will provide continuous coverage over all indel sizes when
+      the small variant caller and manta outputs are evaluated together. Alternate small
+      indel candidate sets can be parsed out of the candidateSV.vcf.gz file if this
+      candidate set is not appropriate.
+  
+  For tumor-only analysis, Manta will produce an additional VCF:
+
+  - tumorSV.vcf.gz
+      Subset of the candidateSV.vcf.gz file after removing redundant candidates and small
+      indels less than the minimum scored variant size (50 by default). The SVs are not
+      scored, but include additional details: (1) paired and split read supporting evidence
+      counts for each allele (2) a subset of the filters from the scored tumor-normal model
+      are applied to the single tumor case to improve precision.
+
+**Manta helps**
+  This script configures the Manta SV analysis pipeline.
+  You must specify a BAM or CRAM file for at least one sample.
+  Configuration will produce a workflow run script which
+  can execute the workflow on a single node or through
+  sge and resume any interrupted execution.
 
 **Options**
   --version             show program's version number and exit
@@ -266,6 +299,7 @@ sge and resume any interrupted execution.
     configuration or only of interest for workflow development/debugging.
     They will not be printed here if a default exists unless --allHelp is
     specified
+    
     --existingAlignStatsFile=FILE
                         Pre-calculated alignment statistics file. Skips
                         alignment stats calculation.
