@@ -151,8 +151,8 @@
                 <param name="set_configuration_switch" value="Default_config_file"/>
                 <param name="callMemMb" value="1000"/>
                 <param name="candidateSmallIndels_check" value="True"/>
-                <output name="candidateSmallIndels" file="candidateSmallIndels.vcf.gz" decompress="true" lines_diff="4"/>
-                <output name="somaticSV" file="somaticSV.vcf.gz" decompress="true" lines_diff="4"/>
+                <output name="candidateSmallIndels" file="candidateSmallIndels.vcf.gz" decompress="true" lines_diff="6"/>
+                <output name="somaticSV" file="somaticSV.vcf.gz" decompress="true" lines_diff="6"/>
         </test>
          <test>
                 <param name="reference_source_selector" value="cached"/>
@@ -163,8 +163,8 @@
                 <param name="set_configuration_switch" value="Customized"/>
                 <param name="callMemMb" value="1000"/>
                 <param name="candidateSmallIndels_check" value="True"/>
-                <output name="candidateSmallIndels" file="candidateSmallIndels.vcf.gz" decompress="true" lines_diff="4"/>
-                <output name="somaticSV" file="somaticSV.vcf.gz" decompress="true" lines_diff="4"/>
+                <output name="candidateSmallIndels" file="candidateSmallIndels.vcf.gz" decompress="true" lines_diff="6"/>
+                <output name="somaticSV" file="somaticSV.vcf.gz" decompress="true" lines_diff="6"/>
         </test>
        <test>
                 <param name="reference_source_selector" value="cached"/>
@@ -175,8 +175,8 @@
                 <param name="set_configuration_switch" value="Default_config_file"/>
                 <param name="callMemMb" value="1000"/>
                 <param name="candidateSmallIndels_check" value="True"/>
-                <output name="candidateSmallIndels" file="candidateSmallIndels.vcf.gz" decompress="true" lines_diff="4"/>
-                <output name="somaticSV" file="somaticSV.vcf.gz" decompress="true" lines_diff="4"/>
+                <output name="candidateSmallIndels" file="candidateSmallIndels.vcf.gz" decompress="true" lines_diff="6"/>
+                <output name="somaticSV" file="somaticSV.vcf.gz" decompress="true" lines_diff="6"/>
         </test>
         <test>
                 <param name="reference_source_selector" value="history"/>
@@ -187,8 +187,8 @@
                 <param name="set_configuration_switch" value="Default_config_file"/>
                 <param name="callMemMb" value="1000"/>
                 <param name="candidateSV_check" value="True"/>
-                <output name="candidateSV" file="candidateSV.vcf.gz" decompress="true" lines_diff="4"/>
-                <output name="somaticSV" file="somaticSV.vcf.gz" decompress="true" lines_diff="4"/>
+                <output name="candidateSV" file="candidateSV.vcf.gz" decompress="true" lines_diff="6"/>
+                <output name="somaticSV" file="somaticSV.vcf.gz" decompress="true" lines_diff="6"/>
         </test>
         <test>
                 <param name="reference_source_selector" value="history"/>
@@ -199,8 +199,8 @@
                 <param name="set_configuration_switch" value="Default_config_file"/>
                 <param name="callMemMb" value="1000"/>
                 <param name="candidateSmallIndels_check" value="True"/>
-                <output name="candidateSmallIndels" file="candidateSmallIndels.vcf.gz" decompress="true" lines_diff="4"/>
-                <output name="somaticSV" file="somaticSV.vcf.gz" decompress="true" lines_diff="4"/>
+                <output name="candidateSmallIndels" file="candidateSmallIndels.vcf.gz" decompress="true" lines_diff="6"/>
+                <output name="somaticSV" file="somaticSV.vcf.gz" decompress="true" lines_diff="6"/>
         </test>
     </tests>
     <help><![CDATA[
