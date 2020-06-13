@@ -1,0 +1,12 @@
+Downloading the following reference genome:	GRCh38 
+
+Beginning installation. This may take up to 40 minutes to complete.
+The transcriptional reference data for GRCh38 has been saved.
+All reference files have been created.
+Verifying and benchmarking installation now...
+Starting matrix generation for SNVs and DINUCs...Completed! Elapsed time: 2.31 seconds.
+Matrices generated for 1 samples with 0 errors. Total of 9631 SNVs, 0 DINUCs, and 0 INDELs were successfully analyzed.
+Installation was succesful.
+SigProfilerMatrixGenerator took 2.375269651412964 seconds to complete.
+To proceed with matrix_generation, please provide the path to your vcf files and an appropriate output path.
+Installation complete.

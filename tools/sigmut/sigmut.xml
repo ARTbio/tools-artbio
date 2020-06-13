@@ -1,615 +1,308 @@
 ﻿<tool id="SigProfiler" name="SigProfiler" version="@VERSION@">
-	<description>SigProfiler performs the mutational signature characterization from VCF files.</description>
+    <description>SigProfiler performs the mutational signature characterization from VCF files.</description>
 
-	<macros>
-		<import>sigmut_macros.xml</import>
-	</macros>
-	<expand macro="requirements"/>
-	<expand macro="stdio"/>
-	<command detect_errors="exit_code"><![CDATA[
-		@VERSION@
-		@pipefail@
-		#import os
-		#import random
-		#import datetime
-                #set job_dir=os.getcwd()
-		#set run_dir = job_dir + (' ' + str(random.randint(1,100000))).strip() + '/'
-		#set job_num = "Job_" + (' ' + str(random.randint(1,500))).strip()
-		
-		mkdir $run_dir &&
-
-		#if str( $set_analysis.choices ) == "install_genome":
-		ln -s -f '$__tool_directory__/install.log' '${logref}' &&
-		#else if str( $set_analysis.choices ) == "get_sigmut":
-		#set err_file = $run_dir + "logs/SigProfilerMatrixGenerator_" + $job_num + "_" + str($set_analysis.refgendat) + str(datetime.date.today()) + ".err"
-		#set log_file = $run_dir + "logs/SigProfilerMatrixGenerator_" + $job_num + "_" + str($set_analysis.refgendat) + str(datetime.date.today()) + ".out"
-		
-		#set plot1 = $run_dir + "output/plots/SBS_6_plots_" + $job_num + ".pdf" 
-		#set plot2 = $run_dir + "output/plots/SBS_24_plots_" + $job_num + ".pdf"
-		#set plot3 = $run_dir + "output/plots/SBS_78_plots_" + $job_num + ".pdf"
-		#set plot4 = $run_dir + "output/plots/SBS_96_plots_" + $job_num + ".pdf"
-		#set plot5 = $run_dir + "output/plots/SBS_384_plots_" + $job_num + ".pdf"
-		#set plot6 = $run_dir + "output/plots/SBS_1536_plots_" + $job_num + ".pdf"
-		#set plot7 = $run_dir + "output/plots/DBS_78_plots_" + $job_num + ".pdf"
-		#set plot8 = $run_dir + "output/plots/DBS_186_plots_" + $job_num + ".pdf"
-
-		#set plot9 = $run_dir + "output/plots/ID_simple_plots_" + $job_num + ".pdf"
-		#set plot10 = $run_dir + "output/plots/ID_TSB_plots_" + $job_num + ".pdf"
-		#set plot11 = $run_dir + "output/plots/ID_83_plots_" + $job_num + ".pdf"
-		#set plot12 = $run_dir + "output/plots/ID_94_plots_" + $job_num + ".pdf"
-		#set plot13 = $run_dir + "output/plots/ID_96_plots_" + $job_num + ".pdf"
-		
-		#set exo1 = $run_dir + "output/DBS/" + $job_num + ".DBS78" + ".exome" 
-		#set exo2 = $run_dir + "output/DBS/" + $job_num + ".DBS186" + ".exome"
-		#set exo3 = $run_dir + "output/DBS/" + $job_num + ".DBS1248" + ".exome"
-		#set exo4 = $run_dir + "output/DBS/" + $job_num + ".DBS2976" + ".exome"
-
-		#set exo5 = $run_dir + "output/SBS/" + $job_num + ".SBS6" + ".exome"
-		#set exo6 = $run_dir + "output/SBS/" + $job_num + ".SBS24" + ".exome"
-		#set exo7 = $run_dir + "output/SBS/" + $job_num + ".SBS96" + ".exome"
-		#set exo8 = $run_dir + "output/SBS/" + $job_num + ".SBS384" + ".exome"
-		#set exo9 = $run_dir + "output/SBS/" + $job_num + ".SBS1536" + ".exome"
-		#set exo10 = $run_dir + "output/SBS/" + $job_num + ".SBS6144" + ".exome"
-
-		#set exo11 = $run_dir + "output/vcf_files/DBS/" + $job_num + "_" + "DBS_exome.vcf"
-		#set exo12 = $run_dir + "output/vcf_files/SNV/" + $job_num + "_" + "SNV_exome.vcf"
-		
-		#set tsb1  = $run_dir + "output/TSB/strandBiasTest_24.txt"
-		#set tsb2  = $run_dir + "output/TSB/strandBiasTest_384.txt"
-		#set tsb3  = $run_dir + "output/TSB/strandBiasTest_6144.txt"
-		#set tsb4  = $run_dir + "output/TSB/significantResults_strandBiasTest.txt"
-
-		#set seqinf1 = $run_dir + "output/DBS/" + $job_num + ".DBS78" + ".all" 
-		#set seqinf2 = $run_dir + "output/DBS/" + $job_num + ".DBS186" + ".all"
-		#set seqinf3 = $run_dir + "output/DBS/" + $job_num + ".DBS1248" + ".all"
-		#set seqinf4 = $run_dir + "output/DBS/" + $job_num + ".DBS2976" + ".all"
-
-		#set seqinf5 = $run_dir + "output/SBS/" + $job_num + ".SBS6" + ".all"
-		#set seqinf6 = $run_dir + "output/SBS/" + $job_num + ".SBS24" + ".all"
-		#set seqinf7 = $run_dir + "output/SBS/" + $job_num + ".SBS96" + ".all"
-		#set seqinf8 = $run_dir + "output/SBS/" + $job_num + ".SBS384" + ".all"
-		#set seqinf9 = $run_dir + "output/SBS/" + $job_num + ".SBS1536" + ".all"
-		#set seqinf10 = $run_dir + "output/SBS/" + $job_num + ".SBS6144" + ".all"
-
-		#set seqinf11 = $run_dir + "output/ID/" + $job_num + ".ID28" + ".all"
-		#set seqinf12 = $run_dir + "output/ID/" + $job_num + ".ID83" + ".all"
-		#set seqinf13 = $run_dir + "output/ID/" + $job_num + ".ID94" + ".all"
-		#set seqinf14 = $run_dir + "output/ID/" + $job_num + ".ID96" + ".all"
-		#set seqinf15 = $run_dir + "output/ID/" + $job_num + ".ID415" + ".all"
-		#set seqinf16 = $run_dir + "output/ID/" + $job_num + ".ID8628" + ".all"
-
-		ln -s -f '$log_file' '${logsmt}' &&
-
-		#if str($set_analysis.plot) == "true":
-		ln -s -f '$plot1' '${SBS6}' &&
-		ln -s -f '$plot2' '${SBS24}' &&
-		ln -s -f '$plot3' '${SBS78}' &&
-		ln -s -f '$plot4' '${SBS96}' &&
-		ln -s -f '$plot5' '${SBS384}' &&
-		ln -s -f '$plot6' '${SBS1536}' &&
-		ln -s -f '$plot7' '${DBS78}' &&
-		ln -s -f '$plot8' '${DBS186}' &&
-		ln -s -f '$plot9' '${ID_simple}' &&
-		ln -s -f '$plot10' '${ID_TSB}' &&
-		ln -s -f '$plot11' '${ID_83}' &&
-		ln -s -f '$plot12' '${ID_94}' &&
-		ln -s -f '$plot13' '${ID_96}' &&
-		
-		ln -s -f '$seqinf1' '${SeqInf1}' &&
-                ln -s -f '$seqinf2' '${SeqInf2}' &&
-                ln -s -f '$seqinf3' '${SeqInf3}' &&
-                ln -s -f '$seqinf4' '${SeqInf4}' &&
-                ln -s -f '$seqinf5' '${SeqInf5}' &&
-                ln -s -f '$seqinf6' '${SeqInf6}' &&
-                ln -s -f '$seqinf7' '${SeqInf7}' &&
-                ln -s -f '$seqinf8' '${SeqInf8}' &&
-                ln -s -f '$seqinf9' '${SeqInf9}' &&
-                ln -s -f '$seqinf10' '${SeqInf10}' &&
-		
-                ln -s -f '$seqinf11' '${SeqInf11}' &&
-                ln -s -f '$seqinf12' '${SeqInf12}' &&
-                ln -s -f '$seqinf13' '${SeqInf13}' &&
-                ln -s -f '$seqinf14' '${SeqInf14}' &&
-		ln -s -f '$seqinf15' '${SeqInf15}' &&
-		ln -s -f '$seqinf16' '${SeqInf16}' &&
-		
-		#end if
-
-		#if str($set_analysis.exome) == "true":
-		ln -s -f '$exo1' '${Exo1}' &&
-		ln -s -f '$exo2' '${Exo2}' &&
-		ln -s -f '$exo3' '${Exo3}' &&
-		ln -s -f '$exo4' '${Exo4}' &&
-		ln -s -f '$exo5' '${Exo5}' &&
-		ln -s -f '$exo6' '${Exo6}' &&
-		ln -s -f '$exo7' '${Exo7}' &&
-		ln -s -f '$exo8' '${Exo8}' &&
-		ln -s -f '$exo9' '${Exo9}' &&
-		ln -s -f '$exo10' '${Exo10}' &&
-		ln -s -f '$exo11' '${Exo11}' &&
-		ln -s -f '$exo12' '${Exo12}' &&
-		#end if
-
-		#if str($set_analysis.tsb_stat) == "true":
-                ln -s -f '$tsb1' '${TSB24}' &&
-                ln -s -f '$tsb2' '${TSB384}' &&
-                ln -s -f '$tsb3' '${TSB6144}' &&
-		ln -s -f '$tsb4' '${sigRes}' &&
-		#end if
-
-
-		#if str($set_analysis.seqInfo) == "true":
-		ln -s -f '$seqinf1' '${SeqInf1}' &&
-		ln -s -f '$seqinf2' '${SeqInf2}' &&
-		ln -s -f '$seqinf3' '${SeqInf3}' &&
-		ln -s -f '$seqinf4' '${SeqInf4}' &&
-		ln -s -f '$seqinf5' '${SeqInf5}' &&
-		ln -s -f '$seqinf6' '${SeqInf6}' &&
-		ln -s -f '$seqinf7' '${SeqInf7}' &&
-		ln -s -f '$seqinf8' '${SeqInf8}' &&
-		ln -s -f '$seqinf9' '${SeqInf9}' &&
-		ln -s -f '$seqinf10' '${SeqInf10}' &&
-		ln -s -f '$seqinf11' '${SeqInf11}' &&
-                ln -s -f '$seqinf12' '${SeqInf12}' &&
-                ln -s -f '$seqinf13' '${SeqInf13}' &&
-                ln -s -f '$seqinf14' '${SeqInf14}' &&
-		ln -s -f '$seqinf15' '${SeqInf15}' &&
-		ln -s -f '$seqinf16' '${SeqInf16}' &&
-		#end if
-
-
-		#if str( $set_analysis.vcfile_input.vcfile ) == "maf":
-                #set $infile = $run_dir + 'snps.maf'
+    <macros>
+        <import>sigmut_macros.xml</import>
+    </macros>
+    <expand macro="requirements"/>
+    <expand macro="stdio"/>
+    <command detect_errors="exit_code"><![CDATA[
+        @VERSION@
+        @pipefail@
+        mkdir run_dir &&
+        #if str( $set_analysis.choices ) == "get_sigmut":
+            #if str( $set_analysis.vcfile_input.vcfile ) == "maf":
+                #set $infile = 'run_dir/snps.maf'
                 ln -s -f '$set_analysis.vcfile_input.maf_file' '$infile' &&
-                #else if str( $set_analysis.vcfile_input.vcfile ) == "icgc":
-		#set $infile = $run_dir + 'snps.txt'
-		ln -s -f '$set_analysis.vcfile_input.icgc_file' '$infile' &&
-                #else if str( $set_analysis.vcfile_input.vcfile ) == "vcf":
-                #set $infile = $run_dir + 'snps.vcf'
+            #else if str( $set_analysis.vcfile_input.vcfile ) == "icgc":
+                #set $infile = 'run_dir/snps.txt'
+		        ln -s -f '$set_analysis.vcfile_input.icgc_file' '$infile' &&
+            #else if str( $set_analysis.vcfile_input.vcfile ) == "vcf":
+                #set $infile = 'run_dir/snps.vcf'
                 ln -s -f '$set_analysis.vcfile_input.vcf_file' '$infile' &&
-		#end if
+            #end if
+        #end if
+        
+        sigprofiler
+        
+        #if str( $set_analysis.choices ) == "install_genome":
+            -ig $set_analysis.refgendwn > install.log
+        #else if str( $set_analysis.choices ) == "get_sigmut":
+            -g $set_analysis.refgendat
+            -f 'run_dir'
+            -n "project"
+            -p
+## ! implement exome functionality when good test available
+##            #if str( $set_analysis.exome ) == "true":
+##                -e
+##            #end if
+## ! implement per chromosome functionality when good test available
+##            #if str( $set_analysis.chrom_based ) == "true":
+##                -c
+##            #end if
+            #if str( $set_analysis.tsb_stat ) == "true":
+                -t
+            #end if
+            #if str( $set_analysis.gs ) == "true":
+                -s
+            #end if
+            ##-b $set_analysis.bed ### to be done
+            && pdfcombine -f -s -o blinder.pdf run_dir/output/plots/*.pdf
+            && ls run_dir/logs/
+            #if str( $set_analysis.tsb_stat ) == "true":
+                && tail -n +1 run_dir/output/TSB/*.txt > transcriptional_strand_biases.txt
+           #end if
+           #if $set_analysis.seqInfo:
+               && tail -n +1 run_dir/output/*/*.all > information.txt
+           #end if
+        #end if
+        ]]></command>
 
-		#end if
-		
-		sigprofiler	
-		#if str( $set_analysis.choices ) == "install_genome":
-		-ig $set_analysis.refgendwn
-		#else if str( $set_analysis.choices ) == "get_sigmut":
-		-n $job_num
-		-g $set_analysis.refgendat
-		-f $run_dir
+    <inputs>
+        <conditional name="set_analysis">
+            <param name="choices" type="select" label="Which of the following jobs do you want perform?">
+                <option value="install_genome">Install 'de novo' a reference genome </option>
+                <option value="get_sigmut">Obtain the mutational signatures from VCF files</option>
+            </param>
+            <when value="install_genome">
+                <param name="refgendwn" type="select" label="Reference genome" help="Get data from any of the following reference genomes:">
+                    <option value="GRCh37">Homo sapiens, GRCh37.p13 [GCA_000001405.14] </option>
+                    <option value="GRCh38">Homo sapiens, GRCh38.p12 [GCA_000001405.27] </option>
+                    <option value="mm9">Mus musculus, GRCm37 [GCA_000001635.18]</option>
+                    <option value="mm10">Mus musculus, GRCm38.p6 [GCA_000001635.8]</option>
+                    <option value="rn6">Rattus norvegicus, Rnor_6.0 [GCA_000001895.4]</option>
+                    <option value="c_elegans">Caenorhabditis elegans</option>
+                    <option value="dog">Dog</option>
+                </param>
+            </when>
 
-		#if str( $set_analysis.exome ) == "true":
-		-e
-		#end if
-		#if str( $set_analysis.chrom_based ) == "true":
-		-c
-		#end if
-		#if str( $set_analysis.plot ) == "true":
-		-p
-		#end if
-		#if str( $set_analysis.tsb_stat ) == "true":
-		-t
-		#end if
-		#if str( $set_analysis.gs ) == "true":
-		-s
-		#end if
-		##-b $set_analysis.bed
-		#end if
-		]]></command>
+            <when value="get_sigmut">
+                <conditional name="vcfile_input">
+                    <param name="vcfile" type="select" label="VC file" help="Select the format of your input data">
+                        <option value="maf">Mutation Annotation Format</option>
+                        <option value="icgc">Tab-separated file</option>
+                        <option value="vcf">Variant Call Format</option>
+                    </param>
+                    <when value='maf'>
+                        <param name="maf_file" type="data" format="maf" label="select VC file" help="Select the input file in MAF format." />
+                    </when>
+                    <when value='icgc'>
+                        <param name="icgc_file" type="data" format="txt" label="select VC file" help="Select the input file in ICGC format." />
+                    </when>
+                    <when value='vcf'>
+                        <param name="vcf_file" type="data" format="vcf" label="select VC file" help="Select the input file in VCF format." />
+                    </when>
+                </conditional>
 
-	<inputs>
-		<conditional name="set_analysis">
-			<param name="choices" type="select" label="Which of the following jobs do you want perform?">
-				<option value="install_genome">Install 'de novo' a reference genome </option>
-				<option value="get_sigmut">Obtain the mutational signatures from VCF files</option>
-			</param>
-			<when value="install_genome">
-				<param name="refgendwn" type="select" label="Reference genome" help="Get data from any of the following reference genomes:">
-					<option value="GRCh37">Homo sapiens, GRCh37.p13 [GCA_000001405.14] </option>
-					<option value="GRCh38">Homo sapiens, GRCh38.p12 [GCA_000001405.27] </option>
-					<option value="mm9">Mus musculus, GRCm37 [GCA_000001635.18]</option>
-					<option value="mm10">Mus musculus, GRCm38.p6 [GCA_000001635.8]</option>
-					<option value="rn6">Rattus norvegicus, Rnor_6.0 [GCA_000001895.4]</option>
-					<option value="c_elegans">Caenorhabditis elegans</option>
-                                        <option value="dog">Dog</option>
-				</param>
-			</when>
-
-			<when value="get_sigmut">
-				<conditional name="vcfile_input">
-					<param name="vcfile" type="select" label="VC file" help="Select the format of your input data">
-						<option value="maf">Mutation Annotation Format</option>
-						<option value="icgc">Tab-separated file</option>
-						<option value="vcf">Variant Call Format</option>
-					</param>
-					<when value='maf'>
-						<param name="maf_file" type="data" format="maf" label="select VC file" help="Select the input file in MAF format." />
-					</when>
-					<when value='icgc'>
-						<param name="icgc_file" type="data" format="txt" label="select VC file" help="Select the input file in ICGC format." />
-					</when>
-					<when value='vcf'>
-						<param name="vcf_file" type="data" format="vcf" label="select VC file" help="Select the input file in VCF format." />
-					</when>
-				</conditional>
-
-				<param name="refgendat" type="select" label="Reference genome to be analyzed" help="Use the following reference genome:">
-					<option value="GRCh37">Homo sapiens, GRCh37.p13 [GCA_000001405.14] </option>
+                <param name="refgendat" type="select" label="Reference genome to be analyzed" help="Use the following reference genome:">
+                    <option value="GRCh37">Homo sapiens, GRCh37.p13 [GCA_000001405.14] </option>
                                         <option value="GRCh38">Homo sapiens, GRCh38.p12 [GCA_000001405.27] </option>
                                         <option value="mm9">Mus musculus, GRCm37 [GCA_000001635.18]</option>
                                         <option value="mm10">Mus musculus, GRCm38.p6 [GCA_000001635.8]</option>
                                         <option value="rn6">Rattus norvegicus, Rnor_6.0 [GCA_000001895.4]</option>
                                         <option value="c_elegans">Caenorhabditis elegans</option>
                                         <option value="dog">Dog</option>
-				</param>
-
-				<conditional name="bed_input">
-					<param name="bedfile" type="select" label="BED file" help="Input a BED file">
-						<option value="yes">Yes</option>
-						<option value="no" selected="true">No</option>
-					</param>
-					<when value='yes'>
-						<param name="bed_file" format="bed" type="data" label="Use a BED file containing the set of regions" help="Provide a BED file"/>
-					</when>
-					<when value='no'>
-					</when>
-				</conditional>
-				<param name="plot" type="boolean" truevalue="true" label="Produce plot results?" checked="False" help="Show plots"/>
-				<param name="exome" type="boolean" label="Use only the exome?" checked="False" help="Use exome"/>
-				<param name="chrom_based" type="boolean" label="Create the matrices on a per chromosome basis?" checked="False" help="Show snvs"/>
-				<param name="tsb_stat" type="boolean" truevalue="true" label="Performs a transcriptional strand bias test?" checked="False" help="Show snvs"/>
-				<param name="seqInfo" type="boolean" truevalue="true" label="Export sequence information?" checked="False" help="Show sequence information"/>
-				<param name="gs" type="boolean" label="Performs gene strand bias test?" checked="False" help="Show snvs"/>
-			</when>
-		</conditional>
-	</inputs>
-
-	<outputs>
-		<data format="txt" name="logref" label="Log file: Install a Reference Genome">
-			<filter>set_analysis['choices'] == 'install_genome'</filter>
-		</data>
-
-                <data format="txt" name="logsmt" label="Log file: Calculate Mutational Signatures">
-                        <filter>set_analysis['choices'] == 'get_sigmut'</filter>
-                </data>
-
-		<data format="pdf" name="SBS6" label="--> Plot SBS 6 Sig. Mut.">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['plot'] is True</filter>
-		</data>
-
-		<data format="pdf" name="SBS24" label="--> Plot SBS 24 Sig. Mut.">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['plot'] is True</filter>
-		</data>
-
-		<data format="pdf" name="SBS78" label="--> Plot SBS 78 Sig. Mut.">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['plot'] is True</filter>
-		</data>
-
-		<data format="pdf" name="SBS96" label="--> Plot SBS 96 Sig. Mut.">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['plot'] is True</filter>
-		</data>
-
-		<data format="pdf" name="SBS384" label="--> Plot SBS 384 Sig. Mut.">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['plot'] is True</filter>
-		</data>
-
-		<data format="pdf" name="SBS1536" label="--> Plot SBS 1536 Sig. Mut.">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['plot'] is True</filter>
-		</data>
-
-		<data format="pdf" name="DBS78" label="--> Plot DBS 78 Sig. Mut.">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['plot'] is True</filter>
-		</data>
-
-		<data format="pdf" name="DBS186" label="--> Plot DBS 186 Sig. Mut.">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['plot'] is True</filter>
-		</data>
-
-		<data format="pdf" name="ID_simple" label="--> Plot ID simple Sig. Mut.">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['plot'] is True</filter>
-		</data>
-
-		<data format="pdf" name="ID_TSB" label="--> Plot ID TSB Sig. Mut.">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['plot'] is True</filter>
-		</data>
-
-		<data format="pdf" name="ID_83" label="--> Plot ID 83 Sig. Mut.">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['plot'] is True</filter>
-		</data>
-
-		<data format="pdf" name="ID_94" label="--> Plot ID 94 Sig. Mut.">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['plot'] is True</filter>
-		</data>
-
-		<data format="pdf" name="ID_96" label="--> Plot ID 96 Sig. Mut.">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['plot'] is True</filter>
-		</data>
-		
-		<data format="txt" name="Exo11" label="--> DBS_exome.vcf">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['exome'] is True</filter>
-		</data>
-
-		<data format="txt" name="Exo12" label="--> SNV_exome.vcf">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['exome'] is True</filter>
-		</data>
-
-		<data format="txt" name="Exo1" label="--> DBS 78 Sig. Mut. EXOME">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['exome'] is True</filter>
-		</data>
-
-		<data format="txt" name="Exo2" label="--> DBS 186 Sig. Mut. EXOME">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['exome'] is True</filter>
-		</data>
-
-		<data format="txt" name="Exo3" label="--> DBS 1248 Sig. Mut. EXOME">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['exome'] is True</filter>
-		</data>
-
-		<data format="txt" name="Exo4" label="--> DBS 2976 Sig. Mut. EXOME">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['exome'] is True</filter>
-		</data>
-
-		<data format="txt" name="Exo5" label="--> SBS 6 Sig. Mut. EXOME">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['exome'] is True</filter>
-		</data>
-
-		<data format="txt" name="Exo6" label="--> SBS 24 Sig. Mut. EXOME">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['exome'] is True</filter>
-		</data>
-
-		<data format="txt" name="Exo7" label="--> SBS 96 Sig. Mut. EXOME">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['exome'] is True</filter>
-		</data>
-
-		<data format="txt" name="Exo8" label="--> SBS 384 Sig. Mut. EXOME">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['exome'] is True</filter>
-		</data>
-
-		<data format="txt" name="Exo9" label="--> SBS 1536 Sig. Mut. EXOME">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['exome'] is True</filter>
-		</data>
-
-		<data format="txt" name="Exo10" label="--> SBS 6144 Sig. Mut. EXOME">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['exome'] is True</filter>
-		</data>
-
-		<data format="txt" name="sigRes" label="--> TSB: Significant Results">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['tsb_stat'] is True</filter>
-		</data>
-
-		<data format="txt" name="TSB24" label="--> TSB: 24 Sig. Mut.">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['tsb_stat'] is True</filter>
-		</data>
-
-		<data format="txt" name="TSB384" label="--> TSB: 96 Sig. Mut.">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['tsb_stat'] is True</filter>
-		</data>
-
-                <data format="txt" name="TSB6144" label="--> TSB: 1536 Sig. Mut.">
-                        <filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['tsb_stat'] is True</filter>
-                </data>
-
-
-		<data format="txt" name="SeqInf1" label="--> DBS 78 Sig. Mut. ALL">
-			<filter>set_analysis['choices'] == 'get_sigmut' and  set_analysis['seqInfo'] is True</filter>
-		</data>
-
-		<data format="txt" name="SeqInf2" label="--> DBS 186 Sig. Mut. ALL">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['seqInfo'] is True</filter>
-		</data>
-
-		<data format="txt" name="SeqInf3" label="--> DBS 1248 Sig. Mut. ALL">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['seqInfo'] is True</filter>
-		</data>
-
-		<data format="txt" name="SeqInf4" label="--> DBS 2976 Sig. Mut. ALL">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['seqInfo'] is True</filter>
-		</data>
-
-		<data format="txt" name="SeqInf5" label="--> SBS 6 Sig. Mut. ALL">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['seqInfo'] is True</filter>
-		</data>
-
-		<data format="txt" name="SeqInf6" label="--> SBS 24 Sig. Mut. ALL">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['seqInfo'] is True</filter>
-		</data>
-
-		<data format="txt" name="SeqInf7" label="--> SBS 96 Sig. Mut. ALL">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['seqInfo'] is True</filter>
-		</data>
-
-		<data format="txt" name="SeqInf8" label="--> SBS 384 Sig. Mut. ALL">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['seqInfo'] is True</filter>
-		</data>
-
-		<data format="txt" name="SeqInf9" label="--> SBS 1536 Sig. Mut. ALL">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['seqInfo'] is True</filter>
-		</data>
-
-		<data format="txt" name="SeqInf10" label="--> SBS 6144 Sig. Mut. ALL">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['seqInfo'] is True</filter>
-		</data>
-
-
-		<data format="txt" name="SeqInf11" label="--> ID 28 Sig. Mut. ALL">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['seqInfo'] is True</filter>
-		</data>
-
-		<data format="txt" name="SeqInf12" label="--> ID 83 Sig. Mut. ALL">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['seqInfo'] is True</filter>
-		</data>
-
-		<data format="txt" name="SeqInf13" label="--> ID 94 Sig. Mut. ALL">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['seqInfo'] is True</filter>
-		</data>
-
-		<data format="txt" name="SeqInf14" label="--> ID 96 Sig. Mut. ALL">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['seqInfo'] is True</filter>
-		</data>
-
-		<data format="txt" name="SeqInf15" label="--> ID 415 Sig. Mut. ALL">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['seqInfo'] is True</filter>
-		</data>
-
-		<data format="txt" name="SeqInf16" label="--> ID 8628 Sig. Mut. ALL">
-			<filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['seqInfo'] is True</filter>
-		</data>
-
-	</outputs>
-
-	<tests>
-		<test>
-			<conditional name="set_analysis">
-				<param name="choices" value="install_genome"/>
-				<param name="refgendwn" ftype="fasta" value="c_elegans"/>
-			</conditional>
-			<output name="logref" file="c_elegans.log" lines_diff="5"/>
-		</test>
-
-
-		<test>
-			<conditional name="set_analysis">
-				<param name="choices" value="get_sigmut"/>
-				<param name="refgendat" ftype="fasta" value="c_elegans"/>
-				<conditional name="vcfile_input">
-					<param name="vcfile" value="icgc"/>
-					<param name="icgc_file" ftype="txt" value="test_matrix.txt"/>
-				</conditional>
-				<conditional name="bed_input">
-					<param name="bedfile" value="no"/>	
-				</conditional>
-				<param name="plot" value="True"/>
-			</conditional>
-
-		<output name="ID_simple" file="ID_simple.pdf" lines_diff="5"/>
-		<output name="ID_TSB" file="ID_TSB.pdf" lines_diff="5"/>
-		<output name="ID_83" file="ID_83.pdf" lines_diff="5"/>
-
-		</test>
-
-	</tests>
-
-	<help><![CDATA[
-
-		**SigProfiler**
-
-		Background:
-
-		Cancer genomes evince somatic mutations, which are imprinted by
-		different mutational processes, that give rise to diverse
-		mutational signatures. Their analysis from single base
-		substitutions and their immediate sequencing context, allows the
-		classification of small mutational events (including
-		substitutions, insertions, deletions, and doublet substitutions)
-		for better understanding the mutational processes that have
-		shaped a cancer genome.
-
-		In this sense, SigProfiler constitutes a Galaxy-based wrapper of
-		a computational method developed by Ludmil B. Alexandrov, that
-		allow the exploration and visualization of mutational patterns
-		for all types of small mutational events. Specifically, the
-		following actions can be performed using SigProfiler wrapper:
-
-		1. Identify and categorize the mutations based on possible
-		single nucleotide variants (SNVs), double base substitutions
-		(DBS), and insertions/deletions and provides further
-		transcriptional strand bias categorization. Afterwards, the
-		classification of these mutations are integrated into distinct
-		matrices.
-		SigProfiler provides matrix generation support for SBS-6,
-		SBS-96, SBS-1536, DBS-78 and DBS-1248. In addition, the
-		generation of mutational matrices of indels including
-		ID-28 and ID-83 are procured. Besides, an ID-8628 matrix that
-		extends the ID-83 classification is generated.
-		SigProfiler examines transcriptional strand bias for single base
-		substitutions, doublet base substitutions, and small indels. It
-		is evaluated whether a mutation occurs on the transcribed or the
-		non-transcribed strand of well-annotated protein coding genes of
-		a reference genome. Mutations found in the transcribed regions
-		of the genome are further subclassified as: (i) transcribed,
-		(ii) un-transcribed, (iii) bi-directional, or (iv) unknown.
-	       
-		2. Generation of plots of all types of mutational signatures as
-		well as all types of mutational patterns in cancer genomes.  
-
-		Additional Information:
-
-		Classification of Single Base substitutions (SBSs):
-		Single base substitutions (SBSs) are single DNA base-pairs
-		substituted with another single DNA base-pairs. The most
-		basic classification catalogues SBSs into six distinct
-		categories, including: C:G > A:T, C:G > G:C, C:G > T:A,
-		T:A > A:T, T:A > C:G, and T:A > G:C. In practice, a C:G > A:T
-		substitution is denoted as either a C > A mutation using the
-		pyrimidine base or as a G > T mutation using the purine base.
-		In consequence, the most commonly used SBS-6 classification of
-		single base substitutions can be written as: C > A, C > G,
-		C > T, T > A, T > C, and T > G.
-		Additionally, the SBS-6 classification can be further
-		expanded by considering the base-pairs immediately
-		adjacent 5′ and 3′ to the somatic mutation. Therefore, an
-		extended classification for analysis of mutational signatures is
-		SBS-96, where each of the classes in SBS-6 is further elaborated
-		using one base adjacent at the 5′ of the mutation and one base
-		adjacent at the 3′ of the mutation.
-		Logically, SBS-96 can be further elaborated by including
-		additional 5′ and 3′ adjacent context. Each of the six single
-		base substitutions in SBS-6 has 256 possible pentanucleotides
-		resulting in a classification with 1536 possible channels.
-	       
-		Classification of Doublet Base substitutions (DBSs):
-		Doublet base substitutions (DBSs) are somatic mutations in which
-		a set of two adjacent DNA base-pairs is simultaneously
-		substituted with another set of two adjacent DNA base-pairs. An
-		example of a DBS is a set of CT:GA base-pairs mutating to a set
-		of AA:TT base-pairs, which is usually denoted as CT:GA > AA:TT.
-		It should be noted that a CT:GA > AA:TT mutation can be
-		equivalently written as either a CT > AA mutation.  Overall, the
-		basic classification catalogues DBSs into 78 distinct categories
-		denoted as the DBS-78 matrix.
-		Similarly, we can expand the characterization of DBS mutations
-		by considering the 5′ and 3′ adjacent contexts. With
-		seventy-eight possible DBS mutations having sixteen possible
-		tetranucleotides each, this context expansion results in 1248
-		possible channels denoted as the DBS-1248 context.
-		
-		Classification of small insertions and deletions (IDs):
-		A somatic insertion is the incorporation of a set of base-pairs
-		that lengthens a chromosome, while a somatic deletion is the
-		removing of a set of existing base-pairs from a given location
-		of a chromosome.
-		Unfortunately, indel classification cannot be performed
-		analogously to SBS or DBS classifications, where the immediate
-		sequencing context flanking each mutation was
-		utilized to subclassify these mutational events.
-		Consequently, indels (IDs) are classified as single base-pair
-		or longer events. They can be further subclassified as either a
-		C:G or a T:A indel, while longer indels can also be
-		subclassified based on their lengths: 2 bp, 3 bp, 4 bp, and
-		5 + bp.
-
-		Incorporation of transcription Strand Bias (TSB):
-		The mutational classifications described above allow the
-		characterization of mutational patterns of single base
-		substitutions, doublet base substitutions, and small insertions
-		and deletions. Nevertheless, these classifications can be
-		further elaborated by incorporating strand bias. Mutations
-		from the same type are expected to be equally distributed across the two
-		DNA strands. However, in many cases an asymmetric number of mutations are
-		observed due to either one of the strands being preferentially
-		repaired or one of the strands having a higher propensity for
-		being damaged. To sub-classify mutations based on their
-		transcriptional strand bias, the pyrimidine orientation with
-		respect to the locations of well-annotated protein coding genes
-		on a genome is considered.
-
-		Running SigProfiler:
-		
-		1. Reference Genomes:
-		Before using SigProfiler, the installation of a reference genome
-		is demanded. By default, the tool supports the following
-		reference genomes:
+                </param>
+
+<!-- implement bed when test available -->
+<!--                <conditional name="bed_input">
+                    <param name="bedfile" type="select" label="BED file" help="Input a BED file">
+                        <option value="yes">Yes</option>
+                        <option value="no" selected="true">No</option>
+                    </param>
+                    <when value='yes'>
+                        <param name="bed_file" format="bed" type="data" label="Use a BED file containing the set of regions" help="Provide a BED file"/>
+                    </when>
+                    <when value='no'>
+                    </when>
+                </conditional> -->
+                <!-- implement exome functionality when test available -->
+                <!-- <param name="exome" type="boolean" label="Use only the exome?" checked="False" help="Use exome"/> -->
+                <!-- implement chrom_based functionality when test available -->
+                <!--<param name="chrom_based" type="boolean" label="Create the matrices on a per chromosome basis?" checked="False" help="Show snvs"/> -->
+                <param name="tsb_stat" type="boolean" truevalue="true" label="Performs a transcriptional strand bias test?" checked="False" help="Show snvs"/>
+                <param name="seqInfo" type="boolean" truevalue="true" label="Export sequence information?" checked="False" help="Show sequence information"/>
+                <param name="gs" type="boolean" label="Performs gene strand bias test?" checked="False" help="Show snvs"/>
+            </when>
+        </conditional>
+    </inputs>
+
+    <outputs>
+        <data format="txt" name="logref" label="Log file: Install a Reference Genome"
+              from_work_dir="./install.log">
+            <filter>set_analysis['choices'] == 'install_genome'</filter>
+        </data>
+        <data format="txt" name="logsmt" label="Log file: Calculate Mutational Signatures"
+              from_work_dir="run_dir/logs/SigProfilerMatrixGenerator*.out">
+            <filter>set_analysis['choices'] == 'get_sigmut'</filter>
+        </data>
+
+        <data format="pdf" name="blinder" label="SBS Mutational Signatures plots (pdf)"
+              from_work_dir="./blinder.pdf" >
+            <filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['plot'] is True</filter>
+        </data>
+
+        <!-- implement exome outputs when test available -->
+        <!--
+        <data format="txt" name="dbs_exome" label="DBS_exome.vcf">
+            <filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['exome'] is True</filter>
+        </data>
+        <data format="txt" name="snv_exome" label="SNV_exome.vcf">
+            <filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['exome'] is True</filter>
+        </data>
+        
+        <data format="txt" name="sig_exome" label="DBS 78 and so on Sig. Mut. EXOME">
+            <filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['exome'] is True</filter>
+        </data>
+        -->
+        <data format="txt" name="tsb" label="Transcriptional Strand Biases"
+                      from_work_dir="./transcriptional_strand_biases.txt" >
+            <filter>set_analysis['choices'] == 'get_sigmut' and set_analysis['tsb_stat'] is True</filter>
+        </data>
+
+        <data format="txt" name="seqinfo" label="Mutational Signature detailed infos"
+              from_work_dir="./information.txt" >
+            <filter>set_analysis['choices'] == 'get_sigmut' and  set_analysis['seqInfo'] is True</filter>
+        </data>
+
+    </outputs>
+    <tests>
+        <test>
+            <param name="choices" value="install_genome"/>
+            <param name="refgendwn" value="GRCh38"/>
+            <output name="logref" file="hg38_install.log" lines_diff="5"/>
+        </test>
+        <test>
+            <param name="choices" value="get_sigmut"/>
+            <param name="refgendat" value="GRCh38"/>
+            <param name="vcfile" value="vcf"/>
+            <param name="vcf_file" ftype="vcf" value="hg38.vcf"/>
+            <param name="plot" value="True"/>
+            <output name="logsmt" ftype="txt" file="sigmut.log" lines_diff="5" />
+            <output name="blinder" file="hg38_blinder.pdf"  lines_diff="5" />
+        </test>
+    </tests>
+
+    <help><![CDATA[
+
+        **SigProfiler**
+
+        Background:
+
+        Cancer genomes evince somatic mutations, which are imprinted by
+        different mutational processes, that give rise to diverse
+        mutational signatures. Their analysis from single base
+        substitutions and their immediate sequencing context, allows the
+        classification of small mutational events (including
+        substitutions, insertions, deletions, and doublet substitutions)
+        for better understanding the mutational processes that have
+        shaped a cancer genome.
+
+        In this sense, SigProfiler constitutes a Galaxy-based wrapper of
+        a computational method developed by Ludmil B. Alexandrov, that
+        allow the exploration and visualization of mutational patterns
+        for all types of small mutational events. Specifically, the
+        following actions can be performed using SigProfiler wrapper:
+
+        1. Identify and categorize the mutations based on possible
+        single nucleotide variants (SNVs), double base substitutions
+        (DBS), and insertions/deletions and provides further
+        transcriptional strand bias categorization. Afterwards, the
+        classification of these mutations are integrated into distinct
+        matrices.
+        SigProfiler provides matrix generation support for SBS-6,
+        SBS-96, SBS-1536, DBS-78 and DBS-1248. In addition, the
+        generation of mutational matrices of indels including
+        ID-28 and ID-83 are procured. Besides, an ID-8628 matrix that
+        extends the ID-83 classification is generated.
+        SigProfiler examines transcriptional strand bias for single base
+        substitutions, doublet base substitutions, and small indels. It
+        is evaluated whether a mutation occurs on the transcribed or the
+        non-transcribed strand of well-annotated protein coding genes of
+        a reference genome. Mutations found in the transcribed regions
+        of the genome are further subclassified as: (i) transcribed,
+        (ii) un-transcribed, (iii) bi-directional, or (iv) unknown.
+           
+        2. Generation of plots of all types of mutational signatures as
+        well as all types of mutational patterns in cancer genomes.  
+
+        Additional Information:
+
+        Classification of Single Base substitutions (SBSs):
+        Single base substitutions (SBSs) are single DNA base-pairs
+        substituted with another single DNA base-pairs. The most
+        basic classification catalogues SBSs into six distinct
+        categories, including: C:G > A:T, C:G > G:C, C:G > T:A,
+        T:A > A:T, T:A > C:G, and T:A > G:C. In practice, a C:G > A:T
+        substitution is denoted as either a C > A mutation using the
+        pyrimidine base or as a G > T mutation using the purine base.
+        In consequence, the most commonly used SBS-6 classification of
+        single base substitutions can be written as: C > A, C > G,
+        C > T, T > A, T > C, and T > G.
+        Additionally, the SBS-6 classification can be further
+        expanded by considering the base-pairs immediately
+        adjacent 5′ and 3′ to the somatic mutation. Therefore, an
+        extended classification for analysis of mutational signatures is
+        SBS-96, where each of the classes in SBS-6 is further elaborated
+        using one base adjacent at the 5′ of the mutation and one base
+        adjacent at the 3′ of the mutation.
+        Logically, SBS-96 can be further elaborated by including
+        additional 5′ and 3′ adjacent context. Each of the six single
+        base substitutions in SBS-6 has 256 possible pentanucleotides
+        resulting in a classification with 1536 possible channels.
+           
+        Classification of Doublet Base substitutions (DBSs):
+        Doublet base substitutions (DBSs) are somatic mutations in which
+        a set of two adjacent DNA base-pairs is simultaneously
+        substituted with another set of two adjacent DNA base-pairs. An
+        example of a DBS is a set of CT:GA base-pairs mutating to a set
+        of AA:TT base-pairs, which is usually denoted as CT:GA > AA:TT.
+        It should be noted that a CT:GA > AA:TT mutation can be
+        equivalently written as either a CT > AA mutation.  Overall, the
+        basic classification catalogues DBSs into 78 distinct categories
+        denoted as the DBS-78 matrix.
+        Similarly, we can expand the characterization of DBS mutations
+        by considering the 5′ and 3′ adjacent contexts. With
+        seventy-eight possible DBS mutations having sixteen possible
+        tetranucleotides each, this context expansion results in 1248
+        possible channels denoted as the DBS-1248 context.
+        
+        Classification of small insertions and deletions (IDs):
+        A somatic insertion is the incorporation of a set of base-pairs
+        that lengthens a chromosome, while a somatic deletion is the
+        removing of a set of existing base-pairs from a given location
+        of a chromosome.
+        Unfortunately, indel classification cannot be performed
+        analogously to SBS or DBS classifications, where the immediate
+        sequencing context flanking each mutation was
+        utilized to subclassify these mutational events.
+        Consequently, indels (IDs) are classified as single base-pair
+        or longer events. They can be further subclassified as either a
+        C:G or a T:A indel, while longer indels can also be
+        subclassified based on their lengths: 2 bp, 3 bp, 4 bp, and
+        5 + bp.
+
+        Incorporation of transcription Strand Bias (TSB):
+        The mutational classifications described above allow the
+        characterization of mutational patterns of single base
+        substitutions, doublet base substitutions, and small insertions
+        and deletions. Nevertheless, these classifications can be
+        further elaborated by incorporating strand bias. Mutations
+        from the same type are expected to be equally distributed across the two
+        DNA strands. However, in many cases an asymmetric number of mutations are
+        observed due to either one of the strands being preferentially
+        repaired or one of the strands having a higher propensity for
+        being damaged. To sub-classify mutations based on their
+        transcriptional strand bias, the pyrimidine orientation with
+        respect to the locations of well-annotated protein coding genes
+        on a genome is considered.
+
+        Running SigProfiler:
+        
+        1. Reference Genomes:
+        Before using SigProfiler, the installation of a reference genome
+        is demanded. By default, the tool supports the following
+        reference genomes:
 
                 Human: GRCh37 & GRCh38
 
@@ -623,59 +316,59 @@
 
                 sigprofiler -ig GRCh37
 
-		2. Mutational signatures calculation:
-		
-		After successful installation of a reference genome, SigProfiler
-		can be applied to files containing somatic mutations in multiple
-		formats, for transforming these mutational catalogues into mutational
-		matrices. Specifically, the tool can read data formats such as
-		Variant Calling Format (VCF) and Mutation Annotation Format
-		(MAF) and the following parameters should be provided for
-		generating the diverse matrices and plots:
-		
-		--name | -n = Project name
-		--genome | -g = Reference Genome
-		-files | -f = Absolute path where the input mutation files are located
+        2. Mutational signatures calculation:
+        
+        After successful installation of a reference genome, SigProfiler
+        can be applied to files containing somatic mutations in multiple
+        formats, for transforming these mutational catalogues into mutational
+        matrices. Specifically, the tool can read data formats such as
+        Variant Calling Format (VCF) and Mutation Annotation Format
+        (MAF) and the following parameters should be provided for
+        generating the diverse matrices and plots:
+        
+        --name | -n = Project name
+        --genome | -g = Reference Genome
+        -files | -f = Absolute path where the input mutation files are located
 
-		A right command line should look like:
+        A right command line should look like:
 
-		sigprofiler -n MYPROJECT -g GRCh37 -f /path_to_folder_with_VCF_files/ -p
+        sigprofiler -n MYPROJECT -g GRCh37 -f /path_to_folder_with_VCF_files/ -p
 
-		**Options**
-		--version             	show program's version number and exit
+        **Options**
+        --version               show program's version number and exit
 
-		-h, --help            	show this help message and exit
+        -h, --help              show this help message and exit
 
-		--install_genome	Install de novo any of the following reference
-					genomes: 'GRCh37', 'GRCh38', 'mm9' or 'mm10'.
+        --install_genome    Install de novo any of the following reference
+                    genomes: 'GRCh37', 'GRCh38', 'mm9' or 'mm10'.
 
-		--name=APPENDIX		Provide a project name
+        --name=APPENDIX     Provide a project name
 
-		--genome=NAME		Provide a reference genome (ex: GRCh37, GRCh38,
-					mm9 or mm10).
+        --genome=NAME       Provide a reference genome (ex: GRCh37, GRCh38,
+                    mm9 or mm10).
 
-		--files=Abs_path	Path where the input vcf files are located
+        --files=Abs_path    Path where the input vcf files are located
 
-		--exome			Use only the exome or not
+        --exome         Use only the exome or not
 
-		--bed=FILE		BED file containing the set of regions to be used
-					in generating the matrices
+        --bed=FILE      BED file containing the set of regions to be used
+                    in generating the matrices
 
-		--chrom			Create the matrices on a per chromosome basis
+        --chrom         Create the matrices on a per chromosome basis
 
-		--plot			Generate the plots for each context
+        --plot          Generate the plots for each context
 
-		--tsb			Performs a transcriptional strand bias test for the
-					24, 384, and 6144 contexts
+        --tsb           Performs a transcriptional strand bias test for the
+                    24, 384, and 6144 contexts
 
-		--gs			Performs a gene strand bias test
+        --gs            Performs a gene strand bias test
 
-		For further info see: https://github.com/AlexandrovLab/SigProfilerMatrixGenerator
+        For further info see: https://github.com/AlexandrovLab/SigProfilerMatrixGenerator
 
-		]]></help>
+        ]]></help>
 
-	<citations>
-		<citation type="doi">10.1186/s12864-019-6041-2</citation>
-	</citations>
+    <citations>
+        <citation type="doi">10.1186/s12864-019-6041-2</citation>
+    </citations>
 
 </tool>
