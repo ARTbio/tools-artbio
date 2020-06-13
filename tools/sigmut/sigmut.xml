@@ -1,5 +1,5 @@
 ﻿<tool id="SigProfiler" name="SigProfiler" version="@VERSION@">
-    <description>SigProfiler performs the mutational signature characterization from VCF files.</description>
+    <description>performs  mutational signature characterization from variant files</description>
 
     <macros>
         <import>sigmut_macros.xml</import>
