@@ -79,6 +79,7 @@ install:
   - conda install -y conda=4.6.8
   - planemo --version
   - conda --version
+  - which wget
   - git diff --quiet "$TRAVIS_COMMIT_RANGE" -- ; GIT_DIFF_EXIT_CODE=$?
   - |
     if [ "$GIT_DIFF_EXIT_CODE" -gt 1 ] ; then
