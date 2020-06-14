@@ -9,6 +9,10 @@
     <command detect_errors="exit_code"><![CDATA[
         @VERSION@
         @pipefail@
+        BIN=`which sigprofiler | sed 's,/sigprofiler,,g'` &&
+        echo \$BIN &&
+        chmod -R 777 \$BIN &&
+        ls -Rla \$BIN &&
         mkdir run_dir &&
         #if str( $set_analysis.choices ) == "get_sigmut":
             #if str( $set_analysis.vcfile_input.vcfile ) == "maf":
