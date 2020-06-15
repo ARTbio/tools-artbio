@@ -12,7 +12,6 @@
         BIN=`which sigprofiler | sed 's,/sigprofiler,,g'` &&
         echo \$BIN &&
         chmod -R 777 \$BIN &&
-        which wget && echo "was which wget" &&
         mkdir run_dir &&
         #if str( $set_analysis.choices ) == "get_sigmut":
             #if str( $set_analysis.vcfile_input.vcfile ) == "maf":
