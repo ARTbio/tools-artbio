@@ -1,0 +1,59 @@
+THIS FILE CONTAINS THE METADATA ABOUT SYSTEM AND RUNTIME
+
+
+-------System Info-------
+Operating System Name: Linux
+Nodename: plastisipi
+Release: 4.4.0-141-generic
+Version: #167-Ubuntu SMP Wed Dec 5 10:40:15 UTC 2018
+
+-------Python and Package Versions------- 
+Python Version: 3.8.3
+SigProfilerMatrixGenerator Version: 1.0.25
+SigProfilerPlotting version: 1.0.10
+matplotlib version: 3.2.1
+statsmodels version: 0.11.1
+scipy version: 1.4.1
+pandas version: 1.0.4
+numpy version: 1.18.5
+
+-------Vital Parameters Used for the execution -------
+Project: project
+Genome: GRCh38
+Input File Path: run_dir/
+exome: False
+bed_file: None
+chrom_based: False
+plot: True
+tsb_stat: False
+seqInfo: False
+
+-------Date and Time Data------- 
+Date and Clock time when the execution started: 2020-06-14 01:24:25.996267
+
+
+-------Runtime Checkpoints------- 
+Chromosome X done
+Chromosome Y done
+Chromosome 1 done
+Chromosome 2 done
+Chromosome 3 done
+Chromosome 4 done
+Chromosome 5 done
+Chromosome 6 done
+Chromosome 7 done
+Chromosome 8 done
+Chromosome 9 done
+Chromosome 10 done
+Chromosome 11 done
+Chromosome 12 done
+Chromosome 13 done
+Chromosome 14 done
+Chromosome 15 done
+Chromosome 16 done
+Chromosome 17 done
+Chromosome 18 done
+Chromosome 19 done
+Chromosome 20 done
+Chromosome 21 done
+Chromosome 22 done
