@@ -72,7 +72,7 @@ def main(template, input_file, output_file, reduction):
 
     # ouverture fichier output
     facture_output = openpyxl.load_workbook(
-        template, data_only='True', keep_vba=False)
+        template, data_only=False, keep_vba=False)
     ws = facture_output.worksheets[0]
 
     # rajout de l'image de SU qui ne survit pas à la conversion
