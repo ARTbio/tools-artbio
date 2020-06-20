@@ -9,4 +9,4 @@ categories:
 homepage_url: http://artbio.fr
 remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/facturation_ibps
 toolshed:
-  - testtoolshed
+  - toolshed
