@@ -60,6 +60,7 @@
 Génère un fichier Excel de facturation à partir du fichier html du système actuel de l'IBPS.
 
     </help>
-    <citations />
+    <citations>
+    </citations>
 </tool>
 
