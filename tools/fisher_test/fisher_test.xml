@@ -1,8 +1,8 @@
-<tool id="fishertest" name="Fisher's exact test" version="1.0.0">
+<tool id="fishertest" name="Fisher's exact test" version="1.1.0">
 	<description>on two gene hit lists</description>
         <requirements>
 <!--            <requirement type="package" version="3.1.2">R</requirement> -->
-            <requirement type="package" version="2.4.2=r3.3.1_0">bioconductor-qvalue</requirement>
+            <requirement type="package" version="2.18.0=r36_1">bioconductor-qvalue</requirement>
         </requirements>
         <command><![CDATA[
             Rscript '$fisher_test' "\${GALAXY_SLOTS:-1}"
