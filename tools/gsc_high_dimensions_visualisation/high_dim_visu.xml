@@ -378,8 +378,8 @@
             <param name="Rtsne_perplexity" value="10"/>
             <param name="Rtsne_theta" value="1" />
             <param name="Rtsne_normalize" value="FALSE" />
-            <output name="pdf_out" file="tsne-2.nolabels.pdf" ftype="pdf" compare="sim_size" delta="500"/>
-            <output name="table_coordinates" file="tsne-2.coord.tab" ftype="tabular" compare="sim_size" delta="500"/>
+            <output name="pdf_out" file="tsne-2.nolabels.pdf" ftype="pdf" compare="sim_size" delta="1000"/>
+            <output name="table_coordinates" file="tsne-2.coord.tab" ftype="tabular" compare="sim_size" delta="1000"/>
         </test>
     </tests>
     <help>
