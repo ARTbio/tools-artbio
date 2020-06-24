@@ -278,7 +278,7 @@ par <- opar
 }
 
 
-data = read.table(
+data = read.delim(
   opt$data,
   check.names = FALSE,
   header = opt$colnames,
