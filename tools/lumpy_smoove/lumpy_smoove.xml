@@ -1,0 +1,285 @@
+<tool id="lumpy_smoove" name="lumpy_smoove" version="0.1.0">
+    <description>find structural variants using the smoove workflow</description>
+    <requirements>
+        <requirement type="package" version="0.2.5">smoove</requirement>
+    </requirements>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Tool exception" />
+    </stdio>
+    <command detect_errors="exit_code"><![CDATA[
+        #import re
+        #set one_sample_bam = re.sub('[^\w\-]', '_', str($analysis_type.input_file.element_identifier))
+        #if $analysis_type.analysis_type_list == "one_sample":
+            ln -f -s '$analysis_type.input_file' '$one_sample_bam' &&
+        #else:
+            #set sample_a_bam = re.sub('[^\w\-]', '_', str($analysis_type.input_file.element_identifier))
+            #set sample_b_bam = re.sub('[^\w\-]', '_', str($analysis_type.input_fileB.element_identifier))
+            #if $sample_a_bam == $sample_b_bam:
+                #set sample_a_bam = "%s_a" % str($sample_a_bam)
+                #set sample_b_bam = "%s_b" % str($sample_b_bam)
+            #end if
+            ln -f -s '$analysis_type.input_file' '$sample_a_bam' &&
+            ln -f -s '$analysis_type.input_fileB' '$sample_b_bam' &&
+        #end if
+
+        #if $analysis_type.analysis_type_list == "one_sample":
+
+            #if $seq_method.seq_method_list == "paired-end":
+                samtools view -@ \${GALAXY_SLOTS:-4} -u -F 1294 '$one_sample_bam' | samtools sort -@ \${GALAXY_SLOTS:-4} -O bam -o input.discordants.bam &&
+                samtools view -@ \${GALAXY_SLOTS:-4} -h '$one_sample_bam' | python $__tool_directory__/extractSplitReads_BwaMem.py -i stdin | samtools sort -@ \${GALAXY_SLOTS:-4} -O bam -o input.splitters.bam &&
+                samtools view -@ \${GALAXY_SLOTS:-4} '$one_sample_bam'
+                    |python $__tool_directory__/pairend_distro.py -r $analysis_type.readLength -X 4 -N $seq_method.additional_params.samplingValue -o input.lib.histo > meandev.txt &&
+                mean=\$(cat meandev.txt | sed s/mean:// | sed -r s/stdev:.+//) &&
+                stdev=\$(cat meandev.txt | sed -r s/mean:.+stdev://) &&
+                lumpy $seq_method.additional_params.evidence $seq_method.additional_params.probability_curve -mw $seq_method.additional_params.mw -tt $seq_method.additional_params.tt
+                    #if $output_format == "BEDPE":
+                        -b
+                    #end if
+                    -pe id:'$one_sample_bam',bam_file:input.discordants.bam,histo_file:input.lib.histo,mean:"\$mean",stdev:"\$stdev",read_length:$analysis_type.readLength,min_non_overlap:$seq_method.additional_params.min_non_overlap,discordant_z:$seq_method.additional_params.discordant_z,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold
+                    -sr id:'$one_sample_bam',bam_file:input.splitters.bam,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold > '$vcf_call'
+            #elif $seq_method.seq_method_list == "single-read":
+                samtools view -@ \${GALAXY_SLOTS:-4} -h '$one_sample_bam' | python $__tool_directory__/extractSplitReads_BwaMem.py -i stdin | samtools sort -@ \${GALAXY_SLOTS:-4} -O bam -o input.splitters.bam &&
+                lumpy $seq_method.additional_params.evidence $seq_method.additional_params.probability_curve -mw $seq_method.additional_params.mw -tt $seq_method.additional_params.tt
+                    #if $output_format == "BEDPE":
+                        -b
+                    #end if
+                    -sr id:'$one_sample_bam',bam_file:input.splitters.bam,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold > '$vcf_call'
+            #end if
+        #else:
+            #if $seq_method.seq_method_list == "paired-end":
+                samtools view -@ \${GALAXY_SLOTS:-4} -u -F 1294 '$sample_a_bam' | samtools sort -@ \${GALAXY_SLOTS:-4} -O bam -o input.discordants.bam &&
+                samtools view -@ \${GALAXY_SLOTS:-4} -u -F 1294 '$sample_b_bam' | samtools sort -@ \${GALAXY_SLOTS:-4} -O bam -o input.B.discordants.bam &&
+                samtools view -@ \${GALAXY_SLOTS:-4} -h '$sample_a_bam' | python $__tool_directory__/extractSplitReads_BwaMem.py -i stdin | samtools sort -@ \${GALAXY_SLOTS:-4} -O bam -o input.splitters.bam &&
+                samtools view -@ \${GALAXY_SLOTS:-4} -h '$sample_b_bam' | python $__tool_directory__/extractSplitReads_BwaMem.py -i stdin | samtools sort -@ \${GALAXY_SLOTS:-4} -O bam -o input.B.splitters.bam &&
+                samtools view -@ \${GALAXY_SLOTS:-4} '$sample_a_bam'
+                    |python $__tool_directory__/pairend_distro.py -r $analysis_type.readLength -X 4 -N $seq_method.additional_params.samplingValue -o input.lib.histo > meandevA.txt &&
+                samtools view -@ \${GALAXY_SLOTS:-4} '$sample_b_bam'
+                    |python $__tool_directory__/pairend_distro.py -r $analysis_type.readLengthB -X 4 -N $seq_method.additional_params.samplingValue -o input.B.lib.histo > meandevB.txt &&
+                meanA=\$(cat meandevA.txt | sed s/mean:// | sed -r s/stdev:.+//) &&
+                meanB=\$(cat meandevB.txt | sed s/mean:// | sed -r s/stdev:.+//) &&
+                stdevA=\$(cat meandevA.txt | sed -r s/mean:.+stdev://) &&
+                stdevB=\$(cat meandevB.txt | sed -r s/mean:.+stdev://) &&
+                lumpy $seq_method.additional_params.evidence $seq_method.additional_params.probability_curve -mw $seq_method.additional_params.mw -tt $seq_method.additional_params.tt
+                    #if $output_format == "BEDPE":
+                        -b
+                    #end if
+                    -pe id:inputA.bam,bam_file:input.discordants.bam,histo_file:input.lib.histo,mean:"\$meanA",stdev:"\$stdevA",read_length:$analysis_type.readLength,min_non_overlap:$seq_method.additional_params.min_non_overlap,discordant_z:$seq_method.additional_params.discordant_z,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold
+                    -pe id:inputB.bam,bam_file:input.B.discordants.bam,histo_file:input.B.lib.histo,mean:"\$meanB",stdev:"\$stdevA",read_length:$analysis_type.readLengthB,min_non_overlap:$seq_method.additional_params.min_non_overlap,discordant_z:$seq_method.additional_params.discordant_z,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold
+                    -sr id:inputA.bam,bam_file:input.splitters.bam,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold
+                    -sr id:inputB.bam,bam_file:input.B.splitters.bam,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold > '$vcf_call'
+            #elif $seq_method.seq_method_list == "single-read":
+                samtools view -@ \${GALAXY_SLOTS:-4} -h '$sample_a_bam' | python $__tool_directory__/extractSplitReads_BwaMem.py -i stdin | samtools sort -@ \${GALAXY_SLOTS:-4} -O bam -o input.splitters.bam &&
+                samtools view -@ \${GALAXY_SLOTS:-4} -h '$sample_b_bam' | python $__tool_directory__/extractSplitReads_BwaMem.py -i stdin | samtools sort -@ \${GALAXY_SLOTS:-4} -O bam -o input.B.splitters.bam &&
+                lumpy $seq_method.additional_params.evidence $seq_method.additional_params.probability_curve -mw $seq_method.additional_params.mw -tt $seq_method.additional_params.tt
+                    #if $output_format == "BEDPE":
+                        -b
+                    #end if
+                    -sr id:'$sample_a_bam',bam_file:input.splitters.bam,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold
+                    -sr id:'$sample_b_bam',bam_file:input.B.splitters.bam,back_distance:$seq_method.additional_params.back_distance,weight:$seq_method.additional_params.weight,min_mapping_threshold:$seq_method.additional_params.min_mapping_threshold > '$vcf_call'
+            #end if
+        #end if
+
+    ]]></command>
+    <!-- basic error handling -->
+    <inputs>
+        <conditional name="analysis_type">
+            <param help="Single or paired conditions (eg tumor vs normal)" label="Input(s)" name="analysis_type_list" type="select">
+                <option selected="True" value="one_sample">One Sample</option>
+                <option value="two_sample">Two samples</option>
+            </param>
+            <when value="one_sample">
+                <param format="bam" name="input_file" type="data" label="One BAM alignment file produced by BWA-mem"/>
+                <param name="readLength" value="151"  type="integer" label="read length" help="e.g. 151 nt" />
+            </when>
+            <when value="two_sample">
+                <param format="bam" name="input_file" type="data" label="One BAM alignment file produced by BWA-mem"/>
+                <param name="readLength" value="151"  type="integer" label="read length" help="e.g. 151 nt" />
+                <param format="bam" name="input_fileB" type="data" label="One BAM alignment file produced by BWA-mem"/>
+                <param name="readLengthB" value="151"  type="integer" label="read length" help="e.g. 151 nt" />
+            </when>
+        </conditional>
+        <conditional name="seq_method">
+            <param help="Paired-end or single-read sequencing" label="Sequencing method" name="seq_method_list" type="select">
+                <option selected="True" value="paired-end">Paired-end sequencing</option>
+                <option value="single-read">Single-read sequencing</option>
+            </param>
+            <when value="paired-end">
+                <section name="additional_params" title="Additional Options" expanded="False">
+                    <param name="samplingValue" value="100000"  type="integer" label="number of reads to compute mean and stdev of read length" help="e.g. 10000" />
+                    <param name="mw" value="4"  type="integer" label="-mw" help="minimum weight across all samples for a call (default: 4)" />
+                    <param name="tt" value="0"  type="integer" label="-tt" help="trim threshold (default: 0)" />
+                    <param name="min_non_overlap" value="101"  type="integer" label="min_non_overlap" help="e.g. 101" />
+                    <param name="discordant_z" value="5"  type="integer" label="discordant_z" help="e.g. 5" />
+                    <param name="back_distance" value="10"  type="integer" label="back_distance" help="e.g. 10" />
+                    <param name="weight" value="1"  type="integer" label="weight" help="e.g. 1" />
+                    <param name="min_mapping_threshold" value="20"  type="integer" label="min_mapping_threshold" help="e.g. 20" />
+                    <param name="probability_curve" argument="-P" type="boolean" truevalue="-P" falsevalue="" checked="true" label="output probability curve for each variant"/>
+                    <param name="evidence" argument="-e" type="boolean" truevalue="-e" falsevalue="" checked="true" label="show evidence for each call"/>
+                </section>
+            </when>
+            <when value="single-read">
+                <section name="additional_params" title="Additional Options" expanded="False">
+                    <param name="mw" value="4"  type="integer" label="-mw" help="minimum weight across all samples for a call (default: 4)" />
+                    <param name="tt" value="0"  type="integer" label="-tt" help="trim threshold (default: 0)" />
+                    <param name="back_distance" value="10"  type="integer" label="back_distance" help="e.g. 10" />
+                    <param name="weight" value="1"  type="integer" label="weight" help="e.g. 1" />
+                    <param name="min_mapping_threshold" value="20"  type="integer" label="min_mapping_threshold" help="e.g. 20" />
+                    <param name="probability_curve" argument="-P" type="boolean" truevalue="-P" falsevalue="" checked="false" label="output probability curve for each variant"/>
+                    <param name="evidence" argument="-e" type="boolean" truevalue="-e" falsevalue="" checked="false" label="show evidence for each call"/>
+                </section>
+            </when>
+
+        </conditional>
+            <param help="get variant calling in vcf or BEDPE format" label="variant calling format" name="output_format" type="select">
+                <option selected="True" value="vcf">vcf</option>
+                <option value="BEDPE">BEDPE</option>
+            </param>
+    </inputs>
+
+    <outputs>
+        <data format="tabular" name="histogram" label="Lumpy on ${on_string}: Fragment size distribution" from_work_dir="input.lib.histo">
+            <filter>seq_method['seq_method_list'] == "paired-end"</filter>
+        </data>
+        <data format="tabular" name="histogramB" label="Lumpy on ${on_string}: Fragment size distribution" from_work_dir="input.B.lib.histo">
+            <filter>seq_method['seq_method_list'] == "paired-end"</filter>
+            <filter>analysis_type['analysis_type_list'] == "two_sample"</filter>
+        </data>
+        <data format="bam" name="splits" label="Lumpy on ${on_string}: Split Reads (Bam format)" from_work_dir="input.splitters.bam"/>
+        <data format="bam" name="splitsB" label="Lumpy on ${on_string}: Split Reads (Bam format)" from_work_dir="input.B.splitters.bam">
+            <filter>analysis_type['analysis_type_list'] == "two_sample"</filter>
+        </data>
+        <data format="bam" name="discordants" label="Lumpy on ${on_string}: Discordant Pairs (Bam format)" from_work_dir="input.discordants.bam">
+            <filter>seq_method['seq_method_list'] == "paired-end"</filter>
+        </data>
+        <data format="bam" name="discordantsB" label="Lumpy on ${on_string}: Discordant Pairs (Bam format)" from_work_dir="input.B.discordants.bam">
+            <filter>seq_method['seq_method_list'] == "paired-end"</filter>
+            <filter>analysis_type['analysis_type_list'] == "two_sample"</filter>
+        </data>
+        <data format="vcf" name="vcf_call" label="Lumpy Variant Calling">
+            <change_format>
+                <when format="tabular" input="output_format" value="BEDPE" />
+            </change_format>
+        </data>
+    </outputs>
+
+    <tests>
+        <test>
+            <param name="analysis_type_list" value="two_sample" />
+            <param name="input_file" value="sample_Del.bam" ftype="bam"/>
+            <param name="input_fileB" value="sample_cle.bam" ftype="bam"/>
+            <param name="seq_method_list" value="paired-end" />
+            <param name="mw" value="4"/>
+            <param name="tt" value="0"/>
+            <param name="back_distance" value="10"/>
+            <param name="weight" value="1" />
+            <param name="min_mapping_threshold" value="20" />
+            <output name="vcf_call" file="output_two.paired_end.vcf" ftype="vcf"/>
+        </test>
+        <test>
+            <param name="analysis_type_list" value="one_sample" />
+            <param name="input_file" value="sr.input.bam" ftype="bam"/>
+            <param name="seq_method_list" value="single-read" />
+            <param name="mw" value="4"/>
+            <param name="tt" value="0"/>
+            <param name="back_distance" value="10"/>
+            <param name="weight" value="1" />
+            <param name="min_mapping_threshold" value="20" />
+            <output name="vcf_call" file="output.vcf" ftype="vcf"/>
+        </test>
+        <test>
+            <param name="analysis_type_list" value="one_sample" />
+            <param name="input_file" value="sr.input.bam" ftype="bam"/>
+            <param name="seq_method_list" value="single-read" />
+            <param name="mw" value="4"/>
+            <param name="tt" value="0"/>
+            <param name="back_distance" value="10"/>
+            <param name="weight" value="1" />
+            <param name="min_mapping_threshold" value="20" />
+            <param name="evidence" value="true" />
+            <param name="probability_curve" value="true" />
+            <output name="vcf_call" file="output_extended.vcf" ftype="vcf" compare="sim_size"/>
+        </test>
+        <test>
+            <param name="analysis_type_list" value="two_sample" />
+            <param name="input_file" value="sr.input.bam" ftype="bam"/>
+            <param name="input_fileB" value="sr.input.bam" ftype="bam"/>
+            <param name="seq_method_list" value="single-read" />
+            <param name="mw" value="4"/>
+            <param name="tt" value="0"/>
+            <param name="back_distance" value="10"/>
+            <param name="weight" value="1" />
+            <param name="min_mapping_threshold" value="20" />
+            <output name="vcf_call" file="output_two.vcf" ftype="vcf"/>
+        </test>
+   </tests>
+
+    <help>
+
+**Input(s)**
+
+*One sample* : lumpy search structural variations inside a single sequencing dataset
+
+*Two samples*: lumpy search structural variations inside and across two sequencing datasets from two samples
+
+Analysis of sample replicates is not implemented yet in this wrapper
+
+*BAM files*: Only BAM alignments produced by BWA-mem have been tested with this tool
+
+**Sequencing method**
+
+*Paired-end sequencing*: Both ends of library fragments have been sequenced, resulting in two paired sequencing datasets
+
+*Single-read sequencing*: Only one end of library fragment has been sequenced, resulting in a single sequencing dataset. Under these conditions, evidences of structural variation are obtained only from splited read alignments
+
+*Read length*: The length of the sequencing reads in the library. This information is required only for paired-end sequencing data
+
+*Additional options*: refer to lumpy-sv_ documentation and the publication (doi 10.1186/gb-2014-15-6-r84)
+
+**lumpy-sv manual**
+
+Read the lumpy-sv_ documentation for details on using lumpy.
+
+.. _lumpy-sv: https://github.com/arq5x/lumpy-sv
+
+**lumpy options**
+
+v 0.2.13
+Author:  Ryan Layer (rl6sf@virginia.edu)
+
+Summary: Find structural variations in various signals.
+
+Options::
+<![CDATA[
+
+smoove calls several programs. Those with 'Y' are found on your $PATH. Only those with '*' are required.
+
+ *[Y] bgzip [ sort   -> (compress) ->   index ]
+ *[Y] gsort [(sort)  ->  compress   ->  index ]
+ *[Y] tabix [ sort   ->  compress   -> (index)]
+ *[Y] lumpy
+ *[Y] lumpy_filter
+ *[Y] samtools
+ *[Y] svtyper
+ *[Y] mosdepth [extra filtering of split and discordant files for better scaling]
+
+  [Y] duphold [(optional) annotate calls with depth changes]
+  [Y] svtools [only needed for large cohorts].
+
+Available sub-commands are below. Each can be run with -h for additional help.
+
+call        : call lumpy (and optionally svtyper)
+merge       : merge and sort (using svtools) calls from multiple samples
+genotype    : parallelize svtyper on an input VCF
+paste       : square final calls from multiple samples (each with same number of variants)
+plot-counts : plot counts of split, discordant reads before, after smoove filtering
+annotate    : annotate a VCF with gene and quality of SV call
+hipstr      : run hipSTR in parallel
+cnvnator    : run cnvnator in parallel
+duphold     : run duphold in parallel (this can be done by adding a flag to call or genotype)
+]]>
+    </help>
+
+    <citations>
+    <citation type="doi">10.1186/gb-2014-15-6-r84</citation>
+  </citations>
+</tool>
