@@ -10,7 +10,7 @@ jobs:
       addons: {}
       before_install:
       install:
-        - pip install flake8 flake8-import-order planemo docutils==0.14
+        - pip install flake8 flake8-import-order planemo==0.70.0 docutils==0.14
         - planemo --version
         - git diff --quiet "$TRAVIS_COMMIT_RANGE" -- ; GIT_DIFF_EXIT_CODE=$?
         - |
