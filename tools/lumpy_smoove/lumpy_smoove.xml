@@ -1,4 +1,4 @@
-<tool id="lumpy_smoove" name="lumpy_smoove" version="0.1.0">
+<tool id="lumpy_smoove" name="lumpy_smoove" version="0.2.0">
     <description>find structural variants using the smoove workflow</description>
     <macros>
         <import>macro_lumpy_smoove.xml</import>
@@ -10,96 +10,174 @@
         <exit_code range="1:" level="fatal" description="Tool exception" />
     </stdio>
     <command detect_errors="exit_code"><![CDATA[
-    @VERSION@
     @pipefail@
     @set_fasta_index@
+    ln -s $normal_bam normal.bam &&
+    ln -s $tumor_bam tumor.bam &&
     
-        ## smoove call -x --name output --exclude exclude.cnvnator_100bp.GRCh38.20170403.bed  --fasta hg38-integragen.fa -p 24 --genotype *.bam
-
-
+    smoove call -x --name output
+        #if $set_exclusion.choices=="yes":
+            --exclude $bedmask
+        #end if
+        --fasta reference.fa -p 24 normal.bam tumor.bam &&
+    gunzip output-smoove.vcf.gz
+    #if $prpos=="no":
+    && sed -i -E 's/;PRPOS=.+\tGT/\tGT/g' output-smoove.vcf
+    #end if
+    
 
     ]]></command>
     <inputs>
         <expand macro="reference_source_conditional" />
         <param format="bam" name="normal_bam" type="data" label="BAM alignments from the normal sample"/>
         <param format="bam" name="tumor_bam" type="data" label="BAM alignments from the tumor sample"/>
-        <param format="bed" name="bedmask" type="data" label="BED regions to be excluded for the analysis"/>        
-    </inputs>
+        <conditional name="set_exclusion">
+            <param name="choices" type="select" label="exclude regions with a bed file" display="radio">
+                <option value="no" selected="true">No</option>
+                <option value="yes">Yes</option>
+            </param>
+            <when value="yes">
+                <param format="bed" name="bedmask" type="data" label="BED regions to be excluded for the analysis"/>
+            </when>
+            <when value="no">
+            </when>
+        </conditional>      
+        <param name="prpos" type="select" label="include the PRPOS probabilities in INFO tags" display="radio">
+            <option value="no" selected="true">No</option>
+            <option value="yes">Yes</option>
+        </param>
+   </inputs>
 
     <outputs>
-        <data format="vcf" name="vcf_call" label="lumpy-smoove Variant Calling">
-        </data>
+        <data format="vcf" name="vcf_call" label="lumpy-smoove Variant Calling" from_work_dir="./output-smoove.vcf" />
     </outputs>
 
     <tests>
         <test>
+            <param name="reference_source_selector" value="history" />
+            <param name="ref_file" value="chrI-ce11.fa"/>
+            <param name="normal_bam" value="celegans_1.bam"/>
+            <param name="tumor_bam" value="celegans_2.bam"/>
+            <param name="choices" value="yes"/>
+            <param name="bedmask" value="exclude.bed"/>
+            <param name="prpos" value="no"/>
+            <output name="vcf_call" ftype="vcf" file="result-1.vcf" lines_diff="4"/>
         </test>
+        <test>
+            <param name="reference_source_selector" value="history" />
+            <param name="ref_file" value="chrI-ce11.fa"/>
+            <param name="normal_bam" value="celegans_1.bam"/>
+            <param name="tumor_bam" value="celegans_2.bam"/>
+            <param name="choices" value="no"/>
+            <param name="prpos" value="no"/>
+            <output name="vcf_call" ftype="vcf" file="result-2.vcf" lines_diff="4"/>
+        </test>
+        <test>
+            <param name="reference_source_selector" value="history" />
+            <param name="ref_file" value="chrI-ce11.fa"/>
+            <param name="normal_bam" value="celegans_2.bam"/>
+            <param name="tumor_bam" value="celegans_1.bam"/>
+            <param name="choices" value="no"/>
+            <param name="prpos" value="no"/>
+            <output name="vcf_call" ftype="vcf" file="result-3.vcf" lines_diff="4"/>
+        </test>
+        <test>
+            <param name="reference_source_selector" value="history" />
+            <param name="ref_file" value="chrI-ce11.fa"/>
+            <param name="normal_bam" value="celegans_1.bam"/>
+            <param name="tumor_bam" value="celegans_2.bam"/>
+            <param name="choices" value="no"/>
+            <param name="prpos" value="yes"/>
+            <output name="vcf_call" ftype="vcf" file="result-4.vcf" lines_diff="4"/>
+        </test>
+
     </tests>
 
     <help>
 
+**smoove** simplifies and speeds calling and genotyping SVs for short reads. It also improves
+specificity by removing many spurious alignment signals that are indicative of low-level
+noise and often contribute to spurious calls.
+
+There is a blog-post describing smoove in more detail
+here: https://brentp.github.io/post/smoove/
+
+Currently, this Galaxy tool only wraps smoove for 2 samples (bam normal and tumor inputs),
+which translates in the command line::
+
+    <![CDATA[smoove call -x --name my-cohort --exclude $bed --fasta $fasta -p $threads /path/to/*.bam]]>
+
+Note that the --genotype option which allows to stream smoove to svtyper is not implemented
+due to an error returned by svtyper in the smoove conda environment
+
+the --exclude $bed is highly recommended as it can be used to ignore reads that overlap
+problematic regions.
+
+A good set of regions for GRCh37 is https://github.com/hall-lab/speedseq/blob/master/annotations/ceph18.b37.lumpy.exclude.2014-01-15.bed
+
+And for hg38 https://github.com/hall-lab/speedseq/blob/master/annotations/exclude.cnvnator_100bp.GRCh38.20170403.bed
+
+smoove will::
+
+    1. parallelize calls to lumpy_filter to extract split and discordant reads required by lumpy
+    
+    2. further filter lumpy_filter calls to remove high-coverage, spurious regions and user-specified chroms like 'hs37d5';
+    it will also remove reads that we've found are likely spurious signals. after this, it will
+    remove singleton reads (where the mate was removed by one of the previous filters)
+    from the discordant bams. This makes lumpy much faster and less memory-hungry.
+    
+    3. calculate per-sample metrics for mean, standard deviation, and distribution of insert
+    size as required by lumpy.
+    
+    4. stream output of lumpy directly into multiple svtyper processes for parallel-by-region
+    genotyping while lumpy is still running. This option in not currently implemented in Galaxy
+    
+    5. sort, compress, and index final VCF.
+
 **Input(s)**
 
-*One sample* : lumpy search structural variations inside a single sequencing dataset
 
-*Two samples*: lumpy search structural variations inside and across two sequencing datasets from two samples
+*BAM files*: One Bam for normal sample and one Bam for tumor sample.
+Only BAM alignments produced by BWA-mem have been tested with this tool
 
-Analysis of sample replicates is not implemented yet in this wrapper
+*A bed file* describing the regions to exclude from the analysis
 
-*BAM files*: Only BAM alignments produced by BWA-mem have been tested with this tool
 
-**Sequencing method**
+*Additional options*: refer to smoove GitHub repository_ and the lumpy publication (doi 10.1186/gb-2014-15-6-r84)
 
-*Paired-end sequencing*: Both ends of library fragments have been sequenced, resulting in two paired sequencing datasets
+.. _repository: https://github.com/brentp/smoove
 
-*Single-read sequencing*: Only one end of library fragment has been sequenced, resulting in a single sequencing dataset. Under these conditions, evidences of structural variation are obtained only from splited read alignments
-
-*Read length*: The length of the sequencing reads in the library. This information is required only for paired-end sequencing data
-
-*Additional options*: refer to lumpy-sv_ documentation and the publication (doi 10.1186/gb-2014-15-6-r84)
-
-**lumpy-sv manual**
-
-Read the lumpy-sv_ documentation for details on using lumpy.
-
-.. _lumpy-sv: https://github.com/arq5x/lumpy-sv
-
-**lumpy options**
-
-v 0.2.13
-Author:  Ryan Layer (rl6sf@virginia.edu)
-
-Summary: Find structural variations in various signals.
 
 Options::
-<![CDATA[
 
-smoove calls several programs. Those with 'Y' are found on your $PATH. Only those with '*' are required.
+    <![CDATA[
 
- *[Y] bgzip [ sort   -> (compress) ->   index ]
- *[Y] gsort [(sort)  ->  compress   ->  index ]
- *[Y] tabix [ sort   ->  compress   -> (index)]
- *[Y] lumpy
- *[Y] lumpy_filter
- *[Y] samtools
- *[Y] svtyper
- *[Y] mosdepth [extra filtering of split and discordant files for better scaling]
+    smoove calls several programs. Those with 'Y' are found on your $PATH. Only those with '*' are required.
+
+  [Y] bgzip [ sort   -> (compress) ->   index ]
+  [Y] gsort [(sort)  ->  compress   ->  index ]
+  [Y] tabix [ sort   ->  compress   -> (index)]
+  [Y] lumpy
+  [Y] lumpy_filter
+  [Y] samtools
+  [Y] svtyper
+  [Y] mosdepth [extra filtering of split and discordant files for better scaling]
 
   [Y] duphold [(optional) annotate calls with depth changes]
   [Y] svtools [only needed for large cohorts].
 
-Available sub-commands are below. Each can be run with -h for additional help.
+    Available sub-commands are below. Each can be run with -h for additional help.
 
-call        : call lumpy (and optionally svtyper)
-merge       : merge and sort (using svtools) calls from multiple samples
-genotype    : parallelize svtyper on an input VCF
-paste       : square final calls from multiple samples (each with same number of variants)
-plot-counts : plot counts of split, discordant reads before, after smoove filtering
-annotate    : annotate a VCF with gene and quality of SV call
-hipstr      : run hipSTR in parallel
-cnvnator    : run cnvnator in parallel
-duphold     : run duphold in parallel (this can be done by adding a flag to call or genotype)
-]]>
+ call        : call lumpy (and optionally svtyper)
+ merge       : merge and sort (using svtools) calls from multiple samples
+ genotype    : parallelize svtyper on an input VCF
+ paste       : square final calls from multiple samples (each with same number of variants)
+ plot-counts : plot counts of split, discordant reads before, after smoove filtering
+ annotate    : annotate a VCF with gene and quality of SV call
+ hipstr      : run hipSTR in parallel
+ cnvnator    : run cnvnator in parallel
+ duphold     : run duphold in parallel (this can be done by adding a flag to call or genotype)
+    ]]>
     </help>
 
     <citations>
