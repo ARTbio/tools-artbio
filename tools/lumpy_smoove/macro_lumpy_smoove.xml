@@ -6,8 +6,8 @@
         ln -s '${reference_source.ref_file}' reference.fa &&
         samtools faidx 'reference.fa' 2>&1 || echo "Error running samtools faidx for lumpy_smoove" >&2 &&
     #else:
-        ln -s '${source.index.fields.path}' reference.fa &&
-        ln -s '${source.index.fields.path}.fai' reference.fa.fai &&
+        ln -s '${reference_source.index.fields.path}' reference.fa &&
+        ln -s '${reference_source.index.fields.path}.fai' reference.fa.fai &&
     #end if
     ]]></token>
 
