@@ -62,16 +62,16 @@ jobs:
         - set -e
         - |
           if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then
-              if grep -q "testtoolshed" ./.shed.yml; then
-                  while read -r DIR; do
+              while read -r DIR; do
+                  if grep -q "\- testtoolshed" "$DIR"/.shed.yml; then
                       planemo shed_update --shed_target testtoolshed --shed_email "$SHED_EMAIL" --shed_password "$SHED_PASSWORD" --force_repository_creation "$DIR" || exit 1;
-                  done < changed_repositories.list
-              fi
-              if grep -q " toolshed" ./.shed.yml; then
-                  while read -r DIR; do
+                  fi
+              done < changed_repositories.list
+              while read -r DIR; do
+                  if grep -q "\- toolshed" "$DIR"/.shed.yml; then
                       planemo shed_update --shed_target toolshed --shed_email "$SHED_EMAIL" --shed_password "$SHED_PASSWORD" --force_repository_creation "$DIR" || exit 1;
-                  done < changed_repositories.list
-              fi
+                  fi
+              done < changed_repositories.list
           fi
 
 before_install:
