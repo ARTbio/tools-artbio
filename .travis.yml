@@ -30,12 +30,15 @@ jobs:
         - cat changed_repositories.list
 
     - stage: test
+      if: (type = push) AND (branch != master)
       env: CHUNK=0
 
     - stage: test
+      if: (type = push) AND (branch != master)
       env: CHUNK=1
 
     - stage: test
+      if: (type = push) AND (branch != master)
       env: CHUNK=2
 
     - stage: deploy
