@@ -1,4 +1,4 @@
-<tool id="lumpy_smoove" name="lumpy_smoove" version="0.3.0">
+<tool id="lumpy_smoove" name="lumpy_smoove" version="0.4.0">
     <description>find structural variants using the smoove workflow</description>
     <macros>
         <import>macro_lumpy_smoove.xml</import>
@@ -19,7 +19,7 @@
         #if $set_exclusion.choices=="yes":
             --exclude $bedmask
         #end if
-        --fasta reference.fa -p 24 normal.bam tumor.bam &&
+        --fasta reference.fa -p \${GALAXY_SLOTS:-4} normal.bam tumor.bam &&
     gunzip output-smoove.vcf.gz
     #if $prpos=="no":
     && sed -i -E 's/;PRPOS=.+\tGT/\tGT/g' output-smoove.vcf
