@@ -1,4 +1,4 @@
-<tool id="lumpy_smoove" name="lumpy_smoove" version="0.4.0">
+<tool id="lumpy_smoove" name="lumpy_smoove" version="0.5.0">
     <description>find structural variants using the smoove workflow</description>
     <macros>
         <import>macro_lumpy_smoove.xml</import>
@@ -14,17 +14,22 @@
     @set_fasta_index@
     ln -s $normal_bam normal.bam &&
     ln -s $tumor_bam tumor.bam &&
-    
-    smoove call -x --name output
+    samtools index -@ \${GALAXY_SLOTS:-4} normal.bam &&
+    samtools index -@ \${GALAXY_SLOTS:-4} tumor.bam &&
+   
+    smoove call --name output
         #if $set_exclusion.choices=="yes":
             --exclude $bedmask
         #end if
-        --fasta reference.fa -p \${GALAXY_SLOTS:-4} normal.bam tumor.bam &&
-    gunzip output-smoove.vcf.gz
-    #if $prpos=="no":
-    && sed -i -E 's/;PRPOS=.+\tGT/\tGT/g' output-smoove.vcf
-    #end if
-    
+            --fasta reference.fa
+            --processes \${GALAXY_SLOTS:-4}
+            --genotype
+       #if $prpos=="no":
+            --removepr
+       #end if
+           normal.bam tumor.bam &&
+    ls -latr &&
+    gunzip output-smoove.genotyped.vcf.gz
 
     ]]></command>
     <inputs>
@@ -49,52 +54,51 @@
    </inputs>
 
     <outputs>
-        <data format="vcf" name="vcf_call" label="lumpy-smoove Variant Calling" from_work_dir="./output-smoove.vcf" />
+        <data format="vcf" name="vcf_call" label="lumpy-smoove Variant Calling" from_work_dir="./output-smoove.genotyped.vcf" />
     </outputs>
 
     <tests>
         <test>
             <param name="reference_source_selector" value="history" />
             <param name="ref_file" value="chrI-ce11.fa"/>
-            <param name="normal_bam" value="celegans_1.bam"/>
-            <param name="tumor_bam" value="celegans_2.bam"/>
+            <param name="normal_bam" value="celegans_RG_1.bam"/>
+            <param name="tumor_bam" value="celegans_RG_2.bam"/>
             <param name="choices" value="yes"/>
             <param name="bedmask" value="exclude.bed"/>
             <param name="prpos" value="no"/>
-            <output name="vcf_call" ftype="vcf" file="result-1.vcf" lines_diff="4"/>
+            <output name="vcf_call" ftype="vcf" file="result-1.vcf" lines_diff="6"/>
         </test>
         <test>
             <param name="reference_source_selector" value="history" />
             <param name="ref_file" value="chrI-ce11.fa"/>
-            <param name="normal_bam" value="celegans_1.bam"/>
-            <param name="tumor_bam" value="celegans_2.bam"/>
+            <param name="normal_bam" value="celegans_RG_1.bam"/>
+            <param name="tumor_bam" value="celegans_RG_2.bam"/>
             <param name="choices" value="no"/>
             <param name="prpos" value="no"/>
-            <output name="vcf_call" ftype="vcf" file="result-2.vcf" lines_diff="4"/>
+            <output name="vcf_call" ftype="vcf" file="result-2.vcf" lines_diff="6"/>
         </test>
         <test>
             <param name="reference_source_selector" value="history" />
             <param name="ref_file" value="chrI-ce11.fa"/>
-            <param name="normal_bam" value="celegans_2.bam"/>
-            <param name="tumor_bam" value="celegans_1.bam"/>
+            <param name="normal_bam" value="celegans_RG_2.bam"/>
+            <param name="tumor_bam" value="celegans_RG_1.bam"/>
             <param name="choices" value="no"/>
             <param name="prpos" value="no"/>
-            <output name="vcf_call" ftype="vcf" file="result-3.vcf" lines_diff="4"/>
+            <output name="vcf_call" ftype="vcf" file="result-3.vcf" lines_diff="6"/>
         </test>
         <test>
             <param name="reference_source_selector" value="history" />
             <param name="ref_file" value="chrI-ce11.fa"/>
-            <param name="normal_bam" value="celegans_1.bam"/>
-            <param name="tumor_bam" value="celegans_2.bam"/>
+            <param name="normal_bam" value="celegans_RG_1.bam"/>
+            <param name="tumor_bam" value="celegans_RG_2.bam"/>
             <param name="choices" value="no"/>
             <param name="prpos" value="yes"/>
-            <output name="vcf_call" ftype="vcf" file="result-4.vcf" lines_diff="4"/>
+            <output name="vcf_call" ftype="vcf" file="result-4.vcf" lines_diff="6"/>
         </test>
 
     </tests>
 
     <help>
-
 **smoove** simplifies and speeds calling and genotyping SVs for short reads. It also improves
 specificity by removing many spurious alignment signals that are indicative of low-level
 noise and often contribute to spurious calls.
@@ -105,17 +109,21 @@ here: https://brentp.github.io/post/smoove/
 Currently, this Galaxy tool only wraps smoove for 2 samples (bam normal and tumor inputs),
 which translates in the command line::
 
-    <![CDATA[smoove call -x --name my-cohort --exclude $bed --fasta $fasta -p $threads /path/to/*.bam]]>
+    <![CDATA[smoove call --name my-cohort --exclude $bed --fasta $fasta -p $threads --genotype [--removepr] /path/to/*.bam]]>
 
-Note that the --genotype option which allows to stream smoove to svtyper is not implemented
-due to an error returned by svtyper in the smoove conda environment
 
 the --exclude $bed is highly recommended as it can be used to ignore reads that overlap
 problematic regions.
 
-A good set of regions for GRCh37 is https://github.com/hall-lab/speedseq/blob/master/annotations/ceph18.b37.lumpy.exclude.2014-01-15.bed
+A good set of regions for GRCh37 can be found here_
 
-And for hg38 https://github.com/hall-lab/speedseq/blob/master/annotations/exclude.cnvnator_100bp.GRCh38.20170403.bed
+.. _here: https://github.com/hall-lab/speedseq/blob/master/annotations/ceph18.b37.lumpy.exclude.2014-01-15.bed
+
+
+And a good set for GRCh38 can be found there_
+
+.. _there: https://github.com/hall-lab/speedseq/blob/master/annotations/exclude.cnvnator_100bp.GRCh38.20170403.bed
+
 
 smoove will::
 
@@ -130,20 +138,22 @@ smoove will::
     size as required by lumpy.
     
     4. stream output of lumpy directly into multiple svtyper processes for parallel-by-region
-    genotyping while lumpy is still running. This option in not currently implemented in Galaxy
+    genotyping while lumpy is still running.
     
-    5. sort, compress, and index final VCF.
+    5. sort, compress, and index final VCF (but this galaxy wrapper is uncompression the gzip_vcf output)
 
 **Input(s)**
 
+* BAM files: One Bam for normal sample and one Bam for tumor sample. Only BAM alignments produced by BWA-mem have been tested with this tool
+    
+    .. class:: warningmark
+    
+    It is mandatory for proper run of svtyper that **BAM files contain read group information**,
+    ie the @RG tag is present and filled in each BAM
 
-*BAM files*: One Bam for normal sample and one Bam for tumor sample.
-Only BAM alignments produced by BWA-mem have been tested with this tool
 
-*A bed file* describing the regions to exclude from the analysis
-
-
-*Additional options*: refer to smoove GitHub repository_ and the lumpy publication (doi 10.1186/gb-2014-15-6-r84)
+* A bed file describing the regions to exclude from the analysis
+* Additional options*: refer to smoove GitHub repository_ and the lumpy publication (doi 10.1186/gb-2014-15-6-r84)
 
 .. _repository: https://github.com/brentp/smoove
 
