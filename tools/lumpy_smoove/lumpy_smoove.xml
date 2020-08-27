@@ -1,4 +1,4 @@
-<tool id="lumpy_smoove" name="lumpy_smoove" version="0.5.0">
+<tool id="lumpy_smoove" name="lumpy_smoove" version="0.6.0">
     <description>find structural variants using the smoove workflow</description>
     <macros>
         <import>macro_lumpy_smoove.xml</import>
@@ -12,10 +12,15 @@
     <command detect_errors="exit_code"><![CDATA[
     @pipefail@
     @set_fasta_index@
-    ln -s $normal_bam normal.bam &&
-    ln -s $tumor_bam tumor.bam &&
-    samtools index -@ \${GALAXY_SLOTS:-4} normal.bam &&
-    samtools index -@ \${GALAXY_SLOTS:-4} tumor.bam &&
+    #if $set_plan.plan_choice=='pair':
+        ln -s $set_plan.normal_bam normal.bam &&
+        ln -f -s $set_plan.normal_bam.metadata.bam_index normal.bam.bai &&
+        ln -s $set_plan.tumor_bam tumor.bam &&
+        ln -f -s $set_plan.tumor_bam.metadata.bam_index tumor.bam.bai &&
+    #else
+        ln -s $set_plan.single_bam single.bam &&
+        ln -f -s $set_plan.single_bam.metadata.bam_index single.bam.bai &&
+    #end if
    
     smoove call --name output
         #if $set_exclusion.choices=="yes":
@@ -27,15 +32,28 @@
        #if $prpos=="no":
             --removepr
        #end if
-           normal.bam tumor.bam &&
+           *.bam &&
     ls -latr &&
     gunzip output-smoove.genotyped.vcf.gz
 
     ]]></command>
     <inputs>
         <expand macro="reference_source_conditional" />
-        <param format="bam" name="normal_bam" type="data" label="BAM alignments from the normal sample"/>
-        <param format="bam" name="tumor_bam" type="data" label="BAM alignments from the tumor sample"/>
+        <conditional name="set_plan">
+            <param name="plan_choice" type="select" label="Analyse a single Bam or a pair of Bam (eg normal/tumor)" display="radio">
+                <option value="pair" selected="true">A pair of Bam files</option>
+                <option value="single">A single Bam</option>
+            </param>
+            <when value="pair">
+                <param format="bam" name="normal_bam" type="data" label="BAM alignment from the normal sample"/>
+                <param format="bam" name="tumor_bam" type="data" label="BAM alignment from the tumor sample"/>
+            </when>
+            <when value="single">
+                <param format="bam" name="single_bam" type="data" label="BAM alignment from a single sample"/>
+            </when>
+        </conditional>      
+
+ 
         <conditional name="set_exclusion">
             <param name="choices" type="select" label="exclude regions with a bed file" display="radio">
                 <option value="no" selected="true">No</option>
@@ -66,7 +84,7 @@
             <param name="choices" value="yes"/>
             <param name="bedmask" value="exclude.bed"/>
             <param name="prpos" value="no"/>
-            <output name="vcf_call" ftype="vcf" file="result-1.vcf" lines_diff="6"/>
+            <output name="vcf_call" ftype="vcf" file="result-1.vcf" lines_diff="8"/>
         </test>
         <test>
             <param name="reference_source_selector" value="history" />
@@ -75,7 +93,7 @@
             <param name="tumor_bam" value="celegans_RG_2.bam"/>
             <param name="choices" value="no"/>
             <param name="prpos" value="no"/>
-            <output name="vcf_call" ftype="vcf" file="result-2.vcf" lines_diff="6"/>
+            <output name="vcf_call" ftype="vcf" file="result-2.vcf" lines_diff="8"/>
         </test>
         <test>
             <param name="reference_source_selector" value="history" />
@@ -84,7 +102,7 @@
             <param name="tumor_bam" value="celegans_RG_1.bam"/>
             <param name="choices" value="no"/>
             <param name="prpos" value="no"/>
-            <output name="vcf_call" ftype="vcf" file="result-3.vcf" lines_diff="6"/>
+            <output name="vcf_call" ftype="vcf" file="result-3.vcf" lines_diff="8"/>
         </test>
         <test>
             <param name="reference_source_selector" value="history" />
@@ -93,9 +111,17 @@
             <param name="tumor_bam" value="celegans_RG_2.bam"/>
             <param name="choices" value="no"/>
             <param name="prpos" value="yes"/>
-            <output name="vcf_call" ftype="vcf" file="result-4.vcf" lines_diff="6"/>
+            <output name="vcf_call" ftype="vcf" file="result-4.vcf" lines_diff="8"/>
         </test>
-
+        <test>
+            <param name="reference_source_selector" value="history" />
+            <param name="plan_choice" value="single" />
+            <param name="ref_file" value="chrI-ce11.fa"/>
+            <param name="single_bam" value="celegans_RG_1.bam"/>
+            <param name="choices" value="no"/>
+            <param name="prpos" value="no"/>
+            <output name="vcf_call" ftype="vcf" file="result-5.vcf" lines_diff="8"/>
+        </test>
     </tests>
 
     <help>
@@ -144,12 +170,13 @@ smoove will::
 
 **Input(s)**
 
-* BAM files: One Bam for normal sample and one Bam for tumor sample. Only BAM alignments produced by BWA-mem have been tested with this tool
+* BAM files: Either a pair of Bam files (e.g. normal vs tumor sample) or a single Bam file.
+  Only BAM alignments produced by BWA-mem have been tested with this tool
     
     .. class:: warningmark
     
     It is mandatory for proper run of svtyper that **BAM files contain read group information**,
-    ie the @RG tag is present and filled in each BAM
+    ie the @RG tag is present and filled in each BAM file
 
 
 * A bed file describing the regions to exclude from the analysis
