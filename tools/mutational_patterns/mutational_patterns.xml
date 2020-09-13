@@ -90,12 +90,13 @@ Takes as inputs
 
 This tool returns a pdf file with the visualisation :
 
-* the Cosine similarity of samples when decomposed over the 30 signatures of cosmic
-* the absolute contribution of the n most contributing cosmic signatures in the samples mutational patterns (to be set by the user, between 2 and 30)
-* the relative contribution of the n most contributing cosmic signatures in the samples mutational patterns  (to be set by the user, between 2 and 30)
-* a clustering of the samples with respect to the relative contribution of their cosmic signatures
-* pie charts of the samples displaying for each sample the relative contribution of the n most contributing cosmic signatures in their mutational pattern
+* the Cosine similarity of samples when decomposed over the 30 signatures of cosmic_
+* the absolute contribution of the n most contributing cosmic_ signatures in the samples mutational patterns (to be set by the user, between 2 and 30)
+* the relative contribution of the n most contributing cosmic_ signatures in the samples mutational patterns  (to be set by the user, between 2 and 30)
+* a clustering of the samples with respect to the relative contribution of their cosmic_ signatures
+* pie charts of the samples displaying for each sample the relative contribution of the n most contributing cosmic_ signatures in their mutational pattern
 
+.. _cosmic: https://cancer.sanger.ac.uk/cosmic/signatures_v2.tt
 
     </help>
     <citations>
