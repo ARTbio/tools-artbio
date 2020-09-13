@@ -1,0 +1,106 @@
+<tool id="mutational_patterns" name="Analyse Mutational Patters/Signatures" version="2.0.0_galaxy_1">
+    <description>from genomic variations in vcf files</description>
+    <requirements>
+        <requirement type="package" version="2.0.0=r40_0">bioconductor-mutationalpatterns</requirement>
+        <requirement type="package" version="1.6.6=r40h6115d3f_1">r-optparse</requirement>
+        <requirement type="package" version="0.2.20=r40h0357c0b_1002">r-rjson</requirement>
+        <requirement type="package" version="0.21.0=r40h0357c0b_1004">r-nmf</requirement>
+        <requirement type="package" version="1.4.3=r40_0">bioconductor-bsgenome.hsapiens.ucsc.hg38</requirement>
+        <requirement type="package" version="0.99.1=r40_4">bioconductor-bsgenome.hsapiens.1000genomes.hs37d5</requirement>
+        <requirement type="package" version="1.4.3=r40_0">bioconductor-bsgenome.hsapiens.ucsc.hg19</requirement>
+        <requirement type="package" version="1.3.1000=r40_4">bioconductor-bsgenome.hsapiens.ncbi.grch38</requirement>
+        <!-- install bioconda genomes
+        bioconductor-bsgenome.mmusculus.ucsc.mm9
+        bioconductor-bsgenome.mmusculus.ucsc.mm10   -->                    
+    </requirements>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Tool exception" />
+    </stdio>
+
+    <command detect_errors="exit_code"><![CDATA[ 
+#import json
+#import os
+Rscript $__tool_directory__/mutational_patterns.R 
+    --inputs
+    #set $filename_to_element_identifiers = {}
+    #for $sample in $vcfs:
+        $filename_to_element_identifiers.__setitem__(str($sample),  $sample.element_identifier)
+    #end for
+    '#echo json.dumps(filename_to_element_identifiers)#'
+    --genome '$genome'
+    --levels '$levels'
+    --signum '$signum'
+    --output '$output'
+            
+]]></command>
+    <inputs>
+        <param name="vcfs" type="data_collection" format="vcf" label="VCF file(s) collection" multiple="true"/>
+        <param name="genome" type="select" label="Reference Genome">
+            <option value="BSgenome.Hsapiens.1000genomes.hs37d5">BSgenome.Hsapiens.1000genomes.hs37d5</option>
+            <option value="BSgenome.Hsapiens.NCBI.GRCh38">BSgenome.Hsapiens.NCBI.GRCh38</option>
+            <option value="BSgenome.Hsapiens.UCSC.hg19">BSgenome.Hsapiens.UCSC.hg19</option>
+            <option value="BSgenome.Hsapiens.UCSC.hg38" selected="true">BSgenome.Hsapiens.UCSC.hg38</option>
+            <!--<option value="BSgenome.Mmusculus.UCSC.mm10">BSgenome.Mmusculus.UCSC.mm10</option>
+            <option value="BSgenome.Mmusculus.UCSC.mm9">BSgenome.Mmusculus.UCSC.mm9</option>-->
+        </param>
+        <param name="levels" type="data" format="tabular"
+               label="A two-column tab-separated file describing levels attributed to each sample name"
+               help="Tip: the sample name list in the vcf collection can be obtained using
+               the IUC Galaxy tool 'Extract element identifiers of a list collection' &lt;br&gt;
+               example:&lt;br&gt;
+               sample1 female&lt;br&gt;
+               sample2 female&lt;br&gt;
+               sample3 male&lt;br&gt;
+               sample4 female&lt;br&gt;
+               sample5 male&lt;br&gt;
+               sample5 male" />
+        <param name="signum" type="integer" value="2" min="2" max="30"
+               label="selects the N most significant signatures in samples to express mutational patterns"
+               help="an integer between 2 and 30 signature types from cosmic"/>
+
+    </inputs>
+    <outputs>
+        <data name="output" format="pdf" label="Mutational Patterns/Signatures" />
+    </outputs>
+    <tests>
+        <test>
+            <param name="vcfs">
+                <collection type="list">
+                    <element name="1" value="EGF167.vcf"/>
+                    <element name="2" value="EGF089.vcf"/>
+                    <element name="3" value="EGF037F.vcf"/>
+                </collection>
+            </param>
+            <param name="genome" value="BSgenome.Hsapiens.UCSC.hg38"/>
+            <param name="levels" value="levels.tab" ftype="tabular"/>
+            <param name="signum" value="3" />
+            <output name="output" file="output.pdf" compare="sim_size" ftype="pdf"/>
+        </test>
+    </tests>
+    <help>
+
+**What it does**
+
+Takes as inputs
+
+* a collection of n vcf files corresponding to n samples.
+* a tabular table describing the correspondance of sample names to levels (tissues, ages, sexes, etc.)
+* the number of cosmic signatures to decompose mutational patterns of samples
+
+
+This tool returns a pdf file with the visualisation :
+
+* the Cosine similarity of samples when decomposed over the 30 signatures of cosmic
+* the absolute contribution of the n most contributing cosmic signatures in the samples mutational patterns (to be set by the user, between 2 and 30)
+* the relative contribution of the n most contributing cosmic signatures in the samples mutational patterns  (to be set by the user, between 2 and 30)
+* a clustering of the samples with respect to the relative contribution of their cosmic signatures
+* pie charts of the samples displaying for each sample the relative contribution of the n most contributing cosmic signatures in their mutational pattern
+
+
+    </help>
+    <citations>
+        <citation type="doi">10.18129/B9.bioc.MutationalPatterns</citation>
+        <citation type="doi">10.1186/s13073-018-0539-0</citation>
+        <citation type="doi">10.1038/nature12477</citation>
+    </citations>
+</tool>

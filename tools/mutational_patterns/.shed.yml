@@ -1,0 +1,14 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: mutational_patterns
+description:  Mutational patterns and signatures in base substitution catalogs 
+long_description: |
+  A Galaxy wrapper of the R MutationalPatterns for the characterization
+  and visualization of a wide range of mutational patterns in
+  base substitution catalogs
+categories:
+  - Variant Analysis
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/mutational_patterns
+toolshed:
+  - toolshed
