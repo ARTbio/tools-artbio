@@ -61,51 +61,150 @@ levels_table  <- read.delim(opt$levels, header=FALSE, col.names=c("sample_name",
 vcf_table <- data.frame(path=vcf_files, sample_name=sample_names)
 metadata_table <- merge(vcf_table, levels_table, by.x=2, by.y=1)
 levels <- metadata_table$level
-muts = mutations_from_vcf(vcfs[[1]])
-types = mut_type(vcfs[[1]])
-context = mut_context(vcfs[[1]], ref_genome)
-type_context = type_context(vcfs[[1]], ref_genome)
 type_occurrences <- mut_type_occurrences(vcfs, ref_genome)
-# p1 <- plot_spectrum(type_occurrences)
-# p2 <- plot_spectrum(type_occurrences, CT = TRUE)
-# p3 <- plot_spectrum(type_occurrences, CT = TRUE, legend = FALSE)
-# 
-# plot(p2)
-# p4 <- plot_spectrum(type_occurrences, by = levels, CT = TRUE, legend = TRUE)
-# palette <- c("pink", "orange", "blue", "lightblue", "green", "red", "purple")
-# p5 <- plot_spectrum(type_occurrences, CT=TRUE, legend=TRUE, colors=palette)
-# 
-# plot(p4)
+
+# only useful if only 1 level
+p1 <- plot_spectrum(type_occurrences, CT = TRUE)
+plot(p1)
+
+# mutation spectrum, total or by sample
+p2 <- plot_spectrum(type_occurrences, by = levels, CT=TRUE, legend=TRUE) # by sample
+p3 <- plot_spectrum(type_occurrences, CT=TRUE, legend=TRUE) # total
+library("gridExtra")
+grid.arrange(p2, p3, ncol=2, widths=c(4,2.3), heights=c(4,1))
 mut_mat <- mut_matrix(vcf_list = vcfs, ref_genome = ref_genome)
-# plot_96_profile(mut_mat[,1:length(as.data.frame(mut_mat))], condensed = TRUE)
-mut_mat <- mut_mat + 0.0001
-# library("NMF")
-# estimate <- nmf(mut_mat, rank=2:5, method="brunet", nrun=100, seed=123456)
-# plot(estimate)
-# nmf_res <- extract_signatures(mut_mat, rank = 4, nrun = 100)
-# colnames(nmf_res$signatures) <- c("Signature A", "Signature B", "Signature C", "Signature D")
-# rownames(nmf_res$contribution) <- c("Signature A", "Signature B", "Signature C", "Signature D")
-# plot_96_profile(nmf_res$signatures, condensed = TRUE)
+plot_96_profile(mut_mat, condensed = TRUE)
+
+
+## De novo mutational signature extraction using NMF ##
+mut_mat <- mut_mat + 0.0001 # First add a small psuedocount to the mutation count matrix
+# Use the NMF package to generate an estimate rank plot
+library("NMF")
+estimate <- nmf(mut_mat, rank=2:5, method="brunet", nrun=10, seed=123456)  # PARAMETERIZE nrun  and rank!
+# And plot it
+plot(estimate)
+# Extract 4 (PARAMETIZE) mutational signatures from the mutation count matrix with extract_signatures
+# (For larger datasets it is wise to perform more iterations by changing the nrun parameter
+# to achieve stability and avoid local minima)
+nmf_res <- extract_signatures(mut_mat, rank = 4, nrun = 20)  # PARAMETERIZE nrun  and rank!
+# Assign signature names
+colnames(nmf_res$signatures) <- c("Signature A", "Signature B", "Signature C", "Signature D")  # PARAMETERIZE
+rownames(nmf_res$contribution) <- c("Signature A", "Signature B", "Signature C", "Signature D")  # PARAMETERIZE
+# Plot the 96-profile of the signatures:
+plot_96_profile(nmf_res$signatures, condensed = TRUE)
+# Visualize the contribution of the signatures in a barplot
+pc1 <- plot_contribution(nmf_res$contribution, nmf_res$signature, mode="relative", coord_flip = TRUE)
+# Visualize the contribution of the signatures in absolute number of mutations
+pc2 <- plot_contribution(nmf_res$contribution, nmf_res$signature, mode="absolute", coord_flip = TRUE)
+# Combine the two plots:
+grid.arrange(pc1, pc2)
+
+
+# The relative contribution of each signature for each sample can also be plotted as a heatmap with
+# plot_contribution_heatmap, which might be easier to interpret and compare than stacked barplots.
+# The samples can be hierarchically clustered based on their euclidean dis- tance. The signatures
+# can be plotted in a user-specified order.
+# Plot signature contribution as a heatmap with sample clustering dendrogram and a specified signature order:
+pch1 <- plot_contribution_heatmap(nmf_res$contribution,
+                                  sig_order = c("Signature B", "Signature A", "Signature C", "Signature D"))  # PARAMETERIZE
+# Plot signature contribution as a heatmap without sample clustering:
+pch2 <- plot_contribution_heatmap(nmf_res$contribution, cluster_samples=FALSE)
+#Combine the plots into one figure:
+grid.arrange(pch1, pch2, ncol = 2, widths = c(2,1.6))
+
+# Compare the reconstructed mutational profile with the original mutational profile:   
+plot_compare_profiles(mut_mat[,1],
+                      nmf_res$reconstructed[,1],
+                      profile_names = c("Original", "Reconstructed"),
+                      condensed = TRUE)
+
+##### Find optimal contribution of known signatures: COSMIC mutational signatures ####
+
+
 sp_url <- paste("https://cancer.sanger.ac.uk/cancergenome/assets/", "signatures_probabilities.txt", sep = "")
 cancer_signatures = read.table(sp_url, sep = "\t", header = TRUE)
 new_order = match(row.names(mut_mat), cancer_signatures$Somatic.Mutation.Type)
 cancer_signatures = cancer_signatures[as.vector(new_order),]
 row.names(cancer_signatures) = cancer_signatures$Somatic.Mutation.Type
 cancer_signatures = as.matrix(cancer_signatures[,4:33])
-# plot_96_profile(cancer_signatures, condensed = TRUE, ymax = 0.3)
+
+# Plot mutational profile the COSMIC signatures
+plot_96_profile(cancer_signatures, condensed = TRUE, ymax = 0.3)
+# Hierarchically cluster the COSMIC signatures based on their similarity with average linkage
 hclust_cosmic = cluster_signatures(cancer_signatures, method = "average")
+# store signatures in new order
 cosmic_order = colnames(cancer_signatures)[hclust_cosmic$order]
-# plot(hclust_cosmic)
-cos_sim(mut_mat[,1], cancer_signatures[,1])
+plot(hclust_cosmic)
+
+# Similarity between mutational profiles and COSMIC signatures
+
+
+# The similarity between each mutational profile and each COSMIC signature, can be calculated
+# with cos_sim_matrix, and visualized with plot_cosine_heatmap. The cosine similarity reflects
+# how well each mutational profile can be explained by each signature individually. The advantage
+# of this heatmap representation is that it shows in a glance the similarity in mutational
+# profiles between samples, while at the same time providing information on which signatures
+# are most prominent. The samples can be hierarchically clustered in plot_cosine_heatmap.
+# The cosine similarity between two mutational profiles/signatures can be calculated with cos_sim :
+# cos_sim(mut_mat[,1], cancer_signatures[,1])
+
+# Calculate pairwise cosine similarity between mutational profiles and COSMIC signatures
 cos_sim_samples_signatures = cos_sim_matrix(mut_mat, cancer_signatures)
+# Plot heatmap with specified signature order
 plot_cosine_heatmap(cos_sim_samples_signatures, col_order = cosmic_order, cluster_rows = TRUE)
+
+# Find optimal contribution of COSMIC signatures to reconstruct 96 mutational profiles
+
 fit_res <- fit_to_signatures(mut_mat, cancer_signatures)
+# Select signatures with some contribution (above a threshold)
 threshold <- tail(sort(unlist(rowSums(fit_res$contribution), use.names = FALSE)), opt$signum)[1]
 select <- which(rowSums(fit_res$contribution) >= threshold) # ensure opt$signum best signatures in samples are retained, the others discarded
+# Plot contribution barplots
 plot_contribution(fit_res$contribution[select,], cancer_signatures[,select], coord_flip = T, mode = "absolute")
 plot_contribution(fit_res$contribution[select,], cancer_signatures[,select], coord_flip = T, mode = "relative")
+# Plot relative contribution of the cancer signatures in each sample as a heatmap with sample clustering
 plot_contribution_heatmap(fit_res$contribution, cluster_samples = TRUE, method = "complete")
+# Compare the reconstructed mutational profile of sample 1 with its original mutational profile
+plot_compare_profiles(mut_mat[,1], fit_res$reconstructed[,1],
+                      profile_names = c("Original", "Reconstructed"),
+                      condensed = TRUE)
 
+# Calculate the cosine similarity between all original and reconstructed mutational profiles with
+# `cos_sim_matrix`
+
+# calculate all pairwise cosine similarities
+cos_sim_ori_rec <- cos_sim_matrix(mut_mat, fit_res$reconstructed)
+# extract cosine similarities per sample between original and reconstructed
+cos_sim_ori_rec <- as.data.frame(diag(cos_sim_ori_rec))
+
+# We can use ggplot to make a barplot of the cosine similarities between the original and
+# reconstructed mutational profile of each sample. This clearly shows how well each mutational
+# profile can be reconstructed with the COSMIC mutational signatures. Two identical profiles
+# have a cosine similarity of 1. The lower the cosine similarity between original and
+# reconstructed, the less well the original mutational profile can be reconstructed with
+# the COSMIC signatures. You could use, for example, cosine similarity of 0.95 as a cutoff.
+
+# Adjust data frame for plotting with gpplot
+colnames(cos_sim_ori_rec) = "cos_sim"
+cos_sim_ori_rec$sample = row.names(cos_sim_ori_rec)
+# ggplot2 is already loaded
+# Make barplot
+ggplot(cos_sim_ori_rec, aes(y=cos_sim, x=sample)) +
+     geom_bar(stat="identity", fill = "skyblue4") +
+     coord_cartesian(ylim=c(0.8, 1)) +
+     # coord_flip(ylim=c(0.8,1)) +
+     ylab("Cosine similarity\n original VS reconstructed") +
+     xlab("") +
+     # Reverse order of the samples such that first is up
+     # xlim(rev(levels(factor(cos_sim_ori_rec$sample)))) +
+     theme_bw() +
+     theme(panel.grid.minor.y=element_blank(),
+     panel.grid.major.y=element_blank()) +
+     # Add cut.off line
+     geom_hline(aes(yintercept=.95))
+
+
+## pie charts for comic signatures in samples
 
 sig5data <- as.data.frame(t(head(fit_res$contribution[select,])))
 colnames(sig5data) <- gsub("nature", "", colnames(sig5data))

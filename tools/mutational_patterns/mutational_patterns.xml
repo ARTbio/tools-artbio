@@ -1,10 +1,11 @@
-<tool id="mutational_patterns" name="Analyse Mutational Patters/Signatures" version="2.0.0_galaxy_2">
+<tool id="mutational_patterns" name="Analyse Mutational Patters/Signatures" version="2.0.0_galaxy_3">
     <description>from genomic variations in vcf files</description>
     <requirements>
         <requirement type="package" version="2.0.0=r40_0">bioconductor-mutationalpatterns</requirement>
         <requirement type="package" version="1.6.6=r40h6115d3f_1">r-optparse</requirement>
         <requirement type="package" version="0.2.20=r40h0357c0b_1002">r-rjson</requirement>
         <requirement type="package" version="0.21.0=r40h0357c0b_1004">r-nmf</requirement>
+        <requirement type="package" version="2.3=r40h6115d3f_1003">r-gridextra</requirement>
         <requirement type="package" version="1.4.3=r40_0">bioconductor-bsgenome.hsapiens.ucsc.hg38</requirement>
         <requirement type="package" version="0.99.1=r40_4">bioconductor-bsgenome.hsapiens.1000genomes.hs37d5</requirement>
         <requirement type="package" version="1.4.3=r40_0">bioconductor-bsgenome.hsapiens.ucsc.hg19</requirement>
@@ -66,9 +67,22 @@ Rscript $__tool_directory__/mutational_patterns.R
         <test>
             <param name="vcfs">
                 <collection type="list">
-                    <element name="1" value="EGF167.vcf"/>
-                    <element name="2" value="EGF089.vcf"/>
-                    <element name="3" value="EGF037F.vcf"/>
+                    <element name="1" value="A.vcf"/>
+                    <element name="2" value="B.vcf"/>
+                    <element name="3" value="C.vcf"/>
+                    <element name="4" value="D.vcf"/>
+                    <element name="5" value="E.vcf"/>
+                    <element name="6" value="F.vcf"/>
+                    <element name="7" value="G.vcf"/>
+                    <element name="8" value="H.vcf"/>
+                    <element name="9" value="I.vcf"/>
+                    <element name="10" value="J.vcf"/>
+                    <element name="11" value="K.vcf"/>
+                    <element name="12" value="L.vcf"/>
+                    <element name="13" value="M.vcf"/>
+                    <element name="14" value="N.vcf"/>
+                    <element name="15" value="O.vcf"/>
+                    <element name="16" value="P.vcf"/>
                 </collection>
             </param>
             <param name="genome" value="BSgenome.Hsapiens.UCSC.hg38"/>
