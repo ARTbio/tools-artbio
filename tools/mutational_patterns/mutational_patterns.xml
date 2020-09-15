@@ -1,6 +1,14 @@
 <tool id="mutational_patterns" name="Analyse Mutational Patters/Signatures" version="2.0.0_galaxy_3">
     <description>from genomic variations in vcf files</description>
     <requirements>
+    <!--
+        <requirement type="package" version="1.12.0=r36_0">bioconductor-mutationalpatterns</requirement>
+        <requirement type="package" version="1.6.6=r36h6115d3f_1">r-optparse</requirement>
+        <requirement type="package" version="0.2.20=r36h0357c0b_1002">r-rjson</requirement>
+        <requirement type="package" version="0.21.0=r36h0357c0b_1004">r-nmf</requirement>
+        <requirement type="package" version="2.3=r36h6115d3f_1003">r-gridextra</requirement>
+        <requirement type="package" version="1.4.1=r36_8">bioconductor-bsgenome.hsapiens.ucsc.hg38</requirement>
+    -->
         <requirement type="package" version="2.0.0=r40_0">bioconductor-mutationalpatterns</requirement>
         <requirement type="package" version="1.6.6=r40h6115d3f_1">r-optparse</requirement>
         <requirement type="package" version="0.2.20=r40h0357c0b_1002">r-rjson</requirement>
@@ -90,6 +98,35 @@ Rscript $__tool_directory__/mutational_patterns.R
             <param name="signum" value="3" />
             <output name="output" file="output.pdf" compare="sim_size" ftype="pdf"/>
         </test>
+<!--
+        <test>
+            <param name="vcfs">
+                <collection type="list">
+                    <element name="6" ftype="vcf" value="F.vcf"/>
+                    <element name="7" ftype="vcf" value="G.vcf"/>
+                    <element name="8" ftype="vcf" value="H.vcf"/>
+                    <element name="9" ftype="vcf" value="I.vcf"/>
+                </collection>
+            </param>
+            <param name="genome" value="BSgenome.Hsapiens.UCSC.hg38"/>
+            <param name="levels" value="FGHI_levels.tab" ftype="tabular"/>
+            <param name="signum" value="3" />
+            <output name="output" file="test2_output.pdf" compare="sim_size" ftype="pdf"/>
+        </test>
+
+        <test>
+            <param name="vcfs">
+                <collection type="list">
+                    <element name="1" ftype="vcf" value="G.vcf"/>
+                    <element name="2" ftype="vcf" value="H.vcf"/>
+                </collection>
+            </param>
+            <param name="genome" value="BSgenome.Hsapiens.UCSC.hg38"/>
+            <param name="levels" value="GH_levels.tab" ftype="tabular"/>
+            <param name="signum" value="3" />
+            <output name="output" file="test3_output.pdf" compare="sim_size" ftype="pdf"/>
+        </test>
+        -->
     </tests>
     <help>
 

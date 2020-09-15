@@ -58,20 +58,22 @@ library(ref_genome, character.only = TRUE)
 # Load the VCF files into a GRangesList:
 vcfs <- read_vcfs_as_granges(vcf_files, sample_names, ref_genome)
 levels_table  <- read.delim(opt$levels, header=FALSE, col.names=c("sample_name","level"))
-vcf_table <- data.frame(path=vcf_files, sample_name=sample_names)
-metadata_table <- merge(vcf_table, levels_table, by.x=2, by.y=1)
-levels <- metadata_table$level
+vcf_table <- data.frame(sample_name=sample_names, path=vcf_files)
+library(dplyr)
+metadata_table <- left_join(vcf_table, levels_table, by = "sample_name")
+tissue <- as.character(metadata_table$level)
 type_occurrences <- mut_type_occurrences(vcfs, ref_genome)
 
 # only useful if only 1 level
 p1 <- plot_spectrum(type_occurrences, CT = TRUE)
 plot(p1)
-
+print(metadata_table$level)
 # mutation spectrum, total or by sample
-p2 <- plot_spectrum(type_occurrences, by = levels, CT=TRUE, legend=TRUE) # by sample
+p2 <- plot_spectrum(type_occurrences, by = metadata_table$level, CT=TRUE, legend=TRUE) # by sample
 p3 <- plot_spectrum(type_occurrences, CT=TRUE, legend=TRUE) # total
 library("gridExtra")
 grid.arrange(p2, p3, ncol=2, widths=c(4,2.3), heights=c(4,1))
+
 mut_mat <- mut_matrix(vcf_list = vcfs, ref_genome = ref_genome)
 plot_96_profile(mut_mat, condensed = TRUE)
 
