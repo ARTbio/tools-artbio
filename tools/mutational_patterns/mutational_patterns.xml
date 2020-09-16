@@ -1,10 +1,11 @@
-<tool id="mutational_patterns" name="Analyse Mutational Patters/Signatures" version="2.0.0_galaxy_2">
+<tool id="mutational_patterns" name="Analyse Mutational Patters/Signatures" version="2.0.0+galaxy3">
     <description>from genomic variations in vcf files</description>
     <requirements>
         <requirement type="package" version="2.0.0=r40_0">bioconductor-mutationalpatterns</requirement>
         <requirement type="package" version="1.6.6=r40h6115d3f_1">r-optparse</requirement>
         <requirement type="package" version="0.2.20=r40h0357c0b_1002">r-rjson</requirement>
         <requirement type="package" version="0.21.0=r40h0357c0b_1004">r-nmf</requirement>
+        <requirement type="package" version="2.3=r40h6115d3f_1003">r-gridextra</requirement>
         <requirement type="package" version="1.4.3=r40_0">bioconductor-bsgenome.hsapiens.ucsc.hg38</requirement>
         <requirement type="package" version="0.99.1=r40_4">bioconductor-bsgenome.hsapiens.1000genomes.hs37d5</requirement>
         <requirement type="package" version="1.4.3=r40_0">bioconductor-bsgenome.hsapiens.ucsc.hg19</requirement>
@@ -28,9 +29,26 @@ Rscript $__tool_directory__/mutational_patterns.R
     #end for
     '#echo json.dumps(filename_to_element_identifiers)#'
     --genome '$genome'
-    --levels '$levels'
-    --signum '$signum'
-    --output '$output'
+    
+    #if $set_levels.choices == 'yes':
+      --levels '$set_levels.levels'
+    #end if
+
+    #if $set_spectrum.choices == 'yes':
+        --output_spectrum $spectrum
+    #end if
+    
+    #if $set_denovo.choices == 'yes':
+        --nrun $set_denovo.nrun
+        --rank $set_denovo.rank
+        --newsignum $set_denovo.newsignum
+        --output_denovo $denovo
+    #end if
+
+    #if $set_cosmic.choices == 'yes':
+        --signum '$set_cosmic.signum'
+        --output_cosmic $cosmic
+    #end if
             
 ]]></command>
     <inputs>
@@ -43,38 +61,143 @@ Rscript $__tool_directory__/mutational_patterns.R
             <!--<option value="BSgenome.Mmusculus.UCSC.mm10">BSgenome.Mmusculus.UCSC.mm10</option>
             <option value="BSgenome.Mmusculus.UCSC.mm9">BSgenome.Mmusculus.UCSC.mm9</option>-->
         </param>
-        <param name="levels" type="data" format="tabular"
-               label="A two-column tab-separated file describing levels attributed to each sample name"
-               help="Tip: the sample name list in the vcf collection can be obtained using
-               the IUC Galaxy tool 'Extract element identifiers of a list collection' &lt;br&gt;
-               example:&lt;br&gt;
-               sample1 female&lt;br&gt;
-               sample2 female&lt;br&gt;
-               sample3 male&lt;br&gt;
-               sample4 female&lt;br&gt;
-               sample5 male&lt;br&gt;
-               sample5 male" />
-        <param name="signum" type="integer" value="2" min="2" max="30"
-               label="selects the N most significant signatures in samples to express mutational patterns"
-               help="an integer between 2 and 30 signature types from cosmic"/>
+        <conditional name="set_levels">
+            <param name="choices" type="select" label="samples have levels/labels for grouping them in the analysis" display="radio"
+                   help="for instance, female/male or genotype-1/genotype-2/genotype-3, etc.">
+                <option value="no" selected="true">No</option>
+                <option value="yes">Yes</option>
+            </param>
+            <when value="yes">
+                <param name="levels" type="data" format="tabular"
+                       label="A two-column tab-separated file describing levels attributed to each sample name"
+                       help="Tip: the sample name list in the vcf collection can be obtained using
+                       the IUC Galaxy tool 'Extract element identifiers of a list collection' &lt;br&gt;
+                       example:&lt;br&gt;
+                       sample1 female&lt;br&gt;
+                       sample2 female&lt;br&gt;
+                       sample3 male&lt;br&gt;
+                       sample4 female&lt;br&gt;
+                       sample5 male&lt;br&gt;
+                       sample5 male" />
+            </when>
+            <when value="no" />
+        </conditional>
+        <conditional name="set_spectrum">
+            <param name="choices" type="select" label="Analyse Mutational Spectrum" display="radio">
+                <option value="yes" selected="true">Yes</option>
+                <option value="no">No</option>
+            </param>
+            <when value="yes" />
+            <when value="no" />
+        </conditional>
+        <conditional name="set_denovo">
+            <param name="choices" type="select" label="Extract de novo signatures with MutationalPatterns" display="radio">
+                <option value="yes" selected="true">Yes</option>
+                <option value="no">No</option>
+            </param>
+            <when value="yes">
+                <param name="nrun" type="integer" value="10" min="10" max="200"
+                       label="Number of cycles to find best fitting of signatures"
+                       help="High values extend the computational time"/>
+                <param name="rank" type="integer" value="4" min="3" max="30"
+                       label="Number of ranks to be displayed for control of optimal number of signature"
+                       help="High values extend the computational time"/>
+                <param name="newsignum" type="integer" value="4" min="2" max="30"
+                       label="Number of de novo signatures to capture"
+                       help="High values extend the computational time"/>
+            </when>
+            <when value="no" />
+        </conditional>
 
+        <conditional name="set_cosmic">
+            <param name="choices" type="select" label="Decompose with Cosmic signature v2" display="radio">
+                <option value="yes" selected="true">Yes</option>
+                <option value="no">No</option>
+            </param>
+            <when value="yes">
+                <param name="signum" type="integer" value="3" min="2" max="30"
+                       label="selects the N most significant signatures in samples to express mutational patterns"
+                       help="an integer between 2 and 30 signature types from cosmic"/>
+            </when>
+             <when value="no" />
+       </conditional>
     </inputs>
     <outputs>
-        <data name="output" format="pdf" label="Mutational Patterns/Signatures" />
+        <data name="spectrum" format="pdf" label="Mutational Spectrum">
+            <filter>set_spectrum['choices'] == "yes"</filter>
+        </data>
+        <data name="denovo" format="pdf" label="De novo signatures">
+            <filter>set_denovo['choices'] == "yes"</filter>
+        </data>
+        <data name="cosmic" format="pdf" label="Cosmic signatures">
+            <filter>set_cosmic['choices'] == "yes"</filter>
+        </data>
     </outputs>
     <tests>
         <test>
             <param name="vcfs">
                 <collection type="list">
-                    <element name="1" value="EGF167.vcf"/>
-                    <element name="2" value="EGF089.vcf"/>
-                    <element name="3" value="EGF037F.vcf"/>
+                    <element name="1" ftype="vcf" value="G.vcf"/>
+                    <element name="2" ftype="vcf" value="H.vcf"/>
                 </collection>
             </param>
             <param name="genome" value="BSgenome.Hsapiens.UCSC.hg38"/>
-            <param name="levels" value="levels.tab" ftype="tabular"/>
+            <param name="levels" value="GH_levels.tab" ftype="tabular"/>
+            <conditional name="set_spectrum">
+                <param name="choices" value="no"/>
+            </conditional>
+            <conditional name="set_denovo">
+                <param name="choices" value="no"/>
+            </conditional>
+            <conditional name="set_cosmic">
+                <param name="choices" value="yes"/>
+            </conditional>
             <param name="signum" value="3" />
-            <output name="output" file="output.pdf" compare="sim_size" ftype="pdf"/>
+            <output name="cosmic" file="cosmic_output1.pdf" compare="sim_size" ftype="pdf"/>
+        </test>
+        <test>
+            <param name="vcfs">
+                <collection type="list">
+                    <element name="6" value="F.vcf"/>
+                    <element name="7" value="G.vcf"/>
+                    <element name="8" value="H.vcf"/>
+                    <element name="9" value="I.vcf"/>
+                </collection>
+            </param>
+            <param name="genome" value="BSgenome.Hsapiens.UCSC.hg38"/>
+            <conditional name="set_spectrum">
+                <param name="choices" value="no"/>
+            </conditional>
+            <conditional name="set_denovo">
+                <param name="choices" value="yes"/>
+            </conditional>
+            <conditional name="set_cosmic">
+                <param name="choices" value="no"/>
+            </conditional>
+            <output name="denovo" file="denovo_output1.pdf" compare="sim_size" ftype="pdf"/>
+        </test>
+        <test>
+            <param name="vcfs">
+                <collection type="list">
+                    <element name="1" ftype="vcf" value="G.vcf"/>
+                    <element name="2" ftype="vcf" value="H.vcf"/>
+                </collection>
+            </param>
+            <param name="genome" value="BSgenome.Hsapiens.UCSC.hg38"/>
+            <conditional name="set_levels">
+                <param name="choices" value="yes"/>
+            </conditional>
+            <param name="levels" value="GH_levels.tab" ftype="tabular"/>
+            <conditional name="set_spectrum">
+                <param name="choices" value="yes"/>
+            </conditional>
+            <conditional name="set_denovo">
+                <param name="choices" value="no"/>
+            </conditional>
+            <conditional name="set_cosmic">
+                <param name="choices" value="no"/>
+            </conditional>
+            <output name="spectrum" file="spectrum_output1.pdf" compare="sim_size" ftype="pdf"/>
         </test>
     </tests>
     <help>
