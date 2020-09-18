@@ -142,6 +142,29 @@ Rscript $__tool_directory__/mutational_patterns.R
                 </collection>
             </param>
             <param name="genome" value="BSgenome.Hsapiens.UCSC.hg38"/>
+            <conditional name="set_levels">
+                <param name="choices" value="yes"/>
+            </conditional>
+            <param name="levels" value="GH_levels.tab" ftype="tabular"/>
+            <conditional name="set_spectrum">
+                <param name="choices" value="yes"/>
+            </conditional>
+            <conditional name="set_denovo">
+                <param name="choices" value="no"/>
+            </conditional>
+            <conditional name="set_cosmic">
+                <param name="choices" value="no"/>
+            </conditional>
+            <output name="spectrum" file="spectrum_output1.pdf" compare="sim_size" ftype="pdf"/>
+        </test>
+        <test>
+            <param name="vcfs">
+                <collection type="list">
+                    <element name="1" ftype="vcf" value="G.vcf"/>
+                    <element name="2" ftype="vcf" value="H.vcf"/>
+                </collection>
+            </param>
+            <param name="genome" value="BSgenome.Hsapiens.UCSC.hg38"/>
             <param name="levels" value="GH_levels.tab" ftype="tabular"/>
             <conditional name="set_spectrum">
                 <param name="choices" value="no"/>
@@ -175,29 +198,6 @@ Rscript $__tool_directory__/mutational_patterns.R
                 <param name="choices" value="no"/>
             </conditional>
             <output name="denovo" file="denovo_output1.pdf" compare="sim_size" ftype="pdf"/>
-        </test>
-        <test>
-            <param name="vcfs">
-                <collection type="list">
-                    <element name="1" ftype="vcf" value="G.vcf"/>
-                    <element name="2" ftype="vcf" value="H.vcf"/>
-                </collection>
-            </param>
-            <param name="genome" value="BSgenome.Hsapiens.UCSC.hg38"/>
-            <conditional name="set_levels">
-                <param name="choices" value="yes"/>
-            </conditional>
-            <param name="levels" value="GH_levels.tab" ftype="tabular"/>
-            <conditional name="set_spectrum">
-                <param name="choices" value="yes"/>
-            </conditional>
-            <conditional name="set_denovo">
-                <param name="choices" value="no"/>
-            </conditional>
-            <conditional name="set_cosmic">
-                <param name="choices" value="no"/>
-            </conditional>
-            <output name="spectrum" file="spectrum_output1.pdf" compare="sim_size" ftype="pdf"/>
         </test>
     </tests>
     <help>

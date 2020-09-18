@@ -81,27 +81,25 @@ json_dict <- opt$inputs
 parser <- newJSONParser()
 parser$addData(json_dict)
 fileslist <- parser$getObject()
-vcf_files <- attr(fileslist, "names")
-sample_names <- unname(unlist(fileslist))
+vcf_paths <- attr(fileslist, "names")
+element_identifiers <- unname(unlist(fileslist))
 ref_genome <- opt$genome
-vcf_table <- data.frame(sample_name=sample_names, path=vcf_files)
+vcf_table <- data.frame(element_identifier=element_identifiers, path=vcf_paths)
 
 library(MutationalPatterns)
 library(ref_genome, character.only = TRUE)
 
 # Load the VCF files into a GRangesList:
-vcfs <- read_vcfs_as_granges(vcf_files, sample_names, ref_genome)
+vcfs <- read_vcfs_as_granges(vcf_paths, element_identifiers, ref_genome)
 if (!is.na(opt$levels)[1]) {  # manage levels if there are
-    levels_table  <- read.delim(opt$levels, header=FALSE, col.names=c("sample_name","level"))
-    library(dplyr)
-    metadata_table <- left_join(vcf_table, levels_table, by = "sample_name")
-#    detach("package:dplyr", unload=TRUE)
-    tissue <- metadata_table$level
+    levels_table  <- read.delim(opt$levels, header=FALSE, col.names=c("element_identifier","level"))
+    library(plyr)
+    metadata_table <- join(vcf_table, levels_table, by = "element_identifier")
+    tissue <- as.vector(metadata_table$level)
 }
 
 ##### This is done for any section ######
 mut_mat <- mut_matrix(vcf_list = vcfs, ref_genome = ref_genome)
-
 
 ###### Section 1 Mutation characteristics and spectrums #############
 if (!is.na(opt$output_spectrum)[1]) {
@@ -114,10 +112,10 @@ if (!is.na(opt$output_spectrum)[1]) {
         p1 <- plot_spectrum(type_occurrences, CT = TRUE, legend=TRUE)
         plot(p1)
     } else {
-        p2 <- plot_spectrum(type_occurrences, by = tissue, CT=TRUE, legend=TRUE) # by sample
+        p2 <- plot_spectrum(type_occurrences, by = tissue, CT=TRUE) # by levels
         p3 <- plot_spectrum(type_occurrences, CT=TRUE, legend=TRUE) # total
         grid.arrange(p2, p3, ncol=2, widths=c(4,2.3), heights=c(4,1))
-    }
+   }
     plot_96_profile(mut_mat, condensed = TRUE)
     dev.off()
 }
