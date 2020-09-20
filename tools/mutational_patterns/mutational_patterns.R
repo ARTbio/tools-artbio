@@ -88,6 +88,7 @@ vcf_table <- data.frame(element_identifier=element_identifiers, path=vcf_paths)
 
 library(MutationalPatterns)
 library(ref_genome, character.only = TRUE)
+library(ggplot2)
 
 # Load the VCF files into a GRangesList:
 vcfs <- read_vcfs_as_granges(vcf_paths, element_identifiers, ref_genome)
@@ -217,8 +218,30 @@ if (!is.na(opt$output_cosmic)[1]) {
     # Plot contribution barplots
     pc1 <- plot_contribution(fit_res$contribution[select,], cancer_signatures[,select], coord_flip = T, mode = "absolute")
     pc2 <- plot_contribution(fit_res$contribution[select,], cancer_signatures[,select], coord_flip = T, mode = "relative")
+    #####
+    # ggplot2 alternative
+    if (!is.na(opt$levels)[1]) {  # if there are levels to display in graphs
+        pc1_data <- pc1$data
+        pc1_data <- merge (pc1_data, metadata_table[,c(1,3)], by.x="Sample", by.y="element_identifier")
+        pc1 <- ggplot(pc1_data, aes(x=Sample, y=Contribution, fill=as.factor(Signature))) +
+               geom_bar(stat="identity", position='stack') +
+               scale_fill_discrete(name="Cosmic\nSignature") +
+               labs(x = "Samples", y = "Absolute contribution") + theme_bw() + 
+               theme(panel.grid.minor.x = element_blank(), panel.grid.major.x = element_blank()) + 
+               facet_grid(~level, scales = "free_x")
+        pc2_data <- pc2$data
+        pc2_data <- merge (pc2_data, metadata_table[,c(1,3)], by.x="Sample", by.y="element_identifier")
+        print(pc2_data)
+        pc2 <- ggplot(pc2_data, aes(x=Sample, y=Contribution, fill=as.factor(Signature))) +
+               geom_bar(stat="identity", position='fill') +
+               scale_fill_discrete(name="Cosmic\nSignature") +
+               scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+               labs(x = "Samples", y = "Relative contribution") + theme_bw() + 
+               theme(panel.grid.minor.x = element_blank(), panel.grid.major.x = element_blank()) + 
+               facet_grid(~level, scales = "free_x")
+    }
     # Combine the two plots:
-    grid.arrange(pc1, pc2)
+    grid.arrange(pc1, pc2, top = textGrob("Absolute and Relative Contributions of Cosmic signatures to mutational patterns",gp=gpar(fontsize=12,font=3)))
     ## pie charts of comic signatures contributions in samples
     
     sig_data_pie <- as.data.frame(t(head(fit_res$contribution[select,])))
@@ -229,7 +252,6 @@ if (!is.na(opt$output_cosmic)[1]) {
     melted_sig_data_pie_percents <-melt(data=sig_data_pie_percents)
     melted_sig_data_pie_percents$label <- sub("Sig.", "", melted_sig_data_pie_percents$variable)
     melted_sig_data_pie_percents$pos <- cumsum(melted_sig_data_pie_percents$value) - melted_sig_data_pie_percents$value/2
-    library(ggplot2)
     p.trans <-  ggplot(melted_sig_data_pie_percents, aes(x="", y=value, group=variable, fill=variable)) +
                        geom_bar(width = 1, stat = "identity") +
                        geom_text(aes(label = label), position = position_stack(vjust = 0.5), color="black", size=3) +
