@@ -70,7 +70,12 @@ option_list = list(
     default = NA,
     type = 'character',
     help = "path to output dataset"
-  )
+  ),
+  make_option(
+    c("-r", "--rdata"),
+    type="character",
+    default=NULL,
+    help="Path to RData output file")
 )
 
 opt = parse_args(OptionParser(option_list = option_list),
@@ -129,8 +134,8 @@ if (!is.na(opt$output_denovo)[1]) {
     estimate <- nmf(mut_mat, rank=1:opt$rank+1, method="brunet", nrun=opt$nrun, seed=123456)
     # And plot it
     pdf(opt$output_denovo, paper = "special", width = 11.69, height = 11.69)
-    p.trans <- plot(estimate)
-    grid.arrange(p.trans)
+    p4 <- plot(estimate)
+    grid.arrange(p4)
     # Extract 4 (PARAMETIZE) mutational signatures from the mutation count matrix with extract_signatures
     # (For larger datasets it is wise to perform more iterations by changing the nrun parameter
     # to achieve stability and avoid local minima)
@@ -139,8 +144,8 @@ if (!is.na(opt$output_denovo)[1]) {
     colnames(nmf_res$signatures) <- paste0("NewSig_", 1:opt$rank)
     rownames(nmf_res$contribution) <- paste0("NewSig_", 1:opt$rank)
     # Plot the 96-profile of the signatures:
-    p.trans <- plot_96_profile(nmf_res$signatures, condensed = TRUE)
-    grid.arrange(p.trans)
+    p5 <- plot_96_profile(nmf_res$signatures, condensed = TRUE)
+    grid.arrange(p5)
     # Visualize the contribution of the signatures in a barplot
     pc1 <- plot_contribution(nmf_res$contribution, nmf_res$signature, mode="relative", coord_flip = TRUE)
     # Visualize the contribution of the signatures in absolute number of mutations
@@ -181,8 +186,8 @@ if (!is.na(opt$output_cosmic)[1]) {
     
     # Plot mutational profiles of the COSMIC signatures
     colnames(cancer_signatures) <- gsub("Signature.", "", colnames(cancer_signatures)) # shorten signature labels
-    p.trans <- plot_96_profile(cancer_signatures, condensed = TRUE, ymax = 0.3)
-    grid.arrange(p.trans, top = textGrob("COSMIC signature profiles",gp=gpar(fontsize=12,font=3)))
+    p6 <- plot_96_profile(cancer_signatures, condensed = TRUE, ymax = 0.3)
+    grid.arrange(p6, top = textGrob("COSMIC signature profiles",gp=gpar(fontsize=12,font=3)))
 
     # Hierarchically cluster the COSMIC signatures based on their similarity with average linkage
     # hclust_cosmic = cluster_signatures(cancer_signatures, method = "average")
@@ -216,23 +221,22 @@ if (!is.na(opt$output_cosmic)[1]) {
     threshold <- tail(sort(unlist(rowSums(fit_res$contribution), use.names = FALSE)), opt$signum)[1]
     select <- which(rowSums(fit_res$contribution) >= threshold) # ensure opt$signum best signatures in samples are retained, the others discarded
     # Plot contribution barplots
-    pc1 <- plot_contribution(fit_res$contribution[select,], cancer_signatures[,select], coord_flip = T, mode = "absolute")
-    pc2 <- plot_contribution(fit_res$contribution[select,], cancer_signatures[,select], coord_flip = T, mode = "relative")
+    pc3 <- plot_contribution(fit_res$contribution[select,], cancer_signatures[,select], coord_flip = T, mode = "absolute")
+    pc4 <- plot_contribution(fit_res$contribution[select,], cancer_signatures[,select], coord_flip = T, mode = "relative")
     #####
     # ggplot2 alternative
     if (!is.na(opt$levels)[1]) {  # if there are levels to display in graphs
-        pc1_data <- pc1$data
-        pc1_data <- merge (pc1_data, metadata_table[,c(1,3)], by.x="Sample", by.y="element_identifier")
-        pc1 <- ggplot(pc1_data, aes(x=Sample, y=Contribution, fill=as.factor(Signature))) +
+        pc3_data <- pc3$data
+        pc3_data <- merge (pc3_data, metadata_table[,c(1,3)], by.x="Sample", by.y="element_identifier")
+        pc3 <- ggplot(pc3_data, aes(x=Sample, y=Contribution, fill=as.factor(Signature))) +
                geom_bar(stat="identity", position='stack') +
                scale_fill_discrete(name="Cosmic\nSignature") +
                labs(x = "Samples", y = "Absolute contribution") + theme_bw() + 
                theme(panel.grid.minor.x = element_blank(), panel.grid.major.x = element_blank()) + 
                facet_grid(~level, scales = "free_x")
-        pc2_data <- pc2$data
-        pc2_data <- merge (pc2_data, metadata_table[,c(1,3)], by.x="Sample", by.y="element_identifier")
-        print(pc2_data)
-        pc2 <- ggplot(pc2_data, aes(x=Sample, y=Contribution, fill=as.factor(Signature))) +
+        pc4_data <- pc4$data
+        pc4_data <- merge (pc4_data, metadata_table[,c(1,3)], by.x="Sample", by.y="element_identifier")
+        pc4 <- ggplot(pc4_data, aes(x=Sample, y=Contribution, fill=as.factor(Signature))) +
                geom_bar(stat="identity", position='fill') +
                scale_fill_discrete(name="Cosmic\nSignature") +
                scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
@@ -241,7 +245,7 @@ if (!is.na(opt$output_cosmic)[1]) {
                facet_grid(~level, scales = "free_x")
     }
     # Combine the two plots:
-    grid.arrange(pc1, pc2, top = textGrob("Absolute and Relative Contributions of Cosmic signatures to mutational patterns",gp=gpar(fontsize=12,font=3)))
+    grid.arrange(pc3, pc4, top = textGrob("Absolute and Relative Contributions of Cosmic signatures to mutational patterns",gp=gpar(fontsize=12,font=3)))
     ## pie charts of comic signatures contributions in samples
     
     sig_data_pie <- as.data.frame(t(head(fit_res$contribution[select,])))
@@ -252,7 +256,7 @@ if (!is.na(opt$output_cosmic)[1]) {
     melted_sig_data_pie_percents <-melt(data=sig_data_pie_percents)
     melted_sig_data_pie_percents$label <- sub("Sig.", "", melted_sig_data_pie_percents$variable)
     melted_sig_data_pie_percents$pos <- cumsum(melted_sig_data_pie_percents$value) - melted_sig_data_pie_percents$value/2
-    p.trans <-  ggplot(melted_sig_data_pie_percents, aes(x="", y=value, group=variable, fill=variable)) +
+    p7 <-  ggplot(melted_sig_data_pie_percents, aes(x="", y=value, group=variable, fill=variable)) +
                        geom_bar(width = 1, stat = "identity") +
                        geom_text(aes(label = label), position = position_stack(vjust = 0.5), color="black", size=3) +
                        coord_polar("y", start=0) + facet_wrap(~ sample) +
@@ -260,11 +264,11 @@ if (!is.na(opt$output_cosmic)[1]) {
                        theme(axis.text = element_blank(),
                              axis.ticks = element_blank(),
                              panel.grid  = element_blank())
-    grid.arrange(p.trans)
+    grid.arrange(p7)
 
     # Plot relative contribution of the cancer signatures in each sample as a heatmap with sample clustering
-    p.trans <- plot_contribution_heatmap(fit_res$contribution, cluster_samples = TRUE, method = "complete")
-    grid.arrange(p.trans)
+    p8 <- plot_contribution_heatmap(fit_res$contribution, cluster_samples = TRUE, method = "complete")
+    grid.arrange(p8)
 
     # Compare the reconstructed mutational profile of sample 1 with its original mutational profile
     # plot_compare_profiles(mut_mat[,1], fit_res$reconstructed[,1],
@@ -290,7 +294,7 @@ if (!is.na(opt$output_cosmic)[1]) {
     colnames(cos_sim_ori_rec) = "cos_sim"
     cos_sim_ori_rec$sample = row.names(cos_sim_ori_rec)
     # Make barplot
-    p.trans <- ggplot(cos_sim_ori_rec, aes(y=cos_sim, x=sample)) +
+    p9 <- ggplot(cos_sim_ori_rec, aes(y=cos_sim, x=sample)) +
                       geom_bar(stat="identity", fill = "skyblue4") +
                       coord_cartesian(ylim=c(0.8, 1)) +
                       # coord_flip(ylim=c(0.8,1)) +
@@ -303,7 +307,12 @@ if (!is.na(opt$output_cosmic)[1]) {
                       panel.grid.major.y=element_blank()) +
                       # Add cut.off line
                       geom_hline(aes(yintercept=.95))
-    grid.arrange(p.trans, top = textGrob("Similarity between true and reconstructed profiles (with all Cosmic sig.)",gp=gpar(fontsize=12,font=3)))    
-    
+    grid.arrange(p9, top = textGrob("Similarity between true and reconstructed profiles (with all Cosmic sig.)",gp=gpar(fontsize=12,font=3)))    
     dev.off()
+}
+
+
+# Output RData file
+if (!is.null(opt$rdata)) {
+  save.image(file=opt$rdata)
 }

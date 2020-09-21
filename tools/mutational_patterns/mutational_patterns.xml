@@ -1,4 +1,4 @@
-<tool id="mutational_patterns" name="Analyse Mutational Patters/Signatures" version="2.0.0+galaxy4">
+<tool id="mutational_patterns" name="Analyse Mutational Patterns/Signatures" version="2.0.0+galaxy4">
     <description>from genomic variations in vcf files</description>
     <requirements>
         <requirement type="package" version="2.0.0=r40_0">bioconductor-mutationalpatterns</requirement>
@@ -50,6 +50,10 @@ Rscript $__tool_directory__/mutational_patterns.R
         --output_cosmic $cosmic
     #end if
             
+    #if $rdata_out
+        --rdata '$rdata'
+    #end if
+
 ]]></command>
     <inputs>
         <param name="vcfs" type="data_collection" format="vcf" label="VCF file(s) collection" multiple="true"/>
@@ -120,7 +124,8 @@ Rscript $__tool_directory__/mutational_patterns.R
                        help="an integer between 2 and 30 signature types from cosmic"/>
             </when>
              <when value="no" />
-       </conditional>
+        </conditional>
+        <param name="rdata_out" type="boolean" checked="false" label="Output RData file?" help="Output all the data used by R to construct the tables and plots, can be loaded into R" />
     </inputs>
     <outputs>
         <data name="spectrum" format="pdf" label="Mutational Spectrum">
@@ -132,6 +137,10 @@ Rscript $__tool_directory__/mutational_patterns.R
         <data name="cosmic" format="pdf" label="Cosmic signatures">
             <filter>set_cosmic['choices'] == "yes"</filter>
         </data>
+        <data name="rdata" format="rdata" label="${tool.name}: RData file">
+            <filter>rdata_out</filter>
+        </data>
+
     </outputs>
     <tests>
         <test>
@@ -157,6 +166,7 @@ Rscript $__tool_directory__/mutational_patterns.R
             </conditional>
             <output name="spectrum" file="spectrum_output1.pdf" compare="sim_size" ftype="pdf"/>
         </test>
+
         <test>
             <param name="vcfs">
                 <collection type="list">
@@ -178,6 +188,7 @@ Rscript $__tool_directory__/mutational_patterns.R
             <param name="signum" value="3" />
             <output name="cosmic" file="cosmic_output1.pdf" compare="sim_size" ftype="pdf"/>
         </test>
+
         <test>
             <param name="vcfs">
                 <collection type="list">
@@ -198,6 +209,8 @@ Rscript $__tool_directory__/mutational_patterns.R
                 <param name="choices" value="no"/>
             </conditional>
             <output name="denovo" file="denovo_output1.pdf" compare="sim_size" ftype="pdf"/>
+            <param name="rdata_out" value="true" />
+            <output name="rdata" file="denovo_1.RData" compare="sim_size" />
         </test>
     </tests>
     <help>
