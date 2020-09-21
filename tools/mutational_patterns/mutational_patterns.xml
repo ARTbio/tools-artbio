@@ -210,7 +210,7 @@ Rscript $__tool_directory__/mutational_patterns.R
             </conditional>
             <output name="denovo" file="denovo_output1.pdf" compare="sim_size" ftype="pdf"/>
             <param name="rdata_out" value="true" />
-            <output name="rdata" file="denovo_1.RData" compare="sim_size" />
+            <output name="rdata" file="denovo_1.RData" compare="sim_size" delta="40000" />
         </test>
     </tests>
     <help>
