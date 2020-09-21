@@ -94,6 +94,7 @@ Rscript $__tool_directory__/mutational_patterns.R
             <when value="yes" />
             <when value="no" />
         </conditional>
+
         <conditional name="set_denovo">
             <param name="choices" type="select" label="Extract de novo signatures with MutationalPatterns" display="radio">
                 <option value="yes" selected="true">Yes</option>
@@ -210,7 +211,7 @@ Rscript $__tool_directory__/mutational_patterns.R
             </conditional>
             <output name="denovo" file="denovo_output1.pdf" compare="sim_size" ftype="pdf"/>
             <param name="rdata_out" value="true" />
-            <output name="rdata" file="denovo_1.RData" compare="sim_size" delta="40000" />
+            <output name="rdata" file="denovo_1.RData" compare="sim_size" delta="170000" />
         </test>
     </tests>
     <help>

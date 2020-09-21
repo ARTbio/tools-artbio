@@ -128,10 +128,12 @@ if (!is.na(opt$output_spectrum)[1]) {
 
 ###### Section 2: De novo mutational signature extraction using NMF #######
 if (!is.na(opt$output_denovo)[1]) {
-    mut_mat <- mut_mat + 0.0001 # First add a small psuedocount to the mutation count matrix
+    # for the moment:
+    opt$rank <-length(element_identifiers)
+    pseudo_mut_mat <- mut_mat + 0.0001 # First add a small pseudocount to the mutation count matrix
     # Use the NMF package to generate an estimate rank plot
     library("NMF")
-    estimate <- nmf(mut_mat, rank=1:opt$rank+1, method="brunet", nrun=opt$nrun, seed=123456)
+    estimate <- nmf(pseudo_mut_mat, rank=1:opt$rank, method="brunet", nrun=opt$nrun, seed=123456)
     # And plot it
     pdf(opt$output_denovo, paper = "special", width = 11.69, height = 11.69)
     p4 <- plot(estimate)
@@ -139,7 +141,7 @@ if (!is.na(opt$output_denovo)[1]) {
     # Extract 4 (PARAMETIZE) mutational signatures from the mutation count matrix with extract_signatures
     # (For larger datasets it is wise to perform more iterations by changing the nrun parameter
     # to achieve stability and avoid local minima)
-    nmf_res <- extract_signatures(mut_mat, rank=opt$rank, nrun=opt$nrun)
+    nmf_res <- extract_signatures(pseudo_mut_mat, rank=opt$rank, nrun=opt$nrun)
     # Assign signature names
     colnames(nmf_res$signatures) <- paste0("NewSig_", 1:opt$rank)
     rownames(nmf_res$contribution) <- paste0("NewSig_", 1:opt$rank)
@@ -166,7 +168,7 @@ if (!is.na(opt$output_denovo)[1]) {
     grid.arrange(pch1, pch2, ncol = 2, widths = c(2,1.6))
     
     # Compare the reconstructed mutational profile with the original mutational profile:   
-    plot_compare_profiles(mut_mat[,1],
+    plot_compare_profiles(pseudo_mut_mat[,1],
                           nmf_res$reconstructed[,1],
                           profile_names = c("Original", "Reconstructed"),
                           condensed = TRUE)
@@ -178,8 +180,8 @@ if (!is.na(opt$output_cosmic)[1]) {
     pdf(opt$output_cosmic, paper = "special", width = 11.69, height = 11.69)
     sp_url <- paste("https://cancer.sanger.ac.uk/cancergenome/assets/", "signatures_probabilities.txt", sep = "")
     cancer_signatures = read.table(sp_url, sep = "\t", header = TRUE)
-    mut_mat <- mut_mat + 0.0001 # First add a small psuedocount to the mutation count matrix
-    new_order = match(row.names(mut_mat), cancer_signatures$Somatic.Mutation.Type)
+    pseudo_mut_mat <- mut_mat + 0.0001 # First add a small psuedocount to the mutation count matrix
+    new_order = match(row.names(pseudo_mut_mat), cancer_signatures$Somatic.Mutation.Type)
     cancer_signatures = cancer_signatures[as.vector(new_order),]
     row.names(cancer_signatures) = cancer_signatures$Somatic.Mutation.Type
     cancer_signatures = as.matrix(cancer_signatures[,4:33])
@@ -215,7 +217,7 @@ if (!is.na(opt$output_cosmic)[1]) {
     # grid.arrange(p.trans)
     
     # Find optimal contribution of COSMIC signatures to reconstruct 96 mutational profiles
-    fit_res <- fit_to_signatures(mut_mat, cancer_signatures)
+    fit_res <- fit_to_signatures(pseudo_mut_mat, cancer_signatures)
 
     # Select signatures with some contribution (above a threshold)
     threshold <- tail(sort(unlist(rowSums(fit_res$contribution), use.names = FALSE)), opt$signum)[1]
@@ -279,7 +281,7 @@ if (!is.na(opt$output_cosmic)[1]) {
     # `cos_sim_matrix`
     
     # calculate all pairwise cosine similarities
-    cos_sim_ori_rec <- cos_sim_matrix(mut_mat, fit_res$reconstructed)
+    cos_sim_ori_rec <- cos_sim_matrix(pseudo_mut_mat, fit_res$reconstructed)
     # extract cosine similarities per sample between original and reconstructed
     cos_sim_ori_rec <- as.data.frame(diag(cos_sim_ori_rec))
     
