@@ -29,6 +29,12 @@ option_list = list(
     help = "path to the tab separated file describing the levels in function of datasets"
   ),
   make_option(
+    "--cosmic_version",
+    default = "v2",
+    type = 'character',
+    help = "Version of the Cosmic Signature set to be used to express mutational patterns"
+  ),
+  make_option(
     "--signum",
     default = 2,
     type = 'integer',
@@ -52,7 +58,6 @@ option_list = list(
     type = 'integer',
     help = "Number of new signatures to be captured"
   ),
-
   make_option(
     "--output_spectrum",
     default = NA,
@@ -128,8 +133,8 @@ if (!is.na(opt$output_spectrum)[1]) {
 
 ###### Section 2: De novo mutational signature extraction using NMF #######
 if (!is.na(opt$output_denovo)[1]) {
-    # for the moment:
-    opt$rank <-length(element_identifiers)
+    # opt$rank cannot be higher than the number of samples
+    if (opt$rank > length(element_identifiers)) {opt$rank <-length(element_identifiers)}
     pseudo_mut_mat <- mut_mat + 0.0001 # First add a small pseudocount to the mutation count matrix
     # Use the NMF package to generate an estimate rank plot
     library("NMF")
@@ -141,10 +146,10 @@ if (!is.na(opt$output_denovo)[1]) {
     # Extract 4 (PARAMETIZE) mutational signatures from the mutation count matrix with extract_signatures
     # (For larger datasets it is wise to perform more iterations by changing the nrun parameter
     # to achieve stability and avoid local minima)
-    nmf_res <- extract_signatures(pseudo_mut_mat, rank=opt$rank, nrun=opt$nrun)
+    nmf_res <- extract_signatures(pseudo_mut_mat, rank=opt$newsignum, nrun=opt$nrun)
     # Assign signature names
-    colnames(nmf_res$signatures) <- paste0("NewSig_", 1:opt$rank)
-    rownames(nmf_res$contribution) <- paste0("NewSig_", 1:opt$rank)
+    colnames(nmf_res$signatures) <- paste0("NewSig_", 1:opt$newsignum)
+    rownames(nmf_res$contribution) <- paste0("NewSig_", 1:opt$newsignum)
     # Plot the 96-profile of the signatures:
     p5 <- plot_96_profile(nmf_res$signatures, condensed = TRUE)
     grid.arrange(p5)
@@ -161,7 +166,7 @@ if (!is.na(opt$output_denovo)[1]) {
     # can be plotted in a user-specified order.
     # Plot signature contribution as a heatmap with sample clustering dendrogram and a specified signature order:
     pch1 <- plot_contribution_heatmap(nmf_res$contribution,
-                                      sig_order = paste0("NewSig_", 1:opt$rank))
+                                      sig_order = paste0("NewSig_", 1:opt$newsignum))
     # Plot signature contribution as a heatmap without sample clustering:
     pch2 <- plot_contribution_heatmap(nmf_res$contribution, cluster_samples=FALSE)
     #Combine the plots into one figure:
@@ -178,18 +183,38 @@ if (!is.na(opt$output_denovo)[1]) {
 
 if (!is.na(opt$output_cosmic)[1]) {
     pdf(opt$output_cosmic, paper = "special", width = 11.69, height = 11.69)
-    sp_url <- paste("https://cancer.sanger.ac.uk/cancergenome/assets/", "signatures_probabilities.txt", sep = "")
-    cancer_signatures = read.table(sp_url, sep = "\t", header = TRUE)
     pseudo_mut_mat <- mut_mat + 0.0001 # First add a small psuedocount to the mutation count matrix
-    new_order = match(row.names(pseudo_mut_mat), cancer_signatures$Somatic.Mutation.Type)
-    cancer_signatures = cancer_signatures[as.vector(new_order),]
-    row.names(cancer_signatures) = cancer_signatures$Somatic.Mutation.Type
-    cancer_signatures = as.matrix(cancer_signatures[,4:33])
+    if (opt$cosmic_version == "v2") {
+        sp_url <- paste("https://cancer.sanger.ac.uk/cancergenome/assets/", "signatures_probabilities.txt", sep = "")
+        cancer_signatures = read.table(sp_url, sep = "\t", header = TRUE)
+        new_order = match(row.names(pseudo_mut_mat), cancer_signatures$Somatic.Mutation.Type)
+        cancer_signatures = cancer_signatures[as.vector(new_order),]
+        row.names(cancer_signatures) = cancer_signatures$Somatic.Mutation.Type
+        cancer_signatures = as.matrix(cancer_signatures[,4:33])
+        colnames(cancer_signatures) <- gsub("Signature.", "", colnames(cancer_signatures)) # shorten signature labels
+        cosmic_tag <- "Signatures (Cosmic v2, March 2015)"
+        } else {
+        sp_url <- "https://raw.githubusercontent.com/ARTbio/startbio/master/sigProfiler_SBS_signatures_2019_05_22.tsv"
+        cancer_signatures = read.table(sp_url, sep = "\t", header = TRUE)
+        new_order = match(row.names(pseudo_mut_mat), cancer_signatures$Somatic.Mutation.Type)
+        cancer_signatures = cancer_signatures[as.vector(new_order),]
+        row.names(cancer_signatures) = cancer_signatures$Somatic.Mutation.Type
+        cancer_signatures = as.matrix(cancer_signatures[,4:70])        
+        colnames(cancer_signatures) <- gsub("SBS", "", colnames(cancer_signatures)) # shorten signature labels
+        cosmic_tag <- "Signatures (Cosmic v3, May 2019)"
+        }
     
     # Plot mutational profiles of the COSMIC signatures
-    colnames(cancer_signatures) <- gsub("Signature.", "", colnames(cancer_signatures)) # shorten signature labels
-    p6 <- plot_96_profile(cancer_signatures, condensed = TRUE, ymax = 0.3)
-    grid.arrange(p6, top = textGrob("COSMIC signature profiles",gp=gpar(fontsize=12,font=3)))
+    if (opt$cosmic_version == "v2") {
+        p6 <- plot_96_profile(cancer_signatures, condensed = TRUE, ymax = 0.3)
+        grid.arrange(p6, top = textGrob("COSMIC signature profiles",gp=gpar(fontsize=12,font=3)))
+    } else {
+        print(length(cancer_signatures))
+        p6 <- plot_96_profile(cancer_signatures[,1:33], condensed = TRUE, ymax = 0.3)
+        p6bis <- plot_96_profile(cancer_signatures[,34:67], condensed = TRUE, ymax = 0.3)
+        grid.arrange(p6, top = textGrob("COSMIC signature profiles (on two pages)",gp=gpar(fontsize=12,font=3)))
+        grid.arrange(p6bis, top = textGrob("COSMIC signature profiles (continued)",gp=gpar(fontsize=12,font=3)))
+    }
 
     # Hierarchically cluster the COSMIC signatures based on their similarity with average linkage
     # hclust_cosmic = cluster_signatures(cancer_signatures, method = "average")
@@ -262,7 +287,7 @@ if (!is.na(opt$output_cosmic)[1]) {
                        geom_bar(width = 1, stat = "identity") +
                        geom_text(aes(label = label), position = position_stack(vjust = 0.5), color="black", size=3) +
                        coord_polar("y", start=0) + facet_wrap(~ sample) +
-                       labs(x="", y="Samples", fill = "Signatures (Cosmic_v2,March 2015)") +
+                       labs(x="", y="Samples", fill = cosmic_tag) +
                        theme(axis.text = element_blank(),
                              axis.ticks = element_blank(),
                              panel.grid  = element_blank())

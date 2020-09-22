@@ -46,6 +46,7 @@ Rscript $__tool_directory__/mutational_patterns.R
     #end if
 
     #if $set_cosmic.choices == 'yes':
+        --cosmic_version $set_cosmic.cosmic_version
         --signum '$set_cosmic.signum'
         --output_cosmic $cosmic
     #end if
@@ -123,6 +124,10 @@ Rscript $__tool_directory__/mutational_patterns.R
                 <param name="signum" type="integer" value="3" min="2" max="30"
                        label="selects the N most significant signatures in samples to express mutational patterns"
                        help="an integer between 2 and 30 signature types from cosmic"/>
+                <param name="cosmic_version" type="select" label="Version of the Cosmic signature set">
+                    <option value="v2" selected="true">Cosmic v2, March 2015</option>
+                    <option value="v3">Cosmic v3, May 2019</option>
+                </param>
             </when>
              <when value="no" />
         </conditional>
