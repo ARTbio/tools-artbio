@@ -107,10 +107,10 @@ Rscript $__tool_directory__/mutational_patterns.R
                        help="High values extend the computational time"/>
                 <param name="rank" type="integer" value="4" min="3" max="30"
                        label="Number of ranks to be displayed for control of optimal number of signature"
-                       help="High values extend the computational time"/>
+                       help="High values extend the computational time. In addition the number of ranks cannot be greater than the number of available samples in the study"/>
                 <param name="newsignum" type="integer" value="4" min="2" max="30"
                        label="Number of de novo signatures to capture"
-                       help="High values extend the computational time"/>
+                       help="High values extend the computational time. Note also that you cannot extract more signature than the number of available samples in the study"/>
             </when>
             <when value="no" />
         </conditional>
@@ -149,6 +149,7 @@ Rscript $__tool_directory__/mutational_patterns.R
 
     </outputs>
     <tests>
+        <!-- simple profile -->
         <test>
             <param name="vcfs">
                 <collection type="list">
@@ -173,28 +174,7 @@ Rscript $__tool_directory__/mutational_patterns.R
             <output name="spectrum" file="spectrum_output1.pdf" compare="sim_size" ftype="pdf"/>
         </test>
 
-        <test>
-            <param name="vcfs">
-                <collection type="list">
-                    <element name="1" ftype="vcf" value="G.vcf"/>
-                    <element name="2" ftype="vcf" value="H.vcf"/>
-                </collection>
-            </param>
-            <param name="genome" value="BSgenome.Hsapiens.UCSC.hg38"/>
-            <param name="levels" value="GH_levels.tab" ftype="tabular"/>
-            <conditional name="set_spectrum">
-                <param name="choices" value="no"/>
-            </conditional>
-            <conditional name="set_denovo">
-                <param name="choices" value="no"/>
-            </conditional>
-            <conditional name="set_cosmic">
-                <param name="choices" value="yes"/>
-            </conditional>
-            <param name="signum" value="3" />
-            <output name="cosmic" file="cosmic_output1.pdf" compare="sim_size" ftype="pdf"/>
-        </test>
-
+         <!-- de novo signatures -->
         <test>
             <param name="vcfs">
                 <collection type="list">
@@ -217,6 +197,31 @@ Rscript $__tool_directory__/mutational_patterns.R
             <output name="denovo" file="denovo_output1.pdf" compare="sim_size" ftype="pdf"/>
             <param name="rdata_out" value="true" />
             <output name="rdata" file="denovo_1.RData" compare="sim_size" delta="170000" />
+        </test>
+
+         <!-- cosmic signatures -->
+        <test>
+            <param name="vcfs">
+                <collection type="list">
+                    <element name="6" value="F.vcf"/>
+                    <element name="7" value="G.vcf"/>
+                    <element name="8" value="H.vcf"/>
+                    <element name="9" value="I.vcf"/>
+                </collection>
+            </param>
+            <param name="genome" value="BSgenome.Hsapiens.UCSC.hg38"/>
+            <param name="levels" value="GH_levels.tab" ftype="tabular"/>
+            <conditional name="set_spectrum">
+                <param name="choices" value="no"/>
+            </conditional>
+            <conditional name="set_denovo">
+                <param name="choices" value="no"/>
+            </conditional>
+            <conditional name="set_cosmic">
+                <param name="choices" value="yes"/>
+            </conditional>
+            <param name="signum" value="3" />
+            <output name="cosmic" file="cosmic_output1.pdf" compare="sim_size" ftype="pdf"/>
         </test>
     </tests>
     <help>

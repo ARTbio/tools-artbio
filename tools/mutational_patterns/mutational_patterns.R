@@ -135,6 +135,8 @@ if (!is.na(opt$output_spectrum)[1]) {
 if (!is.na(opt$output_denovo)[1]) {
     # opt$rank cannot be higher than the number of samples
     if (opt$rank > length(element_identifiers)) {opt$rank <-length(element_identifiers)}
+    # likewise, opt$signum cannot be higher thant the number of samples
+    if (opt$signum > length(element_identifiers)) {opt$signum <-length(element_identifiers)}
     pseudo_mut_mat <- mut_mat + 0.0001 # First add a small pseudocount to the mutation count matrix
     # Use the NMF package to generate an estimate rank plot
     library("NMF")
