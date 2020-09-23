@@ -71,6 +71,12 @@ option_list = list(
     help = "path to output dataset"
   ),
   make_option(
+    "--sigmatrix",
+    default = NA,
+    type = 'character',
+    help = "path to signature matrix"
+  ),
+  make_option(
     "--output_cosmic",
     default = NA,
     type = 'character',
@@ -154,6 +160,9 @@ if (!is.na(opt$output_denovo)[1]) {
     rownames(nmf_res$contribution) <- paste0("NewSig_", 1:opt$newsignum)
     # Plot the 96-profile of the signatures:
     p5 <- plot_96_profile(nmf_res$signatures, condensed = TRUE)
+    new_sig_matrix <- reshape2::dcast(p5$data, substitution + context ~ variable, value.var = "value")
+    new_sig_matrix = format(new_sig_matrix, scientific=TRUE)
+    write.table(new_sig_matrix, file=opt$sigmatrix, quote = FALSE, row.names = FALSE, sep="\t") 
     grid.arrange(p5)
     # Visualize the contribution of the signatures in a barplot
     pc1 <- plot_contribution(nmf_res$contribution, nmf_res$signature, mode="relative", coord_flip = TRUE)

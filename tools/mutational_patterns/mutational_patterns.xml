@@ -43,6 +43,7 @@ Rscript $__tool_directory__/mutational_patterns.R
         --rank $set_denovo.rank
         --newsignum $set_denovo.newsignum
         --output_denovo $denovo
+        --sigmatrix $sigmatrix
     #end if
 
     #if $set_cosmic.choices == 'yes':
@@ -140,6 +141,9 @@ Rscript $__tool_directory__/mutational_patterns.R
         <data name="denovo" format="pdf" label="De novo signatures">
             <filter>set_denovo['choices'] == "yes"</filter>
         </data>
+        <data name="sigmatrix" format="tabular" label="De novo signatures probability matrix">
+            <filter>set_denovo['choices'] == "yes"</filter>
+        </data>
         <data name="cosmic" format="pdf" label="Cosmic signatures">
             <filter>set_cosmic['choices'] == "yes"</filter>
         </data>
@@ -194,9 +198,13 @@ Rscript $__tool_directory__/mutational_patterns.R
             <conditional name="set_cosmic">
                 <param name="choices" value="no"/>
             </conditional>
-            <output name="denovo" file="denovo_output1.pdf" compare="sim_size" ftype="pdf"/>
+            <param name="nrun" value="10" />
+            <param name="rank" value="4" />
+            <param name="newsignum" value="4" />
             <param name="rdata_out" value="true" />
-            <output name="rdata" file="denovo_1.RData" compare="sim_size" delta="170000" />
+            <output name="denovo" file="denovo_output1.pdf" compare="sim_size" ftype="pdf"/>
+            <output name="sigmatrix" file="sigmatrix.tab" ftype="tabular" compare="sim_size"/>
+            <output name="rdata" file="denovo_1.RData" compare="sim_size" /> <!--  delta="170000" -->
         </test>
 
          <!-- cosmic signatures -->
