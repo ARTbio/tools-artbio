@@ -1,4 +1,4 @@
-<tool id="lumpy_smoove" name="lumpy_smoove" version="0.6.0">
+<tool id="lumpy_smoove" name="lumpy_smoove" version="0.2.5+galaxy5">
     <description>find structural variants using the smoove workflow</description>
     <macros>
         <import>macro_lumpy_smoove.xml</import>
@@ -17,9 +17,15 @@
         ln -f -s $set_plan.normal_bam.metadata.bam_index normal.bam.bai &&
         ln -s $set_plan.tumor_bam tumor.bam &&
         ln -f -s $set_plan.tumor_bam.metadata.bam_index tumor.bam.bai &&
-    #else
+    #elif $set_plan.plan_choice=='single':
         ln -s $set_plan.single_bam single.bam &&
         ln -f -s $set_plan.single_bam.metadata.bam_index single.bam.bai &&
+    #else:
+        #for $sample in $set_plan.cohort:
+            ln -s $sample ${sample.element_identifier}.bam &&
+            ln -f -s $sample.metadata.bam_index ${sample.element_identifier}.bam.bai &&
+        #end for
+    ls -la &&
     #end if
    
     smoove call --name output
@@ -43,6 +49,7 @@
             <param name="plan_choice" type="select" label="Analyse a single Bam or a pair of Bam (eg normal/tumor)" display="radio">
                 <option value="pair" selected="true">A pair of Bam files</option>
                 <option value="single">A single Bam</option>
+                <option value="cohort">a small cohort of Bam files (less than ~40)</option>
             </param>
             <when value="pair">
                 <param format="bam" name="normal_bam" type="data" label="BAM alignment from the normal sample"/>
@@ -50,6 +57,9 @@
             </when>
             <when value="single">
                 <param format="bam" name="single_bam" type="data" label="BAM alignment from a single sample"/>
+            </when>
+            <when value="cohort">
+                <param name="cohort" type="data_collection" format="bam" label="A collection of bam files" multiple="true"/>
             </when>
         </conditional>      
 
@@ -76,6 +86,25 @@
     </outputs>
 
     <tests>
+        <test>
+
+            <conditional name="set_plan">
+                <param name="plan_choice" value="cohort"/>
+                <param name="cohort">
+                    <collection type="list">
+                        <element name="1" ftype="bam" value="celegans_RG_1.bam"/>
+                        <element name="2" ftype="bam" value="celegans_RG_2.bam"/>
+                        <element name="3" ftype="bam" value="celegans_RG_3.bam"/>
+                    </collection>
+                </param>
+            </conditional>
+            <param name="reference_source_selector" value="history" />
+            <param name="ref_file" value="chrI-ce11.fa"/>
+            <param name="choices" value="yes"/>
+            <param name="bedmask" value="exclude.bed"/>
+            <param name="prpos" value="no"/>
+            <output name="vcf_call" ftype="vcf" file="result-6.vcf" lines_diff="10"/>
+        </test>
         <test>
             <param name="reference_source_selector" value="history" />
             <param name="ref_file" value="chrI-ce11.fa"/>
@@ -132,7 +161,8 @@ noise and often contribute to spurious calls.
 There is a blog-post describing smoove in more detail
 here: https://brentp.github.io/post/smoove/
 
-Currently, this Galaxy tool only wraps smoove for 2 samples (bam normal and tumor inputs),
+Currently, this Galaxy tool only wraps smoove for 1, 2 (bam normal and tumor inputs) or
+a small collection of samples (&lt;40),
 which translates in the command line::
 
     <![CDATA[smoove call --name my-cohort --exclude $bed --fasta $fasta -p $threads --genotype [--removepr] /path/to/*.bam]]>
