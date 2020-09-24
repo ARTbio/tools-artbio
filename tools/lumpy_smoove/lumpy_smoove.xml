@@ -1,4 +1,4 @@
-<tool id="lumpy_smoove" name="lumpy_smoove" version="0.2.5+galaxy5">
+<tool id="lumpy_smoove" name="lumpy_smoove" version="0.7.0">
     <description>find structural variants using the smoove workflow</description>
     <macros>
         <import>macro_lumpy_smoove.xml</import>
