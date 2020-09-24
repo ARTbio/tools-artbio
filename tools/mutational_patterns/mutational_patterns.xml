@@ -204,7 +204,7 @@ Rscript $__tool_directory__/mutational_patterns.R
             <param name="rdata_out" value="true" />
             <output name="denovo" file="denovo_output1.pdf" compare="sim_size" ftype="pdf"/>
             <output name="sigmatrix" file="sigmatrix.tab" ftype="tabular" compare="sim_size"/>
-            <output name="rdata" file="denovo_1.RData" compare="sim_size" /> <!--  delta="170000" -->
+            <output name="rdata" file="denovo_1.RData" compare="sim_size" delta="400000"/> <!--  delta="170000" -->
         </test>
 
          <!-- cosmic signatures -->
