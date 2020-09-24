@@ -1,4 +1,4 @@
-<tool id="mutational_patterns" name="Analyse Mutational Patters/Signatures" version="2.0.0+galaxy3">
+<tool id="mutational_patterns" name="Analyse Mutational Patterns/Signatures" version="2.0.0+galaxy4">
     <description>from genomic variations in vcf files</description>
     <requirements>
         <requirement type="package" version="2.0.0=r40_0">bioconductor-mutationalpatterns</requirement>
@@ -43,13 +43,19 @@ Rscript $__tool_directory__/mutational_patterns.R
         --rank $set_denovo.rank
         --newsignum $set_denovo.newsignum
         --output_denovo $denovo
+        --sigmatrix $sigmatrix
     #end if
 
     #if $set_cosmic.choices == 'yes':
+        --cosmic_version $set_cosmic.cosmic_version
         --signum '$set_cosmic.signum'
         --output_cosmic $cosmic
     #end if
             
+    #if $rdata_out
+        --rdata '$rdata'
+    #end if
+
 ]]></command>
     <inputs>
         <param name="vcfs" type="data_collection" format="vcf" label="VCF file(s) collection" multiple="true"/>
@@ -90,6 +96,7 @@ Rscript $__tool_directory__/mutational_patterns.R
             <when value="yes" />
             <when value="no" />
         </conditional>
+
         <conditional name="set_denovo">
             <param name="choices" type="select" label="Extract de novo signatures with MutationalPatterns" display="radio">
                 <option value="yes" selected="true">Yes</option>
@@ -101,10 +108,10 @@ Rscript $__tool_directory__/mutational_patterns.R
                        help="High values extend the computational time"/>
                 <param name="rank" type="integer" value="4" min="3" max="30"
                        label="Number of ranks to be displayed for control of optimal number of signature"
-                       help="High values extend the computational time"/>
+                       help="High values extend the computational time. In addition the number of ranks cannot be greater than the number of available samples in the study"/>
                 <param name="newsignum" type="integer" value="4" min="2" max="30"
                        label="Number of de novo signatures to capture"
-                       help="High values extend the computational time"/>
+                       help="High values extend the computational time. Note also that you cannot extract more signature than the number of available samples in the study"/>
             </when>
             <when value="no" />
         </conditional>
@@ -118,9 +125,14 @@ Rscript $__tool_directory__/mutational_patterns.R
                 <param name="signum" type="integer" value="3" min="2" max="30"
                        label="selects the N most significant signatures in samples to express mutational patterns"
                        help="an integer between 2 and 30 signature types from cosmic"/>
+                <param name="cosmic_version" type="select" label="Version of the Cosmic signature set">
+                    <option value="v2" selected="true">Cosmic v2, March 2015</option>
+                    <option value="v3">Cosmic v3, May 2019</option>
+                </param>
             </when>
              <when value="no" />
-       </conditional>
+        </conditional>
+        <param name="rdata_out" type="boolean" checked="false" label="Output RData file?" help="Output all the data used by R to construct the tables and plots, can be loaded into R" />
     </inputs>
     <outputs>
         <data name="spectrum" format="pdf" label="Mutational Spectrum">
@@ -129,53 +141,19 @@ Rscript $__tool_directory__/mutational_patterns.R
         <data name="denovo" format="pdf" label="De novo signatures">
             <filter>set_denovo['choices'] == "yes"</filter>
         </data>
+        <data name="sigmatrix" format="tabular" label="De novo signatures probability matrix">
+            <filter>set_denovo['choices'] == "yes"</filter>
+        </data>
         <data name="cosmic" format="pdf" label="Cosmic signatures">
             <filter>set_cosmic['choices'] == "yes"</filter>
         </data>
+        <data name="rdata" format="rdata" label="${tool.name}: RData file">
+            <filter>rdata_out</filter>
+        </data>
+
     </outputs>
     <tests>
-        <test>
-            <param name="vcfs">
-                <collection type="list">
-                    <element name="1" ftype="vcf" value="G.vcf"/>
-                    <element name="2" ftype="vcf" value="H.vcf"/>
-                </collection>
-            </param>
-            <param name="genome" value="BSgenome.Hsapiens.UCSC.hg38"/>
-            <param name="levels" value="GH_levels.tab" ftype="tabular"/>
-            <conditional name="set_spectrum">
-                <param name="choices" value="no"/>
-            </conditional>
-            <conditional name="set_denovo">
-                <param name="choices" value="no"/>
-            </conditional>
-            <conditional name="set_cosmic">
-                <param name="choices" value="yes"/>
-            </conditional>
-            <param name="signum" value="3" />
-            <output name="cosmic" file="cosmic_output1.pdf" compare="sim_size" ftype="pdf"/>
-        </test>
-        <test>
-            <param name="vcfs">
-                <collection type="list">
-                    <element name="6" value="F.vcf"/>
-                    <element name="7" value="G.vcf"/>
-                    <element name="8" value="H.vcf"/>
-                    <element name="9" value="I.vcf"/>
-                </collection>
-            </param>
-            <param name="genome" value="BSgenome.Hsapiens.UCSC.hg38"/>
-            <conditional name="set_spectrum">
-                <param name="choices" value="no"/>
-            </conditional>
-            <conditional name="set_denovo">
-                <param name="choices" value="yes"/>
-            </conditional>
-            <conditional name="set_cosmic">
-                <param name="choices" value="no"/>
-            </conditional>
-            <output name="denovo" file="denovo_output1.pdf" compare="sim_size" ftype="pdf"/>
-        </test>
+        <!-- simple profile -->
         <test>
             <param name="vcfs">
                 <collection type="list">
@@ -198,6 +176,60 @@ Rscript $__tool_directory__/mutational_patterns.R
                 <param name="choices" value="no"/>
             </conditional>
             <output name="spectrum" file="spectrum_output1.pdf" compare="sim_size" ftype="pdf"/>
+        </test>
+
+         <!-- de novo signatures -->
+        <test>
+            <param name="vcfs">
+                <collection type="list">
+                    <element name="6" value="F.vcf"/>
+                    <element name="7" value="G.vcf"/>
+                    <element name="8" value="H.vcf"/>
+                    <element name="9" value="I.vcf"/>
+                </collection>
+            </param>
+            <param name="genome" value="BSgenome.Hsapiens.UCSC.hg38"/>
+            <conditional name="set_spectrum">
+                <param name="choices" value="no"/>
+            </conditional>
+            <conditional name="set_denovo">
+                <param name="choices" value="yes"/>
+            </conditional>
+            <conditional name="set_cosmic">
+                <param name="choices" value="no"/>
+            </conditional>
+            <param name="nrun" value="10" />
+            <param name="rank" value="4" />
+            <param name="newsignum" value="4" />
+            <param name="rdata_out" value="true" />
+            <output name="denovo" file="denovo_output1.pdf" compare="sim_size" ftype="pdf"/>
+            <output name="sigmatrix" file="sigmatrix.tab" ftype="tabular" compare="sim_size"/>
+            <output name="rdata" file="denovo_1.RData" compare="sim_size" delta="400000"/> <!--  delta="170000" -->
+        </test>
+
+         <!-- cosmic signatures -->
+        <test>
+            <param name="vcfs">
+                <collection type="list">
+                    <element name="6" value="F.vcf"/>
+                    <element name="7" value="G.vcf"/>
+                    <element name="8" value="H.vcf"/>
+                    <element name="9" value="I.vcf"/>
+                </collection>
+            </param>
+            <param name="genome" value="BSgenome.Hsapiens.UCSC.hg38"/>
+            <param name="levels" value="GH_levels.tab" ftype="tabular"/>
+            <conditional name="set_spectrum">
+                <param name="choices" value="no"/>
+            </conditional>
+            <conditional name="set_denovo">
+                <param name="choices" value="no"/>
+            </conditional>
+            <conditional name="set_cosmic">
+                <param name="choices" value="yes"/>
+            </conditional>
+            <param name="signum" value="3" />
+            <output name="cosmic" file="cosmic_output1.pdf" compare="sim_size" ftype="pdf"/>
         </test>
     </tests>
     <help>
