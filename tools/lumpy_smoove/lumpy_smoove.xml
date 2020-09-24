@@ -161,7 +161,8 @@ noise and often contribute to spurious calls.
 There is a blog-post describing smoove in more detail
 here: https://brentp.github.io/post/smoove/
 
-Currently, this Galaxy tool only wraps smoove for 2 samples (bam normal and tumor inputs),
+Currently, this Galaxy tool only wraps smoove for 1, 2 (bam normal and tumor inputs) or
+a small collection of samples (<40),
 which translates in the command line::
 
     <![CDATA[smoove call --name my-cohort --exclude $bed --fasta $fasta -p $threads --genotype [--removepr] /path/to/*.bam]]>
