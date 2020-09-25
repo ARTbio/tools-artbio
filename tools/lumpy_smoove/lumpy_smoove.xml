@@ -1,4 +1,4 @@
-<tool id="lumpy_smoove" name="lumpy_smoove" version="0.7.0">
+<tool id="lumpy_smoove" name="lumpy_smoove" version="0.2.5+galaxy5">
     <description>find structural variants using the smoove workflow</description>
     <macros>
         <import>macro_lumpy_smoove.xml</import>
@@ -94,7 +94,6 @@
                     <collection type="list">
                         <element name="1" ftype="bam" value="celegans_RG_1.bam"/>
                         <element name="2" ftype="bam" value="celegans_RG_2.bam"/>
-                        <element name="3" ftype="bam" value="celegans_RG_3.bam"/>
                     </collection>
                 </param>
             </conditional>
@@ -103,7 +102,7 @@
             <param name="choices" value="yes"/>
             <param name="bedmask" value="exclude.bed"/>
             <param name="prpos" value="no"/>
-            <output name="vcf_call" ftype="vcf" file="result-6.vcf" lines_diff="10"/>
+            <output name="vcf_call" ftype="vcf" file="result-6.vcf" lines_diff="8"/>
         </test>
         <test>
             <param name="reference_source_selector" value="history" />
