@@ -1,0 +1,78 @@
+<tool id="artbio_bam_cleaning" name="ARTbio bam cleaning" version="1.6+galaxy0">
+    <description>
+        on flags and PCR Duplicates and MD recalibration
+    </description>
+    <macros>
+        <import>macro.xml</import>
+    </macros>
+    <requirements>
+        <requirement type="package" version="1.6">samtools</requirement>
+        <requirement type="package" version="0.7.1">sambamba</requirement>
+        <requirement type="package" version="1.3.2">freebayes</requirement>
+    </requirements>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Error occured" />
+    </stdio>
+    <command detect_errors="exit_code"><![CDATA[
+    @pipefail@
+    @set_fasta_index@
+    #set input_base = 'input'   
+    ln -f -s $input_bam.metadata.bam_index input.bam.bai &&
+    ln -s $input_bam input.bam &&
+    sambamba view -h -t 8 --filter='mapping_quality >= 1 and not(unmapped) and not(mate_is_unmapped)' -f 'bam' $input_base".bam"
+    | samtools rmdup - -
+    |tee $input_base".filt1.dedup.bam"| bamleftalign --fasta-reference reference.fa -c --max-iterations "5" -
+    | samtools calmd  -C 50 -b -@ \${GALAXY_SLOTS:-2} - reference.fa > $input_base".filt1.dedup.bamleft.calmd.bam" &&
+    sambamba view -h -t 8 --filter='mapping_quality <= 254' -f 'bam' -o $input_base".filt1.dedup.bamleft.calmd.filt2.bam" $input_base".filt1.dedup.bamleft.calmd.bam"
+    ]]></command>
+    <inputs>
+        <expand macro="reference_source_conditional" />
+        <param name="input_bam" type="data" format="bam" label="BAM or SAM file to process"/>
+    </inputs>
+    <outputs>
+        <data name="calmd" format="bam" label="CalMD filter (for lumpy-smoove)" from_work_dir="./input.filt1.dedup.bamleft.calmd.bam"/>
+        <data name="fullfilter" format="bam" label="Full filtering (for somatic-varscan)" from_work_dir="./input.filt1.dedup.bamleft.calmd.filt2.bam"/>
+    </outputs>
+    <tests>
+        <test>
+            <param name="input_bam" value="match_chr21_DBA_974.bam" ftype="bam" />
+            <param name="reference_source_selector" value="history" />
+            <param name="ref_file" value="chr21.fa" />
+            <output name="calmd" file="match_chr21_DBA_974.filt1.dedup.bamleft.calmd.bam" ftype="bam" />
+            <output name="fullfilter" file="match_chr21_DBA_974.filt1.dedup.bamleft.calmd.filt2.bam" ftype="bam" />
+        </test>
+    </tests>
+    <help>
+ARTbio bam cleaning overview
+============================
+
+This tool is wrapping several cleaning steps to produce bam files suitable for subsequent
+analyses with lumpy-smoove (or other large structural variation callers) or with
+somatic-varscan (or small structural variation callers)
+
+
+Workflow 
+=============
+
+The tool is using the following command line for filtering:
+
+::
+
+    sambamba view -h -t 8 --filter='mapping_quality >= 1 and not(unmapped) and not(mate_is_unmapped)' -f 'bam' $input_base".bam"
+    &#124; samtools rmdup - -
+    &#124;tee $input_base".filt1.dedup.bam" &#124; bamleftalign --fasta-reference reference.fa -c --max-iterations "5" -
+    &#124; samtools calmd  -C 50 -b -@ 4 - reference.fa &gt; $input_base".filt1.dedup.bamleft.calmd.bam" ;
+    sambamba view -h -t 8 --filter='mapping_quality &lt;&#61; 254' -f 'bam' -o $input_base".filt1.dedup.bamleft.calmd.filt2.bam" $input_base".filt1.dedup.bamleft.calmd.bam"
+    
+Purpose
+--------
+
+This "workflow" tool was generated in order to limit the number of ``python metadata/set.py`` jobs
+which occur at each step of standard galaxy workflows. Indeed, these jobs are poorly optimized and may last considerable
+amounts of time when datasets are large, at each step, lowering the overall performance of the workflow.
+
+    </help>
+    <citations>
+        <citation type="doi">10.1371/journal.pone.0168397</citation>
+    </citations>
+</tool>
