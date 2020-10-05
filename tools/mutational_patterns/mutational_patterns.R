@@ -7,6 +7,8 @@ library(optparse)
 library(rjson)
 library(grid)
 library(gridExtra)
+library(scales)
+library(RColorBrewer)
 
 # Arguments
 option_list = list(
@@ -117,6 +119,9 @@ if (!is.na(opt$levels)[1]) {  # manage levels if there are
 
 ##### This is done for any section ######
 mut_mat <- mut_matrix(vcf_list = vcfs, ref_genome = ref_genome)
+qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
+col_vector = unique(unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals))))
+col_vector <- col_vector[c(-32, -34, -39)] # 67-color palette
 
 ###### Section 1 Mutation characteristics and spectrums #############
 if (!is.na(opt$output_spectrum)[1]) {
@@ -204,6 +209,7 @@ if (!is.na(opt$output_cosmic)[1]) {
         cancer_signatures = as.matrix(cancer_signatures[,4:33])
         colnames(cancer_signatures) <- gsub("Signature.", "", colnames(cancer_signatures)) # shorten signature labels
         cosmic_tag <- "Signatures (Cosmic v2, March 2015)"
+        cosmic_colors <- col_vector[1:30]
         } else {
         sp_url <- "https://raw.githubusercontent.com/ARTbio/startbio/master/sigProfiler_SBS_signatures_2019_05_22.tsv"
         cancer_signatures = read.table(sp_url, sep = "\t", header = TRUE)
@@ -213,6 +219,7 @@ if (!is.na(opt$output_cosmic)[1]) {
         cancer_signatures = as.matrix(cancer_signatures[,4:70])        
         colnames(cancer_signatures) <- gsub("SBS", "", colnames(cancer_signatures)) # shorten signature labels
         cosmic_tag <- "Signatures (Cosmic v3, May 2019)"
+        cosmic_colors <- col_vector[1:67]
         }
     
     # Plot mutational profiles of the COSMIC signatures
@@ -220,47 +227,34 @@ if (!is.na(opt$output_cosmic)[1]) {
         p6 <- plot_96_profile(cancer_signatures, condensed = TRUE, ymax = 0.3)
         grid.arrange(p6, top = textGrob("COSMIC signature profiles",gp=gpar(fontsize=12,font=3)))
     } else {
-        print(length(cancer_signatures))
         p6 <- plot_96_profile(cancer_signatures[,1:33], condensed = TRUE, ymax = 0.3)
         p6bis <- plot_96_profile(cancer_signatures[,34:67], condensed = TRUE, ymax = 0.3)
         grid.arrange(p6, top = textGrob("COSMIC signature profiles (on two pages)",gp=gpar(fontsize=12,font=3)))
         grid.arrange(p6bis, top = textGrob("COSMIC signature profiles (continued)",gp=gpar(fontsize=12,font=3)))
     }
 
-    # Hierarchically cluster the COSMIC signatures based on their similarity with average linkage
-    # hclust_cosmic = cluster_signatures(cancer_signatures, method = "average")
-    # store signatures in new order
-    # cosmic_order = colnames(cancer_signatures)[hclust_cosmic$order]
-    # plot(hclust_cosmic)
-    
-    # Similarity between mutational profiles and COSMIC signatures
-    
-    
-    # The similarity between each mutational profile and each COSMIC signature, can be calculated
-    # with cos_sim_matrix, and visualized with plot_cosine_heatmap. The cosine similarity reflects
-    # how well each mutational profile can be explained by each signature individually. The advantage
-    # of this heatmap representation is that it shows in a glance the similarity in mutational
-    # profiles between samples, while at the same time providing information on which signatures
-    # are most prominent. The samples can be hierarchically clustered in plot_cosine_heatmap.
-    # The cosine similarity between two mutational profiles/signatures can be calculated with cos_sim :
-    # cos_sim(mut_mat[,1], cancer_signatures[,1])
-    
-    # Calculate pairwise cosine similarity between mutational profiles and COSMIC signatures
-    
-    # cos_sim_samples_signatures = cos_sim_matrix(mut_mat, cancer_signatures)
-    # Plot heatmap with specified signature order
-    # p.trans <- plot_cosine_heatmap(cos_sim_samples_signatures, col_order = cosmic_order, cluster_rows = TRUE)
-    # grid.arrange(p.trans)
     
     # Find optimal contribution of COSMIC signatures to reconstruct 96 mutational profiles
     fit_res <- fit_to_signatures(pseudo_mut_mat, cancer_signatures)
 
-    # Select signatures with some contribution (above a threshold)
-    threshold <- tail(sort(unlist(rowSums(fit_res$contribution), use.names = FALSE)), opt$signum)[1]
-    select <- which(rowSums(fit_res$contribution) >= threshold) # ensure opt$signum best signatures in samples are retained, the others discarded
     # Plot contribution barplots
-    pc3 <- plot_contribution(fit_res$contribution[select,], cancer_signatures[,select], coord_flip = T, mode = "absolute")
-    pc4 <- plot_contribution(fit_res$contribution[select,], cancer_signatures[,select], coord_flip = T, mode = "relative")
+        pc3 <- plot_contribution(fit_res$contribution, cancer_signatures, coord_flip = T, mode = "absolute")
+        pc4 <- plot_contribution(fit_res$contribution, cancer_signatures, coord_flip = T, mode = "relative")
+        pc3_data <- pc3$data
+        pc3 <- ggplot(pc3_data, aes(x=Sample, y=Contribution, fill=as.factor(Signature))) +
+               geom_bar(stat="identity", position='stack') +
+               coord_flip() +
+               scale_fill_manual(name = "Cosmic\nSignatures", values = cosmic_colors) +
+               labs(x = "Samples", y = "Absolute contribution") + theme_bw() + 
+               theme(panel.grid.minor.x = element_blank(), panel.grid.major.x = element_blank(), legend.position="right")
+        pc4_data <- pc4$data
+        pc4 <- ggplot(pc4_data, aes(x=Sample, y=Contribution, fill=as.factor(Signature))) +
+               geom_bar(stat="identity", position='fill') +
+               coord_flip() +
+               scale_fill_manual(name = "Cosmic\nSignatures", values = cosmic_colors) +
+               scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+               labs(x = "Samples", y = "Relative contribution") + theme_bw() + 
+               theme(panel.grid.minor.x = element_blank(), panel.grid.major.x = element_blank(), legend.position="right")
     #####
     # ggplot2 alternative
     if (!is.na(opt$levels)[1]) {  # if there are levels to display in graphs
@@ -268,24 +262,28 @@ if (!is.na(opt$output_cosmic)[1]) {
         pc3_data <- merge (pc3_data, metadata_table[,c(1,3)], by.x="Sample", by.y="element_identifier")
         pc3 <- ggplot(pc3_data, aes(x=Sample, y=Contribution, fill=as.factor(Signature))) +
                geom_bar(stat="identity", position='stack') +
-               scale_fill_discrete(name="Cosmic\nSignature") +
+               scale_fill_manual(name = "Cosmic\nSignatures", values = cosmic_colors) +
                labs(x = "Samples", y = "Absolute contribution") + theme_bw() + 
-               theme(panel.grid.minor.x = element_blank(), panel.grid.major.x = element_blank()) + 
+               theme(panel.grid.minor.x = element_blank(), panel.grid.major.x = element_blank(), legend.position="right") + 
                facet_grid(~level, scales = "free_x")
         pc4_data <- pc4$data
         pc4_data <- merge (pc4_data, metadata_table[,c(1,3)], by.x="Sample", by.y="element_identifier")
         pc4 <- ggplot(pc4_data, aes(x=Sample, y=Contribution, fill=as.factor(Signature))) +
                geom_bar(stat="identity", position='fill') +
-               scale_fill_discrete(name="Cosmic\nSignature") +
+               scale_fill_manual(name = "Cosmic\nSignatures", values = cosmic_colors) +
                scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
                labs(x = "Samples", y = "Relative contribution") + theme_bw() + 
-               theme(panel.grid.minor.x = element_blank(), panel.grid.major.x = element_blank()) + 
+               theme(panel.grid.minor.x = element_blank(), panel.grid.major.x = element_blank(), legend.position="right") + 
                facet_grid(~level, scales = "free_x")
     }
     # Combine the two plots:
     grid.arrange(pc3, pc4, top = textGrob("Absolute and Relative Contributions of Cosmic signatures to mutational patterns",gp=gpar(fontsize=12,font=3)))
-    ## pie charts of comic signatures contributions in samples
     
+    # Select signatures with some contribution (above a threshold)
+    threshold <- tail(sort(unlist(rowSums(fit_res$contribution), use.names = FALSE)), opt$signum)[1]
+    select <- which(rowSums(fit_res$contribution) >= threshold) # ensure opt$signum best signatures in samples are retained, the others discarded
+
+    ## pie charts of comic signatures contributions in samples
     sig_data_pie <- as.data.frame(t(head(fit_res$contribution[select,])))
     colnames(sig_data_pie) <- gsub("nature", "", colnames(sig_data_pie))
     sig_data_pie_percents <- sig_data_pie / (apply(sig_data_pie,1,sum)) * 100
@@ -299,22 +297,17 @@ if (!is.na(opt$output_cosmic)[1]) {
                        geom_text(aes(label = label), position = position_stack(vjust = 0.5), color="black", size=3) +
                        coord_polar("y", start=0) + facet_wrap(~ sample) +
                        labs(x="", y="Samples", fill = cosmic_tag) +
+                       scale_fill_manual(name = paste0(length(select), " most contributing\nSignatures"), values = cosmic_colors[select])
                        theme(axis.text = element_blank(),
                              axis.ticks = element_blank(),
                              panel.grid  = element_blank())
     grid.arrange(p7)
 
     # Plot relative contribution of the cancer signatures in each sample as a heatmap with sample clustering
-    p8 <- plot_contribution_heatmap(fit_res$contribution, cluster_samples = TRUE, method = "complete")
-    grid.arrange(p8)
-
-    # Compare the reconstructed mutational profile of sample 1 with its original mutational profile
-    # plot_compare_profiles(mut_mat[,1], fit_res$reconstructed[,1],
-    #                       profile_names = c("Original", "Reconstructed"),
-    #                       condensed = TRUE)
-    
-    # Calculate the cosine similarity between all original and reconstructed mutational profiles with
-    # `cos_sim_matrix`
+    if (length(vcf_paths) > 1) {
+        p8 <- plot_contribution_heatmap(fit_res$contribution, cluster_samples = TRUE, method = "complete")
+        grid.arrange(p8)
+    }
     
     # calculate all pairwise cosine similarities
     cos_sim_ori_rec <- cos_sim_matrix(pseudo_mut_mat, fit_res$reconstructed)
