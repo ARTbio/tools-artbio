@@ -248,7 +248,7 @@ Rscript $__tool_directory__/mutational_patterns.R
                 <param name="choices" value="yes"/>
             </conditional>
             <param name="signum" value="5" />
-            <output name="cosmic" file="cosmic_output2.pdf" compare="sim_size" delta="20000" ftype="pdf"/>
+            <output name="cosmic" file="cosmic_output2.pdf" compare="sim_size" delta="50000" ftype="pdf"/>
         </test>
     </tests>
     <help>
