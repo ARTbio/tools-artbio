@@ -102,7 +102,7 @@ fileslist <- parser$getObject()
 vcf_paths <- attr(fileslist, "names")
 element_identifiers <- unname(unlist(fileslist))
 ref_genome <- opt$genome
-vcf_table <- data.frame(element_identifier=element_identifiers, path=vcf_paths)
+vcf_table <- data.frame(element_identifier=as.character(element_identifiers), path=vcf_paths)
 
 library(MutationalPatterns)
 library(ref_genome, character.only = TRUE)
