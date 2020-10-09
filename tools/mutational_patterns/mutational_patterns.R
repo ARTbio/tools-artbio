@@ -246,7 +246,9 @@ if (!is.na(opt$output_cosmic)[1]) {
                coord_flip() +
                scale_fill_manual(name = "Cosmic\nSignatures", values = cosmic_colors) +
                labs(x = "Samples", y = "Absolute contribution") + theme_bw() + 
-               theme(panel.grid.minor.x = element_blank(), panel.grid.major.x = element_blank(), legend.position="right")
+               theme(panel.grid.minor.x = element_blank(), panel.grid.major.x = element_blank(), legend.position="right",
+                     text = element_text(size=8),
+                     axis.text.x = element_text(angle=90, hjust=1))
         pc4_data <- pc4$data
         pc4 <- ggplot(pc4_data, aes(x=Sample, y=Contribution, fill=as.factor(Signature))) +
                geom_bar(stat="identity", position='fill') +
@@ -254,7 +256,9 @@ if (!is.na(opt$output_cosmic)[1]) {
                scale_fill_manual(name = "Cosmic\nSignatures", values = cosmic_colors) +
                scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
                labs(x = "Samples", y = "Relative contribution") + theme_bw() + 
-               theme(panel.grid.minor.x = element_blank(), panel.grid.major.x = element_blank(), legend.position="right")
+               theme(panel.grid.minor.x = element_blank(), panel.grid.major.x = element_blank(), legend.position="right",
+                     text = element_text(size=8),
+                     axis.text.x = element_text(angle=90, hjust=1))
     #####
     # ggplot2 alternative
     if (!is.na(opt$levels)[1]) {  # if there are levels to display in graphs
@@ -264,7 +268,9 @@ if (!is.na(opt$output_cosmic)[1]) {
                geom_bar(stat="identity", position='stack') +
                scale_fill_manual(name = "Cosmic\nSignatures", values = cosmic_colors) +
                labs(x = "Samples", y = "Absolute contribution") + theme_bw() + 
-               theme(panel.grid.minor.x = element_blank(), panel.grid.major.x = element_blank(), legend.position="right") + 
+               theme(panel.grid.minor.x = element_blank(), panel.grid.major.x = element_blank(), legend.position="right",
+                     text = element_text(size=8),
+                     axis.text.x = element_text(angle=90, hjust=1)) + 
                facet_grid(~level, scales = "free_x")
         pc4_data <- pc4$data
         pc4_data <- merge (pc4_data, metadata_table[,c(1,3)], by.x="Sample", by.y="element_identifier")
@@ -273,7 +279,9 @@ if (!is.na(opt$output_cosmic)[1]) {
                scale_fill_manual(name = "Cosmic\nSignatures", values = cosmic_colors) +
                scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
                labs(x = "Samples", y = "Relative contribution") + theme_bw() + 
-               theme(panel.grid.minor.x = element_blank(), panel.grid.major.x = element_blank(), legend.position="right") + 
+               theme(panel.grid.minor.x = element_blank(), panel.grid.major.x = element_blank(), legend.position="right",
+                     text = element_text(size=8),
+                     axis.text.x = element_text(angle=90, hjust=1)) + 
                facet_grid(~level, scales = "free_x")
     }
     # Combine the two plots:
