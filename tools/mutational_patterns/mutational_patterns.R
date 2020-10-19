@@ -316,7 +316,7 @@ if (!is.na(opt$output_cosmic)[1]) {
              worklist[[i]] <- worklist[[i]][ , -length(as.data.frame(worklist[[i]]))]
         }
         worklist <- as.data.frame(melt(worklist))
-        worklist[,2] <- paste0(worklist[,2], " - ", worklist[,4])
+        worklist[,2] <- paste0(worklist[,4], " - ", worklist[,2])
         head(worklist)
     }
     
@@ -328,7 +328,7 @@ if (!is.na(opt$output_cosmic)[1]) {
     p7 <-  ggplot(worklist, aes(x="", y=value, group=signature, fill=signature)) +
               geom_bar(width = 1, stat = "identity") +
               geom_text(aes(label = label), position = position_stack(vjust = 0.5), color="black", size=3) +
-              coord_polar("y", start=0) + facet_wrap(~ sample) +
+              coord_polar("y", start=0) + facet_wrap(.~sample) +
               labs(x="", y="Samples", fill = cosmic_tag) +
               scale_fill_manual(name = paste0(opt$signum, " most contributing\nsignatures\n(in each label/tissue)"),
                                 values = cosmic_colors[as.numeric(levels(factor(worklist$label)))]) +
