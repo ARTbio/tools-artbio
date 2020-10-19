@@ -316,10 +316,11 @@ if (!is.na(opt$output_cosmic)[1]) {
              worklist[[i]] <- worklist[[i]][ , -length(as.data.frame(worklist[[i]]))]
         }
         worklist <- as.data.frame(melt(worklist))
+        worklist[,2] <- paste0(worklist[,2], " - ", worklist[,4])
+        head(worklist)
     }
     
     colnames(worklist) <- c("signature", "sample", "value", "level")
-    print(worklist)
     worklist <- as.data.frame(worklist %>% group_by(sample) %>% mutate(value=value/sum(value)*100))
     worklist$pos <- cumsum(worklist$value) - worklist$value/2
     worklist$label <- factor(worklist$signature)
