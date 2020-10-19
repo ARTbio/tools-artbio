@@ -110,12 +110,16 @@ library(ggplot2)
 
 # Load the VCF files into a GRangesList:
 vcfs <- read_vcfs_as_granges(vcf_paths, element_identifiers, ref_genome)
+library(plyr)
 if (!is.na(opt$levels)[1]) {  # manage levels if there are
     levels_table  <- read.delim(opt$levels, header=FALSE, col.names=c("element_identifier","level"))
-    library(plyr)
-    metadata_table <- join(vcf_table, levels_table, by = "element_identifier")
-    tissue <- as.vector(metadata_table$level)
+    } else {
+    levels_table <- data.frame(element_identifier=vcf_table$element_identifier,
+                               level=rep("nolabels", length(vcf_table$element_identifier)))
 }
+metadata_table <- join(vcf_table, levels_table, by = "element_identifier")
+tissue <- as.vector(metadata_table$level)
+detach(package:plyr)
 
 ##### This is done for any section ######
 mut_mat <- mut_matrix(vcf_list = vcfs, ref_genome = ref_genome)
@@ -130,7 +134,7 @@ if (!is.na(opt$output_spectrum)[1]) {
     
     # mutation spectrum, total or by sample
     
-    if (is.na(opt$levels)[1]) {
+    if (length(levels(factor(levels_table$level))) == 1) { # (is.na(opt$levels)[1]) 
         p1 <- plot_spectrum(type_occurrences, CT = TRUE, legend=TRUE)
         plot(p1)
     } else {
@@ -287,28 +291,49 @@ if (!is.na(opt$output_cosmic)[1]) {
     # Combine the two plots:
     grid.arrange(pc3, pc4, top = textGrob("Absolute and Relative Contributions of Cosmic signatures to mutational patterns",gp=gpar(fontsize=12,font=3)))
     
-    # Select signatures with some contribution (above a threshold)
-    threshold <- tail(sort(unlist(rowSums(fit_res$contribution), use.names = FALSE)), opt$signum)[1]
-    select <- which(rowSums(fit_res$contribution) >= threshold) # ensure opt$signum best signatures in samples are retained, the others discarded
-
-    ## pie charts of comic signatures contributions in samples
-    sig_data_pie <- as.data.frame(t(head(fit_res$contribution[select,])))
-    colnames(sig_data_pie) <- gsub("nature", "", colnames(sig_data_pie))
-    sig_data_pie_percents <- sig_data_pie / (apply(sig_data_pie,1,sum)) * 100
-    sig_data_pie_percents$sample <- rownames(sig_data_pie_percents)
+    #### pie charts of comic signatures contributions in samples ###
     library(reshape2)
-    melted_sig_data_pie_percents <-melt(data=sig_data_pie_percents)
-    melted_sig_data_pie_percents$label <- sub("Sig.", "", melted_sig_data_pie_percents$variable)
-    melted_sig_data_pie_percents$pos <- cumsum(melted_sig_data_pie_percents$value) - melted_sig_data_pie_percents$value/2
-    p7 <-  ggplot(melted_sig_data_pie_percents, aes(x="", y=value, group=variable, fill=variable)) +
-                       geom_bar(width = 1, stat = "identity") +
-                       geom_text(aes(label = label), position = position_stack(vjust = 0.5), color="black", size=3) +
-                       coord_polar("y", start=0) + facet_wrap(~ sample) +
-                       labs(x="", y="Samples", fill = cosmic_tag) +
-                       scale_fill_manual(name = paste0(length(select), " most contributing\nSignatures"), values = cosmic_colors[select])
-                       theme(axis.text = element_blank(),
-                             axis.ticks = element_blank(),
-                             panel.grid  = element_blank())
+    library(dplyr)
+    if (length(levels(factor(levels_table$level))) < 2) {
+        fit_res_contrib <- as.data.frame(fit_res$contribution)
+        worklist <- cbind(signature=rownames(fit_res$contribution),
+                          level=rep("nolabels", length(fit_res_contrib[,1])),
+                          fit_res_contrib,
+                          sum=rowSums(fit_res_contrib))
+        worklist <- worklist[order(worklist[ ,"sum"], decreasing = T), ]
+        worklist <- worklist[1:opt$signum,]
+        worklist <- worklist[ , -length(worklist[1,])]
+        worklist <- melt(worklist)
+        worklist <- worklist[,c(1,3,4,2)]
+    } else {
+        worklist <- list()
+        for (i in levels(factor(levels_table$level))) {
+             fit_res$contribution[,levels_table$element_identifier[levels_table$level == i]] -> worklist[[i]]
+             sum <- rowSums(as.data.frame(worklist[[i]]))
+             worklist[[i]] <- cbind(worklist[[i]], sum)
+             worklist[[i]] <- worklist[[i]][order(worklist[[i]][ ,"sum"], decreasing = T), ]
+             worklist[[i]] <- worklist[[i]][1:opt$signum,]
+             worklist[[i]] <- worklist[[i]][ , -length(as.data.frame(worklist[[i]]))]
+        }
+        worklist <- as.data.frame(melt(worklist))
+    }
+    
+    colnames(worklist) <- c("signature", "sample", "value", "level")
+    print(worklist)
+    worklist <- as.data.frame(worklist %>% group_by(sample) %>% mutate(value=value/sum(value)*100))
+    worklist$pos <- cumsum(worklist$value) - worklist$value/2
+    worklist$label <- factor(worklist$signature)
+    worklist$signature <- factor(worklist$signature)
+    p7 <-  ggplot(worklist, aes(x="", y=value, group=signature, fill=signature)) +
+              geom_bar(width = 1, stat = "identity") +
+              geom_text(aes(label = label), position = position_stack(vjust = 0.5), color="black", size=3) +
+              coord_polar("y", start=0) + facet_wrap(~ sample) +
+              labs(x="", y="Samples", fill = cosmic_tag) +
+              scale_fill_manual(name = paste0(opt$signum, " most contributing\nsignatures\n(in each label/tissue)"),
+                                values = cosmic_colors[as.numeric(levels(factor(worklist$label)))]) +
+              theme(axis.text = element_blank(),
+                    axis.ticks = element_blank(),
+                    panel.grid  = element_blank())
     grid.arrange(p7)
 
     # Plot relative contribution of the cancer signatures in each sample as a heatmap with sample clustering
