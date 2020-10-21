@@ -240,7 +240,7 @@ Rscript $__tool_directory__/mutational_patterns.R
             </conditional>
             <param name="signum" value="3" />
             <output name="cosmic" file="cosmic_output1.pdf" compare="sim_size"/>
-            <output name="sig_contrib_matrix" file="sig_contrib_table.tsv"/>
+            <output name="sig_contrib_matrix" file="sig_contrib_table.tsv" compare="sim_size"/>
         </test>
         <!-- cosmic signature on single sample -->
         <test>
