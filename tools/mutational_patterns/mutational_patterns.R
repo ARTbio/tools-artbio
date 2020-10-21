@@ -85,6 +85,12 @@ option_list = list(
     help = "path to output dataset"
   ),
   make_option(
+    "--sig_contrib_matrix",
+    default = NA,
+    type = 'character',
+    help = "path to signature contribution matrix"
+  ),
+  make_option(
     c("-r", "--rdata"),
     type="character",
     default=NULL,
@@ -343,6 +349,14 @@ if (!is.na(opt$output_cosmic)[1]) {
         grid.arrange(p8)
     }
     
+    # export relative contribution matrix
+    if (!is.na(opt$sig_contrib_matrix)) {
+    write.table(t(fit_res$contribution)/rowSums(t(fit_res$contribution)),
+                file = opt$sig_contrib_matrix, sep = "\t", quote = F,
+                row.names = T,
+                col.names=c("sample\t1",
+                            rownames(fit_res$contribution)[2:dim(fit_res$contribution)[1]]))
+    }
     # calculate all pairwise cosine similarities
     cos_sim_ori_rec <- cos_sim_matrix(pseudo_mut_mat, fit_res$reconstructed)
     # extract cosine similarities per sample between original and reconstructed
