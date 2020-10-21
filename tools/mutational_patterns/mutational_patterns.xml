@@ -212,7 +212,7 @@ Rscript $__tool_directory__/mutational_patterns.R
             <param name="newsignum" value="4" />
             <param name="rdata_out" value="true" />
             <output name="denovo" file="denovo_output1.pdf" compare="sim_size"/>
-            <output name="sigmatrix" file="sigmatrix.tab"compare="sim_size"/>
+            <output name="sigmatrix" file="sigmatrix.tab" compare="sim_size"/>
             <output name="rdata" file="denovo_1.RData" compare="sim_size" delta="400000"/> <!--  delta="170000" -->
         </test>
 
@@ -260,7 +260,7 @@ Rscript $__tool_directory__/mutational_patterns.R
                 <param name="choices" value="yes"/>
             </conditional>
             <param name="signum" value="5" />
-            <output name="cosmic" file="cosmic_output2.pdf" compare="sim_size" delta="50000" ftype="pdf"/>
+            <output name="cosmic" file="cosmic_output2.pdf" compare="sim_size" delta="50000"/>
         </test>
     </tests>
     <help>
