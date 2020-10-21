@@ -184,7 +184,7 @@ Rscript $__tool_directory__/mutational_patterns.R
             <conditional name="set_cosmic">
                 <param name="choices" value="no"/>
             </conditional>
-            <output name="spectrum" file="spectrum_output1.pdf" compare="sim_size" ftype="pdf"/>
+            <output name="spectrum" file="spectrum_output1.pdf" compare="sim_size"/>
         </test>
 
          <!-- de novo signatures -->
@@ -211,8 +211,8 @@ Rscript $__tool_directory__/mutational_patterns.R
             <param name="rank" value="4" />
             <param name="newsignum" value="4" />
             <param name="rdata_out" value="true" />
-            <output name="denovo" file="denovo_output1.pdf" compare="sim_size" ftype="pdf"/>
-            <output name="sigmatrix" file="sigmatrix.tab" ftype="tabular" compare="sim_size"/>
+            <output name="denovo" file="denovo_output1.pdf" compare="sim_size"/>
+            <output name="sigmatrix" file="sigmatrix.tab"compare="sim_size"/>
             <output name="rdata" file="denovo_1.RData" compare="sim_size" delta="400000"/> <!--  delta="170000" -->
         </test>
 
@@ -239,7 +239,7 @@ Rscript $__tool_directory__/mutational_patterns.R
                 <param name="contrib_matrix_out"  value="true" />
             </conditional>
             <param name="signum" value="3" />
-            <output name="cosmic" file="cosmic_output1.pdf" compare="sim_size" ftype="pdf"/>
+            <output name="cosmic" file="cosmic_output1.pdf" compare="sim_size"/>
             <output name="sig_contrib_matrix" file="sig_contrib_table.tsv"/>
         </test>
         <!-- cosmic signature on single sample -->
