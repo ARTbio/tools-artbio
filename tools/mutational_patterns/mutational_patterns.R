@@ -351,12 +351,12 @@ if (!is.na(opt$output_cosmic)[1]) {
     
     # export relative contribution matrix
     if (!is.na(opt$sig_contrib_matrix)) {
-    write.table(t(fit_res$contribution)/rowSums(t(fit_res$contribution)),
-                file = opt$sig_contrib_matrix, sep = "\t", quote = F,
-                row.names = T,
-                col.names=c("sample\t1",
-                            rownames(fit_res$contribution)[2:dim(fit_res$contribution)[1]]))
+        output_table <- t(fit_res$contribution)/rowSums(t(fit_res$contribution))
+        colnames(output_table) <- paste0("s", colnames(output_table))
+        output_table <- data.frame(sample=rownames(output_table), output_table)
+        write.table(output_table, file = opt$sig_contrib_matrix, sep = "\t", quote = F, row.names = F)
     }
+
     # calculate all pairwise cosine similarities
     cos_sim_ori_rec <- cos_sim_matrix(pseudo_mut_mat, fit_res$reconstructed)
     # extract cosine similarities per sample between original and reconstructed
