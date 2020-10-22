@@ -1,4 +1,4 @@
-<tool id="high_dim_heatmap" name="Plot heatmap" version="1.0.0">
+<tool id="high_dim_heatmap" name="Plot heatmap" version="1.1.0">
     <description>with high number of rows</description>
     <requirements>
         <requirement type="package" version="3.0.1">r-gplots</requirement>
@@ -43,6 +43,8 @@ rownames(mat_input) <- input[,1]
     colorscale = colfunc <- colorRampPalette(c("white", "blue"))
 #elif $colorscheme == "blwhre"
     colorscale = colfunc <- colorRampPalette(c("blue","white", "red"))
+#elif $colorscheme == "yeblu"
+    colorscale = colfunc <- colorRampPalette(c("lightyellow", "royalblue4"))
 #end if
 
 #if $labels== "both"
@@ -138,6 +140,7 @@ dev.off()
         <param name="colorscheme" type="select" label="Coloring groups" >
             <option value="whrd" selected="true">White to red</option>
             <option value="whblu">White to blue</option>
+            <option value="yeblu">Yellow to blue</option>
             <option value="blwhre">Blue to white to red</option>
         </param>
         <param name="scale" type="select" label="Data scaling" >
