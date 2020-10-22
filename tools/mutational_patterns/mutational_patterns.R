@@ -354,7 +354,9 @@ if (!is.na(opt$output_cosmic)[1]) {
         output_table <- t(fit_res$contribution)/rowSums(t(fit_res$contribution))
         colnames(output_table) <- paste0("s", colnames(output_table))
         if (length(levels(factor(levels_table$level))) > 1) {
-            output_table <- data.frame(sample=worklist$sample, output_table)
+            output_table <- data.frame(sample=paste0(metadata_table[metadata_table$element_identifier==colnames(fit_res$contribution),
+                                                                    3], "-", colnames(fit_res$contribution) ),
+                                       output_table)
             } else {
         output_table <- data.frame(sample=rownames(output_table), output_table)
         }
