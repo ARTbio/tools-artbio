@@ -88,6 +88,14 @@ The tools returns a table "signature scores" that contains
 * the number of genes detected in the cell/library
 * the total number of aligned reads in the cell/library
 
+And also several tables or PDF : 
+
+* signature genes covariance matrix
+* signature genes correlation matrix
+* genes statistics (mean expression, standard deviation, variance, percentage of detection)
+* a pdf with the violin plot of signature score for each transcriptomes splitted by their category (HIGH/LOW)
+
+
     </help>
     <citations>
         <citation type="bibtex">
