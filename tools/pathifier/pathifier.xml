@@ -108,7 +108,7 @@
             <param name="min_exp" value="data" />
             <param name="min_std" value="data" />
             <output name="pds" file="sheffer.kegg_noref.tsv" ftype="tabular"/>
-            <output name="rdatafile" file="sheffer.kegg_noref.rdata" ftype="rdata"/>
+            <output name="rdatafile" file="sheffer.kegg_noref.rdata" ftype="rdata" compare="sim_size" />
             <output name="plot" file="plot_noref.pdf" ftype="pdf" compare="sim_size" />
         </test>
     </tests>
@@ -149,7 +149,7 @@ the distance (normalized to 1) of each point (transcriptome) to the curve origin
         * `genesinpathway` : Gene identifiers in each pathway
         * `newmeanstd`
         * `origmeanstd`
-        * `pathwaysize` : Number of genes retainded in pathway
+        * `pathwaysize` : Number of genes retained in pathway
         * `curves` : Coordinates of transcriptomes projected on the principal curve
         * `curves_order` : Order of transcriptomes along the principal curve
         * `z` : z-scores matrix
