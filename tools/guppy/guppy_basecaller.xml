@@ -1,0 +1,46 @@
+<tool id="guppy-basecaller" name="Guppy basecaller wrapper" version="0.1.4" python_template_version="3.5">
+    <description>A simple wrapper for guppy basecaller that depends on configuration files</description>
+    <requirements>
+    </requirements>
+    <command detect_errors="exit_code"><![CDATA[
+
+        #for $file in $infiles:
+            ln -s $file ${file.element_identifier}.fast5 &&
+        #end for
+        tar xf $config &&
+        guppy_basecaller -i .
+                         --save_path out
+                         --data_path .
+                         --config *.cfg
+                         --num_callers 4
+                         --records_per_fastq 0
+                         --cpu_threads_per_caller \${GALAXY_SLOTS:-2}
+                         --disable_pings
+                         --qscore_filtering
+                         --calib_detect
+    ]]></command>
+    <inputs>
+        <param name="infiles" type="data_collection" format="h5" label="Fast5 input (datatype h5)" multiple="true"/>
+        <param name="config" type="data" format="tar" label="Guppy basecall configuration model"/>
+    </inputs>
+    <outputs>
+        <data name="guppy_result" format="fastq">
+            <discover_datasets directory="out/PASS" ext="fastq" pattern=".+\.fastq" visible="true"/>
+        </data>
+    </outputs>
+    <help><![CDATA[
+        A wrapper for guppy basecaller. This expects two type of inputs: a collection of fast5 files,
+        and a configuration in the form of a tar file.
+
+        You can find configurations at https://github.com/nanoporetech/rerio,
+        and in particular the directory https://github.com/nanoporetech/rerio/basecall_models.
+
+        Each file there contains a URL you can download to use, for example
+        https://github.com/nanoporetech/rerio/blob/master/basecall_models/res_rna2_r941_min_flipflop_v001
+        points to 'https://nanoporetech.box.com/shared/static/84e1jeudx8lr8ay7e9u1ebnvx3bk2kjf.tgz'
+
+        When uploading these .tgz files take care to set the format to 'tar' (galaxy doesn't autodetect this?).
+
+        The results should be fastq files.
+    ]]></help>
+</tool>
