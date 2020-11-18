@@ -1,7 +1,7 @@
 owner: artbio
 name: guppy_basecaller
 description: A wrapper for the guppy basecaller tool from Oxford Nanopore Technologies 
-long_description:
+long_description: |
 categories:
   - Nanopore
 homepage_url: http://artbio.fr
