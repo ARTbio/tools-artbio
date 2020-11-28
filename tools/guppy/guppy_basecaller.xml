@@ -1,4 +1,4 @@
-<tool id="guppy-basecaller" name="Guppy basecaller wrapper" version="0.2.0" python_template_version="3.5">
+<tool id="guppy-basecaller" name="Guppy basecaller wrapper" version="0.2.1" python_template_version="3.5">
     <description>A simple wrapper for guppy basecaller that depends on configuration files</description>
     <requirements>
     </requirements>
@@ -18,7 +18,7 @@
                          --disable_pings
 ###                         --qscore_filtering
 ###                         --calib_detect
-        && cat *.fastq | awk '{ if (NR%4 == 2) {gsub(/U/,"T",$1); print $1} else print }' > $output_fastq
+        && cat out/*.fastq | awk '{ if (NR%4 == 2) {gsub(/U/,"T",$1); print $1} else print }' > $output_fastq
     ]]></command>
     <inputs>
         <param name="infiles" type="data_collection" format="h5" label="Fast5 input (datatype h5)" multiple="true"/>
