@@ -1,4 +1,4 @@
-<tool id="guppy-basecaller" name="Guppy basecaller wrapper" version="0.1.5" python_template_version="3.5">
+<tool id="guppy-basecaller" name="Guppy basecaller wrapper" version="0.1.6" python_template_version="3.5">
     <description>A simple wrapper for guppy basecaller that depends on configuration files</description>
     <requirements>
     </requirements>
@@ -16,17 +16,16 @@
                          --records_per_fastq 0
                          --cpu_threads_per_caller \${GALAXY_SLOTS:-2}
                          --disable_pings
-                         --qscore_filtering
+###                         --qscore_filtering
 ###                         --calib_detect
+        && cat *.fastq | awk '{ if (NR%4 == 2) {gsub(/U/,"T",$1); print $1} else print }' > $output.fastq
     ]]></command>
     <inputs>
         <param name="infiles" type="data_collection" format="h5" label="Fast5 input (datatype h5)" multiple="true"/>
         <param name="config" type="data" format="tar" label="Guppy basecall configuration model"/>
     </inputs>
     <outputs>
-        <data name="guppy_result" format="fastq">
-            <discover_datasets directory="out/pass" ext="fastq" pattern=".+\.fastq" visible="true"/>
-        </data>
+        <data name="output.fastq" format="fastqsanger" />
     </outputs>
     <help><![CDATA[
         A wrapper for guppy basecaller. This expects two type of inputs: a collection of fast5 files,
