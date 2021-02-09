@@ -22,4 +22,5 @@ jobs:
         uses: github/super-linter@v3
         env:
           DEFAULT_BRANCH: main
+          VALIDATE_PYTHON_FLAKE8: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
