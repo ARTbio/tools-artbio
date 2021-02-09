@@ -23,4 +23,6 @@ jobs:
         env:
           DEFAULT_BRANCH: main
           VALIDATE_PYTHON_FLAKE8: true
+          VALIDATE_R: true
+          DEFAULT_WORKSPACE: /tools
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
