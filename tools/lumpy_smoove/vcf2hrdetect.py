@@ -3,11 +3,11 @@ import sys
 handle = open(sys.argv[1], 'r')
 vcfdict = dict()
 tabdict = dict()
-for l in handle:
-    if l[0] == "#":
+for line in handle:
+    if line[0] == "#":
         continue
     else:
-        tabline = l[:-1].split("\t")
+        tabline = line[:-1].split("\t")
         vcfdict[tabline[2]] = tabline
 for id in vcfdict.keys():
     if "_1" in id:
