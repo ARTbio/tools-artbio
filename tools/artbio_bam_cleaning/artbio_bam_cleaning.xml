@@ -1,4 +1,4 @@
-<tool id="artbio_bam_cleaning" name="ARTbio bam cleaning" version="1.6+galaxy1">
+<tool id="artbio_bam_cleaning" name="ARTbio bam cleaning" version="1.6+galaxy2">
     <description>
         on flags and PCR Duplicates and MD recalibration
     </description>
@@ -31,7 +31,7 @@
         <expand macro="reference_source_conditional" />
         <param name="input_bam" type="data" format="bam" label="BAM or SAM file to process"/>
         <param name="pipeline" type="select" label="where to stop the pipeline">
-            <option value="CalMD">At CalMD processing, to keep split read alignments</option>
+            <option value="CalMD">At CalMD processing to keep split read alignments</option>
             <option value="fullfilter" selected="true">Full bam processing, will eliminate split read alignments in the final bam file</option>
         </param>
     </inputs>
