@@ -1,4 +1,4 @@
-<tool id="lumpy_smoove" name="lumpy_smoove" version="0.2.5+galaxy5">
+<tool id="lumpy_smoove" name="lumpy_smoove" version="0.2.5+galaxy6">
     <description>find structural variants using the smoove workflow</description>
     <macros>
         <import>macro_lumpy_smoove.xml</import>
@@ -102,7 +102,7 @@
             <param name="choices" value="yes"/>
             <param name="bedmask" value="exclude.bed"/>
             <param name="prpos" value="no"/>
-            <output name="vcf_call" ftype="vcf" file="result-6.vcf" lines_diff="8"/>
+            <output name="vcf_call" ftype="vcf" file="result-6.vcf" lines_diff="12"/>
         </test>
         <test>
             <param name="reference_source_selector" value="history" />
@@ -112,7 +112,7 @@
             <param name="choices" value="yes"/>
             <param name="bedmask" value="exclude.bed"/>
             <param name="prpos" value="no"/>
-            <output name="vcf_call" ftype="vcf" file="result-1.vcf" lines_diff="8"/>
+            <output name="vcf_call" ftype="vcf" file="result-1.vcf" lines_diff="12"/>
         </test>
         <test>
             <param name="reference_source_selector" value="history" />
@@ -121,7 +121,7 @@
             <param name="tumor_bam" value="celegans_RG_2.bam"/>
             <param name="choices" value="no"/>
             <param name="prpos" value="no"/>
-            <output name="vcf_call" ftype="vcf" file="result-2.vcf" lines_diff="8"/>
+            <output name="vcf_call" ftype="vcf" file="result-2.vcf" lines_diff="12"/>
         </test>
         <test>
             <param name="reference_source_selector" value="history" />
@@ -130,7 +130,7 @@
             <param name="tumor_bam" value="celegans_RG_1.bam"/>
             <param name="choices" value="no"/>
             <param name="prpos" value="no"/>
-            <output name="vcf_call" ftype="vcf" file="result-3.vcf" lines_diff="8"/>
+            <output name="vcf_call" ftype="vcf" file="result-3.vcf" lines_diff="12"/>
         </test>
         <test>
             <param name="reference_source_selector" value="history" />
@@ -139,7 +139,7 @@
             <param name="tumor_bam" value="celegans_RG_2.bam"/>
             <param name="choices" value="no"/>
             <param name="prpos" value="yes"/>
-            <output name="vcf_call" ftype="vcf" file="result-4.vcf" lines_diff="8"/>
+            <output name="vcf_call" ftype="vcf" file="result-4.vcf" lines_diff="12"/>
         </test>
         <test>
             <param name="reference_source_selector" value="history" />
@@ -148,7 +148,7 @@
             <param name="single_bam" value="celegans_RG_1.bam"/>
             <param name="choices" value="no"/>
             <param name="prpos" value="no"/>
-            <output name="vcf_call" ftype="vcf" file="result-5.vcf" lines_diff="8"/>
+            <output name="vcf_call" ftype="vcf" file="result-5.vcf" lines_diff="12"/>
         </test>
     </tests>
 

@@ -1,0 +1,35 @@
+<tool id="vcf2hrdetect" name="Convert lumpy-smoove vcf" version="1">
+    <description>to tabular hrdetect</description>
+    <macros>
+        <import>macro_lumpy_smoove.xml</import>
+    </macros>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Tool exception" />
+    </stdio>
+    <command detect_errors="exit_code"><![CDATA[
+    @pipefail@
+    python '$__tool_directory__'/vcf2hrdetect.py '$lumpy_smoove_vcf' '$hrdetect_tabular'
+    ]]></command>
+    <inputs>
+        <param name="lumpy_smoove_vcf" type="data" format="vcf" label="lumpy-smoove vcf to process"/>
+   </inputs>
+
+    <outputs>
+        <data format="tabular" name="hrdetect_tabular" label="tabular hrdetec SVs" />
+    </outputs>
+
+    <tests>
+        <test>
+            <param name="lumpy_smoove_vcf" value="test_vcf2hrdetect.vcf" ftype="vcf" />
+            <output name="hrdetect_tabular" file="test_vcf2hrdetect.tab" ftype="tabular" />
+        </test>
+    </tests>
+    <help>
+**vcf2hrdetect** convert a vcf produced by lumpy-smoove to a somatic_sv.tsv tabular file compatible with
+the HRDetect pipeline (https://github.com/eyzhao/hrdetect-pipeline/blob/master/data/example/patients/patient1/sample1/somatic_sv.tsv)
+    </help>
+
+    <citations>
+    <citation type="doi">10.1038/nm.4292</citation>
+  </citations>
+</tool>
