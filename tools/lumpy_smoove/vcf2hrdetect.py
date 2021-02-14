@@ -35,6 +35,7 @@ for id in vcfdict.keys():  # only sv that are not of type TRA or INV
     type = vcfdict[id][7].split("SVTYPE=")[1].split(";")[0]
     tabdict[id] = [chr1, pos1, chr2, pos2, type]
 out = open(sys.argv[2], 'w')
+out.write("chr1\tpos1\tchr2\tpos2\ttype\n")
 for key in tabdict:
     line = "\t".join(tabdict[key]) + "\n"
     out.write(line)
