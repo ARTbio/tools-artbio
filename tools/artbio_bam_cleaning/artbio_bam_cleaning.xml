@@ -1,4 +1,4 @@
-<tool id="artbio_bam_cleaning" name="ARTbio bam cleaning" version="1.6+galaxy2">
+<tool id="artbio_bam_cleaning" name="ARTbio bam cleaning" version="1.6+galaxy3">
     <description>
         on flags and PCR Duplicates and MD recalibration
     </description>
@@ -23,40 +23,23 @@
     | samtools rmdup - -
     |tee $input_base".filt1.dedup.bam"| bamleftalign --fasta-reference reference.fa -c --max-iterations "5" -
     | samtools calmd  -C 50 -b -@ \${GALAXY_SLOTS:-2} - reference.fa > $calmd
-    #if $pipeline == 'fullfilter':
     && sambamba view -h -t \${GALAXY_SLOTS:-2} --filter='mapping_quality <= 254' -f 'bam' -o $fullfilter $calmd
-    #end if
     ]]></command>
     <inputs>
         <expand macro="reference_source_conditional" />
         <param name="input_bam" type="data" format="bam" label="BAM or SAM file to process"/>
-        <param name="pipeline" type="select" label="where to stop the pipeline">
-            <option value="CalMD">At CalMD processing to keep split read alignments</option>
-            <option value="fullfilter" selected="true">Full bam processing, will eliminate split read alignments in the final bam file</option>
-        </param>
     </inputs>
     <outputs>
-        <data name="calmd" format="bam" label="CalMD filter (for lumpy-smoove)">
-            <filter>pipeline == 'CalMD'</filter>
-        </data>
-        <data name="fullfilter" format="bam" label="Full filtering (for somatic-varscan)">
-             <filter>pipeline == 'fullfilter'</filter>
-        </data>
-       
+        <data name="calmd" format="bam" label="CalMD filter (for lumpy-smoove)" />
+        <data name="fullfilter" format="bam" label="Full filtering (for somatic-varscan)" />
     </outputs>
     <tests>
         <test>
             <param name="input_bam" value="match_chr21_DBA_974.bam" ftype="bam" />
             <param name="reference_source_selector" value="history" />
             <param name="ref_file" value="chr21.fa" />
-            <output name="fullfilter" file="match_chr21_DBA_974.filt1.dedup.bamleft.calmd.filt2.bam" ftype="bam" />
-        </test>
-        <test>
-            <param name="input_bam" value="match_chr21_DBA_974.bam" ftype="bam" />
-            <param name="reference_source_selector" value="history" />
-            <param name="ref_file" value="chr21.fa" />
-            <param name="pipeline" value="CalMD"/>
             <output name="calmd" file="match_chr21_DBA_974.filt1.dedup.bamleft.calmd.bam" ftype="bam" />
+            <output name="fullfilter" file="match_chr21_DBA_974.filt1.dedup.bamleft.calmd.filt2.bam" ftype="bam" />
         </test>
     </tests>
     <help>
