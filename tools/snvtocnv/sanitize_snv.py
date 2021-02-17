@@ -6,7 +6,7 @@ for line in handle:
     if line[0] == '#':
         out.write(line)
         continue
-    linelist = line[:-1].split('\t')
+    linelist = line.split('\t')
     refcol = linelist[0].split('chr')
     infocol = linelist[7].split('INDEL')
     if len(infocol) > 1:
