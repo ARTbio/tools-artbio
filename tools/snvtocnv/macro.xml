@@ -1,0 +1,35 @@
+<macros>
+    <token name="@pipefail@"><![CDATA[set -o | grep -q pipefail && set -o pipefail;]]></token>
+
+    <token name="@set_fasta_index@"><![CDATA[
+    #if str( $reference_source.reference_source_selector ) == "history":
+        ln -s '${reference_source.ref_file}' reference.fa &&
+        samtools faidx 'reference.fa' 2>&1 || echo "Error running samtools faidx for snvtocnv" >&2 &&
+    #else:
+        ln -s '${reference_source.index.fields.path}' reference.fa &&
+        ln -s '${reference_source.index.fields.path}.fai' reference.fa.fai &&
+    #end if
+    ]]></token>
+
+    <macro name="reference_source_conditional">
+        <conditional name="reference_source">
+            <param name="reference_source_selector" type="select" label="Will you select a reference genome from your history or use a built-in index?" help="Built-ins were indexed using default options. See `Indexes` section of help below">
+                <option value="cached">Use a built-in genome index</option>
+                <option value="history">Use a genome from history and build index</option>
+            </param>
+            <when value="cached">
+                <param name="index" type="select" label="Using built-in genome" help="Select genome from the list">
+                    <options from_data_table="fasta_indexes">
+                        <filter type="sort_by" column="2" />
+                        <validator type="no_options" message="No indexes are available" />
+                    </options>
+                    <validator type="no_options" message="A built-in reference genome is not available for the build associated with the selected input file"/>
+                </param>
+            </when>
+            <when value="history">
+                <param name="ref_file" type="data" format="fasta" label="Use the following dataset as the reference sequence"
+                    help="You can upload a FASTA sequence to the history and use it as reference" />
+            </when>
+        </conditional>
+    </macro>
+</macros>

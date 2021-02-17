@@ -1,0 +1,74 @@
+<tool id="snvtocnv" name="Infer CNVs from SNVs" version="0.1">
+    <description>
+    </description>
+    <macros>
+        <import>macro.xml</import>
+    </macros>
+    <requirements>
+        <requirement type="package" version="1.6">samtools</requirement>
+        <requirement type="package" version="3.0.0">sequenza-utils</requirement>
+        <requirement type="package" version="3.0.0">r-sequenza</requirement>
+    </requirements>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Error occured" />
+    </stdio>
+    <command detect_errors="exit_code"><![CDATA[
+    @pipefail@
+    @set_fasta_index@
+    sequenza−utils gc_wiggle  --fasta reference.fa -o hg19.gc50Base.wig.gz −w 50 11 &&
+    sequenza-utils snp2seqz -v '$input_snvs'  -gc hg19.gc50Base.wig.gz -o sample.seqz.gz &&
+    sequenza-utils seqz_binning --seqz sample.seqz.gz -w 50 -o sample.binned.seqz.gz &&
+    Rscript segmentation_sequenza.R -i sample.binned.seqz.gz -s sample -d test &&
+    Rscript sequenza_to_hrdtools_input.R
+            -i test/sample_segments.txt
+            -s test/sample_alternative_solutions.txt
+            -o '$cnvs'
+    ]]></command>
+    <inputs>
+        <expand macro="reference_source_conditional" />
+        <param name="input_snvs" type="data" format="vcf" label="SNVs to process in a vcf file"/>
+    </inputs>
+    <outputs>
+        <data name="cnvs" format="tabular" label="Annotated CNVs" />
+    </outputs>
+    <tests>
+        <test>
+            <param name="input_snvs" value="snv.vcf" ftype="vcf" />
+            <output name="cnvs" file="cnv.tab" ftype="tabular" />
+        </test>
+    </tests>
+    <help>
+
+snvtocnv
+============================
+
+This tool is wrapping several cleaning steps to produce bam files suitable for subsequent
+analyses with lumpy-smoove (or other large structural variation callers) or with
+somatic-varscan (or small structural variation callers)
+
+
+Workflow 
+=============
+
+The tool is using the following command line for filtering:
+
+::
+
+    sambamba view -h -t 8 --filter='mapping_quality >= 1 and not(unmapped) and not(mate_is_unmapped)' -f 'bam' $input_base".bam"
+    &#124; samtools rmdup - -
+    &#124;tee $input_base".filt1.dedup.bam" &#124; bamleftalign --fasta-reference reference.fa -c --max-iterations "5" -
+    &#124; samtools calmd  -C 50 -b -@ 4 - reference.fa &gt; $input_base".filt1.dedup.bamleft.calmd.bam" ;
+    sambamba view -h -t 8 --filter='mapping_quality &lt;&#61; 254' -f 'bam' -o $input_base".filt1.dedup.bamleft.calmd.filt2.bam" $input_base".filt1.dedup.bamleft.calmd.bam"
+    
+Purpose
+--------
+
+This "workflow" tool was generated in order to limit the number of ``python metadata/set.py`` jobs
+which occur at each step of standard galaxy workflows. Indeed, these jobs are poorly optimized and may last considerable
+amounts of time when datasets are large, at each step, lowering the overall performance of the workflow.
+
+    </help>
+    <citations>
+        <citation type="doi">10.1371/journal.pone.0168397</citation>
+    </citations>
+</tool>
