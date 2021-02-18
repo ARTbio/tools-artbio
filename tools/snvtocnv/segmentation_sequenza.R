@@ -1,7 +1,8 @@
 # load packages that are provided in the conda env
 options(show.error.messages = F,
-       error = function(){
-           cat(geterrmessage(), file = stderr()); q("no", 1, F )})
+       error = function() {
+           cat(geterrmessage(), file = stderr()); q("no", 1, F)})
+Sys.setenv(TZ = "Pacific/Auckland") # turnaround the tidyverse bug "In OlsonNames() : no Olson database found"
 
 
 library(optparse)
@@ -47,14 +48,14 @@ segfile <- sequenza.extract(data_file,
 
 ## Estimation of cellularity and ploidy
 
-segfile_CP <- sequenza.fit(segfile)
+segfile_cp <- sequenza.fit(segfile)
 message(sprintf("\nEstimation step for %s\n", data_file))
 
 ## writing files and plots using default parameters
 message(sprintf("\nWriting files and plots for %s\n", data_file))
 
 sequenza.results(sequenza.extract = segfile,
-                 cp.table = segfile_CP,
+                 cp.table = segfile_cp,
                  sample.id = sample_name,
                  out.dir = output_dir)
-message(sprintf('\nOutput written to %s\n', output_dir))
+message(sprintf("\nOutput written to %s\n", output_dir))
