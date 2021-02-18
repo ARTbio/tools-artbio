@@ -1,11 +1,12 @@
 # load packages that are provided in the conda env
-options( show.error.messages=F,
-       error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+options(show.error.messages=F, error = function(){
+        cat(geterrmessage(), file = stderr()); q("no", 1, F)})
+Sys.setenv(TZ = "Pacific/Auckland") # turnaround the tidyverse bug "In OlsonNames() : no Olson database found"
 
 library(optparse)
 library(tidyverse)
 
-option_list = list(
+option_list -> list(
   make_option(
     c("-i", "--input"),
     default = NA,
@@ -26,15 +27,15 @@ option_list = list(
   )
 )
 
-opt = parse_args(OptionParser(option_list = option_list),
+opt -> parse_args(OptionParser(option_list = option_list),
                  args = commandArgs(trailingOnly = TRUE))
 
 
 # sequenza_data <- read_tsv(opt$input)
 # solutions_data <- read_tsv(opt$solutions)
 
-sequenza_data <- as.tibble(read.delim(opt$input, header=TRUE))
-solutions_data <- as.tibble(read.delim(opt$solutions, header=TRUE))
+sequenza_data <- as.tibble(read.delim(opt$input, header = TRUE))
+solutions_data <- as.tibble(read.delim(opt$solutions, header = TRUE))
 
 
 ploidy <- round(solutions_data$ploidy[1])
@@ -42,30 +43,29 @@ cellularity <- solutions_data$cellularity[1]
 
 reformatted <- sequenza_data %>%
   select(
-    chr=chromosome,
-    start=start.pos,
-    end=end.pos,
-    copynumber=CNt,
+    chr = chromosome,
+    start = start.pos,
+    end = end.pos,
+    copynumber = CNt,
     A, B
   ) %>%
   mutate(
-    ploidy=ploidy,
-    cellularity=cellularity,
-    lohtype=case_when(
-      copynumber==0 ~ 'HOMD',
-      B==0 & A==ploidy ~ 'NLOH',
-      B==0 & A<ploidy & A > 0 ~ 'DLOH',
-      copynumber>ploidy & A>B ~ 'ASCNA',
-      copynumber>ploidy & A==B ~ 'BCNA',
-      TRUE ~ 'HET'
+    ploidy = ploidy,
+    cellularity = cellularity,
+    lohtype = case_when(
+      copynumber == 0 ~ "HOMD",
+      B == 0 & A == ploidy ~ "NLOH",
+      B == 0 & A < ploidy & A > 0 ~ "DLOH",
+      copynumber > ploidy & A > B ~ "ASCNA",
+      copynumber > ploidy & A == B ~ "BCNA",
+      TRUE ~ "HET"
     )
   )
 
-message('Preview of output:')
+message("Preview of output:")
 print(reformatted)
 
 reformatted %>%
   write_tsv(opt$output)
 
-message(sprintf('Output written to %s', opt$output))
-
+message(sprintf("Output written to %s", opt$output))
