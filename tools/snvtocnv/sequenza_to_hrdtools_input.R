@@ -1,12 +1,12 @@
 # load packages that are provided in the conda env
-options(show.error.messages = F, error = function(){
+options(show.error.messages = F, error = function() {
         cat(geterrmessage(), file = stderr()); q("no", 1, F) })
 Sys.setenv(TZ = "Pacific/Auckland") # turnaround the tidyverse bug "In OlsonNames() : no Olson database found"
 
 library(optparse)
 library(tidyverse)
 
-option_list -> list(
+option_list <- list(
   make_option(
     c("-i", "--input"),
     default = NA,
@@ -27,7 +27,7 @@ option_list -> list(
   )
 )
 
-opt -> parse_args(OptionParser(option_list = option_list),
+opt <- parse_args(OptionParser(option_list = option_list),
                  args = commandArgs(trailingOnly = TRUE))
 
 sequenza_data <- as.tibble(read.delim(opt$input, header = TRUE))
