@@ -30,8 +30,12 @@ opt = parse_args(OptionParser(option_list = option_list),
                  args = commandArgs(trailingOnly = TRUE))
 
 
-sequenza_data <- read_tsv(opt$input)
-solutions_data <- read_tsv(opt$solutions)
+# sequenza_data <- read_tsv(opt$input)
+# solutions_data <- read_tsv(opt$solutions)
+
+sequenza_data <- as.tibble(read.delim(opt$input, header=TRUE))
+solutions_data <- as.tibble(read.delim(opt$solutions, header=TRUE))
+
 
 ploidy <- round(solutions_data$ploidy[1])
 cellularity <- solutions_data$cellularity[1]

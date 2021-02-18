@@ -45,14 +45,22 @@
         </param>
     </inputs>
     <outputs>
+        <data name="sample_segment" format="txt" label="sample segments" from_work_dir="test/sample_segments.txt" />
+        <data name="alt_solutions" format="txt" label="alternate solutions" from_work_dir="test/sample_alternative_solutions.txt" />
         <data name="cnvs" format="tabular" label="Annotated CNVs" />
     </outputs>
     <tests>
         <test>
-            <param name="input_snvs" value="chr22.vcf" ftype="vcf" />
+            <param name="input_snvs" value="hg19_chr22.vcf" ftype="vcf" />
             <param name="reference_source_selector" value="history" />
-            <param name="ref_file" value="hg19_chr22.fa" />
-            <output name="cnvs" file="cnv.tab" ftype="tabular" />
+            <param name="ref_file" value="hg19_chr22.fa.gz" />
+            <output name="cnvs" file="hg19.cnv.tab" ftype="tabular" />
+        </test>
+        <test>
+            <param name="input_snvs" value="hg38_chr22.vcf" ftype="vcf" />
+            <param name="reference_source_selector" value="history" />
+            <param name="ref_file" value="hg38_chr22.fa.gz" />
+            <output name="cnvs" file="hg38.cnv.tab" ftype="tabular" />
         </test>
     </tests>
     <help>
