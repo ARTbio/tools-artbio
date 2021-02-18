@@ -8,6 +8,9 @@
         <requirement type="package" version="1.6">samtools</requirement>
         <requirement type="package" version="3.0.0">sequenza-utils</requirement>
         <requirement type="package" version="3.0.0">r-sequenza</requirement>
+        <requirement type="package" version="1.6.6">r-optparse</requirement>
+        <requirement type="package" version="1.24.0">bioconductor-biocparallel</requirement>
+        <requirement type="package" version="1.3.0">r-tidyverse</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Error occured" />
@@ -15,11 +18,19 @@
     <command detect_errors="exit_code"><![CDATA[
     @pipefail@
     @set_fasta_index@
-    sequenza−utils gc_wiggle  --fasta reference.fa -o hg19.gc50Base.wig.gz −w 50 11 &&
-    sequenza-utils snp2seqz -v '$input_snvs'  -gc hg19.gc50Base.wig.gz -o sample.seqz.gz &&
+    #if $sanitize == 'yes':
+        python $__tool_directory__/sanitize_snv.py $input_snvs input_snv.vcf &&
+    #else:
+        ln -s $input_snvs input_snv.vcf &&
+    #end if
+    sequenza-utils gc_wiggle  --fasta reference.fa -o reference.gc50Base.wig.gz -w 50 &&
+    sequenza-utils snp2seqz -v '$input_snvs'  -gc reference.gc50Base.wig.gz -o sample.seqz.gz &&
     sequenza-utils seqz_binning --seqz sample.seqz.gz -w 50 -o sample.binned.seqz.gz &&
-    Rscript segmentation_sequenza.R -i sample.binned.seqz.gz -s sample -d test &&
-    Rscript sequenza_to_hrdtools_input.R
+    Rscript $__tool_directory__/segmentation_sequenza.R
+            -i sample.binned.seqz.gz
+            -s sample
+            -O test &&
+    Rscript $__tool_directory__/sequenza_to_hrdtools_input.R
             -i test/sample_segments.txt
             -s test/sample_alternative_solutions.txt
             -o '$cnvs'
@@ -27,13 +38,20 @@
     <inputs>
         <expand macro="reference_source_conditional" />
         <param name="input_snvs" type="data" format="vcf" label="SNVs to process in a vcf file"/>
+        <param name="sanitize" type="select" label="Sanitize the vcf input"
+               help="remove haplotype chromosomes and chr prefix">
+            <option value="no" selected="true">NO</option>
+            <option value="yes">YES</option>
+        </param>
     </inputs>
     <outputs>
         <data name="cnvs" format="tabular" label="Annotated CNVs" />
     </outputs>
     <tests>
         <test>
-            <param name="input_snvs" value="snv.vcf" ftype="vcf" />
+            <param name="input_snvs" value="chr22.vcf" ftype="vcf" />
+            <param name="reference_source_selector" value="history" />
+            <param name="ref_file" value="hg19_chr22.fa" />
             <output name="cnvs" file="cnv.tab" ftype="tabular" />
         </test>
     </tests>

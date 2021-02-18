@@ -4,10 +4,8 @@
     <token name="@set_fasta_index@"><![CDATA[
     #if str( $reference_source.reference_source_selector ) == "history":
         ln -s '${reference_source.ref_file}' reference.fa &&
-        samtools faidx 'reference.fa' 2>&1 || echo "Error running samtools faidx for snvtocnv" >&2 &&
     #else:
         ln -s '${reference_source.index.fields.path}' reference.fa &&
-        ln -s '${reference_source.index.fields.path}.fai' reference.fa.fai &&
     #end if
     ]]></token>
 

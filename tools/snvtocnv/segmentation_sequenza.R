@@ -1,33 +1,49 @@
-' segmentation_sequenza.R
-Takes data in the format of Sequenza output segz and
-reformats it to calculate lohtypes.
-Creates an output directory with different files and plots
-Necessary files for next steps : *alternative_solutions.txt and *segments.txt
-Usage: segmentation_sequenza.R -i INPUT -s SAMPLE_NAME -d OUTPUT_DIR
-Options:
--i --input INPUT          Path to Sequenza seqz processed segments file
--s --sample-name SAMPLE_NAME
--d --output-dir OUTPUT_DIR  Output directory
+# load packages that are provided in the conda env
+options( show.error.messages=F,
+       error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
 
-' -> doc
 
-library(docopt)
+library(optparse)
 library(sequenza)
 library(BiocParallel)
 library(tidyverse)
 
-args <- docopt(doc)
+option_list = list(
+  make_option(
+    c("-i", "--input"),
+    default = NA,
+    type = "character",
+    help = "Path to Sequenza seqz processed segments file"
+  ),
+  make_option(
+    c("-O", "--output_dir"),
+    default = NA,
+    type = "character",
+    help = "Output directory"
+  ),
+  make_option(
+    c("-s", "--sample_name"),
+    default = NA,
+    type = "character",
+    help = "Sample name"
+  )
+)
 
-data.file <- args[['--input']]
-output.dir <- args[['--output-dir']]
-sample.name <- args[['--sample-name']]
+opt = parse_args(OptionParser(option_list = option_list),
+                 args = commandArgs(trailingOnly = TRUE))
+
+data.file <- opt$input
+output.dir <- opt$output_dir
+sample.name <- opt$sample_name
+
 
 ## Processing seqz files : normalisation and segmentation for chromosomes 1 to 22
 message(sprintf('\nExtraction step for %s', data.file))
 
 segfile <- sequenza.extract(data.file, 
-                            verbose = TRUE,
-                            chromosome.list = as.character(c(1:22)))
+                            verbose = TRUE) # ,
+                            # chromosome.list = as.character(c(1:22)))
 
 ## Estimation of cellularity and ploidy 
 
