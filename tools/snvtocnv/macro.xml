@@ -16,7 +16,7 @@
                 <option value="history">Use a genome from history and build index</option>
             </param>
             <when value="cached">
-                <param name="index" type="select" label="Using built-in genome" help="Select genome from the list">
+                <param name="index" type="select" label="Using built-in genome" help="Select genome sorted and with chr prefix (chr1, chr2, ...)">
                     <options from_data_table="fasta_indexes">
                         <filter type="sort_by" column="2" />
                         <validator type="no_options" message="No indexes are available" />

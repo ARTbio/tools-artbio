@@ -30,8 +30,8 @@ option_list <- list(
 opt <- parse_args(OptionParser(option_list = option_list),
                  args = commandArgs(trailingOnly = TRUE))
 
-sequenza_data <- as.tibble(read.delim(opt$input, header = TRUE))
-solutions_data <- as.tibble(read.delim(opt$solutions, header = TRUE))
+sequenza_data <- as_tibble(read.delim(opt$input, header = TRUE))
+solutions_data <- as_tibble(read.delim(opt$solutions, header = TRUE))
 
 
 ploidy <- round(solutions_data$ploidy[1])
