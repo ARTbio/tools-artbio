@@ -3,9 +3,9 @@
 
     <token name="@set_fasta_index@"><![CDATA[
     #if str( $reference_source.reference_source_selector ) == "history":
-        ln -s '${reference_source.ref_file}' reference.fa &&
+        cp '${reference_source.ref_file}' reference.fa &&
     #else:
-        ln -s '${reference_source.index.fields.path}' reference.fa &&
+        cp '${reference_source.index.fields.path}' reference.fa &&
     #end if
     ]]></token>
 
