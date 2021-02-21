@@ -1,4 +1,4 @@
-<tool id="snvtocnv" name="Infer CNVs from SNVs" version="0.3.0">
+<tool id="snvtocnv" name="Infer CNVs from SNVs" version="0.4.0">
     <description>
     </description>
     <macros>
@@ -17,13 +17,7 @@
     </stdio>
     <command detect_errors="exit_code"><![CDATA[
     @pipefail@
-    @set_fasta_index@
-    #if $sanitize == 'yes':
-        python $__tool_directory__/sanitize_snv.py $input_snvs input_snv.vcf &&
-    #else:
-        ln -s $input_snvs input_snv.vcf &&
-    #end if
-    sequenza-utils gc_wiggle  --fasta reference.fa -o $refwig -w 50 &&
+##    sequenza-utils gc_wiggle  --fasta reference.fa -o $refwig -w 50 &&
     sequenza-utils snp2seqz -v '$input_snvs'  -gc $refwig -o sample.seqz.gz &&
     sequenza-utils seqz_binning --seqz sample.seqz.gz -w 50 -o '$wiggle' &&
     Rscript $__tool_directory__/segmentation_sequenza.R
@@ -36,16 +30,10 @@
             -o '$cnvs'
     ]]></command>
     <inputs>
-        <expand macro="reference_source_conditional" />
+        <param name="refwig" type="data" format="txt" label="GC wigle of reference genome"/>
         <param name="input_snvs" type="data" format="vcf" label="SNVs to process in a vcf file"/>
-        <param name="sanitize" type="select" label="Sanitize the vcf input"
-               help="remove haplotype chromosomes and chr prefix">
-            <option value="no" selected="true">NO</option>
-            <option value="yes">YES</option>
-        </param>
     </inputs>
     <outputs>
-        <data name="refwig" format="txt" label="reference_wig" />
         <data name="wiggle" format="txt" label="binned wiggle" />
         <data name="sample_segment" format="txt" label="sample segments" from_work_dir="test/sample_segments.txt" />
         <data name="alt_solutions" format="txt" label="alternate solutions" from_work_dir="test/sample_alternative_solutions.txt" />
@@ -54,14 +42,12 @@
     <tests>
         <test>
             <param name="input_snvs" value="hg19_chr22.vcf" ftype="vcf" />
-            <param name="reference_source_selector" value="history" />
-            <param name="ref_file" value="hg19_chr22.fa.gz" />
+            <param name="refwig" value="hg19.GCref.txt" />
             <output name="cnvs" file="hg19.cnv.tab" ftype="tabular" />
         </test>
         <test>
             <param name="input_snvs" value="hg38_chr22.vcf" ftype="vcf" />
-            <param name="reference_source_selector" value="history" />
-            <param name="ref_file" value="hg38_chr22.fa.gz" />
+            <param name="refwig" value="hg38.GCref.txt" />
             <output name="cnvs" file="hg38.cnv.tab" ftype="tabular" />
         </test>
     </tests>
