@@ -2,12 +2,12 @@
 # options(show.error.messages = F,
 #       error = function() {
 #           cat(geterrmessage(), file = stderr()); q("no", 1, F)})
-Sys.setenv(TZ = "UTC") # turnaround the tidyverse bug "In OlsonNames() : no Olson database found"
 
 library(optparse)
 library(sequenza)
 library(BiocParallel)
 library(tidyverse)
+Sys.setenv(TZ = "Etc/UTC") # turnaround the tidyverse bug "In OlsonNames() : no Olson database found"
 
 option_list <- list(
   make_option(
