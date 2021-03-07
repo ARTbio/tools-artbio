@@ -6,6 +6,10 @@ library(optparse)
 library(sequenza)
 library(BiocParallel)
 library(tidyverse)
+library(readr)
+
+local("CET")
+
 option_list <- list(
   make_option(
     c("-i", "--input"),
