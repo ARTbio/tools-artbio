@@ -43,7 +43,7 @@ chrom_list <- c("chr1", "chr2", "chr3", "chr4", "chr5", "chr6", "chr7", "chr8", 
                "chr18", "chr19", "chr20", "chr21", "chr22")
 
 segfile <- sequenza.extract(data_file,
-                            verbose = TRUE,
+                            verbose = FALSE,
                             chromosome.list = chrom_list)
 
 ## Estimation of cellularity and ploidy
