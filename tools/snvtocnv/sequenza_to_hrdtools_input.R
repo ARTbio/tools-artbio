@@ -1,4 +1,5 @@
-options(warn = -1)
+options(show.error.messages = F, error = function() {
+        cat(geterrmessage(), file = stderr()); q("no", 1, F) })
 
 # load packages that are provided in the conda env
 
@@ -61,6 +62,6 @@ message("Preview of output:")
 print(reformatted)
 
 reformatted %>%
-  write.table(opt$output, quote=F, row.names=F, sep="\t")
+  write.table(opt$output, quote = F, row.names = F, sep = "\t")
 
 message(sprintf("Output written to %s", opt$output))

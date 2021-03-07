@@ -1,4 +1,5 @@
-options(warn = -1)
+options(show.error.messages = F, error = function() {
+        cat(geterrmessage(), file = stderr()); q("no", 1, F) })
 
 # load packages that are provided in the conda env
 library(optparse)
