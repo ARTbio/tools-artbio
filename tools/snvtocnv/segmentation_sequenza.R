@@ -9,6 +9,8 @@ library(tidyverse)
 library(readr)
 
 local("CET")
+options(tz = "Europe/Paris")
+Sys.setenv(TZ = "Europe/Paris")
 
 option_list <- list(
   make_option(
