@@ -1,4 +1,4 @@
-<tool id="snvtocnv" name="Infer CNVs from SNVs" version="0.4.0">
+<tool id="snvtocnv" name="Infer CNVs from SNVs" version="0.5.0">
     <description>
     </description>
     <macros>
@@ -56,33 +56,22 @@
 snvtocnv
 ============================
 
-This tool is wrapping several cleaning steps to produce bam files suitable for subsequent
-analyses with lumpy-smoove (or other large structural variation callers) or with
-somatic-varscan (or small structural variation callers)
+Analyze genomic sequencing data from paired normal-tumor samples, including
+cellularity and ploidy estimation; mutation and copy number (allele-specific and total
+copy number) detection, quantification and visualization.
 
-
-Workflow 
-=============
-
-The tool is using the following command line for filtering:
-
-::
-
-    sambamba view -h -t 8 --filter='mapping_quality >= 1 and not(unmapped) and not(mate_is_unmapped)' -f 'bam' $input_base".bam"
-    &#124; samtools rmdup - -
-    &#124;tee $input_base".filt1.dedup.bam" &#124; bamleftalign --fasta-reference reference.fa -c --max-iterations "5" -
-    &#124; samtools calmd  -C 50 -b -@ 4 - reference.fa &gt; $input_base".filt1.dedup.bamleft.calmd.bam" ;
-    sambamba view -h -t 8 --filter='mapping_quality &lt;&#61; 254' -f 'bam' -o $input_base".filt1.dedup.bamleft.calmd.filt2.bam" $input_base".filt1.dedup.bamleft.calmd.bam"
     
-Purpose
+Inputs
 --------
 
-This "workflow" tool was generated in order to limit the number of ``python metadata/set.py`` jobs
-which occur at each step of standard galaxy workflows. Indeed, these jobs are poorly optimized and may last considerable
-amounts of time when datasets are large, at each step, lowering the overall performance of the workflow.
+A GC wigle of genome index generated with the tool "create GC_wiggle of reference genome"
+available from this galaxy wrapper
+
+A vcf file of somatic *single* nucleotide variations observed in a tumor sample
+
 
     </help>
     <citations>
-        <citation type="doi">10.1371/journal.pone.0168397</citation>
+        <citation type="doi">10.1093/annonc/mdu479</citation>
     </citations>
 </tool>

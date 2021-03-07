@@ -8,9 +8,9 @@ library(sequenza)
 library(BiocParallel)
 library(tidyverse)
 Sys.setenv(TZ = "Etc/UTC") # turnaround the tidyverse bug "In OlsonNames() : no Olson database found"
-tzdirs <- c(Sys.getenv("TZDIR"), file.path(R.home("share"), 
-        "zoneinfo"), "/usr/share/zoneinfo", "/usr/share/lib/zoneinfo", 
-        "/usr/lib/zoneinfo", "/usr/local/etc/zoneinfo", "/etc/zoneinfo", 
+tzdirs <- c(Sys.getenv("TZDIR"), file.path(R.home("share"),
+        "zoneinfo"), "/usr/share/zoneinfo", "/usr/share/lib/zoneinfo",
+        "/usr/lib/zoneinfo", "/usr/local/etc/zoneinfo", "/etc/zoneinfo",
         "/usr/etc/zoneinfo")
 option_list <- list(
   make_option(
