@@ -1,7 +1,6 @@
+options(warn = -1)
+
 # load packages that are provided in the conda env
-options(show.error.messages = F, error = function() {
-        cat(geterrmessage(), file = stderr()); q("no", 1, F) })
-Sys.setenv(TZ = "Pacific/Auckland") # turnaround the tidyverse bug "In OlsonNames() : no Olson database found"
 
 library(optparse)
 library(tidyverse)

@@ -1,4 +1,4 @@
-<tool id="snvtocnv" name="Infer CNVs from SNVs" version="0.5.0">
+<tool id="snvtocnv" name="Infer CNVs from SNVs" version="0.6.0">
     <description>
     </description>
     <macros>
