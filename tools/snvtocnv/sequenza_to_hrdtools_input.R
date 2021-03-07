@@ -61,6 +61,6 @@ message("Preview of output:")
 print(reformatted)
 
 reformatted %>%
-  write_tsv(opt$output)
+  write.table(opt$output, quote=F, row.names=F, sep="\t")
 
 message(sprintf("Output written to %s", opt$output))

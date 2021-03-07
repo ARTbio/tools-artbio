@@ -1,4 +1,4 @@
-<tool id="snvtocnv" name="Infer CNVs from SNVs" version="0.6.0">
+<tool id="snvtocnv" name="Infer CNVs from SNVs" version="0.6.1">
     <description>
     </description>
     <macros>
@@ -17,7 +17,6 @@
     </stdio>
     <command detect_errors="exit_code"><![CDATA[
     @pipefail@
-##    sequenza-utils gc_wiggle  --fasta reference.fa -o $refwig -w 50 &&
     sequenza-utils snp2seqz -v '$input_snvs'  -gc $refwig -o sample.seqz.gz &&
     sequenza-utils seqz_binning --seqz sample.seqz.gz -w 50 -o '$wiggle' &&
     Rscript $__tool_directory__/segmentation_sequenza.R

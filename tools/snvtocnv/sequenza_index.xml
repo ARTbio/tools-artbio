@@ -1,4 +1,4 @@
-<tool id="sequenzaindex" name="create GC_wiggle of reference genome" version="0.6.0">
+<tool id="sequenzaindex" name="create GC_wiggle of reference genome" version="0.6.1">
     <description>
     </description>
     <macros>
