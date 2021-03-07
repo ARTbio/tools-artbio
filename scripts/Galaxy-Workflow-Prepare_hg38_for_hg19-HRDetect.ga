@@ -1,0 +1,1926 @@
+{
+    "a_galaxy_workflow": "true", 
+    "annotation": "", 
+    "format-version": "0.1", 
+    "name": "Prepare_hg38_for_hg19-HRDetect (cross-mapping)", 
+    "steps": {
+        "0": {
+            "annotation": "", 
+            "content_id": null, 
+            "errors": null, 
+            "id": 0, 
+            "input_connections": {}, 
+            "inputs": [
+                {
+                    "description": "", 
+                    "name": "INTEGRAGEN VarScan,PASS,SS=2,chr,chrom-expur,snpdb_filt, sorted"
+                }
+            ], 
+            "label": "INTEGRAGEN VarScan,PASS,SS=2,chr,chrom-expur,snpdb_filt, sorted", 
+            "name": "Input dataset collection", 
+            "outputs": [], 
+            "position": {
+                "left": 224.90625, 
+                "top": 186.578125
+            }, 
+            "tool_id": null, 
+            "tool_state": "{\"collection_type\": \"list\", \"optional\": false}", 
+            "tool_version": null, 
+            "type": "data_collection_input", 
+            "uuid": "a9a7d31c-c7c7-460d-b5b3-268231f568e7", 
+            "workflow_outputs": [
+                {
+                    "label": null, 
+                    "output_name": "output", 
+                    "uuid": "e98a6c15-8264-4767-8fb9-aac763693d8c"
+                }
+            ]
+        }, 
+        "1": {
+            "annotation": "", 
+            "content_id": null, 
+            "errors": null, 
+            "id": 1, 
+            "input_connections": {}, 
+            "inputs": [
+                {
+                    "description": "", 
+                    "name": "Smoove (SOMATIC) (0/0 - 0/1 and 0/0 - 1/1)"
+                }
+            ], 
+            "label": "Smoove (SOMATIC) (0/0 - 0/1 and 0/0 - 1/1)", 
+            "name": "Input dataset collection", 
+            "outputs": [], 
+            "position": {
+                "left": 270.5625, 
+                "top": 329.640625
+            }, 
+            "tool_id": null, 
+            "tool_state": "{\"collection_type\": \"list\", \"optional\": false}", 
+            "tool_version": null, 
+            "type": "data_collection_input", 
+            "uuid": "d3c9d216-491c-496f-ab93-4c5d65501270", 
+            "workflow_outputs": [
+                {
+                    "label": null, 
+                    "output_name": "output", 
+                    "uuid": "0bb2592f-c715-4799-8e00-1044b2ab4b4b"
+                }
+            ]
+        }, 
+        "2": {
+            "annotation": "", 
+            "content_id": null, 
+            "errors": null, 
+            "id": 2, 
+            "input_connections": {}, 
+            "inputs": [
+                {
+                    "description": "", 
+                    "name": "UCSC hg19"
+                }
+            ], 
+            "label": "UCSC hg19", 
+            "name": "Input dataset", 
+            "outputs": [], 
+            "position": {
+                "left": 295.765625, 
+                "top": 462.890625
+            }, 
+            "tool_id": null, 
+            "tool_state": "{\"optional\": false}", 
+            "tool_version": null, 
+            "type": "data_input", 
+            "uuid": "b7bad4c2-798e-4a45-9cc5-44ef5b726887", 
+            "workflow_outputs": [
+                {
+                    "label": null, 
+                    "output_name": "output", 
+                    "uuid": "82a2e955-a061-44a8-8500-8f3639f33dd0"
+                }
+            ]
+        }, 
+        "3": {
+            "annotation": "", 
+            "content_id": null, 
+            "errors": null, 
+            "id": 3, 
+            "input_connections": {}, 
+            "inputs": [
+                {
+                    "description": "", 
+                    "name": "hg38tohg19_chain_file"
+                }
+            ], 
+            "label": "hg38tohg19_chain_file", 
+            "name": "Input dataset", 
+            "outputs": [], 
+            "position": {
+                "left": 329.546875, 
+                "top": 596.328125
+            }, 
+            "tool_id": null, 
+            "tool_state": "{\"optional\": false}", 
+            "tool_version": null, 
+            "type": "data_input", 
+            "uuid": "92a362d3-89ab-41f0-9370-2f19c3e82b7f", 
+            "workflow_outputs": [
+                {
+                    "label": null, 
+                    "output_name": "output", 
+                    "uuid": "a68afde2-0c85-496f-b70f-28c5f11d8c32"
+                }
+            ]
+        }, 
+        "4": {
+            "annotation": "", 
+            "content_id": null, 
+            "errors": null, 
+            "id": 4, 
+            "input_connections": {}, 
+            "inputs": [
+                {
+                    "description": "", 
+                    "name": "Varscan brut with chr prefix"
+                }
+            ], 
+            "label": "Varscan brut with chr prefix", 
+            "name": "Input dataset collection", 
+            "outputs": [], 
+            "position": {
+                "left": 288.46875, 
+                "top": 724.6875
+            }, 
+            "tool_id": null, 
+            "tool_state": "{\"collection_type\": \"list\", \"optional\": false}", 
+            "tool_version": null, 
+            "type": "data_collection_input", 
+            "uuid": "3be9ad21-1fdd-485e-a199-4c53e4fdfeb6", 
+            "workflow_outputs": [
+                {
+                    "label": null, 
+                    "output_name": "output", 
+                    "uuid": "c95ea8c8-959d-4a47-9430-a032e73c6cd7"
+                }
+            ]
+        }, 
+        "5": {
+            "annotation": "", 
+            "content_id": null, 
+            "errors": null, 
+            "id": 5, 
+            "input_connections": {}, 
+            "inputs": [
+                {
+                    "description": "", 
+                    "name": "hg19 chromosome lengths"
+                }
+            ], 
+            "label": "hg19 chromosome lengths", 
+            "name": "Input dataset", 
+            "outputs": [], 
+            "position": {
+                "left": 356.578125, 
+                "top": 836.03125
+            }, 
+            "tool_id": null, 
+            "tool_state": "{\"optional\": false}", 
+            "tool_version": null, 
+            "type": "data_input", 
+            "uuid": "8aca5231-0065-4b20-a837-7f09adaf16c6", 
+            "workflow_outputs": [
+                {
+                    "label": null, 
+                    "output_name": "output", 
+                    "uuid": "fe263d0f-7655-41a2-ba5c-c0e30f67e855"
+                }
+            ]
+        }, 
+        "6": {
+            "annotation": "", 
+            "content_id": null, 
+            "errors": null, 
+            "id": 6, 
+            "input_connections": {}, 
+            "inputs": [
+                {
+                    "description": "", 
+                    "name": "clean sorted hg19 for GC_wiggle reference"
+                }
+            ], 
+            "label": "clean sorted hg19 for GC_wiggle reference", 
+            "name": "Input dataset", 
+            "outputs": [], 
+            "position": {
+                "left": 417.5, 
+                "top": 1108
+            }, 
+            "tool_id": null, 
+            "tool_state": "{\"optional\": false}", 
+            "tool_version": null, 
+            "type": "data_input", 
+            "uuid": "a3a4cd38-77be-408f-b44f-e07f4f01177a", 
+            "workflow_outputs": [
+                {
+                    "label": null, 
+                    "output_name": "output", 
+                    "uuid": "b80120d5-cd99-4f45-ba4d-c78512268101"
+                }
+            ]
+        }, 
+        "7": {
+            "annotation": "", 
+            "content_id": "toolshed.g2.bx.psu.edu/repos/artbio/lumpy_smoove/vcf2hrdetect/1", 
+            "errors": null, 
+            "id": 7, 
+            "input_connections": {
+                "lumpy_smoove_vcf": {
+                    "id": 1, 
+                    "output_name": "output"
+                }
+            }, 
+            "inputs": [], 
+            "label": "Get SVs", 
+            "name": "Convert lumpy-smoove vcf", 
+            "outputs": [
+                {
+                    "name": "hrdetect_tabular", 
+                    "type": "tabular"
+                }
+            ], 
+            "position": {
+                "left": 946.921875, 
+                "top": 621.890625
+            }, 
+            "post_job_actions": {
+                "HideDatasetActionhrdetect_tabular": {
+                    "action_arguments": {}, 
+                    "action_type": "HideDatasetAction", 
+                    "output_name": "hrdetect_tabular"
+                }, 
+                "RenameDatasetActionhrdetect_tabular": {
+                    "action_arguments": {
+                        "newname": "${cohorte} SVs"
+                    }, 
+                    "action_type": "RenameDatasetAction", 
+                    "output_name": "hrdetect_tabular"
+                }
+            }, 
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/artbio/lumpy_smoove/vcf2hrdetect/1", 
+            "tool_shed_repository": {
+                "changeset_revision": "ad8853ee9909", 
+                "name": "lumpy_smoove", 
+                "owner": "artbio", 
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            }, 
+            "tool_state": "{\"__page__\": null, \"__rerun_remap_job_id__\": null, \"lumpy_smoove_vcf\": {\"__class__\": \"ConnectedValue\"}}", 
+            "tool_version": "1", 
+            "type": "tool", 
+            "uuid": "801b9d20-a773-43d9-a0ba-1dff8687ec5f", 
+            "workflow_outputs": []
+        }, 
+        "8": {
+            "annotation": "", 
+            "content_id": "toolshed.g2.bx.psu.edu/repos/iuc/crossmap_vcf/crossmap_vcf/0.3.7+galaxy1", 
+            "errors": null, 
+            "id": 8, 
+            "input_connections": {
+                "seq_source|chain_source|input_chain": {
+                    "id": 3, 
+                    "output_name": "output"
+                }, 
+                "seq_source|input": {
+                    "id": 0, 
+                    "output_name": "output"
+                }, 
+                "seq_source|input_fasta": {
+                    "id": 2, 
+                    "output_name": "output"
+                }
+            }, 
+            "inputs": [], 
+            "label": null, 
+            "name": "CrossMap VCF", 
+            "outputs": [
+                {
+                    "name": "output", 
+                    "type": "vcf"
+                }, 
+                {
+                    "name": "output_unmapped", 
+                    "type": "vcf"
+                }
+            ], 
+            "position": {
+                "left": 838.5625, 
+                "top": 323.203125
+            }, 
+            "post_job_actions": {
+                "HideDatasetActionoutput": {
+                    "action_arguments": {}, 
+                    "action_type": "HideDatasetAction", 
+                    "output_name": "output"
+                }, 
+                "HideDatasetActionoutput_unmapped": {
+                    "action_arguments": {}, 
+                    "action_type": "HideDatasetAction", 
+                    "output_name": "output_unmapped"
+                }
+            }, 
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/iuc/crossmap_vcf/crossmap_vcf/0.3.7+galaxy1", 
+            "tool_shed_repository": {
+                "changeset_revision": "b21851ddcc79", 
+                "name": "crossmap_vcf", 
+                "owner": "iuc", 
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            }, 
+            "tool_state": "{\"__page__\": null, \"__rerun_remap_job_id__\": null, \"seq_source\": {\"input\": {\"__class__\": \"ConnectedValue\"}, \"index_source_s\": \"history\", \"chain_source\": {\"index_source\": \"history\", \"input_chain\": {\"__class__\": \"ConnectedValue\"}, \"__current_case__\": 1}, \"__current_case__\": 1, \"input_fasta\": {\"__class__\": \"ConnectedValue\"}}}", 
+            "tool_version": "0.3.7+galaxy1", 
+            "type": "tool", 
+            "uuid": "1acb36a1-2668-42f8-849d-32749dd07b34", 
+            "workflow_outputs": []
+        }, 
+        "9": {
+            "annotation": "", 
+            "content_id": "toolshed.g2.bx.psu.edu/repos/iuc/bcftools_view/bcftools_view/1.10", 
+            "errors": null, 
+            "id": 9, 
+            "input_connections": {
+                "input_file": {
+                    "id": 4, 
+                    "output_name": "output"
+                }, 
+                "sec_restrict|regions|regions_file": {
+                    "id": 5, 
+                    "output_name": "output"
+                }
+            }, 
+            "inputs": [
+                {
+                    "description": "runtime parameter for tool bcftools view", 
+                    "name": "sec_subset"
+                }
+            ], 
+            "label": null, 
+            "name": "bcftools view", 
+            "outputs": [
+                {
+                    "name": "output_file", 
+                    "type": "vcf"
+                }
+            ], 
+            "position": {
+                "left": 613, 
+                "top": 815.625
+            }, 
+            "post_job_actions": {
+                "HideDatasetActionoutput_file": {
+                    "action_arguments": {}, 
+                    "action_type": "HideDatasetAction", 
+                    "output_name": "output_file"
+                }
+            }, 
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/iuc/bcftools_view/bcftools_view/1.10", 
+            "tool_shed_repository": {
+                "changeset_revision": "c4a9b38b435d", 
+                "name": "bcftools_view", 
+                "owner": "iuc", 
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            }, 
+            "tool_state": "{\"__page__\": null, \"sec_filter\": {\"phased\": null, \"max_ac\": \"\", \"max_af\": \"\", \"min_af\": \"\", \"exclude_types\": [\"indels\"], \"min_ac\": \"\", \"uncalled\": null, \"private\": null, \"types\": null, \"max_alleles\": \"\", \"min_alleles\": \"\", \"known_or_novel\": null, \"select_genotype\": \"__none__\"}, \"sec_restrict\": {\"regions\": {\"regions_file\": {\"__class__\": \"ConnectedValue\"}, \"__current_case__\": 2, \"regions_src\": \"regions_file\"}, \"exclude\": \"\", \"include\": \"\", \"apply_filters\": \"PASS\", \"targets\": {\"__current_case__\": 0, \"targets_src\": \"__none__\"}}, \"input_file\": {\"__class__\": \"ConnectedValue\"}, \"__rerun_remap_job_id__\": null, \"sec_subset\": {\"force_samples\": \"false\", \"invert_samples_file\": \"false\", \"invert_samples\": \"false\", \"samples_file\": {\"__class__\": \"RuntimeValue\"}, \"no_update\": \"false\", \"samples\": \"\", \"trim_alt_alleles\": \"false\"}, \"sec_output\": {\"header\": null, \"invert_targets_file\": \"false\", \"drop_genotypes\": \"false\", \"compression_level\": \"\"}, \"output_type\": \"v\"}", 
+            "tool_version": "1.10", 
+            "type": "tool", 
+            "uuid": "8094194e-2dd4-4fc2-a4e5-20867c38fd71", 
+            "workflow_outputs": []
+        }, 
+        "10": {
+            "annotation": "", 
+            "content_id": "testtoolshed.g2.bx.psu.edu/repos/artbio/snvtocnv/sequenzaindex/0.7.0", 
+            "errors": null, 
+            "id": 10, 
+            "input_connections": {
+                "reference": {
+                    "id": 6, 
+                    "output_name": "output"
+                }
+            }, 
+            "inputs": [], 
+            "label": null, 
+            "name": "create GC_wiggle of reference genome", 
+            "outputs": [
+                {
+                    "name": "refwig", 
+                    "type": "txt"
+                }
+            ], 
+            "position": {
+                "left": 977.75, 
+                "top": 1342.46875
+            }, 
+            "post_job_actions": {}, 
+            "tool_id": "testtoolshed.g2.bx.psu.edu/repos/artbio/snvtocnv/sequenzaindex/0.7.0", 
+            "tool_shed_repository": {
+                "changeset_revision": "67213c4eefa6", 
+                "name": "snvtocnv", 
+                "owner": "artbio", 
+                "tool_shed": "testtoolshed.g2.bx.psu.edu"
+            }, 
+            "tool_state": "{\"__page__\": null, \"window\": \"50\", \"__rerun_remap_job_id__\": null, \"reference\": {\"__class__\": \"ConnectedValue\"}}", 
+            "tool_version": "0.7.0", 
+            "type": "tool", 
+            "uuid": "37cfdf1a-dfff-4e9d-ae14-a85373f8f998", 
+            "workflow_outputs": [
+                {
+                    "label": null, 
+                    "output_name": "refwig", 
+                    "uuid": "3af368d3-4956-43ee-9595-32dbc351843b"
+                }
+            ]
+        }, 
+        "11": {
+            "annotation": "", 
+            "id": 11, 
+            "input_connections": {
+                "SVs": {
+                    "id": 7, 
+                    "input_subworkflow_step_id": 0, 
+                    "output_name": "hrdetect_tabular"
+                }, 
+                "hg38 to hg19 chain file": {
+                    "id": 3, 
+                    "input_subworkflow_step_id": 1, 
+                    "output_name": "output"
+                }
+            }, 
+            "inputs": [], 
+            "label": null, 
+            "name": "cross-mapped SVs", 
+            "outputs": [], 
+            "position": {
+                "left": 1288.5, 
+                "top": 697
+            }, 
+            "subworkflow": {
+                "a_galaxy_workflow": "true", 
+                "annotation": "", 
+                "format-version": "0.1", 
+                "name": "cross-mapped SVs", 
+                "steps": {
+                    "0": {
+                        "annotation": "", 
+                        "content_id": null, 
+                        "errors": null, 
+                        "id": 0, 
+                        "input_connections": {}, 
+                        "inputs": [
+                            {
+                                "description": "", 
+                                "name": "SVs"
+                            }
+                        ], 
+                        "label": "SVs", 
+                        "name": "Input dataset collection", 
+                        "outputs": [], 
+                        "position": {
+                            "left": 185.375, 
+                            "top": 120
+                        }, 
+                        "tool_id": null, 
+                        "tool_state": "{\"collection_type\": \"list\", \"optional\": false}", 
+                        "tool_version": null, 
+                        "type": "data_collection_input", 
+                        "uuid": "7f7929d9-7c8a-405a-bd13-844a1c901bd9", 
+                        "workflow_outputs": [
+                            {
+                                "label": null, 
+                                "output_name": "output", 
+                                "uuid": "5419cbec-f336-4b69-a48b-a8e9c9e150d5"
+                            }
+                        ]
+                    }, 
+                    "1": {
+                        "annotation": "", 
+                        "content_id": null, 
+                        "errors": null, 
+                        "id": 1, 
+                        "input_connections": {}, 
+                        "inputs": [
+                            {
+                                "description": "", 
+                                "name": "hg38 to hg19 chain file"
+                            }
+                        ], 
+                        "label": "hg38 to hg19 chain file", 
+                        "name": "Input dataset", 
+                        "outputs": [], 
+                        "position": {
+                            "left": 134.9375, 
+                            "top": 384.796875
+                        }, 
+                        "tool_id": null, 
+                        "tool_state": "{\"optional\": false}", 
+                        "tool_version": null, 
+                        "type": "data_input", 
+                        "uuid": "4f374d80-de2f-4b2b-b85d-7c9d416db655", 
+                        "workflow_outputs": [
+                            {
+                                "label": null, 
+                                "output_name": "output", 
+                                "uuid": "ab26e701-c32c-4251-a39a-213a76569349"
+                            }
+                        ]
+                    }, 
+                    "2": {
+                        "annotation": "", 
+                        "content_id": "toolshed.g2.bx.psu.edu/repos/bgruening/text_processing/tp_tail_tool/1.1.0", 
+                        "errors": null, 
+                        "id": 2, 
+                        "input_connections": {
+                            "infile": {
+                                "id": 0, 
+                                "output_name": "output"
+                            }
+                        }, 
+                        "inputs": [], 
+                        "label": null, 
+                        "name": "Select last", 
+                        "outputs": [
+                            {
+                                "name": "outfile", 
+                                "type": "input"
+                            }
+                        ], 
+                        "position": {
+                            "left": 466.796875, 
+                            "top": 309.796875
+                        }, 
+                        "post_job_actions": {
+                            "HideDatasetActionoutfile": {
+                                "action_arguments": {}, 
+                                "action_type": "HideDatasetAction", 
+                                "output_name": "outfile"
+                            }
+                        }, 
+                        "tool_id": "toolshed.g2.bx.psu.edu/repos/bgruening/text_processing/tp_tail_tool/1.1.0", 
+                        "tool_shed_repository": {
+                            "changeset_revision": "0a8c6b61f0f4", 
+                            "name": "text_processing", 
+                            "owner": "bgruening", 
+                            "tool_shed": "toolshed.g2.bx.psu.edu"
+                        }, 
+                        "tool_state": "{\"__page__\": null, \"complement\": \"+\", \"__rerun_remap_job_id__\": null, \"num_lines\": \"2\", \"infile\": {\"__class__\": \"ConnectedValue\"}}", 
+                        "tool_version": null, 
+                        "type": "tool", 
+                        "uuid": "b5d862b2-eef3-4922-b9a8-8b933f1fcd46", 
+                        "workflow_outputs": []
+                    }, 
+                    "3": {
+                        "annotation": "", 
+                        "content_id": "Show beginning1", 
+                        "errors": null, 
+                        "id": 3, 
+                        "input_connections": {
+                            "input": {
+                                "id": 0, 
+                                "output_name": "output"
+                            }
+                        }, 
+                        "inputs": [], 
+                        "label": "keep header", 
+                        "name": "Select first", 
+                        "outputs": [
+                            {
+                                "name": "out_file1", 
+                                "type": "input"
+                            }
+                        ], 
+                        "position": {
+                            "left": 378.796875, 
+                            "top": 557.796875
+                        }, 
+                        "post_job_actions": {
+                            "HideDatasetActionout_file1": {
+                                "action_arguments": {}, 
+                                "action_type": "HideDatasetAction", 
+                                "output_name": "out_file1"
+                            }
+                        }, 
+                        "tool_id": "Show beginning1", 
+                        "tool_state": "{\"__page__\": null, \"input\": {\"__class__\": \"ConnectedValue\"}, \"__rerun_remap_job_id__\": null, \"lineNum\": \"1\"}", 
+                        "tool_version": null, 
+                        "type": "tool", 
+                        "uuid": "82b483ea-de4b-47bb-a56f-3d92c4d1d4a4", 
+                        "workflow_outputs": []
+                    }, 
+                    "4": {
+                        "annotation": "", 
+                        "content_id": "Cut1", 
+                        "errors": null, 
+                        "id": 4, 
+                        "input_connections": {
+                            "input": {
+                                "id": 2, 
+                                "output_name": "outfile"
+                            }
+                        }, 
+                        "inputs": [], 
+                        "label": "cut first and second", 
+                        "name": "Cut", 
+                        "outputs": [
+                            {
+                                "name": "out_file1", 
+                                "type": "tabular"
+                            }
+                        ], 
+                        "position": {
+                            "left": 713.796875, 
+                            "top": 257.796875
+                        }, 
+                        "post_job_actions": {
+                            "HideDatasetActionout_file1": {
+                                "action_arguments": {}, 
+                                "action_type": "HideDatasetAction", 
+                                "output_name": "out_file1"
+                            }
+                        }, 
+                        "tool_id": "Cut1", 
+                        "tool_state": "{\"columnList\": \"c1,c2\", \"input\": {\"__class__\": \"ConnectedValue\"}, \"delimiter\": \"T\", \"__rerun_remap_job_id__\": null, \"__page__\": null}", 
+                        "tool_version": null, 
+                        "type": "tool", 
+                        "uuid": "ff78dddf-061c-4188-a442-e455251705f9", 
+                        "workflow_outputs": []
+                    }, 
+                    "5": {
+                        "annotation": "", 
+                        "content_id": "Cut1", 
+                        "errors": null, 
+                        "id": 5, 
+                        "input_connections": {
+                            "input": {
+                                "id": 2, 
+                                "output_name": "outfile"
+                            }
+                        }, 
+                        "inputs": [], 
+                        "label": "cut 3 & 4", 
+                        "name": "Cut", 
+                        "outputs": [
+                            {
+                                "name": "out_file1", 
+                                "type": "tabular"
+                            }
+                        ], 
+                        "position": {
+                            "left": 717.984375, 
+                            "top": 468.796875
+                        }, 
+                        "post_job_actions": {
+                            "HideDatasetActionout_file1": {
+                                "action_arguments": {}, 
+                                "action_type": "HideDatasetAction", 
+                                "output_name": "out_file1"
+                            }
+                        }, 
+                        "tool_id": "Cut1", 
+                        "tool_state": "{\"columnList\": \"c3,c4\", \"input\": {\"__class__\": \"ConnectedValue\"}, \"delimiter\": \"T\", \"__rerun_remap_job_id__\": null, \"__page__\": null}", 
+                        "tool_version": null, 
+                        "type": "tool", 
+                        "uuid": "acfda05e-8df2-450a-a771-419ca7803a9d", 
+                        "workflow_outputs": []
+                    }, 
+                    "6": {
+                        "annotation": "", 
+                        "content_id": "Cut1", 
+                        "errors": null, 
+                        "id": 6, 
+                        "input_connections": {
+                            "input": {
+                                "id": 2, 
+                                "output_name": "outfile"
+                            }
+                        }, 
+                        "inputs": [], 
+                        "label": "cut last", 
+                        "name": "Cut", 
+                        "outputs": [
+                            {
+                                "name": "out_file1", 
+                                "type": "tabular"
+                            }
+                        ], 
+                        "position": {
+                            "left": 717.59375, 
+                            "top": 687.1875
+                        }, 
+                        "post_job_actions": {
+                            "HideDatasetActionout_file1": {
+                                "action_arguments": {}, 
+                                "action_type": "HideDatasetAction", 
+                                "output_name": "out_file1"
+                            }
+                        }, 
+                        "tool_id": "Cut1", 
+                        "tool_state": "{\"columnList\": \"c5\", \"input\": {\"__class__\": \"ConnectedValue\"}, \"delimiter\": \"T\", \"__rerun_remap_job_id__\": null, \"__page__\": null}", 
+                        "tool_version": null, 
+                        "type": "tool", 
+                        "uuid": "23910e42-2337-4209-bf51-f0e2823aac0c", 
+                        "workflow_outputs": []
+                    }, 
+                    "7": {
+                        "annotation": "", 
+                        "content_id": "Cut1", 
+                        "errors": null, 
+                        "id": 7, 
+                        "input_connections": {
+                            "input": {
+                                "id": 4, 
+                                "output_name": "out_file1"
+                            }
+                        }, 
+                        "inputs": [], 
+                        "label": "add end column to chr1", 
+                        "name": "Cut", 
+                        "outputs": [
+                            {
+                                "name": "out_file1", 
+                                "type": "tabular"
+                            }
+                        ], 
+                        "position": {
+                            "left": 919.984375, 
+                            "top": 268.390625
+                        }, 
+                        "post_job_actions": {
+                            "ChangeDatatypeActionout_file1": {
+                                "action_arguments": {
+                                    "newtype": "bed"
+                                }, 
+                                "action_type": "ChangeDatatypeAction", 
+                                "output_name": "out_file1"
+                            }, 
+                            "HideDatasetActionout_file1": {
+                                "action_arguments": {}, 
+                                "action_type": "HideDatasetAction", 
+                                "output_name": "out_file1"
+                            }
+                        }, 
+                        "tool_id": "Cut1", 
+                        "tool_state": "{\"columnList\": \"c1,c2,c2\", \"input\": {\"__class__\": \"ConnectedValue\"}, \"delimiter\": \"T\", \"__rerun_remap_job_id__\": null, \"__page__\": null}", 
+                        "tool_version": null, 
+                        "type": "tool", 
+                        "uuid": "5842a45c-b1d6-4fe7-9b64-8c8ec5f739db", 
+                        "workflow_outputs": []
+                    }, 
+                    "8": {
+                        "annotation": "", 
+                        "content_id": "Cut1", 
+                        "errors": null, 
+                        "id": 8, 
+                        "input_connections": {
+                            "input": {
+                                "id": 5, 
+                                "output_name": "out_file1"
+                            }
+                        }, 
+                        "inputs": [], 
+                        "label": "add end column to chr2", 
+                        "name": "Cut", 
+                        "outputs": [
+                            {
+                                "name": "out_file1", 
+                                "type": "tabular"
+                            }
+                        ], 
+                        "position": {
+                            "left": 927.1875, 
+                            "top": 501
+                        }, 
+                        "post_job_actions": {
+                            "ChangeDatatypeActionout_file1": {
+                                "action_arguments": {
+                                    "newtype": "bed"
+                                }, 
+                                "action_type": "ChangeDatatypeAction", 
+                                "output_name": "out_file1"
+                            }, 
+                            "HideDatasetActionout_file1": {
+                                "action_arguments": {}, 
+                                "action_type": "HideDatasetAction", 
+                                "output_name": "out_file1"
+                            }
+                        }, 
+                        "tool_id": "Cut1", 
+                        "tool_state": "{\"columnList\": \"c1,c2,c2\", \"input\": {\"__class__\": \"ConnectedValue\"}, \"delimiter\": \"T\", \"__rerun_remap_job_id__\": null, \"__page__\": null}", 
+                        "tool_version": null, 
+                        "type": "tool", 
+                        "uuid": "b093d558-dc23-4d06-92e7-bf5ff5fc96f4", 
+                        "workflow_outputs": []
+                    }, 
+                    "9": {
+                        "annotation": "", 
+                        "content_id": "addValue", 
+                        "errors": null, 
+                        "id": 9, 
+                        "input_connections": {
+                            "input": {
+                                "id": 7, 
+                                "output_name": "out_file1"
+                            }
+                        }, 
+                        "inputs": [], 
+                        "label": null, 
+                        "name": "Add column", 
+                        "outputs": [
+                            {
+                                "name": "out_file1", 
+                                "type": "input"
+                            }
+                        ], 
+                        "position": {
+                            "left": 1140.5, 
+                            "top": 282.5
+                        }, 
+                        "post_job_actions": {
+                            "HideDatasetActionout_file1": {
+                                "action_arguments": {}, 
+                                "action_type": "HideDatasetAction", 
+                                "output_name": "out_file1"
+                            }
+                        }, 
+                        "tool_id": "addValue", 
+                        "tool_state": "{\"__page__\": null, \"input\": {\"__class__\": \"ConnectedValue\"}, \"__rerun_remap_job_id__\": null, \"exp\": \"1\", \"iterate\": \"yes\"}", 
+                        "tool_version": null, 
+                        "type": "tool", 
+                        "uuid": "c7478e85-0013-45de-a9f6-d74648d0b36e", 
+                        "workflow_outputs": []
+                    }, 
+                    "10": {
+                        "annotation": "", 
+                        "content_id": "addValue", 
+                        "errors": null, 
+                        "id": 10, 
+                        "input_connections": {
+                            "input": {
+                                "id": 8, 
+                                "output_name": "out_file1"
+                            }
+                        }, 
+                        "inputs": [], 
+                        "label": null, 
+                        "name": "Add column", 
+                        "outputs": [
+                            {
+                                "name": "out_file1", 
+                                "type": "input"
+                            }
+                        ], 
+                        "position": {
+                            "left": 1132.5, 
+                            "top": 538.5
+                        }, 
+                        "post_job_actions": {
+                            "HideDatasetActionout_file1": {
+                                "action_arguments": {}, 
+                                "action_type": "HideDatasetAction", 
+                                "output_name": "out_file1"
+                            }
+                        }, 
+                        "tool_id": "addValue", 
+                        "tool_state": "{\"__page__\": null, \"input\": {\"__class__\": \"ConnectedValue\"}, \"__rerun_remap_job_id__\": null, \"exp\": \"1\", \"iterate\": \"yes\"}", 
+                        "tool_version": null, 
+                        "type": "tool", 
+                        "uuid": "bb11a769-ca72-4e49-b98f-75f416c14377", 
+                        "workflow_outputs": []
+                    }, 
+                    "11": {
+                        "annotation": "", 
+                        "content_id": "Paste1", 
+                        "errors": null, 
+                        "id": 11, 
+                        "input_connections": {
+                            "input1": {
+                                "id": 9, 
+                                "output_name": "out_file1"
+                            }, 
+                            "input2": {
+                                "id": 6, 
+                                "output_name": "out_file1"
+                            }
+                        }, 
+                        "inputs": [], 
+                        "label": null, 
+                        "name": "Paste", 
+                        "outputs": [
+                            {
+                                "name": "out_file1", 
+                                "type": "input"
+                            }
+                        ], 
+                        "position": {
+                            "left": 1342.5, 
+                            "top": 320.5
+                        }, 
+                        "post_job_actions": {
+                            "HideDatasetActionout_file1": {
+                                "action_arguments": {}, 
+                                "action_type": "HideDatasetAction", 
+                                "output_name": "out_file1"
+                            }
+                        }, 
+                        "tool_id": "Paste1", 
+                        "tool_state": "{\"input2\": {\"__class__\": \"ConnectedValue\"}, \"__page__\": null, \"delimiter\": \"T\", \"input1\": {\"__class__\": \"ConnectedValue\"}, \"__rerun_remap_job_id__\": null}", 
+                        "tool_version": null, 
+                        "type": "tool", 
+                        "uuid": "1880a7a6-09f1-47f6-a3be-eaf35f7867b2", 
+                        "workflow_outputs": []
+                    }, 
+                    "12": {
+                        "annotation": "", 
+                        "content_id": "Paste1", 
+                        "errors": null, 
+                        "id": 12, 
+                        "input_connections": {
+                            "input1": {
+                                "id": 10, 
+                                "output_name": "out_file1"
+                            }, 
+                            "input2": {
+                                "id": 6, 
+                                "output_name": "out_file1"
+                            }
+                        }, 
+                        "inputs": [], 
+                        "label": null, 
+                        "name": "Paste", 
+                        "outputs": [
+                            {
+                                "name": "out_file1", 
+                                "type": "input"
+                            }
+                        ], 
+                        "position": {
+                            "left": 1314.5, 
+                            "top": 610.5
+                        }, 
+                        "post_job_actions": {
+                            "HideDatasetActionout_file1": {
+                                "action_arguments": {}, 
+                                "action_type": "HideDatasetAction", 
+                                "output_name": "out_file1"
+                            }
+                        }, 
+                        "tool_id": "Paste1", 
+                        "tool_state": "{\"input2\": {\"__class__\": \"ConnectedValue\"}, \"__page__\": null, \"delimiter\": \"T\", \"input1\": {\"__class__\": \"ConnectedValue\"}, \"__rerun_remap_job_id__\": null}", 
+                        "tool_version": null, 
+                        "type": "tool", 
+                        "uuid": "93877562-e4b2-46b3-9fe6-fc5aaaf91f9a", 
+                        "workflow_outputs": []
+                    }, 
+                    "13": {
+                        "annotation": "", 
+                        "content_id": "mergeCols1", 
+                        "errors": null, 
+                        "id": 13, 
+                        "input_connections": {
+                            "input1": {
+                                "id": 11, 
+                                "output_name": "out_file1"
+                            }
+                        }, 
+                        "inputs": [], 
+                        "label": null, 
+                        "name": "Merge Columns", 
+                        "outputs": [
+                            {
+                                "name": "out_file1", 
+                                "type": "tabular"
+                            }
+                        ], 
+                        "position": {
+                            "left": 1474.5, 
+                            "top": 478.5
+                        }, 
+                        "post_job_actions": {
+                            "ChangeDatatypeActionout_file1": {
+                                "action_arguments": {
+                                    "newtype": "bed"
+                                }, 
+                                "action_type": "ChangeDatatypeAction", 
+                                "output_name": "out_file1"
+                            }, 
+                            "HideDatasetActionout_file1": {
+                                "action_arguments": {}, 
+                                "action_type": "HideDatasetAction", 
+                                "output_name": "out_file1"
+                            }
+                        }, 
+                        "tool_id": "mergeCols1", 
+                        "tool_state": "{\"__page__\": null, \"input1\": {\"__class__\": \"ConnectedValue\"}, \"__rerun_remap_job_id__\": null, \"col2\": \"5\", \"col1\": \"4\", \"columns\": []}", 
+                        "tool_version": null, 
+                        "type": "tool", 
+                        "uuid": "aa15e5bd-9b8e-40b1-a36d-8e8980fb06ab", 
+                        "workflow_outputs": []
+                    }, 
+                    "14": {
+                        "annotation": "", 
+                        "content_id": "mergeCols1", 
+                        "errors": null, 
+                        "id": 14, 
+                        "input_connections": {
+                            "input1": {
+                                "id": 12, 
+                                "output_name": "out_file1"
+                            }
+                        }, 
+                        "inputs": [], 
+                        "label": null, 
+                        "name": "Merge Columns", 
+                        "outputs": [
+                            {
+                                "name": "out_file1", 
+                                "type": "tabular"
+                            }
+                        ], 
+                        "position": {
+                            "left": 1392, 
+                            "top": 813.5
+                        }, 
+                        "post_job_actions": {
+                            "ChangeDatatypeActionout_file1": {
+                                "action_arguments": {
+                                    "newtype": "bed"
+                                }, 
+                                "action_type": "ChangeDatatypeAction", 
+                                "output_name": "out_file1"
+                            }, 
+                            "HideDatasetActionout_file1": {
+                                "action_arguments": {}, 
+                                "action_type": "HideDatasetAction", 
+                                "output_name": "out_file1"
+                            }
+                        }, 
+                        "tool_id": "mergeCols1", 
+                        "tool_state": "{\"__page__\": null, \"input1\": {\"__class__\": \"ConnectedValue\"}, \"__rerun_remap_job_id__\": null, \"col2\": \"5\", \"col1\": \"4\", \"columns\": []}", 
+                        "tool_version": null, 
+                        "type": "tool", 
+                        "uuid": "7d322317-ee9a-49db-a334-c41bd80a09ee", 
+                        "workflow_outputs": []
+                    }, 
+                    "15": {
+                        "annotation": "", 
+                        "content_id": "toolshed.g2.bx.psu.edu/repos/iuc/crossmap_bed/crossmap_bed/0.3.7+galaxy1", 
+                        "errors": null, 
+                        "id": 15, 
+                        "input_connections": {
+                            "chain_source|input_chain": {
+                                "id": 1, 
+                                "output_name": "output"
+                            }, 
+                            "input": {
+                                "id": 13, 
+                                "output_name": "out_file1"
+                            }
+                        }, 
+                        "inputs": [], 
+                        "label": null, 
+                        "name": "CrossMap BED", 
+                        "outputs": [
+                            {
+                                "name": "output_valid", 
+                                "type": "bed"
+                            }, 
+                            {
+                                "name": "output_failed", 
+                                "type": "bed"
+                            }
+                        ], 
+                        "position": {
+                            "left": 1578.390625, 
+                            "top": 242
+                        }, 
+                        "post_job_actions": {
+                            "HideDatasetActionoutput_failed": {
+                                "action_arguments": {}, 
+                                "action_type": "HideDatasetAction", 
+                                "output_name": "output_failed"
+                            }, 
+                            "HideDatasetActionoutput_valid": {
+                                "action_arguments": {}, 
+                                "action_type": "HideDatasetAction", 
+                                "output_name": "output_valid"
+                            }
+                        }, 
+                        "tool_id": "toolshed.g2.bx.psu.edu/repos/iuc/crossmap_bed/crossmap_bed/0.3.7+galaxy1", 
+                        "tool_shed_repository": {
+                            "changeset_revision": "cdbdce00f5f6", 
+                            "name": "crossmap_bed", 
+                            "owner": "iuc", 
+                            "tool_shed": "toolshed.g2.bx.psu.edu"
+                        }, 
+                        "tool_state": "{\"merge_unmapped_entries\": \"false\", \"chain_source\": {\"index_source\": \"history\", \"input_chain\": {\"__class__\": \"ConnectedValue\"}, \"__current_case__\": 1}, \"__page__\": null, \"__rerun_remap_job_id__\": null, \"input\": {\"__class__\": \"ConnectedValue\"}}", 
+                        "tool_version": null, 
+                        "type": "tool", 
+                        "uuid": "a1864d92-90e9-47a8-9ad3-4a256da25b38", 
+                        "workflow_outputs": []
+                    }, 
+                    "16": {
+                        "annotation": "", 
+                        "content_id": "toolshed.g2.bx.psu.edu/repos/iuc/crossmap_bed/crossmap_bed/0.3.7+galaxy1", 
+                        "errors": null, 
+                        "id": 16, 
+                        "input_connections": {
+                            "chain_source|input_chain": {
+                                "id": 1, 
+                                "output_name": "output"
+                            }, 
+                            "input": {
+                                "id": 14, 
+                                "output_name": "out_file1"
+                            }
+                        }, 
+                        "inputs": [], 
+                        "label": null, 
+                        "name": "CrossMap BED", 
+                        "outputs": [
+                            {
+                                "name": "output_valid", 
+                                "type": "bed"
+                            }, 
+                            {
+                                "name": "output_failed", 
+                                "type": "bed"
+                            }
+                        ], 
+                        "position": {
+                            "left": 1589, 
+                            "top": 660.59375
+                        }, 
+                        "post_job_actions": {
+                            "HideDatasetActionoutput_failed": {
+                                "action_arguments": {}, 
+                                "action_type": "HideDatasetAction", 
+                                "output_name": "output_failed"
+                            }, 
+                            "HideDatasetActionoutput_valid": {
+                                "action_arguments": {}, 
+                                "action_type": "HideDatasetAction", 
+                                "output_name": "output_valid"
+                            }
+                        }, 
+                        "tool_id": "toolshed.g2.bx.psu.edu/repos/iuc/crossmap_bed/crossmap_bed/0.3.7+galaxy1", 
+                        "tool_shed_repository": {
+                            "changeset_revision": "cdbdce00f5f6", 
+                            "name": "crossmap_bed", 
+                            "owner": "iuc", 
+                            "tool_shed": "toolshed.g2.bx.psu.edu"
+                        }, 
+                        "tool_state": "{\"merge_unmapped_entries\": \"false\", \"chain_source\": {\"index_source\": \"history\", \"input_chain\": {\"__class__\": \"ConnectedValue\"}, \"__current_case__\": 1}, \"__page__\": null, \"__rerun_remap_job_id__\": null, \"input\": {\"__class__\": \"ConnectedValue\"}}", 
+                        "tool_version": null, 
+                        "type": "tool", 
+                        "uuid": "0419b616-121a-4570-999e-ef571093351b", 
+                        "workflow_outputs": []
+                    }, 
+                    "17": {
+                        "annotation": "", 
+                        "content_id": "toolshed.g2.bx.psu.edu/repos/bgruening/text_processing/tp_easyjoin_tool/1.1.2", 
+                        "errors": null, 
+                        "id": 17, 
+                        "input_connections": {
+                            "infile1": {
+                                "id": 15, 
+                                "output_name": "output_valid"
+                            }, 
+                            "infile2": {
+                                "id": 16, 
+                                "output_name": "output_valid"
+                            }
+                        }, 
+                        "inputs": [], 
+                        "label": null, 
+                        "name": "Join", 
+                        "outputs": [
+                            {
+                                "name": "output", 
+                                "type": "input"
+                            }
+                        ], 
+                        "position": {
+                            "left": 1916.5, 
+                            "top": 463.5
+                        }, 
+                        "post_job_actions": {
+                            "HideDatasetActionoutput": {
+                                "action_arguments": {}, 
+                                "action_type": "HideDatasetAction", 
+                                "output_name": "output"
+                            }
+                        }, 
+                        "tool_id": "toolshed.g2.bx.psu.edu/repos/bgruening/text_processing/tp_easyjoin_tool/1.1.2", 
+                        "tool_shed_repository": {
+                            "changeset_revision": "ddf54b12c295", 
+                            "name": "text_processing", 
+                            "owner": "bgruening", 
+                            "tool_shed": "toolshed.g2.bx.psu.edu"
+                        }, 
+                        "tool_state": "{\"__page__\": null, \"ignore_case\": \"false\", \"infile2\": {\"__class__\": \"ConnectedValue\"}, \"infile1\": {\"__class__\": \"ConnectedValue\"}, \"empty_string_filler\": \"0\", \"__rerun_remap_job_id__\": null, \"jointype\": \" \", \"header\": \"false\", \"column1\": \"6\", \"column2\": \"6\"}", 
+                        "tool_version": null, 
+                        "type": "tool", 
+                        "uuid": "5d21da2a-15a5-4501-8b9a-1c8fa84ff21a", 
+                        "workflow_outputs": []
+                    }, 
+                    "18": {
+                        "annotation": "", 
+                        "content_id": "Cut1", 
+                        "errors": null, 
+                        "id": 18, 
+                        "input_connections": {
+                            "input": {
+                                "id": 17, 
+                                "output_name": "output"
+                            }
+                        }, 
+                        "inputs": [], 
+                        "label": "prune columns", 
+                        "name": "Cut", 
+                        "outputs": [
+                            {
+                                "name": "out_file1", 
+                                "type": "tabular"
+                            }
+                        ], 
+                        "position": {
+                            "left": 2130.5, 
+                            "top": 606.5
+                        }, 
+                        "post_job_actions": {
+                            "HideDatasetActionout_file1": {
+                                "action_arguments": {}, 
+                                "action_type": "HideDatasetAction", 
+                                "output_name": "out_file1"
+                            }
+                        }, 
+                        "tool_id": "Cut1", 
+                        "tool_state": "{\"columnList\": \"c2,c3,c7,c8,c11\", \"input\": {\"__class__\": \"ConnectedValue\"}, \"delimiter\": \"T\", \"__rerun_remap_job_id__\": null, \"__page__\": null}", 
+                        "tool_version": null, 
+                        "type": "tool", 
+                        "uuid": "f3d03d75-3811-4363-a786-ed1ba745e06a", 
+                        "workflow_outputs": []
+                    }, 
+                    "19": {
+                        "annotation": "", 
+                        "content_id": "Grep1", 
+                        "errors": null, 
+                        "id": 19, 
+                        "input_connections": {
+                            "input": {
+                                "id": 18, 
+                                "output_name": "out_file1"
+                            }
+                        }, 
+                        "inputs": [], 
+                        "label": null, 
+                        "name": "Select", 
+                        "outputs": [
+                            {
+                                "name": "out_file1", 
+                                "type": "input"
+                            }
+                        ], 
+                        "position": {
+                            "left": 2112.5, 
+                            "top": 756
+                        }, 
+                        "post_job_actions": {
+                            "HideDatasetActionout_file1": {
+                                "action_arguments": {}, 
+                                "action_type": "HideDatasetAction", 
+                                "output_name": "out_file1"
+                            }
+                        }, 
+                        "tool_id": "Grep1", 
+                        "tool_state": "{\"__page__\": null, \"input\": {\"__class__\": \"ConnectedValue\"}, \"invert\": \"true\", \"__rerun_remap_job_id__\": null, \"pattern\": \"_\"}", 
+                        "tool_version": null, 
+                        "type": "tool", 
+                        "uuid": "f34a6022-baf6-455e-a1b6-124176f2974e", 
+                        "workflow_outputs": []
+                    }, 
+                    "20": {
+                        "annotation": "", 
+                        "content_id": "cat1", 
+                        "errors": null, 
+                        "id": 20, 
+                        "input_connections": {
+                            "input1": {
+                                "id": 3, 
+                                "output_name": "out_file1"
+                            }, 
+                            "queries_0|input2": {
+                                "id": 19, 
+                                "output_name": "out_file1"
+                            }
+                        }, 
+                        "inputs": [], 
+                        "label": null, 
+                        "name": "Concatenate datasets", 
+                        "outputs": [
+                            {
+                                "name": "out_file1", 
+                                "type": "input"
+                            }
+                        ], 
+                        "position": {
+                            "left": 2092.375, 
+                            "top": 926.796875
+                        }, 
+                        "post_job_actions": {
+                            "RenameDatasetActionout_file1": {
+                                "action_arguments": {
+                                    "newname": "${cohorte} cross-mapped SVs"
+                                }, 
+                                "action_type": "RenameDatasetAction", 
+                                "output_name": "out_file1"
+                            }
+                        }, 
+                        "tool_id": "cat1", 
+                        "tool_state": "{\"__page__\": null, \"__rerun_remap_job_id__\": null, \"input1\": {\"__class__\": \"ConnectedValue\"}, \"queries\": [{\"input2\": {\"__class__\": \"ConnectedValue\"}, \"__index__\": 0}]}", 
+                        "tool_version": null, 
+                        "type": "tool", 
+                        "uuid": "b8eb109b-c4c3-4e96-8dd9-ae785777362f", 
+                        "workflow_outputs": [
+                            {
+                                "label": null, 
+                                "output_name": "out_file1", 
+                                "uuid": "d17a7b95-0dda-4af9-9267-fcb04707fba1"
+                            }
+                        ]
+                    }
+                }, 
+                "tags": "", 
+                "uuid": "3a60103e-8103-45fb-ba6c-6a77d625b60a"
+            }, 
+            "tool_id": "1630892b1349a3f1", 
+            "type": "subworkflow", 
+            "uuid": "9fe7d451-65fc-45c2-880f-bf7f5c3a5903", 
+            "workflow_outputs": [
+                {
+                    "label": null, 
+                    "output_name": "20:out_file1", 
+                    "uuid": "ac9a1263-5aab-4c10-bf19-a380c0892d6c"
+                }
+            ]
+        }, 
+        "12": {
+            "annotation": "", 
+            "content_id": "toolshed.g2.bx.psu.edu/repos/devteam/vcfsort/vcfsort/1.0.0_rc3+galaxy0", 
+            "errors": null, 
+            "id": 12, 
+            "input_connections": {
+                "input1": {
+                    "id": 8, 
+                    "output_name": "output"
+                }
+            }, 
+            "inputs": [], 
+            "label": null, 
+            "name": "VCFsort:", 
+            "outputs": [
+                {
+                    "name": "out_file1", 
+                    "type": "vcf"
+                }
+            ], 
+            "position": {
+                "left": 1127.5, 
+                "top": 364
+            }, 
+            "post_job_actions": {
+                "HideDatasetActionout_file1": {
+                    "action_arguments": {}, 
+                    "action_type": "HideDatasetAction", 
+                    "output_name": "out_file1"
+                }
+            }, 
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/devteam/vcfsort/vcfsort/1.0.0_rc3+galaxy0", 
+            "tool_shed_repository": {
+                "changeset_revision": "f0580efedada", 
+                "name": "vcfsort", 
+                "owner": "devteam", 
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            }, 
+            "tool_state": "{\"__page__\": null, \"__rerun_remap_job_id__\": null, \"input1\": {\"__class__\": \"ConnectedValue\"}}", 
+            "tool_version": "1.0.0_rc3+galaxy0", 
+            "type": "tool", 
+            "uuid": "1178f8dc-87bf-42df-8ec5-a6be1d94adcf", 
+            "workflow_outputs": []
+        }, 
+        "13": {
+            "annotation": "", 
+            "content_id": "toolshed.g2.bx.psu.edu/repos/iuc/crossmap_vcf/crossmap_vcf/0.3.7+galaxy1", 
+            "errors": null, 
+            "id": 13, 
+            "input_connections": {
+                "seq_source|chain_source|input_chain": {
+                    "id": 3, 
+                    "output_name": "output"
+                }, 
+                "seq_source|input": {
+                    "id": 9, 
+                    "output_name": "output_file"
+                }, 
+                "seq_source|input_fasta": {
+                    "id": 2, 
+                    "output_name": "output"
+                }
+            }, 
+            "inputs": [], 
+            "label": null, 
+            "name": "CrossMap VCF", 
+            "outputs": [
+                {
+                    "name": "output", 
+                    "type": "vcf"
+                }, 
+                {
+                    "name": "output_unmapped", 
+                    "type": "vcf"
+                }
+            ], 
+            "position": {
+                "left": 862.3125, 
+                "top": 864.078125
+            }, 
+            "post_job_actions": {
+                "HideDatasetActionoutput": {
+                    "action_arguments": {}, 
+                    "action_type": "HideDatasetAction", 
+                    "output_name": "output"
+                }, 
+                "HideDatasetActionoutput_unmapped": {
+                    "action_arguments": {}, 
+                    "action_type": "HideDatasetAction", 
+                    "output_name": "output_unmapped"
+                }
+            }, 
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/iuc/crossmap_vcf/crossmap_vcf/0.3.7+galaxy1", 
+            "tool_shed_repository": {
+                "changeset_revision": "b21851ddcc79", 
+                "name": "crossmap_vcf", 
+                "owner": "iuc", 
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            }, 
+            "tool_state": "{\"__page__\": null, \"__rerun_remap_job_id__\": null, \"seq_source\": {\"input\": {\"__class__\": \"ConnectedValue\"}, \"index_source_s\": \"history\", \"chain_source\": {\"index_source\": \"history\", \"input_chain\": {\"__class__\": \"ConnectedValue\"}, \"__current_case__\": 1}, \"__current_case__\": 1, \"input_fasta\": {\"__class__\": \"ConnectedValue\"}}}", 
+            "tool_version": "0.3.7+galaxy1", 
+            "type": "tool", 
+            "uuid": "e60af2fc-753f-47b6-89c6-a8b1f0e5acf7", 
+            "workflow_outputs": []
+        }, 
+        "14": {
+            "annotation": "", 
+            "content_id": "toolshed.g2.bx.psu.edu/repos/iuc/bcftools_view/bcftools_view/1.10", 
+            "errors": null, 
+            "id": 14, 
+            "input_connections": {
+                "input_file": {
+                    "id": 12, 
+                    "output_name": "out_file1"
+                }, 
+                "sec_restrict|regions|regions_file": {
+                    "id": 5, 
+                    "output_name": "output"
+                }
+            }, 
+            "inputs": [
+                {
+                    "description": "runtime parameter for tool bcftools view", 
+                    "name": "sec_subset"
+                }
+            ], 
+            "label": "Get INDELs", 
+            "name": "bcftools view", 
+            "outputs": [
+                {
+                    "name": "output_file", 
+                    "type": "vcf"
+                }
+            ], 
+            "position": {
+                "left": 1326.1875, 
+                "top": 201
+            }, 
+            "post_job_actions": {
+                "RenameDatasetActionoutput_file": {
+                    "action_arguments": {
+                        "newname": "${cohorte} INDELs"
+                    }, 
+                    "action_type": "RenameDatasetAction", 
+                    "output_name": "output_file"
+                }
+            }, 
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/iuc/bcftools_view/bcftools_view/1.10", 
+            "tool_shed_repository": {
+                "changeset_revision": "c4a9b38b435d", 
+                "name": "bcftools_view", 
+                "owner": "iuc", 
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            }, 
+            "tool_state": "{\"__page__\": null, \"sec_filter\": {\"phased\": null, \"max_ac\": \"\", \"max_af\": \"\", \"min_af\": \"\", \"exclude_types\": null, \"min_ac\": \"\", \"uncalled\": null, \"private\": null, \"types\": [\"indels\"], \"max_alleles\": \"\", \"min_alleles\": \"\", \"known_or_novel\": null, \"select_genotype\": \"__none__\"}, \"sec_restrict\": {\"regions\": {\"regions_file\": {\"__class__\": \"ConnectedValue\"}, \"__current_case__\": 2, \"regions_src\": \"regions_file\"}, \"exclude\": \"\", \"include\": \"\", \"apply_filters\": \"\", \"targets\": {\"__current_case__\": 0, \"targets_src\": \"__none__\"}}, \"input_file\": {\"__class__\": \"ConnectedValue\"}, \"__rerun_remap_job_id__\": null, \"sec_subset\": {\"force_samples\": \"false\", \"invert_samples_file\": \"false\", \"invert_samples\": \"false\", \"samples_file\": {\"__class__\": \"RuntimeValue\"}, \"no_update\": \"false\", \"samples\": \"\", \"trim_alt_alleles\": \"false\"}, \"sec_output\": {\"header\": null, \"invert_targets_file\": \"false\", \"drop_genotypes\": \"false\", \"compression_level\": \"\"}, \"output_type\": \"v\"}", 
+            "tool_version": "1.10", 
+            "type": "tool", 
+            "uuid": "9977595f-818e-4901-b7f3-b1a413dbd87d", 
+            "workflow_outputs": [
+                {
+                    "label": null, 
+                    "output_name": "output_file", 
+                    "uuid": "b4cd79c6-316d-4ca2-8dad-bd0be741c9cd"
+                }
+            ]
+        }, 
+        "15": {
+            "annotation": "", 
+            "content_id": "toolshed.g2.bx.psu.edu/repos/iuc/bcftools_view/bcftools_view/1.10", 
+            "errors": null, 
+            "id": 15, 
+            "input_connections": {
+                "input_file": {
+                    "id": 12, 
+                    "output_name": "out_file1"
+                }, 
+                "sec_restrict|regions|regions_file": {
+                    "id": 5, 
+                    "output_name": "output"
+                }
+            }, 
+            "inputs": [
+                {
+                    "description": "runtime parameter for tool bcftools view", 
+                    "name": "sec_subset"
+                }
+            ], 
+            "label": "Get SNVs", 
+            "name": "bcftools view", 
+            "outputs": [
+                {
+                    "name": "output_file", 
+                    "type": "vcf"
+                }
+            ], 
+            "position": {
+                "left": 1325, 
+                "top": 432.828125
+            }, 
+            "post_job_actions": {
+                "RenameDatasetActionoutput_file": {
+                    "action_arguments": {
+                        "newname": "${cohorte} SNVs"
+                    }, 
+                    "action_type": "RenameDatasetAction", 
+                    "output_name": "output_file"
+                }
+            }, 
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/iuc/bcftools_view/bcftools_view/1.10", 
+            "tool_shed_repository": {
+                "changeset_revision": "c4a9b38b435d", 
+                "name": "bcftools_view", 
+                "owner": "iuc", 
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            }, 
+            "tool_state": "{\"__page__\": null, \"sec_filter\": {\"phased\": null, \"max_ac\": \"\", \"max_af\": \"\", \"min_af\": \"\", \"exclude_types\": null, \"min_ac\": \"\", \"uncalled\": null, \"private\": null, \"types\": [\"snps\"], \"max_alleles\": \"\", \"min_alleles\": \"\", \"known_or_novel\": null, \"select_genotype\": \"__none__\"}, \"sec_restrict\": {\"regions\": {\"regions_file\": {\"__class__\": \"ConnectedValue\"}, \"__current_case__\": 2, \"regions_src\": \"regions_file\"}, \"exclude\": \"\", \"include\": \"\", \"apply_filters\": \"\", \"targets\": {\"__current_case__\": 0, \"targets_src\": \"__none__\"}}, \"input_file\": {\"__class__\": \"ConnectedValue\"}, \"__rerun_remap_job_id__\": null, \"sec_subset\": {\"force_samples\": \"false\", \"invert_samples_file\": \"false\", \"invert_samples\": \"false\", \"samples_file\": {\"__class__\": \"RuntimeValue\"}, \"no_update\": \"false\", \"samples\": \"\", \"trim_alt_alleles\": \"false\"}, \"sec_output\": {\"header\": null, \"invert_targets_file\": \"false\", \"drop_genotypes\": \"false\", \"compression_level\": \"\"}, \"output_type\": \"v\"}", 
+            "tool_version": "1.10", 
+            "type": "tool", 
+            "uuid": "a0f163bf-bff2-4083-b10a-e5365bd86138", 
+            "workflow_outputs": [
+                {
+                    "label": null, 
+                    "output_name": "output_file", 
+                    "uuid": "5f443720-ac0d-4e41-99cf-28899640d14a"
+                }
+            ]
+        }, 
+        "16": {
+            "annotation": "", 
+            "content_id": "toolshed.g2.bx.psu.edu/repos/devteam/vcfsort/vcfsort/1.0.0_rc3+galaxy0", 
+            "errors": null, 
+            "id": 16, 
+            "input_connections": {
+                "input1": {
+                    "id": 13, 
+                    "output_name": "output"
+                }
+            }, 
+            "inputs": [], 
+            "label": null, 
+            "name": "VCFsort:", 
+            "outputs": [
+                {
+                    "name": "out_file1", 
+                    "type": "vcf"
+                }
+            ], 
+            "position": {
+                "left": 846.5, 
+                "top": 1132
+            }, 
+            "post_job_actions": {
+                "HideDatasetActionout_file1": {
+                    "action_arguments": {}, 
+                    "action_type": "HideDatasetAction", 
+                    "output_name": "out_file1"
+                }
+            }, 
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/devteam/vcfsort/vcfsort/1.0.0_rc3+galaxy0", 
+            "tool_shed_repository": {
+                "changeset_revision": "f0580efedada", 
+                "name": "vcfsort", 
+                "owner": "devteam", 
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            }, 
+            "tool_state": "{\"__page__\": null, \"__rerun_remap_job_id__\": null, \"input1\": {\"__class__\": \"ConnectedValue\"}}", 
+            "tool_version": "1.0.0_rc3+galaxy0", 
+            "type": "tool", 
+            "uuid": "1d7e98ff-91c1-48cd-9bff-43f385cb082f", 
+            "workflow_outputs": []
+        }, 
+        "17": {
+            "annotation": "", 
+            "content_id": "toolshed.g2.bx.psu.edu/repos/iuc/bcftools_view/bcftools_view/1.10", 
+            "errors": null, 
+            "id": 17, 
+            "input_connections": {
+                "input_file": {
+                    "id": 16, 
+                    "output_name": "out_file1"
+                }, 
+                "sec_restrict|regions|regions_file": {
+                    "id": 5, 
+                    "output_name": "output"
+                }
+            }, 
+            "inputs": [
+                {
+                    "description": "runtime parameter for tool bcftools view", 
+                    "name": "sec_subset"
+                }
+            ], 
+            "label": null, 
+            "name": "bcftools view", 
+            "outputs": [
+                {
+                    "name": "output_file", 
+                    "type": "vcf"
+                }
+            ], 
+            "position": {
+                "left": 1076, 
+                "top": 1122.828125
+            }, 
+            "post_job_actions": {
+                "HideDatasetActionoutput_file": {
+                    "action_arguments": {}, 
+                    "action_type": "HideDatasetAction", 
+                    "output_name": "output_file"
+                }
+            }, 
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/iuc/bcftools_view/bcftools_view/1.10", 
+            "tool_shed_repository": {
+                "changeset_revision": "c4a9b38b435d", 
+                "name": "bcftools_view", 
+                "owner": "iuc", 
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            }, 
+            "tool_state": "{\"__page__\": null, \"sec_filter\": {\"phased\": null, \"max_ac\": \"\", \"max_af\": \"\", \"min_af\": \"\", \"exclude_types\": null, \"min_ac\": \"\", \"uncalled\": null, \"private\": null, \"types\": null, \"max_alleles\": \"\", \"min_alleles\": \"\", \"known_or_novel\": null, \"select_genotype\": \"__none__\"}, \"sec_restrict\": {\"regions\": {\"regions_file\": {\"__class__\": \"ConnectedValue\"}, \"__current_case__\": 2, \"regions_src\": \"regions_file\"}, \"exclude\": \"\", \"include\": \"\", \"apply_filters\": \"\", \"targets\": {\"__current_case__\": 0, \"targets_src\": \"__none__\"}}, \"input_file\": {\"__class__\": \"ConnectedValue\"}, \"__rerun_remap_job_id__\": null, \"sec_subset\": {\"force_samples\": \"false\", \"invert_samples_file\": \"false\", \"invert_samples\": \"false\", \"samples_file\": {\"__class__\": \"RuntimeValue\"}, \"no_update\": \"false\", \"samples\": \"\", \"trim_alt_alleles\": \"false\"}, \"sec_output\": {\"header\": null, \"invert_targets_file\": \"false\", \"drop_genotypes\": \"false\", \"compression_level\": \"\"}, \"output_type\": \"v\"}", 
+            "tool_version": "1.10", 
+            "type": "tool", 
+            "uuid": "cd92f41d-3cac-4ec6-b29f-77235e6e5b16", 
+            "workflow_outputs": []
+        }, 
+        "18": {
+            "annotation": "", 
+            "content_id": "toolshed.g2.bx.psu.edu/repos/artbio/snvtocnv/snvtocnv/0.7.0", 
+            "errors": null, 
+            "id": 18, 
+            "input_connections": {
+                "input_snvs": {
+                    "id": 17, 
+                    "output_name": "output_file"
+                }, 
+                "refwig": {
+                    "id": 10, 
+                    "output_name": "refwig"
+                }
+            }, 
+            "inputs": [
+                {
+                    "description": "runtime parameter for tool Infer CNVs from SNVs", 
+                    "name": "input_snvs"
+                }, 
+                {
+                    "description": "runtime parameter for tool Infer CNVs from SNVs", 
+                    "name": "refwig"
+                }
+            ], 
+            "label": null, 
+            "name": "Infer CNVs from SNVs", 
+            "outputs": [
+                {
+                    "name": "wiggle", 
+                    "type": "txt"
+                }, 
+                {
+                    "name": "sample_segment", 
+                    "type": "txt"
+                }, 
+                {
+                    "name": "alt_solutions", 
+                    "type": "txt"
+                }, 
+                {
+                    "name": "cnvs", 
+                    "type": "tabular"
+                }
+            ], 
+            "position": {
+                "left": 1330, 
+                "top": 1257
+            }, 
+            "post_job_actions": {
+                "RenameDatasetActioncnvs": {
+                    "action_arguments": {
+                        "newname": "${cohorte} Annotated LOH"
+                    }, 
+                    "action_type": "RenameDatasetAction", 
+                    "output_name": "cnvs"
+                }
+            }, 
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/artbio/snvtocnv/snvtocnv/0.7.0", 
+            "tool_shed_repository": {
+                "changeset_revision": "b77d7a0a45e8", 
+                "name": "snvtocnv", 
+                "owner": "artbio", 
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            }, 
+            "tool_state": "{\"__page__\": null, \"__rerun_remap_job_id__\": null, \"input_snvs\": {\"__class__\": \"RuntimeValue\"}, \"refwig\": {\"__class__\": \"RuntimeValue\"}}", 
+            "tool_version": "0.7.0", 
+            "type": "tool", 
+            "uuid": "8aa7887e-fa0a-4afc-8bcb-26524a08668b", 
+            "workflow_outputs": [
+                {
+                    "label": null, 
+                    "output_name": "wiggle", 
+                    "uuid": "3f54addd-954d-41e5-bf7b-e9bc9cb2f613"
+                }, 
+                {
+                    "label": null, 
+                    "output_name": "sample_segment", 
+                    "uuid": "730e2c43-bd26-426b-9fed-b5260bfd6cdc"
+                }, 
+                {
+                    "label": null, 
+                    "output_name": "alt_solutions", 
+                    "uuid": "1583b3f4-02b0-46b9-90cd-1b4acebcd46d"
+                }, 
+                {
+                    "label": null, 
+                    "output_name": "cnvs", 
+                    "uuid": "94a480a9-67f5-41e8-a35c-ca362e52b401"
+                }
+            ]
+        }, 
+        "19": {
+            "annotation": "", 
+            "content_id": "toolshed.g2.bx.psu.edu/repos/bgruening/text_processing/tp_tail_tool/1.1.0", 
+            "errors": null, 
+            "id": 19, 
+            "input_connections": {
+                "infile": {
+                    "id": 18, 
+                    "output_name": "cnvs"
+                }
+            }, 
+            "inputs": [], 
+            "label": null, 
+            "name": "Select last", 
+            "outputs": [
+                {
+                    "name": "outfile", 
+                    "type": "input"
+                }
+            ], 
+            "position": {
+                "left": 1544.90625, 
+                "top": 1170.171875
+            }, 
+            "post_job_actions": {
+                "HideDatasetActionoutfile": {
+                    "action_arguments": {}, 
+                    "action_type": "HideDatasetAction", 
+                    "output_name": "outfile"
+                }
+            }, 
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/bgruening/text_processing/tp_tail_tool/1.1.0", 
+            "tool_shed_repository": {
+                "changeset_revision": "ddf54b12c295", 
+                "name": "text_processing", 
+                "owner": "bgruening", 
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            }, 
+            "tool_state": "{\"__page__\": null, \"complement\": \"+\", \"__rerun_remap_job_id__\": null, \"num_lines\": \"2\", \"infile\": {\"__class__\": \"ConnectedValue\"}}", 
+            "tool_version": "1.1.0", 
+            "type": "tool", 
+            "uuid": "1d770ac9-d019-4ec3-ad75-cf729ad6bc67", 
+            "workflow_outputs": []
+        }, 
+        "20": {
+            "annotation": "", 
+            "content_id": "toolshed.g2.bx.psu.edu/repos/devteam/column_maker/Add_a_column1/1.2.0", 
+            "errors": null, 
+            "id": 20, 
+            "input_connections": {
+                "input": {
+                    "id": 19, 
+                    "output_name": "outfile"
+                }
+            }, 
+            "inputs": [], 
+            "label": null, 
+            "name": "Compute", 
+            "outputs": [
+                {
+                    "name": "out_file1", 
+                    "type": "input"
+                }
+            ], 
+            "position": {
+                "left": 1645.46875, 
+                "top": 1066.75
+            }, 
+            "post_job_actions": {
+                "HideDatasetActionout_file1": {
+                    "action_arguments": {}, 
+                    "action_type": "HideDatasetAction", 
+                    "output_name": "out_file1"
+                }
+            }, 
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/devteam/column_maker/Add_a_column1/1.2.0", 
+            "tool_shed_repository": {
+                "changeset_revision": "464b9305180e", 
+                "name": "column_maker", 
+                "owner": "devteam", 
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            }, 
+            "tool_state": "{\"__page__\": null, \"header_lines_conditional\": {\"header_lines_select\": \"no\", \"__current_case__\": 0}, \"round\": \"no\", \"cond\": \"c3-c2\", \"input\": {\"__class__\": \"ConnectedValue\"}, \"__rerun_remap_job_id__\": null}", 
+            "tool_version": "1.2.0", 
+            "type": "tool", 
+            "uuid": "94a82d77-6404-40f4-8b0f-522ea99152e2", 
+            "workflow_outputs": []
+        }, 
+        "21": {
+            "annotation": "", 
+            "content_id": "Cut1", 
+            "errors": null, 
+            "id": 21, 
+            "input_connections": {
+                "input": {
+                    "id": 20, 
+                    "output_name": "out_file1"
+                }
+            }, 
+            "inputs": [], 
+            "label": "segments.tsv", 
+            "name": "Cut", 
+            "outputs": [
+                {
+                    "name": "out_file1", 
+                    "type": "tabular"
+                }
+            ], 
+            "position": {
+                "left": 1843.90625, 
+                "top": 982.171875
+            }, 
+            "post_job_actions": {
+                "RenameDatasetActionout_file1": {
+                    "action_arguments": {
+                        "newname": "${cohorte} Annotated LOH compliant HRDetect"
+                    }, 
+                    "action_type": "RenameDatasetAction", 
+                    "output_name": "out_file1"
+                }
+            }, 
+            "tool_id": "Cut1", 
+            "tool_state": "{\"columnList\": \"c1,c2,c3,c10,c7,c4,c9\", \"input\": {\"__class__\": \"ConnectedValue\"}, \"delimiter\": \"T\", \"__rerun_remap_job_id__\": null, \"__page__\": null}", 
+            "tool_version": "1.0.2", 
+            "type": "tool", 
+            "uuid": "8adbdda4-8328-4b11-b31f-292a94a82a91", 
+            "workflow_outputs": [
+                {
+                    "label": null, 
+                    "output_name": "out_file1", 
+                    "uuid": "a72abf8e-7ad2-4549-9f1d-993075709a08"
+                }
+            ]
+        }
+    }, 
+    "tags": [], 
+    "uuid": "9bc1a3ca-1586-4f7b-a586-a834a044a060", 
+    "version": 40
+}
