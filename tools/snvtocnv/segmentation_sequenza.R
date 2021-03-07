@@ -45,6 +45,10 @@ chrom_list <- c("chr1", "chr2", "chr3", "chr4", "chr5", "chr6", "chr7", "chr8", 
                "chr18", "chr19", "chr20", "chr21", "chr22")
 
 Sys.timezone(location = TRUE)
+Sys.setenv(TZDIR = file.path(R.home("share"), "zoneinfo"))
+Sys.setenv(TZ = "US/Eastern")
+options(tz = "US/Eastern")
+
 segfile <- sequenza.extract(data_file,
                             verbose = FALSE,
                             chromosome.list = chrom_list)
