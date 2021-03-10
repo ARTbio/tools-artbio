@@ -1,6 +1,8 @@
-<tool id="BlastParser_and_hits" name="Parse blast output and compile hits" version="2.6.1">
+<tool id="BlastParser_and_hits" name="Parse blast output and compile hits" version="2.7.0">
 <description>for virus discovery</description>
-<requirements></requirements>
+<requirements>
+    <requirement type="package" version="3.7.6">python</requirement>
+</requirements>
 <command><![CDATA[
     python '$__tool_directory__'/BlastParser_and_hits.py
 	--sequences '$sequences'
