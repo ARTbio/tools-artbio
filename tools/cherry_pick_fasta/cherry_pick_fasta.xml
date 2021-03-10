@@ -1,5 +1,8 @@
-<tool id="cherry_pick_fasta" name="Pick Fasta sequences" version="2.0.0">
+<tool id="cherry_pick_fasta" name="Pick Fasta sequences" version="2.1.0">
   <description>with header satisfying a string query</description>
+  <requirements>
+      <requirement type="package" version="3.7.6">python</requirement>
+  </requirements>
   <command interpreter="python">cherry_pick_fasta.py
                                    --input $input
                                    --searchfor '$search.searchfor'
