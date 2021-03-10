@@ -45,7 +45,7 @@ def parse_fasta_with(query, FastaListe):
 
 
 def complement_fasta(fullfasta, subfasta):
-    return list(set(fullfasta) - set(subfasta))
+    return sorted(list(set(fullfasta) - set(subfasta)))
 
 
 def getquerylist(file):
