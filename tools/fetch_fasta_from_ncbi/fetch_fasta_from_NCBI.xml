@@ -1,69 +1,74 @@
 <tool id="retrieve_fasta_from_NCBI" name="Retrieve FASTA from NCBI" version="2.3.1">
   <description></description>
+  <requirements>
+      <requirement type="package" version="1.25.9">urllib3</requirement>
+  </requirements>
   <command><![CDATA[
     python '$__tool_directory__'/fetch_fasta_from_NCBI.py
-        -i "$queryString"
-        -d $dbname
-        -l '$logfile'
-        -c
-        -o '$outfile';
-    #if $dry_run == ""
-        number_UIDs=\$(tail -n 2 $logfile | perl -ne '/Found (\d+) UID/ && print \$1');
-        if [ "\$number_UIDs" -gt 0 ]; then
-            python '$__tool_directory__'/fetch_fasta_from_NCBI.py
-                -i "$queryString"
-                -d $dbname
-                -u
-                -l '$logfile'
-                -o 'uid_outfile';
-            UID_array=( \$(head uid_outfile) );
-            array_len=\${#UID_array[@]};
-            counter=0;
-            number_of_groups=\$((array_len / 200000));
-            modulo=\$((array_len % 200000));
-            if [ "\$modulo" -gt 0 ];then
-                number_of_groups=\$((number_of_groups + 1));
-            fi;
-            group_number=1;
-            echo "----- Number of groups of batches: \$number_of_groups -----" >> $logfile;
-            for ((i=0; i+200000<array_len;i+=200000)); do
-                echo "----- Group number: \$group_number -----" >> $logfile;
-                echo "\${UID_array[@]:\$i:99999}" > uid_list_1.txt;
-                echo "\${UID_array[@]:\$((i+100000)):99999}" > uid_list_2.txt;
-                python '$__tool_directory__'/fetch_fasta_from_NCBI.py
-                    -d $dbname
-                    -l '$logfile'
-                    -o 'tmp1_outfile'
-                    --UID_list uid_list_1.txt&
-                python '$__tool_directory__'/fetch_fasta_from_NCBI.py
-                    -d $dbname
-                    -l 'tmp1_logfile'
-                    -o 'tmp2_outfile'
-                    --UID_list uid_list_2.txt&
-                wait;
-                cat tmp1_outfile tmp2_outfile>> $outfile;
-                rm tmp1_outfile tmp2_outfile;
-                cat tmp1_logfile >> $logfile;
-                rm tmp1_logfile;
-                rm uid_list_1.txt uid_list_2.txt;
-                group_number=\$((group_number + 1));
-                counter=\$(( counter + 200000 ));
-            done;
-            echo "----- Group number: \$group_number -----" >> $logfile;
-            echo "----- Last group -----" >> $logfile;
-            if [ "\$counter" -lt "\$array_len" ]; then
-                echo "\${UID_array[@]:\$counter:\$((array_len - counter + 1))}" > uid_list.txt;
-                python '$__tool_directory__'/fetch_fasta_from_NCBI.py
-                    -d $dbname
-                    -l '$logfile'
-                    -o 'tmp_outfile'
-                    --UID_list uid_list.txt;
-                rm uid_list.txt;
-                cat tmp_outfile >> $outfile;
-                rm tmp_outfile;
-            fi;
-        fi;
-    #end if
+        --query "$queryString"
+        --dbname '$dbname'
+        --logfile '$logfile'
+        #if $fetch_option == 'fasta':
+            --fasta $fasta
+        #end if
+##    #if $dry_run == ""
+##        &&
+##        number_UIDs=\$(tail -n 2 $logfile | perl -ne '/Found (\d+) UID/ && print \$1');
+##        if [ "\$number_UIDs" -gt 0 ]; then
+##            python '$__tool_directory__'/fetch_fasta_from_NCBI.py
+##                -i "$queryString"
+##                -d $dbname
+##                -u
+##                -l '$logfile'
+##                -o 'uid_outfile';
+##            UID_array=( \$(head uid_outfile) );
+##            array_len=\${#UID_array[@]};
+##            counter=0;
+##            number_of_groups=\$((array_len / 200000));
+##            modulo=\$((array_len % 200000));
+##            if [ "\$modulo" -gt 0 ];then
+##                number_of_groups=\$((number_of_groups + 1));
+##            fi;
+##            group_number=1;
+##            echo "----- Number of groups of batches: \$number_of_groups -----" >> $logfile;
+##            for ((i=0; i+200000<array_len;i+=200000)); do
+##                echo "----- Group number: \$group_number -----" >> $logfile;
+##                echo "\${UID_array[@]:\$i:99999}" > uid_list_1.txt;
+##                echo "\${UID_array[@]:\$((i+100000)):99999}" > uid_list_2.txt;
+##                python '$__tool_directory__'/fetch_fasta_from_NCBI.py
+##                    -d $dbname
+##                    -l '$logfile'
+##                    -o 'tmp1_outfile'
+##                    --UID_list uid_list_1.txt&
+##                python '$__tool_directory__'/fetch_fasta_from_NCBI.py
+##                    -d $dbname
+##                    -l 'tmp1_logfile'
+##                    -o 'tmp2_outfile'
+##                    --UID_list uid_list_2.txt&
+##                wait;
+##                cat tmp1_outfile tmp2_outfile>> $outfile;
+##                rm tmp1_outfile tmp2_outfile;
+##                cat tmp1_logfile >> $logfile;
+##                rm tmp1_logfile;
+##                rm uid_list_1.txt uid_list_2.txt;
+##                group_number=\$((group_number + 1));
+##                counter=\$(( counter + 200000 ));
+##            done;
+##            echo "----- Group number: \$group_number -----" >> $logfile;
+##            echo "----- Last group -----" >> $logfile;
+##            if [ "\$counter" -lt "\$array_len" ]; then
+##                echo "\${UID_array[@]:\$counter:\$((array_len - counter + 1))}" > uid_list.txt;
+##                python '$__tool_directory__'/fetch_fasta_from_NCBI.py
+##                    -d $dbname
+##                    -l '$logfile'
+##                    -o 'tmp_outfile'
+##                    --UID_list uid_list.txt;
+##                rm uid_list.txt;
+##                cat tmp_outfile >> $outfile;
+##                rm tmp_outfile;
+##            fi;
+##        fi;
+##    #end if
   ]]></command>
 
   <inputs>
@@ -83,19 +88,24 @@
       <option value="nuccore">Nucleotide</option>
       <option value="protein">Protein</option>
     </param>
-    <param name="dry_run" type="boolean" label="Get only the number of sequences" truevalue="--count" falsevalue="" checked="false"/>
+    <param name="fetch_option" type="select" label="select what will be retrieved">
+      <option value="fasta" selected="true">Fasta and IUDs</option>
+      <option value="justiuds">Only IUDs</option>
+    </param>
   </inputs>
   <outputs>
-    <data name="outfile" format="fasta" label="${tool.name} (${dbname.value_label}) with queryString '${queryString.value}'" >
-      <filter> dry_run == False</filter>
+    <data name="fasta" format="fasta" label="Fasta sequences retrieved from NCBI" >
+      <filter>fetch_option == "fasta"</filter> -->
     </data>
-    <data format="txt" name="logfile" label="${tool.name}: log"/>
+    <data name="UIDs" format="txt" label="UIDs" from_work_dir="retrieved_uid_list.txt" />
+    <data format="txt" name="logfile" label="logs"/>
   </outputs>
   <tests>
+<!--
       <test>
           <param name="queryString" value="9629650[gi]" />
           <param name="dbname" value="nuccore" />
-          <output name="outfilename" ftype="fasta" file="output.fa" />
+          <output name="outfile" ftype="fasta" file="output.fa" />
       </test>
       <test>
           <param name="queryString" value="CU929326[Accession]" />
@@ -105,7 +115,7 @@
       </test>
       <test>
           <param name="queryString" value="Drosophila[Organism] AND 2014[PDAT] AND virus" />
-          <output name="outfilename" ftype="fasta" >
+          <output name="outfile" ftype="fasta" >
               <metadata name="sequences" value="13" />
           </output>
       </test>
@@ -119,6 +129,7 @@
               </assert_contents>
           </output>
       </test>
+-->
   </tests>
   <help>
 **What it does**
@@ -136,6 +147,33 @@ By checking the checkbox you can also run your query without sequence retrieval 
 Note that the tool may fail in case of interrupted connexion with the NCBI database (see the log dataset)
 
 Retrieval progress is reported in the log dataset.
+
+**Options**::
+  <![CDATA[
+  usage: fetch_fasta_from_NCBI.py [-h] [--query QUERY_STRING]
+                                  [--iud_file IUDS_FILE] [--output OUTNAME]
+                                  [--dbname DBNAME] [--fasta GET_FASTA]
+                                  [--logfile LOGFILE]
+                                  [--loglevel {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
+  
+  Retrieve data from NCBI
+  
+  optional arguments:
+    -h, --help            show this help message and exit
+    --query QUERY_STRING, -i QUERY_STRING
+                          NCBI Query String
+    --iud_file IUDS_FILE  input list of iuds to be fetched
+    --output OUTNAME, -o OUTNAME
+                          output file name
+    --dbname DBNAME, -d DBNAME
+                          database type
+    --fasta GET_FASTA, -F GET_FASTA
+                          retrieve fasta sequences
+    --logfile LOGFILE, -l LOGFILE
+                          log file (default=stderr)
+    --loglevel {DEBUG,INFO,WARNING,ERROR,CRITICAL}
+                          logging level (default: INFO)
+  ]]>
 
 **Acknowledgments**
 
