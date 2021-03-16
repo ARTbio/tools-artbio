@@ -5,7 +5,11 @@
     </requirements>
     <command><![CDATA[
     python '$__tool_directory__'/fetch_fasta_from_NCBI.py
-        --query "$queryString"
+        #if $query.option == 'query':
+            --query '$query.queryString'
+        #else:
+            --iud_file '$query.iud_list'
+        #end if
         --dbname '$dbname'
         --logfile '$logfile'
         #if $fetch_option == 'fasta':
@@ -13,18 +17,34 @@
         #end if
   ]]></command>
   <inputs>
-    <param name="queryString" type="text" size="5x80" area="True" value="txid10239[orgn] NOT txid131567[orgn] AND complete[all] NOT partial[title] NOT phage[title]" label="Query to NCBI in entrez format" help="exemple: Drosophila melanogaster[Organism] AND Gcn5[Title]">
-      <sanitizer>
-        <valid initial="string.printable">
-          <remove value="&quot;"/>
-          <remove value="\"/>
-        </valid>
-        <mapping initial="none">
-          <add source="&quot;" target="\&quot;"/>
-          <add source="\" target="\\"/>
-        </mapping>
-      </sanitizer>
-    </param>
+
+    <conditional name="query">
+        <param name="option" type="select" label="retrieve data from query or IUD list" display="radio">
+            <option value="query" selected="true">Query string</option>
+            <option value="list">IUD list</option>
+        </param>
+        <when value="query">
+            <param name="queryString" type="text" size="5x80" area="True"
+                   value=""
+                   label="Query to NCBI in entrez format"
+                   help="exemple: `Drosophila melanogaster[Organism] AND Gcn5[Title]`">
+            <sanitizer>
+                <valid initial="string.printable">
+                    <remove value="&quot;"/>
+                    <remove value="\"/>
+                </valid>
+                <mapping initial="none">
+                    <add source="&quot;" target="\&quot;"/>
+                    <add source="\" target="\\"/>
+                </mapping>
+            </sanitizer>
+            </param>
+        </when>
+        <when value="list">
+            <param name="iud_list" format="txt,tabular" type="data" label="A list of NCBI UIDs"
+                   help="a file with a single column of UIDs, in txt or tabular format"/>
+        </when>
+    </conditional>      
     <param name="dbname" type="select" label="NCBI database">
       <option value="nuccore">Nucleotide</option>
       <option value="protein">Protein</option>
@@ -38,7 +58,9 @@
     <data name="fasta" format="fasta" label="Fasta sequences retrieved from NCBI" >
       <filter>fetch_option == "fasta"</filter>
     </data>
-    <data name="UIDs" format="txt" label="UIDs" from_work_dir="retrieved_uid_list.txt" />
+    <data name="UIDs" format="txt" label="UIDs" from_work_dir="retrieved_uid_list.txt">
+      <filter>query['option'] == "query"</filter>
+    </data>
     <data format="txt" name="logfile" label="logs"/>
   </outputs>
   <tests>
@@ -53,6 +75,13 @@
           <param name="dbname" value="nuccore" />
           <param name="fetch_option" value="justiuds"/>
           <output name="logfile" ftype="txt" file="dry_run.log" compare="sim_size"/>
+      </test>
+      <test>
+          <param name="option" value="list" />
+          <param name="iud_list" value="input_list.txt" ftype="txt" />
+          <param name="dbname" value="nuccore" />
+          <param name="fetch_option" value="fasta"/>
+          <output name="fasta" ftype="fasta" file="output_list.fa"/>
       </test>
       <test>
           <param name="queryString" value="Drosophila[Organism] AND 2017[Modification Date] AND virus" />
@@ -78,7 +107,7 @@
 
 This tool retrieves nucleotide/peptide sequences from the corresponding NCBI database (nuccore or protein) for a given entrez query.
 
-The tool is preset with "txid10239[orgn] NOT txid131567[orgn] AND complete NOT partial[title] NOT phage[title]" for metaVisitor use purpose
+The tool can be set with the query "txid10239[orgn] NOT txid131567[orgn] AND complete NOT partial[title] NOT phage[title]" for metaVisitor use purpose
 
 See `Entrez help`_ for explanation of query formats
 

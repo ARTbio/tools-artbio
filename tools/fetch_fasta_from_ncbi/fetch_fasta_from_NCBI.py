@@ -310,7 +310,7 @@ class Eutils:
 def command_parse():
     parser = argparse.ArgumentParser(description='Retrieve data from NCBI')
     parser.add_argument('--query', '-i', dest='query_string',
-                        default='', help='NCBI Query String')
+                        default=None, help='NCBI Query String')
     parser.add_argument('--iud_file', dest='iuds_file', default=None,
                         help='input list of iuds to be fetched')
     parser.add_argument('--dbname', '-d', dest='dbname', help='database type')
