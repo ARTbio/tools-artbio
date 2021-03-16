@@ -81,7 +81,6 @@ class Eutils:
             # as self.ids already implemented
             self.print_uids_list()
         if self.get_fasta:
-            print("recognized the get_fasta option")
             try:
                 self.get_sequences()
             except QueryException as e:
@@ -101,9 +100,6 @@ class Eutils:
         the remainder of the retrieved set will be stored on the History server
         http://www.ncbi.nlm.nih.gov/books/NBK25499/#chapter4.EFetch
         """
-        self.logger.info("retrieving counts from %s" % self.base)
-        self.logger.info("for Query: %s and database: %s" %
-                         (self.query_string, self.dbname))
         querylog = self.esearch(self.dbname, self.query_string, '', '',
                                 'count')
         self.logger.debug("Query response:")
@@ -122,9 +118,13 @@ class Eutils:
         from http://www.ncbi.nlm.nih.gov/books/NBK25499/#chapter4.ESearch
         """
         retmax = self.retmax_esearch
-        if (self.count > retmax):
-            num_batches = (self.count / retmax) + 1
+        self.logger.info("retmax = %s, self.count = %s" % (retmax, self.count))
+        if (int(self.count) > retmax):
+            num_batches = int(self.count / retmax) + 1
             self.usehistory = 'y'
+            self.logger.info("Batch size for esearch action: %d UIDs" % retmax)
+            self.logger.info("Number of batches for esearch action: %s"
+                             % num_batches)
             querylog = self.esearch(self.dbname, self.query_string, '', '', '')
             for line in querylog:
                 line = line.decode('utf-8')
@@ -154,24 +154,10 @@ class Eutils:
                     uid = line.split("<Id>")[1].split("</Id>")[0]
                     self.ids.append(uid)
             self.logger.info("Retrieved %d UIDs" % len(self.ids))
-
-
-#        for n in range(num_batches):
-#            querylog = self.esearch(self.dbname, self.query_string, n*retmax,
-#                                    retmax, '')
-#            print("my returned querylog to parse was %s" %querylog)
-#            for line in querylog:
-#                line = line.decode('utf-8')
-#                if '<Id>' in line and '</Id>' in line:
-#                    uid = line.split("<Id>")[1].split("</Id>")[0]
-#                    self.ids.append(uid)
-#            self.logger.info("Retrieved %d UIDs" % len(self.ids))
-
-
         return self.ids
 
     def get_sequences(self):
-        batch_size = 200
+        batch_size = self.retmax_efetch
         count = self.count
         uids_list = self.ids
         self.logger.info("Batch size for efetch action: %d" % batch_size)
@@ -344,7 +330,6 @@ def command_parse():
 def __main__():
     """ main function """
     args = command_parse()
-    print(args)
     log_level = getattr(logging, args.loglevel)
     kwargs = {'format': LOG_FORMAT,
               'datefmt': LOG_DATEFMT,
