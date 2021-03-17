@@ -1,5 +1,8 @@
-<tool id="yac" name="Clip adapter" version="2.3.0">
+<tool id="yac" name="Clip adapter" version="2.4.0">
     <description />
+    <requirements>
+        <requirement type="package" version="3.7.6">python</requirement>
+    </requirements>
     <command detect_errors="exit_code"><![CDATA[
         python $__tool_directory__/yac.py
             --input $input
@@ -19,7 +22,6 @@
             #else
                 mv clip.tmp $output
             #end if
-
     ]]></command>
     <inputs>
         <param format="fasta,fastq" label="Source file" name="input" type="data" />
