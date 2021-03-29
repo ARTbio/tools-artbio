@@ -1,4 +1,4 @@
-<tool id="artbio_bam_cleaning" name="ARTbio bam cleaning" version="1.6+galaxy4">
+<tool id="artbio_bam_cleaning" name="ARTbio bam cleaning" version="1.6+galaxy5">
     <description>
         on flags and PCR Duplicates and MD recalibration
     </description>
@@ -24,8 +24,9 @@
         | samtools rmdup -s - - | tee $input_base".filt1.dedup.bam"
     #end if
     | bamleftalign --fasta-reference reference.fa -c --max-iterations "5" -
-    | samtools calmd  -C 50 -b -@ \${GALAXY_SLOTS:-2} - reference.fa > $calmd
-    && sambamba view -h -t \${GALAXY_SLOTS:-2} --filter='mapping_quality <= 254' -f 'bam' -o $fullfilter $calmd
+    | samtools calmd  -C 50 -b -@ \${GALAXY_SLOTS:-2} - reference.fa
+    | tee $calmd
+    | sambamba view -h -t \${GALAXY_SLOTS:-2} --filter='mapping_quality <= 254' -f 'bam' /dev/stdin > $fullfilter
     ]]></command>
     <inputs>
         <expand macro="reference_source_conditional" />
