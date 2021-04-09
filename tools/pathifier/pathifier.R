@@ -149,11 +149,11 @@ pathwaynames <- names(gs)
 if (args$is_normal == T) {
   normals <- read.delim(file = args$normals, h = F)
   normals <- as.logical(normals[, 2])
-  N_exp_matrix <- exp_matrix[, normals]
-} else N_exp_matrix <- exp_matrix
+  n_exp_matrix <- exp_matrix[, normals]
+} else n_exp_matrix <- exp_matrix
 
 # Calculate MIN_STD
-rsd <- apply(N_exp_matrix, 1, sd)
+rsd <- apply(n_exp_matrix, 1, sd)
 min_std <- quantile(rsd, 0.25)
 
 # Calculate MIN_EXP
@@ -163,9 +163,9 @@ min_exp <- quantile(as.vector(as.matrix(exp_matrix)),
 # Filter low value genes. At least 10% of samples with values over min_exp
 # Set expression levels < MIN_EXP to MIN_EXP
 over <- apply(exp_matrix, 1, function(x) x > min_exp)
-G_over <- apply(over, 2, mean)
-G_over <- names(G_over)[G_over > 0.1]
-exp_matrix_filtered <- exp_matrix[G_over, ]
+g_over <- apply(over, 2, mean)
+g_over <- names(g_over)[g_over > 0.1]
+exp_matrix_filtered <- exp_matrix[g_over, ]
 exp_matrix_filtered[exp_matrix_filtered < min_exp] <- min_exp
 
 # Set maximum 5000 genes with more variance
