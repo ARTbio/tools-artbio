@@ -169,9 +169,9 @@ exp_matrix_filtered <- exp_matrix[G_over, ]
 exp_matrix_filtered[exp_matrix_filtered < min_exp] <- min_exp
 
 # Set maximum 5000 genes with more variance
-V <- names(sort(apply(exp_matrix_filtered, 1, var), decreasing = T))[1:5000]
-V <- V[!is.na(V)]
-exp_matrix_filtered <- exp_matrix_filtered[V, ]
+variable_genes <- names(sort(apply(exp_matrix_filtered, 1, var), decreasing = T))[1:5000]
+variable_genes <- variable_genes[!is.na(variable_genes)]
+exp_matrix_filtered <- exp_matrix_filtered[variable_genes, ]
 allgenes <- as.vector(rownames(exp_matrix_filtered))
 
 
@@ -192,7 +192,7 @@ col_score_fun <- colorRamp2(c(0, 0.5, 1), c("#4575B4", "#FFFFBF", "#D73027"))
 
 # Run Pathifier
 if (args$is_normal == T) {
-  PDS <- quantify_pathways_deregulation(exp_matrix_filtered,
+  pds <- quantify_pathways_deregulation(exp_matrix_filtered,
                                         allgenes,
                                         gs,
                                         pathwaynames,
@@ -203,11 +203,11 @@ if (args$is_normal == T) {
                                         min_std = args$min_std,
                                         min_exp = args$min_exp)
   for (i in pathwaynames) {
-    DF <- data.frame(PDS$curves[[i]][, 1:3],
+    df <- data.frame(pds$curves[[i]][, 1:3],
                      normal = normals,
-                     PDS = as.numeric(PDS$scores[[i]]),
-                     curve_order = as.vector(PDS$curves_order[[i]]))
-    ordered <- DF[DF$curve_order, ]
+                     PDS = as.numeric(pds$scores[[i]]),
+                     curve_order = as.vector(pds$curves_order[[i]]))
+    ordered <- df[df$curve_order, ]
 
 
     layout(cbind(1:2, 1:2), heights = c(7, 1))
@@ -236,12 +236,12 @@ if (args$is_normal == T) {
            col = c("blue", "red"), cex = 1.1)
 
     ## annotation for heatmap
-    sample_status <- data.frame(Status = factor(ifelse(DF$normal, "normal", "tumor")))
+    sample_status <- data.frame(Status = factor(ifelse(df$normal, "normal", "tumor")))
     rownames(sample_status) <- colnames(exp_matrix_filtered)
     color_status_heatmap <- list(Status = c(normal = "blue", tumor = "red"))
   }
 } else{
-  PDS <- quantify_pathways_deregulation(exp_matrix_filtered,
+  pds <- quantify_pathways_deregulation(exp_matrix_filtered,
                                         allgenes,
                                         gs,
                                         pathwaynames,
@@ -251,10 +251,10 @@ if (args$is_normal == T) {
                                         min_std = args$min_std,
                                         min_exp = args$min_exp)
   for (i in pathwaynames) {
-    DF <- data.frame(PDS$curves[[i]][, 1:3],
-                     PDS = as.numeric(PDS$scores[[i]]),
-                     curve_order = as.vector(PDS$curves_order[[i]]))
-    ordered <- DF[DF$curve_order, ]
+    df <- data.frame(pds$curves[[i]][, 1:3],
+                     PDS = as.numeric(pds$scores[[i]]),
+                     curve_order = as.vector(pds$curves_order[[i]]))
+    ordered <- df[df$curve_order, ]
 
     layout(cbind(1:2, 1:2), heights = c(7, 1))
     sc3 <- scatterplot3d(ordered[, 1:3],
@@ -277,12 +277,12 @@ if (args$is_normal == T) {
 }
 
 ## Create dataframe from Pathifier list and round score to 4 digits
-PDS_scores <- mapply(FUN = function(x) cbind(round(x, 4)), PDS$scores)
-dimnames(PDS_scores) <- list(colnames(exp_matrix_filtered), names(PDS$scores))
+pds_scores <- mapply(FUN = function(x) cbind(round(x, 4)), pds$scores)
+dimnames(pds_scores) <- list(colnames(exp_matrix_filtered), names(pds$scores))
 
 ## plot heatmap
-if (ncol(PDS_scores) > 1) {
-    pheatmap(t(PDS_scores),
+if (ncol(pds_scores) > 1) {
+    pheatmap(t(pds_scores),
              main = "Heatmap of Pathway Deregulation Score",   # heat map title
              cluster_rows = args$heatmap_cluster_pathways,     # apply clustering method
              cluster_cols = args$heatmap_cluster_cells,        # apply clustering method
@@ -300,7 +300,7 @@ dev.off()
 
 
 ## write table
-write.table(PDS_scores,
+write.table(pds_scores,
             args$pds,
             row.names = T,
             col.names = T,
@@ -308,4 +308,4 @@ write.table(PDS_scores,
             sep = "\t")
 
 ## write S4 pathifier object
-save(PDS, file = args$rdata)
+save(pds, file = args$rdata)
