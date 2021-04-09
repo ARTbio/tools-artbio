@@ -133,7 +133,7 @@ the distance (normalized to 1) of each point (transcriptome) to the curve origin
         * first column : gene set name (pathway name)
         * second : description of gene set
         * third and + : list of genes that composed the gene set tab-separated  
-    * (Optional) a two column table to described either your transcriptome status (cancer or not) with no header : 
+    * (Optional) a two column table with no header, to described transcriptome status (Tumor or not) : 
         * first column : sample labels
         * second : levels of sample status : 1 = Healthy, 0 = Tumor
 
