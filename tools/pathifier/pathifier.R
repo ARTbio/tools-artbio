@@ -4,7 +4,7 @@
 ##################################################################################################
 
 
-options(show.error.messages = F, error = function () {
+options(show.error.messages = F, error = function() {
   cat(geterrmessage(), file = stderr()); q("no", 1, F)
   }
 )
@@ -131,7 +131,7 @@ exp_matrix <- as.matrix(read.delim(file = args$exp,
                                    sep = args$sep,
                                    check.names = F))
 
-# Load Genesets annotation 
+# Load Genesets annotation
 gene_sets_file <- file(args$genes, open = "r")
 gene_sets <- readLines(gene_sets_file)
 close(gene_sets_file)
@@ -146,7 +146,7 @@ pathwaynames <- names(gs)
 
 # Prepare data and parameters ##################################################
 # Extract information from binary phenotypes. 1 = Normal, 0 = Tumor
-if (args$is_normal == T){
+if (args$is_normal == T) {
   normals <- read.delim(file = args$normals, h = F)
   normals <- as.logical(normals[, 2])
   N_exp_matrix <- exp_matrix[, normals]
@@ -175,11 +175,11 @@ exp_matrix_filtered <- exp_matrix_filtered[V, ]
 allgenes <- as.vector(rownames(exp_matrix_filtered))
 
 
-if (args$min_std == "data"){
+if (args$min_std == "data") {
   args$min_std <- min_std
 } else args$min_std <- as.numeric(args$min_std)
 
-if (args$min_exp == "data"){
+if (args$min_exp == "data") {
   args$min_exp <- min_exp
 } else args$min_exp <- as.numeric(args$min_exp)
 
@@ -191,7 +191,7 @@ pdf(args$plot)
 col_score_fun <- colorRamp2(c(0, 0.5, 1), c("#4575B4", "#FFFFBF", "#D73027"))
 
 # Run Pathifier
-if (args$is_normal == T){
+if (args$is_normal == T) {
   PDS <- quantify_pathways_deregulation(exp_matrix_filtered,
                                         allgenes,
                                         gs,
@@ -202,7 +202,7 @@ if (args$is_normal == T){
                                         logfile = args$logfile,
                                         min_std = args$min_std,
                                         min_exp = args$min_exp)
-  for (i in pathwaynames){
+  for (i in pathwaynames) {
     DF <- data.frame(PDS$curves[[i]][, 1:3],
                      normal = normals,
                      PDS = as.numeric(PDS$scores[[i]]),
@@ -250,7 +250,7 @@ if (args$is_normal == T){
                                         logfile = args$logfile,
                                         min_std = args$min_std,
                                         min_exp = args$min_exp)
-  for (i in pathwaynames){
+  for (i in pathwaynames) {
     DF <- data.frame(PDS$curves[[i]][, 1:3],
                      PDS = as.numeric(PDS$scores[[i]]),
                      curve_order = as.vector(PDS$curves_order[[i]]))
@@ -281,7 +281,7 @@ PDS_scores <- mapply(FUN = function(x) cbind(round(x, 4)), PDS$scores)
 dimnames(PDS_scores) <- list(colnames(exp_matrix_filtered), names(PDS$scores))
 
 ## plot heatmap
-if (ncol(PDS_scores) > 1){
+if (ncol(PDS_scores) > 1) {
     pheatmap(t(PDS_scores),
              main = "Heatmap of Pathway Deregulation Score",   # heat map title
              cluster_rows = args$heatmap_cluster_pathways,     # apply clustering method
