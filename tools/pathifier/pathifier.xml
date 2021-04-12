@@ -173,5 +173,20 @@ the distance (normalized to 1) of each point (transcriptome) to the curve origin
             url = {https://git.bioconductor.org/packages/pathifier},
             }
         </citation>
+        <citation type="bibtex">@article {Drier6388,
+            author = {Drier, Yotam and Sheffer, Michal and Domany, Eytan},
+            title = {Pathway-based personalized analysis of cancer},
+            volume = {110},
+            number = {16},
+            pages = {6388--6393},
+            year = {2013},
+            doi = {10.1073/pnas.1219651110},
+            publisher = {National Academy of Sciences},
+            issn = {0027-8424},
+            URL = {https://www.pnas.org/content/110/16/6388},
+            eprint = {https://www.pnas.org/content/110/16/6388.full.pdf},
+            journal = {Proceedings of the National Academy of Sciences}
+            }
+        </citation>
   </citations>
 </tool>

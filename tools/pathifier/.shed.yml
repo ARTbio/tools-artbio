@@ -11,5 +11,4 @@ categories:
 homepage_url: https://
 remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/pathifier
 toolshed:
-  - testtoolshed
   - toolshed
