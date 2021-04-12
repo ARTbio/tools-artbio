@@ -1,0 +1,192 @@
+<tool id="pathifier" name="Pathifier" version="1.0.1">
+    <description>: Quantify deregulation of pathways in cancer</description>
+    <requirements>
+        <requirement type="package" version="1.6.2=r35h6115d3f_0">r-optparse</requirement>
+        <requirement type="package" version="1.22.0=r351_0">bioconductor-pathifier</requirement>
+        <requirement type="package" version="1.0.12=r351h6115d3f_0">r-pheatmap</requirement>
+        <requirement type="package" version="0.3_41=r351h6115d3f_0">r-scatterplot3d</requirement>
+        <requirement type="package" version="0.4.7=r35h6115d3f_0">r-circlize</requirement>
+    </requirements>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Tool exception" />
+    </stdio>
+    <command detect_errors="exit_code"><![CDATA[ 
+        Rscript $__tool_directory__/pathifier.R 
+            --exp '$input'
+            --sep '$input_sep'
+            --genes '$genes'
+
+            #if $reference.is_normal == "Yes":
+                --is_normal 'TRUE'
+                --normals '$reference.normals'
+            #end if
+
+            --max_stability '$max_stability'
+            --attempts '$attempts'
+            --min_std '$min_std'
+            --min_exp '$min_exp'
+
+            --heatmap_cluster_cells '$heatmap_cluster_cells'
+            --heatmap_cluster_pathways '$heatmap_cluster_pathways'
+            --heatmap_show_cell_labels '$heatmap_show_cell_labels'
+            --heatmap_show_pathway_labels '$heatmap_show_pathway_labels'
+
+            --pds '$pds'
+            --logfile '$logfile'
+            --plot '$plot'
+            --rdata '$rdatafile'
+            
+]]></command>
+    <inputs>
+        <param name="input" type="data" format="txt,tabular" label="expression data"/>
+        <param name="input_sep" type="select" label="Input column separator">
+            <option value="tab" selected="true">Tabs</option>
+            <option value=",">Comma</option>
+        </param>
+        <param name="genes" type="data" format="txt" label="Gene sets Pathways" 
+               help="Must be in gmt format (one pathway per line : Name, description, genes (one by column), tab separated)" />
+        <conditional name="reference">
+            <param name="is_normal" label="Do you have non cancer transcriptomes in your data set ?" type="boolean" truevalue="Yes" falsevalue="" checked="false" 
+                   help="If set the starting curve depends on the matrix of points with in a certain row order (first 'normal' then 'cancer' samples), otherwise the first principal component is used. See help for more informations"/>
+            <when value="Yes">
+                <param name="normals" type="data" format="tabular" label="Sample status"
+                       help="A two-column data frame, first column contains data labels, second column the levels of sample status : 1 = Healthy, 0 = Tumor (no header)" />
+            </when>
+            <when value="">
+            </when>
+        </conditional>
+        <param name="max_stability" label="Throw away components leading to low stability of sampling noise" type="boolean" truevalue="TRUE" 
+               falsevalue="FALSE" checked="true" />
+        <param name="attempts" type="integer" label="Number of runs to determine stability" value="100"/>
+        <param name="min_std" type="text" value="0.4" label="Minimum of standard deviation to filter out low variable genes"
+               help="Use 'data' to use the minimum standard deviation of your data" />
+        <param name="min_exp" type="text" value="4" label="Minimum of gene expression to filter out low variable genes"
+               help="Use 'data' to use the minimum expression of your data" />
+        <param name="heatmap_cluster_cells" label="Cluster samples on heatmap" type="boolean" truevalue="TRUE" falsevalue="FALSE" checked="true" />
+        <param name="heatmap_cluster_pathways" label="Cluster pathways on heatmap" type="boolean" truevalue="TRUE" falsevalue="FALSE" checked="true" />
+        <param name="heatmap_show_cell_labels" label="Show sample labels on heatmap" type="boolean" truevalue="TRUE" falsevalue="FALSE" checked="false" />
+        <param name="heatmap_show_pathway_labels" label="Cluster pathway labels on heatmap" type="boolean" truevalue="TRUE" falsevalue="FALSE" checked="true" />
+        <param label="Return log file of pathifier" name="log" type="select" >
+            <option value="no" selected="True">No</option>
+            <option value="yes">Yes</option>
+        </param>
+        <param label="Return Pathifier S4 object" name="rdata" type="select" >
+            <option value="no" selected="True">No</option>
+            <option value="yes">Yes</option>
+        </param>
+             
+    </inputs>
+    <outputs>
+        <data name="pds" format="tabular" label="Pathifier Deregulation Score (PDS) of ${on_string}" />
+        <data name="logfile" format="txt" label="Pathifier log file of ${on_string}" >
+            <filter>log == 'yes'</filter>
+        </data>
+        <data name="plot" format="pdf" label="Pathifier vizualization of ${on_string}" />
+        <data name="rdatafile" format="rdata" label="Pathifier S4 object of ${on_string}" >
+            <filter>rds == 'yes'</filter>
+        </data>
+    </outputs>
+    <tests>
+        <test>
+            <param name="input" value="sheffer.tsv" ftype="tabular"/>
+            <param name="genes" value="kegg_pathways.gmt" ftype="txt" />
+            <param name="is_normal" value="True" />
+            <param name="normals" value="normals.tsv" ftype="tabular" />
+            <param name="log" value="yes" />
+            <param name="attempts" value="100" />
+            <output name="logfile" file="sheffer.kegg.log" ftype="txt" compare="sim_size" />
+            <output name="pds" file="sheffer.kegg.tsv" ftype="tabular"/>
+            <output name="plot" file="plot.pdf" ftype="pdf" compare="sim_size" />
+        </test>
+        <test>
+            <param name="input" value="sheffer_noref.tsv" ftype="tabular"/>
+            <param name="genes" value="kegg_pathways.gmt" ftype="txt" />
+            <param name="is_normal" value="" />
+            <param name="log" value="no" />
+            <param name="rdata" value="yes" />
+            <param name="attempts" value="50" />
+            <param name="min_exp" value="data" />
+            <param name="min_std" value="data" />
+            <output name="pds" file="sheffer.kegg_noref.tsv" ftype="tabular"/>
+            <output name="rdatafile" file="sheffer.kegg_noref.rdata" ftype="rdata" compare="sim_size" />
+            <output name="plot" file="plot_noref.pdf" ftype="pdf" compare="sim_size" />
+        </test>
+    </tests>
+    <help>
+
+**What it does**
+
+Pathifier is an algorithm that infers pathway deregulation scores for each (tumor) sample on the basis
+of expression data. This score is determined, in a context-specific manner, for every particular dataset
+and type of cancer that is being investigated. The algorithm  transforms gene-level information into
+pathway-level information, generating a compact and biologically relevant representation of each sample.
+
+For each pathway analysed, the transcriptome datasets are plotted in the gene pathway space using a
+Principal Component analysis (PCA) and a principal curve is regressed from these points. All transcriptomes 
+are projected on the nearest point of this curve. Pathifier finally computes a score which corresponds to 
+the distance (normalized to 1) of each point (transcriptome) to the curve origin. 
+
+**Inputs**
+
+    * a matrix of n columns of observations (generally RNAseq experiments) and k rows of variables (generally k genes).
+    * a Gene Matrix Transposed file (GMT format) where each row represents a gene set :
+        * first column : gene set name (pathway name)
+        * second : description of gene set
+        * third and + : list of genes that composed the gene set tab-separated  
+    * (Optional) a two column table with no header, to described transcriptome status (Tumor or not) : 
+        * first column : sample labels
+        * second : levels of sample status : 1 = Healthy, 0 = Tumor
+
+**Outputs**
+
+    * Table of Pathway Deregulation Scores : one by pathway (column) and by transcriptome (row)
+    * Visualization of PDS (pdf) : 
+        * Principal curve of different PDS 
+        * Heatmap of PDS that allows (through clustering) to see pattern in pathway deregulation
+    * (Optional) Log file of Pathifier algorithm
+    * (Optional) Pathifier S4 object which contains all informations and results generated by Pathifier, for each pathway :
+        * `scores` : PDS scores
+        * `genesinpathway` : Gene identifiers in each pathway
+        * `newmeanstd`
+        * `origmeanstd`
+        * `pathwaysize` : Number of genes retained in pathway
+        * `curves` : Coordinates of transcriptomes projected on the principal curve
+        * `curves_order` : Order of transcriptomes along the principal curve
+        * `z` : z-scores matrix
+        * `compin`
+        * `xm`
+        * `xs`
+        * `center`
+        * `rot`
+        * `pctaken` : Number of principal component retained for pathifier analysis
+        * `samplings`
+        * `sucess` : List of pathway index that passed Pathfiier filters (more info in log file)
+        * `logfile` : Name of logfile
+
+    </help>
+    <citations>
+        <citation type="bibtex">@Manual{,
+            title = {{pathifier}: Quantify deregulation of pathways in cancer},
+            author = {Yotam Drier},
+            year = {2013-06-27},
+            note = {R package version 1.22.0},
+            url = {https://git.bioconductor.org/packages/pathifier},
+            }
+        </citation>
+        <citation type="bibtex">@article {Drier6388,
+            author = {Drier, Yotam and Sheffer, Michal and Domany, Eytan},
+            title = {Pathway-based personalized analysis of cancer},
+            volume = {110},
+            number = {16},
+            pages = {6388--6393},
+            year = {2013},
+            doi = {10.1073/pnas.1219651110},
+            publisher = {National Academy of Sciences},
+            issn = {0027-8424},
+            URL = {https://www.pnas.org/content/110/16/6388},
+            eprint = {https://www.pnas.org/content/110/16/6388.full.pdf},
+            journal = {Proceedings of the National Academy of Sciences}
+            }
+        </citation>
+  </citations>
+</tool>
