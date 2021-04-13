@@ -1,13 +1,13 @@
 <tool id="scrublet" name="Scrublet" version="0.0.1">
-  <description>: visualization of splicing events across multiple samples</description>
+  <description>: Detection of cell doublet in scRNAseq data</description>
   <requirements>
-    <requirement type="package" version="3">python</requirement>
-    <requirement type="package" version="1.3">scrublet</requirement>
-    <requirement type="package" version="2.2.1=r3.4.1_0">argparse</requirement>
-    <requirement type="package" version="1.10.4=r3.4.1_0">matplotlib</requirement>
-    <requirement type="package" version="2.2.1=r3.4.1_0">scipy.io</requirement>
-    <requirement type="package" version="2.2.1=r3.4.1_0">pandas</requirement>
-    <requirement type="package" version="2.2.1=r3.4.1_0">numpy</requirement>
+    <requirement type="package" >python</requirement>
+    <requirement type="package" version="0.2.3">scrublet</requirement>
+    <requirement type="package" >argparse</requirement>
+    <requirement type="package" >matplotlib</requirement>
+    <requirement type="package" >scipy</requirement>
+    <requirement type="package" >pandas</requirement>
+    <requirement type="package" >numpy</requirement>
   </requirements>
   <stdio>
     <exit_code range="1:" level="fatal" description="Tool exception" />
@@ -25,11 +25,11 @@
  
   ]]></command>
   <inputs>
-    <param name="input_barcodes" type="data" format="tsv" label="Barcode names" help="" />
-    <param name="input_features" type="data" format="tsv" label="Feature names"/>
-    <param name="input_matrix" type="data" format="text" label="10X UMI matrix"/>
-    <param name="expected_doublet_rate" type="float" label="Expected doublet rate" help="" />
-    <param name="doublet_threshold" type="float" label="Doublet score threshold" help="" />
+    <param name="input_barcodes" type="data" format="txt" label="Barcode names" help="" />
+    <param name="input_features" type="data" format="tabular" label="Feature names"/>
+    <param name="input_matrix" type="data" format="mtx" label="10X UMI matrix"/>
+    <param name="expected_doublet_rate" type="float" value="0.1" label="Expected doublet rate" help="" />
+    <param name="doublet_threshold" type="float" value="0" label="Doublet score threshold" help="" />
   </inputs>
   <outputs>
     <data name="output_csv" format="csv" label="Scrublet doublet scores on ${on_string}" />
@@ -37,6 +37,16 @@
     <data name="output_umap" format="pdf" label="Scrublet umap on ${on_string}" />
   </outputs>
   <tests>
+      <test>
+        <param name="input_barcodes" value="barcodes.tsv" ftype="tabular"/>
+        <param name="input_features" value="genes.tsv" ftype="tabular"/>
+        <param name="input_matrix" value="matrix.mtx" ftype="tabular"/>
+        <param name="expected_doublet_rate" value="0.06"/>
+        <param name="doublet_threshold" value="0.25"/>
+        <output name="output_csv" file="doublet_scores.csv" ftype="csv"/>
+        <output name="output_hist" file="histogram.pdf" ftype="pdf"/>
+        <output name="output_umap" file="umap.pdf" ftype="pdf"/>
+      </test>
   </tests>
   <help>
 
@@ -44,10 +54,24 @@
 
 **What it does**
 
-Generate doublet prediction from 10X matrix  based on the Scrublet algorithm.
+Generate doublet prediction from 10X matrix based on the Scrublet algorithm.
   </help>
   <citations>
-      <citation type="doi">doi.org/10.1101/357368</citation>
+      <citation type="bibtex">@article{WOLOCK2019281,
+          title = {Scrublet: Computational Identification of Cell Doublets in Single-Cell Transcriptomic Data},
+          journal = {Cell Systems},
+          volume = {8},
+          number = {4},
+          pages = {281-291.e9},
+          year = {2019},
+          issn = {2405-4712},
+          doi = {https://doi.org/10.1016/j.cels.2018.11.005},
+          url = {https://www.sciencedirect.com/science/article/pii/S2405471218304745},
+          author = {Samuel L. Wolock and Romain Lopez and Allon M. Klein},
+          keywords = {single-cell, bioinformatics, cell doublets, artifact detection, decoy classifier, high dimensional data analysis, RNA-seq},
+          abstract = {Summary
+          Single-cell RNA-sequencing has become a widely used, powerful approach for studying cell populations. However, these methods often generate multiplet artifacts, where two or more cells receive the same barcode, resulting in a hybrid transcriptome. In most experiments, multiplets account for several percent of transcriptomes and can confound downstream data analysis. Here, we present Single-Cell Remover of Doublets (Scrublet), a framework for predicting the impact of multiplets in a given analysis and identifying problematic multiplets. Scrublet avoids the need for expert knowledge or cell clustering by simulating multiplets from the data and building a nearest neighbor classifier. To demonstrate the utility of this approach, we test Scrublet on several datasets that include independent knowledge of cell multiplets. Scrublet is freely available for download at github.com/AllonKleinLab/scrublet.}
+          }</citation>
   </citations>
 </tool>
 
