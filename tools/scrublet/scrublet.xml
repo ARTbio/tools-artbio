@@ -37,7 +37,7 @@
     <data name="output_umap" format="pdf" label="Scrublet umap on ${on_string}" />
   </outputs>
   <tests>
-      <test>
+<!--      <test>
         <param name="input_barcodes" value="barcodes.tsv" ftype="tabular"/>
         <param name="input_features" value="genes.tsv" ftype="tabular"/>
         <param name="input_matrix" value="matrix.mtx" ftype="tabular"/>
@@ -46,7 +46,7 @@
         <output name="output_csv" file="doublet_scores.csv" ftype="csv"/>
         <output name="output_hist" file="histogram.pdf" ftype="pdf"/>
         <output name="output_umap" file="umap.pdf" ftype="pdf"/>
-      </test>
+      </test> -->
   </tests>
   <help>
 
