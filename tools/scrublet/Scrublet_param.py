@@ -26,7 +26,7 @@ def __main__():
     args = Parser()
     # Import des donnees 10X
     counts_matrix = scipy.io.mmread(args.input_matrix).T.tocsc()
-    genes = np.array(scr.load_genes(args.input_features, delimiter='\t', column=2))
+    genes = np.array(scr.load_genes(args.input_features, delimiter='\t', column=1))
     barcodes = pd.read_csv(args.input_barcodes, delimiter='\t', header=None)
     print('Counts matrix shape: {} rows, {} columns'.format(counts_matrix.shape[0], counts_matrix.shape[1]))
     print('Number of genes in gene list: {}'.format(len(genes)))
@@ -44,12 +44,12 @@ def __main__():
 
 
     scrub.plot_histogram();
-    plt.savefig(args.output_hist)
+    plt.savefig(args.output_hist, format='pdf')
     print('Running UMAP...')
     scrub.set_embedding('UMAP', scr.get_umap(scrub.manifold_obs_, 10, min_dist=0.3))
     print('Done.')
     scrub.plot_embedding('UMAP', order_points=True);
-    plt.savefig(args.output_umap)
+    plt.savefig(args.output_umap, format='pdf')
 
 if __name__ == "__main__":
     __main__()
