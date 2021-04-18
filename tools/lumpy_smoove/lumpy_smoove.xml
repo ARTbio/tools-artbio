@@ -25,7 +25,6 @@
             ln -s $sample ${sample.element_identifier}.bam &&
             ln -f -s $sample.metadata.bam_index ${sample.element_identifier}.bam.bai &&
         #end for
-    ls -la &&
     #end if
    
     smoove call --name output
@@ -39,9 +38,7 @@
             --removepr
        #end if
            *.bam &&
-    ls -latr &&
-    gunzip output-smoove.genotyped.vcf.gz &&
-    ln -s output-smoove.genotyped.vcf $vcf_call
+    gunzip -c output-smoove.genotyped.vcf.gz > $vcf_call
 
     ]]></command>
     <inputs>
