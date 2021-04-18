@@ -1,4 +1,4 @@
-<tool id="lumpy_smoove" name="lumpy_smoove" version="0.2.5+galaxy6">
+<tool id="lumpy_smoove" name="lumpy_smoove" version="0.2.5+galaxy7">
     <description>find structural variants using the smoove workflow</description>
     <macros>
         <import>macro_lumpy_smoove.xml</import>
@@ -40,7 +40,8 @@
        #end if
            *.bam &&
     ls -latr &&
-    gunzip output-smoove.genotyped.vcf.gz
+    gunzip output-smoove.genotyped.vcf.gz &&
+    ln -s output-smoove.genotyped.vcf $vcf_call
 
     ]]></command>
     <inputs>
@@ -82,7 +83,7 @@
    </inputs>
 
     <outputs>
-        <data format="vcf" name="vcf_call" label="lumpy-smoove Variant Calling" from_work_dir="./output-smoove.genotyped.vcf" />
+        <data format="vcf" name="vcf_call" label="lumpy-smoove Variant Calling" />
     </outputs>
 
     <tests>
