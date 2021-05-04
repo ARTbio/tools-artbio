@@ -18,7 +18,7 @@
  </inputs>
 
  <outputs>
-    <data format="fast5.tar.gz" name="compressed_output" label="${inputs} tar.gz archive" />
+    <data format="fast5.tar.gz" name="compressed_output" label="tar.gz archive of fast5" />
 </outputs>
 
     <tests>
