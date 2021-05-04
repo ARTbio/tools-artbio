@@ -1,4 +1,4 @@
-<tool id="tarfast5" name="tarfast5" version="0.1">
+<tool id="tarfast5" name="tarfast5" version="0.2">
   <description></description>
   <requirements>
         <requirement type="package" version="2.6">pigz</requirement>
@@ -8,9 +8,9 @@
   </stdio>
   <command detect_errors="exit_code"><![CDATA[
         #for $file in $inputs:
-            ln -s $file ${file.element_identifier}.fast5 &&
+            ln -s $file ${file.element_identifier}.h5 &&
         #end for
-            tar -cfh - *.fast5 | pigz -9 -p \${GALAXY_SLOTS:-4} > $compressed_output
+            tar -I pigz -cvhf $compressed_output *.h5
   ]]></command>
  <inputs>
     <param name="inputs" type="data" format="h5" label="fast5 sequence files" multiple="true" />
