@@ -23,7 +23,7 @@
     <tests>
         <test> <!-- 0 -->
             <param name="inputs" value="F1.fast5.h5,F2.fast5.h5" ftype="h5" />
-            <output file="archive.tar.gz" name="compressed_output" compare="sim_size" delta="1000" />
+            <output file="archive.tar.gz" name="compressed_output" compare="sim_size" delta="3000" />
         </test>
     </tests>
 <help>
