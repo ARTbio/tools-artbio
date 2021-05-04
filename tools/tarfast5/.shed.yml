@@ -1,0 +1,16 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: tarfast5
+description: produces a tar.gz archive of fast5 sequence files
+long_description: |
+  produces a tar.gz archive of fast5 (h5 format) sequence files
+
+categories:
+  - Nanopore
+
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/tarfast5
+toolshed:
+  - testtoolshed
+  - toolshed
+
