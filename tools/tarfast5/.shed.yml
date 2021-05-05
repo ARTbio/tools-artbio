@@ -12,5 +12,5 @@ homepage_url: http://artbio.fr
 remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/tarfast5
 toolshed:
   - testtoolshed
-  - toolshed
+#  - toolshed
 

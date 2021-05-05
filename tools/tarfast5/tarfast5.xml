@@ -26,23 +26,12 @@
             <param name="inputs" value="F1.fast5.h5,F2.fast5.h5" ftype="h5" />
             <output file="archive.tar.gz" name="compressed_output" compare="sim_size" delta="3000" />
         </test>
-        <test> <!-- 1 -->
-            <param name="inputs">
-                <collection type="list">
-                    <element name="1" file="F1.fast5.h5" />
-                    <element name="2" file="F2.fast5.h5" />
-                </collection>
-            </param>
-            <output file="archive.tar.gz" name="compressed_output" compare="sim_size" delta="3000" />
-        </test>
     </tests>
 <help>
 
 **What it does**
 
-
-**Inputs**
-
+Creates a tar.gz archive of fast5 (h5) sequences files
 
 .. class:: warningmark
 
