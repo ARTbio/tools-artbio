@@ -1,4 +1,4 @@
-<tool id="tarfast5" name="tarfast5" version="0.3">
+<tool id="tarfast5" name="tarfast5" version="0.4">
   <description></description>
   <requirements>
         <requirement type="package" version="2.6">pigz</requirement>
@@ -11,7 +11,8 @@
         #for $file in $inputs:
             ln -s $file ${file.element_identifier}.h5 &&
         #end for
-            tar -I pigz -cvhf $compressed_output *.h5
+            export PIGZ="-p \${GALAXY_SLOTS:-4}" &&
+            tar -cvh --use-compress-program=pigz -f $compressed_output *.h5
   ]]></command>
  <inputs>
     <param name="inputs" type="data" format="h5" label="fast5 sequence files" multiple="true" />
