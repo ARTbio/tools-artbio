@@ -11,7 +11,7 @@
         #for $file in $inputs:
             ln -s $file ${file.element_identifier}.h5 &&
         #end for
-            tar cvhf *.h5 | pigz -p \${GALAXY_SLOTS:-4} -k > filename.tar.gz
+            tar cvhf *.h5 | pigz -p \${GALAXY_SLOTS:-4} -k > $compressed_output
             ## tar -I pigz -cvhf $compressed_output *.h5
   ]]></command>
  <inputs>
