@@ -1,5 +1,8 @@
-<tool id="vcf2hrdetect" name="Convert lumpy-smoove vcf" version="1">
+<tool id="vcf2hrdetect" name="Convert lumpy-smoove vcf" version="2">
     <description>to tabular hrdetect</description>
+    <requirements>
+        <requirement type="package" version="2.7.15">python</requirement>
+    </requirements>
     <macros>
         <import>macro_lumpy_smoove.xml</import>
     </macros>

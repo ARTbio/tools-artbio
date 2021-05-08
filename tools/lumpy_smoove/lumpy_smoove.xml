@@ -1,10 +1,10 @@
-<tool id="lumpy_smoove" name="lumpy_smoove" version="0.2.5+galaxy7">
+<tool id="lumpy_smoove" name="lumpy_smoove" version="0.2.6+galaxy7">
     <description>find structural variants using the smoove workflow</description>
     <macros>
         <import>macro_lumpy_smoove.xml</import>
     </macros>
     <requirements>
-        <requirement type="package" version="0.2.5">smoove</requirement>
+        <requirement type="package" version="0.2.6">smoove</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
