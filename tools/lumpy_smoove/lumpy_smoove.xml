@@ -4,7 +4,7 @@
         <import>macro_lumpy_smoove.xml</import>
     </macros>
     <requirements>
-        <requirement type="package" version="0.2.6">smoove</requirement>
+        <requirement type="package" version="0.2.6=h9ee0642_1">smoove</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
