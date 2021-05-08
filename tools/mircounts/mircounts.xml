@@ -144,12 +144,12 @@
             <param name="display" value="relative"/>
             <param name="output_premir_counts" value="True"/>
             <param name="output_mir_counts" value="True"/>
-            <output name="output" file="aga.bam"/>
-            <output name="gff3" file="aga.22.gff3" lines_diff="22"/>
-            <output name="pre_mir_count_file" file="aga_pre_mirs_count.22.tab"/>
-            <output name="mir_count_file" file="aga_mirs_count.22.tab"/>
-            <output name="latticePDF" file="aga_mir_coverage.pdf"/>
-            <output name="coverage_dataframe" file="aga_lattice_dataframe.tab"/>
+            <output name="output" file="aga.bam" compare="sim_size" />
+            <output name="gff3" file="aga.22.gff3" lines_diff="22" ftype="gff3" />
+            <output name="pre_mir_count_file" file="aga_pre_mirs_count.22.tab" ftype="tabular" />
+            <output name="mir_count_file" file="aga_mirs_count.22.tab" ftype="tabular" />
+            <output name="latticePDF" file="aga_mir_coverage.pdf" ftype="pdf" />
+            <output name="coverage_dataframe" file="aga_lattice_dataframe.tab" ftype="tabular" />
         </test>
         <test>
             <param name="cutoption" value="yes" />
@@ -165,12 +165,12 @@
             <param name="display" value="relative"/>
             <param name="output_premir_counts" value="True"/>
             <param name="output_mir_counts" value="True"/>
-            <output name="output" file="mouse.bam"/>
-            <output name="gff3" file="mouse.19.gff3" lines_diff="22"/>
-            <output name="pre_mir_count_file" file="mouse_pre_mirs_count.29.tab"/>
-            <output name="mir_count_file" file="mouse_mirs_count.29.tab"/>
-            <output name="latticePDF" file="mouse_mir_coverage.pdf"/>
-            <output name="coverage_dataframe" file="mouse_lattice_dataframe.tab"/>
+            <output name="output" file="mouse.bam" compare="sim_size"/>
+            <output name="gff3" file="mouse.19.gff3" lines_diff="22" ftype="gff3" />
+            <output name="pre_mir_count_file" file="mouse_pre_mirs_count.29.tab" ftype="tabular" />
+            <output name="mir_count_file" file="mouse_mirs_count.29.tab" ftype="tabular" />
+            <output name="latticePDF" file="mouse_mir_coverage.pdf" ftype="pdf" />
+            <output name="coverage_dataframe" file="mouse_lattice_dataframe.tab" ftype="tabular" />
         </test>
         <test>
             <param name="cutoption" value="yes" />
@@ -185,10 +185,10 @@
             <param name="plottingOption" value="no"/>
             <param name="output_premir_counts" value="True"/>
             <param name="output_mir_counts" value="True"/>
-            <output name="output" file="unclipped.out.22.bam"/>
-            <output name="gff3" file="translated_dme.22.gff3" lines_diff="22"/>
-            <output name="pre_mir_count_file" file="pre_mirs_unclipped_count.22.tab"/>
-            <output name="mir_count_file" file="mirs_unclipped_count.22.tab"/>
+            <output name="output" file="unclipped.out.22.bam" compare="sim_size" />
+            <output name="gff3" file="translated_dme.22.gff3" lines_diff="22" ftype="gff3" />
+            <output name="pre_mir_count_file" file="pre_mirs_unclipped_count.22.tab" ftype="tabular" />
+            <output name="mir_count_file" file="mirs_unclipped_count.22.tab" ftype="tabular" />
         </test>
          <test>
             <param name="cutoption" value="yes" />
@@ -203,10 +203,10 @@
             <param name="plottingOption" value="no"/>
             <param name="output_premir_counts" value="True"/>
             <param name="output_mir_counts" value="True"/>
-            <output name="output" file="unclipped.out.bam" />
-            <output name="gff3" file="translated_dme.gff3" lines_diff="22"/>
-            <output name="pre_mir_count_file" file="pre_mirs_unclipped_count.tab"/>
-            <output name="mir_count_file" file="mirs_unclipped_count.tab"/>
+            <output name="output" file="unclipped.out.bam" compare="sim_size" />
+            <output name="gff3" file="translated_dme.gff3" lines_diff="22"  ftype="gff3" />
+            <output name="pre_mir_count_file" file="pre_mirs_unclipped_count.tab" ftype="tabular" />
+            <output name="mir_count_file" file="mirs_unclipped_count.tab" ftype="tabular" />
         </test>
         <test>
             <param name="cutoption" value="yes" />
@@ -222,12 +222,12 @@
             <param name="display" value="relative"/>
             <param name="output_premir_counts" value="True"/>
             <param name="output_mir_counts" value="True"/>
-            <output name="output" file="unclipped.out.bam"/>
-            <output name="gff3" file="translated_dme.gff3"  lines_diff="22"/>
-            <output name="pre_mir_count_file" file="pre_mirs_unclipped_count.tab"/>
-            <output name="mir_count_file" file="mirs_unclipped_count.tab"/>
-            <output name="latticePDF" file="mir_unclipped_coverage.pdf"/>
-            <output name="coverage_dataframe" file="lattice_unclipped_dataframe.tab"/>
+            <output name="output" file="unclipped.out.bam" compare="sim_size" />
+            <output name="gff3" file="translated_dme.gff3"  lines_diff="22" ftype="gff3" />
+            <output name="pre_mir_count_file" file="pre_mirs_unclipped_count.tab" ftype="tabular" />
+            <output name="mir_count_file" file="mirs_unclipped_count.tab" ftype="tabular" />
+            <output name="latticePDF" file="mir_unclipped_coverage.pdf" ftype="pdf"/>
+            <output name="coverage_dataframe" file="lattice_unclipped_dataframe.tab" ftype="tabular" />
         </test>
         <test>
             <param name="cutoption" value="no" />
@@ -239,12 +239,12 @@
             <param name="display" value="absolute"/>
             <param name="output_premir_counts" value="True"/>
             <param name="output_mir_counts" value="True"/>
-            <output name="output" file="clipped.out.bam"/>
-            <output name="gff3" file="translated_dme.gff3" lines_diff="22"/>
-            <output name="pre_mir_count_file" file="pre_mirs_clipped_count.tab"/>
-            <output name="mir_count_file" file="mirs_clipped_count.tab"/>
-            <output name="latticePDF" file="mir_clipped_coverage.pdf"/>
-            <output name="coverage_dataframe" file="lattice_clipped_dataframe.tab"/>
+            <output name="output" file="clipped.out.bam" compare="sim_size" />
+            <output name="gff3" file="translated_dme.gff3" lines_diff="22" ftype="gff3" />
+            <output name="pre_mir_count_file" file="pre_mirs_clipped_count.tab" ftype="tabular" />
+            <output name="mir_count_file" file="mirs_clipped_count.tab" ftype="tabular" />
+            <output name="latticePDF" file="mir_clipped_coverage.pdf" ftype="pdf" />
+            <output name="coverage_dataframe" file="lattice_clipped_dataframe.tab" ftype="tabular" />
         </test>
     </tests>
     <help>
