@@ -263,7 +263,7 @@ if (exists("global", where = args)) {
   if (args$global == "nomerge") {
     castml <- dcast(ml, Dataset + Polarity + Size ~ variable, function(x) sum(x))
     castml <- within(castml, Counts[Polarity == "R"] <- (Counts[Polarity == "R"] * -1))
-    bc <- globalbc(castml, global="no")
+    bc <- globalbc(castml, global = "no")
   } else {
     castml <- dcast(ml, Dataset + Size ~ variable, function(x) sum(x))
     bc <- globalbc(castml, global = "yes")
