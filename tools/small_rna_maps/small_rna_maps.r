@@ -257,7 +257,7 @@ if (args$extra_plot_method == "" & !exists("global", where = args)) {
 }
 if (exists("global", where = args)) {
   pdf(file = args$output, paper = "special", height = 11.69)
-  table <- within(table, Counts[Polarity == "R"] = abs(Counts[Polarity == "R"]))
+  table <- within(table, Counts[Polarity == "R"] <- abs(Counts[Polarity == "R"]))
   library(reshape2)
   ml <- melt(table, id.vars = c("Dataset", "Chromosome", "Polarity", "Size"))
   if (args$global == "nomerge") {
