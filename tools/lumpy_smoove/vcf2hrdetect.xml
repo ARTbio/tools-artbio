@@ -24,7 +24,7 @@
     <tests>
         <test>
             <param name="lumpy_smoove_vcf" value="test_vcf2hrdetect.vcf" ftype="vcf" />
-            <output name="hrdetect_tabular" file="test_vcf2hrdetect.tab" ftype="tabular" />
+            <output name="hrdetect_tabular" file="test_vcf2hrdetect.tab" sort="true" ftype="tabular" />
         </test>
     </tests>
     <help>
