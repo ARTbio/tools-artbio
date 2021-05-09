@@ -36,12 +36,12 @@ n_samples <- length(unique(table$Dataset))
 samples <- unique(table$Dataset)
 genes <- unique(table$Chromosome)
 per_gene_readmap <- lapply(genes, function(x) subset(table, Chromosome == x))
-per_gene_limit <- lapply(genes, function(x) c(1, unique(subset(table, Chromosome == x)$Chrom_length)) )
+per_gene_limit <- lapply(genes, function(x) c(1, unique(subset(table, Chromosome == x)$Chrom_length)))
 n_genes <- length(per_gene_readmap)
 
 ## functions
 plot_unit <- function(df, method = args$first_plot_method, ...) {
-    p <- xyplot(Counts ~ Coordinate|factor(Dataset, levels = unique(Dataset)) + factor(Chromosome, levels = unique(Chromosome)),
+    p <- xyplot(Counts ~ Coordinate | factor(Dataset, levels = unique(Dataset)) + factor(Chromosome, levels = unique(Chromosome)),
                data = df,
                type = "h",
                lwd = 1.5,
@@ -65,9 +65,9 @@ bottom_first_method <- list(Counts = "Coordinates (nucleotides)", Coverage = "Co
 
 ## Plotting Functions
 single_plot <- function(...) {
-  width = 8.2677 * n_samples / 2
-  rows_per_page = 8
-  graph_heights = c(rep(40, 8), 10)
+  width <- 8.2677 * n_samples / 2
+  rows_per_page <- 8
+  graph_heights <- c(rep(40, 8), 10)
   pdf(file = args$output_pdf, paper = "special", height = 15, width = width)
   for (i in seq(1, n_genes, rows_per_page)) {
     start <- i
@@ -80,7 +80,7 @@ single_plot <- function(...) {
     }
     first_plot_list <- lapply(per_gene_readmap[start:end], function(x) update(useOuterStrips(plot_unit(x, par.settings = par_settings_firstplot), strip.left = strip.custom(par.strip.text = list(cex = 0.5)))))
     plot.list <- rbind(first_plot_list)
-    args_list <- c(plot.list, list ~ nrow = rows_per_page + 1, ncol = 1, heights = unit(graph_heights, rep("mm", 9)),
+    args_list <- c(plot.list, list(nrow= rows_per_page + 1, ncol = 1, heights = unit(graph_heights, rep("mm", 9)),
                                  top = textGrob("Cluster Read Counts (Peaks in middle of clusters)", gp = gpar(cex = 1), vjust = 0, just = "top"),
                                  left = textGrob("Read Counts", gp = gpar(cex = 1), vjust = 0, hjust = 0, x = 1, y = (-0.41 / 7) * (end - start - (6.23 / 0.41)), rot = 90),
                                  sub = textGrob("Coordinates (nucleotides)", gp = gpar(cex = 1), just = "bottom", vjust = 2)
