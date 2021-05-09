@@ -21,9 +21,9 @@ library(lattice)
 
 # Get arguments
 option_list <- list(
-    make_option(c("-d", "--dataframe"), type="character",
+    make_option(c("-d", "--dataframe"), type = "character",
                 help = "Dataframe containing coverage values obtained from mircounts.py"),
-    make_option(c("-t", "--type"), type="character", default = "relative",
+    make_option(c("-t", "--type"), type = "character", default = "relative",
                 help = "Type of plotting, either relative or absoute coverage values (default = 'relative')"),
     make_option(c("-o", "--output"), type = "character", help = "File to output the pdf to")
     )
@@ -45,7 +45,7 @@ if (args$type == "relative") {
 } else {
     graph <- xyplot(Count ~ Offset | Mir_hairpin, data = coverage, col = c("darkblue"), type = "l", lwd = 1.5,
                    scales = list(x = list(cex = .5), y = list(cex = .5)), par.strip.text = list(cex = .5),
-                   strip = strip.custom(which.given=1, bg = "lightblue"), layout = c(4, 15),
+                   strip = strip.custom(which.given = 1, bg = "lightblue"), layout = c(4, 15),
                    as.table = T, xlab = "Counts", ylab = "Coordinates",
                    main = "miRNA coverage plots")
 }
