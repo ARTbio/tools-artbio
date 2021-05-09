@@ -80,7 +80,7 @@ single_plot <- function(...) {
     }
     first_plot_list <- lapply(per_gene_readmap[start:end], function(x) update(useOuterStrips(plot_unit(x, par.settings = par_settings_firstplot), strip.left = strip.custom(par.strip.text = list(cex = 0.5)))))
     plot.list <- rbind(first_plot_list)
-    args_list <- c(plot.list, list(nrow= rows_per_page + 1, ncol = 1, heights = unit(graph_heights, rep("mm", 9)),
+    args_list <- c(plot.list, list(nrow = rows_per_page + 1, ncol = 1, heights = unit(graph_heights, rep("mm", 9)),
                                  top = textGrob("Cluster Read Counts (Peaks in middle of clusters)", gp = gpar(cex = 1), vjust = 0, just = "top"),
                                  left = textGrob("Read Counts", gp = gpar(cex = 1), vjust = 0, hjust = 0, x = 1, y = (-0.41 / 7) * (end - start - (6.23 / 0.41)), rot = 90),
                                  sub = textGrob("Coordinates (nucleotides)", gp = gpar(cex = 1), just = "bottom", vjust = 2)
