@@ -1,15 +1,15 @@
-<tool id="small_rna_maps" name="small_rna_maps" version="2.16.1">
+<tool id="small_rna_maps" name="small_rna_maps" version="3.0.0">
   <description></description>
   <requirements>
-        <requirement type="package" version="1.11.2=py27_0">numpy</requirement>
-        <requirement type="package" version="0.15.3=py27hda2845c_1">pysam</requirement>
-        <requirement type="package" version="1.6.4=r36h6115d3f_0">r-optparse</requirement>
-        <requirement type="package" version="0.6_28=r36h6115d3f_1002">r-latticeextra</requirement>
-        <requirement type="package" version="2.3=r36h6115d3f_1002">r-gridextra</requirement>
-        <requirement type="package" version="1.4.3=r36h29659fb_0">r-reshape2</requirement>
-        <requirement type="package" version="0.6.6">sambamba</requirement>
-        <requirement type="package" version="1.9=h10a08f8_12">samtools</requirement>
-        <requirement type="package" version="64.2=he1b5a44_1">icu</requirement>
+        <requirement type="package" version="1.20.2=py38h9894fe3_0">numpy</requirement>
+        <requirement type="package" version="0.16.0.1=py38hbdc2ae9_1">pysam</requirement>
+        <requirement type="package" version="1.6.6=r40h6115d3f_1">r-optparse</requirement>
+        <requirement type="package" version="0.6_29=r40h6115d3f_1">r-latticeextra</requirement>
+        <requirement type="package" version="2.3=r40h6115d3f_1003">r-gridextra</requirement>
+        <requirement type="package" version="1.4.4=r40h0357c0b_1">r-reshape2</requirement>
+        <requirement type="package" version="0.8.0=h984e79f_0">sambamba</requirement>
+        <requirement type="package" version="1.10=h2e538c0_3">samtools</requirement>
+        <requirement type="package" version="68.1=h58526e2_0">icu</requirement>
   </requirements>
   <stdio>
       <exit_code range="1:" level="fatal" description="Tool exception" />

@@ -1,5 +1,6 @@
 tool_test_output.html
 tool_test_output.json
+newtests
 .DS_Store
 .tox
 *.pyc

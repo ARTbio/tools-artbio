@@ -1,5 +1,8 @@
-<tool id="vcf2hrdetect" name="Convert lumpy-smoove vcf" version="1">
+<tool id="vcf2hrdetect" name="Convert lumpy-smoove vcf" version="2">
     <description>to tabular hrdetect</description>
+    <requirements>
+        <requirement type="package" version="0.2.5">smoove</requirement>
+    </requirements>
     <macros>
         <import>macro_lumpy_smoove.xml</import>
     </macros>
@@ -21,7 +24,7 @@
     <tests>
         <test>
             <param name="lumpy_smoove_vcf" value="test_vcf2hrdetect.vcf" ftype="vcf" />
-            <output name="hrdetect_tabular" file="test_vcf2hrdetect.tab" ftype="tabular" />
+            <output name="hrdetect_tabular" file="test_vcf2hrdetect.tab" sort="true" ftype="tabular" />
         </test>
     </tests>
     <help>
