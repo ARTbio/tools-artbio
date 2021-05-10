@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
   <macros>
-    <token name="@WRAPPER_VERSION@">1.0.1</token>
+    <token name="@WRAPPER_VERSION@">1.3.3</token>
     <xml name="requirements">
         <requirements>
-            <requirement type="package" version="1.3.0=pl526r341h4f16992_4">rsem</requirement>
-            <requirement type="package" version="1.2.3=py37hc9558a2_0">bowtie</requirement>
-            <requirement type="package" version="2.3.5=py37he860b03_0">bowtie2</requirement>
+            <requirement type="package" version="1.3.3=pl5262h3198e80_2">rsem</requirement>
+            <requirement type="package" version="1.3.0=py39h176da8b_2">bowtie</requirement>
+            <requirement type="package" version="2.4.2=py39hc9c6fcd_2">bowtie2</requirement>
         </requirements>
     </xml>
     <xml name="rsem_options">
