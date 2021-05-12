@@ -158,10 +158,9 @@ class RsemReference(Html):
         if len(rvalb) > 0:
             rval += rvalb
         rval.append('</ul></body></html>')
-        fh = file(dataset.file_name, 'w')
-        fh.write("\n".join(rval))
-        fh.write('\n')
-        fh.close()
+        with open(dataset.file_name, 'w') as fh:
+            fh.write("\n".join(rval))
+            fh.write('\n')
 
     def set_meta(self, dataset, **kwd):
         Html.set_meta(self, dataset, **kwd)
@@ -270,10 +269,9 @@ class RsemBt2Reference(Html):
         if len(rvalb) > 0:
             rval += rvalb
         rval.append('</ul></body></html>')
-        fh = file(dataset.file_name, 'w')
-        fh.write("\n".join(rval))
-        fh.write('\n')
-        fh.close()
+        with open(dataset.file_name, 'w') as fh:
+            fh.write("\n".join(rval))
+            fh.write('\n')
 
     def set_meta(self, dataset, **kwd):
         Html.set_meta(self, dataset, **kwd)
