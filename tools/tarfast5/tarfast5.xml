@@ -1,4 +1,4 @@
-<tool id="tarfast5" name="tarfast5" version="0.4">
+<tool id="tarfast5" name="tarfast5" version="0.5">
   <description></description>
   <requirements>
         <requirement type="package" version="2.6">pigz</requirement>
@@ -12,20 +12,34 @@
             ln -s $file ${file.element_identifier}.h5 &&
         #end for
             export PIGZ="-p \${GALAXY_SLOTS:-4}" &&
-            tar -cvh --use-compress-program=pigz -f $compressed_output *.h5
+            tar -cvh --use-compress-program=pigz -f $output *.h5
   ]]></command>
  <inputs>
     <param name="inputs" type="data" format="h5" label="fast5 sequence files" multiple="true" />
+    <param name="output_format" type="select" label="compression of the tar archive" display="radio">
+        <option value="tar">tar (no compression)</option>
+        <option value="gzip" selected="true">tar.gz</option>
+    </param>
  </inputs>
 
  <outputs>
-    <data format="fast5.tar.gz" name="compressed_output" label="tar.gz archive of fast5" />
+    <data format="fast5.tar.gz" name="output" label="tar.gz archive of fast5" >
+        <filter>output_format == "gzip"</filter>
+    </data>
+    <data format="fast5.tar" name="output" label="tar archive of fast5" >
+        <filter>output_format == "tar"</filter>
+    </data>    
 </outputs>
 
     <tests>
-        <test> <!-- 0 -->
+        <test> <!-- tar.gz -->
             <param name="inputs" value="F1.fast5.h5,F2.fast5.h5" ftype="h5" />
-            <output file="archive.tar.gz" name="compressed_output" compare="sim_size" delta="3000" />
+            <output file="archive.tar.gz" name="output" compare="sim_size" delta="3000" />
+        </test>
+        <test> <!-- tar -->
+            <param name="inputs" value="F1.fast5.h5,F2.fast5.h5" ftype="h5" />
+            <param name="output_format" value="tar" />
+            <output file="archive.tar" name="output" compare="sim_size" delta="3000" />
         </test>
     </tests>
 <help>
