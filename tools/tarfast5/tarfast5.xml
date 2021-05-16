@@ -1,4 +1,4 @@
-<tool id="tarfast5" name="tarfast5" version="0.5">
+<tool id="tarfast5" name="tarfast5" version="0.5.1">
   <description></description>
   <requirements>
         <requirement type="package" version="2.6">pigz</requirement>
@@ -38,7 +38,7 @@
 
     <tests>
         <test> <!-- tar -->
-            <param name="inputs" value="F1.fast5.h5,F2.fast5.h5" ftype="h5" />
+            <param name="inputs" value="F1.fast5.h5" ftype="h5" />
             <param name="output_format" value="tar" />
             <output file="archive.tar" name="output" compare="sim_size" delta="3000" />
         </test>
