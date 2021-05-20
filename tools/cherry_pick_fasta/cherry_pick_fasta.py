@@ -79,18 +79,20 @@ def __main__():
         elif args.searchfor == 'without':
             notcontList = complement_fasta(FastaListe,
                                            parse_fasta_with(searchterm,
-                                                            FastaListe))
+                                                            FastaListe,
+                                                            args.mode))
             notcontFasta = '>%s' % '>'.join(notcontList)
             Output.write(notcontFasta)
     if args.query_file:
         searchlist = getquerylist(args.query_file)
         if args.searchfor == 'with':
-            contList = parse_fasta_with(searchlist, FastaListe)
+            contList = parse_fasta_with(searchlist, FastaListe, args.mode)
             contFasta = '>%s' % '>'.join(contList)
             Output.write(contFasta)
         elif args.searchfor == 'without':
             notcontList = complement_fasta(FastaListe, parse_fasta_with(
-                                           searchlist, FastaListe))
+                                           searchlist, FastaListe
+                                           args.mode))
             notcontFasta = '>%s' % '>'.join(notcontList)
             Output.write(notcontFasta)
     Output.close()
