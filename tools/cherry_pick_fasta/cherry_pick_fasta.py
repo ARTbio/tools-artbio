@@ -24,9 +24,9 @@ def Parser():
     the_parser.add_argument('--query-file', dest='query_file',
                             action='store', type=str,
                             help='headers containing any of the strings \
-                                  provided in the text file (1 string per line) \
-                                  will be extracted or excluded as well as the \
-                                  corresponding sequence')
+                                  provided in the text file (1 string per \
+                                  line) will be extracted or excluded as well \
+                                   as the corresponding sequence')
 
     the_parser.add_argument(
         '--output', action='store', type=str, help='output fasta file')
@@ -73,7 +73,7 @@ def __main__():
     FastaListe = CrudeFasta.split('>')[1:]
     if args.query_string:
         if args.searchfor == 'with':
-            contList = parse_fasta_with(searchterm, FastaListe)
+            contList = parse_fasta_with(searchterm, FastaListe, args.mode)
             contFasta = '>%s' % '>'.join(contList)
             Output.write(contFasta)
         elif args.searchfor == 'without':
