@@ -1,4 +1,4 @@
-<tool id="cherry_pick_fasta" name="Pick Fasta sequences" version="2.1.0">
+<tool id="cherry_pick_fasta" name="Pick Fasta sequences" version="2.2.0">
   <description>with header satisfying a string query</description>
   <requirements>
       <requirement type="package" version="3.7.6">python</requirement>
@@ -7,9 +7,17 @@
                                    --input $input
                                    --searchfor '$search.searchfor'
                                    #if $search.options_selector == 'single':
-                                       --query-string '$search.query'
+                                       #if $search.match == 'exact':
+                                           --query-string '$search.query' --mode exact
+                                       #else:
+                                           --query-string '$search.query' --mode includes
+                                       #end if
                                    #else:
-                                       --query-file '$search.query'
+                                       #if $search.match == 'exact':
+                                           --query-file '$search.query' --mode exact
+                                       #else:
+                                           --query-file '$search.query' --mode includes
+                                       #end if
                                    #end if
                                    --output $output
   </command>
@@ -39,12 +47,20 @@
                 <option value="with" selected="true">contain</option>
                 <option value="without">do not contain</option>
             </param>
+            <param name="match" type="select" label="exactly or includes">
+                <option value="includes" selected="true">includes this string</option>
+                <option value="exact">exactly</option>
+            </param>
         </when>
         <when value="textdataset">
             <param name="query" type="data" format="txt" label="term dataset" help="a list of term to search for, one term per line" />
             <param name="searchfor" type="select" label="retrieve sequences whose headers contain or do not contain the search list">
                 <option value="with" selected="true">contain</option>
                 <option value="without">do not contain</option>
+            </param>
+            <param name="match" type="select" label="exactly or includes">
+                <option value="includes" selected="true">includes this string</option>
+                <option value="exact">exactly</option>
             </param>
         </when>
     </conditional>
@@ -89,7 +105,7 @@
 This tool retrieves nucleotide/peptide sequences from a fasta file whose headers match
 or do not match a given string.
 
-It is Copyright © 2019 `CNRS and Sorbonne-Université`_ and is released under the `MIT license`_.
+It is Copyright © 2021 `CNRS and Sorbonne-Université`_ and is released under the `MIT license`_.
 
 .. _CNRS and  Sorbonne-Université: http://www.sorbonne-universite.fr/en
 .. _MIT license: http://opensource.org/licenses/MIT
