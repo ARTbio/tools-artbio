@@ -1,9 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-'''
-Chery pick of fasta sequences satisfying a query string in their header/name
-'''
-
+# Chery pick of fasta sequences satisfying a query string in their header/name
 import argparse
 
 
@@ -27,34 +22,38 @@ def Parser():
                                   provided in the text file (1 string per \
                                   line) will be extracted or excluded as well \
                                    as the corresponding sequence')
-
-    the_parser.add_argument(
-        '--output', action='store', type=str, help='output fasta file')
+    the_parser.add_argument('--output', action='store', type=str,
+                            help='output fasta file')
     args = the_parser.parse_args()
     return args
 
 
-def parse_fasta_with(query, FastaListe, mode):
+def parse_fasta_dict(query, fasta_dict, mode):
     if not isinstance(query, list):
         query = [query]
     accumulator = []
     if mode == 'includes':
-        for sequence in FastaListe:
+        for seq_id in fasta_dict:
             for string in query:
-                if string in sequence:
-                    accumulator.append(sequence)
+                if string in seq_id:
+                    accumulator.append(seq_id)
                     continue
     elif mode == 'exact':
-        for sequence in FastaListe:
+        for seq_id in fasta_dict:
             for string in query:
-                if string == sequence:
-                    accumulator.append(sequence)
+                if string == seq_id:
+                    accumulator.append(seq_id)
                     continue
-    return accumulator
+    res_dict = {k: fasta_dict[k] for k in fasta_dict if k in accumulator}
+    return res_dict
 
 
-def complement_fasta(fullfasta, subfasta):
-    return sorted(list(set(fullfasta) - set(subfasta)))
+def complement_fasta_dict(fasta_dict, subfasta_dict):
+    fasta_ids = list(fasta_dict.keys())
+    subfasta_ids = list(subfasta_dict.keys)
+    complement_ids = list(set(fasta_ids) - set(subfasta_ids))
+    sub_dict = {k: fasta_dict[k] for k in fasta_dict if k in complement_ids}
+    return sub_dict
 
 
 def getquerylist(file):
@@ -64,38 +63,37 @@ def getquerylist(file):
     return querylist
 
 
+def buid_fasta_dict(fasta):
+    from Bio import SeqIO
+    seq_dict = {rec.id: rec.seq for rec in SeqIO.parse(fasta, "fasta")}
+    return seq_dict
+
+
+def write_fasta_result(fasta_dict, file):
+    line_length = 80
+    with open(file, 'w') as f:
+        for header in sorted(fasta_dict):
+            f.write('>%s\n' % header)
+            for i in range(line_length, len(fasta_dict[header]), line_length):
+                f.write('%s\n' % fasta_dict[header][i-line_length:i])
+            f.write('%s\n' % fasta_dict[header][i:])
+
+
 def __main__():
     ''' main function '''
     args = Parser()
-    searchterm = args.query_string
-    CrudeFasta = open(args.input, 'r').read()
-    Output = open(args.output, 'w')
-    FastaListe = CrudeFasta.split('>')[1:]
+    fasta_dict = buid_fasta_dict(args.input)
     if args.query_string:
-        if args.searchfor == 'with':
-            contList = parse_fasta_with(searchterm, FastaListe, args.mode)
-            contFasta = '>%s' % '>'.join(contList)
-            Output.write(contFasta)
-        elif args.searchfor == 'without':
-            notcontList = complement_fasta(FastaListe,
-                                           parse_fasta_with(searchterm,
-                                                            FastaListe,
-                                                            args.mode))
-            notcontFasta = '>%s' % '>'.join(notcontList)
-            Output.write(notcontFasta)
-    if args.query_file:
-        searchlist = getquerylist(args.query_file)
-        if args.searchfor == 'with':
-            contList = parse_fasta_with(searchlist, FastaListe, args.mode)
-            contFasta = '>%s' % '>'.join(contList)
-            Output.write(contFasta)
-        elif args.searchfor == 'without':
-            notcontList = complement_fasta(FastaListe, parse_fasta_with(
-                                           searchlist, FastaListe,
-                                           args.mode))
-            notcontFasta = '>%s' % '>'.join(notcontList)
-            Output.write(notcontFasta)
-    Output.close()
+        query = args.query_string
+    elif args.query_file:
+        query = getquerylist(args.query_file)
+    if args.searchfor == 'with':
+        fasta_result_dict = parse_fasta_dict(query, fasta_dict, args.mode)
+    elif args.searchfor == 'without':
+        fasta_result_dict = complement_fasta_dict(fasta_dict, parse_fasta_dict(
+                                                  query, fasta_dict,
+                                                  args.mode))
+    write_fasta_result(fasta_result_dict, args.output)
 
 
 if __name__ == '__main__':
