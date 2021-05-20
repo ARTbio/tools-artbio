@@ -1,6 +1,8 @@
 # Chery pick of fasta sequences satisfying a query string in their header/name
 import argparse
 
+import Bio
+
 
 def Parser():
     the_parser = argparse.ArgumentParser(
@@ -64,8 +66,7 @@ def getquerylist(file):
 
 
 def buid_fasta_dict(fasta):
-    from Bio import SeqIO
-    seq_dict = {rec.id: rec.seq for rec in SeqIO.parse(fasta, "fasta")}
+    seq_dict = {rec.id: rec.seq for rec in Bio.SeqIO.parse(fasta, "fasta")}
     return seq_dict
 
 
