@@ -1,4 +1,4 @@
-<tool id="tarfast5" name="tarfast5" version="0.5.2">
+<tool id="tarfast5" name="tarfast5" version="0.5.3">
   <description></description>
   <requirements>
         <requirement type="package" version="2.6">pigz</requirement>
