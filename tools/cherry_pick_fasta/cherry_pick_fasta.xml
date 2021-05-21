@@ -136,12 +136,7 @@
 **What it does**
 
 This tool retrieves nucleotide/peptide sequences from a fasta file whose headers match
-or do not match a given string.
-
-It is Copyright © 2021 `CNRS and Sorbonne-Université`_ and is released under the `MIT license`_.
-
-.. _CNRS and  Sorbonne-Université: http://www.sorbonne-universite.fr/en
-.. _MIT license: http://opensource.org/licenses/MIT
+or do not match a given string, or a list of strings.
 
   </help>
 </tool>
