@@ -54,7 +54,7 @@ def parse_fasta_dict(query, fasta_dict, mode):
 
 def complement_fasta_dict(fasta_dict, subfasta_dict):
     fasta_ids = list(fasta_dict.keys())
-    subfasta_ids = list(subfasta_dict.keys)
+    subfasta_ids = list(subfasta_dict.keys())
     complement_ids = list(set(fasta_ids) - set(subfasta_ids))
     sub_dict = {k: fasta_dict[k] for k in fasta_dict if k in complement_ids}
     return sub_dict
@@ -73,7 +73,7 @@ def buid_fasta_dict(fasta):
 
 
 def write_fasta_result(fasta_dict, file):
-    line_length = 80
+    line_length = 60
     with open(file, 'w') as f:
         for header in sorted(fasta_dict):
             f.write('>%s\n' % header)
