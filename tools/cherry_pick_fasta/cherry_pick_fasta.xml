@@ -71,14 +71,19 @@
   <tests>
     <test>
         <param ftype="fasta" name="input" value="input.fa" />
-        <!-- <param name="options_selector" value="textdataset" /> -->
+        <param name="query" value="gi|81971654|sp|Q9IJX4.1|POLN_CRPVC_RecName:_Full_Replicase_polyprotein;_Contains:_RecName:_Full_Pro--Locus_65_Transcript_1/2_Confidence_0.667_Length_1344_hit1_IdMatch=43.46,AligLength=451,E-val=2e-122" />
+        <param name="searchfor" value="with" />
+        <param name="match" value="exact" />
+        <output name="output" ftype="fasta" file="output.fa" />
+    </test>
+    <test>
+        <param ftype="fasta" name="input" value="input.fa" />
         <param name="query" value="gi|81971654" />
         <param name="searchfor" value="with" />
         <output name="output" ftype="fasta" file="output.fa" />
     </test>
     <test>
         <param ftype="fasta" name="input" value="input.fa" />
-        <!-- <param name="options_selector" value="textdataset" /> -->
         <param name="query" value="RNA" />
         <param name="searchfor" value="without" />
         <output name="output" ftype="fasta" file="output_without.fa" />
@@ -98,7 +103,6 @@
         <output name="output" ftype="fasta" file="output_termlist_without.fa" />
     </test>
   </tests>
-
   <help>
 **What it does**
 
