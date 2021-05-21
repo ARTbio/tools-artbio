@@ -26,11 +26,19 @@
     <param name="input" type="data" format="fasta" label="Source file" help="Fasta file to parse" />
 
     <conditional name="search">
-        <param name="options_selector" type="select" display="radio" label="by single term or file of terms">
-            <option value="single" selected="True">single term</option>
-            <option value="textdataset">terms in a text dataset</option>
+        <param name="options_selector" type="select" display="radio" label="for a">
+            <option value="single" selected="True">single string</option>
+            <option value="textdataset">list of strings</option>
         </param>
         <when value="single">
+            <param name="match" type="select"  label="retrieve sequences whose headers...">
+                <option value="include" selected="true">partially</option>
+                <option value="exact">exactly</option>
+            </param>
+            <param name="searchfor" type="select" label=" ">
+                <option value="with" selected="true">contain this string</option>
+                <option value="without">do not contain this string</option>
+            </param>
             <param name="query" type="text" size="30" value="" label="Search string" help="exemple: gi|40557596">
                 <sanitizer>
                     <valid initial="string.printable">
@@ -43,25 +51,17 @@
                     </mapping>
                 </sanitizer>
             </param>
-            <param name="searchfor" type="select" label="retrieve sequences whose headers contain or do not contain the search string">
-                <option value="with" selected="true">contain</option>
-                <option value="without">do not contain</option>
-            </param>
-            <param name="match" type="select" label="exactly or includes">
-                <option value="includes" selected="true">includes this string</option>
-                <option value="exact">exactly</option>
-            </param>
         </when>
         <when value="textdataset">
-            <param name="query" type="data" format="txt" label="term dataset" help="a list of term to search for, one term per line" />
-            <param name="searchfor" type="select" label="retrieve sequences whose headers contain or do not contain the search list">
-                <option value="with" selected="true">contain</option>
-                <option value="without">do not contain</option>
-            </param>
-            <param name="match" type="select" label="exactly or includes">
-                <option value="includes" selected="true">includes this string</option>
+            <param name="match" type="select"  label="retrieve sequences whose headers...">
+                <option value="includes" selected="true">partially</option>
                 <option value="exact">exactly</option>
             </param>
+            <param name="searchfor" type="select" label=" ">
+                <option value="with" selected="true">contain one of these list strings</option>
+                <option value="without">do not contain one of these list strings</option>
+            </param>
+            <param name="query" type="data" format="txt" label="list of strings dataset" help="a list of strings to search for, one string per line" />
         </when>
     </conditional>
   </inputs>
@@ -69,6 +69,7 @@
     <data name="output" format="fasta" label="Fasta sequences ${search.searchfor.value} ${search.options_selector} term(s) in header" />
   </outputs>
   <tests>
+    <!-- exact matches -->
     <test>
         <param ftype="fasta" name="input" value="input.fa" />
         <param name="query" value="gi|81971654|sp|Q9IJX4.1|POLN_CRPVC_RecName:_Full_Replicase_polyprotein;_Contains:_RecName:_Full_Pro--Locus_65_Transcript_1/2_Confidence_0.667_Length_1344_hit1_IdMatch=43.46,AligLength=451,E-val=2e-122" />
@@ -83,6 +84,27 @@
         <param name="match" value="exact" />
         <output name="output" ftype="fasta" file="output_exact.fa" />
     </test>
+
+
+    <test>
+        <param ftype="fasta" name="input" value="input.fa" />
+        <param name="options_selector" value="textdataset" />
+        <param name="query" ftype="txt" value="alt_termlist.txt" />
+        <param name="searchfor" value="without" />
+        <param name="match" value="exact" />
+        <output name="output" ftype="fasta" file="output_alt_termlist_without.fa" />
+    </test>
+    <test>
+        <param ftype="fasta" name="input" value="input.fa" />
+        <param name="options_selector" value="textdataset" />
+        <param name="query" ftype="txt" value="alt_termlist.txt" />
+        <param name="searchfor" value="with" />
+        <param name="match" value="exact" />
+        <output name="output" ftype="fasta" file="output_alt_termlist.fa" />
+    </test>
+
+
+    <!-- partial matches -->
     <test>
         <param ftype="fasta" name="input" value="input.fa" />
         <param name="query" value="gi|81971654" />
