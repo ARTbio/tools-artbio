@@ -80,7 +80,8 @@ def write_fasta_result(fasta_dict, file):
             if len(fasta_dict[header]) <= line_length:
                 f.write('%s\n' % fasta_dict[header])
             else:
-                for i in range(line_length, len(fasta_dict[header]), line_length):
+                for i in range(line_length, len(fasta_dict[header]),
+                               line_length):
                     f.write('%s\n' % fasta_dict[header][i-line_length:i])
                 f.write('%s\n' % fasta_dict[header][i:])
 
