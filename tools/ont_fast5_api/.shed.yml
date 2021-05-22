@@ -1,0 +1,18 @@
+name: ont_fast5_api
+owner: artbio
+remote_repository_url: "https://github.com/artbio/tools-artbio/tree/master/tools/ont_fast5_api"
+homepage_url: "https://github.com/nanoporetech/ont_fast5_api/"
+long_description: |
+  ont_fast5_api is a simple interface to HDF5 files of the Oxford Nanopore FAST5 file format.
+  It provides:
+  - concrete implementation of the FAST5 file schema using the generic h5py library
+  - plain-english-named methods to interact with and reflect the FAST5 file schema
+  - tools to convert between multi_read and single_read formats
+  - tools to compress/decompress raw data in files
+  Note. This repository was forked from the iuc tool ont_fast5_api
+categories:
+  - Nanopore
+toolshed:
+  - toolshed
+  - testtoolshed
+
