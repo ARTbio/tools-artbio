@@ -1,4 +1,4 @@
-<tool id="xpore_dataprep" name="xpore-dataprep" version="1.0.0_galaxy+0">
+<tool id="xpore_dataprep" name="xpore-dataprep" version="0.5.6+galaxy0">
   <description></description>
   <requirements>
         <requirement type="package" version="0.5.6">xpore</requirement>
@@ -24,7 +24,6 @@
 
  <outputs>
     <data format="txt" name="data_index" label="data.index" from_work_dir="./out/data.index" />
-    <data format="txt" name="eventalign_index" label="eventalign.index" from_work_dir="./out/eventalign.index" />
     <data format="h5" name="eventalign_hdf5" label="eventalign.hdf5" from_work_dir="./out/eventalign.hdf5" />
     <data format="txt" name="data_log" label="data.log" from_work_dir="./out/data.log" />
     <data format="txt" name="eventalign_log" label="eventalign.log" from_work_dir="./out/eventalign.log" />
