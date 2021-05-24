@@ -12,7 +12,8 @@
             --eventalign '$eventalign_reads'
             --summary '$eventalign_summary'
             --out_dir out
-            --n_processes \${GALAXY_SLOTS:-4}
+            --n_processes \${GALAXY_SLOTS:-4} &&
+            ls -la out
   ]]></command>
  <inputs>
     <param name="eventalign_reads" type="data" format="txt,tabular" label="aligned nanopore events"
@@ -57,13 +58,13 @@ some warnings
 
 **Output**
 
-├── data.index
-├── data.json
-├── data.log
-├── data.readcount
-├── eventalign.hdf5
-├── eventalign.index
-└── eventalign.log
+    ├── data.index
+    ├── data.json
+    ├── data.log
+    ├── data.readcount
+    ├── eventalign.hdf5
+    ├── eventalign.index
+    └── eventalign.log
 
 </help>
 
