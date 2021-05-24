@@ -32,16 +32,15 @@
 </outputs>
 
 <tests>
-    <test> <!-- tar -->
-        <param name="inputs" value="F1.fast5.h5" ftype="h5" />
-        <param name="output_format" value="tar" />
-        <output file="archive.tar" name="output" compare="sim_size" delta="3000" />
-    </test>
-
-    <test> <!-- tar.gz -->
-        <param name="inputs" value="F1.fast5.h5,F2.fast5.h5" ftype="h5" />
-        <param name="output_format" value="gzip" />
-        <output file="archive.tar.gz" name="output" compare="sim_size" delta="3000" />
+    <test>
+        <param name="eventalign_reads" value="dataprep_eventaligh_reads.tsv" ftype="tabular" />
+        <param name="eventalign_summary" value="dataprep_eventaligh_summary.tsv" ftype="tabular" />
+        <output file="data.index" name="data_index" />
+        <output file="data.log" name="data_log" />
+        <output file="eventalign.log" name="eventalign_log" />
+        <output file="data.readcount" name="data_readcount" />
+        <output file="data.json" name="data_json" />
+        <output file="eventalign.hdf5" name="eventalign_hdf5" compare="sim_size" delta="3000" />
     </test>
 </tests>
 <help>
