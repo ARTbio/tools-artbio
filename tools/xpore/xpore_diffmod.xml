@@ -1,0 +1,70 @@
+<tool id="xpore_diffmod" name="xpore-diffmod" version="1.0.0_galaxy+0">
+  <description></description>
+  <requirements>
+        <requirement type="package" version="1.0">xpore</requirement>
+        <requirement type="package" version="1.9.0">pyensembl</requirement>
+  </requirements>
+  <stdio>
+      <exit_code range="1:" level="fatal" description="Tool exception" />
+  </stdio>
+  <command detect_errors="exit_code"><![CDATA[
+        #for $file in $inputs:
+            ln -s $file ${file.element_identifier}.fast5 &&
+        #end for
+        ## xpore-diffmod --config config.yml  --n_processes \${GALAXY_SLOTS:-4}
+
+  ]]></command>
+ <inputs>
+    <param name="inputs" type="data" format="h5,fast5.tar" label="fast5 sequence files" multiple="true" />
+    <param name="output_format" type="select" label="compression of the tar archive" display="radio">
+        <option value="tar">tar (no compression)</option>
+        <option value="gzip" selected="true">tar.gz</option>
+    </param>
+ </inputs>
+
+ <outputs>
+    <data format="fast5.tar" name="output" label="Archive of fast5" >
+        <change_format>
+            <when input="output_format" value="gzip" format="fast5.tar.gz"/>
+        </change_format>
+    </data>
+
+
+</outputs>
+
+    <tests>
+        <test> <!-- tar -->
+            <param name="inputs" value="F1.fast5.h5" ftype="h5" />
+            <param name="output_format" value="tar" />
+            <output file="archive.tar" name="output" compare="sim_size" delta="3000" />
+        </test>
+
+        <test> <!-- tar.gz -->
+            <param name="inputs" value="F1.fast5.h5,F2.fast5.h5" ftype="h5" />
+            <param name="output_format" value="gzip" />
+            <output file="archive.tar.gz" name="output" compare="sim_size" delta="3000" />
+        </test>
+    </tests>
+<help>
+
+**What it does**
+
+Creates a tar.gz archive of fast5 (h5) sequences files
+
+.. class:: warningmark
+
+This tools follows a "map-reduce" procedure: multiple inputs, that can be arranged as a data collection,
+are compressed into a single tar.gz archive.
+ 
+
+
+**Output**
+
+A fast5.tar.gz archive
+
+</help>
+
+<citations>
+    <citation type="doi">10.1101/2020.06.18.160010</citation>
+</citations>
+</tool>

@@ -1,0 +1,14 @@
+notes: Pairwise comparison without replicates with default parameter setting.
+
+data:
+    24hC2H4:
+        rep1: ./data/24hC2H4/dataprep
+    24hH2O:
+        rep1: ./data/24hH2O/dataprep
+
+out: ./out
+
+method:
+    prefiltering:
+        method: t-test
+        threshold: 0.1
