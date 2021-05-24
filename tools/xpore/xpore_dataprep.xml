@@ -1,7 +1,7 @@
 <tool id="xpore_dataprep" name="xpore-dataprep" version="1.0.0_galaxy+0">
   <description></description>
   <requirements>
-        <requirement type="package" version="1.0">xpore</requirement>
+        <requirement type="package" version="0.5.6">xpore</requirement>
         <requirement type="package" version="1.9.0">pyensembl</requirement>
   </requirements>
   <stdio>
