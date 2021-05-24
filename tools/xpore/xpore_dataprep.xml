@@ -29,7 +29,7 @@
     <data format="txt" name="data_log" label="data.log" from_work_dir="./out/data.log" />
     <data format="txt" name="eventalign_log" label="eventalign.log" from_work_dir="./out/eventalign.log" />
     <data format="txt" name="data_readcount" label="data.readcount" from_work_dir="./out/data.readcount" />
-    <data format="json" name="data_json" label="data.json" />
+    <data format="json" name="data_json" label="data.json" from_work_dir="./out/data.json"/>
 </outputs>
 
 <tests>
