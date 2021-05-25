@@ -143,18 +143,3 @@ A fast5.tar.gz archive
     <citation type="doi">10.1101/2020.06.18.160010</citation>
 </citations>
 </tool>
-
-notes: Pairwise comparison without replicates with default parameter setting.
-
-data:
-    §control_condition§:
-        rep1: ./data/24hC2H4/dataprep
-    24hH2O:
-        rep1: ./data/24hH2O/dataprep
-
-out: ./out
-
-method:
-    prefiltering:
-        method: t-test
-        threshold: 0.1
