@@ -8,47 +8,93 @@
       <exit_code range="1:" level="fatal" description="Tool exception" />
   </stdio>
   <command detect_errors="exit_code"><![CDATA[
-        #for $file in $inputs:
-            ln -s $file ${file.element_identifier}.fast5 &&
+    printf "notes: Pairwise comparison without replicates with default parameter setting.\n\n" >> config.yml &&
+    printf "data:\n" >> config.yml &&
+    printf "    ${control_name}:\n" >> config.yml &&
+    #for $i, $s in enumerate($ControlReplicates):
+        printf "        rep${i}: ./${control_name}_${i}/dataprep\n" >> config.yml &&
+        mkdir -p $control_name_${i}/bamtx $control_name_${i}/fast5 \
+              $control_name_${i}/fastq $control_name_${i}/nanopolish \
+              $control_name_${i}/dataprep &&
+        ln -s ${s.ControlBam} $control_name_${i}/bamtx/$i.bam &&
+        #for $file in ${s.ControlFast5}:
+            ln -s $file $control_name_${i}/fast5/${file.element_identifier}.fast5 &&
         #end for
-        ## xpore-diffmod --config config.yml  --n_processes \${GALAXY_SLOTS:-4}
+        ln -s ${s.ControlFastq} $control_name_${i}/fastq/$i.fastq &&
+        ln -s ${s.ControlJson} $control_name_${i}/dataprep/data.json &&
+        ln -s ${s.ControlIndex} $control_name_${i}/dataprep/data.index &&
+        ln -s ${s.ControlReadcount} $control_name_${i}/dataprep/data.readcount &&
+        ln -s ${s.ControlEventalign} $control_name_${i}/dataprep/eventalign.index &&
+    #end for
+    printf "    ${test_name}:\n" >> config.yml &&    
+    #for $i, $s in enumerate($TestReplicates):
+        printf "        rep${i}: ./${test_name}_${i}/dataprep\n" >> config.yml &&
+        mkdir -p $test_name_${i}/bamtx $test_name_${i}/fast5 \
+              $test_name_${i}/fastq $test_name_${i}/nanopolish \
+              $test_name_${i}/dataprep &&
+        ln -s ${s.TestBam} $test_name_${i}/bamtx/$i.bam &&
+        #for $file in ${s.TestFast5}:
+            ln -s $file $test_name_${i}/fast5/${file.element_identifier}.fast5 &&
+        #end for
+        ln -s ${s.TestFastq} $test_name_${i}/fastq/$i.fastq &&
+        ln -s ${s.TestJson} $test_name_${i}/dataprep/data.json &&
+        ln -s ${s.TestIndex} $test_name_${i}/dataprep/data.index &&
+        ln -s ${s.TestReadcount} $test_name_${i}/dataprep/data.readcount &&
+        ln -s ${s.TestEventalign} $test_name_${i}/dataprep/eventalign.index &&
+    #end for
+    printf "\nout: ./out\n" >> config.yml &&
+    printf "\nmethod:\n" >> config.yml &&
+    printf "    prefiltering:\n" >> config.yml &&
+    printf "        method: t-test\n" >> config.yml &&
+    printf "        threshold: 0.1\n" >> config.yml &&
+
+    xpore-diffmod --config config.yml  --n_processes \${GALAXY_SLOTS:-4}
 
   ]]></command>
  <inputs>
     <section name="Controls" title="Control Condition" >
-        <param name="control_name" type="text" label="Control condition name" />
-            <repeat name="ControlReplicates" title="Control replicates" min="1">
-                <param name="ControlRepName" label="Name of control replicate" type="text" />
-                <param name="ControlBam" label="Name of control replicate" type="data" format="bam" />
-                <param name="ControlFast5" label="fast5 or collection of fast5" type="data"
-                       format="h5,fast5.tar" multiple="true" />
-                <param name="ControlFastq" label="fastq file from Guppy base calling" type="data"
-                       format="fastq,fastq.gz,fastqsanger,fastqsanger.gz" />
-                <section name="ControlDataPrepSection" title="Control dataprep" >
-                    <param name="ControlJson" label="json from xpore-dataprep" type="data" format="json" />
-                    <param name="ControlIndex" label="index from xpore-dataprep" type="data" format="txt" />
-                    <param name="ControlReadcount" label="Readcount from xpore-dataprep" type="data" format="txt" />
-                    <param name="ControlEventalign" label="Eventalign (hdf5) from xpore-dataprep" type="data" format="h5" />
-                </section>
-            </repeat>
+        <param name="control_name" type="text" label="Control condition name"
+               help="Only letters, digits and _ will be retained in this field">
+            <sanitizer>
+                <valid initial="string.letters,string.digits"><add value="_" /></valid>
+            </sanitizer>
+        </param>
+        <repeat name="ControlReplicates" title="Control replicates" min="1">
+            <param name="ControlBam" label="Bam alignment of the control replicate" type="data"
+                   format="bam" />
+            <param name="ControlFast5" label="fast5 or collection of fast5" type="data"
+                   format="h5,fast5.tar" multiple="true" />
+            <param name="ControlFastq" label="fastq file from Guppy base calling" type="data"
+                   format="fastq,fastq.gz,fastqsanger,fastqsanger.gz" />
+            <section name="ControlDataPrepSection" title="Control dataprep" >
+                <param name="ControlJson" label="json from xpore-dataprep" type="data" format="json" />
+                <param name="ControlIndex" label="index from xpore-dataprep" type="data" format="txt" />
+                <param name="ControlReadcount" label="Readcount from xpore-dataprep" type="data" format="txt" />
+                <param name="ControlEventalign" label="Eventalign (hdf5) from xpore-dataprep" type="data" format="h5" />
+            </section>
+        </repeat>
     </section>
 
     <section name="Tests" title="Test Condition" >
-        <param name="test_name" type="text" label="Test condition name" />
-            <repeat name="TestReplicates" title="Test replicates" min="1">
-                <param name="TestRepName" label="Name of Test replicate" type="text" />
-                <param name="TestBam" label="Name of Test replicate" type="data" format="bam" />
-                <param name="TestFast5" label="fast5 or collection of fast5" type="data"
-                       format="h5,fast5.tar" multiple="true" />
-                <param name="TestFastq" label="fastq file from Guppy base calling" type="data"
-                       format="fastq,fastq.gz,fastqsanger,fastqsanger.gz" />
-                <section name="TestDataPrepSection" title="Test dataprep" >
-                    <param name="TestJson" label="json from xpore-dataprep" type="data" format="json" />
-                    <param name="TestIndex" label="index from xpore-dataprep" type="data" format="txt" />
-                    <param name="TestReadcount" label="Readcount from xpore-dataprep" type="data" format="txt" />
-                    <param name="TestEventalign" label="Eventalign (hdf5) from xpore-dataprep" type="data" format="h5" />
-                </section>
-            </repeat>
+        <param name="test_name" type="text" label="Test condition name"
+               help="Only letters, digits and _ will be retained in this field">
+                <sanitizer>
+                    <valid initial="string.letters,string.digits"><add value="_" /></valid>
+                </sanitizer>
+        </param>
+        <repeat name="TestReplicates" title="Test replicates" min="1">
+            <param name="TestBam" label="Name of Test replicate" type="data" format="bam" />
+            <param name="TestFast5" label="fast5 or collection of fast5" type="data"
+                   format="h5,fast5.tar" multiple="true" />
+            <param name="TestFastq" label="fastq file from Guppy base calling" type="data"
+                   format="fastq,fastq.gz,fastqsanger,fastqsanger.gz" />
+            <section name="TestDataPrepSection" title="Test dataprep" >
+                <param name="TestJson" label="json from xpore-dataprep" type="data" format="json" />
+                <param name="TestIndex" label="index from xpore-dataprep" type="data" format="txt" />
+                <param name="TestReadcount" label="Readcount from xpore-dataprep" type="data" format="txt" />
+                <param name="TestEventalign" label="Eventalign (hdf5) from xpore-dataprep" type="data" format="h5" />
+            </section>
+        </repeat>
     </section>
 
  </inputs>
@@ -99,3 +145,18 @@ A fast5.tar.gz archive
     <citation type="doi">10.1101/2020.06.18.160010</citation>
 </citations>
 </tool>
+
+notes: Pairwise comparison without replicates with default parameter setting.
+
+data:
+    §control_condition§:
+        rep1: ./data/24hC2H4/dataprep
+    24hH2O:
+        rep1: ./data/24hH2O/dataprep
+
+out: ./out
+
+method:
+    prefiltering:
+        method: t-test
+        threshold: 0.1
