@@ -15,11 +15,42 @@
 
   ]]></command>
  <inputs>
-    <param name="inputs" type="data" format="h5,fast5.tar" label="fast5 sequence files" multiple="true" />
-    <param name="output_format" type="select" label="compression of the tar archive" display="radio">
-        <option value="tar">tar (no compression)</option>
-        <option value="gzip" selected="true">tar.gz</option>
-    </param>
+    <section name="Controls" title="Control Condition" >
+        <param name="control_name" type="text" label="Control condition name" />
+            <repeat name="ControlReplicates" title="Control replicates" min="1">
+                <param name="ControlRepName" label="Name of control replicate" type="text" />
+                <param name="ControlBam" label="Name of control replicate" type="data" format="bam" />
+                <param name="ControlFast5" label="fast5 or collection of fast5" type="data"
+                       format="h5,fast5.tar" multiple="true" />
+                <param name="ControlFastq" label="fastq file from Guppy base calling" type="data"
+                       format="fastq,fastq.gz,fastqsanger,fastqsanger.gz" />
+                <section name="ControlDataPrepSection" title="Control dataprep" >
+                    <param name="ControlJson" label="json from xpore-dataprep" type="data" format="json" />
+                    <param name="ControlIndex" label="index from xpore-dataprep" type="data" format="txt" />
+                    <param name="ControlReadcount" label="Readcount from xpore-dataprep" type="data" format="txt" />
+                    <param name="ControlEventalign" label="Eventalign (hdf5) from xpore-dataprep" type="data" format="h5" />
+                </section>
+            </repeat>
+    </section>
+
+    <section name="Tests" title="Test Condition" >
+        <param name="test_name" type="text" label="Test condition name" />
+            <repeat name="TestReplicates" title="Test replicates" min="1">
+                <param name="TestRepName" label="Name of Test replicate" type="text" />
+                <param name="TestBam" label="Name of Test replicate" type="data" format="bam" />
+                <param name="TestFast5" label="fast5 or collection of fast5" type="data"
+                       format="h5,fast5.tar" multiple="true" />
+                <param name="TestFastq" label="fastq file from Guppy base calling" type="data"
+                       format="fastq,fastq.gz,fastqsanger,fastqsanger.gz" />
+                <section name="TestDataPrepSection" title="Test dataprep" >
+                    <param name="TestJson" label="json from xpore-dataprep" type="data" format="json" />
+                    <param name="TestIndex" label="index from xpore-dataprep" type="data" format="txt" />
+                    <param name="TestReadcount" label="Readcount from xpore-dataprep" type="data" format="txt" />
+                    <param name="TestEventalign" label="Eventalign (hdf5) from xpore-dataprep" type="data" format="h5" />
+                </section>
+            </repeat>
+    </section>
+
  </inputs>
 
  <outputs>
