@@ -48,7 +48,9 @@
     printf "        method: t-test\n" >> config.yml &&
     printf "        threshold: 0.1\n" >> config.yml &&
 
-    xpore-diffmod --config config.yml  --n_processes \${GALAXY_SLOTS:-4}
+    xpore-diffmod --config config.yml  --n_processes \${GALAXY_SLOTS:-4} &&
+    tree . &&
+    sed -i "s/,/\t/g" .out/diffmod.table
 
   ]]></command>
  <inputs>
@@ -100,28 +102,24 @@
  </inputs>
 
  <outputs>
-    <data format="fast5.tar" name="output" label="Archive of fast5" >
-        <change_format>
-            <when input="output_format" value="gzip" format="fast5.tar.gz"/>
-        </change_format>
-    </data>
-
-
+    <data format="tabular" name="diffmod_table" label="diffmod table" from_work_dir="./out/diffmod.table" \>
+    <data format="txt" name="diffmod_log" label="diffmod log" from_work_dir="./out/diffmod.log" \>
 </outputs>
-
+<!--
     <tests>
-        <test> <!-- tar -->
+        <test> 
             <param name="inputs" value="F1.fast5.h5" ftype="h5" />
             <param name="output_format" value="tar" />
             <output file="archive.tar" name="output" compare="sim_size" delta="3000" />
         </test>
 
-        <test> <!-- tar.gz -->
+        <test>
             <param name="inputs" value="F1.fast5.h5,F2.fast5.h5" ftype="h5" />
             <param name="output_format" value="gzip" />
             <output file="archive.tar.gz" name="output" compare="sim_size" delta="3000" />
         </test>
     </tests>
+-->
 <help>
 
 **What it does**
