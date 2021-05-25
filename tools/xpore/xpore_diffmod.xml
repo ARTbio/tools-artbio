@@ -102,8 +102,8 @@
  </inputs>
 
  <outputs>
-    <data format="tabular" name="diffmod_table" label="diffmod table" from_work_dir="./out/diffmod.table" \>
-    <data format="txt" name="diffmod_log" label="diffmod log" from_work_dir="./out/diffmod.log" \>
+    <data format="tabular" name="diffmod_table" label="diffmod table" from_work_dir="./out/diffmod.table" />
+    <data format="txt" name="diffmod_log" label="diffmod log" from_work_dir="./out/diffmod.log" />
 </outputs>
 <!--
     <tests>
