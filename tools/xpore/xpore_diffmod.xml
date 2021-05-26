@@ -66,6 +66,7 @@
  <outputs>
     <data format="tabular" name="diffmod_table" label="diffmod table" from_work_dir="./out/diffmod.table" />
     <data format="txt" name="diffmod_log" label="diffmod log" from_work_dir="./out/diffmod.log" />
+    <data format="txt" name="config" label="configuration.yml" from_work_dir="./config.yml" />
 </outputs>
 <tests>
     <test> 
@@ -91,7 +92,7 @@
             <param name="TestIndex" value="inputs_xpore-diffmod/T2_data.index" ftype="txt" />
             <param name="TestReadcount" value="inputs_xpore-diffmod/T2_data.readcount" ftype="txt" />
         </repeat>
-        <output file="diffmod.table.sorted" name="diffmod_table" ftype="tabular" sort="true" />
+        <output file="diffmod.table.sorted" name="diffmod_table" ftype="tabular" compare="sim_size" delta="1" />
         <output file="diffmod.log" name="diffmod_log" ftype="txt" />
     </test>
 </tests>
