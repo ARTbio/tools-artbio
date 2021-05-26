@@ -47,22 +47,31 @@
 
 **What it does**
 
-data preparation for xpore-diffmod
+Prepare data for differential analysis by xpore-diffmod.
 
-.. class:: warningmark
+**Inputs**
 
-some warnings 
+This tools requires the following inputs::
 
+- the "aligned nanopore events" file returned from nanopolish eventalign (also named squiggles)
+- the "nanopolish summary" file also returned by nanopolish eventalign
 
-**Output**
+**Outputs**
 
-    ├── data.index
-    ├── data.json
-    ├── data.log
-    ├── data.readcount
-    ├── eventalign.hdf5
-    ├── eventalign.index
-    └── eventalign.log
+3 datasets that will be required by xpore-diffmod::
+
+- data.index
+- data.json
+- data.readcount
+
+plus 3 datasets not required by xpore-diffmod::
+
+- data.log
+- eventalign.hdf5
+- eventalign.log
+
+for details on xpore-data prep, see https://xpore.readthedocs.io/en/latest/index.html
+and https://github.com/GoekeLab/xpore
 
 </help>
 

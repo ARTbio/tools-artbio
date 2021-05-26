@@ -92,7 +92,7 @@
             <param name="TestIndex" value="inputs_xpore-diffmod/T2_data.index" ftype="txt" />
             <param name="TestReadcount" value="inputs_xpore-diffmod/T2_data.readcount" ftype="txt" />
         </repeat>
-        <output file="diffmod.table.sorted" name="diffmod_table" ftype="tabular" compare="sim_size" delta="1" />
+        <output file="diffmod.table.sorted" name="diffmod_table" ftype="tabular" compare="sim_size" delta="10" />
         <output file="diffmod.log" name="diffmod_log" ftype="txt" />
     </test>
 </tests>
@@ -100,18 +100,18 @@
 
 **What it does**
 
-Creates a tar.gz archive of fast5 (h5) sequences files
+This tool is a basic wrapper of xpore-diffmod
 
-.. class:: warningmark
-
-This tools follows a "map-reduce" procedure: multiple inputs, that can be arranged as a data collection,
-are compressed into a single tar.gz archive.
  
 
 
 **Output**
 
 A fast5.tar.gz archive
+
+for details on xpore-data prep, see https://xpore.readthedocs.io/en/latest/index.html
+and https://github.com/GoekeLab/xpore
+
 
 </help>
 
