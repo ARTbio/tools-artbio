@@ -38,33 +38,29 @@
 
   ]]></command>
  <inputs>
-    <section name="Controls" title="Control Condition" >
-        <param name="control_name" type="text" label="Control condition name"
-               help="Only letters, digits and _ will be retained in this field">
+    <param name="control_name" type="text" label="Control condition name"
+           help="Only letters, digits and _ will be retained in this field">
+        <sanitizer>
+            <valid initial="string.letters,string.digits"><add value="_" /></valid>
+        </sanitizer>
+    </param>
+    <repeat name="ControlReplicates" title="Control replicates" min="1">
+        <param name="ControlJson" label="json from xpore-dataprep" type="data" format="json" />
+        <param name="ControlIndex" label="index from xpore-dataprep" type="data" format="txt" />
+        <param name="ControlReadcount" label="Readcount from xpore-dataprep" type="data" format="txt" />
+    </repeat>
+
+    <param name="test_name" type="text" label="Test condition name"
+           help="Only letters, digits and _ will be retained in this field">
             <sanitizer>
                 <valid initial="string.letters,string.digits"><add value="_" /></valid>
             </sanitizer>
-        </param>
-        <repeat name="ControlReplicates" title="Control replicates" min="1">
-            <param name="ControlJson" label="json from xpore-dataprep" type="data" format="json" />
-            <param name="ControlIndex" label="index from xpore-dataprep" type="data" format="txt" />
-            <param name="ControlReadcount" label="Readcount from xpore-dataprep" type="data" format="txt" />
-        </repeat>
-    </section>
-
-    <section name="Tests" title="Test Condition" >
-        <param name="test_name" type="text" label="Test condition name"
-               help="Only letters, digits and _ will be retained in this field">
-                <sanitizer>
-                    <valid initial="string.letters,string.digits"><add value="_" /></valid>
-                </sanitizer>
-        </param>
-        <repeat name="TestReplicates" title="Test replicates" min="1">
-            <param name="TestJson" label="json from xpore-dataprep" type="data" format="json" />
-            <param name="TestIndex" label="index from xpore-dataprep" type="data" format="txt" />
-            <param name="TestReadcount" label="Readcount from xpore-dataprep" type="data" format="txt" />
-        </repeat>
-    </section>
+    </param>
+    <repeat name="TestReplicates" title="Test replicates" min="1">
+        <param name="TestJson" label="json from xpore-dataprep" type="data" format="json" />
+        <param name="TestIndex" label="index from xpore-dataprep" type="data" format="txt" />
+        <param name="TestReadcount" label="Readcount from xpore-dataprep" type="data" format="txt" />
+    </repeat>
 
  </inputs>
 
