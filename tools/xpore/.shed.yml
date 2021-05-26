@@ -1,0 +1,21 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: xpore
+description: "Identification and quantification of differential RNA modifications from direct RNA sequencing"
+long_description: |
+  xPore is a Python package for identification and quantification of differential RNA
+  modifications from (Nanopore) direct RNA sequencing. See xPore documentation
+  (https://xpore.readthedocs.io) for additional information, a quick start guide, and
+  details on the data processing and output file format.
+  
+  xPore is described in detail in a preprint
+  (https://www.biorxiv.org/content/10.1101/2020.06.18.160010v1)
+
+categories:
+  - Nanopore
+
+homepage_url: https://github.com/GoekeLab/xpore
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/xpore
+toolshed:
+  - testtoolshed
+  - toolshed
