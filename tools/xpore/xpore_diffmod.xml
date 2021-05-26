@@ -13,10 +13,10 @@
     printf "    ${control_name}:\n" >> config.yml &&
     #for $i, $s in enumerate($ControlReplicates):
         printf "        rep${i}: ./${control_name}_${i}\n" >> config.yml &&
-        mkdir $control_name_${i} &&
-        ln -s ${s.ControlJson} $control_name_${i}/data.json &&
-        ln -s ${s.ControlIndex} $control_name_${i}/data.index &&
-        ln -s ${s.ControlReadcount} $control_name_${i}/data.readcount &&
+        mkdir ${control_name}_${i} &&
+        ln -s ${s.ControlJson} ${control_name}_${i}/data.json &&
+        ln -s ${s.ControlIndex} ${control_name}_${i}/data.index &&
+        ln -s ${s.ControlReadcount} ${control_name}_${i}/data.readcount &&
     #end for
     printf "    ${test_name}:\n" >> config.yml &&    
     #for $i, $s in enumerate($TestReplicates):
