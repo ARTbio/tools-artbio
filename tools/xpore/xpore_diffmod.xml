@@ -21,10 +21,10 @@
     printf "    ${test_name}:\n" >> config.yml &&    
     #for $i, $s in enumerate($TestReplicates):
         printf "        rep${i}: ./${test_name}_${i}\n" >> config.yml &&
-        mkdir $test_name_${i} &&
-        ln -s ${s.TestJson} $test_name_${i}/data.json &&
-        ln -s ${s.TestIndex} $test_name_${i}/data.index &&
-        ln -s ${s.TestReadcount} $test_name_${i}/data.readcount &&
+        mkdir ${test_name}_${i} &&
+        ln -s ${s.TestJson} ${test_name}_${i}/data.json &&
+        ln -s ${s.TestIndex} ${test_name}_${i}/data.index &&
+        ln -s ${s.TestReadcount} ${test_name}_${i}/data.readcount &&
     #end for
     printf "\nout: ./out\n" >> config.yml &&
     printf "\nmethod:\n" >> config.yml &&
