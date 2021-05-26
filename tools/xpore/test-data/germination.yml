@@ -3,8 +3,10 @@ notes: Pairwise comparison without replicates with default parameter setting.
 data:
     24hC2H4:
         rep1: ./data/24hC2H4/dataprep
+        rep2: ./data/24hC2H4_1/dataprep
     24hH2O:
         rep1: ./data/24hH2O/dataprep
+        rep2: ./data/24hH2O_1/dataprep
 
 out: ./out
 
