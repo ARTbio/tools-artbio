@@ -92,7 +92,7 @@
             <param name="TestIndex" value="inputs_xpore-diffmod/T2_data.index" ftype="txt" />
             <param name="TestReadcount" value="inputs_xpore-diffmod/T2_data.readcount" ftype="txt" />
         </repeat>
-        <output file="diffmod.table" name="diffmod_table" ftype="tabular" />
+        <output file="diffmod.table.sorted" name="diffmod_table" ftype="tabular" sort="true" />
         <output file="diffmod.log" name="diffmod_log" ftype="txt" />
     </test>
 </tests>
