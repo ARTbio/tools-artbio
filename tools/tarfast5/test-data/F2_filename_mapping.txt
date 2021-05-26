@@ -1,5 +1,0 @@
-03bd0764-2e1f-4d60-841b-9519ea9d39cb	batch0.fast5
-02343944-ac7b-41ac-85b9-dd0b040bfd6c	batch0.fast5
-02184968-3def-4785-bd81-0bff70a57da4	batch0.fast5
-07b9016b-e5db-449f-b161-79f17eae34df	batch0.fast5
-0335884d-20f0-4b7f-8f1c-ef57cd739ce6	batch0.fast5

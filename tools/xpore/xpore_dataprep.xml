@@ -1,4 +1,4 @@
-<tool id="xpore_dataprep" name="xpore-dataprep" version="0.5.6+galaxy0">
+<tool id="xpore_dataprep" name="xpore-dataprep" version="0.5.6+galaxy1">
   <description></description>
   <requirements>
         <requirement type="package" version="0.5.6">xpore</requirement>
@@ -47,7 +47,13 @@
 
 **What it does**
 
-Prepare data for differential analysis by xpore-diffmod.
+Prepare data for differential analysis by xpore-diffmod analysis of differential RNA
+modification across all tested positions.
+
+.. class:: warningmark
+
+In its current version, only preparation of data for analysis by xpore-diffmod based on a
+**transcripts** collection reference is implemented.
 
 **Inputs**
 
