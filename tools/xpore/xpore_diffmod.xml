@@ -33,7 +33,6 @@
     printf "        threshold: 0.1\n" >> config.yml &&
 
     xpore-diffmod --config config.yml  --n_processes \${GALAXY_SLOTS:-4} &&
-    tree . &&
     sed -i "s/,/\t/g" ./out/diffmod.table
 
   ]]></command>
