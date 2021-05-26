@@ -1,4 +1,4 @@
-<tool id="xpore_diffmod" name="xpore-diffmod" version="0.5.6+galaxy0">
+<tool id="xpore_diffmod" name="xpore-diffmod" version="0.5.6+galaxy1">
   <description></description>
   <requirements>
         <requirement type="package" version="0.5.6">xpore</requirement>

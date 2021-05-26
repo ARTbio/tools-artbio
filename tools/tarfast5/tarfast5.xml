@@ -1,4 +1,4 @@
-<tool id="tarfast5" name="tarfast5" version="0.6.0">
+<tool id="tarfast5" name="tarfast5" version="0.6.1">
   <description></description>
   <requirements>
         <requirement type="package" version="2.6">pigz</requirement>
@@ -53,12 +53,12 @@
 
 **What it does**
 
-Creates a tar.gz archive of fast5 (h5) sequences files
+Creates a fast5.tar or fast5.tar.gz archive of fast5 (h5) sequences files
 
 .. class:: warningmark
 
-This tools follows a "map-reduce" procedure: multiple inputs, that can be arranged as a data collection,
-are compressed into a single tar.gz archive.
+This tools follows a "map-reduce" procedure: multiple inputs arranged as a
+data collection are compressed into a single tar.gz archive.
  
 
 
@@ -69,15 +69,6 @@ A fast5.tar.gz archive
 </help>
 
 <citations>
-    <citation type="doi">10.1093/bioinformatics/btp352</citation>
-     <citation type="bibtex">@Book{,
-    title = {Lattice: Multivariate Data Visualization with R},
-    author = {Deepayan Sarkar},
-    publisher = {Springer},
-    address = {New York},
-    year = {2008},
-    note = {ISBN 978-0-387-75968-5},
-    url = {http://lmdvr.r-forge.r-project.org},
-  }</citation>
+    <citation type="doi">10.11578/dc.20180330.1</citation>
 </citations>
 </tool>
