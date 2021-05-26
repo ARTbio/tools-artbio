@@ -70,7 +70,7 @@
 </outputs>
 <tests>
     <test> 
-        <param name="control_name" value="control">
+        <param name="control_name" value="control" />
         <repeat name="ControlReplicates">
             <param name="ControlJson" value="inputs_xpore-diffmod/C1_data.json" ftype="json" />
             <param name="ControlIndex" value="inputs_xpore-diffmod/C1_data.index" ftype="txt" />
@@ -81,7 +81,7 @@
             <param name="ControlIndex" value="inputs_xpore-diffmod/C2_data.index" ftype="txt" />
             <param name="ControlReadcount" value="inputs_xpore-diffmod/C2_data.readcount" ftype="txt" />
         </repeat>
-        <param name="test_name" value="test">
+        <param name="test_name" value="test" />
         <repeat name="TestReplicates">
             <param name="TestJson" value="inputs_xpore-diffmod/T1_data.json" ftype="json"/>
             <param name="TestIndex" value="inputs_xpore-diffmod/T1_data.index" ftype="txt" />
