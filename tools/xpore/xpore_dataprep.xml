@@ -1,8 +1,7 @@
-<tool id="xpore_dataprep" name="xpore-dataprep" version="0.5.6+galaxy1">
+<tool id="xpore_dataprep" name="xpore-dataprep" version="0.5.6+galaxy2">
   <description></description>
   <requirements>
         <requirement type="package" version="0.5.6">xpore</requirement>
-        <requirement type="package" version="1.9.0">pyensembl</requirement>
   </requirements>
   <stdio>
       <exit_code range="1:" level="fatal" description="Tool exception" />
@@ -13,7 +12,14 @@
             --summary '$eventalign_summary'
             --out_dir out
             --n_processes \${GALAXY_SLOTS:-4} &&
-            ls -la out
+            mv ./out/data.index $data_index &&
+            mv ./out/eventalign.hdf5 $eventalign_hdf5 &&
+            mv ./out/data.log $data_log &&
+            mv ./out/eventalign.log $eventalign_log &&
+            mv ./out/data.readcount $data_readcount &&
+            mv ./out/data.json $data_json
+            
+            
   ]]></command>
  <inputs>
     <param name="eventalign_reads" type="data" format="txt,tabular" label="aligned nanopore events"
@@ -23,12 +29,12 @@
  </inputs>
 
  <outputs>
-    <data format="txt" name="data_index" label="data.index" from_work_dir="./out/data.index" />
-    <data format="h5" name="eventalign_hdf5" label="eventalign.hdf5" from_work_dir="./out/eventalign.hdf5" />
-    <data format="txt" name="data_log" label="data.log" from_work_dir="./out/data.log" />
-    <data format="txt" name="eventalign_log" label="eventalign.log" from_work_dir="./out/eventalign.log" />
-    <data format="txt" name="data_readcount" label="data.readcount" from_work_dir="./out/data.readcount" />
-    <data format="json" name="data_json" label="data.json" from_work_dir="./out/data.json"/>
+    <data format="txt" name="data_index" label="data.index" />
+    <data format="h5" name="eventalign_hdf5" label="eventalign.hdf5" />
+    <data format="txt" name="data_log" label="data.log" />
+    <data format="txt" name="eventalign_log" label="eventalign.log" />
+    <data format="txt" name="data_readcount" label="data.readcount" />
+    <data format="json" name="data_json" label="data.json" />
 </outputs>
 
 <tests>

@@ -1,8 +1,7 @@
-<tool id="xpore_diffmod" name="xpore-diffmod" version="0.5.6+galaxy1">
+<tool id="xpore_diffmod" name="xpore-diffmod" version="0.5.6+galaxy2">
   <description></description>
   <requirements>
         <requirement type="package" version="0.5.6">xpore</requirement>
-        <requirement type="package" version="1.9.0">pyensembl</requirement>
   </requirements>
   <stdio>
       <exit_code range="1:" level="fatal" description="Tool exception" />
@@ -31,9 +30,11 @@
     printf "    prefiltering:\n" >> config.yml &&
     printf "        method: t-test\n" >> config.yml &&
     printf "        threshold: 0.1\n" >> config.yml &&
-
     xpore-diffmod --config config.yml  --n_processes \${GALAXY_SLOTS:-4} &&
-    sed -i "s/,/\t/g" ./out/diffmod.table
+    sed -i "s/,/\t/g" ./out/diffmod.table &&
+    mv ./out/diffmod.table $diffmod_table &&
+    mv ./out/diffmod.log $diffmod_log &&
+    mv ./config.yml $config
 
   ]]></command>
  <inputs>
@@ -64,9 +65,9 @@
  </inputs>
 
  <outputs>
-    <data format="tabular" name="diffmod_table" label="diffmod table" from_work_dir="./out/diffmod.table" />
-    <data format="txt" name="diffmod_log" label="diffmod log" from_work_dir="./out/diffmod.log" />
-    <data format="txt" name="config" label="configuration.yml" from_work_dir="./config.yml" />
+    <data format="tabular" name="diffmod_table" label="diffmod table" />
+    <data format="txt" name="diffmod_log" label="diffmod log" />
+    <data format="txt" name="config" label="configuration.yml" />
 </outputs>
 <tests>
     <test> 
