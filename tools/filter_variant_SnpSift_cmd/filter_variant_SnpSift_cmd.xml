@@ -104,6 +104,8 @@ to  select variants in patients samples  with different parameters
 Check https://pcingola.github.io/SnpEff/ss_filter/
 
 Exemple of output
+ ( AF&lt;0.01 | AF =='.' ) &amp; isVariant( GEN[0] ) &amp; isVariant( GEN[2] ) &amp; countRef()&#62;=1
+
     </help>
 
 </tool>
