@@ -1,1 +1,1 @@
-( AF<0.01 | AF == '.' ) & isVariant( GEN[2] )  & countRef()>= 3
+( AF<0.01 | AF == '.' ) & isVariant( GEN[2] )  & countRef()>= 1
