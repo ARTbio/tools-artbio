@@ -1,0 +1,4 @@
+Sample	Phenotype
+mother	normal
+father	normal
+propositus	sick
