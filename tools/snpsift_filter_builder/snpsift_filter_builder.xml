@@ -1,0 +1,111 @@
+<tool id="filer_variant_SnpSift_cmd" name="Generate filter line for variant filtering with SnpSift" version="0.1.0">
+    <description>from family variant studies</description>
+    <requirements>
+        <requirement type="package" version="1.3.2=r3.3.2_0">r-optparse</requirement>
+    </requirements>
+  
+     <command detect_errors="exit_code"><![CDATA[ 
+        Rscript $__tool_directory__/filter_variant_SnpSift_cmd.R 
+            --description_table_file $description_table
+            --header_desc $header_desc
+            --sample_col $sample_col
+            --phenotype_col $phenotype_col
+            --vcf $vcf
+            --normal $normal
+            --patient $patient 
+            #if $set_af.choices == 'yes':
+      			--af '$set_af.freq'
+    		#end if
+    		
+    		#if $set_count_ref.choices == 'yes':
+      			--count_ref '$set_count_ref.nbref'
+    		#end if
+    		
+
+]]></command>
+    <inputs>
+        <param name="description_table" type="data" format="tabular" label="Table describing samples and phenotypes"
+         help="example:&lt;br&gt;
+         	sample phenotype&lt;br&gt;
+         	mother normal&lt;br&gt;
+         	father normal&lt;br&gt;
+         	son proband&lt;br&gt;"
+         	/>
+        <param name="header_desc" type="select" label="Consider first line of table describing samples and phenotypes file as header?">
+            <option value="TRUE" selected="true">Yes</option>
+            <option value="FALSE">No</option>
+        </param>
+        <param name="sample_col" label="Column containing Sample ID" type="data_column" data_ref="description_table" accept_default="true" />
+        <param name="phenotype_col" label="Column containing Phenotype value (normal, sick)" type="data_column" data_ref="description_table" accept_default="true" />
+        <param name="normal" label="Normal samples identification" size="3" type="text" value="normal" help="Value describing the normal sample phenotype in the input table ie. normal, control, parent"  />
+        <param name="patient" label="Patient samples identification" size="3" type="text" value="sick" help="Value describing the altered (not normal) sample phenotype in the input table ie. sick, proband, patient"  />
+		<param name="vcf" label="Vcf file"  type="data" format="vcf"    />
+
+         		<conditional name="set_af">
+            <param name="choices" type="select" label="Add AF allelic frequency filter" display="radio">
+                <option value="yes" selected="true">Yes</option>
+                <option value="no">No</option>
+            </param>
+            <when value="yes">
+                <param name="freq" type="float" value="0.01"
+                       label="Maximal allelic frequency AF retained"
+                       help="by default, AF&lt;0.01"/>
+            </when>
+            <when value="no" />
+        </conditional>       
+		
+		<conditional name="set_count_ref">
+            <param name="choices" type="select" label="Add AF allelic frequency filter" display="radio">
+                <option value="yes">Yes</option>
+                <option value="no" selected="true">No</option>
+            </param>
+            <when value="yes">
+                <param name="nbref" type="integer" value="-1"
+                       label="Minimal Count number of genotypes that are NOT variants (i.e. reference 0&#47;0) "
+                       help="If -1 is specified, countRef will take the number of normal samples minus 1 "/>
+            </when>
+            <when value="no" />
+        </conditional>
+
+        </inputs>
+        <outputs>
+           <data name="filter_line" format="txt" label="Filter line from ${on_string}">
+           
+        </data>
+		</outputs>
+	
+	    <tests>
+	    <test>
+			<param name="description_table" value="desc_test.txt" ftype="tabular"/>
+            <param name="header_desc" value="TRUE"/>
+            <param name="sample_col" value="1"/>
+            <param name="phenotype_col" value="2"/>
+            <param name="normal" value="normal"/>
+            <param name="patient" value="sick"/>
+            <param name="vcf" value="test.vcf"/>
+            
+            <conditional name="set_af">
+                <param name="choices" value="yes"/>
+            </conditional>
+            <param name="af" value="0.01"/>
+           <conditional name="set_count_ref">
+                <param name="choices" value="no"/>
+            </conditional>
+            <output name="filter_line" file="filter_line.txt" ftype="txt"/>
+        </test>
+       
+    </tests>
+    <help>
+
+**What it does**
+
+Takes a description table and a VCF file to create the command line for filtering in SnpSift tool
+to  select variants in patients samples  with different parameters
+Check https://pcingola.github.io/SnpEff/ss_filter/
+
+Exemple of output
+ ( AF&lt;0.01 | AF =='.' ) &amp; isVariant( GEN[0] ) &amp; isVariant( GEN[2] ) &amp; countRef()&#62;=1
+
+    </help>
+
+</tool>
