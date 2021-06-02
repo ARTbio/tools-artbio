@@ -1,11 +1,11 @@
 <tool id="snpsift_filter_builder" name="Generate filter line for variant filtering with SnpSift" version="0.1.0">
     <description>from family variant studies</description>
     <requirements>
-        <requirement type="package" version="1.3.2=r3.3.2_0">r-optparse</requirement>
+        <requirement type="package" version="1.6.6=r41hc72bb7e_1">r-optparse</requirement>
     </requirements>
   
      <command detect_errors="exit_code"><![CDATA[ 
-        Rscript $__tool_directory__/filter_variant_SnpSift_cmd.R 
+        Rscript $__tool_directory__/snpsift_filter_builder.R
             --description_table_file $description_table
             --header_desc $header_desc
             --sample_col $sample_col
