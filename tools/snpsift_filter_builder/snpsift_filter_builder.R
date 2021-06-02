@@ -11,7 +11,7 @@
 ## and a minimal of 1 reference allele in the genotypes
 
 options( show.error.messages=F,
-         error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+         error = function(){cat(geterrmessage(),file=stderr());q("no", 1, F)})
 loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
 warnings()
 
@@ -95,7 +95,7 @@ print(c(description_table_file,header_desc,sample_col,pheno_col,vcf_file,norm_va
 
 ## Read Sample description table and get sample names and phenotypes
 desc_table <- read.table(file = description_table_file, 
-                         sep="\t", 
+                         sep = "\t", 
                          header = header_desc)
 
 data_table <- data.frame(sampleID = desc_table[,sample_col],
@@ -108,17 +108,17 @@ if(length(grep(patient_value, data_table$phenotype))<1) warning(paste0("There ar
 
 ## Get VCF #CHROM line containing the names and ordering of samples in VCF
 chrom_line <- system(paste0("grep -m 1 ^#CHROM ", vcf_file), intern = T)
-samples <- unlist( strsplit( gsub(".*FORMAT\t", "" , chrom_line), "\t") )
-samples.data <- data.frame(sampleID=samples, position = seq(0,length(samples)-1,by=1))
+samples <- unlist(strsplit( gsub(".*FORMAT\t", "" , chrom_line), "\t"))
+samples.data <- data.frame(sampleID = samples, position = seq(0,length(samples)-1,by=1))
 
 ## Verifying that all samples in VCF are in description table
  if( length(intersect(samples.data$sampleID, data_table$sampleID)) != length(samples)){
-  stop(paste(paste0(setdiff(samples.data$sampleID, data_table$sampleID), collapse=","), 
+  stop(paste(paste0(setdiff(samples.data$sampleID, data_table$sampleID), collapse = ","), 
              " sample(s) not present in description table"))
 }
 
 ## Merging data_table and position in VCF
-data_table <- merge(samples.data,data_table)
+data_table <- merge(samples.data, data_table)
 
 ## Get filter line
 filter_line <- NULL
@@ -130,21 +130,22 @@ if(! is.na(af)) filter_line <- paste0("( AF<", af, " | AF == '.' )")
 if(length(grep(patient_value, data_table$phenotype))>0){
   for(i in grep(patient_value, data_table$phenotype)){
     filter_line <- ifelse(is.null(filter_line),
-                        paste0(" isVariant( GEN[",data_table$position[i],"] ) "),
-                        paste0(filter_line," & isVariant( GEN[",data_table$position[i],"] ) "))
+                        paste0(" isVariant( GEN[", data_table$position[i], "] ) "),
+                        paste0(filter_line, " & isVariant( GEN[", data_table$position[i], "] ) "))
   
   }
 }
 
 ## add countRef
-if(count_ref != -1 ){ filter_line <- ifelse(is.null(filter_line),
-                                              paste0("countRef()>= ", count_ref),
-                                              paste0(filter_line," & countRef()>= ", count_ref))
+if(count_ref != -1 ){ 
+	filter_line <- ifelse(is.null(filter_line),
+							paste0("countRef()>= ", count_ref),
+                        	paste0(filter_line, " & countRef()>= ", count_ref))
 } else{
-    if(length( grep(norm_value,data_table$phenotype) ) >1) 
-        filter_line <- ifelse( is.null(filter_line),
+    if(length(grep(norm_value,data_table$phenotype))>1) 
+        filter_line <- ifelse(is.null(filter_line),
                          paste0("countRef()>= ", length(grep(norm_value,data_table$phenotype))-1),
-                         paste0(filter_line," & countRef()>= ", length(grep(norm_value,data_table$phenotype))-1))
+                         paste0(filter_line, " & countRef()>= ", length(grep(norm_value,data_table$phenotype))-1))
 }
 
 # Return filter line
