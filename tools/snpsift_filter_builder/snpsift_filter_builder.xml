@@ -16,11 +16,10 @@
             #if $set_af.choices == 'yes':
       			--af '$set_af.freq'
     		#end if
-    		
     		#if $set_count_ref.choices == 'yes':
       			--count_ref '$set_count_ref.nbref'
     		#end if
-    		
+    		--out ${output}
 
 ]]></command>
     <inputs>
@@ -69,7 +68,7 @@
 
         </inputs>
         <outputs>
-           <data name="filter_line" format="txt" label="Filter line from ${on_string}">
+           <data name="output" format="txt" >
            
         </data>
 		</outputs>
@@ -91,7 +90,7 @@
            <conditional name="set_count_ref">
                 <param name="choices" value="no"/>
             </conditional>
-            <output name="filter_line" file="filter_line.txt" ftype="txt"/>
+            <output name="output" file="filter_line.txt" ftype="txt"/>
         </test>
        
     </tests>
@@ -99,11 +98,11 @@
 
 **What it does**
 
-Takes a description table and a VCF file to create the command line for filtering in SnpSift tool
+Takes a Takes a table describing samples (normal/patients) and a VCF file to create the command line for filtering in SnpSift tool
 to  select variants in patients samples  with different parameters
 Check https://pcingola.github.io/SnpEff/ss_filter/
 
-Exemple of output
+Exemple of output:
  ( AF&lt;0.01 | AF =='.' ) &amp; isVariant( GEN[0] ) &amp; isVariant( GEN[2] ) &amp; countRef()&#62;=1
 
     </help>

@@ -72,6 +72,12 @@ option_list <- list(
     default = -1,
     type = 'integer',
     help = "Minimum number of reference alleles"
+  ),
+  make_option(
+    c("-o", "--out"),
+    default = "filter_line.txt",
+    type = 'character',
+    help = "Output name [default : '%default' ]"
   )
 )
 
@@ -90,8 +96,10 @@ norm_value <- opt$normal
 patient_value <- opt$patient
 af <- opt$af
 count_ref <-opt$count_ref
+output_file <-opt$out
 
-print(c(description_table_file,header_desc,sample_col,pheno_col,vcf_file,norm_value,patient_value,af,count_ref))
+
+print(c(description_table_file,header_desc,sample_col,pheno_col,vcf_file,norm_value,patient_value,af,count_ref,output_file))
 
 ## Read Sample description table and get sample names and phenotypes
 desc_table <- read.table(file = description_table_file, 
@@ -150,6 +158,6 @@ if(count_ref != -1 ){
 
 # Return filter line
 print(filter_line)
-write(filter_line, file="filter_line.txt")
+write(filter_line, file = output_file)
 
 
