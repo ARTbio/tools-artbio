@@ -1,4 +1,4 @@
-<tool id="filer_variant_SnpSift_cmd" name="Generate filter line for variant filtering with SnpSift" version="0.1.0">
+<tool id="snpsift_filter_builder" name="Generate filter line for variant filtering with SnpSift" version="0.1.0">
     <description>from family variant studies</description>
     <requirements>
         <requirement type="package" version="1.3.2=r3.3.2_0">r-optparse</requirement>
@@ -37,8 +37,8 @@
         </param>
         <param name="sample_col" label="Column containing Sample ID" type="data_column" data_ref="description_table" accept_default="true" />
         <param name="phenotype_col" label="Column containing Phenotype value (normal, sick)" type="data_column" data_ref="description_table" accept_default="true" />
-        <param name="normal" label="Normal samples identification" size="3" type="text" value="normal" help="Value describing the normal sample phenotype in the input table ie. normal, control, parent"  />
-        <param name="patient" label="Patient samples identification" size="3" type="text" value="sick" help="Value describing the altered (not normal) sample phenotype in the input table ie. sick, proband, patient"  />
+        <param name="normal" label="Normal samples identification" size="3" type="text" value="normal" help="Value describing the normal sample phenotype in the input table eg. normal, control, parent"  />
+        <param name="patient" label="Patient samples identification" size="3" type="text" value="sick" help="Value describing the altered (not normal) sample phenotype in the input table eg. sick, proband, patient"  />
 		<param name="vcf" label="Vcf file"  type="data" format="vcf"    />
 
          		<conditional name="set_af">

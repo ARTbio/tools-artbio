@@ -10,7 +10,7 @@
 
 
 ## Command line
-## Rscript filter_variant_SnpSift_cmd.R --description_table_file desc_test.txt --header_desc T --sample_col 1 --phenotype_col 2 --vcf test.vcf --normal normal --patient patient --af 0.01 --count_ref 2
+## Rscript snpsift_filter_builder --description_table_file desc_test.txt --header_desc T --sample_col 1 --phenotype_col 2 --vcf test.vcf --normal normal --patient patient --af 0.01 --count_ref 2
 
 ## Looking for variants in patient samples
 ## with allele frequency smaller than 0.01

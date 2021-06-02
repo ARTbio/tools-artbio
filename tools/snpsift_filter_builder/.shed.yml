@@ -1,15 +1,14 @@
 # .shed.yml supporting automatic pushes.
 owner: artbio
-name: filer_variant_SnpSift_cmd
+name: snpsift_filter_builder
 description: filer_variant_SnpSift_cmd creates the filter line parameter to filter variants in SnpSift tool
 long_description: |
     Takes a description table and a VCF file to create the command line for filtering in SnpSift tool
     to  select variants in patients samples  with different parameters
-
 categories:
   - Variant Analysis
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/filter_variant_SnpSift_cmd
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/snpsift_filter_builder
 toolshed:
   - testtoolshed
   - toolshed
