@@ -150,7 +150,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        r-version: [4.0.1]
+        r-version: [3.6.1]
     steps:
     # checkout the repository to master
     # and use it as the current working directory
