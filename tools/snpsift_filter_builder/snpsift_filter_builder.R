@@ -19,29 +19,29 @@ library(optparse)
 
 # Arguments
 option_list <- list(
-	make_option(
-		"--description_table_file",
-    	default = NA,
-    	type = 'character',
-    	help = "Table describing samples and phenotypes"
-  	),
-	make_option(
-		"--header_desc",
-		default = T,
-    	type = 'logical',
-    	help = "True/False Header present in description table or not"
-  	),
-	make_option(
-		"--sample_col",
-		default = 1,
-		type = 'integer',
-		help = "Column number of sample names"
-  	),
-	make_option(
-    	"--phenotype_col",
-    	default = 2,
-    	type = 'integer',
-    	help = "Column number of sample phenotypes"
+  make_option(
+    "--description_table_file",
+      default = NA,
+      type = 'character',
+      help = "Table describing samples and phenotypes"
+    ),
+  make_option(
+    "--header_desc",
+    default = T,
+      type = 'logical',
+      help = "True/False Header present in description table or not"
+    ),
+  make_option(
+    "--sample_col",
+    default = 1,
+    type = 'integer',
+    help = "Column number of sample names"
+    ),
+  make_option(
+      "--phenotype_col",
+      default = 2,
+      type = 'integer',
+      help = "Column number of sample phenotypes"
   ),
   make_option(
     "--vcf",
@@ -146,9 +146,9 @@ if(length(grep(patient_value, data_table$phenotype))>0){
 
 ## add countRef
 if(count_ref != -1 ){ 
-	filter_line <- ifelse(is.null(filter_line),
-							paste0("countRef()>= ", count_ref),
-                        	paste0(filter_line, " & countRef()>= ", count_ref))
+  filter_line <- ifelse(is.null(filter_line),
+              paste0("countRef()>= ", count_ref),
+                          paste0(filter_line, " & countRef()>= ", count_ref))
 } else{
     if(length(grep(norm_value,data_table$phenotype))>1) 
         filter_line <- ifelse(is.null(filter_line),
