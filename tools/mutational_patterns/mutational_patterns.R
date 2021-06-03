@@ -1,6 +1,6 @@
 # load packages that are provided in the conda env
-options( show.error.messages=F,
-       error = function(){
+options(show.error.messages = F,
+       error = function() {
            cat(geterrmessage(), file = stderr()); q("no", 1, F)
            }
         )
@@ -157,13 +157,14 @@ if (!is.na(opt$output_spectrum)[1]) {
 }
 
 ###### Section 2: De novo mutational signature extraction using NMF #######
+# opt$rank cannot be higher than the number of samples and
+# likewise, opt$signum cannot be higher thant the number of samples
 if (!is.na(opt$output_denovo)[1]) {
-    # opt$rank cannot be higher than the number of samples
-    if (opt$rank > length(element_identifiers)){
+
+    if (opt$rank > length(element_identifiers)) {
         opt$rank <- length(element_identifiers)
         }
-    # likewise, opt$signum cannot be higher thant the number of samples
-    if (opt$signum > length(element_identifiers)){
+    if (opt$signum > length(element_identifiers)) {
         opt$signum <- length(element_identifiers)
         }
     pseudo_mut_mat <- mut_mat + 0.0001 # First add a small pseudocount to the mutation count matrix
@@ -202,7 +203,7 @@ if (!is.na(opt$output_denovo)[1]) {
     pch1 <- plot_contribution_heatmap(nmf_res$contribution,
                                       sig_order = paste0("NewSig_", 1:opt$newsignum))
     # Plot signature contribution as a heatmap without sample clustering:
-    pch2 <- plot_contribution_heatmap(nmf_res$contribution, cluster_sample s= FALSE)
+    pch2 <- plot_contribution_heatmap (nmf_res$contribution, cluster_samples= FALSE)
     #Combine the plots into one figure:
     grid.arrange(pch1, pch2, ncol = 2, widths = c(2, 1.6))
 
@@ -212,7 +213,7 @@ if (!is.na(opt$output_denovo)[1]) {
                           profile_names = c("Original", "Reconstructed"),
                           condensed = TRUE)
     dev.off()
-}
+    }
 ##### Section 3: Find optimal contribution of known signatures: COSMIC mutational signatures ####
 
 if (!is.na(opt$output_cosmic)[1]) {
