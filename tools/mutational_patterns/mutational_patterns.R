@@ -203,7 +203,7 @@ if (!is.na(opt$output_denovo)[1]) {
     pch1 <- plot_contribution_heatmap(nmf_res$contribution,
                                       sig_order = paste0("NewSig_", 1:opt$newsignum))
     # Plot signature contribution as a heatmap without sample clustering:
-    pch2 <- plot_contribution_heatmap (nmf_res$contribution, cluster_samples= FALSE)
+    pch2 <- plot_contribution_heatmap(nmf_res$contribution, cluster_samples = FALSE)
     #Combine the plots into one figure:
     grid.arrange(pch1, pch2, ncol = 2, widths = c(2, 1.6))
 
