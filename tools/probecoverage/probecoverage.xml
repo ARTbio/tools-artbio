@@ -1,4 +1,4 @@
-<tool id="probecoverage" name="Probe Coverage" version="0.6.0">
+<tool id="probecoverage" name="Probe Coverage" version="0.6.1">
   <description></description>
   <requirements>
         <requirement type="package" version="1.10=h9402c20_2">samtools</requirement>
