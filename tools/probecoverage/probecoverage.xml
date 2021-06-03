@@ -1,4 +1,4 @@
-<tool id="probecoverage" name="Probe Coverage" version="0.6.1">
+<tool id="probecoverage" name="Probe Coverage" version="0.7.0">
   <description></description>
   <requirements>
         <requirement type="package" version="1.10=h9402c20_2">samtools</requirement>
@@ -6,7 +6,7 @@
         <requirement type="package" version="1.6.4=r36h6115d3f_0">r-optparse</requirement>
         <requirement type="package" version="3.2.1=r36h6115d3f_0">r-ggplot2</requirement>
         <requirement type="package" version="1.17.3=py37h95a1406_0">numpy</requirement>
-        <requirement type="package" version="0.15.3=py37hbcae180_3">pysam</requirement>
+        <requirement type="package" version="0.16.0.1">pysam</requirement>
   </requirements>
   <stdio>
       <exit_code range="1:" level="fatal" description="Tool exception" />
