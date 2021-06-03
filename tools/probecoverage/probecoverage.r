@@ -1,7 +1,7 @@
 ## Setup R error handling to go to stderr
 options(show.error.messages = F,
-            error = function(){
-                cat(geterrmessage(), file = stderr()); q( "no", 1, F )
+            error = function() {
+                cat(geterrmessage(), file = stderr()); q("no", 1, F)
             }
        )
 warnings()
@@ -11,7 +11,7 @@ library(reshape2)
 
 option_list <- list(
     make_option(c("-i", "--input"), type = "character", help = "Path to dataframe"),
-    make_option(c("-t", "--title"), type="character", help = "Main Title"),
+    make_option(c("-t", "--title"), type = "character", help = "Main Title"),
     make_option("--xlab", type = "character", help = "X-axis legend"),
     make_option("--ylab", type = "character", help = "Y-axis legend"),
     make_option("--sample", type = "character", help = "a space separated of sample labels"),
