@@ -102,6 +102,18 @@ option_list <- list(
 
 opt <- parse_args(OptionParser(option_list = option_list),
                  args = commandArgs(trailingOnly = TRUE))
+install.packages("BiocManager", ask = False, repos='http://cran.us.r-project.org')
+
+if (opt$genome == "BSgenome.Hsapiens.UCSC.hg38") {
+        BiocManager::install("BSgenome.Hsapiens.UCSC.hg38")} else if (
+    opt$genome == "BSgenome.Hsapiens.UCSC.hg19") {
+            BiocManager::install("BSgenome.Hsapiens.UCSC.hg19")} else if (
+    opt$genome == "BSgenome.Hsapiens.NCBI.GRCh38") {
+            BiocManager::install("BSgenome.Hsapiens.NCBI.GRCh38")} else if (
+    opt$genome == "BSgenome.Hsapiens.1000genomes.hs37d5") {
+            BiocManager::install("BSgenome.Hsapiens.1000genomes.hs37d5")
+            }
+
 
 ################ Manage input data ####################
 json_dict <- opt$inputs
