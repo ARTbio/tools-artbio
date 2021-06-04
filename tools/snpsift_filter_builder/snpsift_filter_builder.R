@@ -149,7 +149,7 @@ if (length(grep(patient_value, data_table$phenotype)) > 0) {
 }
 
 # add countRef
-if (count_ref != -1 ) {
+if (count_ref != -1) {
     filter_line <- ifelse(is.null(filter_line),
                           paste0("countRef()>= ", count_ref),
                           paste0(filter_line, " & countRef()>= ", count_ref))
