@@ -1,17 +1,17 @@
-###Create Filtering Input for variant selection with SnpSift tool based on sample names and sample phenotypes 
-##Exemple
-#( AF<0.01 | AF =='.' ) & isVariant( GEN[0] ) & isVariant( GEN[2] ) & countRef()>=1
+# Create Filtering Input for variant selection with SnpSift tool based on sample names and sample phenotypes 
+# Exemple
+# "( AF<0.01 | AF =='.' ) & isVariant( GEN[0] ) & isVariant( GEN[2] ) & countRef()>=1"
+# Command line
+# "Rscript snpsift_filter_builder --description_table_file desc_test.txt --header_desc T --sample_col 1 --phenotype_col 2 --vcf test.vcf --normal normal --patient patient --af 0.01 --count_ref 2"
+# Looking for variants in patient samples
+# with allele frequency smaller than 0.01
+# and a minimal of 1 reference allele in the genotypes
 
-
-##Command line
-##Rscript snpsift_filter_builder --description_table_file desc_test.txt --header_desc T --sample_col 1 --phenotype_col 2 --vcf test.vcf --normal normal --patient patient --af 0.01 --count_ref 2
-
-##Looking for variants in patient samples
-##with allele frequency smaller than 0.01
-##and a minimal of 1 reference allele in the genotypes
-
-options( show.error.messages=F,
-         error = function(){cat(geterrmessage(),file=stderr());q("no", 1, F)})
+options(show.error.messages = F,
+        error = function() {
+            cat(geterrmessage(),file = stderr());q("no", 1, F)
+            }
+        )
 loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
 warnings()
 
