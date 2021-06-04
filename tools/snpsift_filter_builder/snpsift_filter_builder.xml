@@ -1,7 +1,8 @@
 <tool id="snpsift_filter_builder" name="Build filter query for variant filtering using SnpSift" version="0.2.0">
     <description>from family variant studies</description>
     <requirements>
-        <requirement type="package" version="1.6.6=r40h6115d3f_1">r-optparse</requirement>
+        <requirement type="package" version="4.1.0=h9e01966_1">r-base</requirement>
+        <requirement type="package" version="1.6.6=r41hc72bb7e_1">r-optparse</requirement>
     </requirements>
   
      <command detect_errors="exit_code"><![CDATA[ 
