@@ -22,15 +22,15 @@
     </stdio>
 
     <command detect_errors="exit_code"><![CDATA[
-which conda &&
+sudo which conda &&
 #if str($genome) == 'BSgenome.Hsapiens.1000genomes.hs37d5':
-    conda install -y bioconductor-bsgenome.hsapiens.1000genomes.hs37d5=0.99.1=r40_4 &&
+    sudo conda install -y bioconductor-bsgenome.hsapiens.1000genomes.hs37d5=0.99.1=r40_4 &&
 #else if str($genome) == 'BSgenome.Hsapiens.NCBI.GRCh38':
-    conda install -y bioconductor-bsgenome.hsapiens.ncbi.grch38=1.3.1000=r40_4 &&
+    sudo conda install -y bioconductor-bsgenome.hsapiens.ncbi.grch38=1.3.1000=r40_4 &&
 #else if str($genome) == 'BSgenome.Hsapiens.UCSC.hg19':
-    conda install -y bioconductor-bsgenome.hsapiens.ucsc.hg19=1.4.3=r40_0 &&
+    sudo conda install -y bioconductor-bsgenome.hsapiens.ucsc.hg19=1.4.3=r40_0 &&
 #else if str($genome) == 'BSgenome.Hsapiens.UCSC.hg38':
-    conda install -y bioconductor-bsgenome.hsapiens.ucsc.hg38=1.4.3=r40_0 &&
+    sudo conda install -y bioconductor-bsgenome.hsapiens.ucsc.hg38=1.4.3=r40_0 &&
 #end if
 
 #import json
