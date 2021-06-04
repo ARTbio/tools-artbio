@@ -1,11 +1,14 @@
 <tool id="mutational_patterns" name="Analyse Mutational Patterns/Signatures" version="2.0.0+galaxy14">
     <description>from genomic variations in vcf files</description>
     <requirements>
+         <requirement type="package" version="4.10.0=py37h06a4308_0">conda</requirement>
         <requirement type="package" version="2.0.0=r40_0">bioconductor-mutationalpatterns</requirement>
         <requirement type="package" version="1.6.6=r40h6115d3f_1">r-optparse</requirement>
         <requirement type="package" version="0.2.20=r40h0357c0b_1002">r-rjson</requirement>
         <requirement type="package" version="0.21.0=r40h0357c0b_1004">r-nmf</requirement>
         <requirement type="package" version="2.3=r40h6115d3f_1003">r-gridextra</requirement>
+        
+        
 <!--         <requirement type="package" version="1.4.3=r40_0">bioconductor-bsgenome.hsapiens.ucsc.hg38</requirement>
         <requirement type="package" version="0.99.1=r40_4">bioconductor-bsgenome.hsapiens.1000genomes.hs37d5</requirement>
         <requirement type="package" version="1.4.3=r40_0">bioconductor-bsgenome.hsapiens.ucsc.hg19</requirement>
@@ -18,7 +21,8 @@
         <exit_code range="1:" level="fatal" description="Tool exception" />
     </stdio>
 
-    <command detect_errors="exit_code"><![CDATA[ 
+    <command detect_errors="exit_code"><![CDATA[
+which conda &&
 #if str($genome) == 'BSgenome.Hsapiens.1000genomes.hs37d5':
     conda install -y bioconductor-bsgenome.hsapiens.1000genomes.hs37d5=0.99.1=r40_4 &&
 #else if str($genome) == 'BSgenome.Hsapiens.NCBI.GRCh38':
