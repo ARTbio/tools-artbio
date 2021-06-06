@@ -1,0 +1,1 @@
+ isVariant( GEN[0] )  & isVariant( GEN[2] )  & countRef()>= 4

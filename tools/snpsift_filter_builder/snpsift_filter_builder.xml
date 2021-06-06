@@ -93,13 +93,45 @@
             </conditional>
             <output name="output" file="filter_line.txt" ftype="txt"/>
         </test>
-       
+        <test>
+			<param name="description_table" value="desc_test.txt" ftype="tabular"/>
+            <param name="header_desc" value="TRUE"/>
+            <param name="sample_col" value="1"/>
+            <param name="phenotype_col" value="2"/>
+            <param name="normal" value="normal"/>
+            <param name="patient" value="sick"/>
+            <param name="vcf" value="test.vcf"/>
+            <conditional name="set_af">
+                <param name="choices" value="no"/>
+            </conditional>
+           <conditional name="set_count_ref">
+                <param name="choices" value="no"/>
+            </conditional>
+            <output name="output" file="filter_line2.txt" ftype="txt"/>
+        </test>
+        <test>
+			<param name="description_table" value="desc_test2.txt" ftype="tabular"/>
+            <param name="header_desc" value="TRUE"/>
+            <param name="sample_col" value="1"/>
+            <param name="phenotype_col" value="2"/>
+            <param name="normal" value="normal"/>
+            <param name="patient" value="sick"/>
+            <param name="vcf" value="test.vcf"/>
+            <conditional name="set_af">
+                <param name="choices" value="no"/>
+            </conditional>
+           <conditional name="set_count_ref">
+                <param name="choices" value="yes"/>
+            </conditional>
+             <param name="nbref" value="4"/>
+            <output name="output" file="filter_line3.txt" ftype="txt"/>
+        </test>       
     </tests>
     <help>
 
 **What it does**
 
-Takes a Takes a table describing samples (normal/patients) and a VCF file to create the command line for filtering in SnpSift tool
+Takes a table describing samples (normal/patients) and a VCF file to create the command line for filtering in SnpSift tool
 to  select variants in patients samples  with different parameters
 Check https://pcingola.github.io/SnpEff/ss_filter/
 

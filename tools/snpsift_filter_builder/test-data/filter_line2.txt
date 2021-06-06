@@ -1,0 +1,1 @@
+ isVariant( GEN[2] )  & countRef()>= 1
