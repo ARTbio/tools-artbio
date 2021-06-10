@@ -1,0 +1,674 @@
+{
+   "uuid":"28705fb2-ba16-46f2-be0f-b1af583f311f",
+   "tags":[
+      
+   ],
+   "format-version":"0.1",
+   "name":"Step5b. Reformate DEXSeq2 outputs",
+   "steps":{
+      "0":{
+         "tool_id":null,
+         "tool_version":null,
+         "outputs":[
+            
+         ],
+         "workflow_outputs":[
+            {
+               "output_name":"output",
+               "uuid":"35bb9f5d-88f0-479e-a6ce-45761bac4bd8",
+               "label":null
+            }
+         ],
+         "input_connections":{
+            
+         },
+         "tool_state":"{}",
+         "id":0,
+         "uuid":"0c25565e-6440-4beb-beec-66176a1e117e",
+         "errors":null,
+         "name":"Input dataset",
+         "label":"DEXSeq result",
+         "inputs":[
+            
+         ],
+         "position":{
+            "top":341,
+            "left":200
+         },
+         "annotation":"",
+         "content_id":null,
+         "type":"data_input"
+      },
+      "1":{
+         "tool_id":null,
+         "tool_version":null,
+         "outputs":[
+            
+         ],
+         "workflow_outputs":[
+            {
+               "output_name":"output",
+               "uuid":"da5854a4-11d1-483d-83a9-a8a177bb2091",
+               "label":null
+            }
+         ],
+         "input_connections":{
+            
+         },
+         "tool_state":"{}",
+         "id":1,
+         "uuid":"758a7ca5-1a8a-4815-ac2e-8103f02f247c",
+         "errors":null,
+         "name":"Input dataset",
+         "label":"DEXSeq header",
+         "inputs":[
+            
+         ],
+         "position":{
+            "top":710,
+            "left":1844
+         },
+         "annotation":"",
+         "content_id":null,
+         "type":"data_input"
+      },
+      "2":{
+         "tool_id":null,
+         "tool_version":null,
+         "outputs":[
+            
+         ],
+         "workflow_outputs":[
+            {
+               "output_name":"output",
+               "uuid":"73b1c0ef-0ff6-47ff-bbad-201558df1423",
+               "label":null
+            }
+         ],
+         "input_connections":{
+            
+         },
+         "tool_state":"{}",
+         "id":2,
+         "uuid":"7b71581d-2cc7-4f79-af24-e393e37f81c3",
+         "errors":null,
+         "name":"Input dataset",
+         "label":"Biomart Ensembl data",
+         "inputs":[
+            
+         ],
+         "position":{
+            "top":729,
+            "left":2120
+         },
+         "annotation":"",
+         "content_id":null,
+         "type":"data_input"
+      },
+      "3":{
+         "tool_id":"toolshed.g2.bx.psu.edu/repos/devteam/cut_columns/Cut1/1.0.2",
+         "tool_version":"1.0.2",
+         "outputs":[
+            {
+               "type":"tabular",
+               "name":"out_file1"
+            }
+         ],
+         "workflow_outputs":[
+            
+         ],
+         "input_connections":{
+            "input":{
+               "output_name":"output",
+               "id":0
+            }
+         },
+         "tool_state":"{\"columnList\": \"\\\"c1-c23,c11\\\"\", \"input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"delimiter\": \"\\\"T\\\"\", \"__rerun_remap_job_id__\": null, \"__page__\": null}",
+         "id":3,
+         "tool_shed_repository":{
+            "owner":"devteam",
+            "changeset_revision":"cec635fab700",
+            "name":"cut_columns",
+            "tool_shed":"toolshed.g2.bx.psu.edu"
+         },
+         "uuid":"7ef86544-328f-4ad3-bc31-b238a125c062",
+         "errors":null,
+         "name":"Cut",
+         "post_job_actions":{
+            "HideDatasetActionout_file1":{
+               "output_name":"out_file1",
+               "action_type":"HideDatasetAction",
+               "action_arguments":{
+                  
+               }
+            }
+         },
+         "label":"DEXseq Step1. Sort according to FC",
+         "inputs":[
+            {
+               "name":"input",
+               "description":"runtime parameter for tool Cut"
+            }
+         ],
+         "position":{
+            "top":330,
+            "left":528
+         },
+         "annotation":"",
+         "content_id":"toolshed.g2.bx.psu.edu/repos/devteam/cut_columns/Cut1/1.0.2",
+         "type":"tool"
+      },
+      "4":{
+         "tool_id":"toolshed.g2.bx.psu.edu/repos/bgruening/text_processing/tp_replace_in_column/1.1.3",
+         "tool_version":"1.1.3",
+         "outputs":[
+            {
+               "type":"input",
+               "name":"outfile"
+            }
+         ],
+         "workflow_outputs":[
+            
+         ],
+         "input_connections":{
+            "infile":{
+               "output_name":"out_file1",
+               "id":3
+            }
+         },
+         "tool_state":"{\"__page__\": null, \"__rerun_remap_job_id__\": null, \"replacements\": \"[{\\\"column\\\": \\\"24\\\", \\\"__index__\\\": 0, \\\"replace_pattern\\\": \\\"\\\", \\\"find_pattern\\\": \\\"-\\\"}]\", \"infile\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\"}",
+         "id":4,
+         "tool_shed_repository":{
+            "owner":"bgruening",
+            "changeset_revision":"a6f147a050a2",
+            "name":"text_processing",
+            "tool_shed":"toolshed.g2.bx.psu.edu"
+         },
+         "uuid":"82121174-8743-4424-b338-7e6ecd0b348c",
+         "errors":null,
+         "name":"Replace Text",
+         "post_job_actions":{
+            "HideDatasetActionoutfile":{
+               "output_name":"outfile",
+               "action_type":"HideDatasetAction",
+               "action_arguments":{
+                  
+               }
+            }
+         },
+         "label":"DEXSeq Step2. Sort according to FC",
+         "inputs":[
+            {
+               "name":"infile",
+               "description":"runtime parameter for tool Replace Text"
+            }
+         ],
+         "position":{
+            "top":364,
+            "left":764
+         },
+         "annotation":"",
+         "content_id":"toolshed.g2.bx.psu.edu/repos/bgruening/text_processing/tp_replace_in_column/1.1.3",
+         "type":"tool"
+      },
+      "5":{
+         "tool_id":"sort1",
+         "tool_version":"1.1.0",
+         "outputs":[
+            {
+               "type":"input",
+               "name":"out_file1"
+            }
+         ],
+         "workflow_outputs":[
+            
+         ],
+         "input_connections":{
+            "input":{
+               "output_name":"outfile",
+               "id":4
+            }
+         },
+         "tool_state":"{\"__page__\": null, \"style\": \"\\\"num\\\"\", \"column\": \"\\\"24\\\"\", \"__rerun_remap_job_id__\": null, \"order\": \"\\\"DESC\\\"\", \"input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"header_lines\": \"\\\"0\\\"\", \"column_set\": \"[]\"}",
+         "id":5,
+         "uuid":"95543934-161e-4b81-99c6-c28769ac3fe2",
+         "errors":null,
+         "name":"Sort",
+         "post_job_actions":{
+            "HideDatasetActionout_file1":{
+               "output_name":"out_file1",
+               "action_type":"HideDatasetAction",
+               "action_arguments":{
+                  
+               }
+            }
+         },
+         "label":"DEXSeq Step3. Sort according to FC",
+         "inputs":[
+            {
+               "name":"input",
+               "description":"runtime parameter for tool Sort"
+            }
+         ],
+         "position":{
+            "top":374,
+            "left":1023
+         },
+         "annotation":"",
+         "content_id":"sort1",
+         "type":"tool"
+      },
+      "6":{
+         "tool_id":"toolshed.g2.bx.psu.edu/repos/devteam/cut_columns/Cut1/1.0.2",
+         "tool_version":"1.0.2",
+         "outputs":[
+            {
+               "type":"tabular",
+               "name":"out_file1"
+            }
+         ],
+         "workflow_outputs":[
+            {
+               "output_name":"out_file1",
+               "uuid":"a86d0faf-a5b2-43dd-9912-0a1795609531",
+               "label":null
+            }
+         ],
+         "input_connections":{
+            "input":{
+               "output_name":"out_file1",
+               "id":5
+            }
+         },
+         "tool_state":"{\"columnList\": \"\\\"c1-c23\\\"\", \"input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"delimiter\": \"\\\"T\\\"\", \"__rerun_remap_job_id__\": null, \"__page__\": null}",
+         "id":6,
+         "tool_shed_repository":{
+            "owner":"devteam",
+            "changeset_revision":"cec635fab700",
+            "name":"cut_columns",
+            "tool_shed":"toolshed.g2.bx.psu.edu"
+         },
+         "uuid":"ef176439-6575-4dff-80f1-d512f665a332",
+         "errors":null,
+         "name":"Cut",
+         "post_job_actions":{
+            
+         },
+         "label":"DEXSeq Step4. Sort according to FC",
+         "inputs":[
+            {
+               "name":"input",
+               "description":"runtime parameter for tool Cut"
+            }
+         ],
+         "position":{
+            "top":405,
+            "left":1266
+         },
+         "annotation":"",
+         "content_id":"toolshed.g2.bx.psu.edu/repos/devteam/cut_columns/Cut1/1.0.2",
+         "type":"tool"
+      },
+      "7":{
+         "tool_id":"Grep1",
+         "tool_version":"1.0.1",
+         "outputs":[
+            {
+               "type":"input",
+               "name":"out_file1"
+            }
+         ],
+         "workflow_outputs":[
+            
+         ],
+         "input_connections":{
+            "input":{
+               "output_name":"out_file1",
+               "id":6
+            }
+         },
+         "tool_state":"{\"__page__\": null, \"pattern\": \"\\\"\\\\\\\\t0\\\\\\\\t\\\"\", \"invert\": \"\\\"true\\\"\", \"__rerun_remap_job_id__\": null, \"input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\"}",
+         "id":7,
+         "uuid":"d9672c67-9367-4a9f-b192-3c3f213da279",
+         "errors":null,
+         "name":"Select",
+         "post_job_actions":{
+            "HideDatasetActionout_file1":{
+               "output_name":"out_file1",
+               "action_type":"HideDatasetAction",
+               "action_arguments":{
+                  
+               }
+            }
+         },
+         "label":"DEXSeq Remove Zero counts data",
+         "inputs":[
+            {
+               "name":"input",
+               "description":"runtime parameter for tool Select"
+            }
+         ],
+         "position":{
+            "top":439,
+            "left":1546
+         },
+         "annotation":"",
+         "content_id":"Grep1",
+         "type":"tool"
+      },
+      "8":{
+         "tool_id":"toolshed.g2.bx.psu.edu/repos/iuc/volcanoplot/volcanoplot/0.0.2",
+         "tool_version":"0.0.2",
+         "outputs":[
+            {
+               "type":"pdf",
+               "name":"plot"
+            }
+         ],
+         "workflow_outputs":[
+            {
+               "output_name":"plot",
+               "uuid":"362fdbaf-2b22-440b-b975-100c43eb39c6",
+               "label":null
+            }
+         ],
+         "input_connections":{
+            "input":{
+               "output_name":"out_file1",
+               "id":7
+            }
+         },
+         "tool_state":"{\"__page__\": null, \"fdr_col\": \"\\\"8\\\"\", \"plot_options\": \"{\\\"legend_labs\\\": \\\"Down,Not Sig,Up\\\", \\\"xlab\\\": \\\"\\\", \\\"ylab\\\": \\\"\\\", \\\"legend\\\": \\\"\\\", \\\"title\\\": \\\"\\\"}\", \"label_col\": \"\\\"1\\\"\", \"lfc_col\": \"\\\"11\\\"\", \"__rerun_remap_job_id__\": null, \"labels\": \"{\\\"label_select\\\": \\\"none\\\", \\\"__current_case__\\\": 2}\", \"signif_thresh\": \"\\\"0.01\\\"\", \"lfc_thresh\": \"\\\"1.0\\\"\", \"pval_col\": \"\\\"7\\\"\", \"input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\"}",
+         "id":8,
+         "tool_shed_repository":{
+            "owner":"iuc",
+            "changeset_revision":"d1d39c72b755",
+            "name":"volcanoplot",
+            "tool_shed":"toolshed.g2.bx.psu.edu"
+         },
+         "uuid":"32650059-4f65-45b3-adca-0ed241672ab1",
+         "errors":null,
+         "name":"Volcano Plot",
+         "post_job_actions":{
+            
+         },
+         "label":"DEXSeq VolcanoPlot ",
+         "inputs":[
+            {
+               "name":"input",
+               "description":"runtime parameter for tool Volcano Plot"
+            }
+         ],
+         "position":{
+            "top":441,
+            "left":1816
+         },
+         "annotation":"",
+         "content_id":"toolshed.g2.bx.psu.edu/repos/iuc/volcanoplot/volcanoplot/0.0.2",
+         "type":"tool"
+      },
+      "9":{
+         "tool_id":"toolshed.g2.bx.psu.edu/repos/iuc/volcanoplot/volcanoplot/0.0.2",
+         "tool_version":"0.0.2",
+         "outputs":[
+            {
+               "type":"pdf",
+               "name":"plot"
+            }
+         ],
+         "workflow_outputs":[
+            {
+               "output_name":"plot",
+               "uuid":"00bc7c3c-8c21-43da-a2a8-50f52c419e7b",
+               "label":null
+            }
+         ],
+         "input_connections":{
+            "input":{
+               "output_name":"out_file1",
+               "id":7
+            }
+         },
+         "tool_state":"{\"__page__\": null, \"fdr_col\": \"\\\"8\\\"\", \"plot_options\": \"{\\\"legend_labs\\\": \\\"Down,Not Sig,Up\\\", \\\"xlab\\\": \\\"\\\", \\\"ylab\\\": \\\"\\\", \\\"legend\\\": \\\"\\\", \\\"title\\\": \\\"\\\"}\", \"label_col\": \"\\\"1\\\"\", \"lfc_col\": \"\\\"11\\\"\", \"__rerun_remap_job_id__\": null, \"labels\": \"{\\\"top_num\\\": \\\"\\\", \\\"label_select\\\": \\\"signif\\\", \\\"__current_case__\\\": 0}\", \"signif_thresh\": \"\\\"0.01\\\"\", \"lfc_thresh\": \"\\\"1.0\\\"\", \"pval_col\": \"\\\"7\\\"\", \"input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\"}",
+         "id":9,
+         "tool_shed_repository":{
+            "owner":"iuc",
+            "changeset_revision":"d1d39c72b755",
+            "name":"volcanoplot",
+            "tool_shed":"toolshed.g2.bx.psu.edu"
+         },
+         "uuid":"0b05a354-26a6-4180-88aa-851ef8c09ebb",
+         "errors":null,
+         "name":"Volcano Plot",
+         "post_job_actions":{
+            
+         },
+         "label":"DEXSeq VolcanoPlot with top10 names",
+         "inputs":[
+            {
+               "name":"input",
+               "description":"runtime parameter for tool Volcano Plot"
+            }
+         ],
+         "position":{
+            "top":286,
+            "left":1850
+         },
+         "annotation":"",
+         "content_id":"toolshed.g2.bx.psu.edu/repos/iuc/volcanoplot/volcanoplot/0.0.2",
+         "type":"tool"
+      },
+      "10":{
+         "tool_id":"Filter1",
+         "tool_version":"1.1.0",
+         "outputs":[
+            {
+               "type":"input",
+               "name":"out_file1"
+            }
+         ],
+         "workflow_outputs":[
+            
+         ],
+         "input_connections":{
+            "input":{
+               "output_name":"out_file1",
+               "id":7
+            }
+         },
+         "tool_state":"{\"input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"__rerun_remap_job_id__\": null, \"header_lines\": \"\\\"0\\\"\", \"cond\": \"\\\"c8<0.1\\\"\", \"__page__\": null}",
+         "id":10,
+         "uuid":"a32e0d74-b959-4ff5-b306-eec91de5cc73",
+         "errors":null,
+         "name":"Filter",
+         "post_job_actions":{
+            "HideDatasetActionout_file1":{
+               "output_name":"out_file1",
+               "action_type":"HideDatasetAction",
+               "action_arguments":{
+                  
+               }
+            }
+         },
+         "label":"DEXSeq Significant data",
+         "inputs":[
+            {
+               "name":"input",
+               "description":"runtime parameter for tool Filter"
+            }
+         ],
+         "position":{
+            "top":561,
+            "left":1833
+         },
+         "annotation":"",
+         "content_id":"Filter1",
+         "type":"tool"
+      },
+      "11":{
+         "tool_id":"toolshed.g2.bx.psu.edu/repos/bgruening/text_processing/tp_cat/0.1.0",
+         "tool_version":"0.1.0",
+         "outputs":[
+            {
+               "type":"input",
+               "name":"out_file1"
+            }
+         ],
+         "workflow_outputs":[
+            
+         ],
+         "input_connections":{
+            "inputs":{
+               "output_name":"output",
+               "id":1
+            },
+            "queries_0|inputs2":{
+               "output_name":"out_file1",
+               "id":10
+            }
+         },
+         "tool_state":"{\"__page__\": null, \"inputs\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"__rerun_remap_job_id__\": null, \"queries\": \"[{\\\"inputs2\\\": {\\\"__class__\\\": \\\"RuntimeValue\\\"}, \\\"__index__\\\": 0}]\"}",
+         "id":11,
+         "tool_shed_repository":{
+            "owner":"bgruening",
+            "changeset_revision":"a6f147a050a2",
+            "name":"text_processing",
+            "tool_shed":"toolshed.g2.bx.psu.edu"
+         },
+         "uuid":"fd832d8d-a31e-4537-b8a1-30c25f14b579",
+         "errors":null,
+         "name":"Concatenate datasets",
+         "post_job_actions":{
+            "HideDatasetActionout_file1":{
+               "output_name":"out_file1",
+               "action_type":"HideDatasetAction",
+               "action_arguments":{
+                  
+               }
+            }
+         },
+         "label":"DEXSeq significant results with header",
+         "inputs":[
+            {
+               "name":"inputs",
+               "description":"runtime parameter for tool Concatenate datasets"
+            }
+         ],
+         "position":{
+            "top":495,
+            "left":2107.5
+         },
+         "annotation":"",
+         "content_id":"toolshed.g2.bx.psu.edu/repos/bgruening/text_processing/tp_cat/0.1.0",
+         "type":"tool"
+      },
+      "12":{
+         "tool_id":"join1",
+         "tool_version":"2.1.1",
+         "outputs":[
+            {
+               "type":"input",
+               "name":"out_file1"
+            }
+         ],
+         "workflow_outputs":[
+            
+         ],
+         "input_connections":{
+            "input2":{
+               "output_name":"output",
+               "id":2
+            },
+            "input1":{
+               "output_name":"out_file1",
+               "id":11
+            }
+         },
+         "tool_state":"{\"input2\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"__page__\": null, \"field1\": \"\\\"2\\\"\", \"partial\": \"\\\"-p\\\"\", \"field2\": \"\\\"1\\\"\", \"__rerun_remap_job_id__\": null, \"fill_empty_columns\": \"{\\\"fill_empty_columns_switch\\\": \\\"no_fill\\\", \\\"__current_case__\\\": 0}\", \"unmatched\": \"\\\"-u\\\"\", \"header\": \"\\\"-H\\\"\", \"input1\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\"}",
+         "id":12,
+         "uuid":"ae6b5360-abea-4fb0-bb48-cf6597535bf9",
+         "errors":null,
+         "name":"Join two Datasets",
+         "post_job_actions":{
+            "HideDatasetActionout_file1":{
+               "output_name":"out_file1",
+               "action_type":"HideDatasetAction",
+               "action_arguments":{
+                  
+               }
+            }
+         },
+         "label":"Add Biomart Annotation DEXSeq",
+         "inputs":[
+            {
+               "name":"input2",
+               "description":"runtime parameter for tool Join two Datasets"
+            },
+            {
+               "name":"input1",
+               "description":"runtime parameter for tool Join two Datasets"
+            }
+         ],
+         "position":{
+            "top":616,
+            "left":2368
+         },
+         "annotation":"",
+         "content_id":"join1",
+         "type":"tool"
+      },
+      "13":{
+         "tool_id":"toolshed.g2.bx.psu.edu/repos/devteam/cut_columns/Cut1/1.0.2",
+         "tool_version":"1.0.2",
+         "outputs":[
+            {
+               "type":"tabular",
+               "name":"out_file1"
+            }
+         ],
+         "workflow_outputs":[
+            {
+               "output_name":"out_file1",
+               "uuid":"50822a1a-0595-4c65-b023-8c234b0bebcd",
+               "label":null
+            }
+         ],
+         "input_connections":{
+            "input":{
+               "output_name":"out_file1",
+               "id":12
+            }
+         },
+         "tool_state":"{\"columnList\": \"\\\"c1,c24-c27,c11,c7,c8,c12-c16,c23,c19,c18,c17,c22,c21,c20,c4,c5,c9,c10,c6\\\"\", \"input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"delimiter\": \"\\\"T\\\"\", \"__rerun_remap_job_id__\": null, \"__page__\": null}",
+         "id":13,
+         "tool_shed_repository":{
+            "owner":"devteam",
+            "changeset_revision":"cec635fab700",
+            "name":"cut_columns",
+            "tool_shed":"toolshed.g2.bx.psu.edu"
+         },
+         "uuid":"ac39b3da-a2f5-454a-872f-a3ee539394ce",
+         "errors":null,
+         "name":"Cut",
+         "post_job_actions":{
+            
+         },
+         "label":"DEXSeq final table",
+         "inputs":[
+            {
+               "name":"input",
+               "description":"runtime parameter for tool Cut"
+            }
+         ],
+         "position":{
+            "top":652,
+            "left":2631
+         },
+         "annotation":"",
+         "content_id":"toolshed.g2.bx.psu.edu/repos/devteam/cut_columns/Cut1/1.0.2",
+         "type":"tool"
+      }
+   },
+   "annotation":"",
+   "a_galaxy_workflow":"true"
+}
