@@ -1,1 +1,295 @@
-{"uuid": "7c19717e-a41a-4611-b91d-46271693f6ce", "tags": [], "format-version": "0.1", "name": "Step1. Fastq Quality Control with FASTQC et MultiQC", "steps": {"0": {"tool_id": null, "tool_version": null, "outputs": [], "workflow_outputs": [{"output_name": "output", "uuid": "1c8e9391-adee-464d-a91f-71e39c9ffdb1", "label": null}], "input_connections": {}, "tool_state": "{\"collection_type\": \"list\"}", "id": 0, "uuid": "b6c69ec5-3e25-4c9f-9172-3906a083a9be", "errors": null, "name": "Input dataset collection", "label": "KO FASTQs", "inputs": [], "position": {"top": 310.5, "left": 224}, "annotation": "", "content_id": null, "type": "data_collection_input"}, "1": {"tool_id": null, "tool_version": null, "outputs": [], "workflow_outputs": [{"output_name": "output", "uuid": "52a2aa38-0ba3-4072-a53c-1cde88d4e845", "label": null}], "input_connections": {}, "tool_state": "{\"collection_type\": \"list\"}", "id": 1, "uuid": "54a28a0f-98db-4a9e-a8f9-50891aaf21e0", "errors": null, "name": "Input dataset collection", "label": "HET FASTQs", "inputs": [], "position": {"top": 486, "left": 223.5}, "annotation": "", "content_id": null, "type": "data_collection_input"}, "2": {"tool_id": "toolshed.g2.bx.psu.edu/repos/devteam/fastqc/fastqc/0.72", "tool_version": "0.72", "outputs": [{"type": "html", "name": "html_file"}, {"type": "txt", "name": "text_file"}], "workflow_outputs": [], "input_connections": {"input_file": {"output_name": "output", "id": 0}}, "tool_state": "{\"__page__\": null, \"contaminants\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"__rerun_remap_job_id__\": null, \"limits\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"input_file\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\"}", "id": 2, "tool_shed_repository": {"owner": "devteam", "changeset_revision": "c15237684a01", "name": "fastqc", "tool_shed": "toolshed.g2.bx.psu.edu"}, "uuid": "1ca1d386-0b34-4b66-aba4-eaa47cea610f", "errors": null, "name": "FastQC", "post_job_actions": {"HideDatasetActionhtml_file": {"output_name": "html_file", "action_type": "HideDatasetAction", "action_arguments": {}}, "HideDatasetActiontext_file": {"output_name": "text_file", "action_type": "HideDatasetAction", "action_arguments": {}}}, "label": null, "inputs": [{"name": "contaminants", "description": "runtime parameter for tool FastQC"}, {"name": "limits", "description": "runtime parameter for tool FastQC"}, {"name": "input_file", "description": "runtime parameter for tool FastQC"}], "position": {"top": 257.5, "left": 575}, "annotation": "", "content_id": "toolshed.g2.bx.psu.edu/repos/devteam/fastqc/fastqc/0.72", "type": "tool"}, "3": {"tool_id": "toolshed.g2.bx.psu.edu/repos/devteam/fastqc/fastqc/0.72", "tool_version": "0.72", "outputs": [{"type": "html", "name": "html_file"}, {"type": "txt", "name": "text_file"}], "workflow_outputs": [], "input_connections": {"input_file": {"output_name": "output", "id": 1}}, "tool_state": "{\"__page__\": null, \"contaminants\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"__rerun_remap_job_id__\": null, \"limits\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"input_file\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\"}", "id": 3, "tool_shed_repository": {"owner": "devteam", "changeset_revision": "c15237684a01", "name": "fastqc", "tool_shed": "toolshed.g2.bx.psu.edu"}, "uuid": "5c024d23-b4e8-4dab-9549-38104e3905bb", "errors": null, "name": "FastQC", "post_job_actions": {"HideDatasetActionhtml_file": {"output_name": "html_file", "action_type": "HideDatasetAction", "action_arguments": {}}, "HideDatasetActiontext_file": {"output_name": "text_file", "action_type": "HideDatasetAction", "action_arguments": {}}}, "label": null, "inputs": [{"name": "contaminants", "description": "runtime parameter for tool FastQC"}, {"name": "limits", "description": "runtime parameter for tool FastQC"}, {"name": "input_file", "description": "runtime parameter for tool FastQC"}], "position": {"top": 502, "left": 566}, "annotation": "", "content_id": "toolshed.g2.bx.psu.edu/repos/devteam/fastqc/fastqc/0.72", "type": "tool"}, "4": {"tool_id": "toolshed.g2.bx.psu.edu/repos/iuc/multiqc/multiqc/1.6", "tool_version": "1.6", "outputs": [{"type": "input", "name": "stats"}, {"type": "html", "name": "html_report"}, {"type": "txt", "name": "log"}], "workflow_outputs": [{"output_name": "html_report", "uuid": "6f26c3ff-9eff-4898-87c8-0f118d52b6ce", "label": null}], "input_connections": {"results_1|software_cond|output_0|input": {"output_name": "text_file", "id": 3}, "results_0|software_cond|output_0|input": {"output_name": "text_file", "id": 2}}, "tool_state": "{\"comment\": \"\\\"\\\"\", \"__page__\": null, \"title\": \"\\\"\\\"\", \"__rerun_remap_job_id__\": null, \"results\": \"[{\\\"__index__\\\": 0, \\\"software_cond\\\": {\\\"output\\\": [{\\\"__index__\\\": 0, \\\"type\\\": \\\"data\\\", \\\"input\\\": {\\\"__class__\\\": \\\"RuntimeValue\\\"}}], \\\"__current_case__\\\": 8, \\\"software\\\": \\\"fastqc\\\"}}, {\\\"__index__\\\": 1, \\\"software_cond\\\": {\\\"output\\\": [{\\\"__index__\\\": 0, \\\"type\\\": \\\"data\\\", \\\"input\\\": {\\\"__class__\\\": \\\"RuntimeValue\\\"}}], \\\"__current_case__\\\": 8, \\\"software\\\": \\\"fastqc\\\"}}]\", \"saveLog\": \"\\\"false\\\"\"}", "id": 4, "tool_shed_repository": {"owner": "iuc", "changeset_revision": "1c2db0054039", "name": "multiqc", "tool_shed": "toolshed.g2.bx.psu.edu"}, "uuid": "4e21607c-0f78-461d-9d11-b09dfc55e2c7", "errors": null, "name": "MultiQC", "post_job_actions": {"HideDatasetActionlog": {"output_name": "log", "action_type": "HideDatasetAction", "action_arguments": {}}, "HideDatasetActionstats": {"output_name": "stats", "action_type": "HideDatasetAction", "action_arguments": {}}}, "label": null, "inputs": [], "position": {"top": 403, "left": 1008}, "annotation": "", "content_id": "toolshed.g2.bx.psu.edu/repos/iuc/multiqc/multiqc/1.6", "type": "tool"}}, "annotation": "", "a_galaxy_workflow": "true"}
+{
+   "uuid":"7c19717e-a41a-4611-b91d-46271693f6ce",
+   "tags":[
+      
+   ],
+   "format-version":"0.1",
+   "name":"Step1. Fastq Quality Control with FASTQC and MultiQC",
+   "steps":{
+      "0":{
+         "tool_id":null,
+         "tool_version":null,
+         "outputs":[
+            
+         ],
+         "workflow_outputs":[
+            {
+               "output_name":"output",
+               "uuid":"1c8e9391-adee-464d-a91f-71e39c9ffdb1",
+               "label":null
+            }
+         ],
+         "input_connections":{
+            
+         },
+         "tool_state":"{\"collection_type\": \"list\"}",
+         "id":0,
+         "uuid":"b6c69ec5-3e25-4c9f-9172-3906a083a9be",
+         "errors":null,
+         "name":"Input dataset collection",
+         "label":"KO FASTQs",
+         "inputs":[
+            
+         ],
+         "position":{
+            "top":310.5,
+            "left":224
+         },
+         "annotation":"",
+         "content_id":null,
+         "type":"data_collection_input"
+      },
+      "1":{
+         "tool_id":null,
+         "tool_version":null,
+         "outputs":[
+            
+         ],
+         "workflow_outputs":[
+            {
+               "output_name":"output",
+               "uuid":"52a2aa38-0ba3-4072-a53c-1cde88d4e845",
+               "label":null
+            }
+         ],
+         "input_connections":{
+            
+         },
+         "tool_state":"{\"collection_type\": \"list\"}",
+         "id":1,
+         "uuid":"54a28a0f-98db-4a9e-a8f9-50891aaf21e0",
+         "errors":null,
+         "name":"Input dataset collection",
+         "label":"HET FASTQs",
+         "inputs":[
+            
+         ],
+         "position":{
+            "top":486,
+            "left":223.5
+         },
+         "annotation":"",
+         "content_id":null,
+         "type":"data_collection_input"
+      },
+      "2":{
+         "tool_id":"toolshed.g2.bx.psu.edu/repos/devteam/fastqc/fastqc/0.72",
+         "tool_version":"0.72",
+         "outputs":[
+            {
+               "type":"html",
+               "name":"html_file"
+            },
+            {
+               "type":"txt",
+               "name":"text_file"
+            }
+         ],
+         "workflow_outputs":[
+            
+         ],
+         "input_connections":{
+            "input_file":{
+               "output_name":"output",
+               "id":0
+            }
+         },
+         "tool_state":"{\"__page__\": null, \"contaminants\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"__rerun_remap_job_id__\": null, \"limits\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"input_file\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\"}",
+         "id":2,
+         "tool_shed_repository":{
+            "owner":"devteam",
+            "changeset_revision":"c15237684a01",
+            "name":"fastqc",
+            "tool_shed":"toolshed.g2.bx.psu.edu"
+         },
+         "uuid":"1ca1d386-0b34-4b66-aba4-eaa47cea610f",
+         "errors":null,
+         "name":"FastQC",
+         "post_job_actions":{
+            "HideDatasetActionhtml_file":{
+               "output_name":"html_file",
+               "action_type":"HideDatasetAction",
+               "action_arguments":{
+                  
+               }
+            },
+            "HideDatasetActiontext_file":{
+               "output_name":"text_file",
+               "action_type":"HideDatasetAction",
+               "action_arguments":{
+                  
+               }
+            }
+         },
+         "label":null,
+         "inputs":[
+            {
+               "name":"contaminants",
+               "description":"runtime parameter for tool FastQC"
+            },
+            {
+               "name":"limits",
+               "description":"runtime parameter for tool FastQC"
+            },
+            {
+               "name":"input_file",
+               "description":"runtime parameter for tool FastQC"
+            }
+         ],
+         "position":{
+            "top":257.5,
+            "left":575
+         },
+         "annotation":"",
+         "content_id":"toolshed.g2.bx.psu.edu/repos/devteam/fastqc/fastqc/0.72",
+         "type":"tool"
+      },
+      "3":{
+         "tool_id":"toolshed.g2.bx.psu.edu/repos/devteam/fastqc/fastqc/0.72",
+         "tool_version":"0.72",
+         "outputs":[
+            {
+               "type":"html",
+               "name":"html_file"
+            },
+            {
+               "type":"txt",
+               "name":"text_file"
+            }
+         ],
+         "workflow_outputs":[
+            
+         ],
+         "input_connections":{
+            "input_file":{
+               "output_name":"output",
+               "id":1
+            }
+         },
+         "tool_state":"{\"__page__\": null, \"contaminants\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"__rerun_remap_job_id__\": null, \"limits\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"input_file\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\"}",
+         "id":3,
+         "tool_shed_repository":{
+            "owner":"devteam",
+            "changeset_revision":"c15237684a01",
+            "name":"fastqc",
+            "tool_shed":"toolshed.g2.bx.psu.edu"
+         },
+         "uuid":"5c024d23-b4e8-4dab-9549-38104e3905bb",
+         "errors":null,
+         "name":"FastQC",
+         "post_job_actions":{
+            "HideDatasetActionhtml_file":{
+               "output_name":"html_file",
+               "action_type":"HideDatasetAction",
+               "action_arguments":{
+                  
+               }
+            },
+            "HideDatasetActiontext_file":{
+               "output_name":"text_file",
+               "action_type":"HideDatasetAction",
+               "action_arguments":{
+                  
+               }
+            }
+         },
+         "label":null,
+         "inputs":[
+            {
+               "name":"contaminants",
+               "description":"runtime parameter for tool FastQC"
+            },
+            {
+               "name":"limits",
+               "description":"runtime parameter for tool FastQC"
+            },
+            {
+               "name":"input_file",
+               "description":"runtime parameter for tool FastQC"
+            }
+         ],
+         "position":{
+            "top":502,
+            "left":566
+         },
+         "annotation":"",
+         "content_id":"toolshed.g2.bx.psu.edu/repos/devteam/fastqc/fastqc/0.72",
+         "type":"tool"
+      },
+      "4":{
+         "tool_id":"toolshed.g2.bx.psu.edu/repos/iuc/multiqc/multiqc/1.6",
+         "tool_version":"1.6",
+         "outputs":[
+            {
+               "type":"input",
+               "name":"stats"
+            },
+            {
+               "type":"html",
+               "name":"html_report"
+            },
+            {
+               "type":"txt",
+               "name":"log"
+            }
+         ],
+         "workflow_outputs":[
+            {
+               "output_name":"html_report",
+               "uuid":"6f26c3ff-9eff-4898-87c8-0f118d52b6ce",
+               "label":null
+            }
+         ],
+         "input_connections":{
+            "results_1|software_cond|output_0|input":{
+               "output_name":"text_file",
+               "id":3
+            },
+            "results_0|software_cond|output_0|input":{
+               "output_name":"text_file",
+               "id":2
+            }
+         },
+         "tool_state":"{\"comment\": \"\\\"\\\"\", \"__page__\": null, \"title\": \"\\\"\\\"\", \"__rerun_remap_job_id__\": null, \"results\": \"[{\\\"__index__\\\": 0, \\\"software_cond\\\": {\\\"output\\\": [{\\\"__index__\\\": 0, \\\"type\\\": \\\"data\\\", \\\"input\\\": {\\\"__class__\\\": \\\"RuntimeValue\\\"}}], \\\"__current_case__\\\": 8, \\\"software\\\": \\\"fastqc\\\"}}, {\\\"__index__\\\": 1, \\\"software_cond\\\": {\\\"output\\\": [{\\\"__index__\\\": 0, \\\"type\\\": \\\"data\\\", \\\"input\\\": {\\\"__class__\\\": \\\"RuntimeValue\\\"}}], \\\"__current_case__\\\": 8, \\\"software\\\": \\\"fastqc\\\"}}]\", \"saveLog\": \"\\\"false\\\"\"}",
+         "id":4,
+         "tool_shed_repository":{
+            "owner":"iuc",
+            "changeset_revision":"1c2db0054039",
+            "name":"multiqc",
+            "tool_shed":"toolshed.g2.bx.psu.edu"
+         },
+         "uuid":"4e21607c-0f78-461d-9d11-b09dfc55e2c7",
+         "errors":null,
+         "name":"MultiQC",
+         "post_job_actions":{
+            "HideDatasetActionlog":{
+               "output_name":"log",
+               "action_type":"HideDatasetAction",
+               "action_arguments":{
+                  
+               }
+            },
+            "HideDatasetActionstats":{
+               "output_name":"stats",
+               "action_type":"HideDatasetAction",
+               "action_arguments":{
+                  
+               }
+            }
+         },
+         "label":null,
+         "inputs":[
+            
+         ],
+         "position":{
+            "top":403,
+            "left":1008
+         },
+         "annotation":"",
+         "content_id":"toolshed.g2.bx.psu.edu/repos/iuc/multiqc/multiqc/1.6",
+         "type":"tool"
+      }
+   },
+   "annotation":"",
+   "a_galaxy_workflow":"true"
+}

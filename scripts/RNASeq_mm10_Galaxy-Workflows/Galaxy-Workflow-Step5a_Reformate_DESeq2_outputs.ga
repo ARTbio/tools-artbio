@@ -1,1 +1,1033 @@
-{"uuid": "c47cffe4-2acd-4e84-a45e-713ff7042c8a", "tags": [], "format-version": "0.1", "name": "Step5a. Reformate DESeq2 outputs", "steps": {"0": {"tool_id": null, "tool_version": null, "outputs": [], "workflow_outputs": [{"output_name": "output", "uuid": "454dc366-243c-4cf1-aad9-d62210b574c6", "label": null}], "input_connections": {}, "tool_state": "{\"collection_type\": \"list\"}", "id": 0, "uuid": "8b544a81-438a-40ba-9122-564e52511607", "errors": null, "name": "Input dataset collection", "label": "KO Featurecounts", "inputs": [], "position": {"top": 415.5, "left": 100}, "annotation": "", "content_id": null, "type": "data_collection_input"}, "1": {"tool_id": null, "tool_version": null, "outputs": [], "workflow_outputs": [{"output_name": "output", "uuid": "d8e7a416-ec98-411c-b168-c5068c5bf1ce", "label": null}], "input_connections": {}, "tool_state": "{}", "id": 1, "uuid": "b4c3ac58-0540-4bee-b6b3-f46ccc6f0056", "errors": null, "name": "Input dataset", "label": "DESeq2 header", "inputs": [], "position": {"top": 233.5, "left": 454}, "annotation": "", "content_id": null, "type": "data_input"}, "2": {"tool_id": null, "tool_version": null, "outputs": [], "workflow_outputs": [{"output_name": "output", "uuid": "7741178b-fe53-4bbb-bb09-d435b97b92f0", "label": null}], "input_connections": {}, "tool_state": "{}", "id": 2, "uuid": "3f401c85-ff4b-44ed-a71a-711df4b4be4e", "errors": null, "name": "Input dataset", "label": "DESeq2 result", "inputs": [], "position": {"top": 316, "left": 439}, "annotation": "", "content_id": null, "type": "data_input"}, "3": {"tool_id": null, "tool_version": null, "outputs": [], "workflow_outputs": [{"output_name": "output", "uuid": "a4b38631-10ca-48ff-8633-79ce81ce49db", "label": null}], "input_connections": {}, "tool_state": "{\"collection_type\": \"list\"}", "id": 3, "uuid": "e45aaaba-ed89-42be-8478-1cb21db348bc", "errors": null, "name": "Input dataset collection", "label": "HET Featurecounts", "inputs": [], "position": {"top": 568.5, "left": 114}, "annotation": "", "content_id": null, "type": "data_collection_input"}, "4": {"tool_id": null, "tool_version": null, "outputs": [], "workflow_outputs": [{"output_name": "output", "uuid": "29534929-7a92-4f64-86ac-bb43b20a1d34", "label": null}], "input_connections": {}, "tool_state": "{}", "id": 4, "uuid": "2d721ada-ec00-4368-a3d6-66b43624c057", "errors": null, "name": "Input dataset", "label": "Biomart Ensembl data", "inputs": [], "position": {"top": 789, "left": 2529}, "annotation": "", "content_id": null, "type": "data_input"}, "5": {"tool_id": "toolshed.g2.bx.psu.edu/repos/iuc/collection_column_join/collection_column_join/0.0.3", "tool_version": null, "outputs": [{"type": "tabular", "name": "tabular_output"}, {"type": "txt", "name": "script_output"}], "workflow_outputs": [], "input_connections": {"input_tabular": {"output_name": "output", "id": 0}}, "tool_state": "{\"__page__\": null, \"identifier_column\": \"\\\"1\\\"\", \"include_outputs\": \"null\", \"__rerun_remap_job_id__\": null, \"input_tabular\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"fill_char\": \"\\\".\\\"\", \"old_col_in_header\": \"\\\"true\\\"\", \"has_header\": \"\\\"1\\\"\"}", "id": 5, "tool_shed_repository": {"owner": "iuc", "changeset_revision": "58228a4d58fe", "name": "collection_column_join", "tool_shed": "toolshed.g2.bx.psu.edu"}, "uuid": "cda6135b-97f3-4e25-9f3d-c83c1ade02fe", "errors": null, "name": "Column Join", "post_job_actions": {"HideDatasetActiontabular_output": {"output_name": "tabular_output", "action_type": "HideDatasetAction", "action_arguments": {}}, "HideDatasetActionscript_output": {"output_name": "script_output", "action_type": "HideDatasetAction", "action_arguments": {}}}, "label": "KO counts table", "inputs": [{"name": "input_tabular", "description": "runtime parameter for tool Column Join"}], "position": {"top": 428.5, "left": 348}, "annotation": "", "content_id": "toolshed.g2.bx.psu.edu/repos/iuc/collection_column_join/collection_column_join/0.0.3", "type": "tool"}, "6": {"tool_id": "toolshed.g2.bx.psu.edu/repos/bgruening/text_processing/tp_cat/0.1.0", "tool_version": null, "outputs": [{"type": "input", "name": "out_file1"}], "workflow_outputs": [], "input_connections": {"inputs": {"output_name": "output", "id": 1}, "queries_0|inputs2": {"output_name": "output", "id": 2}}, "tool_state": "{\"__page__\": null, \"inputs\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"__rerun_remap_job_id__\": null, \"queries\": \"[{\\\"inputs2\\\": {\\\"__class__\\\": \\\"RuntimeValue\\\"}, \\\"__index__\\\": 0}]\"}", "id": 6, "tool_shed_repository": {"owner": "bgruening", "changeset_revision": "a6f147a050a2", "name": "text_processing", "tool_shed": "toolshed.g2.bx.psu.edu"}, "uuid": "f895a9e6-1c31-482f-9afc-b6692edb359a", "errors": null, "name": "Concatenate datasets", "post_job_actions": {"HideDatasetActionout_file1": {"output_name": "out_file1", "action_type": "HideDatasetAction", "action_arguments": {}}}, "label": "DESeq2 with Header", "inputs": [{"name": "inputs", "description": "runtime parameter for tool Concatenate datasets"}], "position": {"top": 237.5, "left": 709.5}, "annotation": "", "content_id": "toolshed.g2.bx.psu.edu/repos/bgruening/text_processing/tp_cat/0.1.0", "type": "tool"}, "7": {"tool_id": "toolshed.g2.bx.psu.edu/repos/iuc/collection_column_join/collection_column_join/0.0.3", "tool_version": null, "outputs": [{"type": "tabular", "name": "tabular_output"}, {"type": "txt", "name": "script_output"}], "workflow_outputs": [], "input_connections": {"input_tabular": {"output_name": "output", "id": 3}}, "tool_state": "{\"__page__\": null, \"identifier_column\": \"\\\"1\\\"\", \"include_outputs\": \"null\", \"__rerun_remap_job_id__\": null, \"input_tabular\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"fill_char\": \"\\\".\\\"\", \"old_col_in_header\": \"\\\"true\\\"\", \"has_header\": \"\\\"1\\\"\"}", "id": 7, "tool_shed_repository": {"owner": "iuc", "changeset_revision": "58228a4d58fe", "name": "collection_column_join", "tool_shed": "toolshed.g2.bx.psu.edu"}, "uuid": "4acb9879-a4c8-4bab-8bc5-1672c362d98d", "errors": null, "name": "Column Join", "post_job_actions": {"HideDatasetActiontabular_output": {"output_name": "tabular_output", "action_type": "HideDatasetAction", "action_arguments": {}}, "HideDatasetActionscript_output": {"output_name": "script_output", "action_type": "HideDatasetAction", "action_arguments": {}}}, "label": "HET counts table", "inputs": [{"name": "input_tabular", "description": "runtime parameter for tool Column Join"}], "position": {"top": 578.5, "left": 340}, "annotation": "", "content_id": "toolshed.g2.bx.psu.edu/repos/iuc/collection_column_join/collection_column_join/0.0.3", "type": "tool"}, "8": {"tool_id": "join1", "tool_version": null, "outputs": [{"type": "input", "name": "out_file1"}], "workflow_outputs": [], "input_connections": {"input2": {"output_name": "tabular_output", "id": 7}, "input1": {"output_name": "tabular_output", "id": 5}}, "tool_state": "{\"input2\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"__page__\": null, \"field1\": \"\\\"1\\\"\", \"partial\": \"\\\"-p\\\"\", \"field2\": \"\\\"1\\\"\", \"__rerun_remap_job_id__\": null, \"fill_empty_columns\": \"{\\\"fill_empty_columns_switch\\\": \\\"no_fill\\\", \\\"__current_case__\\\": 0}\", \"unmatched\": \"\\\"-u\\\"\", \"header\": \"\\\"-H\\\"\", \"input1\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\"}", "id": 8, "uuid": "9200c9ab-1fe5-4ef0-ae90-7bdf775ed449", "errors": null, "name": "Join two Datasets", "post_job_actions": {"HideDatasetActionout_file1": {"output_name": "out_file1", "action_type": "HideDatasetAction", "action_arguments": {}}}, "label": "KO and HET Featurecounts ", "inputs": [{"name": "input2", "description": "runtime parameter for tool Join two Datasets"}, {"name": "input1", "description": "runtime parameter for tool Join two Datasets"}], "position": {"top": 516.5, "left": 585}, "annotation": "", "content_id": "join1", "type": "tool"}, "9": {"tool_id": "toolshed.g2.bx.psu.edu/repos/jjohnson/regex_find_replace/regex1/0.1.0", "tool_version": null, "outputs": [{"type": "input", "name": "out_file1"}], "workflow_outputs": [], "input_connections": {"input": {"output_name": "out_file1", "id": 8}}, "tool_state": "{\"input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"__rerun_remap_job_id__\": null, \"checks\": \"[{\\\"__index__\\\": 0, \\\"replacement\\\": \\\"\\\\\\\\t\\\", \\\"pattern\\\": \\\"_[A-Z0-9]+\\\\\\\\t\\\"}, {\\\"__index__\\\": 1, \\\"replacement\\\": \\\"\\\", \\\"pattern\\\": \\\"_[A-Z0-9]+\\\"}]\", \"__page__\": null}", "id": 9, "tool_shed_repository": {"owner": "jjohnson", "changeset_revision": "9ea374bb0350", "name": "regex_find_replace", "tool_shed": "toolshed.g2.bx.psu.edu"}, "uuid": "36eb6898-1220-4e34-b71f-08df46fe6cfc", "errors": null, "name": "Regex Find And Replace", "post_job_actions": {"HideDatasetActionout_file1": {"output_name": "out_file1", "action_type": "HideDatasetAction", "action_arguments": {}}}, "label": "Replace header", "inputs": [{"name": "input", "description": "runtime parameter for tool Regex Find And Replace"}], "position": {"top": 551.5, "left": 816}, "annotation": "", "content_id": "toolshed.g2.bx.psu.edu/repos/jjohnson/regex_find_replace/regex1/0.1.0", "type": "tool"}, "10": {"tool_id": "join1", "tool_version": null, "outputs": [{"type": "input", "name": "out_file1"}], "workflow_outputs": [], "input_connections": {"input2": {"output_name": "out_file1", "id": 9}, "input1": {"output_name": "out_file1", "id": 6}}, "tool_state": "{\"input2\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"__page__\": null, \"field1\": \"\\\"1\\\"\", \"partial\": \"\\\"-p\\\"\", \"field2\": \"\\\"1\\\"\", \"__rerun_remap_job_id__\": null, \"fill_empty_columns\": \"{\\\"fill_empty_columns_switch\\\": \\\"no_fill\\\", \\\"__current_case__\\\": 0}\", \"unmatched\": \"\\\"-u\\\"\", \"header\": \"\\\"-H\\\"\", \"input1\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\"}", "id": 10, "uuid": "ad0efdd0-1ac5-4a1d-9237-19e922e73dc9", "errors": null, "name": "Join two Datasets", "post_job_actions": {"HideDatasetActionout_file1": {"output_name": "out_file1", "action_type": "HideDatasetAction", "action_arguments": {}}}, "label": "DEseq2 results with counts", "inputs": [{"name": "input2", "description": "runtime parameter for tool Join two Datasets"}, {"name": "input1", "description": "runtime parameter for tool Join two Datasets"}], "position": {"top": 374.5, "left": 1031}, "annotation": "", "content_id": "join1", "type": "tool"}, "11": {"tool_id": "toolshed.g2.bx.psu.edu/repos/devteam/cut_columns/Cut1/1.0.2", "tool_version": null, "outputs": [{"type": "tabular", "name": "out_file1"}], "workflow_outputs": [], "input_connections": {"input": {"output_name": "out_file1", "id": 10}}, "tool_state": "{\"columnList\": \"\\\"c1-c15,c3\\\"\", \"input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"delimiter\": \"\\\"T\\\"\", \"__rerun_remap_job_id__\": null, \"__page__\": null}", "id": 11, "tool_shed_repository": {"owner": "devteam", "changeset_revision": "cec635fab700", "name": "cut_columns", "tool_shed": "toolshed.g2.bx.psu.edu"}, "uuid": "477b3f82-136a-4980-b315-5f384dc6cd53", "errors": null, "name": "Cut", "post_job_actions": {"HideDatasetActionout_file1": {"output_name": "out_file1", "action_type": "HideDatasetAction", "action_arguments": {}}}, "label": "Step1. Sort according to FC", "inputs": [{"name": "input", "description": "runtime parameter for tool Cut"}], "position": {"top": 394, "left": 1242}, "annotation": "", "content_id": "toolshed.g2.bx.psu.edu/repos/devteam/cut_columns/Cut1/1.0.2", "type": "tool"}, "12": {"tool_id": "toolshed.g2.bx.psu.edu/repos/bgruening/text_processing/tp_replace_in_column/1.1.3", "tool_version": null, "outputs": [{"type": "input", "name": "outfile"}], "workflow_outputs": [], "input_connections": {"infile": {"output_name": "out_file1", "id": 11}}, "tool_state": "{\"__page__\": null, \"__rerun_remap_job_id__\": null, \"replacements\": \"[{\\\"column\\\": \\\"16\\\", \\\"__index__\\\": 0, \\\"replace_pattern\\\": \\\"\\\", \\\"find_pattern\\\": \\\"-\\\"}]\", \"infile\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\"}", "id": 12, "tool_shed_repository": {"owner": "bgruening", "changeset_revision": "a6f147a050a2", "name": "text_processing", "tool_shed": "toolshed.g2.bx.psu.edu"}, "uuid": "1d60f9d7-d526-44b0-b8bc-0edad118f8f9", "errors": null, "name": "Replace Text", "post_job_actions": {"HideDatasetActionoutfile": {"output_name": "outfile", "action_type": "HideDatasetAction", "action_arguments": {}}}, "label": "Step2. Sort according to FC", "inputs": [{"name": "infile", "description": "runtime parameter for tool Replace Text"}], "position": {"top": 422, "left": 1450}, "annotation": "", "content_id": "toolshed.g2.bx.psu.edu/repos/bgruening/text_processing/tp_replace_in_column/1.1.3", "type": "tool"}, "13": {"tool_id": "sort1", "tool_version": null, "outputs": [{"type": "input", "name": "out_file1"}], "workflow_outputs": [], "input_connections": {"input": {"output_name": "outfile", "id": 12}}, "tool_state": "{\"__page__\": null, \"style\": \"\\\"num\\\"\", \"column\": \"\\\"16\\\"\", \"__rerun_remap_job_id__\": null, \"order\": \"\\\"DESC\\\"\", \"input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"header_lines\": \"\\\"1\\\"\", \"column_set\": \"[]\"}", "id": 13, "uuid": "411c65c3-bbc1-4206-8df1-6423072c5731", "errors": null, "name": "Sort", "post_job_actions": {"HideDatasetActionout_file1": {"output_name": "out_file1", "action_type": "HideDatasetAction", "action_arguments": {}}}, "label": "Step3. Sort according to FC", "inputs": [{"name": "input", "description": "runtime parameter for tool Sort"}], "position": {"top": 433, "left": 1654}, "annotation": "", "content_id": "sort1", "type": "tool"}, "14": {"tool_id": "toolshed.g2.bx.psu.edu/repos/devteam/cut_columns/Cut1/1.0.2", "tool_version": null, "outputs": [{"type": "tabular", "name": "out_file1"}], "workflow_outputs": [{"output_name": "out_file1", "uuid": "d22a71b0-35b4-4d9d-9e7e-233d1a3ccd14", "label": null}], "input_connections": {"input": {"output_name": "out_file1", "id": 13}}, "tool_state": "{\"columnList\": \"\\\"c1-c15\\\"\", \"input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"delimiter\": \"\\\"T\\\"\", \"__rerun_remap_job_id__\": null, \"__page__\": null}", "id": 14, "tool_shed_repository": {"owner": "devteam", "changeset_revision": "cec635fab700", "name": "cut_columns", "tool_shed": "toolshed.g2.bx.psu.edu"}, "uuid": "16ce557b-cced-401f-a8ee-fac8995d2267", "errors": null, "name": "Cut", "post_job_actions": {}, "label": "Step4. Sort according to FC", "inputs": [{"name": "input", "description": "runtime parameter for tool Cut"}], "position": {"top": 463, "left": 1897}, "annotation": "", "content_id": "toolshed.g2.bx.psu.edu/repos/devteam/cut_columns/Cut1/1.0.2", "type": "tool"}, "15": {"tool_id": "Grep1", "tool_version": null, "outputs": [{"type": "input", "name": "out_file1"}], "workflow_outputs": [], "input_connections": {"input": {"output_name": "out_file1", "id": 14}}, "tool_state": "{\"__page__\": null, \"pattern\": \"\\\"\\\\\\\\t0\\\\\\\\t\\\"\", \"invert\": \"\\\"true\\\"\", \"__rerun_remap_job_id__\": null, \"input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\"}", "id": 15, "uuid": "f891d86d-6d4a-4edd-87bf-8acbdd8a9d3c", "errors": null, "name": "Select", "post_job_actions": {"HideDatasetActionout_file1": {"output_name": "out_file1", "action_type": "HideDatasetAction", "action_arguments": {}}}, "label": "Remove Zero counts data", "inputs": [{"name": "input", "description": "runtime parameter for tool Select"}], "position": {"top": 497, "left": 2177}, "annotation": "", "content_id": "Grep1", "type": "tool"}, "16": {"tool_id": "toolshed.g2.bx.psu.edu/repos/iuc/volcanoplot/volcanoplot/0.0.2", "tool_version": null, "outputs": [{"type": "pdf", "name": "plot"}], "workflow_outputs": [{"output_name": "plot", "uuid": "c780174a-c393-4fea-ad96-66c5f441dfc3", "label": null}], "input_connections": {"input": {"output_name": "out_file1", "id": 15}}, "tool_state": "{\"__page__\": null, \"fdr_col\": \"\\\"7\\\"\", \"plot_options\": \"{\\\"legend_labs\\\": \\\"Down,Not Sig,Up\\\", \\\"xlab\\\": \\\"\\\", \\\"ylab\\\": \\\"\\\", \\\"legend\\\": \\\"\\\", \\\"title\\\": \\\"\\\"}\", \"label_col\": \"\\\"1\\\"\", \"lfc_col\": \"\\\"3\\\"\", \"__rerun_remap_job_id__\": null, \"labels\": \"{\\\"top_num\\\": \\\"10\\\", \\\"label_select\\\": \\\"signif\\\", \\\"__current_case__\\\": 0}\", \"signif_thresh\": \"\\\"0.05\\\"\", \"lfc_thresh\": \"\\\"1.0\\\"\", \"pval_col\": \"\\\"6\\\"\", \"input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\"}", "id": 16, "tool_shed_repository": {"owner": "iuc", "changeset_revision": "d1d39c72b755", "name": "volcanoplot", "tool_shed": "toolshed.g2.bx.psu.edu"}, "uuid": "3944197c-1bbd-41f3-bc11-91467302499c", "errors": null, "name": "Volcano Plot", "post_job_actions": {}, "label": null, "inputs": [{"name": "input", "description": "runtime parameter for tool Volcano Plot"}], "position": {"top": 389, "left": 2432}, "annotation": "", "content_id": "toolshed.g2.bx.psu.edu/repos/iuc/volcanoplot/volcanoplot/0.0.2", "type": "tool"}, "17": {"tool_id": "toolshed.g2.bx.psu.edu/repos/iuc/volcanoplot/volcanoplot/0.0.2", "tool_version": null, "outputs": [{"type": "pdf", "name": "plot"}], "workflow_outputs": [{"output_name": "plot", "uuid": "26f8c1d5-cf64-4f37-bc17-dfd895a50938", "label": null}], "input_connections": {"input": {"output_name": "out_file1", "id": 15}}, "tool_state": "{\"__page__\": null, \"fdr_col\": \"\\\"7\\\"\", \"plot_options\": \"{\\\"legend_labs\\\": \\\"Down,Not Sig,Up\\\", \\\"xlab\\\": \\\"\\\", \\\"ylab\\\": \\\"\\\", \\\"legend\\\": \\\"\\\", \\\"title\\\": \\\"\\\"}\", \"label_col\": \"\\\"1\\\"\", \"lfc_col\": \"\\\"3\\\"\", \"__rerun_remap_job_id__\": null, \"labels\": \"{\\\"label_select\\\": \\\"none\\\", \\\"__current_case__\\\": 2}\", \"signif_thresh\": \"\\\"0.05\\\"\", \"lfc_thresh\": \"\\\"1.0\\\"\", \"pval_col\": \"\\\"6\\\"\", \"input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\"}", "id": 17, "tool_shed_repository": {"owner": "iuc", "changeset_revision": "d1d39c72b755", "name": "volcanoplot", "tool_shed": "toolshed.g2.bx.psu.edu"}, "uuid": "37a9588c-b777-45bb-975e-f3b1f62f29f1", "errors": null, "name": "Volcano Plot", "post_job_actions": {}, "label": null, "inputs": [{"name": "input", "description": "runtime parameter for tool Volcano Plot"}], "position": {"top": 505.5, "left": 2441}, "annotation": "", "content_id": "toolshed.g2.bx.psu.edu/repos/iuc/volcanoplot/volcanoplot/0.0.2", "type": "tool"}, "18": {"tool_id": "Filter1", "tool_version": null, "outputs": [{"type": "input", "name": "out_file1"}], "workflow_outputs": [], "input_connections": {"input": {"output_name": "out_file1", "id": 15}}, "tool_state": "{\"input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"__rerun_remap_job_id__\": null, \"header_lines\": \"\\\"1\\\"\", \"cond\": \"\\\"c7<0.1\\\"\", \"__page__\": null}", "id": 18, "uuid": "57e44866-1e90-4bad-8c50-c16644bcb664", "errors": null, "name": "Filter", "post_job_actions": {"HideDatasetActionout_file1": {"output_name": "out_file1", "action_type": "HideDatasetAction", "action_arguments": {}}}, "label": "Significant data", "inputs": [{"name": "input", "description": "runtime parameter for tool Filter"}], "position": {"top": 619, "left": 2464}, "annotation": "", "content_id": "Filter1", "type": "tool"}, "19": {"tool_id": "join1", "tool_version": null, "outputs": [{"type": "input", "name": "out_file1"}], "workflow_outputs": [], "input_connections": {"input2": {"output_name": "output", "id": 4}, "input1": {"output_name": "out_file1", "id": 18}}, "tool_state": "{\"input2\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"__page__\": null, \"field1\": \"\\\"1\\\"\", \"partial\": \"\\\"-p\\\"\", \"field2\": \"\\\"1\\\"\", \"__rerun_remap_job_id__\": null, \"fill_empty_columns\": \"{\\\"fill_empty_columns_switch\\\": \\\"no_fill\\\", \\\"__current_case__\\\": 0}\", \"unmatched\": \"\\\"-u\\\"\", \"header\": \"\\\"-H\\\"\", \"input1\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\"}", "id": 19, "uuid": "61dbd5a5-778b-4333-b2e2-55fc2b43eda2", "errors": null, "name": "Join two Datasets", "post_job_actions": {"HideDatasetActionout_file1": {"output_name": "out_file1", "action_type": "HideDatasetAction", "action_arguments": {}}}, "label": null, "inputs": [{"name": "input2", "description": "runtime parameter for tool Join two Datasets"}, {"name": "input1", "description": "runtime parameter for tool Join two Datasets"}], "position": {"top": 618, "left": 2769}, "annotation": "", "content_id": "join1", "type": "tool"}, "20": {"tool_id": "toolshed.g2.bx.psu.edu/repos/devteam/cut_columns/Cut1/1.0.2", "tool_version": null, "outputs": [{"type": "tabular", "name": "out_file1"}], "workflow_outputs": [], "input_connections": {"input": {"output_name": "out_file1", "id": 19}}, "tool_state": "{\"columnList\": \"\\\"c1,c17-c19,c3,c6,c7,c11,c10,c9,c15,c14,c13,c2,c4-c5\\\"\", \"input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"delimiter\": \"\\\"T\\\"\", \"__rerun_remap_job_id__\": null, \"__page__\": null}", "id": 20, "tool_shed_repository": {"owner": "devteam", "changeset_revision": "cec635fab700", "name": "cut_columns", "tool_shed": "toolshed.g2.bx.psu.edu"}, "uuid": "11ee104f-4c6a-4d1d-af9d-f8bc1aab1a56", "errors": null, "name": "Cut", "post_job_actions": {"HideDatasetActionout_file1": {"output_name": "out_file1", "action_type": "HideDatasetAction", "action_arguments": {}}}, "label": "Final DESeq2 table", "inputs": [{"name": "input", "description": "runtime parameter for tool Cut"}], "position": {"top": 616.5, "left": 3024}, "annotation": "", "content_id": "toolshed.g2.bx.psu.edu/repos/devteam/cut_columns/Cut1/1.0.2", "type": "tool"}}, "annotation": "", "a_galaxy_workflow": "true"}
+{
+   "uuid":"c47cffe4-2acd-4e84-a45e-713ff7042c8a",
+   "tags":[
+      
+   ],
+   "format-version":"0.1",
+   "name":"Step5a. Reformate DESeq2 outputs",
+   "steps":{
+      "0":{
+         "tool_id":null,
+         "tool_version":null,
+         "outputs":[
+            
+         ],
+         "workflow_outputs":[
+            {
+               "output_name":"output",
+               "uuid":"454dc366-243c-4cf1-aad9-d62210b574c6",
+               "label":null
+            }
+         ],
+         "input_connections":{
+            
+         },
+         "tool_state":"{\"collection_type\": \"list\"}",
+         "id":0,
+         "uuid":"8b544a81-438a-40ba-9122-564e52511607",
+         "errors":null,
+         "name":"Input dataset collection",
+         "label":"KO Featurecounts",
+         "inputs":[
+            
+         ],
+         "position":{
+            "top":415.5,
+            "left":100
+         },
+         "annotation":"",
+         "content_id":null,
+         "type":"data_collection_input"
+      },
+      "1":{
+         "tool_id":null,
+         "tool_version":null,
+         "outputs":[
+            
+         ],
+         "workflow_outputs":[
+            {
+               "output_name":"output",
+               "uuid":"d8e7a416-ec98-411c-b168-c5068c5bf1ce",
+               "label":null
+            }
+         ],
+         "input_connections":{
+            
+         },
+         "tool_state":"{}",
+         "id":1,
+         "uuid":"b4c3ac58-0540-4bee-b6b3-f46ccc6f0056",
+         "errors":null,
+         "name":"Input dataset",
+         "label":"DESeq2 header",
+         "inputs":[
+            
+         ],
+         "position":{
+            "top":233.5,
+            "left":454
+         },
+         "annotation":"",
+         "content_id":null,
+         "type":"data_input"
+      },
+      "2":{
+         "tool_id":null,
+         "tool_version":null,
+         "outputs":[
+            
+         ],
+         "workflow_outputs":[
+            {
+               "output_name":"output",
+               "uuid":"7741178b-fe53-4bbb-bb09-d435b97b92f0",
+               "label":null
+            }
+         ],
+         "input_connections":{
+            
+         },
+         "tool_state":"{}",
+         "id":2,
+         "uuid":"3f401c85-ff4b-44ed-a71a-711df4b4be4e",
+         "errors":null,
+         "name":"Input dataset",
+         "label":"DESeq2 result",
+         "inputs":[
+            
+         ],
+         "position":{
+            "top":316,
+            "left":439
+         },
+         "annotation":"",
+         "content_id":null,
+         "type":"data_input"
+      },
+      "3":{
+         "tool_id":null,
+         "tool_version":null,
+         "outputs":[
+            
+         ],
+         "workflow_outputs":[
+            {
+               "output_name":"output",
+               "uuid":"a4b38631-10ca-48ff-8633-79ce81ce49db",
+               "label":null
+            }
+         ],
+         "input_connections":{
+            
+         },
+         "tool_state":"{\"collection_type\": \"list\"}",
+         "id":3,
+         "uuid":"e45aaaba-ed89-42be-8478-1cb21db348bc",
+         "errors":null,
+         "name":"Input dataset collection",
+         "label":"HET Featurecounts",
+         "inputs":[
+            
+         ],
+         "position":{
+            "top":568.5,
+            "left":114
+         },
+         "annotation":"",
+         "content_id":null,
+         "type":"data_collection_input"
+      },
+      "4":{
+         "tool_id":null,
+         "tool_version":null,
+         "outputs":[
+            
+         ],
+         "workflow_outputs":[
+            {
+               "output_name":"output",
+               "uuid":"29534929-7a92-4f64-86ac-bb43b20a1d34",
+               "label":null
+            }
+         ],
+         "input_connections":{
+            
+         },
+         "tool_state":"{}",
+         "id":4,
+         "uuid":"2d721ada-ec00-4368-a3d6-66b43624c057",
+         "errors":null,
+         "name":"Input dataset",
+         "label":"Biomart Ensembl data",
+         "inputs":[
+            
+         ],
+         "position":{
+            "top":789,
+            "left":2529
+         },
+         "annotation":"",
+         "content_id":null,
+         "type":"data_input"
+      },
+      "5":{
+         "tool_id":"toolshed.g2.bx.psu.edu/repos/iuc/collection_column_join/collection_column_join/0.0.3",
+         "tool_version":null,
+         "outputs":[
+            {
+               "type":"tabular",
+               "name":"tabular_output"
+            },
+            {
+               "type":"txt",
+               "name":"script_output"
+            }
+         ],
+         "workflow_outputs":[
+            
+         ],
+         "input_connections":{
+            "input_tabular":{
+               "output_name":"output",
+               "id":0
+            }
+         },
+         "tool_state":"{\"__page__\": null, \"identifier_column\": \"\\\"1\\\"\", \"include_outputs\": \"null\", \"__rerun_remap_job_id__\": null, \"input_tabular\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"fill_char\": \"\\\".\\\"\", \"old_col_in_header\": \"\\\"true\\\"\", \"has_header\": \"\\\"1\\\"\"}",
+         "id":5,
+         "tool_shed_repository":{
+            "owner":"iuc",
+            "changeset_revision":"58228a4d58fe",
+            "name":"collection_column_join",
+            "tool_shed":"toolshed.g2.bx.psu.edu"
+         },
+         "uuid":"cda6135b-97f3-4e25-9f3d-c83c1ade02fe",
+         "errors":null,
+         "name":"Column Join",
+         "post_job_actions":{
+            "HideDatasetActiontabular_output":{
+               "output_name":"tabular_output",
+               "action_type":"HideDatasetAction",
+               "action_arguments":{
+                  
+               }
+            },
+            "HideDatasetActionscript_output":{
+               "output_name":"script_output",
+               "action_type":"HideDatasetAction",
+               "action_arguments":{
+                  
+               }
+            }
+         },
+         "label":"KO counts table",
+         "inputs":[
+            {
+               "name":"input_tabular",
+               "description":"runtime parameter for tool Column Join"
+            }
+         ],
+         "position":{
+            "top":428.5,
+            "left":348
+         },
+         "annotation":"",
+         "content_id":"toolshed.g2.bx.psu.edu/repos/iuc/collection_column_join/collection_column_join/0.0.3",
+         "type":"tool"
+      },
+      "6":{
+         "tool_id":"toolshed.g2.bx.psu.edu/repos/bgruening/text_processing/tp_cat/0.1.0",
+         "tool_version":null,
+         "outputs":[
+            {
+               "type":"input",
+               "name":"out_file1"
+            }
+         ],
+         "workflow_outputs":[
+            
+         ],
+         "input_connections":{
+            "inputs":{
+               "output_name":"output",
+               "id":1
+            },
+            "queries_0|inputs2":{
+               "output_name":"output",
+               "id":2
+            }
+         },
+         "tool_state":"{\"__page__\": null, \"inputs\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"__rerun_remap_job_id__\": null, \"queries\": \"[{\\\"inputs2\\\": {\\\"__class__\\\": \\\"RuntimeValue\\\"}, \\\"__index__\\\": 0}]\"}",
+         "id":6,
+         "tool_shed_repository":{
+            "owner":"bgruening",
+            "changeset_revision":"a6f147a050a2",
+            "name":"text_processing",
+            "tool_shed":"toolshed.g2.bx.psu.edu"
+         },
+         "uuid":"f895a9e6-1c31-482f-9afc-b6692edb359a",
+         "errors":null,
+         "name":"Concatenate datasets",
+         "post_job_actions":{
+            "HideDatasetActionout_file1":{
+               "output_name":"out_file1",
+               "action_type":"HideDatasetAction",
+               "action_arguments":{
+                  
+               }
+            }
+         },
+         "label":"DESeq2 with Header",
+         "inputs":[
+            {
+               "name":"inputs",
+               "description":"runtime parameter for tool Concatenate datasets"
+            }
+         ],
+         "position":{
+            "top":237.5,
+            "left":709.5
+         },
+         "annotation":"",
+         "content_id":"toolshed.g2.bx.psu.edu/repos/bgruening/text_processing/tp_cat/0.1.0",
+         "type":"tool"
+      },
+      "7":{
+         "tool_id":"toolshed.g2.bx.psu.edu/repos/iuc/collection_column_join/collection_column_join/0.0.3",
+         "tool_version":null,
+         "outputs":[
+            {
+               "type":"tabular",
+               "name":"tabular_output"
+            },
+            {
+               "type":"txt",
+               "name":"script_output"
+            }
+         ],
+         "workflow_outputs":[
+            
+         ],
+         "input_connections":{
+            "input_tabular":{
+               "output_name":"output",
+               "id":3
+            }
+         },
+         "tool_state":"{\"__page__\": null, \"identifier_column\": \"\\\"1\\\"\", \"include_outputs\": \"null\", \"__rerun_remap_job_id__\": null, \"input_tabular\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"fill_char\": \"\\\".\\\"\", \"old_col_in_header\": \"\\\"true\\\"\", \"has_header\": \"\\\"1\\\"\"}",
+         "id":7,
+         "tool_shed_repository":{
+            "owner":"iuc",
+            "changeset_revision":"58228a4d58fe",
+            "name":"collection_column_join",
+            "tool_shed":"toolshed.g2.bx.psu.edu"
+         },
+         "uuid":"4acb9879-a4c8-4bab-8bc5-1672c362d98d",
+         "errors":null,
+         "name":"Column Join",
+         "post_job_actions":{
+            "HideDatasetActiontabular_output":{
+               "output_name":"tabular_output",
+               "action_type":"HideDatasetAction",
+               "action_arguments":{
+                  
+               }
+            },
+            "HideDatasetActionscript_output":{
+               "output_name":"script_output",
+               "action_type":"HideDatasetAction",
+               "action_arguments":{
+                  
+               }
+            }
+         },
+         "label":"HET counts table",
+         "inputs":[
+            {
+               "name":"input_tabular",
+               "description":"runtime parameter for tool Column Join"
+            }
+         ],
+         "position":{
+            "top":578.5,
+            "left":340
+         },
+         "annotation":"",
+         "content_id":"toolshed.g2.bx.psu.edu/repos/iuc/collection_column_join/collection_column_join/0.0.3",
+         "type":"tool"
+      },
+      "8":{
+         "tool_id":"join1",
+         "tool_version":null,
+         "outputs":[
+            {
+               "type":"input",
+               "name":"out_file1"
+            }
+         ],
+         "workflow_outputs":[
+            
+         ],
+         "input_connections":{
+            "input2":{
+               "output_name":"tabular_output",
+               "id":7
+            },
+            "input1":{
+               "output_name":"tabular_output",
+               "id":5
+            }
+         },
+         "tool_state":"{\"input2\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"__page__\": null, \"field1\": \"\\\"1\\\"\", \"partial\": \"\\\"-p\\\"\", \"field2\": \"\\\"1\\\"\", \"__rerun_remap_job_id__\": null, \"fill_empty_columns\": \"{\\\"fill_empty_columns_switch\\\": \\\"no_fill\\\", \\\"__current_case__\\\": 0}\", \"unmatched\": \"\\\"-u\\\"\", \"header\": \"\\\"-H\\\"\", \"input1\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\"}",
+         "id":8,
+         "uuid":"9200c9ab-1fe5-4ef0-ae90-7bdf775ed449",
+         "errors":null,
+         "name":"Join two Datasets",
+         "post_job_actions":{
+            "HideDatasetActionout_file1":{
+               "output_name":"out_file1",
+               "action_type":"HideDatasetAction",
+               "action_arguments":{
+                  
+               }
+            }
+         },
+         "label":"KO and HET Featurecounts ",
+         "inputs":[
+            {
+               "name":"input2",
+               "description":"runtime parameter for tool Join two Datasets"
+            },
+            {
+               "name":"input1",
+               "description":"runtime parameter for tool Join two Datasets"
+            }
+         ],
+         "position":{
+            "top":516.5,
+            "left":585
+         },
+         "annotation":"",
+         "content_id":"join1",
+         "type":"tool"
+      },
+      "9":{
+         "tool_id":"toolshed.g2.bx.psu.edu/repos/jjohnson/regex_find_replace/regex1/0.1.0",
+         "tool_version":null,
+         "outputs":[
+            {
+               "type":"input",
+               "name":"out_file1"
+            }
+         ],
+         "workflow_outputs":[
+            
+         ],
+         "input_connections":{
+            "input":{
+               "output_name":"out_file1",
+               "id":8
+            }
+         },
+         "tool_state":"{\"input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"__rerun_remap_job_id__\": null, \"checks\": \"[{\\\"__index__\\\": 0, \\\"replacement\\\": \\\"\\\\\\\\t\\\", \\\"pattern\\\": \\\"_[A-Z0-9]+\\\\\\\\t\\\"}, {\\\"__index__\\\": 1, \\\"replacement\\\": \\\"\\\", \\\"pattern\\\": \\\"_[A-Z0-9]+\\\"}]\", \"__page__\": null}",
+         "id":9,
+         "tool_shed_repository":{
+            "owner":"jjohnson",
+            "changeset_revision":"9ea374bb0350",
+            "name":"regex_find_replace",
+            "tool_shed":"toolshed.g2.bx.psu.edu"
+         },
+         "uuid":"36eb6898-1220-4e34-b71f-08df46fe6cfc",
+         "errors":null,
+         "name":"Regex Find And Replace",
+         "post_job_actions":{
+            "HideDatasetActionout_file1":{
+               "output_name":"out_file1",
+               "action_type":"HideDatasetAction",
+               "action_arguments":{
+                  
+               }
+            }
+         },
+         "label":"Replace header",
+         "inputs":[
+            {
+               "name":"input",
+               "description":"runtime parameter for tool Regex Find And Replace"
+            }
+         ],
+         "position":{
+            "top":551.5,
+            "left":816
+         },
+         "annotation":"",
+         "content_id":"toolshed.g2.bx.psu.edu/repos/jjohnson/regex_find_replace/regex1/0.1.0",
+         "type":"tool"
+      },
+      "10":{
+         "tool_id":"join1",
+         "tool_version":null,
+         "outputs":[
+            {
+               "type":"input",
+               "name":"out_file1"
+            }
+         ],
+         "workflow_outputs":[
+            
+         ],
+         "input_connections":{
+            "input2":{
+               "output_name":"out_file1",
+               "id":9
+            },
+            "input1":{
+               "output_name":"out_file1",
+               "id":6
+            }
+         },
+         "tool_state":"{\"input2\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"__page__\": null, \"field1\": \"\\\"1\\\"\", \"partial\": \"\\\"-p\\\"\", \"field2\": \"\\\"1\\\"\", \"__rerun_remap_job_id__\": null, \"fill_empty_columns\": \"{\\\"fill_empty_columns_switch\\\": \\\"no_fill\\\", \\\"__current_case__\\\": 0}\", \"unmatched\": \"\\\"-u\\\"\", \"header\": \"\\\"-H\\\"\", \"input1\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\"}",
+         "id":10,
+         "uuid":"ad0efdd0-1ac5-4a1d-9237-19e922e73dc9",
+         "errors":null,
+         "name":"Join two Datasets",
+         "post_job_actions":{
+            "HideDatasetActionout_file1":{
+               "output_name":"out_file1",
+               "action_type":"HideDatasetAction",
+               "action_arguments":{
+                  
+               }
+            }
+         },
+         "label":"DEseq2 results with counts",
+         "inputs":[
+            {
+               "name":"input2",
+               "description":"runtime parameter for tool Join two Datasets"
+            },
+            {
+               "name":"input1",
+               "description":"runtime parameter for tool Join two Datasets"
+            }
+         ],
+         "position":{
+            "top":374.5,
+            "left":1031
+         },
+         "annotation":"",
+         "content_id":"join1",
+         "type":"tool"
+      },
+      "11":{
+         "tool_id":"toolshed.g2.bx.psu.edu/repos/devteam/cut_columns/Cut1/1.0.2",
+         "tool_version":null,
+         "outputs":[
+            {
+               "type":"tabular",
+               "name":"out_file1"
+            }
+         ],
+         "workflow_outputs":[
+            
+         ],
+         "input_connections":{
+            "input":{
+               "output_name":"out_file1",
+               "id":10
+            }
+         },
+         "tool_state":"{\"columnList\": \"\\\"c1-c15,c3\\\"\", \"input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"delimiter\": \"\\\"T\\\"\", \"__rerun_remap_job_id__\": null, \"__page__\": null}",
+         "id":11,
+         "tool_shed_repository":{
+            "owner":"devteam",
+            "changeset_revision":"cec635fab700",
+            "name":"cut_columns",
+            "tool_shed":"toolshed.g2.bx.psu.edu"
+         },
+         "uuid":"477b3f82-136a-4980-b315-5f384dc6cd53",
+         "errors":null,
+         "name":"Cut",
+         "post_job_actions":{
+            "HideDatasetActionout_file1":{
+               "output_name":"out_file1",
+               "action_type":"HideDatasetAction",
+               "action_arguments":{
+                  
+               }
+            }
+         },
+         "label":"Step1. Sort according to FC",
+         "inputs":[
+            {
+               "name":"input",
+               "description":"runtime parameter for tool Cut"
+            }
+         ],
+         "position":{
+            "top":394,
+            "left":1242
+         },
+         "annotation":"",
+         "content_id":"toolshed.g2.bx.psu.edu/repos/devteam/cut_columns/Cut1/1.0.2",
+         "type":"tool"
+      },
+      "12":{
+         "tool_id":"toolshed.g2.bx.psu.edu/repos/bgruening/text_processing/tp_replace_in_column/1.1.3",
+         "tool_version":null,
+         "outputs":[
+            {
+               "type":"input",
+               "name":"outfile"
+            }
+         ],
+         "workflow_outputs":[
+            
+         ],
+         "input_connections":{
+            "infile":{
+               "output_name":"out_file1",
+               "id":11
+            }
+         },
+         "tool_state":"{\"__page__\": null, \"__rerun_remap_job_id__\": null, \"replacements\": \"[{\\\"column\\\": \\\"16\\\", \\\"__index__\\\": 0, \\\"replace_pattern\\\": \\\"\\\", \\\"find_pattern\\\": \\\"-\\\"}]\", \"infile\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\"}",
+         "id":12,
+         "tool_shed_repository":{
+            "owner":"bgruening",
+            "changeset_revision":"a6f147a050a2",
+            "name":"text_processing",
+            "tool_shed":"toolshed.g2.bx.psu.edu"
+         },
+         "uuid":"1d60f9d7-d526-44b0-b8bc-0edad118f8f9",
+         "errors":null,
+         "name":"Replace Text",
+         "post_job_actions":{
+            "HideDatasetActionoutfile":{
+               "output_name":"outfile",
+               "action_type":"HideDatasetAction",
+               "action_arguments":{
+                  
+               }
+            }
+         },
+         "label":"Step2. Sort according to FC",
+         "inputs":[
+            {
+               "name":"infile",
+               "description":"runtime parameter for tool Replace Text"
+            }
+         ],
+         "position":{
+            "top":422,
+            "left":1450
+         },
+         "annotation":"",
+         "content_id":"toolshed.g2.bx.psu.edu/repos/bgruening/text_processing/tp_replace_in_column/1.1.3",
+         "type":"tool"
+      },
+      "13":{
+         "tool_id":"sort1",
+         "tool_version":null,
+         "outputs":[
+            {
+               "type":"input",
+               "name":"out_file1"
+            }
+         ],
+         "workflow_outputs":[
+            
+         ],
+         "input_connections":{
+            "input":{
+               "output_name":"outfile",
+               "id":12
+            }
+         },
+         "tool_state":"{\"__page__\": null, \"style\": \"\\\"num\\\"\", \"column\": \"\\\"16\\\"\", \"__rerun_remap_job_id__\": null, \"order\": \"\\\"DESC\\\"\", \"input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"header_lines\": \"\\\"1\\\"\", \"column_set\": \"[]\"}",
+         "id":13,
+         "uuid":"411c65c3-bbc1-4206-8df1-6423072c5731",
+         "errors":null,
+         "name":"Sort",
+         "post_job_actions":{
+            "HideDatasetActionout_file1":{
+               "output_name":"out_file1",
+               "action_type":"HideDatasetAction",
+               "action_arguments":{
+                  
+               }
+            }
+         },
+         "label":"Step3. Sort according to FC",
+         "inputs":[
+            {
+               "name":"input",
+               "description":"runtime parameter for tool Sort"
+            }
+         ],
+         "position":{
+            "top":433,
+            "left":1654
+         },
+         "annotation":"",
+         "content_id":"sort1",
+         "type":"tool"
+      },
+      "14":{
+         "tool_id":"toolshed.g2.bx.psu.edu/repos/devteam/cut_columns/Cut1/1.0.2",
+         "tool_version":null,
+         "outputs":[
+            {
+               "type":"tabular",
+               "name":"out_file1"
+            }
+         ],
+         "workflow_outputs":[
+            {
+               "output_name":"out_file1",
+               "uuid":"d22a71b0-35b4-4d9d-9e7e-233d1a3ccd14",
+               "label":null
+            }
+         ],
+         "input_connections":{
+            "input":{
+               "output_name":"out_file1",
+               "id":13
+            }
+         },
+         "tool_state":"{\"columnList\": \"\\\"c1-c15\\\"\", \"input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"delimiter\": \"\\\"T\\\"\", \"__rerun_remap_job_id__\": null, \"__page__\": null}",
+         "id":14,
+         "tool_shed_repository":{
+            "owner":"devteam",
+            "changeset_revision":"cec635fab700",
+            "name":"cut_columns",
+            "tool_shed":"toolshed.g2.bx.psu.edu"
+         },
+         "uuid":"16ce557b-cced-401f-a8ee-fac8995d2267",
+         "errors":null,
+         "name":"Cut",
+         "post_job_actions":{
+            
+         },
+         "label":"Step4. Sort according to FC",
+         "inputs":[
+            {
+               "name":"input",
+               "description":"runtime parameter for tool Cut"
+            }
+         ],
+         "position":{
+            "top":463,
+            "left":1897
+         },
+         "annotation":"",
+         "content_id":"toolshed.g2.bx.psu.edu/repos/devteam/cut_columns/Cut1/1.0.2",
+         "type":"tool"
+      },
+      "15":{
+         "tool_id":"Grep1",
+         "tool_version":null,
+         "outputs":[
+            {
+               "type":"input",
+               "name":"out_file1"
+            }
+         ],
+         "workflow_outputs":[
+            
+         ],
+         "input_connections":{
+            "input":{
+               "output_name":"out_file1",
+               "id":14
+            }
+         },
+         "tool_state":"{\"__page__\": null, \"pattern\": \"\\\"\\\\\\\\t0\\\\\\\\t\\\"\", \"invert\": \"\\\"true\\\"\", \"__rerun_remap_job_id__\": null, \"input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\"}",
+         "id":15,
+         "uuid":"f891d86d-6d4a-4edd-87bf-8acbdd8a9d3c",
+         "errors":null,
+         "name":"Select",
+         "post_job_actions":{
+            "HideDatasetActionout_file1":{
+               "output_name":"out_file1",
+               "action_type":"HideDatasetAction",
+               "action_arguments":{
+                  
+               }
+            }
+         },
+         "label":"Remove Zero counts data",
+         "inputs":[
+            {
+               "name":"input",
+               "description":"runtime parameter for tool Select"
+            }
+         ],
+         "position":{
+            "top":497,
+            "left":2177
+         },
+         "annotation":"",
+         "content_id":"Grep1",
+         "type":"tool"
+      },
+      "16":{
+         "tool_id":"toolshed.g2.bx.psu.edu/repos/iuc/volcanoplot/volcanoplot/0.0.2",
+         "tool_version":null,
+         "outputs":[
+            {
+               "type":"pdf",
+               "name":"plot"
+            }
+         ],
+         "workflow_outputs":[
+            {
+               "output_name":"plot",
+               "uuid":"c780174a-c393-4fea-ad96-66c5f441dfc3",
+               "label":null
+            }
+         ],
+         "input_connections":{
+            "input":{
+               "output_name":"out_file1",
+               "id":15
+            }
+         },
+         "tool_state":"{\"__page__\": null, \"fdr_col\": \"\\\"7\\\"\", \"plot_options\": \"{\\\"legend_labs\\\": \\\"Down,Not Sig,Up\\\", \\\"xlab\\\": \\\"\\\", \\\"ylab\\\": \\\"\\\", \\\"legend\\\": \\\"\\\", \\\"title\\\": \\\"\\\"}\", \"label_col\": \"\\\"1\\\"\", \"lfc_col\": \"\\\"3\\\"\", \"__rerun_remap_job_id__\": null, \"labels\": \"{\\\"top_num\\\": \\\"10\\\", \\\"label_select\\\": \\\"signif\\\", \\\"__current_case__\\\": 0}\", \"signif_thresh\": \"\\\"0.05\\\"\", \"lfc_thresh\": \"\\\"1.0\\\"\", \"pval_col\": \"\\\"6\\\"\", \"input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\"}",
+         "id":16,
+         "tool_shed_repository":{
+            "owner":"iuc",
+            "changeset_revision":"d1d39c72b755",
+            "name":"volcanoplot",
+            "tool_shed":"toolshed.g2.bx.psu.edu"
+         },
+         "uuid":"3944197c-1bbd-41f3-bc11-91467302499c",
+         "errors":null,
+         "name":"Volcano Plot",
+         "post_job_actions":{
+            
+         },
+         "label":null,
+         "inputs":[
+            {
+               "name":"input",
+               "description":"runtime parameter for tool Volcano Plot"
+            }
+         ],
+         "position":{
+            "top":389,
+            "left":2432
+         },
+         "annotation":"",
+         "content_id":"toolshed.g2.bx.psu.edu/repos/iuc/volcanoplot/volcanoplot/0.0.2",
+         "type":"tool"
+      },
+      "17":{
+         "tool_id":"toolshed.g2.bx.psu.edu/repos/iuc/volcanoplot/volcanoplot/0.0.2",
+         "tool_version":null,
+         "outputs":[
+            {
+               "type":"pdf",
+               "name":"plot"
+            }
+         ],
+         "workflow_outputs":[
+            {
+               "output_name":"plot",
+               "uuid":"26f8c1d5-cf64-4f37-bc17-dfd895a50938",
+               "label":null
+            }
+         ],
+         "input_connections":{
+            "input":{
+               "output_name":"out_file1",
+               "id":15
+            }
+         },
+         "tool_state":"{\"__page__\": null, \"fdr_col\": \"\\\"7\\\"\", \"plot_options\": \"{\\\"legend_labs\\\": \\\"Down,Not Sig,Up\\\", \\\"xlab\\\": \\\"\\\", \\\"ylab\\\": \\\"\\\", \\\"legend\\\": \\\"\\\", \\\"title\\\": \\\"\\\"}\", \"label_col\": \"\\\"1\\\"\", \"lfc_col\": \"\\\"3\\\"\", \"__rerun_remap_job_id__\": null, \"labels\": \"{\\\"label_select\\\": \\\"none\\\", \\\"__current_case__\\\": 2}\", \"signif_thresh\": \"\\\"0.05\\\"\", \"lfc_thresh\": \"\\\"1.0\\\"\", \"pval_col\": \"\\\"6\\\"\", \"input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\"}",
+         "id":17,
+         "tool_shed_repository":{
+            "owner":"iuc",
+            "changeset_revision":"d1d39c72b755",
+            "name":"volcanoplot",
+            "tool_shed":"toolshed.g2.bx.psu.edu"
+         },
+         "uuid":"37a9588c-b777-45bb-975e-f3b1f62f29f1",
+         "errors":null,
+         "name":"Volcano Plot",
+         "post_job_actions":{
+            
+         },
+         "label":null,
+         "inputs":[
+            {
+               "name":"input",
+               "description":"runtime parameter for tool Volcano Plot"
+            }
+         ],
+         "position":{
+            "top":505.5,
+            "left":2441
+         },
+         "annotation":"",
+         "content_id":"toolshed.g2.bx.psu.edu/repos/iuc/volcanoplot/volcanoplot/0.0.2",
+         "type":"tool"
+      },
+      "18":{
+         "tool_id":"Filter1",
+         "tool_version":null,
+         "outputs":[
+            {
+               "type":"input",
+               "name":"out_file1"
+            }
+         ],
+         "workflow_outputs":[
+            
+         ],
+         "input_connections":{
+            "input":{
+               "output_name":"out_file1",
+               "id":15
+            }
+         },
+         "tool_state":"{\"input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"__rerun_remap_job_id__\": null, \"header_lines\": \"\\\"1\\\"\", \"cond\": \"\\\"c7<0.1\\\"\", \"__page__\": null}",
+         "id":18,
+         "uuid":"57e44866-1e90-4bad-8c50-c16644bcb664",
+         "errors":null,
+         "name":"Filter",
+         "post_job_actions":{
+            "HideDatasetActionout_file1":{
+               "output_name":"out_file1",
+               "action_type":"HideDatasetAction",
+               "action_arguments":{
+                  
+               }
+            }
+         },
+         "label":"Significant data",
+         "inputs":[
+            {
+               "name":"input",
+               "description":"runtime parameter for tool Filter"
+            }
+         ],
+         "position":{
+            "top":619,
+            "left":2464
+         },
+         "annotation":"",
+         "content_id":"Filter1",
+         "type":"tool"
+      },
+      "19":{
+         "tool_id":"join1",
+         "tool_version":null,
+         "outputs":[
+            {
+               "type":"input",
+               "name":"out_file1"
+            }
+         ],
+         "workflow_outputs":[
+            
+         ],
+         "input_connections":{
+            "input2":{
+               "output_name":"output",
+               "id":4
+            },
+            "input1":{
+               "output_name":"out_file1",
+               "id":18
+            }
+         },
+         "tool_state":"{\"input2\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"__page__\": null, \"field1\": \"\\\"1\\\"\", \"partial\": \"\\\"-p\\\"\", \"field2\": \"\\\"1\\\"\", \"__rerun_remap_job_id__\": null, \"fill_empty_columns\": \"{\\\"fill_empty_columns_switch\\\": \\\"no_fill\\\", \\\"__current_case__\\\": 0}\", \"unmatched\": \"\\\"-u\\\"\", \"header\": \"\\\"-H\\\"\", \"input1\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\"}",
+         "id":19,
+         "uuid":"61dbd5a5-778b-4333-b2e2-55fc2b43eda2",
+         "errors":null,
+         "name":"Join two Datasets",
+         "post_job_actions":{
+            "HideDatasetActionout_file1":{
+               "output_name":"out_file1",
+               "action_type":"HideDatasetAction",
+               "action_arguments":{
+                  
+               }
+            }
+         },
+         "label":null,
+         "inputs":[
+            {
+               "name":"input2",
+               "description":"runtime parameter for tool Join two Datasets"
+            },
+            {
+               "name":"input1",
+               "description":"runtime parameter for tool Join two Datasets"
+            }
+         ],
+         "position":{
+            "top":618,
+            "left":2769
+         },
+         "annotation":"",
+         "content_id":"join1",
+         "type":"tool"
+      },
+      "20":{
+         "tool_id":"toolshed.g2.bx.psu.edu/repos/devteam/cut_columns/Cut1/1.0.2",
+         "tool_version":null,
+         "outputs":[
+            {
+               "type":"tabular",
+               "name":"out_file1"
+            }
+         ],
+         "workflow_outputs":[
+            
+         ],
+         "input_connections":{
+            "input":{
+               "output_name":"out_file1",
+               "id":19
+            }
+         },
+         "tool_state":"{\"columnList\": \"\\\"c1,c17-c19,c3,c6,c7,c11,c10,c9,c15,c14,c13,c2,c4-c5\\\"\", \"input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"delimiter\": \"\\\"T\\\"\", \"__rerun_remap_job_id__\": null, \"__page__\": null}",
+         "id":20,
+         "tool_shed_repository":{
+            "owner":"devteam",
+            "changeset_revision":"cec635fab700",
+            "name":"cut_columns",
+            "tool_shed":"toolshed.g2.bx.psu.edu"
+         },
+         "uuid":"11ee104f-4c6a-4d1d-af9d-f8bc1aab1a56",
+         "errors":null,
+         "name":"Cut",
+         "post_job_actions":{
+            "HideDatasetActionout_file1":{
+               "output_name":"out_file1",
+               "action_type":"HideDatasetAction",
+               "action_arguments":{
+                  
+               }
+            }
+         },
+         "label":"Final DESeq2 table",
+         "inputs":[
+            {
+               "name":"input",
+               "description":"runtime parameter for tool Cut"
+            }
+         ],
+         "position":{
+            "top":616.5,
+            "left":3024
+         },
+         "annotation":"",
+         "content_id":"toolshed.g2.bx.psu.edu/repos/devteam/cut_columns/Cut1/1.0.2",
+         "type":"tool"
+      }
+   },
+   "annotation":"",
+   "a_galaxy_workflow":"true"
+}
