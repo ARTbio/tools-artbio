@@ -3,6 +3,7 @@
     <requirements>
         <requirement type="package" version="0.2.5b8">pindel</requirement>
         <requirement type="package" version="1.0">openssl</requirement>
+        <requirement type="package" version="1.7">samtools</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" />
