@@ -25,5 +25,3 @@ with open(args.output_config_file, "w") as output:
                                       insert_size=insert_size,
                                       sample_label=sample_label)
         output.write(config_line)
-
-
