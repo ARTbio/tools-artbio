@@ -39,15 +39,15 @@
                label="Which chromosome to operate on"/>
     </inputs>
     <outputs>
-        <data format="txt" name="Deletions" type="data" label="${input_file.element_identifier} Deletions"/>
-        <data format="txt" name="Short_Insertions" type="data" label="${input_file.element_identifier} Short Insertions"/>
-        <data format="txt" name="Long_Insertions" type="data" label="${input_file.element_identifier} Long Insertions"/>
-        <data format="txt" name="Inversions" type="data" label="${input_file.element_identifier} Inversions"/>
-        <data format="txt" name="Tandem_Duplications" type="data" label="${input_file.element_identifier} Tandom Duplications"/>
-        <data format="txt" name="Breakpoints" type="data" label="${input_file.element_identifier} Breakpoints"/>
-        <data format="txt" name="Read_Pair" type="data" label="${input_file.element_identifier} Read Pair Evidence"/>
-        <data format="txt" name="INT_final" type="data" label="${input_file.element_identifier} INT_final"/>
-        <data format="txt" name="Close_End_Mapped" type="data" label="${input_file.element_identifier} Close End Mapped"/>
+        <data format="txt" name="Deletions" label="${input_file.element_identifier} Deletions"/>
+        <data format="txt" name="Short_Insertions" label="${input_file.element_identifier} Short Insertions"/>
+        <data format="txt" name="Long_Insertions" label="${input_file.element_identifier} Long Insertions"/>
+        <data format="txt" name="Inversions" label="${input_file.element_identifier} Inversions"/>
+        <data format="txt" name="Tandem_Duplications" label="${input_file.element_identifier} Tandom Duplications"/>
+        <data format="txt" name="Breakpoints" label="${input_file.element_identifier} Breakpoints"/>
+        <data format="txt" name="Read_Pair" label="${input_file.element_identifier} Read Pair Evidence"/>
+        <data format="txt" name="INT_final" label="${input_file.element_identifier} INT_final"/>
+        <data format="txt" name="Close_End_Mapped" label="${input_file.element_identifier} Close End Mapped"/>
     </outputs>
     <tests>
         <test>
