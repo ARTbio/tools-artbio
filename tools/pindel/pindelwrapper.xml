@@ -62,7 +62,7 @@
             <output name="Tandem_Duplications" file="X_100000_Hum1.bam_Tandem_Duplications.txt" ftype="txt"/>
             <output name="Breakpoints" file="X_100000_Hum1.bam_Breakpoints.txt" ftype="txt"/>
             <output name="Read_Pair" file="X_100000_Hum1.bam_Read_Pair_Evidence.txt" ftype="txt"/>
-            <output name="INT_Final" file="X_100000_Hum1.bam_INT_final.txt" ftype="txt"/>
+            <output name="int_Final" file="X_100000_Hum1.bam_INT_final.txt" ftype="txt"/>
             <output name="Close_End_Mapped" file="X_100000_Hum1.bam_Close_End_Mapped.txt" ftype="txt"/>
         </test>
     </tests>
