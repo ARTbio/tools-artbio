@@ -1,0 +1,19 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: pindel
+description: Pindel detects genome-wide structural variation.
+long_description: |
+  Pindel can detect breakpoints of large deletions, medium sized insertions,
+  inversions, tandem duplications and other structural variants at
+  single-based resolution from next-gen sequence data.
+  It uses a pattern growth approach to identify the breakpoints of these
+  variants from paired-end short reads.
+  
+  credit: this Galaxy wrapper was originally developped by Portia Hollyoak
+  https://www.linkedin.com/in/portiahollyoak/ 
+categories:
+  - Variant Analysis
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/pindel
+toolshed:
+  - toolshed

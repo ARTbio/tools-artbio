@@ -1,0 +1,96 @@
+<tool id ="pindel" name="Pindel" version="0.2.5b8+galaxy1">
+    <description></description>
+    <requirements>
+        <requirement type="package" version="0.2.5b8">pindel</requirement>
+        <requirement type="package" version="1.0">openssl</requirement>
+    </requirements>
+    <stdio>
+        <exit_code range="1:" />
+    </stdio>
+    <command><![CDATA[
+        ln -f -s "$input_file.metadata.bam_index" alignment.sorted.bam.bai &&
+        ln -f -s "$input_file" alignment.sorted.bam &&
+        ln -f -s "$reference" ref.fa &&
+        samtools faidx ref.fa &&
+       python $__tool_directory__/create_config_file.py
+        --input_file alignment.sorted.bam
+        --insert_size "$insert_size"
+        --sample_label "$input_file.element_identifier"
+        --output_config_file output_config_file &&
+        pindel
+        -f ref.fa
+        -i output_config_file
+        -c "$chromosome"
+        -o prefix &&
+        mv prefix_D $Deletions &&
+        mv prefix_SI $Short_Insertions &&
+        mv prefix_LI $Long_Insertions &&
+        mv prefix_INV $Inversions &&
+        mv prefix_TD $Tandem_Duplications &&
+        mv prefix_RP $Read_Pair &&
+        mv prefix_INT_final $INT_final &&
+        mv prefix_CloseEndMapped $Close_End_Mapped
+    ]]></command>
+    <inputs>
+        <param format="bam" name="input_file" type="data" label="One or more BAM alignment files produced by BWA"/>
+        <param name="insert_size" type="integer" value="" label="Expected Insert size" />
+        <param format="fasta" name="reference" type="data" label="Reference genome in fasta format"/>
+        <param name="chromosome" type="text" value="ALL" help="Select a chromsome. ALL will use all chromosomes"
+               label="Which chromosome to operate on"/>
+    </inputs>
+    <outputs>
+        <data format="txt" name="Deletions" type="data" label="${input_file.element_identifier} Deletions"/>
+        <data format="txt" name="Short_Insertions" type="data" label="${input_file.element_identifier} Short Insertions"/>
+        <data format="txt" name="Long_Insertions" type="data" label="${input_file.element_identifier} Long Insertions"/>
+        <data format="txt" name="Inversions" type="data" label="${input_file.element_identifier} Inversions"/>
+        <data format="txt" name="Tandem_Duplications" type="data" label="${input_file.element_identifier} Tandom Duplications"/>
+        <data format="txt" name="Breakpoints" type="data" label="${input_file.element_identifier} Breakpoints"/>
+        <data format="txt" name="Read_Pair" type="data" label="${input_file.element_identifier} Read Pair Evidence"/>
+        <data format="txt" name="INT_final" type="data" label="${input_file.element_identifier} INT_final"/>
+        <data format="txt" name="Close_End_Mapped" type="data" label="${input_file.element_identifier} Close End Mapped"/>
+    </outputs>
+    <tests>
+        <test>
+            <param name="input_file" value="X_100000_Hum1.bam" ftype="bam"/>
+            <param name="insert_size" value="250"/>
+            <param name="reference" value="dm6_X.fasta" ftype="fasta"/>
+            <param name="chromosome" value="ALL"/>
+            <output name="Deletions" file="X_100000_Hum1.bam_Deletions.txt" ftype="txt"/>
+            <output name="Short_Insertions" file="X_100000_Hum1.bam_Short_Insertions.txt" ftype="txt"/>
+            <output name="Long_Insertions" file="X_100000_Hum1.bam_Long_Insertions.txt" ftype="txt"/>
+            <output name="Inversions" file="X_100000_Hum1.bam_Inversions.txt" ftype="txt"/>
+            <output name="Tandem_Duplications" file="X_100000_Hum1.bam_Tandem_Duplications.txt" ftype="txt"/>
+            <output name="Breakpoints" file="X_100000_Hum1.bam_Breakpoints.txt" ftype="txt"/>
+            <output name="Read_Pair" file="X_100000_Hum1.bam_Read_Pair_Evidence.txt" ftype="txt"/>
+            <output name="INT_Final" file="X_100000_Hum1.bam_INT_final.txt" ftype="txt"/>
+            <output name="Close_End_Mapped" file="X_100000_Hum1.bam_Close_End_Mapped.txt" ftype="txt"/>
+        </test>
+    </tests>
+    <help> <![CDATA[
+
+Pindel can detect breakpoints of large deletions, medium sized insertions, inversions, tandem duplications and other structural variants at single-based resolution from next-generation sequencing data. It uses a pattern growth approach to identify the breakpoints of these variants from paired-end short reads.
+
+The following inputs/parameters are required:
+- One or more BAM alignment files produced by BWA
+- Expected Insert Size for each alignment file
+- Sample label for each alignment file
+- Reference genome in fasta format (the same one used in alignment)
+- Which chromosome to operate on
+
+The following output files are produced by Pindel:
+- Deletions
+- Short Insertions
+- Long Insertions
+- Inversions
+- Tandom Duplications
+- Breakpoints
+- Read Pair Evidence
+- INT_final
+- Close End Mapped
+
+
+    ]]> </help>
+    <citations>
+        <citation type="doi">doi:10.1093/bioinformatics/btp394</citation>
+    </citations>
+</tool>
