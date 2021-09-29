@@ -1,0 +1,35 @@
+####################################################################################################
+0	INV 63	NT 0:0 "":""	ChrID X	BP 67129	67193	BP_range 67129	67193	Supports 2	1	+ 2	1	- 0	0	S1 3	SUM_MS 0	1	NumSupSamples 1	1	X_100000_Hum1.bam 29 32 2 1 0 0
+CACACTAAAGCAGCTACACACACTTACACCGACGCTTCTCAAGAAGAGAATATATTCACCTCAGCGACATGCACTAACGCAGCTGCACCCACTCATACGGATGCAGAACTTAAAAGCGCCAAAACgagctgaggttaatgctgccatcactgtgtgagagggaggggaagatttccaaagcttcgctcgttttggcgcttttaagttctgcatccgtatgagtgggtgcagctgcgttagtgcatgtcgc
+                                                   ATATTCACCTCAGCGACATGCACTAACGCAGCTGCACCCACTCATACAGATGCAGAACTTAAAGGCGCCAAAACGAGCTAAGCTT	+	67055	0	X_100000_Hum1.bam	@HWI-42297995/2
+                                                   ATATTCACCTCAGCGACATGCACTAACGCAGCTGCACCCACTCATACAGATGCAGAACTTAAAGGCGCCAAAACGAGCTAAGCTT	+	67055	0	X_100000_Hum1.bam	@HWI-42297995/2
+----------------------------------------------------------------------------------------------------
+tgtttgtgttagtgtgtgcatgagaaagaggggaaatagtattgcgtccaattttggtggaagagctgaggttaatgctgccatcactgtgtgagagggaggggaagatttccaaagcttcgctcTTCCACCAAAATTGGACGCAATACTATTTCCCCTCTTTCTCATGCACACACTAACACAAACAAGGCCACAAACTCAAGCACAGAAAGGCGCTCAAAATGTCCCGCGCTTATTATTACAGACGCAA
+####################################################################################################
+1	INV 87	NT 16:0 "GCTTTTTTTTGCTGGT":""	ChrID X	BP 5407	5495	BP_range 5407	5495	Supports 4	1	+ 4	1	- 0	0	S1 5	SUM_MS 0	1	NumSupSamples 1	1	X_100000_Hum1.bam 0 1 4 1 0 0
+CCAGCCAGAATGCCAAAATTACTCACCTGCAATGTTTCCTGAGGCCTCCAGCGACTCGGTGCTTCCGTCCTTCCGACGGGGGTACCTGAAAAGAATAAATCAATAACAATGTTAGTTTTAAATTT                ttttgacagtaattaggacaggtaacattatcatattgtatggtatgtttacaatttacaattgaaatgattttatagaaaacattgaaatttaaaactaacattgttattgatttattcttttc
+                                                                                                                   AGTTTTAAATTTCAATGTTTTCTATAAAATCATTTCAATTGTAAATTGTAAACATACCATACAATATGATAATGTTACCTGTCCTAATTACTGTCAAAAACCAGCAAAAAAAAGCAAAGTTAAAA	+	5395	0	X_100000_Hum1.bam	@HWI-35741779/1
+                                                                                                                   AGTTTTAAATTTCAATGTTTTCTATAAAATCATTTCAATTGTAAATTGTAAACATACCATACAATATGATAATGTTACCTGTCCTAATTACTGTCAAAAACCAGCAAAAAAAAGCAAAGTTAAAA	+	5395	0	X_100000_Hum1.bam	@HWI-40771345/2
+                                                                                                                   AGTTTTAAATTTCAATGTTTTCTATAAAATCATTTCAATTGTAAATTGTAAACATACCATACAATATGATAATGTTACCTGTCCTAATTACTGTCAAAAACCAGCAAAAAAAAGCAAAGTTAAAA	+	5395	0	X_100000_Hum1.bam	@HWI-40771345/2
+                                                                                                                   AGTTTTAAATTTCAATGTTTTCTATAAAATCATTTCAATTGTAAATTGTAAACATACCATACAATATGATAATGTTACCTGTCCTAATTACTGTCAAAAACCAGCAAAAAAAAGCAAAGTTAAAA	+	5395	0	X_100000_Hum1.bam	@HWI-35741779/1
+----------------------------------------------------------------------------------------------------
+aataatgtaaaagtagttagtattttgtagacttaggcttttgacagtaattaggacaggtaacattatcatattgtatggtatgtttacaatttacaattgaaatgattttatagaaaacattgGCCTAAGTCTACAAAATACTAACTACTTTTACATTATTACTAACTATGTCCAACCCCCAAACTCACCACATGTAATGTTACATTCAAAAATGCAAATTATTGTACCTATATATTACAAACTCTGT
+####################################################################################################
+2	INV 98	NT 7:0 "CCTATAT":""	ChrID X	BP 39131	39230	BP_range 39131	39230	Supports 1	1	+ 1	1	- 0	0	S1 2	SUM_MS 0	1	NumSupSamples 1	1	X_100000_Hum1.bam 1 2 1 1 0 0
+GGAGGATGGGCATCGGTTTTATCCATCTCATCGGACGATGGTAACTGCTCATCCTCGCCGCCATCAGCTATAGTCTCATCGCTGGATACCACGCCAACGTCAAATGAAACCACCATAGTAAGAAG       caaataaagggtctggcaatatggtatttttattttcatttaatacaatattttcaaaatcgtaagatttcatgtcggcatttgtttgatataggcttcttcttactatggtggtttcatttgac
+                  TTATCCATCTCATCGGACGATGGTAACTGCTCATCCTCGCCGCCATCAGCTATAGTCTCATCGCTGGATACCACGCCAACGTCAAATGAAACCACCATAGTAAGAAGCCTATATCAAACAAATGG	+	39024	0	X_100000_Hum1.bam	@HWI-19317189/2
+----------------------------------------------------------------------------------------------------
+tattagcagtactcccgcatttatcaacaaataaagggtctggcaatatggtatttttattttcatttaatacaatattttcaaaatcgtaagatttcatgtcggcatttgtttgatataggcttTTGATAAATGCGGGAGTACTGCTAATACCACAGAAGCCAATGAAAAACAGCCTGCCGATAGCCCCTTCCCCATTTCCATAAGCAAAAATTTTAGCACTTCCTCGCCACTAACACATGTAGACACG
+####################################################################################################
+3	INV 95	NT 39:0 "ACTAAGGTTAGTTAAAGGAGAAAAAGGAGCTAAACCGAA":""	ChrID X	BP 73286	73382	BP_range 73286	73382	Supports 2	1	+ 2	1	- 0	0	S1 3	SUM_MS 0	1	NumSupSamples 1	1	X_100000_Hum1.bam 28 49 2 1 0 0
+TCAATAACATAAAATCCGCAGCCAATGAAGCCACCCCACCTAATCGCCCCCAAAATAACCGCACCTACAATTCTTCAAGAAGATCCACAAACCTAAGGCTAGATGAAGCAACTAAAAGGTTACTT                                       tctttagacagtctattttgcacgttcttaaaccatcttcgggcttcgtcagttcctactgctctaaagattcgatttagctcctttttctcctcaagtaaccttttagttgcttcatctagcct
+                                               CCCCAAAATAACCGCACCTACAATTCTTCAAGAAGATCCACAAACCTAAGGCTAGATGAAGCAACTTAAAGGTTACTTACTAAGGTTAGTTAAAGGAGAAAAAGGAGCTAAACCGAATCTTTAGA	+	73208	0	X_100000_Hum1.bam	@HWI-2406974/1
+                                               CCCCAAAATAACCGCACCTACAATTCTTCAAGAAGATCCACAAACCTAAGGCTAGATGAAGCAACTTAAAGGTTACTTACTAAGGTTAGTTAAAGGAGAAAAAGGAGCTAAACCGAATCTTTAGA	+	73208	0	X_100000_Hum1.bam	@HWI-2406974/1
+----------------------------------------------------------------------------------------------------
+ttgagtagtttttgtttgagctttctgatttctttagacagtctattttgcacgttcttaaaccatcttcgggcttcgtcagttcctactgctctaaagattcgatttagctcctttttctcctcAATCAGAAAGCTCAAACAAAAACTACTCAACCGCAACCTACAAGATATTGACACTACGGACCGATATAGAATGCAAAAACTATGGAAAACCACAAATACAATTAAAATGCAACCTCGACCCTGCT
+####################################################################################################
+4	INV 85	NT 0:33 "":"ATATATTCTACATACGTACATCCCTTCGTCCTT"	ChrID X	BP 97985	98071	BP_range 97985	98071	Supports 1	1	+ 0	0	- 1	1	S1 2	SUM_MS 0	1	NumSupSamples 1	1	X_100000_Hum1.bam 16 10 0 0 1 1
+CGATCTGGATTGCTCAAATTTTAAGACGCCCAATAAAAAATTATGCGCGACATCCAATTTTGTAACTCCCTGCATTTTTCCCCCGCTCATCACACCAGTTTTCAAAAGCAAGGCAGCTCAATCTGgccgctgcgctgcaagcagagacattgatgctacagggtaacggctggcgggtgggtccgtttctggcttttgattcctcataaacagattgagctgccttgcttttgaaaactggtgtgatgag
+----------------------------------------------------------------------------------------------------
+atctgtattttgagggggtaggggggcgataacgggtggcgccgctgcgctgcaagcagagacattgatgctacagggtaacggctggcgggtgggtccgtttctggcttttgattcctcataaa                                 GCCACCCGTTATCGCCCCCCTACCCCCTCAAAATACAGATGCACAGCTGCCTCCATGGAAAATCGTGCCCCAGAGCCGTAGAGCACCCCCTATACTCGTCAATGATGTGAAGGAAATTGTCCCTC
+                                                                                                                    CCACATAAAATATATTCTACATACGTACATCCCTTCGTCCTTGCCACCCGTTATCGCCCCCCTACCCCCTCAAAATACAGATGCACAGCTGCCTCCATGGAAAATCGTGCCCCAGAGCCGTAGAG	-	98195	0	X_100000_Hum1.bam	@HWI-22154325/1
