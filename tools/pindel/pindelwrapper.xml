@@ -45,7 +45,7 @@
         <data format="txt" name="Short_Insertions" label="${input_file.element_identifier} Short Insertions"/>
         <data format="txt" name="Long_Insertions" label="${input_file.element_identifier} Long Insertions"/>
         <data format="txt" name="Inversions" label="${input_file.element_identifier} Inversions"/>
-        <data format="txt" name="Tandem_Duplications" label="${input_file.element_identifier} Tandom Duplications"/>
+        <data format="txt" name="Tandem_Duplications" label="${input_file.element_identifier} Tandem Duplications"/>
         <data format="txt" name="Breakpoints" label="${input_file.element_identifier} Breakpoints"/>
         <data format="txt" name="Read_Pair" label="${input_file.element_identifier} Read Pair Evidence"/>
         <data format="txt" name="int_final" label="${input_file.element_identifier} INT_final"/>
@@ -70,7 +70,10 @@
     </tests>
     <help> <![CDATA[
 
-Pindel can detect breakpoints of large deletions, medium sized insertions, inversions, tandem duplications and other structural variants at single-based resolution from next-generation sequencing data. It uses a pattern growth approach to identify the breakpoints of these variants from paired-end short reads.
+Pindel can detect breakpoints of large deletions, medium sized insertions, inversions,
+tandem duplications and other structural variants at single-based resolution from
+next-generation sequencing data. It uses a pattern growth approach to identify the
+breakpoints of these variants from paired-end short reads.
 
 The following inputs/parameters are required:
 - One or more BAM alignment files produced by BWA
