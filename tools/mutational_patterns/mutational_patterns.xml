@@ -124,7 +124,7 @@ Rscript $__tool_directory__/mutational_patterns.R
         </conditional>
 
         <conditional name="set_cosmic">
-            <param name="choices" type="select" label="Decompose with Cosmic signature v2" display="radio">
+            <param name="choices" type="select" label="Decompose with Cosmic signatures" display="radio">
                 <option value="yes" selected="true">Yes</option>
                 <option value="no">No</option>
             </param>
