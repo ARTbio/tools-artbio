@@ -184,7 +184,6 @@ if (!is.na(opt$output_denovo)[1]) {
     rownames(nmf_res$contribution) <- paste0("NewSig_", 1:opt$newsignum)
     # Plot the 96-profile of the signatures:
     p5 <- plot_96_profile(nmf_res$signatures, condensed = TRUE)
-    print(p5$data)
     new_sig_matrix <- reshape2::dcast(p5$data, substitution + context ~ sample, value.var = "freq")
     new_sig_matrix <- format(new_sig_matrix, scientific = TRUE)
     write.table(new_sig_matrix, file = opt$sigmatrix, quote = FALSE, row.names = FALSE, sep = "\t")
