@@ -1,4 +1,4 @@
-<tool id="mutational_patterns" name="Analyse Mutational Patterns/Signatures" version="2.0.0+galaxy14">
+<tool id="mutational_patterns" name="Analyse Mutational Patterns/Signatures" version="2.0.0+galaxy15">
     <description>from genomic variations in vcf files</description>
     <requirements>
         <requirement type="package" version="2.0.0=r40_0">bioconductor-mutationalpatterns</requirement>
@@ -166,6 +166,82 @@ Rscript $__tool_directory__/mutational_patterns.R
 
     </outputs>
     <tests>
+         <!-- cosmic signatures with cosmic V3 -->
+        <test>
+            <param name="vcfs">
+                <collection type="list">
+                    <element name="6" value="F.vcf"/>
+                    <element name="7" value="G.vcf"/>
+                    <element name="8" value="H.vcf"/>
+                    <element name="9" value="I.vcf"/>
+                </collection>
+            </param>
+            <param name="genome" value="BSgenome.Hsapiens.UCSC.hg38"/>
+            <param name="levels" value="FGHI_levels.tab" ftype="tabular"/>
+            <conditional name="set_spectrum">
+                <param name="choices" value="no"/>
+            </conditional>
+            <conditional name="set_denovo">
+                <param name="choices" value="no"/>
+            </conditional>
+            <conditional name="set_cosmic">
+                <param name="choices" value="yes"/>
+                <param name="contrib_matrix_out"  value="true" />
+                <param name="cosmic_version" value="v3"/>
+            </conditional>
+            <param name="signum" value="3" />
+            <output name="cosmic" file="cosmic_output_v3.pdf" compare="sim_size"/>
+            <output name="sig_contrib_matrix" file="sig_contrib_table_v3.tsv" compare="sim_size"/>
+        </test>
+
+         <!-- cosmic signatures -->
+        <test>
+            <param name="vcfs">
+                <collection type="list">
+                    <element name="6" value="F.vcf"/>
+                    <element name="7" value="G.vcf"/>
+                    <element name="8" value="H.vcf"/>
+                    <element name="9" value="I.vcf"/>
+                </collection>
+            </param>
+            <param name="genome" value="BSgenome.Hsapiens.UCSC.hg38"/>
+            <param name="levels" value="FGHI_levels.tab" ftype="tabular"/>
+            <conditional name="set_spectrum">
+                <param name="choices" value="no"/>
+            </conditional>
+            <conditional name="set_denovo">
+                <param name="choices" value="no"/>
+            </conditional>
+            <conditional name="set_cosmic">
+                <param name="choices" value="yes"/>
+                <param name="contrib_matrix_out"  value="true" />
+            </conditional>
+            <param name="signum" value="3" />
+            <output name="cosmic" file="cosmic_output1.pdf" compare="sim_size"/>
+            <output name="sig_contrib_matrix" file="sig_contrib_table.tsv" compare="sim_size"/>
+        </test>
+
+        <!-- cosmic signature on single sample -->
+        <test>
+            <param name="vcfs">
+                <collection type="list">
+                    <element name="1" value="G.vcf"/>
+                </collection>
+            </param>
+            <param name="genome" value="BSgenome.Hsapiens.UCSC.hg38"/>
+            <conditional name="set_spectrum">
+                <param name="choices" value="no"/>
+            </conditional>
+            <conditional name="set_denovo">
+                <param name="choices" value="no"/>
+            </conditional>
+            <conditional name="set_cosmic">
+                <param name="choices" value="yes"/>
+            </conditional>
+            <param name="signum" value="5" />
+            <output name="cosmic" file="cosmic_output2.pdf" compare="sim_size" delta="50000"/>
+        </test>
+
         <!-- simple profile -->
         <test>
             <param name="vcfs">
@@ -218,53 +294,6 @@ Rscript $__tool_directory__/mutational_patterns.R
             <output name="denovo" file="denovo_output1.pdf" compare="sim_size"/>
             <output name="sigmatrix" file="sigmatrix.tab" compare="sim_size"/>
             <output name="rdata" file="denovo_1.RData" compare="sim_size" delta="400000"/> <!--  delta="170000" -->
-        </test>
-
-         <!-- cosmic signatures -->
-        <test>
-            <param name="vcfs">
-                <collection type="list">
-                    <element name="6" value="F.vcf"/>
-                    <element name="7" value="G.vcf"/>
-                    <element name="8" value="H.vcf"/>
-                    <element name="9" value="I.vcf"/>
-                </collection>
-            </param>
-            <param name="genome" value="BSgenome.Hsapiens.UCSC.hg38"/>
-            <param name="levels" value="FGHI_levels.tab" ftype="tabular"/>
-            <conditional name="set_spectrum">
-                <param name="choices" value="no"/>
-            </conditional>
-            <conditional name="set_denovo">
-                <param name="choices" value="no"/>
-            </conditional>
-            <conditional name="set_cosmic">
-                <param name="choices" value="yes"/>
-                <param name="contrib_matrix_out"  value="true" />
-            </conditional>
-            <param name="signum" value="3" />
-            <output name="cosmic" file="cosmic_output1.pdf" compare="sim_size"/>
-            <output name="sig_contrib_matrix" file="sig_contrib_table.tsv" compare="sim_size"/>
-        </test>
-        <!-- cosmic signature on single sample -->
-        <test>
-            <param name="vcfs">
-                <collection type="list">
-                    <element name="1" value="G.vcf"/>
-                </collection>
-            </param>
-            <param name="genome" value="BSgenome.Hsapiens.UCSC.hg38"/>
-            <conditional name="set_spectrum">
-                <param name="choices" value="no"/>
-            </conditional>
-            <conditional name="set_denovo">
-                <param name="choices" value="no"/>
-            </conditional>
-            <conditional name="set_cosmic">
-                <param name="choices" value="yes"/>
-            </conditional>
-            <param name="signum" value="5" />
-            <output name="cosmic" file="cosmic_output2.pdf" compare="sim_size" delta="50000"/>
         </test>
     </tests>
     <help>
