@@ -184,7 +184,7 @@ if (!is.na(opt$output_denovo)[1]) {
     rownames(nmf_res$contribution) <- paste0("NewSig_", 1:opt$newsignum)
     # Plot the 96-profile of the signatures:
     p5 <- plot_96_profile(nmf_res$signatures, condensed = TRUE)
-    new_sig_matrix <- reshape2::dcast(p5$data, substitution + context ~ variable, value.var = "value")
+    new_sig_matrix <- reshape2::dcast(p5$data, substitution + context ~ sample, value.var = "freq")
     new_sig_matrix <- format(new_sig_matrix, scientific = TRUE)
     write.table(new_sig_matrix, file = opt$sigmatrix, quote = FALSE, row.names = FALSE, sep = "\t")
     grid.arrange(p5)
@@ -229,6 +229,7 @@ if (!is.na(opt$output_cosmic)[1]) {
         colnames(cancer_signatures) <- gsub("Signature.", "", colnames(cancer_signatures)) # shorten signature labels
         cosmic_tag <- "Signatures (Cosmic v2, March 2015)"
         cosmic_colors <- col_vector[1:30]
+        names(cosmic_colors) <- colnames(cancer_signatures)
         } else {
         sp_url <- "https://raw.githubusercontent.com/ARTbio/startbio/master/sigProfiler_SBS_signatures_2019_05_22.tsv"
         cancer_signatures <- read.table(sp_url, sep = "\t", header = TRUE)
@@ -239,6 +240,7 @@ if (!is.na(opt$output_cosmic)[1]) {
         colnames(cancer_signatures) <- gsub("SBS", "", colnames(cancer_signatures)) # shorten signature labels
         cosmic_tag <- "Signatures (Cosmic v3, May 2019)"
         cosmic_colors <- col_vector[1:67]
+        names(cosmic_colors) <- colnames(cancer_signatures)
         }
 
     # Plot mutational profiles of the COSMIC signatures
@@ -259,8 +261,9 @@ if (!is.na(opt$output_cosmic)[1]) {
     fit_res <- fit_to_signatures(pseudo_mut_mat, cancer_signatures)
 
     # Plot contribution barplots
-        pc3 <- plot_contribution(fit_res$contribution, cancer_signatures, coord_flip = T, mode = "absolute")
-        pc4 <- plot_contribution(fit_res$contribution, cancer_signatures, coord_flip = T, mode = "relative")
+    pc3 <- plot_contribution(fit_res$contribution, cancer_signatures, coord_flip = T, mode = "absolute")
+    pc4 <- plot_contribution(fit_res$contribution, cancer_signatures, coord_flip = T, mode = "relative")
+    if (is.na(opt$levels)[1]) {  # if there are NO levels to display in graphs
         pc3_data <- pc3$data
         pc3 <- ggplot(pc3_data, aes(x = Sample, y = Contribution, fill = as.factor(Signature))) +
                geom_bar(stat = "identity", position = "stack") +
@@ -282,6 +285,7 @@ if (!is.na(opt$output_cosmic)[1]) {
                theme(panel.grid.minor.x = element_blank(), panel.grid.major.x = element_blank(), legend.position = "right",
                      text = element_text(size = 8),
                      axis.text.x = element_text(angle = 90, hjust = 1))
+    }
     #####
     # ggplot2 alternative
     if (!is.na(opt$levels)[1]) {  # if there are levels to display in graphs
@@ -342,7 +346,6 @@ if (!is.na(opt$output_cosmic)[1]) {
         }
         worklist <- as.data.frame(melt(worklist))
         worklist[, 2] <- paste0(worklist[, 4], " - ", worklist[, 2])
-        head(worklist)
     }
 
     colnames(worklist) <- c("signature", "sample", "value", "level")
@@ -356,7 +359,7 @@ if (!is.na(opt$output_cosmic)[1]) {
               coord_polar("y", start = 0) + facet_wrap(.~sample) +
               labs(x = "", y = "Samples", fill = cosmic_tag) +
               scale_fill_manual(name = paste0(opt$signum, " most contributing\nsignatures\n(in each label/tissue)"),
-                                values = cosmic_colors[as.numeric(levels(factor(worklist$label)))]) +
+                                values = cosmic_colors[levels(worklist$signature)]) +
               theme(axis.text = element_blank(),
                     axis.ticks = element_blank(),
                     panel.grid  = element_blank())
