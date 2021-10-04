@@ -220,23 +220,23 @@ if (!is.na(opt$output_cosmic)[1]) {
     pdf(opt$output_cosmic, paper = "special", width = 11.69, height = 11.69)
     pseudo_mut_mat <- mut_mat + 0.0001 # First add a small psuedocount to the mutation count matrix
     if (opt$cosmic_version == "v2") {
-        sp_url <- paste("https://cancer.sanger.ac.uk/cancergenome/assets/", "signatures_probabilities.txt", sep = "")
+        sp_url <- "https://cancer.sanger.ac.uk/signatures/documents/420/COSMIC_v2_SBS_GRCh38.txt"
         cancer_signatures <- read.table(sp_url, sep = "\t", header = TRUE)
-        new_order <- match(row.names(pseudo_mut_mat), cancer_signatures$Somatic.Mutation.Type)
+        new_order <- match(row.names(pseudo_mut_mat), cancer_signatures$Type)
         cancer_signatures <- cancer_signatures[as.vector(new_order), ]
-        row.names(cancer_signatures) <- cancer_signatures$Somatic.Mutation.Type
-        cancer_signatures <- as.matrix(cancer_signatures[, 4:33])
-        colnames(cancer_signatures) <- gsub("Signature.", "", colnames(cancer_signatures)) # shorten signature labels
+        row.names(cancer_signatures) <- cancer_signatures$Type
+        cancer_signatures <- as.matrix(cancer_signatures[, 2:31])
+        colnames(cancer_signatures) <- gsub("Signature_", "", colnames(cancer_signatures)) # shorten signature labels
         cosmic_tag <- "Signatures (Cosmic v2, March 2015)"
         cosmic_colors <- col_vector[1:30]
         names(cosmic_colors) <- colnames(cancer_signatures)
         } else {
-        sp_url <- "https://raw.githubusercontent.com/ARTbio/startbio/master/sigProfiler_SBS_signatures_2019_05_22.tsv"
+        sp_url <- "https://cancer.sanger.ac.uk/signatures/documents/431/COSMIC_v3_SBS_GRCh38.txt"
         cancer_signatures <- read.table(sp_url, sep = "\t", header = TRUE)
-        new_order <- match(row.names(pseudo_mut_mat), cancer_signatures$Somatic.Mutation.Type)
+        new_order <- match(row.names(pseudo_mut_mat), cancer_signatures$Type)
         cancer_signatures <- cancer_signatures[as.vector(new_order), ]
-        row.names(cancer_signatures) <- cancer_signatures$Somatic.Mutation.Type
-        cancer_signatures <- as.matrix(cancer_signatures[, 4:70])
+        row.names(cancer_signatures) <- cancer_signatures$Type
+        cancer_signatures <- as.matrix(cancer_signatures[, 2:68])
         colnames(cancer_signatures) <- gsub("SBS", "", colnames(cancer_signatures)) # shorten signature labels
         cosmic_tag <- "Signatures (Cosmic v3, May 2019)"
         cosmic_colors <- col_vector[1:67]
