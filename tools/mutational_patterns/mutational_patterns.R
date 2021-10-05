@@ -234,7 +234,7 @@ if (!is.na(opt$output_cosmic)[1]) {
     new_order <- match(row.names(mut_mat), cancer_sbs_signatures$Type)
     cancer_sbs_signatures <- cancer_sbs_signatures[as.numeric(new_order), ]
     cosmic_tag <- paste(opt$genome, "COSMIC", opt$cosmic_version, sep = " ")
-    cosmic_colors <- col_vector[seq_len(cancer_sbs_signatures - 1)]
+    cosmic_colors <- col_vector[seq_len(ncol(cancer_sbs_signatures - 1))]
     names(cosmic_colors) <- colnames(cancer_sbs_signatures[2:length(cancer_sbs_signatures)])
     cancer_sbs_matrix <- as.matrix(cancer_sbs_signatures[, 2:length(cancer_sbs_signatures)])
 
@@ -243,10 +243,11 @@ if (!is.na(opt$output_cosmic)[1]) {
     pdf(opt$output_cosmic, paper = "special", width = 11.69, height = 11.69)
     if (opt$cosmic_version == "v2") {
         p6 <- plot_96_profile(cancer_sbs_matrix, condensed = TRUE, ymax = 0.3)
-        grid.arrange(p6, top = textGrob("COSMIC sbs signature profiles", gp = gpar(fontsize = 12, font = 3)))
+        grid.arrange(p6, top = textGrob("COSMIC SBS signature profiles", gp = gpar(fontsize = 12, font = 3)))
     } else {
         p6 <- plot_96_profile(cancer_sbs_matrix[, 1:trunc(ncol(cancer_sbs_matrix) / 2)], condensed = TRUE, ymax = 0.3)
-        p6bis <- plot_96_profile(cancer_sbs_matrix[, (trunc(ncol(cancer_sbs_matrix) / 2) + 1):ncol(cancer_sbs_matrix)], condensed = TRUE, ymax = 0.3)
+        p6bis <- plot_96_profile(cancer_sbs_matrix[, (trunc(ncol(cancer_sbs_matrix) / 2) + 1):ncol(cancer_sbs_matrix)],
+                                 condensed = TRUE, ymax = 0.3)
         grid.arrange(p6, top = textGrob("COSMIC signature profiles (on two pages)",
                      gp = gpar(fontsize = 12, font = 3)))
         grid.arrange(p6bis, top = textGrob("COSMIC signature profiles (continued)",
@@ -255,7 +256,7 @@ if (!is.na(opt$output_cosmic)[1]) {
 
 
     # Find optimal contribution of COSMIC signatures to reconstruct 96 mutational profiles
-    pseudo_mut_mat <- mut_mat + 0.0001 # First add a small psuedocount to the mutation count matrix
+    pseudo_mut_mat <- mut_mat + 0.0001 # First add a small pseudocount to the mutation count matrix
     fit_res <- fit_to_signatures(pseudo_mut_mat, cancer_sbs_matrix)
 
     # Plot contribution barplots
