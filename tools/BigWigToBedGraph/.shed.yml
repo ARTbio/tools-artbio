@@ -1,0 +1,12 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: bigwig_to_bedGraph
+description: Converts a bigWig file to bedGraph format
+long_description: |
+  Converts a bigWig file to bedGraph format
+categories:
+  - Convert Formats
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/BigWigToBedGraph
+toolshed:
+  - toolshed
