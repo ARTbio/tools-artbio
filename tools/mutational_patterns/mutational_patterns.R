@@ -234,7 +234,7 @@ if (!is.na(opt$output_cosmic)[1]) {
     new_order <- match(row.names(mut_mat), cancer_sbs_signatures$Type)
     cancer_sbs_signatures <- cancer_sbs_signatures[as.numeric(new_order), ]
     cosmic_tag <- paste(opt$genome, "COSMIC", opt$cosmic_version, sep = " ")
-    cosmic_colors <- col_vector[seq_len(ncol(cancer_sbs_signatures - 1))]
+    cosmic_colors <- col_vector[seq_len(ncol(cancer_sbs_signatures) - 1)]
     names(cosmic_colors) <- colnames(cancer_sbs_signatures[2:length(cancer_sbs_signatures)])
     cancer_sbs_matrix <- as.matrix(cancer_sbs_signatures[, 2:length(cancer_sbs_signatures)])
 
