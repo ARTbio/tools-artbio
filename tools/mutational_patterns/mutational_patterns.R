@@ -97,7 +97,14 @@ option_list <- list(
     c("-r", "--rdata"),
     type = "character",
     default = NULL,
-    help = "Path to RData output file")
+    help = "Path to RData output file"
+  ),
+  make_option(
+    c("-t", "--tooldir"),
+    type = "character",
+    default = NULL,
+    help = "Path to tool directory, where tool data are stored")
+
 )
 
 opt <- parse_args(OptionParser(option_list = option_list),
@@ -217,39 +224,29 @@ if (!is.na(opt$output_denovo)[1]) {
 ##### Section 3: Find optimal contribution of known signatures: COSMIC mutational signatures ####
 
 if (!is.na(opt$output_cosmic)[1]) {
-    pdf(opt$output_cosmic, paper = "special", width = 11.69, height = 11.69)
-    pseudo_mut_mat <- mut_mat + 0.0001 # First add a small psuedocount to the mutation count matrix
-    if (opt$cosmic_version == "v2") {
-        sp_url <- "https://cancer.sanger.ac.uk/signatures/documents/420/COSMIC_v2_SBS_GRCh38.txt"
-        cancer_signatures <- read.table(sp_url, sep = "\t", header = TRUE)
-        new_order <- match(row.names(pseudo_mut_mat), cancer_signatures$Type)
-        cancer_signatures <- cancer_signatures[as.vector(new_order), ]
-        row.names(cancer_signatures) <- cancer_signatures$Type
-        cancer_signatures <- as.matrix(cancer_signatures[, 2:31])
-        colnames(cancer_signatures) <- gsub("Signature_", "", colnames(cancer_signatures)) # shorten signature labels
-        cosmic_tag <- "Signatures (Cosmic v2, March 2015)"
-        cosmic_colors <- col_vector[1:30]
-        names(cosmic_colors) <- colnames(cancer_signatures)
-        } else {
-        sp_url <- "https://cancer.sanger.ac.uk/signatures/documents/431/COSMIC_v3_SBS_GRCh38.txt"
-        cancer_signatures <- read.table(sp_url, sep = "\t", header = TRUE)
-        new_order <- match(row.names(pseudo_mut_mat), cancer_signatures$Type)
-        cancer_signatures <- cancer_signatures[as.vector(new_order), ]
-        row.names(cancer_signatures) <- cancer_signatures$Type
-        cancer_signatures <- as.matrix(cancer_signatures[, 2:68])
-        colnames(cancer_signatures) <- gsub("SBS", "", colnames(cancer_signatures)) # shorten signature labels
-        cosmic_tag <- "Signatures (Cosmic v3, May 2019)"
-        cosmic_colors <- col_vector[1:67]
-        names(cosmic_colors) <- colnames(cancer_signatures)
-        }
+    # Prepare cosmic signatures
+    cosmic_urls <- read.delim(paste0(opt$tooldir, "cosmic_urls.tsv"), sep = "\t", header = TRUE)
+    cosmic_SBS_file <- cosmic_urls$url[cosmic_urls$genome == opt$genome &
+                                       cosmic_urls$cosmic_version == opt$cosmic_version]
+    cancer_SBS_signatures <- read.table(paste0(opt$tooldir, cosmic_SBS_file),
+                                        sep = "\t", header = TRUE)
+    row.names(cancer_SBS_signatures) <- cancer_SBS_signatures$Type
+    new_order <- match(row.names(mut_mat), cancer_SBS_signatures$Type)
+    cancer_SBS_signatures <- cancer_SBS_signatures[as.numeric(new_order), ]
+    cosmic_tag <- paste(opt$genome, "COSMIC", opt$cosmic_version, sep = " ")
+    cosmic_colors <- col_vector[1:length(cancer_SBS_signatures) - 1]
+    names(cosmic_colors) <- colnames(cancer_SBS_signatures[2:length(cancer_SBS_signatures)])
+    cancer_SBS_matrix <- as.matrix(cancer_SBS_signatures[, 2:length(cancer_SBS_signatures)])
+
 
     # Plot mutational profiles of the COSMIC signatures
+    pdf(opt$output_cosmic, paper = "special", width = 11.69, height = 11.69)
     if (opt$cosmic_version == "v2") {
-        p6 <- plot_96_profile(cancer_signatures, condensed = TRUE, ymax = 0.3)
-        grid.arrange(p6, top = textGrob("COSMIC signature profiles", gp = gpar(fontsize = 12, font = 3)))
+        p6 <- plot_96_profile(cancer_SBS_matrix, condensed = TRUE, ymax = 0.3)
+        grid.arrange(p6, top = textGrob("COSMIC SBS signature profiles", gp = gpar(fontsize = 12, font = 3)))
     } else {
-        p6 <- plot_96_profile(cancer_signatures[, 1:33], condensed = TRUE, ymax = 0.3)
-        p6bis <- plot_96_profile(cancer_signatures[, 34:67], condensed = TRUE, ymax = 0.3)
+        p6 <- plot_96_profile(cancer_SBS_matrix[, 1:trunc(ncol(cancer_SBS_matrix) / 2)], condensed = TRUE, ymax = 0.3)
+        p6bis <- plot_96_profile(cancer_SBS_matrix[, (trunc(ncol(cancer_SBS_matrix) / 2) + 1):ncol(cancer_SBS_matrix)], condensed = TRUE, ymax = 0.3)
         grid.arrange(p6, top = textGrob("COSMIC signature profiles (on two pages)",
                      gp = gpar(fontsize = 12, font = 3)))
         grid.arrange(p6bis, top = textGrob("COSMIC signature profiles (continued)",
@@ -258,11 +255,12 @@ if (!is.na(opt$output_cosmic)[1]) {
 
 
     # Find optimal contribution of COSMIC signatures to reconstruct 96 mutational profiles
-    fit_res <- fit_to_signatures(pseudo_mut_mat, cancer_signatures)
+    pseudo_mut_mat <- mut_mat + 0.0001 # First add a small psuedocount to the mutation count matrix
+    fit_res <- fit_to_signatures(pseudo_mut_mat, cancer_SBS_matrix)
 
     # Plot contribution barplots
-    pc3 <- plot_contribution(fit_res$contribution, cancer_signatures, coord_flip = T, mode = "absolute")
-    pc4 <- plot_contribution(fit_res$contribution, cancer_signatures, coord_flip = T, mode = "relative")
+    pc3 <- plot_contribution(fit_res$contribution, cancer_SBS_matrix, coord_flip = T, mode = "absolute")
+    pc4 <- plot_contribution(fit_res$contribution, cancer_SBS_matrix, coord_flip = T, mode = "relative")
     if (is.na(opt$levels)[1]) {  # if there are NO levels to display in graphs
         pc3_data <- pc3$data
         pc3 <- ggplot(pc3_data, aes(x = Sample, y = Contribution, fill = as.factor(Signature))) +
@@ -374,7 +372,7 @@ if (!is.na(opt$output_cosmic)[1]) {
     # export relative contribution matrix
     if (!is.na(opt$sig_contrib_matrix)) {
         output_table <- t(fit_res$contribution) / rowSums(t(fit_res$contribution))
-        colnames(output_table) <- paste0("s", colnames(output_table))
+#        colnames(output_table) <- paste0("s", colnames(output_table))
         if (length(levels(factor(levels_table$level))) > 1) {
             output_table <- data.frame(sample = paste0(metadata_table[metadata_table$element_identifier == colnames(fit_res$contribution),
                                                                     3], "-", colnames(fit_res$contribution)),
