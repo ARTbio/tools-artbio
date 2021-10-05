@@ -13,6 +13,7 @@ def Parser():
     the_parser.add_argument('--input_barcodes', action="store", type=str)
     the_parser.add_argument('--input_features', action="store", type=str)
     the_parser.add_argument('--input_matrix', action="store", type=str)
+    the_parser.add_argument('--index_gene_col', action="store", type=int)
     the_parser.add_argument('--expected_doublet_rate', action="store", type=float)
     the_parser.add_argument('--doublet_threshold', action="store", type=float)
     the_parser.add_argument('--output_csv', action="store", type=str)
@@ -26,7 +27,7 @@ def __main__():
     args = Parser()
     # Import des donnees 10X
     counts_matrix = scipy.io.mmread(args.input_matrix).T.tocsc()
-    genes = np.array(scr.load_genes(args.input_features, delimiter='\t', column=1))
+    genes = np.array(scr.load_genes(args.input_features, delimiter='\t', column=args.index_gene_col))
     barcodes = pd.read_csv(args.input_barcodes, delimiter='\t', header=None)
     print('Counts matrix shape: {} rows, {} columns'.format(counts_matrix.shape[0], counts_matrix.shape[1]))
     print('Number of genes in gene list: {}'.format(len(genes)))
