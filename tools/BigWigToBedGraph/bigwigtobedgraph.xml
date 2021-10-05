@@ -1,4 +1,4 @@
-<tool id="bigwig_to_bedGraph" name="BigWig to BedGraph" version="0.2">
+<tool id="bigwig_to_bedGraph" name="BigWig to BedGraph" version="377+galaxy0">
     <description>converter</description>
     <requirements>
         <requirement type="package" version="377=hf46d3de_3">ucsc-bigwigtobedgraph</requirement>
