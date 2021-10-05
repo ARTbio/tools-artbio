@@ -4,6 +4,8 @@ name: bigwig_to_bedGraph
 description: Converts a bigWig file to bedGraph format
 long_description: |
   Converts a bigWig file to bedGraph format
+
+  older tool without conda environment : https://github.com/bgruening/galaxytools/tree/master/tools/bigwig_to_bedgraph
 categories:
   - Convert Formats
 homepage_url: http://artbio.fr
