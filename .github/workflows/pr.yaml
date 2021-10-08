@@ -62,7 +62,7 @@ jobs:
       with:
         fetch-depth: 0
     - name: Fake a Planemo run to update cache and determine commit range, repositories, and chunks
-      uses: galaxyproject/planemo-ci-action@v1
+      uses: galaxyproject/ planemo-ci-action@v1.0.3
       id: discover
       with:
         create-cache: ${{ steps.cache-pip.outputs.cache-hit != 'true' || steps.cache-planemo.outputs.cache-hit != 'true' }}
@@ -106,7 +106,7 @@ jobs:
         path: ~/.cache/pip
         key: pip_cache_py_${{ matrix.python-version }}_gxy_${{ needs.setup.outputs.galaxy-head-sha }}
     - name: Planemo lint
-      uses: galaxyproject/planemo-ci-action@v1
+      uses: galaxyproject/ planemo-ci-action@v1.0.3
       id: lint
       with:
         mode: lint
@@ -243,7 +243,7 @@ jobs:
     - name: Install tzdata
       run: sudo apt-get install tzdata
     - name: Planemo test
-      uses: galaxyproject/planemo-ci-action@v1
+      uses: galaxyproject/ planemo-ci-action@v1.0.3
       id: test
       with:
         mode: test
@@ -284,7 +284,7 @@ jobs:
         path: ~/.cache/pip
         key: pip_cache_py_${{ matrix.python-version }}_gxy_${{ needs.setup.outputs.galaxy-head-sha }}
     - name: Combine outputs
-      uses: galaxyproject/planemo-ci-action@v1
+      uses: galaxyproject/ planemo-ci-action@v1.0.3
       id: combine
       with:
         mode: combine
@@ -294,7 +294,7 @@ jobs:
         name: 'All tool test results'
         path: upload
     - name: Check outputs
-      uses: galaxyproject/planemo-ci-action@v1
+      uses: galaxyproject/ planemo-ci-action@v1.0.3
       id: check
       with:
         mode: check
@@ -323,7 +323,7 @@ jobs:
         path: ~/.cache/pip
         key: pip_cache_py_${{ matrix.python-version }}_gxy_${{ needs.setup.outputs.galaxy-head-sha }}
     - name: Deploy on testtoolshed
-      uses: galaxyproject/planemo-ci-action@v1
+      uses: galaxyproject/ planemo-ci-action@v1.0.3
       with:
         mode: deploy
         repository-list: ${{ needs.setup.outputs.repository-list }}
@@ -331,7 +331,7 @@ jobs:
         shed-key: ${{ secrets.TTS_API_KEY }}
       continue-on-error: true
     - name: Deploy on toolshed
-      uses: galaxyproject/planemo-ci-action@v1
+      uses: galaxyproject/ planemo-ci-action@v1.0.3
       with:
         mode: deploy
         repository-list: ${{ needs.setup.outputs.repository-list }}
