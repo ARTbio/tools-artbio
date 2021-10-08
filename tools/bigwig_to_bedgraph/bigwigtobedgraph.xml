@@ -1,7 +1,7 @@
 <tool id="bigwig_to_bedgraph" name="BigWig to BedGraph" version="377+galaxy0">
     <description>converter</description>
     <requirements>
-        <requirement type="package" version="377=h446ed27_4">ucsc-bigwigtobedgraph</requirement>
+        <requirement type="package" version="357">ucsc-bigwigtobedgraph</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
