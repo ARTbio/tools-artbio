@@ -232,6 +232,8 @@ if (!is.na(opt$output_cosmic)[1]) {
                                         sep = "\t", header = TRUE)
     row.names(cancer_sbs_signatures) <- cancer_sbs_signatures$Type
     new_order <- match(row.names(mut_mat), cancer_sbs_signatures$Type)
+
+####################### double check ! #################################
     cancer_sbs_signatures <- cancer_sbs_signatures[as.numeric(new_order), ]
     cosmic_tag <- paste(opt$genome, "COSMIC", opt$cosmic_version, sep = " ")
     cosmic_colors <- col_vector[seq_len(ncol(cancer_sbs_signatures) - 1)]
