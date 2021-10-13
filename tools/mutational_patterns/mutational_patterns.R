@@ -228,42 +228,51 @@ if (!is.na(opt$output_cosmic)[1]) {
     cosmic_urls <- read.delim(paste0(opt$tooldir, "cosmic_urls.tsv"), sep = "\t", header = TRUE)
     cosmic_sbs_file <- cosmic_urls$url[cosmic_urls$genome == opt$genome &
                                        cosmic_urls$cosmic_version == opt$cosmic_version]
-    cancer_sbs_signatures <- read.table(paste0(opt$tooldir, cosmic_sbs_file),
+    cosmic_sbs_signatures <- read.table(paste0(opt$tooldir, cosmic_sbs_file),
                                         sep = "\t", header = TRUE)
-    row.names(cancer_sbs_signatures) <- cancer_sbs_signatures$Type
-    new_order <- match(row.names(mut_mat), cancer_sbs_signatures$Type)
-
-####################### double check ! #################################
-    cancer_sbs_signatures <- cancer_sbs_signatures[as.numeric(new_order), ]
+    row.names(cosmic_sbs_signatures) <- cosmic_sbs_signatures$Type
+    # drop column Type of cosmic_sbs_signatures
+    cosmic_sbs_signatures <- subset(cosmic_sbs_signatures, select = -c(Type))
+    # reorder substitutions of cosmic_sbs_signatures to match mut_mat
+    cosmic_sbs_signatures <- cosmic_sbs_signatures[match(row.names(mut_mat), row.names(cosmic_sbs_signatures)), ]
+    # remove artefactual signatures (v3.2)
+    # cosmic_sbs_signatures <- subset(cosmic_sbs_signatures, select = -c(SBS27, SBS43, SBS45, SBS46, SBS47, SBS48,
+    #                                 SBS49, SBS50, SBS51, SBS52, SBS53, SBS54, SBS55, SBS56, SBS57, SBS58, SBS59, SBS60))
+    cosmic_sbs_signatures <- subset(cosmic_sbs_signatures, select = c(SBS1, SBS2, SBS3, SBS4, SBS5, SBS6, SBS7a, SBS7b,
+                                    SBS7c, SBS7d, SBS8, SBS9, SBS10a, SBS10b, SBS10c, SBS10d, SBS11, SBS12, SBS13, SBS14,
+                                    SBS15, SBS16, SBS17a, SBS17b, SBS18, SBS19, SBS20, SBS21, SBS22, SBS23, SBS24, SBS25,
+                                    SBS26, SBS27, SBS28, SBS29, SBS30))
     cosmic_tag <- paste(opt$genome, "COSMIC", opt$cosmic_version, sep = " ")
-    cosmic_colors <- col_vector[seq_len(ncol(cancer_sbs_signatures) - 1)]
-    names(cosmic_colors) <- colnames(cancer_sbs_signatures[2:length(cancer_sbs_signatures)])
-    cancer_sbs_matrix <- as.matrix(cancer_sbs_signatures[, 2:length(cancer_sbs_signatures)])
+    cosmic_colors <- col_vector[seq_len(ncol(cosmic_sbs_signatures))]
+    names(cosmic_colors) <- colnames(cosmic_sbs_signatures)
+    # This is IMPORTANT since in Galaxy we do not use the embeded function get_known_signatures()
+    cosmic_sbs_signatures <- as.matrix(cosmic_sbs_signatures)
 
 
     # Plot mutational profiles of the COSMIC signatures
+    # to do: this is largely optional and should be graphically improved anyway
     pdf(opt$output_cosmic, paper = "special", width = 11.69, height = 11.69)
     if (opt$cosmic_version == "v2") {
-        p6 <- plot_96_profile(cancer_sbs_matrix, condensed = TRUE, ymax = 0.3)
-        grid.arrange(p6, top = textGrob("COSMIC SBS signature profiles", gp = gpar(fontsize = 12, font = 3)))
+        p6 <- plot_96_profile(cosmic_sbs_signatures, condensed = TRUE, ymax = 0.3)
+        grid.arrange(p6, top = textGrob(paste0(cosmic_tag, " profiles"), gp = gpar(fontsize = 12, font = 3)))
     } else {
-        p6 <- plot_96_profile(cancer_sbs_matrix[, 1:trunc(ncol(cancer_sbs_matrix) / 2)], condensed = TRUE, ymax = 0.3)
-        p6bis <- plot_96_profile(cancer_sbs_matrix[, (trunc(ncol(cancer_sbs_matrix) / 2) + 1):ncol(cancer_sbs_matrix)],
+        p6 <- plot_96_profile(cosmic_sbs_signatures[, 1:trunc(ncol(cosmic_sbs_signatures) / 2)], condensed = TRUE, ymax = 0.3)
+        p6bis <- plot_96_profile(cosmic_sbs_signatures[, (trunc(ncol(cosmic_sbs_signatures) / 2) + 1):ncol(cosmic_sbs_signatures)],
                                  condensed = TRUE, ymax = 0.3)
-        grid.arrange(p6, top = textGrob("COSMIC signature profiles (on two pages)",
+        grid.arrange(p6, top = textGrob(paste0(cosmic_tag, " profiles (on two pages)"),
                      gp = gpar(fontsize = 12, font = 3)))
-        grid.arrange(p6bis, top = textGrob("COSMIC signature profiles (continued)",
+        grid.arrange(p6bis, top = textGrob(paste0(cosmic_tag, " profiles (on two pages)"),
                      gp = gpar(fontsize = 12, font = 3)))
     }
 
 
     # Find optimal contribution of COSMIC signatures to reconstruct 96 mutational profiles
     pseudo_mut_mat <- mut_mat + 0.0001 # First add a small pseudocount to the mutation count matrix
-    fit_res <- fit_to_signatures(pseudo_mut_mat, cancer_sbs_matrix)
+    fit_res <- fit_to_signatures(pseudo_mut_mat, cosmic_sbs_signatures)
 
     # Plot contribution barplots
-    pc3 <- plot_contribution(fit_res$contribution, cancer_sbs_matrix, coord_flip = T, mode = "absolute")
-    pc4 <- plot_contribution(fit_res$contribution, cancer_sbs_matrix, coord_flip = T, mode = "relative")
+    pc3 <- plot_contribution(fit_res$contribution, cosmic_sbs_signatures, coord_flip = T, mode = "absolute")
+    pc4 <- plot_contribution(fit_res$contribution, cosmic_sbs_signatures, coord_flip = T, mode = "relative")
     if (is.na(opt$levels)[1]) {  # if there are NO levels to display in graphs
         pc3_data <- pc3$data
         pc3 <- ggplot(pc3_data, aes(x = Sample, y = Contribution, fill = as.factor(Signature))) +
