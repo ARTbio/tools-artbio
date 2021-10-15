@@ -1,16 +1,6 @@
-<tool id="mutational_patterns" name="Analyse Mutational Patterns/Signatures" version="3.2.0+galaxy2">
+<tool id="mutational_patterns" name="Analyse Mutational Patterns/Signatures" version="3.2.0+galaxy3">
     <description>from genomic variations in vcf files</description>
     <requirements>
-<!--
-        <requirement type="package" version="2.0.0=r40_0">bioconductor-mutationalpatterns</requirement>
-        <requirement type="package" version="1.6.6=r40h6115d3f_1">r-optparse</requirement>
-        <requirement type="package" version="0.2.20=r40h0357c0b_1002">r-rjson</requirement>
-        <requirement type="package" version="0.21.0=r40h0357c0b_1004">r-nmf</requirement>
-        <requirement type="package" version="2.3=r40h6115d3f_1003">r-gridextra</requirement>
-        <requirement type="package" version="1.4.3=r40_0">bioconductor-bsgenome.hsapiens.ucsc.hg19</requirement>
-        <requirement type="package" version="1.4.3=r40_0">bioconductor-bsgenome.hsapiens.ucsc.hg38</requirement>
--->
-
         <requirement type="package" version="3.2.0=r41hdfd78af_0">bioconductor-mutationalpatterns</requirement>
         <requirement type="package" version="1.6.6=r41hc72bb7e_1">r-optparse</requirement>
         <requirement type="package" version="0.2.20=r41h03ef668_1002">r-rjson</requirement>
@@ -20,8 +10,6 @@
         <requirement type="package" version="1.4.3=r41hdfd78af_3">bioconductor-bsgenome.hsapiens.ucsc.hg38</requirement>
 
 <!--
-        <requirement type="package" version="1.3.1000=r40_4">bioconductor-bsgenome.hsapiens.ncbi.grch38</requirement>
-        <requirement type="package" version="0.99.1=r40_4">bioconductor-bsgenome.hsapiens.1000genomes.hs37d5</requirement>
 install more bioconda genomes
 bioconductor-bsgenome.mmusculus.ucsc.mm9
 bioconductor-bsgenome.mmusculus.ucsc.mm10
@@ -59,13 +47,23 @@ Rscript $__tool_directory__/mutational_patterns.R
         --sigmatrix $sigmatrix
     #end if
 
-    #if $set_cosmic.choices == 'yes':
-        --cosmic_version '$set_cosmic.cosmic_version'
-        --signum '$set_cosmic.signum'
-        --output_cosmic $cosmic
-        #if $set_cosmic.contrib_matrix_out == 'yes'
+    #if $set_preset.choices == 'yes':
+
+        #if $set_preset.set_signature_input.input_signature_choices == 'cosmic'
+            --cosmic_version '$set_preset.set_signature_input.cosmic_version'
+        #end if
+
+        #if $set_preset.set_signature_input.input_signature_choices == 'user_signatures'
+            --own_signatures '$set_preset.set_signature_input.user_signatures'
+        #end if
+       
+        --signum '$set_preset.signum'
+        --output_sigpattern $sig_contrib
+
+        #if $set_preset.contrib_matrix_out == 'yes'
             --sig_contrib_matrix $sig_contrib_matrix
         #end if
+
     #end if
             
     #if $rdata_out
@@ -78,12 +76,8 @@ Rscript $__tool_directory__/mutational_patterns.R
     <inputs>
         <param name="vcfs" type="data_collection" format="vcf" label="VCF file(s) collection" multiple="true"/>
         <param name="genome" type="select" label="Reference Genome">
-            <!-- <option value="BSgenome.Hsapiens.1000genomes.hs37d5">BSgenome.Hsapiens.1000genomes.hs37d5</option> -->
-            <!-- <option value="BSgenome.Hsapiens.NCBI.GRCh38">BSgenome.Hsapiens.NCBI.GRCh38</option> -->
             <option value="BSgenome.Hsapiens.UCSC.hg19">BSgenome.Hsapiens.UCSC.hg19</option>
             <option value="BSgenome.Hsapiens.UCSC.hg38" selected="true">BSgenome.Hsapiens.UCSC.hg38</option>
-            <!--<option value="BSgenome.Mmusculus.UCSC.mm10">BSgenome.Mmusculus.UCSC.mm10</option>
-            <option value="BSgenome.Mmusculus.UCSC.mm9">BSgenome.Mmusculus.UCSC.mm9</option>-->
         </param>
         <conditional name="set_levels">
             <param name="choices" type="select" label="samples have levels/labels for grouping them in the analysis" display="radio"
@@ -117,8 +111,8 @@ Rscript $__tool_directory__/mutational_patterns.R
 
         <conditional name="set_denovo">
             <param name="choices" type="select" label="Extract de novo signatures with MutationalPatterns" display="radio">
-                <option value="yes" selected="true">Yes</option>
-                <option value="no">No</option>
+                <option value="yes">Yes</option>
+                <option value="no" selected="true">No</option>
             </param>
             <when value="yes">
                 <param name="nrun" type="integer" value="10" min="10" max="200"
@@ -134,28 +128,41 @@ Rscript $__tool_directory__/mutational_patterns.R
             <when value="no" />
         </conditional>
 
-        <conditional name="set_cosmic">
-            <param name="choices" type="select" label="Decompose with Cosmic signatures" display="radio">
+        <conditional name="set_preset">
+            <param name="choices" type="select" label="Decompose with preset signatures" display="radio">
                 <option value="yes" selected="true">Yes</option>
                 <option value="no">No</option>
             </param>
             <when value="yes">
+                <conditional name="set_signature_input">
+                    <param name="input_signature_choices" type="select" label="type of signatures" display="radio">
+                        <option value="cosmic" selected="true">COSMIC signatures</option>
+                        <option value="user_signatures">Use your own signature matrix</option>
+                    </param>
+                    <when value="cosmic">
+                        <param name="cosmic_version" type="select" label="Version of the Cosmic signature set">
+                            <option value="v2" selected="true">Cosmic v2, March 2015</option>
+                            <option value="v3">Cosmic v3, May 2019</option>
+                            <option value="v3.1">Cosmic v3.1, June 2020</option>
+                            <option value="v3.2">Cosmic v3.2, March 2021</option>
+                        </param>
+                    </when>
+                    <when value="user_signatures">
+                        <param name="own_matrix" type="data" format="tabular"
+                               label="A tab-separated matrix describing elementary signatures"
+                               help="see https://cancer.sanger.ac.uk/signatures/documents/453/COSMIC_v3.2_SBS_GRCh38.txt for the required format" />
+                    </when>
+                </conditional>
                 <param name="signum" type="integer" value="3" min="2" max="30"
                        label="selects the N most significant signatures in samples to express mutational patterns"
-                       help="an integer between 2 and 30 signature types from cosmic"/>
-                <param name="cosmic_version" type="select" label="Version of the Cosmic signature set">
-                    <option value="v2" selected="true">Cosmic v2, March 2015</option>
-                    <option value="v3">Cosmic v3, May 2019</option>
-                    <option value="v3.1">Cosmic v3.1, June 2020</option>
-                    <option value="v3.2">Cosmic v3.2, March 2021</option>
-                </param>
+                       help="an integer between 2 and the number of elementary signatures in your signature matrix"/>
                 <param name="contrib_matrix_out" type="select" label="Output Signature Contribution table ?"
                        help="Output the normalized signatures contributions for further visualization" >
                     <option value="no" selected="true">No</option>
                     <option value="yes">Yes</option>
                 </param>
             </when>
-             <when value="no" />
+            <when value="no" />
         </conditional>
         <param name="rdata_out" type="boolean" checked="false" label="Output RData file?" help="Output all the data used by R to construct the tables and plots, can be loaded into R" />
     </inputs>
@@ -169,11 +176,11 @@ Rscript $__tool_directory__/mutational_patterns.R
         <data name="sigmatrix" format="tabular" label="De novo signatures probability matrix">
             <filter>set_denovo['choices'] == "yes"</filter>
         </data>
-        <data name="cosmic" format="pdf" label="Cosmic signatures">
-            <filter>set_cosmic['choices'] == "yes"</filter>
+        <data name="sig_contrib" format="pdf" label="Signatures contributions">
+            <filter>set_preset['choices'] == "yes"</filter>
         </data>
         <data name="sig_contrib_matrix" format="tabular" label="${tool.name}: Signature contribution table">
-            <filter>set_cosmic['choices'] == "yes" and set_cosmic['contrib_matrix_out'] == "yes"</filter>
+            <filter>set_preset['choices'] == "yes" and set_preset['contrib_matrix_out'] == "yes"</filter>
         </data>
 
         <data name="rdata" format="rdata" label="${tool.name}: RData file">
@@ -182,7 +189,7 @@ Rscript $__tool_directory__/mutational_patterns.R
 
     </outputs>
     <tests>
-         <!-- cosmic signatures with cosmic V3 -->
+         <!-- cosmic v3.2 -->
         <test>
             <param name="vcfs">
                 <collection type="list">
@@ -200,17 +207,19 @@ Rscript $__tool_directory__/mutational_patterns.R
             <conditional name="set_denovo">
                 <param name="choices" value="no"/>
             </conditional>
-            <conditional name="set_cosmic">
+            <conditional name="set_preset">
                 <param name="choices" value="yes"/>
+                <conditional name="set_signature_input">
+                    <param name="input_signature_choices" value="cosmic" />
+                    <param name="cosmic_version" value="v3.2"/>
+                </conditional>
                 <param name="contrib_matrix_out"  value="yes" />
-                <param name="cosmic_version" value="v3"/>
             </conditional>
             <param name="signum" value="3" />
-            <output name="cosmic" file="cosmic_output_v3.pdf" compare="sim_size"/>
+            <output name="sig_contrib" file="cosmic_output_v3.pdf" compare="sim_size"/>
             <output name="sig_contrib_matrix" file="sig_contrib_table_v3.tsv" compare="sim_size"/>
         </test>
-
-         <!-- cosmic signatures -->
+         <!-- cosmic v2 -->
         <test>
             <param name="vcfs">
                 <collection type="list">
@@ -228,37 +237,19 @@ Rscript $__tool_directory__/mutational_patterns.R
             <conditional name="set_denovo">
                 <param name="choices" value="no"/>
             </conditional>
-            <conditional name="set_cosmic">
+            <conditional name="set_preset">
                 <param name="choices" value="yes"/>
+                <conditional name="set_signature_input">
+                    <param name="input_signature_choices" value="cosmic" />
+                    <param name="cosmic_version" value="v2"/>
+                </conditional>
                 <param name="contrib_matrix_out"  value="yes" />
             </conditional>
             <param name="signum" value="3" />
-            <output name="cosmic" file="cosmic_output1.pdf" compare="sim_size"/>
+            <output name="sig_contrib" file="cosmic_output1.pdf" compare="sim_size"/>
             <output name="sig_contrib_matrix" file="sig_contrib_table.tsv" compare="sim_size"/>
         </test>
-
-        <!-- cosmic signature on single sample -->
-        <test>
-            <param name="vcfs">
-                <collection type="list">
-                    <element name="1" value="G.vcf"/>
-                </collection>
-            </param>
-            <param name="genome" value="BSgenome.Hsapiens.UCSC.hg38"/>
-            <conditional name="set_spectrum">
-                <param name="choices" value="no"/>
-            </conditional>
-            <conditional name="set_denovo">
-                <param name="choices" value="no"/>
-            </conditional>
-            <conditional name="set_cosmic">
-                <param name="choices" value="yes"/>
-            </conditional>
-            <param name="signum" value="5" />
-            <output name="cosmic" file="cosmic_output2.pdf" compare="sim_size" delta="50000"/>
-        </test>
-
-        <!-- simple profile -->
+        <!-- simple spectrum -->
         <test>
             <param name="vcfs">
                 <collection type="list">
@@ -277,12 +268,11 @@ Rscript $__tool_directory__/mutational_patterns.R
             <conditional name="set_denovo">
                 <param name="choices" value="no"/>
             </conditional>
-            <conditional name="set_cosmic">
+            <conditional name="set_preset">
                 <param name="choices" value="no"/>
             </conditional>
             <output name="spectrum" file="spectrum_output1.pdf" compare="sim_size"/>
         </test>
-
          <!-- de novo signatures -->
         <test>
             <param name="vcfs">
@@ -300,7 +290,7 @@ Rscript $__tool_directory__/mutational_patterns.R
             <conditional name="set_denovo">
                 <param name="choices" value="yes"/>
             </conditional>
-            <conditional name="set_cosmic">
+            <conditional name="set_preset">
                 <param name="choices" value="no"/>
             </conditional>
             <param name="nrun" value="10" />
