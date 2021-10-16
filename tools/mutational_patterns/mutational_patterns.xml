@@ -54,7 +54,7 @@ Rscript $__tool_directory__/mutational_patterns.R
         #end if
 
         #if $set_preset.set_signature_input.input_signature_choices == 'user_signatures'
-            --own_signatures '$set_preset.set_signature_input.user_signatures'
+            --own_signatures '$set_preset.set_signature_input.own_matrix'
         #end if
        
         --signum '$set_preset.signum'
@@ -176,7 +176,7 @@ Rscript $__tool_directory__/mutational_patterns.R
         <data name="sigmatrix" format="tabular" label="De novo signatures probability matrix">
             <filter>set_denovo['choices'] == "yes"</filter>
         </data>
-        <data name="sig_contrib" format="pdf" label="Signatures contributions">
+        <data name="sig_contrib" format="pdf" label="Signature contributions">
             <filter>set_preset['choices'] == "yes"</filter>
         </data>
         <data name="sig_contrib_matrix" format="tabular" label="${tool.name}: Signature contribution table">
