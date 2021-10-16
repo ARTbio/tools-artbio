@@ -235,12 +235,12 @@ if (!is.na(opt$output_sigpattern)[1]) {
         cosmic_sbs_file <- cosmic_urls$url[cosmic_urls$genome == opt$genome &
                                            cosmic_urls$cosmic_version == opt$cosmic_version]
         sbs_signatures <- read.table(paste0(opt$tooldir, cosmic_sbs_file),
-                                            sep = "\t", header = TRUE)    
+                                            sep = "\t", header = TRUE)
         tag <- paste(opt$genome, "COSMIC", opt$cosmic_version, sep = " ")
     }
     # Prepare user-defined signatures
     if (!is.na(opt$own_signatures)) {
-        sbs_signatures <- read.table(opt$own_signatures, sep = "\t", header = TRUE)    
+        sbs_signatures <- read.table(opt$own_signatures, sep = "\t", header = TRUE)
         tag <- paste(opt$genome, "User-Defined Signatures", sep = " ")
     }
     row.names(sbs_signatures) <- sbs_signatures$Type
@@ -258,7 +258,6 @@ if (!is.na(opt$output_sigpattern)[1]) {
                           "#e4b4ff", "#4a5500", "#abc7fe", "#c95900", "#003d27", "#b10043", "#d5c68e", "#3e163e", "#b36b00", "#debaeb", "#605400",
                           "#7a0044", "#ffa06d", "#4c0d21", "#ff9cb5", "#3f1d02", "#ff958f", "#634a66", "#775500", "#6e0028", "#717653",
                           "#6c1000", "#693600")
-    # signature_colors <- unique(unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals))))
     signature_colors <- signature_colors[seq_len(ncol(sbs_signatures))]
     names(signature_colors) <- colnames(sbs_signatures)
     # To drop signature_colors <- signature_colors[colnames(sbs_signatures)]
@@ -271,13 +270,13 @@ if (!is.na(opt$output_sigpattern)[1]) {
     # to do: this is largely optional and should be graphically improved anyway
 
     pdf(opt$output_sigpattern, paper = "special", width = 11.69, height = 11.69)
-    for (i in head(seq(1, ncol(sbs_signatures), by = 20), -1)){
+    for (i in head(seq(1, ncol(sbs_signatures), by = 20), -1)) {
         p6 <- plot_96_profile(sbs_signatures[, i:(i + 19)], condensed = TRUE, ymax = 0.3)
         grid.arrange(p6, top = textGrob(paste0(tag, " profiles (", trunc((i + 1) / 20) + 1, " of ",
                                                trunc(ncol(sbs_signatures) / 20) + 1, " pages)"),
                                         gp = gpar(fontsize = 12, font = 3)))
     }
-    p6 <- plot_96_profile(sbs_signatures[,(trunc(ncol(sbs_signatures)/20) * 20):(ncol(sbs_signatures))],
+    p6 <- plot_96_profile(sbs_signatures[, (trunc(ncol(sbs_signatures) / 20) * 20):(ncol(sbs_signatures))],
                           condensed = TRUE, ymax = 0.3)
     grid.arrange(p6, top = textGrob(paste0(tag, " profiles (", trunc(ncol(sbs_signatures) / 20) + 1, " of ",
                                                trunc(ncol(sbs_signatures) / 20) + 1, " pages)"),
