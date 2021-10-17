@@ -236,7 +236,7 @@ if (!is.na(opt$output_sigpattern)[1]) {
                                            cosmic_urls$cosmic_version == opt$cosmic_version]
         sbs_signatures <- read.table(paste0(opt$tooldir, cosmic_sbs_file),
                                             sep = "\t", header = TRUE)
-        tag <- paste(opt$genome, "COSMIC", opt$cosmic_version, sep = " ")
+        tag <- paste(gsub("BSgenome.Hsapiens.UCSC.", "", opt$genome), "COSMIC", opt$cosmic_version, sep = " ")
     }
     # Prepare user-defined signatures
     if (!is.na(opt$own_signatures)) {
@@ -267,8 +267,6 @@ if (!is.na(opt$output_sigpattern)[1]) {
 
     # Plot mutational profiles of the COSMIC signatures
 
-    # to do: this is largely optional and should be graphically improved anyway
-
     pdf(opt$output_sigpattern, paper = "special", width = 11.69, height = 11.69)
     for (i in head(seq(1, ncol(sbs_signatures), by = 20), -1)) {
         p6 <- plot_96_profile(sbs_signatures[, i:(i + 19)], condensed = TRUE, ymax = 0.3)
@@ -281,6 +279,8 @@ if (!is.na(opt$output_sigpattern)[1]) {
     grid.arrange(p6, top = textGrob(paste0(tag, " profiles (", trunc(ncol(sbs_signatures) / 20) + 1, " of ",
                                                trunc(ncol(sbs_signatures) / 20) + 1, " pages)"),
                                         gp = gpar(fontsize = 12, font = 3)))
+
+
     # Find optimal contribution of COSMIC signatures to reconstruct 96 mutational profiles
     pseudo_mut_mat <- mut_mat + 0.0001 # First add a small pseudocount to the mutation count matrix
     fit_res <- fit_to_signatures(pseudo_mut_mat, sbs_signatures)
@@ -293,7 +293,7 @@ if (!is.na(opt$output_sigpattern)[1]) {
         pc3 <- ggplot(pc3_data, aes(x = Sample, y = Contribution, fill = as.factor(Signature))) +
                geom_bar(stat = "identity", position = "stack") +
                coord_flip() +
-               scale_fill_manual(name = "Cosmic\nSignatures", values = signature_colors[]) +
+               scale_fill_manual(name = tag, values = signature_colors[]) +
                labs(x = "Samples", y = "Absolute contribution") + theme_bw() +
                theme(panel.grid.minor.x = element_blank(),
                      panel.grid.major.x = element_blank(),
@@ -304,7 +304,7 @@ if (!is.na(opt$output_sigpattern)[1]) {
         pc4 <- ggplot(pc4_data, aes(x = Sample, y = Contribution, fill = as.factor(Signature))) +
                geom_bar(stat = "identity", position = "fill") +
                coord_flip() +
-               scale_fill_manual(name = "Cosmic\nSignatures", values = signature_colors) +
+               scale_fill_manual(name = tag, values = signature_colors) +
                scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
                labs(x = "Samples", y = "Relative contribution") + theme_bw() +
                theme(panel.grid.minor.x = element_blank(), panel.grid.major.x = element_blank(), legend.position = "right",
@@ -318,7 +318,7 @@ if (!is.na(opt$output_sigpattern)[1]) {
         pc3_data <- merge(pc3_data, metadata_table[, c(1, 3)], by.x = "Sample", by.y = "element_identifier")
         pc3 <- ggplot(pc3_data, aes(x = Sample, y = Contribution, fill = as.factor(Signature))) +
                geom_bar(stat = "identity", position = "stack") +
-               scale_fill_manual(name = "Cosmic\nSignatures", values = signature_colors) +
+               scale_fill_manual(name = tag, values = signature_colors) +
                labs(x = "Samples", y = "Absolute contribution") + theme_bw() +
                theme(panel.grid.minor.x = element_blank(),
                      panel.grid.major.x = element_blank(),
@@ -330,7 +330,7 @@ if (!is.na(opt$output_sigpattern)[1]) {
         pc4_data <- merge(pc4_data, metadata_table[, c(1, 3)], by.x = "Sample", by.y = "element_identifier")
         pc4 <- ggplot(pc4_data, aes(x = Sample, y = Contribution, fill = as.factor(Signature))) +
                geom_bar(stat = "identity", position = "fill") +
-               scale_fill_manual(name = "Cosmic\nSignatures", values = signature_colors) +
+               scale_fill_manual(name = tag, values = signature_colors) +
                scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
                labs(x = "Samples", y = "Relative contribution") + theme_bw() +
                theme(panel.grid.minor.x = element_blank(),
