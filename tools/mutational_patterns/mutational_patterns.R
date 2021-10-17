@@ -37,7 +37,7 @@ option_list <- list(
     "--cosmic_version",
     default = NA,
     type = "character",
-    help = "Version of the Cosmic Signature set to be used to express mutational patterns"
+    help = "Version of the Cosmic Signature set to be used to express mutational profiles"
   ),
   make_option(
     "--own_signatures",
@@ -49,7 +49,7 @@ option_list <- list(
     "--signum",
     default = 2,
     type = "integer",
-    help = "selects the N most significant signatures in samples to express mutational patterns"
+    help = "selects the N most significant signatures in samples to express mutational profiles"
   ),
   make_option(
     "--nrun",
@@ -342,7 +342,7 @@ if (!is.na(opt$output_sigpattern)[1]) {
     }
     # Combine the two plots:
     grid.arrange(pc3, pc4,
-                 top = textGrob("Absolute and Relative Contributions of Cosmic signatures to mutational patterns",
+                 top = textGrob("Absolute and Relative Contributions of elementary signatures to mutational profiles",
                  gp = gpar(fontsize = 12, font = 3)))
 
     #### pie charts of comic signatures contributions in samples ###
@@ -441,7 +441,7 @@ if (!is.na(opt$output_sigpattern)[1]) {
                       panel.grid.major.y = element_blank()) +
                       # Add cut.off line
                       geom_hline(aes(yintercept = .95))
-    grid.arrange(p9, top = textGrob("Similarity between true and reconstructed profiles (with all Cosmic sig.)", gp = gpar(fontsize = 12, font = 3)))
+    grid.arrange(p9, top = textGrob("Similarity between true profiles and profiles reconstructed with elementary signatures", gp = gpar(fontsize = 12, font = 3)))
     dev.off()
 }
 

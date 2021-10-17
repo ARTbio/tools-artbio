@@ -337,27 +337,46 @@ Rscript $__tool_directory__/mutational_patterns.R
 
 **What it does**
 
-Takes as inputs
+This tool implement the R package MutationalPatterns to decompose mutations found in cancers
+in a linear combination of elementary mutational signatures, as first described by
+Alexandrov_ et al (2013) and recently improved in an update_ published in 2020.
 
-* a collection of n vcf files corresponding to n samples.
-* a tabular table describing the correspondance of sample names to levels (tissues, ages, sexes, etc.)
-* the number of cosmic signatures to decompose mutational patterns of samples
+.. _Alexandrov: https://www.nature.com/articles/nature12477
+.. _update: https://www.nature.com/articles/s41586-020-1943-3
 
+Sets of elementary signatures found by analyzing large cohortes of patients are published
+in the COSMIC databases v2_ to v3.2_. You can choose among these COSMIC signature sets to
+analyse your own VCFs.
 
-This tool returns a pdf file with the visualisation :
+In addition, you can use your own signature sets (or filtered COSMIC signature sets)
+since MutationalPatterns implements a method to extract elementary signatures from
+user-provided VCFs.
 
-* the Cosine similarity of samples when decomposed over the 30 signatures of cosmic_
-* the absolute contribution of the n most contributing cosmic_ signatures in the samples mutational patterns (to be set by the user, between 2 and 30)
-* the relative contribution of the n most contributing cosmic_ signatures in the samples mutational patterns  (to be set by the user, between 2 and 30)
-* a clustering of the samples with respect to the relative contribution of their cosmic_ signatures
-* pie charts of the samples displaying for each sample the relative contribution of the n most contributing cosmic_ signatures to their mutational pattern
+**Inputs**
 
-.. _cosmic: https://cancer.sanger.ac.uk/cosmic/signatures_v2.tt
+* a collection of VCF files with somatic mutations calls from analysis of samples.
+* a tabular table describing the correspondance of sample names to levels of a factor
+(tissues, ages, sexes, etc.)
+
+**Outputs**
+
+This tool returns pdf files with various visualisations of :
+
+* the spectrum of single nucleotide mutation types
+* the absolute contribution of the elementary signatures in the samples
+* the relative contribution of the elementary signatures in the samples
+* an unrooted hierarchical clustering of the reconstructed samples with respect to the relative contribution of elementary signatures
+* the Cosine similarity between true samples and samples reconstructed with elementary signatures
+* pie charts displaying the relative contribution of the n most contributing elementary signatures in the reconstructed sample profiles
+
+.. _v2: https://cancer.sanger.ac.uk/signatures/signatures_v2/
+.. _v3.2: https://cancer.sanger.ac.uk/signatures/sbs/
 
     </help>
     <citations>
         <citation type="doi">10.18129/B9.bioc.MutationalPatterns</citation>
         <citation type="doi">10.1186/s13073-018-0539-0</citation>
         <citation type="doi">10.1038/nature12477</citation>
+        <citation type="doi">10.1038/s41586-020-1943-3</citation>
     </citations>
 </tool>
