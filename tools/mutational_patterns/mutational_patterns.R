@@ -35,15 +35,21 @@ option_list <- list(
   ),
   make_option(
     "--cosmic_version",
-    default = "v2",
+    default = NA,
     type = "character",
-    help = "Version of the Cosmic Signature set to be used to express mutational patterns"
+    help = "Version of the Cosmic Signature set to be used to express mutational profiles"
+  ),
+  make_option(
+    "--own_signatures",
+    default = NA,
+    type = "character",
+    help = "Path to the user-defined signature matrix"
   ),
   make_option(
     "--signum",
     default = 2,
     type = "integer",
-    help = "selects the N most significant signatures in samples to express mutational patterns"
+    help = "selects the N most significant signatures in samples to express mutational profiles"
   ),
   make_option(
     "--nrun",
@@ -82,7 +88,7 @@ option_list <- list(
     help = "path to signature matrix"
   ),
   make_option(
-    "--output_cosmic",
+    "--output_sigpattern",
     default = NA,
     type = "character",
     help = "path to output dataset"
@@ -141,8 +147,6 @@ detach(package:plyr)
 ##### This is done for any section ######
 mut_mat <- mut_matrix(vcf_list = vcfs, ref_genome = ref_genome)
 qual_col_pals <- brewer.pal.info[brewer.pal.info$category == "qual", ]
-col_vector <- unique(unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals))))
-col_vector <- col_vector[c(-32, -34, -39)] # 67-color palette
 
 ###### Section 1 Mutation characteristics and spectrums #############
 if (!is.na(opt$output_spectrum)[1]) {
@@ -221,53 +225,75 @@ if (!is.na(opt$output_denovo)[1]) {
                           condensed = TRUE)
     dev.off()
     }
-##### Section 3: Find optimal contribution of known signatures: COSMIC mutational signatures ####
 
-if (!is.na(opt$output_cosmic)[1]) {
+##### Section 3: Find optimal contribution of known signatures: COSMIC or OWN mutational signatures ####
+
+if (!is.na(opt$output_sigpattern)[1]) {
     # Prepare cosmic signatures
-    cosmic_urls <- read.delim(paste0(opt$tooldir, "cosmic_urls.tsv"), sep = "\t", header = TRUE)
-    cosmic_sbs_file <- cosmic_urls$url[cosmic_urls$genome == opt$genome &
-                                       cosmic_urls$cosmic_version == opt$cosmic_version]
-    cancer_sbs_signatures <- read.table(paste0(opt$tooldir, cosmic_sbs_file),
-                                        sep = "\t", header = TRUE)
-    row.names(cancer_sbs_signatures) <- cancer_sbs_signatures$Type
-    new_order <- match(row.names(mut_mat), cancer_sbs_signatures$Type)
-    cancer_sbs_signatures <- cancer_sbs_signatures[as.numeric(new_order), ]
-    cosmic_tag <- paste(opt$genome, "COSMIC", opt$cosmic_version, sep = " ")
-    cosmic_colors <- col_vector[seq_len(ncol(cancer_sbs_signatures) - 1)]
-    names(cosmic_colors) <- colnames(cancer_sbs_signatures[2:length(cancer_sbs_signatures)])
-    cancer_sbs_matrix <- as.matrix(cancer_sbs_signatures[, 2:length(cancer_sbs_signatures)])
+    if (!is.na(opt$cosmic_version)) {
+        cosmic_urls <- read.delim(paste0(opt$tooldir, "cosmic_urls.tsv"), sep = "\t", header = TRUE)
+        cosmic_sbs_file <- cosmic_urls$url[cosmic_urls$genome == opt$genome &
+                                           cosmic_urls$cosmic_version == opt$cosmic_version]
+        sbs_signatures <- read.table(paste0(opt$tooldir, cosmic_sbs_file),
+                                            sep = "\t", header = TRUE)
+        tag <- paste(opt$genome, "COSMIC", opt$cosmic_version, sep = " ")
+    }
+    # Prepare user-defined signatures
+    if (!is.na(opt$own_signatures)) {
+        sbs_signatures <- read.table(opt$own_signatures, sep = "\t", header = TRUE)
+        tag <- paste(opt$genome, "User-Defined Signatures", sep = " ")
+    }
+    row.names(sbs_signatures) <- sbs_signatures$Type
+    # drop column Type of sbs_signatures
+    sbs_signatures <- subset(sbs_signatures, select = -c(Type))
+    # reorder substitutions of sbs_signatures to match mut_mat
+    sbs_signatures <- sbs_signatures[match(row.names(mut_mat), row.names(sbs_signatures)), ]
+    colnames(sbs_signatures) <- gsub("SBS", "", colnames(sbs_signatures))
+    # arrange signature colors
+    signature_colors <- c("#3f4100", "#6f53ff", "#6dc400", "#9d1fd7", "#009c06", "#001fae", "#8adb4d", "#5a67ff", "#d8c938", "#024bc3", "#d2ab00",
+                          "#e36eff", "#00ac44", "#d000b0", "#01b071", "#ff64e2", "#006b21", "#b70090", "#60dc9f", "#5f0083", "#c0ce67", "#002981",
+                          "#ffb53e", "#44005f", "#b59600", "#7d95ff", "#f47600", "#017bc4", "#ff2722", "#02cfec", "#ff233f", "#01b7b4", "#fd005c",
+                          "#019560", "#ff57a9", "#88d896", "#b80067", "#abd27f", "#dc8eff", "#667b00", "#fba3ff", "#093f00", "#ff6494", "#009791",
+                          "#c93200", "#4ac8ff", "#a60005", "#8fd4b6", "#ce0036", "#00634d", "#ff6035", "#2d1956", "#f0be6d", "#6a0058", "#957a00",
+                          "#e4b4ff", "#4a5500", "#abc7fe", "#c95900", "#003d27", "#b10043", "#d5c68e", "#3e163e", "#b36b00", "#debaeb", "#605400",
+                          "#7a0044", "#ffa06d", "#4c0d21", "#ff9cb5", "#3f1d02", "#ff958f", "#634a66", "#775500", "#6e0028", "#717653",
+                          "#6c1000", "#693600")
+    signature_colors <- signature_colors[seq_len(ncol(sbs_signatures))]
+    names(signature_colors) <- colnames(sbs_signatures)
+    # To drop signature_colors <- signature_colors[colnames(sbs_signatures)]
+    # This is IMPORTANT since in Galaxy we do not use the embeded function get_known_signatures()
+    sbs_signatures <- as.matrix(sbs_signatures)
 
 
     # Plot mutational profiles of the COSMIC signatures
-    pdf(opt$output_cosmic, paper = "special", width = 11.69, height = 11.69)
-    if (opt$cosmic_version == "v2") {
-        p6 <- plot_96_profile(cancer_sbs_matrix, condensed = TRUE, ymax = 0.3)
-        grid.arrange(p6, top = textGrob("COSMIC SBS signature profiles", gp = gpar(fontsize = 12, font = 3)))
-    } else {
-        p6 <- plot_96_profile(cancer_sbs_matrix[, 1:trunc(ncol(cancer_sbs_matrix) / 2)], condensed = TRUE, ymax = 0.3)
-        p6bis <- plot_96_profile(cancer_sbs_matrix[, (trunc(ncol(cancer_sbs_matrix) / 2) + 1):ncol(cancer_sbs_matrix)],
-                                 condensed = TRUE, ymax = 0.3)
-        grid.arrange(p6, top = textGrob("COSMIC signature profiles (on two pages)",
-                     gp = gpar(fontsize = 12, font = 3)))
-        grid.arrange(p6bis, top = textGrob("COSMIC signature profiles (continued)",
-                     gp = gpar(fontsize = 12, font = 3)))
+
+    # to do: this is largely optional and should be graphically improved anyway
+
+    pdf(opt$output_sigpattern, paper = "special", width = 11.69, height = 11.69)
+    for (i in head(seq(1, ncol(sbs_signatures), by = 20), -1)) {
+        p6 <- plot_96_profile(sbs_signatures[, i:(i + 19)], condensed = TRUE, ymax = 0.3)
+        grid.arrange(p6, top = textGrob(paste0(tag, " profiles (", trunc((i + 1) / 20) + 1, " of ",
+                                               trunc(ncol(sbs_signatures) / 20) + 1, " pages)"),
+                                        gp = gpar(fontsize = 12, font = 3)))
     }
-
-
+    p6 <- plot_96_profile(sbs_signatures[, (trunc(ncol(sbs_signatures) / 20) * 20):(ncol(sbs_signatures))],
+                          condensed = TRUE, ymax = 0.3)
+    grid.arrange(p6, top = textGrob(paste0(tag, " profiles (", trunc(ncol(sbs_signatures) / 20) + 1, " of ",
+                                               trunc(ncol(sbs_signatures) / 20) + 1, " pages)"),
+                                        gp = gpar(fontsize = 12, font = 3)))
     # Find optimal contribution of COSMIC signatures to reconstruct 96 mutational profiles
     pseudo_mut_mat <- mut_mat + 0.0001 # First add a small pseudocount to the mutation count matrix
-    fit_res <- fit_to_signatures(pseudo_mut_mat, cancer_sbs_matrix)
+    fit_res <- fit_to_signatures(pseudo_mut_mat, sbs_signatures)
 
     # Plot contribution barplots
-    pc3 <- plot_contribution(fit_res$contribution, cancer_sbs_matrix, coord_flip = T, mode = "absolute")
-    pc4 <- plot_contribution(fit_res$contribution, cancer_sbs_matrix, coord_flip = T, mode = "relative")
+    pc3 <- plot_contribution(fit_res$contribution, sbs_signatures, coord_flip = T, mode = "absolute")
+    pc4 <- plot_contribution(fit_res$contribution, sbs_signatures, coord_flip = T, mode = "relative")
     if (is.na(opt$levels)[1]) {  # if there are NO levels to display in graphs
         pc3_data <- pc3$data
         pc3 <- ggplot(pc3_data, aes(x = Sample, y = Contribution, fill = as.factor(Signature))) +
                geom_bar(stat = "identity", position = "stack") +
                coord_flip() +
-               scale_fill_manual(name = "Cosmic\nSignatures", values = cosmic_colors) +
+               scale_fill_manual(name = "Cosmic\nSignatures", values = signature_colors[]) +
                labs(x = "Samples", y = "Absolute contribution") + theme_bw() +
                theme(panel.grid.minor.x = element_blank(),
                      panel.grid.major.x = element_blank(),
@@ -278,7 +304,7 @@ if (!is.na(opt$output_cosmic)[1]) {
         pc4 <- ggplot(pc4_data, aes(x = Sample, y = Contribution, fill = as.factor(Signature))) +
                geom_bar(stat = "identity", position = "fill") +
                coord_flip() +
-               scale_fill_manual(name = "Cosmic\nSignatures", values = cosmic_colors) +
+               scale_fill_manual(name = "Cosmic\nSignatures", values = signature_colors) +
                scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
                labs(x = "Samples", y = "Relative contribution") + theme_bw() +
                theme(panel.grid.minor.x = element_blank(), panel.grid.major.x = element_blank(), legend.position = "right",
@@ -292,7 +318,7 @@ if (!is.na(opt$output_cosmic)[1]) {
         pc3_data <- merge(pc3_data, metadata_table[, c(1, 3)], by.x = "Sample", by.y = "element_identifier")
         pc3 <- ggplot(pc3_data, aes(x = Sample, y = Contribution, fill = as.factor(Signature))) +
                geom_bar(stat = "identity", position = "stack") +
-               scale_fill_manual(name = "Cosmic\nSignatures", values = cosmic_colors) +
+               scale_fill_manual(name = "Cosmic\nSignatures", values = signature_colors) +
                labs(x = "Samples", y = "Absolute contribution") + theme_bw() +
                theme(panel.grid.minor.x = element_blank(),
                      panel.grid.major.x = element_blank(),
@@ -304,7 +330,7 @@ if (!is.na(opt$output_cosmic)[1]) {
         pc4_data <- merge(pc4_data, metadata_table[, c(1, 3)], by.x = "Sample", by.y = "element_identifier")
         pc4 <- ggplot(pc4_data, aes(x = Sample, y = Contribution, fill = as.factor(Signature))) +
                geom_bar(stat = "identity", position = "fill") +
-               scale_fill_manual(name = "Cosmic\nSignatures", values = cosmic_colors) +
+               scale_fill_manual(name = "Cosmic\nSignatures", values = signature_colors) +
                scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
                labs(x = "Samples", y = "Relative contribution") + theme_bw() +
                theme(panel.grid.minor.x = element_blank(),
@@ -316,7 +342,7 @@ if (!is.na(opt$output_cosmic)[1]) {
     }
     # Combine the two plots:
     grid.arrange(pc3, pc4,
-                 top = textGrob("Absolute and Relative Contributions of Cosmic signatures to mutational patterns",
+                 top = textGrob("Absolute and Relative Contributions of elementary signatures to mutational profiles",
                  gp = gpar(fontsize = 12, font = 3)))
 
     #### pie charts of comic signatures contributions in samples ###
@@ -356,9 +382,10 @@ if (!is.na(opt$output_cosmic)[1]) {
               geom_bar(width = 1, stat = "identity") +
               geom_text(aes(label = label), position = position_stack(vjust = 0.5), color = "black", size = 3) +
               coord_polar("y", start = 0) + facet_wrap(.~sample) +
-              labs(x = "", y = "Samples", fill = cosmic_tag) +
+              labs(x = "", y = "Samples", fill = tag) +
               scale_fill_manual(name = paste0(opt$signum, " most contributing\nsignatures\n(in each label/tissue)"),
-                                values = cosmic_colors[levels(worklist$signature)]) +
+                                values = signature_colors[levels(worklist$signature)],
+                                labels = names(signature_colors[levels(worklist$signature)])) +
               theme(axis.text = element_blank(),
                     axis.ticks = element_blank(),
                     panel.grid  = element_blank())
@@ -377,8 +404,10 @@ if (!is.na(opt$output_cosmic)[1]) {
             output_table <- data.frame(sample = paste0(metadata_table[metadata_table$element_identifier == colnames(fit_res$contribution),
                                                                     3], "-", colnames(fit_res$contribution)),
                                        output_table)
+            colnames(output_table) <- gsub("X", "SBS", colnames(output_table))
             } else {
-        output_table <- data.frame(sample = rownames(output_table), output_table)
+            output_table <- data.frame(sample = rownames(output_table), output_table)
+            colnames(output_table) <- gsub("X", "SBS", colnames(output_table))
         }
         write.table(output_table, file = opt$sig_contrib_matrix, sep = "\t", quote = F, row.names = F)
     }
@@ -412,7 +441,7 @@ if (!is.na(opt$output_cosmic)[1]) {
                       panel.grid.major.y = element_blank()) +
                       # Add cut.off line
                       geom_hline(aes(yintercept = .95))
-    grid.arrange(p9, top = textGrob("Similarity between true and reconstructed profiles (with all Cosmic sig.)", gp = gpar(fontsize = 12, font = 3)))
+    grid.arrange(p9, top = textGrob("Similarity between true profiles and profiles reconstructed with elementary signatures", gp = gpar(fontsize = 12, font = 3)))
     dev.off()
 }
 
