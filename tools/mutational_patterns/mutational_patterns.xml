@@ -189,6 +189,36 @@ Rscript $__tool_directory__/mutational_patterns.R
 
     </outputs>
     <tests>
+         <!-- user defined (v3.2 restricted 30 minus 27) -->
+        <test>
+            <param name="vcfs">
+                <collection type="list">
+                    <element name="6" value="F.vcf"/>
+                    <element name="7" value="G.vcf"/>
+                    <element name="8" value="H.vcf"/>
+                    <element name="9" value="I.vcf"/>
+                </collection>
+            </param>
+            <param name="genome" value="BSgenome.Hsapiens.UCSC.hg38"/>
+            <param name="levels" value="FGHI_levels.tab" ftype="tabular"/>
+            <conditional name="set_spectrum">
+                <param name="choices" value="no"/>
+            </conditional>
+            <conditional name="set_denovo">
+                <param name="choices" value="no"/>
+            </conditional>
+            <conditional name="set_preset">
+                <param name="choices" value="yes"/>
+                <conditional name="set_signature_input">
+                    <param name="input_signature_choices" value="user_signatures" />
+                    <param name="own_matrix" value="user_defined_signature.tsv" ftype="tabular"/>
+                </conditional>
+                <param name="contrib_matrix_out"  value="yes" />
+            </conditional>
+            <param name="signum" value="4" />
+            <output name="sig_contrib" file="user_output.pdf" compare="sim_size"/>
+            <output name="sig_contrib_matrix" file="sig_contrib_table_user_defined.tsv" compare="sim_size"/>
+        </test>
          <!-- cosmic v3.2 -->
         <test>
             <param name="vcfs">
