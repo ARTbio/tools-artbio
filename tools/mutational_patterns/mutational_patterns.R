@@ -272,8 +272,8 @@ if (!is.na(opt$output_sigpattern)[1]) {
                               "#FDDAEC", "#F2F2F2", "#B3E2CD", "#FDCDAC", "#CBD5E8", "#F4CAE4", "#E6F5C9", "#FFF2AE", "#F1E2CC", "#CCCCCC", "#E41A1C",
                               "#377EB8", "#4DAF4A", "#984EA3", "#FFFF33", "#A65628", "#F781BF", "#999999", "#66C2A5", "#FC8D62", "#8DA0CB", "#E78AC3",
                               "#A6D854", "#FFD92F", "#E5C494", "#B3B3B3", "#8DD3C7", "#FFFFB3", "#BEBADA", "#FB8072", "#80B1D3", "#FDB462", "#B3DE69",
-                              "#FCCDE5", "#D9D9D9", "#BC80BD", "#FFED6F", "#7FC97F", "#BEAED4", "#FDC086", "#FFFF99", "#386CB0", "#F0027F", "#BF5B17",
-                              "#666666")
+                              "#FCCDE5", "#D9D9D9", "#BC80BD", "#FFED6F", "#3f1d02", "#ff958f", "#634a66", "#775500", "#6e0028", "#717653", "#6c1000",
+                              "#693600")
     }
     signature_colors <- signature_colors[seq_len(ncol(sbs_signatures))]
     names(signature_colors) <- colnames(sbs_signatures)
