@@ -1,4 +1,4 @@
-<tool id="mutational_patterns" name="Analyse Mutational Patterns/Signatures" version="3.2.0+galaxy4">
+<tool id="mutational_patterns" name="Analyse Mutational Patterns/Signatures" version="3.2.0+galaxy5">
     <description>from genomic variations in vcf files</description>
     <requirements>
         <requirement type="package" version="3.2.0=r41hdfd78af_0">bioconductor-mutationalpatterns</requirement>
@@ -37,15 +37,15 @@ Rscript $__tool_directory__/mutational_patterns.R
     #end if
 
     #if $set_spectrum.choices == 'yes':
-        --output_spectrum $spectrum
+        --output_spectrum '$spectrum'
     #end if
     
     #if $set_denovo.choices == 'yes':
-        --nrun $set_denovo.nrun
-        --rank $set_denovo.rank
-        --newsignum $set_denovo.newsignum
-        --output_denovo $denovo
-        --sigmatrix $sigmatrix
+        --nrun '$set_denovo.nrun'
+        --rank '$set_denovo.rank'
+        --newsignum '$set_denovo.newsignum'
+        --output_denovo '$denovo'
+        --sigmatrix '$sigmatrix'
     #end if
 
     #if $set_preset.choices == 'yes':
@@ -59,10 +59,11 @@ Rscript $__tool_directory__/mutational_patterns.R
         #end if
        
         --signum '$set_preset.signum'
-        --output_sigpattern $sig_contrib
+        --colors '$set_preset.colors'
+        --output_sigpattern '$sig_contrib'
 
         #if $set_preset.contrib_matrix_out == 'yes'
-            --sig_contrib_matrix $sig_contrib_matrix
+            --sig_contrib_matrix '$sig_contrib_matrix'
         #end if
 
     #end if
@@ -161,6 +162,10 @@ Rscript $__tool_directory__/mutational_patterns.R
                        help="Output the normalized signatures contributions for further visualization" >
                     <option value="no" selected="true">No</option>
                     <option value="yes">Yes</option>
+                </param>
+                <param name="colors" type="select" label="Color set" display="radio">
+                    <option value="brewer">RColorBrewer</option>
+                    <option value="intense" selected="true">Intense</option>
                 </param>
             </when>
             <when value="no" />

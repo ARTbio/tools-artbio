@@ -100,6 +100,12 @@ option_list <- list(
     help = "path to signature contribution matrix"
   ),
   make_option(
+    "--colors",
+    default = NA,
+    type = "character",
+    help = "color palette to display signatures"
+  ),
+  make_option(
     c("-r", "--rdata"),
     type = "character",
     default = NULL,
@@ -191,8 +197,8 @@ if (!is.na(opt$output_denovo)[1]) {
     # to achieve stability and avoid local minima)
     nmf_res <- extract_signatures(pseudo_mut_mat, rank = opt$newsignum, nrun = opt$nrun)
     # Assign signature names
-    colnames(nmf_res$signatures) <- paste0("NewSig_", 1:opt$newsignum)
-    rownames(nmf_res$contribution) <- paste0("NewSig_", 1:opt$newsignum)
+    colnames(nmf_res$signatures) <- paste0("SBS", 1:opt$newsignum)
+    rownames(nmf_res$contribution) <- paste0("SBS", 1:opt$newsignum)
     # Plot the 96-profile of the signatures:
     p5 <- plot_96_profile(nmf_res$signatures, condensed = TRUE)
     new_sig_matrix <- reshape2::dcast(p5$data, substitution + context ~ sample, value.var = "freq")
@@ -241,7 +247,7 @@ if (!is.na(opt$output_sigpattern)[1]) {
     # Prepare user-defined signatures
     if (!is.na(opt$own_signatures)) {
         sbs_signatures <- read.table(opt$own_signatures, sep = "\t", header = TRUE)
-        tag <- paste(opt$genome, "User-Defined Signatures", sep = " ")
+        tag <- paste(gsub("BSgenome.Hsapiens.UCSC.", "", opt$genome), "User-Defined Signatures", sep = " ")
     }
     row.names(sbs_signatures) <- sbs_signatures$Type
     # drop column Type of sbs_signatures
@@ -250,17 +256,27 @@ if (!is.na(opt$output_sigpattern)[1]) {
     sbs_signatures <- sbs_signatures[match(row.names(mut_mat), row.names(sbs_signatures)), ]
     colnames(sbs_signatures) <- gsub("SBS", "", colnames(sbs_signatures))
     # arrange signature colors
-    signature_colors <- c("#3f4100", "#6f53ff", "#6dc400", "#9d1fd7", "#009c06", "#001fae", "#8adb4d", "#5a67ff", "#d8c938", "#024bc3", "#d2ab00",
-                          "#e36eff", "#00ac44", "#d000b0", "#01b071", "#ff64e2", "#006b21", "#b70090", "#60dc9f", "#5f0083", "#c0ce67", "#002981",
-                          "#ffb53e", "#44005f", "#b59600", "#7d95ff", "#f47600", "#017bc4", "#ff2722", "#02cfec", "#ff233f", "#01b7b4", "#fd005c",
-                          "#019560", "#ff57a9", "#88d896", "#b80067", "#abd27f", "#dc8eff", "#667b00", "#fba3ff", "#093f00", "#ff6494", "#009791",
-                          "#c93200", "#4ac8ff", "#a60005", "#8fd4b6", "#ce0036", "#00634d", "#ff6035", "#2d1956", "#f0be6d", "#6a0058", "#957a00",
-                          "#e4b4ff", "#4a5500", "#abc7fe", "#c95900", "#003d27", "#b10043", "#d5c68e", "#3e163e", "#b36b00", "#debaeb", "#605400",
-                          "#7a0044", "#ffa06d", "#4c0d21", "#ff9cb5", "#3f1d02", "#ff958f", "#634a66", "#775500", "#6e0028", "#717653",
-                          "#6c1000", "#693600")
+    if (opt$colors == "intense") {
+        signature_colors <- c("#3f4100", "#6f53ff", "#6dc400", "#9d1fd7", "#009c06", "#001fae", "#8adb4d", "#5a67ff", "#d8c938", "#024bc3", "#d2ab00",
+                              "#e36eff", "#00ac44", "#d000b0", "#01b071", "#ff64e2", "#006b21", "#b70090", "#60dc9f", "#5f0083", "#c0ce67", "#002981",
+                              "#ffb53e", "#44005f", "#b59600", "#7d95ff", "#f47600", "#017bc4", "#ff2722", "#02cfec", "#ff233f", "#01b7b4", "#fd005c",
+                              "#019560", "#ff57a9", "#88d896", "#b80067", "#abd27f", "#dc8eff", "#667b00", "#fba3ff", "#093f00", "#ff6494", "#009791",
+                              "#c93200", "#4ac8ff", "#a60005", "#8fd4b6", "#ce0036", "#00634d", "#ff6035", "#2d1956", "#f0be6d", "#6a0058", "#957a00",
+                              "#e4b4ff", "#4a5500", "#abc7fe", "#c95900", "#003d27", "#b10043", "#d5c68e", "#3e163e", "#b36b00", "#debaeb", "#605400",
+                              "#7a0044", "#ffa06d", "#4c0d21", "#ff9cb5", "#3f1d02", "#ff958f", "#634a66", "#775500", "#6e0028", "#717653", "#6c1000",
+                              "#693600")
+    } else {
+        signature_colors <- c("#7FC97F", "#BEAED4", "#FDC086", "#FFFF99", "#386CB0", "#F0027F", "#BF5B17", "#666666", "#1B9E77", "#D95F02", "#7570B3",
+                              "#E7298A", "#66A61E", "#E6AB02", "#A6761D", "#A6CEE3", "#1F78B4", "#B2DF8A", "#33A02C", "#FB9A99", "#E31A1C", "#FDBF6F",
+                              "#FF7F00", "#CAB2D6", "#6A3D9A", "#B15928", "#FBB4AE", "#B3CDE3", "#CCEBC5", "#DECBE4", "#FED9A6", "#FFFFCC", "#E5D8BD",
+                              "#FDDAEC", "#F2F2F2", "#B3E2CD", "#FDCDAC", "#CBD5E8", "#F4CAE4", "#E6F5C9", "#FFF2AE", "#F1E2CC", "#CCCCCC", "#E41A1C",
+                              "#377EB8", "#4DAF4A", "#984EA3", "#FFFF33", "#A65628", "#F781BF", "#999999", "#66C2A5", "#FC8D62", "#8DA0CB", "#E78AC3",
+                              "#A6D854", "#FFD92F", "#E5C494", "#B3B3B3", "#8DD3C7", "#FFFFB3", "#BEBADA", "#FB8072", "#80B1D3", "#FDB462", "#B3DE69",
+                              "#FCCDE5", "#D9D9D9", "#BC80BD", "#FFED6F", "#3f1d02", "#ff958f", "#634a66", "#775500", "#6e0028", "#717653", "#6c1000",
+                              "#693600")
+    }
     signature_colors <- signature_colors[seq_len(ncol(sbs_signatures))]
     names(signature_colors) <- colnames(sbs_signatures)
-    # To drop signature_colors <- signature_colors[colnames(sbs_signatures)]
     # This is IMPORTANT since in Galaxy we do not use the embeded function get_known_signatures()
     sbs_signatures <- as.matrix(sbs_signatures)
 
