@@ -254,7 +254,6 @@ if (!is.na(opt$output_sigpattern)[1]) {
     sbs_signatures <- subset(sbs_signatures, select = -c(Type))
     # reorder substitutions of sbs_signatures to match mut_mat
     sbs_signatures <- sbs_signatures[match(row.names(mut_mat), row.names(sbs_signatures)), ]
-    colnames(sbs_signatures) <- gsub("SBS", "", colnames(sbs_signatures))
     # arrange signature colors
     if (opt$colors == "intense") {
         signature_colors <- c("#3f4100", "#6f53ff", "#6dc400", "#9d1fd7", "#009c06", "#001fae", "#8adb4d", "#5a67ff", "#d8c938", "#024bc3", "#d2ab00",
@@ -392,11 +391,11 @@ if (!is.na(opt$output_sigpattern)[1]) {
     colnames(worklist) <- c("signature", "sample", "value", "level")
     worklist <- as.data.frame(worklist %>% group_by(sample) %>% mutate(value = value / sum(value) * 100))
     worklist$pos <- cumsum(worklist$value) - worklist$value / 2
-    worklist$label <- factor(worklist$signature)
+    worklist$label <- factor(gsub("SBS", "", worklist$signature))
     worklist$signature <- factor(worklist$signature)
     p7 <-  ggplot(worklist, aes(x = "", y = value, group = signature, fill = signature)) +
               geom_bar(width = 1, stat = "identity") +
-              geom_text(aes(label = label), position = position_stack(vjust = 0.5), color = "black", size = 3) +
+              geom_text(aes(label = label), position = position_stack(vjust = 0.5), color = "white", size = 3) +
               coord_polar("y", start = 0) + facet_wrap(.~sample) +
               labs(x = "", y = "Samples", fill = tag) +
               scale_fill_manual(name = paste0(opt$signum, " most contributing\nsignatures\n(in each label/tissue)"),
