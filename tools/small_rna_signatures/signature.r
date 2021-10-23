@@ -2,7 +2,7 @@
 options(show.error.messages = F,
         error = function() {
             cat(geterrmessage(), file = stderr())
-            q("no", 1, F )
+            q("no", 1, F)
         }
 )
 warnings()
@@ -15,7 +15,7 @@ library(gridExtra)
 library(optparse)
 
 option_list <- list(
-    make_option("--h_dataframe", type="character",
+    make_option("--h_dataframe", type = "character",
                 help = "path to h-signature dataframe"),
     make_option("--z_dataframe", type = "character",
                 help = "path to z-signature dataframe"),
@@ -62,7 +62,7 @@ colnames(z_dataframe) <- c("chrom", "overlap", "sig", "z-score")
 
     treillisgraph <- function(df, ...) {
           pdf(args$pdf, paper = "special", height = 11.69, width = 6)
-          p <- xyplot(sig ~ overlap | factor(method, levels = unique(method)) + chrom, 
+          p <- xyplot(sig ~ overlap | factor(method, levels = unique(method)) + chrom,
                    data = df,
                    type = "l",
                    col = "darkblue",
