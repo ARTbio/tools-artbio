@@ -74,7 +74,7 @@ class Map:
 
     def query_positions(self, bam_object, overlap):
         all_query_positions = defaultdict(list)
-        for genomicKey in self.alignement_dic.keys():
+        for genomicKey in list(self.alignement_dic):
             chrom, coord, pol = genomicKey
             if pol == 'F' and len(self.alignement_dic[(chrom,
                                                       coord+overlap-1,
