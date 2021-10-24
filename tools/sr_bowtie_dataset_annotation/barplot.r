@@ -3,7 +3,6 @@ if (length(commandArgs(TRUE)) == 0) {
   q("no")
 }
 
-
 # load packages that are provided in the conda env
 options(show.error.messages = F,
        error = function() {
@@ -18,7 +17,6 @@ library(ggplot2)
 library(ggrepel)
 library(RColorBrewer)
 
-#Arguments
 option_list <- list(
   make_option(
     c("-i", "--input"),
@@ -41,16 +39,13 @@ annotations <- read.delim(opt$input, header = F)
 colnames(annotations) <- c("sample", "class", "percent_of_reads", "total")
 annotations$percent <- round(annotations$percent_of_reads / annotations$total * 100,
                             digits = 2)
-# ggplot2 plotting
+## ggplot2 plotting
 
 # Define the number of colors you want
-sasha_trubetskoy_palette <- c("#e6194b", "#3cb44b", "#ffe119", "#4363d8", "#f58231",
+mycolors <- c("#e6194b", "#3cb44b", "#ffe119", "#4363d8", "#f58231",
                               "#911eb4", "#46f0f0", "#f032e6", "#bcf60c",
                               "#008080", "#e6beff", "#9a6324", "#fffac8", "#800000",
                               "#aaffc3", "#808000", "#ffd8b1", "#000075", "#808080")
-nb.cols <- 19
-mycolors <- sasha_trubetskoy_palette[1:nb.cols]
-
 ggtitle("Class proportions")
 ggplot(annotations, aes(x = total / 2, y = percent_of_reads, fill = class, width = total)) +
        geom_bar(position = "fill", stat = "identity") +
