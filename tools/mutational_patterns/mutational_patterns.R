@@ -256,26 +256,33 @@ if (!is.na(opt$output_sigpattern)[1]) {
     sbs_signatures <- sbs_signatures[match(row.names(mut_mat), row.names(sbs_signatures)), ]
     # arrange signature colors
     if (opt$colors == "intense") {
-        signature_colors <- c("#3f4100", "#6f53ff", "#6dc400", "#9d1fd7", "#009c06", "#001fae", "#8adb4d", "#5a67ff", "#d8c938", "#024bc3", "#d2ab00",
-                              "#e36eff", "#00ac44", "#d000b0", "#01b071", "#ff64e2", "#006b21", "#b70090", "#60dc9f", "#5f0083", "#c0ce67", "#002981",
-                              "#ffb53e", "#44005f", "#b59600", "#7d95ff", "#f47600", "#017bc4", "#ff2722", "#02cfec", "#ff233f", "#01b7b4", "#fd005c",
-                              "#019560", "#ff57a9", "#88d896", "#b80067", "#abd27f", "#dc8eff", "#667b00", "#fba3ff", "#093f00", "#ff6494", "#009791",
-                              "#c93200", "#4ac8ff", "#a60005", "#8fd4b6", "#ce0036", "#00634d", "#ff6035", "#2d1956", "#f0be6d", "#6a0058", "#957a00",
-                              "#e4b4ff", "#4a5500", "#abc7fe", "#c95900", "#003d27", "#b10043", "#d5c68e", "#3e163e", "#b36b00", "#debaeb", "#605400",
-                              "#7a0044", "#ffa06d", "#4c0d21", "#ff9cb5", "#3f1d02", "#ff958f", "#634a66", "#775500", "#6e0028", "#717653", "#6c1000",
-                              "#693600")
+        signature_colors <- c("#3f4100", "#6f53ff", "#6dc400", "#9d1fd7", "#009c06", "#001fae", "#c4bedf", "#8adb4d", "#5a67ff", "#d8c938", "#024bc3",
+                              "#d2ab00", "#e36eff", "#cad5b3", "#00ac44", "#d000b0", "#01b071", "#ff64e2", "#006b21", "#b70090", "#60dc9f", "#5f0083",
+                              "#c0ce67", "#002981", "#e6b8b3", "#ffb53e", "#44005f", "#b59600", "#7d95ff", "#f47600", "#017bc4", "#ff2722", "#02cfec",
+                              "#ff233f", "#01b7b4", "#fd005c", "#019560", "#ff57a9", "#88d896", "#b80067", "#abd27f", "#dc8eff", "#667b00", "#fba3ff",
+                              "#093f00", "#ff6494", "#009791", "#c93200", "#4ac8ff", "#a60005", "#8fd4b6", "#ce0036", "#00634d", "#ff6035", "#2d1956",
+                              "#f0be6d", "#6a0058", "#957a00", "#e4b4ff", "#4a5500", "#abc7fe", "#c95900", "#003d27", "#b10043", "#d5c68e", "#3e163e",
+                              "#b36b00", "#debaeb", "#605400", "#7a0044", "#ffa06d", "#4c0d21", "#ff9cb5", "#3f1d02", "#ff958f", "#634a66", "#775500",
+                              "#6e0028", "#717653", "#6c1000", "#693600")
     } else {
-        signature_colors <- c("#7FC97F", "#BEAED4", "#FDC086", "#FFFF99", "#386CB0", "#F0027F", "#BF5B17", "#666666", "#1B9E77", "#D95F02", "#7570B3",
-                              "#E7298A", "#66A61E", "#E6AB02", "#A6761D", "#A6CEE3", "#1F78B4", "#B2DF8A", "#33A02C", "#FB9A99", "#E31A1C", "#FDBF6F",
-                              "#FF7F00", "#CAB2D6", "#6A3D9A", "#B15928", "#FBB4AE", "#B3CDE3", "#CCEBC5", "#DECBE4", "#FED9A6", "#FFFFCC", "#E5D8BD",
-                              "#FDDAEC", "#F2F2F2", "#B3E2CD", "#FDCDAC", "#CBD5E8", "#F4CAE4", "#E6F5C9", "#FFF2AE", "#F1E2CC", "#CCCCCC", "#E41A1C",
-                              "#377EB8", "#4DAF4A", "#984EA3", "#FFFF33", "#A65628", "#F781BF", "#999999", "#66C2A5", "#FC8D62", "#8DA0CB", "#E78AC3",
-                              "#A6D854", "#FFD92F", "#E5C494", "#B3B3B3", "#8DD3C7", "#FFFFB3", "#BEBADA", "#FB8072", "#80B1D3", "#FDB462", "#B3DE69",
-                              "#FCCDE5", "#D9D9D9", "#BC80BD", "#FFED6F", "#3f1d02", "#ff958f", "#634a66", "#775500", "#6e0028", "#717653", "#6c1000",
-                              "#693600")
+        signature_colors <- c("#7FC97F", "#BEAED4", "#FDC086", "#FFFF99", "#386CB0", "#F0027F", "#c4bedf", "#BF5B17", "#666666", "#1B9E77", "#D95F02",
+                              "#7570B3", "#E7298A", "#cad5b3", "#66A61E", "#E6AB02", "#A6761D", "#A6CEE3", "#1F78B4", "#B2DF8A", "#33A02C", "#FB9A99",
+                              "#E31A1C", "#B3E2CD", "#e6b8b3", "#FF7F00", "#CAB2D6", "#6A3D9A", "#B15928", "#FBB4AE", "#B3CDE3", "#CCEBC5", "#DECBE4",
+                              "#FED9A6", "#FFFFCC", "#E5D8BD", "#FDDAEC", "#F2F2F2", "#B3E2CD", "#FDCDAC", "#CBD5E8", "#F4CAE4", "#E6F5C9", "#FFF2AE",
+                              "#F1E2CC", "#CCCCCC", "#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FFFF33", "#A65628", "#F781BF", "#999999", "#66C2A5",
+                              "#FC8D62", "#8DA0CB", "#E78AC3", "#A6D854", "#FFD92F", "#E5C494", "#B3B3B3", "#8DD3C7", "#FFFFB3", "#BEBADA", "#FB8072",
+                              "#80B1D3", "#FDB462", "#B3DE69", "#FCCDE5", "#D9D9D9", "#BC80BD", "#FFED6F", "#3f1d02", "#ff958f", "#634a66", "#775500",
+                              "#6e0028", "#717653", "#6c1000", "#693600")
     }
-    signature_colors <- signature_colors[seq_len(ncol(sbs_signatures))]
-    names(signature_colors) <- colnames(sbs_signatures)
+    names(signature_colors) <- c("SBS1", "SBS2", "SBS3", "SBS4", "SBS5", "SBS6", "SBS7", "SBS7a", "SBS7b", "SBS7c", "SBS7d",
+                                 "SBS8", "SBS9", "SBS10", "SBS10a", "SBS10b", "SBS10c", "SBS10d", "SBS11", "SBS12", "SBS13", "SBS14",
+                                 "SBS15", "SBS16", "SBS17", "SBS17a", "SBS17b", "SBS18", "SBS19", "SBS20", "SBS21", "SBS22", "SBS23",
+                                 "SBS24", "SBS25", "SBS26", "SBS27", "SBS28", "SBS29", "SBS30", "SBS31", "SBS32", "SBS33", "SBS34",
+                                 "SBS35", "SBS36", "SBS37", "SBS38", "SBS39", "SBS40", "SBS41", "SBS42", "SBS43", "SBS44", "SBS45",
+                                 "SBS46", "SBS47", "SBS48", "SBS49", "SBS50", "SBS51", "SBS52", "SBS53", "SBS54", "SBS55", "SBS56",
+                                 "SBS57", "SBS58", "SBS59", "SBS60", "SBS84", "SBS85", "SBS86", "SBS87", "SBS88", "SBS89", "SBS90",
+                                 "SBS91", "SBS92", "SBS93", "SBS94")
+
     # This is IMPORTANT since in Galaxy we do not use the embeded function get_known_signatures()
     sbs_signatures <- as.matrix(sbs_signatures)
 
@@ -308,7 +315,7 @@ if (!is.na(opt$output_sigpattern)[1]) {
         pc3 <- ggplot(pc3_data, aes(x = Sample, y = Contribution, fill = as.factor(Signature))) +
                geom_bar(stat = "identity", position = "stack") +
                coord_flip() +
-               scale_fill_manual(name = tag, values = signature_colors[]) +
+               scale_fill_manual(name = tag, values = signature_colors[colnames(sbs_signatures)]) +
                labs(x = "Samples", y = "Absolute contribution") + theme_bw() +
                theme(panel.grid.minor.x = element_blank(),
                      panel.grid.major.x = element_blank(),
@@ -319,7 +326,7 @@ if (!is.na(opt$output_sigpattern)[1]) {
         pc4 <- ggplot(pc4_data, aes(x = Sample, y = Contribution, fill = as.factor(Signature))) +
                geom_bar(stat = "identity", position = "fill") +
                coord_flip() +
-               scale_fill_manual(name = tag, values = signature_colors) +
+               scale_fill_manual(name = tag, values = signature_colors[colnames(sbs_signatures)]) +
                scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
                labs(x = "Samples", y = "Relative contribution") + theme_bw() +
                theme(panel.grid.minor.x = element_blank(), panel.grid.major.x = element_blank(), legend.position = "right",
@@ -333,7 +340,7 @@ if (!is.na(opt$output_sigpattern)[1]) {
         pc3_data <- merge(pc3_data, metadata_table[, c(1, 3)], by.x = "Sample", by.y = "element_identifier")
         pc3 <- ggplot(pc3_data, aes(x = Sample, y = Contribution, fill = as.factor(Signature))) +
                geom_bar(stat = "identity", position = "stack") +
-               scale_fill_manual(name = tag, values = signature_colors) +
+               scale_fill_manual(name = tag, values = signature_colors[colnames(sbs_signatures)]) +
                labs(x = "Samples", y = "Absolute contribution") + theme_bw() +
                theme(panel.grid.minor.x = element_blank(),
                      panel.grid.major.x = element_blank(),
@@ -345,7 +352,7 @@ if (!is.na(opt$output_sigpattern)[1]) {
         pc4_data <- merge(pc4_data, metadata_table[, c(1, 3)], by.x = "Sample", by.y = "element_identifier")
         pc4 <- ggplot(pc4_data, aes(x = Sample, y = Contribution, fill = as.factor(Signature))) +
                geom_bar(stat = "identity", position = "fill") +
-               scale_fill_manual(name = tag, values = signature_colors) +
+               scale_fill_manual(name = tag, values = signature_colors[colnames(sbs_signatures)]) +
                scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
                labs(x = "Samples", y = "Relative contribution") + theme_bw() +
                theme(panel.grid.minor.x = element_blank(),

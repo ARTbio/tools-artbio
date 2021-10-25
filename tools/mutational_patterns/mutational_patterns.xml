@@ -1,4 +1,4 @@
-<tool id="mutational_patterns" name="Analyse Mutational Patterns/Signatures" version="3.2.0+galaxy6">
+<tool id="mutational_patterns" name="Analyse Mutational Patterns/Signatures" version="3.2.0+galaxy7">
     <description>from genomic variations in vcf files</description>
     <requirements>
         <requirement type="package" version="3.2.0=r41hdfd78af_0">bioconductor-mutationalpatterns</requirement>
