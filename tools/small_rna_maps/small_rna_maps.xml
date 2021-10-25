@@ -8,7 +8,7 @@
         <requirement type="package" version="2.3=r40hc72bb7e_1003">r-gridextra</requirement>
         <requirement type="package" version="1.4.4=r40h03ef668_1">r-reshape2</requirement>
         <requirement type="package" version="0.8.1=h41abebc_0">sambamba</requirement>
-        <requirement type="package" version="1.7">samtools</requirement>
+        <!-- <requirement type="package" version="1.7">samtools</requirement> -->
         <requirement type="package" version="68.1=h58526e2_0">icu</requirement>
         <requirement type="package" version="1.1.1l=h7f98852_0">openssl</requirement>
   </requirements>
@@ -20,7 +20,7 @@
           #import os
           #for $file in $inputs
               sambamba view -t \${GALAXY_SLOTS} -F "not unmapped and sequence_length >= ${minsize} and sequence_length <= ${maxsize}" -f bam '$file' -o '$file.element_identifier' &&
-              samtools index '$file.element_identifier' &&
+              sambamba index -t \${GALAXY_SLOTS} '$file.element_identifier' &&
           #end for
           python '$__tool_directory__'/small_rna_maps.py
               --inputs ${ ' '.join(['"%s"' % x.element_identifier for x in $inputs]) }
