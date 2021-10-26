@@ -212,7 +212,7 @@ if (!is.na(opt$output_denovo)[1]) {
     newcol <- paste0(gsub("\\..", "", new_sig_matrix$context, perl = T),
                      "[", new_sig_matrix$substitution, "]",
                      gsub("^.\\.", "", new_sig_matrix$context, perl = T))
-    new_sig_matrix <- cbind(Type = newcol, new_sig_matrix[, 3:ncol(new_sig_matrix)])
+    new_sig_matrix <- cbind(Type = newcol, new_sig_matrix[, seq_along(new_sig_matrix)[-c(1, 2)]])
     write.table(new_sig_matrix, file = opt$sigmatrix, quote = FALSE, row.names = FALSE, sep = "\t")
     grid.arrange(p5)
     # Visualize the contribution of the signatures in a barplot
@@ -296,12 +296,12 @@ if (!is.na(opt$output_sigpattern)[1]) {
     # if signature names provided are not compliant with cosmic nomenclature,
     # we attribute these names to the active signature_colors vector, adjusted to the length
     # of the signature names.
-    
+
     if (! all(colnames(sbs_signatures) %in% names(signature_colors))) { # provided signature are not all included in cosmic names
         signature_colors <- signature_colors[1:ncol(sbs_signatures)]
         names(signature_colors) <- colnames(sbs_signatures)
     }
-    
+
     # This is IMPORTANT since in Galaxy we do not use the embeded function get_known_signatures()
     sbs_signatures <- as.matrix(sbs_signatures)
 
