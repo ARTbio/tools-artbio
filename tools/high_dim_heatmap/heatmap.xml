@@ -1,4 +1,4 @@
-<tool id="high_dim_heatmap" name="Plot heatmap" version="1.1.0">
+<tool id="high_dim_heatmap" name="Plot heatmap" version="1.2.0">
     <description>with high number of rows</description>
     <requirements>
         <requirement type="package" version="3.0.1">r-gplots</requirement>
@@ -22,29 +22,29 @@ library("gplots")
 
 input <- read.delim('$input1', sep='\t', header=TRUE)
 
-mat_input <- data.matrix(input[,2:ncol(input)])
-rownames(mat_input) <- input[,1]
+mat_input <- data.matrix(input[, 2:ncol(input)])
+rownames(mat_input) <- input[, 1]
 
 #if $transform == "none"
     linput <- mat_input
 #elif $transform == "log2"
     linput <- log2(mat_input)
 #elif $transform == "log2plus1"
-    linput <- log2(mat_input+1)
+    linput <- log2(mat_input + 1)
 #elif $transform == "log10"
     linput <- log10(mat_input)
 #elif $transform == "log10plus1"
-    linput <- log10(mat_input+1)
+    linput <- log10(mat_input + 1)
 #end if
 
 #if $colorscheme == "whrd"
-    colorscale = colfunc <- colorRampPalette(c("white", "red"))
+    colfunc <- colorRampPalette(c("white", "red"))
 #elif $colorscheme == "whblu"
-    colorscale = colfunc <- colorRampPalette(c("white", "blue"))
+    colfunc <- colorRampPalette(c("white", "blue"))
 #elif $colorscheme == "blwhre"
-    colorscale = colfunc <- colorRampPalette(c("blue","white", "red"))
+    colfunc <- colorRampPalette(c("blue","white", "red"))
 #elif $colorscheme == "yeblu"
-    colorscale = colfunc <- colorRampPalette(c("lightyellow", "royalblue4"))
+    colfunc <- colorRampPalette(c("lightyellow", "royalblue4"))
 #end if
 
 #if $labels== "both"
@@ -61,37 +61,37 @@ rownames(mat_input) <- input[,1]
     clabs = FALSE
 #end if
 
-pdf(file='$output1', paper='special', height=$height)
-colorscale
+pdf(file = '$output1', paper = 'special', height = $height)
+par(cex.main = $title_size)
 
 #if $cluster_cond.cluster:
-    hclust_fun = function(x) hclust(x, method='$cluster_cond.clustering')
-    dist_fun = function(x) dist(x, method='$cluster_cond.distance')
-    #if $cluster_cond.cluster_cols_rows=="rows":
-        heatmap.2(linput, dendrogram="row", Colv=FALSE, Rowv=TRUE,
-            distfun=dist_fun, hclustfun=hclust_fun, scale = '$scale', labRow = rlabs, labCol = clabs,
-            col=colfunc(50), trace="none", density.info = "none", margins=c(8,8),
-            main = '$title', key.xlab='$key', keysize=1, cexCol=0.8, cexRow = $rowfontsize, srtCol=45,
-            lhei=c(1, $lineheight))
-    #elif $cluster_cond.cluster_cols_rows=="columns":
-        heatmap.2(linput, dendrogram="column", Colv=TRUE, Rowv=FALSE,
-            distfun=dist_fun, hclustfun=hclust_fun, scale = '$scale', labRow = rlabs, labCol = clabs,
-            col=colfunc(50), trace="none", density.info = "none", margins=c(8,8),
-            main = '$title', key.xlab='$key', keysize=1, cexCol=0.8, cexRow = $rowfontsize, srtCol=45,
-            lhei=c(1, $lineheight))
+    hclust_fun = function(x) hclust(x, method = '$cluster_cond.clustering')
+    dist_fun = function(x) dist(x, method = '$cluster_cond.distance')
+    #if $cluster_cond.cluster_cols_rows == "rows":
+        heatmap.2(linput, dendrogram="row", Colv = FALSE, Rowv = TRUE,
+            distfun = dist_fun, hclustfun = hclust_fun, scale = '$scale', labRow = rlabs,
+            labCol = clabs, col = colfunc(50), trace = "none", density.info = "none",
+            margins = c(8,8), main = '$title', key.xlab = '$key', keysize = 1,
+            cexCol = 0.8, cexRow = $rowfontsize, srtCol = 45, lhei = c(1, $lineheight))
+    #elif $cluster_cond.cluster_cols_rows == "columns":
+        heatmap.2(linput, dendrogram = "column", Colv = TRUE, Rowv = FALSE,
+            distfun = dist_fun, hclustfun = hclust_fun, scale = '$scale', labRow = rlabs,
+            labCol = clabs, col = colfunc(50), trace = "none", density.info = "none",
+            margins = c(8,8), main = '$title', key.xlab = '$key', keysize = 1,
+            cexCol = 0.8, cexRow = $rowfontsize, srtCol = 45, lhei = c(1, $lineheight))
     #else
         heatmap.2(linput,
-            distfun=dist_fun, hclustfun=hclust_fun, scale = '$scale', labRow = rlabs, labCol = clabs,
-            col=colfunc(50), trace="none", density.info = "none", margins=c(8,8),
-            main = '$title', key.xlab='$key', keysize=1, cexCol=0.8, cexRow = $rowfontsize, srtCol=45,
-            lhei=c(1, $lineheight))
+            distfun = dist_fun, hclustfun = hclust_fun, scale = '$scale', labRow = rlabs,
+            labCol = clabs, col = colfunc(50), trace = "none", density.info = "none",
+            margins = c(8,8), main = '$title', key.xlab = '$key', keysize = 1,
+            cexCol = 0.8, cexRow = $rowfontsize, srtCol = 45, lhei = c(1, $lineheight))
     #end if
 #else
     heatmap.2(linput,
-        dendrogram="none", Colv=FALSE, Rowv=FALSE, scale = '$scale', labRow = rlabs, labCol = clabs,
-        col=colfunc(50), trace="none", density.info = "none", margins=c(8,8),
-        main='$title', key.xlab='$key', keysize=1, cexCol=0.8, cexRow = $rowfontsize, srtCol=45,
-        lhei=c(1, $lineheight))
+        dendrogram = "none", Colv = FALSE, Rowv = FALSE, scale = '$scale', labRow = rlabs,
+        labCol = clabs, col = colfunc(50), trace="none", density.info = "none",
+        margins = c(8,8), main = '$title', key.xlab = '$key', keysize = 1, cexCol = 0.8,
+        cexRow = $rowfontsize, srtCol = 45, lhei = c(1, $lineheight))
 #end if
 
 dev.off()
@@ -149,6 +149,7 @@ dev.off()
             <option value="column">Scale my data by column</option>
         </param>
 
+        <param name="title_size" type="float" label="tweak main title size" value="1" />
         <param name="height" type="float" label="tweak plot height" value="7" />
         <param name="rowfontsize" type="float" label="tweak row label size" value="0.8" />
         <param name="lineheight" type="integer" label="tweak line height" value="4" />
@@ -159,16 +160,20 @@ dev.off()
     <tests>
         <test>
             <param name="input1" value="mtcars.txt"/>
+            <param name="title" value="This is a pretty long title"/>
             <param name="cluster" value="true"/>
             <output name="output1" file="result1.pdf"/>
         </test>
         <test>
             <param name="input1" value="mtcars.txt"/>
+            <param name="title" value="This is a pretty long title"/>
             <param name="cluster" value=""/>
             <output name="output1" file="result2.pdf"/>
         </test>
         <test>
             <param name="input1" value="complex_table.tsv"/>
+            <param name="title" value="This is a pretty long title for a complex plot"/>
+            <param name="title_size" value="0.7"/>
             <param name="transform" value="log2plus1"/>
             <param name="cluster" value=""/>
             <param name="colorscheme" value="blwhre"/>
