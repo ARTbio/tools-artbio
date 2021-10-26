@@ -1,4 +1,4 @@
-<tool id="mutational_patterns" name="Analyse Mutational Patterns/Signatures" version="3.2.0+galaxy7">
+<tool id="mutational_patterns" name="Analyse Mutational Patterns/Signatures" version="3.2.0+galaxy8">
     <description>from genomic variations in vcf files</description>
     <requirements>
         <requirement type="package" version="3.2.0=r41hdfd78af_0">bioconductor-mutationalpatterns</requirement>
@@ -60,6 +60,7 @@ Rscript $__tool_directory__/mutational_patterns.R
        
         --signum '$set_preset.signum'
         --colors '$set_preset.colors'
+        --display_signatures '$set_preset.display_signatures'
         --output_sigpattern '$sig_contrib'
 
         #if $set_preset.contrib_matrix_out == 'yes'
@@ -158,7 +159,11 @@ Rscript $__tool_directory__/mutational_patterns.R
                 <param name="signum" type="integer" value="3" min="2" max="30"
                        label="selects the N most significant signatures in samples to express mutational patterns"
                        help="an integer between 2 and the number of elementary signatures in your signature matrix"/>
-                <param name="contrib_matrix_out" type="select" label="Output Signature Contribution table ?"
+                <param name="display_signatures" type="select" display="radio" label="Output profiles of input signatures ?">
+                    <option value="no">No</option>
+                    <option value="yes" selected="true">Yes</option>
+                </param>
+                <param name="contrib_matrix_out" type="select" display="radio" label="Output Signature Contribution table ?"
                        help="Output the normalized signatures contributions for further visualization" >
                     <option value="no" selected="true">No</option>
                     <option value="yes">Yes</option>
@@ -195,7 +200,7 @@ Rscript $__tool_directory__/mutational_patterns.R
 
     </outputs>
     <tests>
-         <!-- user defined (v3.2 restricted 30 minus 27) -->
+         <!-- user defined (v3.2 restricted 30 minus 27 renamed to test nomenclature effect) -->
         <test>
             <param name="vcfs">
                 <collection type="list">
@@ -249,6 +254,7 @@ Rscript $__tool_directory__/mutational_patterns.R
                     <param name="input_signature_choices" value="cosmic" />
                     <param name="cosmic_version" value="v3.2"/>
                 </conditional>
+                <param name="display_signatures"  value="no" />
                 <param name="contrib_matrix_out"  value="yes" />
             </conditional>
             <param name="signum" value="3" />
