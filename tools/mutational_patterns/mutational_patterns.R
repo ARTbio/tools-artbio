@@ -298,7 +298,7 @@ if (!is.na(opt$output_sigpattern)[1]) {
     # of the signature names.
 
     if (! all(colnames(sbs_signatures) %in% names(signature_colors))) { # provided signature are not all included in cosmic names
-        signature_colors <- signature_colors[1:ncol(sbs_signatures)]
+        signature_colors <- signature_colors[seq_along(sbs_signatures)]
         names(signature_colors) <- colnames(sbs_signatures)
     }
 
