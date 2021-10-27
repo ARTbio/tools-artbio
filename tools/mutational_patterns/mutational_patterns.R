@@ -94,6 +94,12 @@ option_list <- list(
     help = "path to output dataset"
   ),
   make_option(
+    "--display_signatures",
+    default = NA,
+    type = "character",
+    help = "display input signature profiles if set to yes"
+  ),
+  make_option(
     "--sig_contrib_matrix",
     default = NA,
     type = "character",
@@ -203,6 +209,10 @@ if (!is.na(opt$output_denovo)[1]) {
     p5 <- plot_96_profile(nmf_res$signatures, condensed = TRUE)
     new_sig_matrix <- reshape2::dcast(p5$data, substitution + context ~ sample, value.var = "freq")
     new_sig_matrix <- format(new_sig_matrix, scientific = TRUE)
+    newcol <- paste0(gsub("\\..", "", new_sig_matrix$context, perl = T),
+                     "[", new_sig_matrix$substitution, "]",
+                     gsub("^.\\.", "", new_sig_matrix$context, perl = T))
+    new_sig_matrix <- cbind(Type = newcol, new_sig_matrix[, seq_along(new_sig_matrix)[-c(1, 2)]])
     write.table(new_sig_matrix, file = opt$sigmatrix, quote = FALSE, row.names = FALSE, sep = "\t")
     grid.arrange(p5)
     # Visualize the contribution of the signatures in a barplot
@@ -283,6 +293,15 @@ if (!is.na(opt$output_sigpattern)[1]) {
                                  "SBS57", "SBS58", "SBS59", "SBS60", "SBS84", "SBS85", "SBS86", "SBS87", "SBS88", "SBS89", "SBS90",
                                  "SBS91", "SBS92", "SBS93", "SBS94")
 
+    # if signature names provided are not compliant with cosmic nomenclature,
+    # we attribute these names to the active signature_colors vector, adjusted to the length
+    # of the signature names.
+
+    if (! all(colnames(sbs_signatures) %in% names(signature_colors))) { # provided signature are not all included in cosmic names
+        signature_colors <- signature_colors[seq_along(sbs_signatures)]
+        names(signature_colors) <- colnames(sbs_signatures)
+    }
+
     # This is IMPORTANT since in Galaxy we do not use the embeded function get_known_signatures()
     sbs_signatures <- as.matrix(sbs_signatures)
 
@@ -290,17 +309,19 @@ if (!is.na(opt$output_sigpattern)[1]) {
     # Plot mutational profiles of the COSMIC signatures
 
     pdf(opt$output_sigpattern, paper = "special", width = 11.69, height = 11.69)
-    for (i in head(seq(1, ncol(sbs_signatures), by = 20), -1)) {
-        p6 <- plot_96_profile(sbs_signatures[, i:(i + 19)], condensed = TRUE, ymax = 0.3)
-        grid.arrange(p6, top = textGrob(paste0(tag, " profiles (", trunc((i + 1) / 20) + 1, " of ",
+    if (opt$display_signatures == "yes") {
+        for (i in head(seq(1, ncol(sbs_signatures), by = 20), -1)) {
+            p6 <- plot_96_profile(sbs_signatures[, i:(i + 19)], condensed = TRUE, ymax = 0.3)
+            grid.arrange(p6, top = textGrob(paste0(tag, " profiles (", trunc((i + 1) / 20) + 1, " of ",
+                                                   trunc(ncol(sbs_signatures) / 20) + 1, " pages)"),
+                                            gp = gpar(fontsize = 12, font = 3)))
+        }
+        p6 <- plot_96_profile(sbs_signatures[, (trunc(ncol(sbs_signatures) / 20) * 20):(ncol(sbs_signatures))],
+                              condensed = TRUE, ymax = 0.3)
+        grid.arrange(p6, top = textGrob(paste0(tag, " profiles (", trunc(ncol(sbs_signatures) / 20) + 1, " of ",
                                                trunc(ncol(sbs_signatures) / 20) + 1, " pages)"),
                                         gp = gpar(fontsize = 12, font = 3)))
     }
-    p6 <- plot_96_profile(sbs_signatures[, (trunc(ncol(sbs_signatures) / 20) * 20):(ncol(sbs_signatures))],
-                          condensed = TRUE, ymax = 0.3)
-    grid.arrange(p6, top = textGrob(paste0(tag, " profiles (", trunc(ncol(sbs_signatures) / 20) + 1, " of ",
-                                               trunc(ncol(sbs_signatures) / 20) + 1, " pages)"),
-                                        gp = gpar(fontsize = 12, font = 3)))
 
 
     # Find optimal contribution of COSMIC signatures to reconstruct 96 mutational profiles
