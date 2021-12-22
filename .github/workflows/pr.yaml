@@ -2,7 +2,7 @@ name: Galaxy Tool Linting and Tests for push and PR
 on: [push, pull_request]
 env:
   GALAXY_FORK: galaxyproject
-  GALAXY_BRANCH: release_21.01
+  GALAXY_BRANCH: release_21.09
   MAX_CHUNKS: 4
 jobs:
   # the setup job does two things:
@@ -14,7 +14,7 @@ jobs:
   # which are needed in subsequent steps.
   setup:
     name: Setup cache and determine changed repositories
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     outputs:
       galaxy-head-sha: ${{ steps.get-galaxy-sha.outputs.galaxy-head-sha }}
       repository-list: ${{ steps.discover.outputs.repository-list }}
@@ -23,7 +23,7 @@ jobs:
       chunk-list: ${{ steps.discover.outputs.chunk-list }}
     strategy:
       matrix:
-        python-version: [3.7, 3.8]
+        python-version: [3.7]
     steps:
     - name: Print github context properties
       run: |
@@ -85,11 +85,11 @@ jobs:
     name: Lint tool-list
     needs: setup
     if: needs.setup.outputs.repository-list != ''
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.7, 3.8]
+        python-version: [3.7]
     steps:
     # checkout the repository
     # and use it as the current working directory
@@ -118,11 +118,11 @@ jobs:
     name: Lint Python scripts
     needs: setup
     if: needs.setup.outputs.repository-list != ''
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.7, 3.8]
+        python-version: [3.7]
     steps:
     # checkout the repository to master
     # and use it as the current working directory
@@ -147,7 +147,7 @@ jobs:
     name: Lint R scripts
     needs: setup
     if: needs.setup.outputs.repository-list != ''
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     strategy:
       matrix:
         r-version: [4.0.1]
@@ -202,14 +202,14 @@ jobs:
   test:
     name: Test tools
     # This job runs on Linux
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     needs: setup
     if: needs.setup.outputs.repository-list != ''
     strategy:
       fail-fast: false
       matrix:
         chunk: ${{ fromJson(needs.setup.outputs.chunk-list) }}
-        python-version: [3.7, 3.8]
+        python-version: [3.7]
     services:
       postgres:
         image: postgres:11
@@ -267,9 +267,9 @@ jobs:
     needs: [setup, test]
     strategy:
       matrix:
-        python-version: [3.7, 3.8]
+        python-version: [3.7]
     # This job runs on Linux
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     steps:
     - uses: actions/download-artifact@v2
       with:
@@ -305,8 +305,8 @@ jobs:
     needs: [setup, lint, flake8, lintr, combine_outputs]
     strategy:
       matrix:
-        python-version: [3.7, 3.8]
-    runs-on: ubuntu-latest
+        python-version: [3.7]
+    runs-on: ubuntu-18.04
     if: github.ref == 'refs/heads/master'
     # && github.repository_owner == 'artbio'
     steps:
