@@ -1,5 +1,5 @@
-<tool id="artbio_mutect2" name="GATK4 Mutect2" version="@WRAPPER_VERSION@" profile="18.05">
-    <description>- Call somatic SNVs and indels via local assembly of haplotypes</description>
+<tool id="filtermutectcalls" name="gatk4 FilterMutectCalls" version="@WRAPPER_VERSION@" profile="18.05">
+    <description>Filter variants in a GATK4 Mutect2 VCF callset</description>
     <macros>
         <import>macros.xml</import>
     </macros>
@@ -9,8 +9,6 @@
         <![CDATA[
         #include source=$set_sections#
         #include source=$pre_gatk_excl_ints_chth#
-	#include source=$tumor_bam_index_pre_chth#
-	#include source=$normal_bam_index_pre_chth#
         #include source=$pre_gatk_ints_chth#
 
         #set ref_flag='--reference="reference.fa"'
@@ -27,10 +25,17 @@
             #set ref_flag=''
         #end if
 
-        #if str($outputs.output_parameters) == 'yes'
-            #if str($outputs.debug_activity) == 'yes'
-                ln -s '$activity_profile_out' activity-profile.tab &&
-            #end if
+        #if str($mode.mode_parameters) == 'tumor_only'
+            ln -s $mode.tumor tumor.bam &&
+            ln -s $mode.tumor.metadata.bam_index tumor.bam.bai &&
+        #else
+            ln -s $mode.tumor tumor.bam &&
+            ln -s $mode.tumor.metadata.bam_index tumor.bam.bai &&
+            ln -s $mode.normal normal.bam &&
+            ln -s $mode.normal.metadata.bam_index normal.bam.bai &&
+        #end if
+
+	#if str($outputs.output_parameters) == 'yes'
             #if str($outputs.debug_assembly) == 'yes'
                 ln -s '$assembly_region_out' assembly-region.tab &&
             #end if
@@ -80,10 +85,10 @@
         gatk Mutect2 --QUIET $ref_flag --tumor-sample "\$sample"
 
         #if str($mode.mode_parameters) == 'tumor_only'
-            #include source=$gatk_tumor_bam_input#
+            --input tumor.bam
         #else
-            #include source=$gatk_tumor_bam_input#
-            #include source=$gatk_normal_bam_input#
+            --input tumor.bam
+            --input normal.bam
         #end if
 
         ## OPTIONAL PARAMETERS ##
@@ -228,7 +233,7 @@
             #if $advanced.max_unpruned_variants
                 --max-unpruned-variants="$advanced.max_unpruned_variants"
             #end if
-
+            --allele-informative-reads-overlap-margin="$advanced.allele_informative_reads_overlap_margin"
             --active-probability-threshold="$advanced.active_probability_threshold"
             --assembly-region-padding="$advanced.assembly_region_padding"
             --bam-writer-type="$advanced.bam_writer_type"
@@ -253,7 +258,6 @@
             $advanced.disable_tool_default_annotations
             $advanced.disable_tool_default_read_filters
             $advanced.dont_increase_kmer_sizes_for_cycles
-            $advanced.dont_trim_active_regions
             $advanced.dont_use_soft_clipped_bases
             $advanced.enable_all_annotations
             $advanced.force_active
@@ -269,9 +273,6 @@
         ## ADDITIONAL OUTPUT PARAMETERS ##
 
         #if str($outputs.output_parameters) == 'yes'
-            #if str($outputs.debug_activity) == 'yes'
-                --activity-profile-out="activity-profile.tab"
-            #end if
             #if str($outputs.debug_assembly) == 'yes'
                 --assembly-region-out="assembly-region.tab"
             #end if
@@ -293,11 +294,11 @@
                 <option value="somatic">Somatic</option>
             </param>
             <when value="tumor_only">
-                <expand macro="gatk_tumor_bam_req_params"/>
+                <param name="tumor" argument="--tumor" type="data" format="bam" label="Input Tumor BAM file" />
             </when>
             <when value="somatic">
-                <expand macro="gatk_tumor_bam_req_params"/>
-                <expand macro="gatk_normal_bam_req_params"/>
+                <param name="tumor" argument="--tumor" type="data" format="bam" label="Input Tumor BAM file" />
+                <param name="normal" argument="--normal" type="data" format="bam" label="Input Normal BAM file" />
             </when>
         </conditional>
         <expand macro="gzip_vcf_params"/>
@@ -514,6 +515,7 @@
                 <option value="yes">Specify parameters</option>
             </param>
             <when value="yes">
+                <param name="allele_informative_reads_overlap_margin" argument="--allele-informative-reads-overlap-margin" type="integer" optional="true" value="2" label="Likelihood and read-based annotations will only take into consideration reads that overlap the variant or any base no further than this distance expressed in base pairs" help="Number of overlapping bases around the variant."/>
                 <param name="active_probability_threshold" argument="--active-probability-threshold" type="float" optional="true" value="0.002" label="Active Probability Threshold" help="Minimum probability for a locus to be considered active."/>
                 <param name="allow_non_unique_kmers_in_ref" argument="--allow-non-unique-kmers-in-ref" type="boolean" truevalue="--allow-non-unique-kmers-in-ref" falsevalue="" optional="true" checked="false" label="Allow Non Unique Kmers In Ref" help="Allow graphs that have non-unique kmers in the reference"/>
                 <param name="assembly_region_padding" argument="--assembly-region-padding" type="integer" optional="true" value="100" label="Assembly Region Padding" help="Number of additional bases of context to include around each assembly region"/>
@@ -526,7 +528,6 @@
                 <param name="disable_tool_default_annotations" argument="--disable-tool-default-annotations" type="boolean" truevalue="--disable-tool-default-annotations" falsevalue="" optional="true" checked="false" label="Disable Default Annotations" help="Disable all tool default annotations"/>
                 <param name="disable_tool_default_read_filters" argument="--disable-tool-default-read-filters" type="boolean" truevalue="--disable-tool-default-read-filters" falsevalue="" optional="true" checked="false" label="Disable default read filters" help="WARNING: many tools will not function correctly without their default read filters on"/>
                 <param name="dont_increase_kmer_sizes_for_cycles" argument="--dont-increase-kmer-sizes-for-cycles" type="boolean" truevalue="--dont-increase-kmer-sizes-for-cycles" falsevalue="" optional="true" checked="false" label="Dont Increase Kmer Sizes For Cycles" help="Disable iterating over kmer sizes when graph cycles are detected"/>
-                <param name="dont_trim_active_regions" argument="--dont-trim-active-regions" type="boolean" truevalue="--dont-trim-active-regions" falsevalue="" optional="true" checked="false" label="Dont Trim Active Regions" help="If specified, we will not trim down the active region from the full region (active + extension) to just the active interval for genotyping"/>
                 <param name="dont_use_soft_clipped_bases" argument="--dont-use-soft-clipped-bases" type="boolean" truevalue="--dont-use-soft-clipped-bases" falsevalue="" optional="true" checked="false" label="Dont Use Soft Clipped Bases" help="Do not analyze soft clipped bases in the reads"/>
                 <param name="emit_ref_confidence" argument="--emit-ref-confidence" type="select" label="Mode for emitting reference confidence scores" help="NOTE: This is a beta feature in Mutect2">
                     <option value="NONE">None</option>
@@ -593,9 +594,6 @@
     </inputs>
     <outputs>
         <expand macro="gzip_vcf_output_params"/>
-        <data format="tabular" name="activity_profile_out" label="${tool.name} on ${on_string}: Activity profile">
-            <filter>str(outputs['output_parameters']) == 'yes' and outputs['debug_activity']</filter>
-        </data>
         <data format="tabular" name="assembly_region_out" label="${tool.name} on ${on_string}: Assembly region">
             <filter>str(outputs['output_parameters']) == 'yes' and outputs['debug_assembly']</filter>
         </data>
@@ -617,8 +615,8 @@
             <param name="output_parameters" value="no" />
             <output name="output_vcf" file="Mutect2-out1.vcf" lines_diff="2" />
         </test>
-	<test>
-	    <conditional name="mode">
+        <test>
+            <conditional name="mode">
                 <param name="mode_parameters" value="tumor_only"/>
                 <param name="tumor" ftype="bam" value="Mutect2-in2.bam" />
             </conditional>
@@ -633,8 +631,8 @@
             <param name="output_parameters" value="no" />
             <output name="output_vcf" file="Mutect2-out2.vcf" lines_diff="2" />
         </test>
-	<test>
-	    <conditional name="mode">
+        <test>
+            <conditional name="mode">
                 <param name="mode_parameters" value="tumor_only"/>
                 <param name="tumor" ftype="bam" value="Mutect2-in3.bam" />
             </conditional>
@@ -653,16 +651,16 @@
                 <param name="mode_parameters" value="tumor_only"/>
                 <param name="tumor" ftype="bam" value="Mutect2-in4.bam" />
             </conditional>
-            <param name="reference_sequence" ftype="fasta" value="reference.fa" />
+            <param name="reference_sequence" value="hg38"/>
             <param name="gzipped_output" value="false" />
-            <param name="reference_source_selector" value="history" />
-            <param name="optional_parameters" value="yes" />
-            <param name="advanced_parameters" value="yes" />
-            <param name="dont_trim_active_regions" value="true" />
+	    <param name="reference_source_selector" value="cached" />
+	    <param name="reference_sequence" value="hg38"/>
+            <param name="optional_parameters" value="no" />
+            <param name="advanced_parameters" value="no" />
             <param name="output_parameters" value="no" />
             <output name="output_vcf" file="Mutect2-out4.vcf" lines_diff="2" />
         </test>
-	<test>
+        <test>
             <conditional name="mode">
                 <param name="mode_parameters" value="tumor_only"/>
                 <param name="tumor" ftype="bam" value="Mutect2-in5.bam" />
@@ -677,8 +675,7 @@
             <param name="debug_assembly" value="true" />
             <param name="debug_bam" value="true" />
             <output name="output_vcf" file="Mutect2-out5.vcf" lines_diff="2" />
-            <output name="activity_profile_out" file="Mutect2-out5-1.tabular" />
-            <output name="assembly_region_out" file="Mutect2-out5-2.tabular" />
+            <output name="assembly_region_out" file="Mutect2-out5-1.tabular" />
             <output name="bam_output" file="Mutect2-out5.bam" />
         </test>
         <test>
@@ -696,129 +693,379 @@
             <output name="output_vcf" file="Mutect2-out6.vcf" lines_diff="2" />
         </test>
     </tests>
-    <help><![CDATA[IMPORTANT: This wrapper constitutes a copy of the developed by the IUC
-(https://github.com/galaxyproject/tools-iuc/blob/master/tools/gatk4/gatk4_Mutect2.xml).
-We have introduced some changes for including the BAM files from both normal and tumor
-samples. However, until these changes are approved, we use this tool by working with a copy
-of the original wrapper.
-	  
-Call somatic short variants via local assembly of haplotypes. Short
-variants include single nucleotide (SNV) and insertion and deletion
-(indel) variants. The caller combines the DREAM challenge-winning
-somatic genotyping engine of the original MuTect (`Cibulskis et al.,
-2013 <http://www.nature.com/nbt/journal/v31/n3/full/nbt.2514.html>`__)
-with the assembly-based machinery of
-`HaplotypeCaller <https://www.broadinstitute.org/gatk/documentation/tooldocs/org_broadinstitute_gatk_tools_walkers_haplotypecaller_HaplotypeCaller.php>`__.
-
-This tool is featured in the *Somatic Short Mutation calling Best
-Practice Workflow*. See
-`Tutorial#11136 <https://software.broadinstitute.org/gatk/documentation/article?id=11136>`__
-for a step-by-step description of the workflow and
-`Article#11127 <https://software.broadinstitute.org/gatk/documentation/article?id=11127>`__
-for an overview of what traditional somatic calling entails. For the
-latest pipeline scripts, see the `Mutect2 WDL scripts
-directory <https://github.com/broadinstitute/gatk/tree/master/scripts/mutect2_wdl>`__.
-Although we present the tool for somatic calling, it may apply to other
-contexts, such as mitochondrial variant calling.
-
+    <help><![CDATA[
 Usage examples
 ~~~~~~~~~~~~~~
 
-Example commands show how to run Mutect2 for typical scenarios. The two
-modes are (i) *somatic mode* where a tumor sample is matched with a
-normal sample in analysis and (ii) *tumor-only mode* where a single
-sample's alignment data undergoes analysis.
-
-(i) Tumor with matched normal
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Given a matched normal, Mutect2 is designed to call somatic variants
-only. The tool includes logic to skip emitting variants that are clearly
-present in the germline based on provided evidence, e.g. in the matched
-normal. This is done at an early stage to avoid spending computational
-resources on germline events. If the variant's germline status is
-borderline, then Mutect2 will emit the variant to the callset for
-subsequent filtering and review.
 
 ::
 
-    gatk Mutect2 \
-      -R reference.fa \
-      -I tumor.bam \
-      -tumor tumor_sample_name \
-      -I normal.bam \
-      -normal normal_sample_name \
-      --germline-resource af-only-gnomad.vcf.gz \
-      --af-of-alleles-not-in-resource 0.00003125 \
-      --panel-of-normals pon.vcf.gz \
-      -O somatic.vcf.gz
+    gatk FilterMutectCalls \
+      -R reference.fasta \
+      -V somatic.vcf.gz \
+      --contamination-table contamination.table \
+      --tumor-segmentation segments.tsv \
+      -O filtered.vcf.gz
 
 
-The --af-of-alleles-not-in-resource argument value should match
-expectations for alleles not found in the provided germline resource.
-Note the tool does not require a germline resource nor a panel of
-normals (PoN) to run. The tool prefilters sites for the matched normal
-and the PoN. For the germline resource, the tool prefilters on the
-allele. Below is an excerpt of a known variants resource with population
-allele frequencies
+When running on unfiltered output of Mutect2 in --mitochondria mode, setting the advanced
+option --autosomal-coverage argument (default 0) activates a recommended filter against
+likely erroneously mapped NuMTs (nuclear mitochondrial DNA segments -- https://en.wikipedia.org/wiki/NUMT).
+For the value, provide the median coverage expected in autosomal regions with coverage.
+
 
 ::
 
-        #CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO
-         1       10067   .       T       TAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCC      30.35   PASS    AC=3;AF=7.384E-5
-         1       10108   .       CAACCCT C       46514.32        PASS    AC=6;AF=1.525E-4
-         1       10109   .       AACCCTAACCCT    AAACCCT,*       89837.27        PASS    AC=48,5;AF=0.001223,1.273E-4
-         1       10114   .       TAACCCTAACCCTAACCCTAACCCTAACCCTAACCCCTAACCCTAACCCTAACCCTAACCCTAACCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCCTAACCCTAACCCTAAACCCTA  *,CAACCCTAACCCTAACCCTAACCCTAACCCTAACCCCTAACCCTAACCCTAACCCTAACCCTAACCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCCTAACCCTAACCCTAAACCCTA,T      36728.97        PASS    AC=55,9,1;AF=0.001373,2.246E-4,2.496E-5
-         1       10119   .       CT      C,*     251.23  PASS    AC=5,1;AF=1.249E-4,2.498E-5
-         1       10120   .       TA      CA,*    14928.74        PASS    AC=10,6;AF=2.5E-4,1.5E-4
-         1       10128   .       ACCCTAACCCTAACCCTAAC    A,*     285.71  PASS    AC=3,1;AF=7.58E-5,2.527E-5
-         1       10131   .       CT      C,*     378.93  PASS    AC=7,5;AF=1.765E-4,1.261E-4
-         1       10132   .       TAACCC  *,T     18025.11        PASS    AC=12,2;AF=3.03E-4,5.049E-5
+USAGE: FilterMutectCalls [arguments]
+
+Filter somatic SNVs and indels called by Mutect2
+Version:4.1.7.0
 
 
-(ii) Tumor-only mode
-^^^^^^^^^^^^^^^^^^^^
+Required Arguments:
 
-This mode runs on a single sample, e.g. single tumor or single normal
-sample. To create a PoN, call on each normal sample in this mode, then
-use CreateSomaticPanelOfNormals to generate the PoN.
+--output,-O:String            The output filtered VCF file  Required.
 
-::
+--reference,-R:GATKPathSpecifier
+                              Reference sequence file  Required.
 
-     gatk Mutect2 \
-      -R reference.fa \
-      -I sample.bam \
-      -tumor sample_name \
-      -O single_sample.vcf.gz
+--variant,-V:String           A VCF file containing variants  Required.
 
 
-Further points of interest
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Optional Arguments:
 
-Additional parameters that factor towards filtering, including
-normal-artifact-lod (default threshold 0.0) and tumor-lod (default
-threshold 5.3), are available in FilterMutectCalls. While the tool
-calculates normal-lod assuming a diploid genotype, it calculates
-normal-artifact-lod with the same approach it uses for tumor-lod, i.e.
-with a variable ploidy assumption.
+--add-output-sam-program-record,-add-output-sam-program-record:Boolean
+                              If true, adds a PG tag to created SAM/BAM/CRAM files.  Default value: true. Possible
+                              values: {true, false}
 
-- If the normal artifact log odds becomes large, then FilterMutectCalls applies the artifact-in-normal filter. For matched normal samples with tumor contamination, consider increasing the normal-artifact-lod threshold.
+--add-output-vcf-command-line,-add-output-vcf-command-line:Boolean
+                              If true, adds a command line header line to created VCF files.  Default value: true.
+                              Possible values: {true, false}
 
-- The tumor log odds, which is calculated independently of any matched normal, determines whether to filter a tumor variant. Variants with tumor LODs exceeding the threshold pass filtering.
+--arguments_file:File         read one or more arguments files and add them to the command line  This argument may be
+                              specified 0 or more times. Default value: null.
+
+--cloud-index-prefetch-buffer,-CIPB:Integer
+                              Size of the cloud-only prefetch buffer (in MB; 0 to disable). Defaults to
+                              cloudPrefetchBuffer if unset.  Default value: -1.
+
+--cloud-prefetch-buffer,-CPB:Integer
+                              Size of the cloud-only prefetch buffer (in MB; 0 to disable).  Default value: 40.
+
+--contamination-estimate:Double
+                              Estimate of contamination.  Default value: 0.0.
+
+--contamination-table:File    Tables containing contamination information.  This argument may be specified 0 or more
+                              times. Default value: null.
+
+--create-output-bam-index,-OBI:Boolean
+                              If true, create a BAM/CRAM index when writing a coordinate-sorted BAM/CRAM file.  Default
+                              value: true. Possible values: {true, false}
+
+--create-output-bam-md5,-OBM:Boolean
+                              If true, create a MD5 digest for any BAM/SAM/CRAM file created  Default value: false.
+                              Possible values: {true, false}
+
+--create-output-variant-index,-OVI:Boolean
+                              If true, create a VCF index when writing a coordinate-sorted VCF file.  Default value:
+                              true. Possible values: {true, false}
+
+--create-output-variant-md5,-OVM:Boolean
+                              If true, create a a MD5 digest any VCF file created.  Default value: false. Possible
+                              values: {true, false}
+
+--disable-bam-index-caching,-DBIC:Boolean
+                              If true, don't cache bam indexes, this will reduce memory requirements but may harm
+                              performance if many intervals are specified.  Caching is automatically disabled if there
+                              are no intervals specified.  Default value: false. Possible values: {true, false}
+
+--disable-read-filter,-DF:String
+                              Read filters to be disabled before analysis  This argument may be specified 0 or more
+                              times. Default value: null. Possible Values: {WellformedReadFilter}
+
+--disable-sequence-dictionary-validation,-disable-sequence-dictionary-validation:Boolean
+                              If specified, do not check the sequence dictionaries from our inputs for compatibility.
+                              Use at your own risk!  Default value: false. Possible values: {true, false}
+
+--distance-on-haplotype:Integer
+                              On second filtering pass, variants with same PGT and PID tags as a filtered variant within
+                              this distance are filtered.  Default value: 100.
+
+--exclude-intervals,-XL:StringOne or more genomic intervals to exclude from processing  This argument may be specified 0
+                              or more times. Default value: null.
+
+--f-score-beta:Double         F score beta, the relative weight of recall to precision, used if OPTIMAL_F_SCORE strategy
+                              is chosen  Default value: 1.0.
+
+--false-discovery-rate:Double Maximum false discovery rate allowed if FALSE_DISCOVERY_RATE threshold strategy is chosen
+                              Default value: 0.05.
+
+--filtering-stats:String      The output filtering stats file  Default value: null.
+
+--gatk-config-file:String     A configuration file to use with the GATK.  Default value: null.
+
+--gcs-max-retries,-gcs-retries:Integer
+                              If the GCS bucket channel errors out, how many times it will attempt to re-initiate the
+                              connection  Default value: 20.
+
+--gcs-project-for-requester-pays:String
+                              Project to bill when accessing "requester pays" buckets. If unset, these buckets cannot be
+                              accessed.  Default value: .
+
+--help,-h:Boolean             display the help message  Default value: false. Possible values: {true, false}
+
+--initial-threshold:Double    Initial artifact probability threshold used in first iteration  Default value: 0.1.
+
+--input,-I:String             BAM/SAM/CRAM file containing reads  This argument may be specified 0 or more times.
+                              Default value: null.
+
+--interval-exclusion-padding,-ixp:Integer
+                              Amount of padding (in bp) to add to each interval you are excluding.  Default value: 0.
+
+--interval-merging-rule,-imr:IntervalMergingRule
+                              Interval merging rule for abutting intervals  Default value: ALL. Possible values: {ALL,
+                              OVERLAPPING_ONLY}
+
+--interval-padding,-ip:IntegerAmount of padding (in bp) to add to each interval you are including.  Default value: 0.
+
+--interval-set-rule,-isr:IntervalSetRule
+                              Set merging approach to use for combining interval inputs  Default value: UNION. Possible
+                              values: {UNION, INTERSECTION}
+
+--intervals,-L:String         One or more genomic intervals over which to operate  This argument may be specified 0 or
+                              more times. Default value: null.
+
+--lenient,-LE:Boolean         Lenient processing of VCF files  Default value: false. Possible values: {true, false}
+
+--log-artifact-prior:Double   Initial ln prior probability that a called site is not a technical artifact  Default
+                              value: -2.302585092994046.
+
+--log-indel-prior:Double      Initial ln prior probability that a site has a somatic indel  Default value:
+                              -16.11809565095832.
+
+--log-snv-prior:Double        Initial ln prior probability that a site has a somatic SNV  Default value:
+                              -13.815510557964275.
+
+--long-indel-length:Integer   Indels of this length or greater are treated specially by the mapping quality filter.
+                              Default value: 5.
+
+--max-alt-allele-count:IntegerMaximum alt alleles per site.  Default value: 1.
+
+--max-events-in-region:IntegerMaximum events in a single assembly region.  Filter all variants if exceeded.  Default
+                              value: 2.
+
+--max-median-fragment-length-difference:Integer
+                              Maximum difference between median alt and ref fragment lengths  Default value: 10000.
+
+--max-n-ratio:Double          Maximum fraction of non-ref bases in the pileup that are N (unknown)  Default value:
+                              Infinity.
+
+--min-allele-fraction:Double  Minimum allele fraction required  Default value: 0.0.
+
+--min-median-base-quality:Integer
+                              Minimum median base quality of alt reads  Default value: 20.
+
+--min-median-mapping-quality:Integer
+                              Minimum median mapping quality of alt reads  Default value: 30.
+
+--min-median-read-position:Integer
+                              Minimum median distance of variants from the end of reads  Default value: 1.
+
+--min-reads-per-strand:IntegerMinimum alt reads required on both forward and reverse strands  Default value: 0.
+
+--min-slippage-length:Integer Minimum number of reference bases in an STR to suspect polymerase slippage  Default value:
+                              8.
+
+--mitochondria-mode:Boolean   Set filters to mitochondrial defaults  Default value: false. Possible values: {true,
+                              false}
+
+--normal-p-value-threshold:Double
+                              P value threshold for normal artifact filter  Default value: 0.001.
+
+--orientation-bias-artifact-priors,-ob-priors:File
+                              One or more .tar.gz files containing tables of prior artifact probabilities for the read
+                              orientation filter model, one table per tumor sample  This argument may be specified 0 or
+                              more times. Default value: null.
+
+--pcr-slippage-rate:Double    The frequency of polymerase slippage in contexts where it is suspected  Default value:
+                              0.1.
+
+--QUIET:Boolean               Whether to suppress job-summary info on System.err.  Default value: false. Possible
+                              values: {true, false}
+
+--read-filter,-RF:String      Read filters to be applied before analysis  This argument may be specified 0 or more
+                              times. Default value: null. Possible Values: {AlignmentAgreesWithHeaderReadFilter,
+                              AllowAllReadsReadFilter, AmbiguousBaseReadFilter, CigarContainsNoNOperator,
+                              FirstOfPairReadFilter, FragmentLengthReadFilter, GoodCigarReadFilter,
+                              HasReadGroupReadFilter, IntervalOverlapReadFilter, LibraryReadFilter, MappedReadFilter,
+                              MappingQualityAvailableReadFilter, MappingQualityNotZeroReadFilter,
+                              MappingQualityReadFilter, MatchingBasesAndQualsReadFilter, MateDifferentStrandReadFilter,
+                              MateDistantReadFilter, MateOnSameContigOrNoMappedMateReadFilter,
+                              MateUnmappedAndUnmappedReadFilter, MetricsReadFilter,
+                              NonChimericOriginalAlignmentReadFilter, NonZeroFragmentLengthReadFilter,
+                              NonZeroReferenceLengthAlignmentReadFilter, NotDuplicateReadFilter,
+                              NotOpticalDuplicateReadFilter, NotProperlyPairedReadFilter,
+                              NotSecondaryAlignmentReadFilter, NotSupplementaryAlignmentReadFilter,
+                              OverclippedReadFilter, PairedReadFilter, PassesVendorQualityCheckReadFilter,
+                              PlatformReadFilter, PlatformUnitReadFilter, PrimaryLineReadFilter,
+                              ProperlyPairedReadFilter, ReadGroupBlackListReadFilter, ReadGroupReadFilter,
+                              ReadLengthEqualsCigarLengthReadFilter, ReadLengthReadFilter, ReadNameReadFilter,
+                              ReadStrandFilter, SampleReadFilter, SecondOfPairReadFilter, SeqIsStoredReadFilter,
+                              SoftClippedReadFilter, ValidAlignmentEndReadFilter, ValidAlignmentStartReadFilter,
+                              WellformedReadFilter}
+
+--read-index,-read-index:String
+                              Indices to use for the read inputs. If specified, an index must be provided for every read
+                              input and in the same order as the read inputs. If this argument is not specified, the
+                              path to the index for each input will be inferred automatically.  This argument may be
+                              specified 0 or more times. Default value: null.
+
+--read-validation-stringency,-VS:ValidationStringency
+                              Validation stringency for all SAM/BAM/CRAM/SRA files read by this program.  The default
+                              stringency value SILENT can improve performance when processing a BAM file in which
+                              variable-length data (read, qualities, tags) do not otherwise need to be decoded.  Default
+                              value: SILENT. Possible values: {STRICT, LENIENT, SILENT}
+
+--seconds-between-progress-updates,-seconds-between-progress-updates:Double
+                              Output traversal statistics every time this many seconds elapse  Default value: 10.0.
+
+--sequence-dictionary,-sequence-dictionary:String
+                              Use the given sequence dictionary as the master/canonical sequence dictionary.  Must be a
+                              .dict file.  Default value: null.
+
+--sites-only-vcf-output:Boolean
+                              If true, don't emit genotype fields when writing vcf file output.  Default value: false.
+                              Possible values: {true, false}
+
+--stats:String                The Mutect stats file output by Mutect2  Default value: null.
+
+--threshold-strategy:Strategy The method for optimizing the posterior probability threshold  Default value:
+                              OPTIMAL_F_SCORE. Possible values: {CONSTANT, FALSE_DISCOVERY_RATE, OPTIMAL_F_SCORE}
+
+--tmp-dir:GATKPathSpecifier   Temp directory to use.  Default value: null.
+
+--tumor-segmentation:File     Tables containing tumor segments' minor allele fractions for germline hets emitted by
+                              CalculateContamination  This argument may be specified 0 or more times. Default value:
+                              null.
+
+--unique-alt-read-count,-unique:Integer
+                              Minimum unique (i.e. deduplicated) reads supporting the alternate allele  Default value:
+                              0.
+
+--use-jdk-deflater,-jdk-deflater:Boolean
+                              Whether to use the JdkDeflater (as opposed to IntelDeflater)  Default value: false.
+                              Possible values: {true, false}
+
+--use-jdk-inflater,-jdk-inflater:Boolean
+                              Whether to use the JdkInflater (as opposed to IntelInflater)  Default value: false.
+                              Possible values: {true, false}
+
+--verbosity,-verbosity:LogLevel
+                              Control verbosity of logging.  Default value: INFO. Possible values: {ERROR, WARNING,
+                              INFO, DEBUG}
+
+--version:Boolean             display the version number for this tool  Default value: false. Possible values: {true,
+                              false}
 
 
-If a variant is absent from a given germline resource, then the value
-for --af-of-alleles-not-in-resource applies. For example, gnomAD's
-16,000 samples (~32,000 homologs per locus) becomes a probability of one
-in 32,000 or less. Thus, an allele's absence from the germline resource
-becomes evidence that it is not a germline variant.
+Advanced Arguments:
 
-Caveats
-~~~~~~~
+--disable-tool-default-read-filters,-disable-tool-default-read-filters:Boolean
+                              Disable all tool default read filters (WARNING: many tools will not function correctly
+                              without their default read filters on)  Default value: false. Possible values: {true,
+                              false}
 
-Although GATK4 Mutect2 accomodates varying coverage depths, further
-optimization of parameters may improve calling for extreme high depths,
-e.g. 1000X.
+--showHidden,-showHidden:Boolean
+                              display hidden arguments  Default value: false. Possible values: {true, false}
+
+Conditional Arguments for readFilter:
+
+Valid only if "AmbiguousBaseReadFilter" is specified:
+--ambig-filter-bases:Integer  Threshold number of ambiguous bases. If null, uses threshold fraction; otherwise,
+                              overrides threshold fraction.  Default value: null.  Cannot be used in conjuction with
+                              argument(s) maxAmbiguousBaseFraction
+
+--ambig-filter-frac:Double    Threshold fraction of ambiguous bases  Default value: 0.05.  Cannot be used in conjuction
+                              with argument(s) maxAmbiguousBases
+
+Valid only if "FragmentLengthReadFilter" is specified:
+--max-fragment-length:Integer Maximum length of fragment (insert size)  Default value: 1000000.
+
+--min-fragment-length:Integer Minimum length of fragment (insert size)  Default value: 0.
+
+Valid only if "IntervalOverlapReadFilter" is specified:
+--keep-intervals:String       One or more genomic intervals to keep  This argument must be specified at least once.
+                              Required.
+
+Valid only if "LibraryReadFilter" is specified:
+--library,-library:String     Name of the library to keep  This argument must be specified at least once. Required.
+
+Valid only if "MappingQualityReadFilter" is specified:
+--maximum-mapping-quality:Integer
+                              Maximum mapping quality to keep (inclusive)  Default value: null.
+
+--minimum-mapping-quality:Integer
+                              Minimum mapping quality to keep (inclusive)  Default value: 10.
+
+Valid only if "MateDistantReadFilter" is specified:
+--mate-too-distant-length:Integer
+                              Minimum start location difference at which mapped mates are considered distant  Default
+                              value: 1000.
+
+Valid only if "OverclippedReadFilter" is specified:
+--dont-require-soft-clips-both-ends:Boolean
+                              Allow a read to be filtered out based on having only 1 soft-clipped block. By default,
+                              both ends must have a soft-clipped block, setting this flag requires only 1 soft-clipped
+                              block  Default value: false. Possible values: {true, false}
+
+--filter-too-short:Integer    Minimum number of aligned bases  Default value: 30.
+
+Valid only if "PlatformReadFilter" is specified:
+--platform-filter-name:String Platform attribute (PL) to match  This argument must be specified at least once. Required.
+
+Valid only if "PlatformUnitReadFilter" is specified:
+--black-listed-lanes:String   Platform unit (PU) to filter out  This argument must be specified at least once. Required.
+
+Valid only if "ReadGroupBlackListReadFilter" is specified:
+--read-group-black-list:StringA read group filter expression in the form "attribute:value", where "attribute" is a two
+                              character read group attribute such as "RG" or "PU".  This argument must be specified at
+                              least once. Required.
+
+Valid only if "ReadGroupReadFilter" is specified:
+--keep-read-group:String      The name of the read group to keep  Required.
+
+Valid only if "ReadLengthReadFilter" is specified:
+--max-read-length:Integer     Keep only reads with length at most equal to the specified value  Required.
+
+--min-read-length:Integer     Keep only reads with length at least equal to the specified value  Default value: 1.
+
+Valid only if "ReadNameReadFilter" is specified:
+--read-name:String            Keep only reads with this read name  Required.
+
+Valid only if "ReadStrandFilter" is specified:
+--keep-reverse-strand-only:Boolean
+                              Keep only reads on the reverse strand  Required. Possible values: {true, false}
+
+Valid only if "SampleReadFilter" is specified:
+--sample,-sample:String       The name of the sample(s) to keep, filtering out all others  This argument must be
+                              specified at least once. Required.
+
+Valid only if "SoftClippedReadFilter" is specified:
+--invert-soft-clip-ratio-filter:Boolean
+                              Inverts the results from this filter, causing all variants that would pass to fail and
+                              visa-versa.  Default value: false. Possible values: {true, false}
+
+--soft-clipped-leading-trailing-ratio:Double
+                              Threshold ratio of soft clipped bases (leading / trailing the cigar string) to total bases
+                              in read for read to be filtered.  Default value: null.  Cannot be used in conjuction with
+                              argument(s) minimumSoftClippedRatio
+
+--soft-clipped-ratio-threshold:Double
+                              Threshold ratio of soft clipped bases (anywhere in the cigar string) to total bases in
+                              read for read to be filtered.  Default value: null.  Cannot be used in conjuction with
+                              argument(s) minimumLeadingTrailingSoftClippedRatio
+
+
 ]]></help>
     <citations>
         <expand macro="citations"/>

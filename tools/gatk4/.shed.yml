@@ -1,5 +1,5 @@
 owner: artbio
-name: artbio_mutect2
+name: gatk4
 description: Find somatic variations
 long_description: |
   MuTect2 is a somatic SNP and indel caller that combines the DREAM 
@@ -13,7 +13,7 @@ long_description: |
 categories:
   - Variant Analysis
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/artbio_mutect2
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/gatk4
 toolshed:
   - testtoolshed
   - toolshed
