@@ -104,11 +104,16 @@ Usage examples
 
 ::
 
-    gatk FilterMutectCalls \
-      -R reference.fasta \
-      -V somatic.vcf.gz \
-      --contamination-table contamination.table \
-      --tumor-segmentation segments.tsv \
+    gatk FilterMutectCalls \\
+    
+      -R reference.fasta \\
+    
+      -V somatic.vcf.gz \\
+    
+      --contamination-table contamination.table \\
+    
+      --tumor-segmentation segments.tsv \\
+    
       -O filtered.vcf.gz
 
 
