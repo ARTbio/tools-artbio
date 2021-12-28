@@ -29,7 +29,7 @@
             ln -s '$gatk_vcf_stats' input.vcf.gz.stats
         #end if
 
-        gatk Mutect2 --QUIET $ref_flag
+        gatk FilterMutectCalls --QUIET $ref_flag
                      --variant
                         #if str($input_options.input_options_selector) == 'vcf'
                             input.vcf
