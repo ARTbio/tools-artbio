@@ -22,11 +22,11 @@
         #end if
 
         #if str($input_options.input_options_selector) == 'vcf'
-            ln -s '$input_options.unfiltered_vcf_input' input.vcf
-            ln -s '$gatk_vcf_stats' input.vcf.stats
+            ln -s '$input_options.unfiltered_vcf_input' input.vcf &&
+            ln -s '$gatk_vcf_stats' input.vcf.stats &&
         #else if str($input_options.input_options_selector) == 'vcf_bgzip'
-            ln -s '$input_options.unfiltered_vcf_input' input.vcf.gz
-            ln -s '$gatk_vcf_stats' input.vcf.gz.stats
+            ln -s '$input_options.unfiltered_vcf_input' input.vcf.gz &&
+            ln -s '$gatk_vcf_stats' input.vcf.gz.stats &&
         #end if
 
         gatk FilterMutectCalls --QUIET $ref_flag
