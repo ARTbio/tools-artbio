@@ -601,10 +601,6 @@
             <filter>str(outputs['output_parameters']) == 'yes' and outputs['debug_bam']</filter>
         </data>
     </outputs>
-    <tests>
-        <test>
-        </test>
-    </tests>
     <help><![CDATA[
 Usage examples
 ~~~~~~~~~~~~~~
