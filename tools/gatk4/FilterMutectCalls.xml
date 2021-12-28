@@ -118,6 +118,10 @@ likely erroneously mapped NuMTs (nuclear mitochondrial DNA segments -- https://e
 For the value, provide the median coverage expected in autosomal regions with coverage.
 
 
+Usage examples
+~~~~~~~~~~~~~~
+
+
 ::
 
     USAGE: FilterMutectCalls [arguments]
