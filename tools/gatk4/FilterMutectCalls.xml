@@ -7,10 +7,6 @@
     <expand macro="version_cmd"/>
     <command detect_errors="exit_code">
         <![CDATA[
-        #include source=$set_sections#
-        #include source=$pre_gatk_excl_ints_chth#
-        #include source=$pre_gatk_ints_chth#
-
         #set ref_flag='--reference="reference.fa"'
 
         #if str($reference_source.reference_source_selector) == 'history'
@@ -25,27 +21,14 @@
             #set ref_flag=''
         #end if
 
-        #if str($mode.mode_parameters) == 'tumor_only'
-            ln -s $mode.tumor tumor.bam &&
-            ln -s $mode.tumor.metadata.bam_index tumor.bam.bai &&
-        #else
-            ln -s $mode.tumor tumor.bam &&
-            ln -s $mode.tumor.metadata.bam_index tumor.bam.bai &&
-            ln -s $mode.normal normal.bam &&
-            ln -s $mode.normal.metadata.bam_index normal.bam.bai &&
+        #if str($input_options.input_options_selector) == 'vcf'
+            ln -s '$input_options.unfiltered_vcf_input' input.vcf
+            ln -s '$gatk_vcf_stats' input.vcf.stats
+        #else if str($input_options.input_options_selector) == 'vcf_bgzip'
+            ln -s '$input_options.unfiltered_vcf_input' input.vcf.gz
+            ln -s '$gatk_vcf_stats' input.vcf.gz.stats
         #end if
 
-	#if str($outputs.output_parameters) == 'yes'
-            #if str($outputs.debug_assembly) == 'yes'
-                ln -s '$assembly_region_out' assembly-region.tab &&
-            #end if
-            #if str($outputs.debug_bam) == 'yes'
-                ln -s '$bam_output' debug.bam &&
-            #end if
-        #end if
-
-        gatk GetSampleName --input="tumor.bam" --output="samplename.txt" &&
-        sample=`cat samplename.txt | sed 's/"//g'` &&
 
         #if str($optional.optional_parameters) == 'yes'
             #if $optional.panel_of_normals
@@ -82,15 +65,20 @@
 
         #end if
 
-        gatk Mutect2 --QUIET $ref_flag --tumor-sample "\$sample"
-
-        #if str($mode.mode_parameters) == 'tumor_only'
-            --input tumor.bam
-        #else
-            --input tumor.bam
-            --input normal.bam
-        #end if
-
+        gatk Mutect2 --QUIET $ref_flag
+                     --variant
+                        #if str($input_options.input_options_selector) == 'vcf'
+                            input.vcf
+                        #else if str($input_options.input_options_selector) == 'vcf_bgzip'
+                            input.vcf.gz
+                        #end if
+                     --output
+                        #if str($input_options.input_options_selector) == 'vcf'
+                            filtered.vcf
+                        #else if str($input_options.input_options_selector) == 'vcf_bgzip'
+                            filtered.vcf.gz
+                        #end if
+                         
         ## OPTIONAL PARAMETERS ##
 
         #if str($optional.optional_parameters) == 'yes'
@@ -272,37 +260,25 @@
 
         ## ADDITIONAL OUTPUT PARAMETERS ##
 
-        #if str($outputs.output_parameters) == 'yes'
-            #if str($outputs.debug_assembly) == 'yes'
-                --assembly-region-out="assembly-region.tab"
-            #end if
-            #if str($outputs.debug_bam) == 'yes'
-                --bam-output="debug.bam"
-            #end if
-        #end if
-
-        #include source=$gatk_excl_ints_chth#
-        #include source=$gatk_ints_chth#
         #include source=$vcf_output_opts#
-        #include source=$gatk_seqdict#
         ]]>
     </command>
     <inputs>
-        <conditional name="mode">
-            <param name="mode_parameters" type="select" label="Type of analysis">
-                <option value="tumor_only">Tumor-only</option>
-                <option value="somatic">Somatic</option>
-            </param>
-            <when value="tumor_only">
-                <param name="tumor" argument="--tumor" type="data" format="bam" label="Input Tumor BAM file" />
-            </when>
-            <when value="somatic">
-                <param name="tumor" argument="--tumor" type="data" format="bam" label="Input Tumor BAM file" />
-                <param name="normal" argument="--normal" type="data" format="bam" label="Input Normal BAM file" />
-            </when>
-        </conditional>
-        <expand macro="gzip_vcf_params"/>
         <expand macro="ref_sel"/>
+        <conditional name="input_options">
+            <param name="input_options_selector" type="select" label="Format of input variant dataset">
+                <option value="vcf">vcf</option>
+                <option value="vcf_bgzip">vcf_bgzip</option>
+            </param>
+            <when value="vcf">
+                <param name="unfiltered_vcf_input" type="data" format="vcf" label="vcf input file." />
+            </when>
+            <when value="vcf_bgzip">
+                <param name="unfiltered_vcf_input" type="data" format="vcf_bgzip" label="vcf_bgzip input file" />
+            </when>
+            <when value="no_ref" />
+        </conditonal>
+        <data format="tabular" name="gatk_vcf_stats" label="gatk vcf stats" help="this stats file is generated by the Mutect2 tool"/>
         <conditional name="optional">
             <param name="optional_parameters" type="select" label="Optional parameters">
                 <option value="no">Use internal defaults</option>
@@ -579,26 +555,13 @@
             </when>
             <when value="no" />
         </conditional>
-        <conditional name="outputs">
-            <param name="output_parameters" type="select" label="Output parameters" help="Additional outputs for debugging purposes">
-                <option value="no">Output only variants</option>
-                <option value="yes">Generate debugging information</option>
-            </param>
-            <when value="yes">
-                <param name="debug_activity" argument="--activity-profile-out" type="boolean" checked="false" truevalue="yes" falsevalue="" label="Activity Profile Out" help="Output the raw activity profile results in IGV format"/>
-                <param name="debug_assembly" argument="--assembly-region-out" type="boolean" checked="false" truevalue="yes" falsevalue="" label="Assembly Region Out" help="Output the assembly region to this IGV formatted file"/>
-                <param name="debug_bam" argument="--bam-output" type="boolean" checked="false" truevalue="yes" falsevalue="" label="Bam Output" help="The assembled haplotypes and locally realigned reads will be written as BAM to this file if requested. This is intended to be used only for troubleshooting purposes, in specific areas where you want to better understand why the caller is making specific calls"/>
-            </when>
-            <when value="no" />
-        </conditional>
     </inputs>
     <outputs>
-        <expand macro="gzip_vcf_output_params"/>
-        <data format="tabular" name="assembly_region_out" label="${tool.name} on ${on_string}: Assembly region">
-            <filter>str(outputs['output_parameters']) == 'yes' and outputs['debug_assembly']</filter>
+        <data format="vcf" name="output_vcf" label="${tool.name} on ${on_string}: Filtered vcf" from_work_dir="filtered.vcf" >
+            <filter>input_options['input_options_selector'] == 'vcf'</filter>
         </data>
-        <data format="bam" name="bam_output" label="${tool.name} on ${on_string}: Debug BAM output">
-            <filter>str(outputs['output_parameters']) == 'yes' and outputs['debug_bam']</filter>
+        <data format="vcf_bgzip" name="output_vcf_bgzip" label="${tool.name} on ${on_string}: Filtered vcf (bgzip)" from_work_dir="filtered.vcf.gz" >
+            <filter>input_options['input_options_selector'] == 'vcf_bgzip'</filter>
         </data>
     </outputs>
     <help><![CDATA[
