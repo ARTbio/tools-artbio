@@ -614,6 +614,7 @@
             <param name="advanced_parameters" value="no" />
             <param name="output_parameters" value="no" />
             <output name="output_vcf" file="Mutect2-out1.vcf" lines_diff="2" />
+            <output name="output_vcf_stats" file="Mutect2-out1.vcf.stats" />
         </test>
         <test>
             <conditional name="mode">

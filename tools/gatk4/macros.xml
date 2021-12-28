@@ -479,7 +479,7 @@
     ]]></template>
 
     <xml name="gatk_gvcf_input_params">
-	    <param name="variant" type="data" multiple="false" format="vcf" label="Input gVCF file" help=""/>
+        <param name="variant" type="data" multiple="false" format="vcf" label="Input gVCF file" help=""/>
     </xml>
 
     <xml name="vcf_input_params">
@@ -595,35 +595,41 @@
     <!--Output related Picard options-->
     <xml name="gzip_vcf_output_params">
         <data format="vcf" name="output_vcf" label="${tool.name} on ${on_string}: vcf" from_work_dir="output.vcf" >
-			<filter>not gzipped_output</filter>
-		</data>
-		<data format="vcf_bgzip" name="output_vcf_bgzip" label="${tool.name} on ${on_string}: vcf_bgzip" from_work_dir="output.vcf.gz" >
-			<filter>gzipped_output</filter>
-		</data>
+            <filter>not gzipped_output</filter>
+        </data>
+        <data format="tabular" name="output_vcf_stats" label="gatk vcf stats" from_work_dir="output.vcf.stats" >
+            <filter>not gzipped_output</filter>
+        </data>
+        <data format="vcf_bgzip" name="output_vcf_bgzip" label="${tool.name} on ${on_string}: vcf_bgzip" from_work_dir="output.vcf.gz" >
+            <filter>gzipped_output</filter>
+        </data>
+        <data format="tabular" name="output_vcf_bgzip_stats" label="gatk vcf stats" from_work_dir="output.vcf.gz.stats" >
+            <filter>gzipped_output</filter>
+        </data>
     </xml>
 
 
     <!--These are the same, other than the capitalization of output, so maybe a better way to do this.-->
     <template name="picard_vcf_output_opts">
         #if $gzipped_output
-			--OUTPUT output.vcf.gz
-		#else
-			--OUTPUT output.vcf
-		#end if
+            --OUTPUT output.vcf.gz
+        #else
+            --OUTPUT output.vcf
+        #end if
     </template>
 
     <template name="vcf_output_opts">
         #if $gzipped_output
-			--output output.vcf.gz
-		#else
-			--output output.vcf
-		#end if
+            --output output.vcf.gz
+        #else
+            --output output.vcf
+        #end if
     </template>
 
     <xml name="picard_output_params">
         <data format="txt" name="output_md5" label="${tool.name} on ${on_string}: md5sum(txt)" from_work_dir="output.bam.md5" >
-			<filter>picard_adv['CREATE_MD5_FILE']</filter>
-		</data>
+            <filter>picard_adv['CREATE_MD5_FILE']</filter>
+        </data>
     </xml>
 
 
