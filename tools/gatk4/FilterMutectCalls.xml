@@ -91,7 +91,7 @@
                 <param name="unfiltered_vcf_input" ftype="vcf" value="Mutect2-out1.vcf" />
             </conditional>
             <param name="gatk_vcf_stats" ftype="tabular" value="Mutect2-out1.vcf.stats" />
-            <output name="output_vcf" file="filtered_Mutect2-out1.vcf"/>
+            <output name="output_vcf" file="filtered_Mutect2-out1.vcf" lines_diff="2" />
         </test>
     </tests>
 
