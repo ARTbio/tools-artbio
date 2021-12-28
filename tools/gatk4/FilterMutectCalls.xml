@@ -83,6 +83,20 @@
             <filter>input_options['input_options_selector'] == 'vcf_bgzip'</filter>
         </data>
     </outputs>
+    <tests>
+        <test>
+            <param name="reference_source_selector" value="history" />
+            <param name="reference_sequence" ftype="fasta" value="reference.fa" />
+            <conditional name="input_options">
+                <param name="unfiltered_vcf_input" ftype="vcf" value="Mutect2-out1.vcf" />
+            </conditional>
+            <param name="gatk_vcf_stats" ftype="tabular" value="Mutect2-out1.vcf.stats" />
+            <output name="output_vcf" file="filtered_Mutect2-out1.vcf"/>
+        </test>
+    </tests>
+
+
+
     <help><![CDATA[
 Usage examples
 ~~~~~~~~~~~~~~
