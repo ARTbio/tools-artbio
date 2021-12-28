@@ -644,7 +644,7 @@
             <param name="annotation_group" value="StandardMutectAnnotation" />
             <param name="advanced_parameters" value="no" />
             <param name="output_parameters" value="no" />
-            <output name="output_vcf" file="Mutect2-out3.vcf" lines_diff="2" />
+            <output name="output_vcf" file="Mutect2-out3.vcf" lines_diff="4" />
         </test>
         <test>
             <conditional name="mode">
