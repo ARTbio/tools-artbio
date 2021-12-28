@@ -27,6 +27,7 @@
         #else if str($input_options.input_options_selector) == 'vcf_bgzip'
             ln -s '$input_options.unfiltered_vcf_input' input.vcf.gz &&
             ln -s '$gatk_vcf_stats' input.vcf.gz.stats &&
+            gatk IndexFeatureFile --input input.vcf.gz &&
         #end if
 
         gatk FilterMutectCalls --QUIET $ref_flag
@@ -95,12 +96,12 @@
         </test>
         <test>
             <param name="reference_source_selector" value="history" />
-            <param name="reference_sequence" ftype="fasta" value="reference.fa" />
+            <param name="reference_sequence" ftype="fasta" value="chr20.fa" />
             <conditional name="input_options">
-                <param name="unfiltered_vcf_input" ftype="vcf_bgzip" value="Mutect2-out1.vcf.gz" />
+                <param name="unfiltered_vcf_input" ftype="vcf_bgzip" value="Mutect2-out6.vcf_bgzip" />
             </conditional>
-            <param name="gatk_vcf_stats" ftype="tabular" value="Mutect2-out1.vcf.stats" />
-            <output name="output_vcf" file="filtered_Mutect2-out1.vcf.gz" />
+            <param name="gatk_vcf_stats" ftype="tabular" value="Mutect2-out6.vcf_bgzip.stats" />
+            <output name="output_vcf" file="filtered_Mutect2-out6.vcf_bgzip" />
         </test>
     </tests>
 
