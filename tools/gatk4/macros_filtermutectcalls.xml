@@ -341,53 +341,6 @@
     </xml>
 
 
-
-    <!--ABOVE HAS BEEN REVIEWED-->
-
-
-
-
-
-
-
-
-
-
-    <!--{-->
-      <!--"summary": "BAM/SAM/CRAM file containing reads",-->
-      <!--"name": "&#45;&#45;input",-->
-      <!--"synonyms": "-I",-->
-      <!--"type": "List[String]",-->
-      <!--"required": "yes",-->
-      <!--"fulltext": "",-->
-      <!--"defaultValue": "[]",-->
-      <!--"minValue": "NA",-->
-      <!--"maxValue": "NA",-->
-      <!--"minRecValue": "NA",-->
-      <!--"maxRecValue": "NA",-->
-      <!--"kind": "required",-->
-      <!--"options": []-->
-    <!--},-->
-    <!--Required BAM input, GATK tool, may be specified multiple times.-->
-    <!--BAM should be indexed on the fly.-->
-    <!--Parameter is required, so is not contained within a section.-->
-    <!--Only decriptor that makes this unique for all input parameters is the summary field.-->
-     <!--{'pre_chth': ['bam_index_pre_chth'],-->
-                                                 <!--'main_chth': ['picard_bam_input'],-->
-                                                 <!--'main_xml': ['gatk_bam_req_params']}},-->
-
-
-
-
-
-
-
-
-
-
-
-
-
     <!--Macros for multiple input tools.  List[File] in GATK json.-->
     <template name="vcf_tabix_multi"><![CDATA[
         #for $num, $file in enumerate($input)
@@ -479,7 +432,7 @@
     ]]></template>
 
     <xml name="gatk_gvcf_input_params">
-	    <param name="variant" type="data" multiple="false" format="vcf" label="Input gVCF file" help=""/>
+        <param name="variant" type="data" multiple="false" format="vcf" label="Input gVCF file" help=""/>
     </xml>
 
     <xml name="vcf_input_params">
@@ -595,64 +548,36 @@
     <!--Output related Picard options-->
     <xml name="gzip_vcf_output_params">
         <data format="vcf" name="output_vcf" label="${tool.name} on ${on_string}: vcf" from_work_dir="output.vcf" >
-			<filter>not gzipped_output</filter>
-		</data>
-		<data format="vcf_bgzip" name="output_vcf_bgzip" label="${tool.name} on ${on_string}: vcf_bgzip" from_work_dir="output.vcf.gz" >
-			<filter>gzipped_output</filter>
-		</data>
+            <filter>not gzipped_output</filter>
+        </data>
+        <data format="vcf_bgzip" name="output_vcf_bgzip" label="${tool.name} on ${on_string}: vcf_bgzip" from_work_dir="output.vcf.gz" >
+            <filter>gzipped_output</filter>
+        </data>
     </xml>
 
 
     <!--These are the same, other than the capitalization of output, so maybe a better way to do this.-->
     <template name="picard_vcf_output_opts">
         #if $gzipped_output
-			--OUTPUT output.vcf.gz
-		#else
-			--OUTPUT output.vcf
-		#end if
+            --OUTPUT output.vcf.gz
+        #else
+            --OUTPUT output.vcf
+        #end if
     </template>
 
     <template name="vcf_output_opts">
         #if $gzipped_output
-			--output output.vcf.gz
-		#else
-			--output output.vcf
-		#end if
+            --output output.vcf.gz
+        #else
+            --output output.vcf
+        #end if
     </template>
 
     <xml name="picard_output_params">
         <data format="txt" name="output_md5" label="${tool.name} on ${on_string}: md5sum(txt)" from_work_dir="output.bam.md5" >
-			<filter>picard_adv['CREATE_MD5_FILE']</filter>
-		</data>
+            <filter>picard_adv['CREATE_MD5_FILE']</filter>
+        </data>
     </xml>
-
-
-    <!--<template name="ref_opts">-->
-        <!--#set $sections = ['optional','advanced','deprecated','']-->
-        <!--#silent $sys.stderr.write("I WOULD LIKE TO SHOW THE SECTION VARIABLE: '${sections}'\n")-->
-        <!--#for $sect in $sections-->
-            <!--#if $varExists('$sect.reference_source.reference_source_selector')-->
-                <!--#if $sect.reference_source.reference_source_selector != "no_ref"-->
-                    <!--#if $sect.reference_source.reference_source_selector != "history"-->
-                        <!--&#45;&#45;reference ${sect.reference_source.reference_sequence.fields.path}-->
-                    <!--#else-->
-                        <!--&#45;&#45;reference ${sect.reference_source.reference_sequence}-->
-                    <!--#end if-->
-                <!--#end if-->
-            <!--#end if-->
-        <!--#end for-->
-    <!--</template>-->
-
-
-    <!--<template name="ref_opts_opt">-->
-        <!--#if $optional.reference_source.reference_source_selector != "no_ref"-->
-            <!--#if $optional.reference_source.reference_source_selector != "history"-->
-                <!--&#45;&#45;reference ${optional.reference_source.reference_sequence.fields.path}-->
-            <!--#else-->
-                <!--&#45;&#45;reference ${optional.reference_source.reference_sequence}-->
-            <!--#end if-->
-        <!--#end if-->
-    <!--</template>-->
 
 
     <!--Citations-->
