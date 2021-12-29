@@ -64,7 +64,7 @@
         </conditional>
         <conditional name="input_options">
             <param name="input_options_selector" type="select" label="Format of input variant dataset">
-                <option value="vcf">vcf</option>
+                <option value="vcf" selected="true">vcf</option>
                 <option value="vcf_bgzip">vcf_bgzip</option>
             </param>
             <when value="vcf">
@@ -98,15 +98,23 @@
             <param name="reference_source_selector" value="history" />
             <param name="reference_sequence" ftype="fasta" value="chr20.fa" />
             <conditional name="input_options">
+                <param name="input_options_selector" value="vcf_bgzip" />
                 <param name="unfiltered_vcf_input" ftype="vcf_bgzip" value="Mutect2-out6.vcf_bgzip" />
             </conditional>
             <param name="gatk_vcf_stats" ftype="tabular" value="Mutect2-out6.vcf_bgzip.stats" />
-            <output name="output_vcf" file="filtered_Mutect2-out6.vcf_bgzip" />
+            <output name="output_vcf" file="filtered_Mutect2-out6.vcf_bgzip" compare="sim_size" />
+        </test>
+        <test>
+            <param name="reference_source_selector" value="history" />
+            <param name="reference_sequence" ftype="fasta" value="chr20.fa" />
+            <conditional name="input_options">
+                <param name="input_options_selector" value="vcf" />
+                <param name="unfiltered_vcf_input" ftype="vcf" value="Mutect2-out6.vcf" />
+            </conditional>
+            <param name="gatk_vcf_stats" ftype="tabular" value="Mutect2-out6.vcf_bgzip.stats" />
+            <output name="output_vcf" file="filtered_Mutect2-out6.vcf" lines_diff="2" />
         </test>
     </tests>
-
-
-
     <help><![CDATA[
 Usage examples
 ~~~~~~~~~~~~~~
