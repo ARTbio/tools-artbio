@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <macros>
-    <token name="@VERSION@">4.1.4.1</token>
-    <token name="@WRAPPER_VERSION@">@VERSION@+artbio3</token>
+    <token name="@VERSION@">4.1.7.0</token>
+    <token name="@WRAPPER_VERSION@">@VERSION@+galaxy1</token>
 
     <xml name="requirements">
         <requirements>
             <requirement type="package" version="@VERSION@">gatk4</requirement>
-            <requirement type="package" version="0.2.6=ha92aebf_0">tabix</requirement>
-            <requirement type="package" version="1.10=h9402c20_2">samtools</requirement>
+            <requirement type="package" version="0.2.5">tabix</requirement>
+            <requirement type="package" version="1.9">samtools</requirement>
             <yield />
         </requirements>
     </xml>
@@ -289,83 +289,6 @@
         </conditional>
     </xml>
 
-    <!--BAM input-->
-    <template name="picard_tumor_bam_input">
-        --INPUT tumor.bam
-    </template>
-
-    <template name="gatk_tumor_bam_input">
-        --input tumor.bam
-    </template>
-
-    <template name="tumor_bam_index_pre_chth"><![CDATA[
-    #for $sect in $sections
-        #if $varExists($sect + "tumor")
-            #if $getVar($sect + "tumor").is_of_type("bam")
-                ln -s $getVar($sect + "tumor") tumor.bam &&
-                samtools index tumor.bam &&
-            #else
-                ln -s $getVar($sect + "tumor") tumor.sam &&
-                samtools view -bS tumor.sam -o tumor.bam &&
-                samtools index tumor.bam &&
-            #end if
-        #end if
-    #end for
-    ]]></template>
-
-    <xml name="gatk_tumor_bam_req_params">
-        <param name="tumor" argument="--tumor" type="data" format="bam,sam" label="Input Tumor BAM/SAM/CRAM file" />
-    </xml>
-
-    <template name="picard_tumor_bam_index"><![CDATA[
-        #if $tumor.is_of_type("bam")
-            ln -s $INPUT tumor.bam &&
-            samtools index tumor.bam &&
-        #else
-            ln -s $INPUT tumor.sam &&
-            samtools view -bS tumor.sam -o tumor.bam &&
-            samtools index tumor.bam &&
-        #end if
-    ]]></template>
-
-    <template name="picard_normal_bam_input">
-        --INPUT normal.bam
-    </template>
-
-    <template name="gatk_normal_bam_input">
-        --input normal.bam
-    </template>
-
-    <template name="normal_bam_index_pre_chth"><![CDATA[
-    #for $sect in $sections
-        #if $varExists($sect + "normal")
-            #if $getVar($sect + "normal").is_of_type("bam")
-                ln -s $getVar($sect + "normal") normal.bam &&
-                samtools index normal.bam &&
-            #else
-                ln -s $getVar($sect + "normal") normal.sam &&
-                samtools view -bS normal.sam -o normal.bam &&
-                samtools index normal.bam &&
-            #end if
-        #end if
-    #end for
-    ]]></template>
-
-    <xml name="gatk_normal_bam_req_params">
-        <param name="normal" argument="--normal" type="data" format="bam,sam" label="Input Normal BAM/SAM/CRAM file" />
-    </xml>
-
-    <template name="picard_normal_bam_index"><![CDATA[
-        #if $normal.is_of_type("bam")
-            ln -s $INPUT normal.bam &&
-            samtools index normal.bam &&
-        #else
-            ln -s $INPUT normal.sam &&
-            samtools view -bS normal.sam -o normal.bam &&
-            samtools index normal.bam &&
-        #end if
-    ]]></template>
-    
     <!--Output goes to stdout, no output parameter exists.-->
     <template name="stdout_to_output">
         > output.txt
@@ -416,53 +339,6 @@
     <xml name="vcf_input_params_multi">
         <param name="input" type="data" multiple="true" format="vcf,vcf_bgzip" label="Input VCF file" help="Input VCF(s) to be sorted. Multiple inputs must have the same sample names (in order)"/>
     </xml>
-
-
-
-    <!--ABOVE HAS BEEN REVIEWED-->
-
-
-
-
-
-
-
-
-
-
-    <!--{-->
-      <!--"summary": "BAM/SAM/CRAM file containing reads",-->
-      <!--"name": "&#45;&#45;input",-->
-      <!--"synonyms": "-I",-->
-      <!--"type": "List[String]",-->
-      <!--"required": "yes",-->
-      <!--"fulltext": "",-->
-      <!--"defaultValue": "[]",-->
-      <!--"minValue": "NA",-->
-      <!--"maxValue": "NA",-->
-      <!--"minRecValue": "NA",-->
-      <!--"maxRecValue": "NA",-->
-      <!--"kind": "required",-->
-      <!--"options": []-->
-    <!--},-->
-    <!--Required BAM input, GATK tool, may be specified multiple times.-->
-    <!--BAM should be indexed on the fly.-->
-    <!--Parameter is required, so is not contained within a section.-->
-    <!--Only decriptor that makes this unique for all input parameters is the summary field.-->
-     <!--{'pre_chth': ['bam_index_pre_chth'],-->
-                                                 <!--'main_chth': ['picard_bam_input'],-->
-                                                 <!--'main_xml': ['gatk_bam_req_params']}},-->
-
-
-
-
-
-
-
-
-
-
-
 
 
     <!--Macros for multiple input tools.  List[File] in GATK json.-->
@@ -556,7 +432,7 @@
     ]]></template>
 
     <xml name="gatk_gvcf_input_params">
-	    <param name="variant" type="data" multiple="false" format="vcf" label="Input gVCF file" help=""/>
+        <param name="variant" type="data" multiple="false" format="vcf" label="Input gVCF file" help=""/>
     </xml>
 
     <xml name="vcf_input_params">
@@ -672,64 +548,36 @@
     <!--Output related Picard options-->
     <xml name="gzip_vcf_output_params">
         <data format="vcf" name="output_vcf" label="${tool.name} on ${on_string}: vcf" from_work_dir="output.vcf" >
-			<filter>not gzipped_output</filter>
-		</data>
-		<data format="vcf_bgzip" name="output_vcf_bgzip" label="${tool.name} on ${on_string}: vcf_bgzip" from_work_dir="output.vcf.gz" >
-			<filter>gzipped_output</filter>
-		</data>
+            <filter>not gzipped_output</filter>
+        </data>
+        <data format="vcf_bgzip" name="output_vcf_bgzip" label="${tool.name} on ${on_string}: vcf_bgzip" from_work_dir="output.vcf.gz" >
+            <filter>gzipped_output</filter>
+        </data>
     </xml>
 
 
     <!--These are the same, other than the capitalization of output, so maybe a better way to do this.-->
     <template name="picard_vcf_output_opts">
         #if $gzipped_output
-			--OUTPUT output.vcf.gz
-		#else
-			--OUTPUT output.vcf
-		#end if
+            --OUTPUT output.vcf.gz
+        #else
+            --OUTPUT output.vcf
+        #end if
     </template>
 
     <template name="vcf_output_opts">
         #if $gzipped_output
-			--output output.vcf.gz
-		#else
-			--output output.vcf
-		#end if
+            --output output.vcf.gz
+        #else
+            --output output.vcf
+        #end if
     </template>
 
     <xml name="picard_output_params">
         <data format="txt" name="output_md5" label="${tool.name} on ${on_string}: md5sum(txt)" from_work_dir="output.bam.md5" >
-			<filter>picard_adv['CREATE_MD5_FILE']</filter>
-		</data>
+            <filter>picard_adv['CREATE_MD5_FILE']</filter>
+        </data>
     </xml>
-
-
-    <!--<template name="ref_opts">-->
-        <!--#set $sections = ['optional','advanced','deprecated','']-->
-        <!--#silent $sys.stderr.write("I WOULD LIKE TO SHOW THE SECTION VARIABLE: '${sections}'\n")-->
-        <!--#for $sect in $sections-->
-            <!--#if $varExists('$sect.reference_source.reference_source_selector')-->
-                <!--#if $sect.reference_source.reference_source_selector != "no_ref"-->
-                    <!--#if $sect.reference_source.reference_source_selector != "history"-->
-                        <!--&#45;&#45;reference ${sect.reference_source.reference_sequence.fields.path}-->
-                    <!--#else-->
-                        <!--&#45;&#45;reference ${sect.reference_source.reference_sequence}-->
-                    <!--#end if-->
-                <!--#end if-->
-            <!--#end if-->
-        <!--#end for-->
-    <!--</template>-->
-
-
-    <!--<template name="ref_opts_opt">-->
-        <!--#if $optional.reference_source.reference_source_selector != "no_ref"-->
-            <!--#if $optional.reference_source.reference_source_selector != "history"-->
-                <!--&#45;&#45;reference ${optional.reference_source.reference_sequence.fields.path}-->
-            <!--#else-->
-                <!--&#45;&#45;reference ${optional.reference_source.reference_sequence}-->
-            <!--#end if-->
-        <!--#end if-->
-    <!--</template>-->
 
 
     <!--Citations-->
