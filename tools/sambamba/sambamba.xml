@@ -59,15 +59,6 @@
             </when>
 
             <when value="slice">
-                <param name="query" type="text" size="80">
-                    <sanitizer invalid_char="X">
-                        <valid initial="string.ascii_letters,string.digits, string.punctuation">
-                            <add value=" " />
-                        </valid>
-                    </sanitizer>
-                    <label>Filter expression</label>
-                    <help>See below for query syntax.</help>
-                </param>
                 <param name="region" type="text" size="40" label="Region in format chr:beg-end">
                     <help>
                     Regions can be specified as 'chr2' (the whole chr2), 'chr2:1000000'
