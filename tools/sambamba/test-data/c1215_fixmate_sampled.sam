@@ -1,5 +1,5 @@
 @HD	VN:1.3	SO:coordinate
-@PG	ID:sambamba	CL:view -h -t 1 -f sam --subsampling-seed=123 -s 0.1 -o /tmp/tmpsodu2dip/files/2/b/e/dataset_2be4d6d2-9c36-480e-a69b-61d0f4ba66d5.dat input.bam	VN:1.0
+@PG	ID:sambamba	CL:view -h -t 1 -f sam --subsampling-seed=123 -s 0.1 -o /tmp/tmp1mtgiw55/files/1/2/e/dataset_12e22434-7749-4511-b122-b93c9487e848.dat input.bam	VN:1.0
 AL096846_2_151_2180	99	AL096846	2	60	35M	=	117	150	ATATATAATTTAATAAATACATTCCGACGATACTG	<<<<<<<<<<<<<<<:(<<<<<<<<<<:<<:5<;;	XT:A:U	NM:i:0	X0:i:1	X1:i:0	XM:i:0	XO:i:0	XG:i:0	MD:Z:35
 AL096846_11_168_117e	163	AL096846	11	60	35M	=	134	158	TTAATAAATACATTCCGACGATACTGCCTCTATGG	<<<<<<<<<<<<<<,2<<<<<<<<<<7<<<:<<<6	XT:A:U	NM:i:0	X0:i:1	X1:i:0	XM:i:0	XO:i:0	XG:i:0	MD:Z:35
 AL096846_15_201_212	163	AL096846	15	60	35M	=	167	187	TAAATACATTCCGACGATACTGCCTCTATGGCTTA	8:<<<<<<<<<<;<<<;;<<<<<<<994<);<<29	XT:A:U	NM:i:0	X0:i:1	X1:i:0	XM:i:0	XO:i:0	XG:i:0	MD:Z:35
