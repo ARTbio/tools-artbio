@@ -99,7 +99,7 @@
     <outputs>
         <data name="outfile" format="bam">
             <change_format>
-                <when input="format" value="sam" format="sam" />
+                <when input="sambamba_options['format']" value="sam" format="sam" />
             </change_format>
         </data>
     </outputs>
