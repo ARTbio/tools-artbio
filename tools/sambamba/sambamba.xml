@@ -1,4 +1,4 @@
-<tool id="sambamba_sample_or_filter" name="Sample or Filter BAM" version="0.7.1+galaxy1">
+<tool id="sambamba_sample_or_filter" name="Sample, Slice or Filter BAM" version="0.7.1+galaxy1">
     <description>
         on flags, fields, and tags using Sambamba
     </description>
