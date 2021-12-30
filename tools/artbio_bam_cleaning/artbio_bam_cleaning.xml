@@ -1,4 +1,4 @@
-<tool id="artbio_bam_cleaning" name="ARTbio bam cleaning" version="1.7+galaxy2">
+<tool id="artbio_bam_cleaning" name="ARTbio bam cleaning" version="1.7+galaxy3">
     <description>
         on flags and PCR Duplicates and MD recalibration
     </description>
@@ -24,7 +24,7 @@
     | samtools calmd  -C 50 -b -@ \${GALAXY_SLOTS:-2} - reference.fa
     #if $specify_outputs == 'just_calMD':
         > $calmd
-    #else if $specify_outputs == 'calMDandMQ' or $specify_outputs == 'both':
+    #else if $specify_outputs == 'both':
         | tee $calmd
         | sambamba view -h -t \${GALAXY_SLOTS:-2} --filter='mapping_quality <= 254' -f 'bam' /dev/stdin > $fullfilter
     #else:
