@@ -97,7 +97,7 @@
         </conditional>
     </inputs>
     <outputs>
-        <data name="outfile" format="bam">
+        <data name="outfile" format="bam" label="Filter, slice or sample on ${on_string}">
             <change_format>
                 <when input="sambamba_options['format']" value="sam" format="sam" />
             </change_format>
