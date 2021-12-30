@@ -76,7 +76,7 @@
                     </param>
                     <when value="bed">
                         <param name="bed_file" type="data" format="bed" label="BED file"
-                               help="NOTE that sambamba slice only outputs BAM-format datasets"/>
+                               help="The coordinates are 0-based. NOTE that sambamba slice only outputs BAM-format datasets."/>
                     </when>
                     <when value="text">
                         <param name="region" type="text" size="40" label="Region(s) in space-separated format chr:start-end">
