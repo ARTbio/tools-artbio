@@ -110,7 +110,7 @@
             <param name="query" value="[H0] == 1 and read_name =~ /^EAS51_62/" />
             <param name="format" value="bam" />
             <param name="region" value="" />
-            <output name="outfile" file="ex1_header_filtered.bam" ftype="bam" />
+            <output name="outfile" file="ex1_header_filtered.bam" ftype="bam" lines_diff="2"/>
         </test>
         <test>
             <param name="input" value="c1215_fixmate.bam" ftype="bam" />
@@ -141,7 +141,7 @@
             <param name="seed" value="123" />
             <param name="fraction" value="0.1" />
             <param name="format" value="bam" />
-            <output name="outfile" file="ex1_header_sampled.bam" ftype="bam" />
+            <output name="outfile" file="ex1_header_sampled.bam" ftype="bam" lines_diff="2"/>
         </test>
         <test>
             <param name="input" value="c1215_fixmate.bam" ftype="bam" />
