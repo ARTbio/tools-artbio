@@ -30,7 +30,7 @@
 
         #if $sambamba_options.selector == 'slice'
             #if $sambamba_options.slice.slice_format == 'text'
-                sambamba slice -o '$outfile' input.bam $sambamba_options.slice.text
+                sambamba slice -o '$outfile' input.bam $sambamba_options.slice.region
             #else
                 sambamba slice --regions $sambamba_options.slice.bed_file -o '$outfile' input.bam
             #end if
