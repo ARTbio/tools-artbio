@@ -18,17 +18,18 @@
             #if $sambamba_options.query != '':
                 --filter='$sambamba_options.query'
             #end if
-                -f '$sambamba_options.format' -o $outfile input.bam $sambamba_options.region
+                -f '$sambamba_options.format'
+                -o $outfile input.bam $sambamba_options.region
 
-         #else if $sambamba_options.selector == 'sample'
-             sambamba view -h -t \${GALAXY_SLOTS:-4} -f '$sambamba_options.format'
-             --subsampling-seed='$sambamba_options.seed'
-             -s '$sambamba_options.fraction' -o '$outfile' input.bam
+        #else if $sambamba_options.selector == 'sample'
+            sambamba view -h -t \${GALAXY_SLOTS:-4} -f '$sambamba_options.format'
+                 --subsampling-seed='$sambamba_options.seed'
+                 -s '$sambamba_options.fraction'
+                 -o '$outfile' input.bam
 
-
-         #else if $sambamba_options.selector == 'slice'
-             sambamba slice -o '$outfile' input.bam $sambamba_options.region
-         #end if
+        #else
+            sambamba slice -o '$outfile' input.bam $sambamba_options.region
+        #end if
     ]]></command>
     <inputs>
         <param name="input" type="data" format="bam" label="BAM or SAM input file(s)"/>
