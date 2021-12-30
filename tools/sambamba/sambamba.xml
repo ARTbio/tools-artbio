@@ -89,6 +89,8 @@
                             </help>
                         </param>
                     </when>
+                </conditional>
+            </when>
 
             <when value="sample">
                 <param name="format" type="select" label="format of the tool output">
