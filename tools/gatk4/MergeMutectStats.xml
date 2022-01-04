@@ -11,6 +11,7 @@
         #for $file in $inputs:
             --stats $file
         #end for
+            --output $merge_stats
         ]]>
     </command>
     <inputs>
