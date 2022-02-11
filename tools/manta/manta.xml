@@ -77,11 +77,13 @@
                 <param name="tumor_bam_file" type="data" format="bam" label="select tumor BAM" help="Select the files you wish to send to Manta (tumor sample, it must be in BAM format)." />
             </when>
         </conditional>
+        <!-- unused parameters
         <param name="additional_param" type="select" multiple="true" display="checkboxes" label="Additional parameters" >
             <option value="exome">Set options for WES input: turn off depth filters</option>
             <option value="rna">Set options for RNA-Seq input. Must specify exactly one bam input file</option>
             <option value="unstrandedRNA">Set if RNA-Seq input is unstranded: Allows splice-junctions on either strand</option>
         </param>
+        -->
         <section name="advanced" title="Advanced options" expanded="false">
             <param name="callMemMb" type="integer" value="8000" label="Set default task memory requirements" help="The maximum memory size to assign to tasks" />
             <param name="scanSizeMb" type="integer" value="12" label="Set maximum sequence region size" help="The maximum sequence region size (in megabases) scanned by each task during SV Locus graph generation. (default: 12)" />
