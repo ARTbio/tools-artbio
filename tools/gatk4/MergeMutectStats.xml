@@ -1,5 +1,5 @@
 <tool id="mergemutectstats" name="gatk4 MergeMutectStats" version="@WRAPPER_VERSION@" profile="18.05">
-    <description>Merge the stats output by scatters of a single Mutect2 job</description>
+    <description>Merge scattered stats outputs created by Mutect2 in a single stats dataset</description>
     <macros>
         <import>macros.xml</import>
     </macros>
