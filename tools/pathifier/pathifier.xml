@@ -1,4 +1,4 @@
-<tool id="pathifier" name="Pathifier" version="1.0.1">
+<tool id="pathifier" name="Pathifier" version="1.0.2">
     <description>: Quantify deregulation of pathways in cancer</description>
     <requirements>
         <requirement type="package" version="1.6.2=r35h6115d3f_0">r-optparse</requirement>
