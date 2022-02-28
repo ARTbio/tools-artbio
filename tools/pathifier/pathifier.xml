@@ -83,7 +83,7 @@
         </data>
         <data name="plot" format="pdf" label="Pathifier vizualization of ${on_string}" />
         <data name="rdatafile" format="rdata" label="Pathifier S4 object of ${on_string}" >
-            <filter>rds == 'yes'</filter>
+            <filter>rdata == 'yes'</filter>
         </data>
     </outputs>
     <tests>
