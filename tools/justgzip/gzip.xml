@@ -4,7 +4,7 @@
       <exit_code range="1:" level="fatal" description="Tool exception" />
   </stdio>
   <command detect_errors="exit_code"><![CDATA[  
-gzip -c '${input1}' >  $output
+gzip -c '${input1}' >  '$output'
   ]]></command>
   <inputs>
       <param format="fastq" name="input1" type="data" label="Input file" help="file to compress" />
