@@ -1,7 +1,7 @@
-<tool id="cherry_pick_fasta" name="Pick Fasta sequences" version="3.0.1">
+<tool id="cherry_pick_fasta" name="Pick Fasta sequences" version="3.1">
   <description>with header satisfying a string query</description>
   <requirements>
-        <requirement type="package" version="1.70">biopython</requirement>
+        <requirement type="package" version="1.73">biopython</requirement>
   </requirements>
   <command interpreter="python">cherry_pick_fasta.py
                                    --input $input
