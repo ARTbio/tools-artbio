@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# Chery pick of fasta sequences satisfying a query string in their header/name
 import argparse
 
 from Bio import SeqIO

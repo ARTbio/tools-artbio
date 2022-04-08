@@ -3,7 +3,8 @@
   <requirements>
         <requirement type="package" version="1.75">biopython</requirement>
   </requirements>
-  <command interpreter="python">cherry_pick_fasta.py
+  <command detect_errors="exit_code"><![CDATA[
+                            python '$__tool_directory__/cherry_pick_fasta.py'
                                    --input $input
                                    --searchfor '$search.searchfor'
                                    #if $search.options_selector == 'single':
@@ -20,7 +21,7 @@
                                        #end if
                                    #end if
                                    --output $output
-  </command>
+  ]]></command>
 
   <inputs>
     <param name="input" type="data" format="fasta" label="Source file" help="Fasta file to parse" />
