@@ -1,7 +1,7 @@
-<tool id="cherry_pick_fasta" name="Pick Fasta sequences" version="3.2.1">
+<tool id="cherry_pick_fasta" name="Pick Fasta sequences" version="3.3">
   <description>with header satisfying a string query</description>
   <requirements>
-        <requirement type="package" version="1.75">biopython</requirement>
+        <requirement type="package" version="3.8.0">python</requirement>
   </requirements>
   <command detect_errors="exit_code"><![CDATA[
                             python '$__tool_directory__/cherry_pick_fasta.py'
@@ -70,6 +70,14 @@
     <data name="output" format="fasta" label="Fasta sequences ${search.searchfor.value} ${search.options_selector} term(s) in header" />
   </outputs>
   <tests>
+    <!-- test headers with space -->
+    <test>
+        <param ftype="fasta" name="input" value="input_withspace.fa" />
+        <param name="query" value="type=rRNA" />
+        <param name="searchfor" value="with" />
+        <param name="match" value="include" />
+        <output name="output" ftype="fasta" file="output_withspace.fa" />
+    </test>
     <!-- exact matches -->
     <test>
         <param ftype="fasta" name="input" value="input.fa" />
