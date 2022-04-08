@@ -1,9 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# Chery pick of fasta sequences satisfying a query string in their header/name
 import argparse
-
-from Bio import SeqIO
 
 
 def Parser():
@@ -68,7 +63,17 @@ def getquerylist(file):
 
 
 def buid_fasta_dict(fasta):
-    seq_dict = {rec.id: rec.seq for rec in SeqIO.parse(fasta, "fasta")}
+    seq_dict = dict()
+    f = open(fasta, 'r')
+    content = f.read()
+    segmented_content = content.split('>')
+    segmented_content = segmented_content[1:]
+    for seq in segmented_content:
+        sliced_seq = seq.split('\n')
+        header = sliced_seq[0]
+        sliced_seq = sliced_seq[1:]
+        sequence = ''.join(sliced_seq)
+        seq_dict[header] = sequence
     return seq_dict
 
 
