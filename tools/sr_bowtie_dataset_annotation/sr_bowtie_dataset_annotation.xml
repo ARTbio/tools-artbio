@@ -1,4 +1,4 @@
-<tool id="sr_bowtie_dataset_annotation" name="Annotate smRNA dataset" version="2.6">
+<tool id="sr_bowtie_dataset_annotation" name="Annotate smRNA dataset" version="2.7">
   <description>by iterative alignments with sRbowtie</description>
   <requirements>
         <requirement type="package" version="1.3.1">bowtie</requirement>
@@ -24,7 +24,9 @@
         #elif $input[0].is_of_type('fastq'):
             #set format = "-q"
         #end if
-
+        
+        mkdir unmatched_dir &&
+        
         #for $file in $input:
             #set sample=$file.element_identifier
             bowtie -p \${GALAXY_SLOTS:-4}
@@ -58,12 +60,15 @@
             #end for
             remaining=\$(( \$(wc -l < class_unmatched.fa)/2)) &&
             echo -e "$sample\tNot classified\t\${remaining}\t\${genome_aligned}" >> $output &&
+            cp class_unmatched.fa unmatched_dir/${sample}_unmatched.fasta &&
+            #if $format == '-q':
+                mv unmatched_dir/${sample}_unmatched.fasta unmatched_dir/${sample}_unmatched.fastq &&
+                sed -n '1~4s/^@/>/p;2~4p' unmatched_dir/${sample}_unmatched.fastq > unmatched_dir/${sample}_unmatched.fasta &&
+                rm unmatched_dir/${sample}_unmatched.fastq &&
+            #end if
         #end for
+        ls -la unmatched_dir &&
         Rscript $__tool_directory__/barplot.r --input $output --barplot $barplot
-        #if $format == '-q':
-            && mv class_unmatched.fa class_unmatched.fastq
-            && sed -n '1~4s/^@/>/p;2~4p' class_unmatched.fastq > class_unmatched.fa
-        #end if
         ]]></command>
   <inputs>
     <param name="input" type="data" multiple="True" format="fasta,fastq" label="Input file: reads clipped from their adapter" help="Only with clipped, raw fasta or fastq files"/>
@@ -96,7 +101,9 @@
 <!-- End of other bowtie index selections -->
    </inputs>
    <outputs>
-       <data format="fasta" name="unmatched" label="Annotate smRNAs: Unmatched reads" from_work_dir="class_unmatched.fa" />
+       <collection name="unmatched" type="list" format="fasta" label="Annotate smRNAs: Unmatched reads">
+           <discover_datasets pattern="__name_and_ext__" directory="unmatched_dir" />
+       </collection>
        <data format="tabular" name="output" label="Cascade Annotation Analysis">
            <actions>
                <action name="column_names" type="metadata" default="Sample,Reference Index,Number of reads, Total reads" />
@@ -106,6 +113,22 @@
     </outputs>
     <tests>
         <test>
+            <param name="input" value ="sample5.fa,sample4.fa,sample3.fa,sample2.fa,sample1.fa" ftype="fasta" />
+            <param name="genomeSource" value="history" />
+            <param name="ownFile" value ="2L-tail.fa" ftype="fasta" />
+            <param name="AdditionalQueries_0|ownFile" value="dme_miR21_hairpin.fa" ftype="fasta" />
+            <param name="AdditionalQueries_1|ownFile" value="Ensembl_transposon_set.fa" ftype="fasta" />
+            <output name="output" ftype="tabular" file="multisample5_output.tab" />
+            <output name="barplot" ftype="pdf" file="multisample5_output.pdf" compare="sim_size" delta="500" />
+            <output_collection name="unmatched" type="list" count="5">
+                <element name="sample5.fa_unmatched" file="unmatched_5.fa" ftype="fasta"/>
+                <element name="sample4.fa_unmatched" file="unmatched_4.fa" ftype="fasta"/>
+                <element name="sample3.fa_unmatched" file="unmatched_3.fa" ftype="fasta"/>
+                <element name="sample2.fa_unmatched" file="unmatched_2.fa" ftype="fasta"/>
+                <element name="sample1.fa_unmatched" file="unmatched_1.fa" ftype="fasta"/>
+            </output_collection>
+        </test>
+        <test>
             <param name="input" value ="sample1.fa" ftype="fasta" />
             <param name="genomeSource" value="history" />
             <param name="ownFile" value ="2L-tail.fa" ftype="fasta" />
@@ -113,7 +136,9 @@
             <param name="AdditionalQueries_1|ownFile" value="Ensembl_transposon_set.fa" ftype="fasta" />
             <output name="output" ftype="tabular" file="sample1_output.tab" />
             <output name="barplot" ftype="pdf" file="sample1_output.pdf" compare="sim_size" delta="500"/>
-            <output name="unmatched" ftype="fasta" file="unmatched_1.fa" />
+            <output_collection name="unmatched" type="list">
+                <element name="sample1.fa_unmatched" file="unmatched_1.fa" ftype="fasta"/>
+            </output_collection>
         </test>
         <test>
             <param name="input" value ="sample.fastq" ftype="fastq" />
@@ -123,17 +148,9 @@
             <param name="AdditionalQueries_1|ownFile" value="Ensembl_transposon_set.fa" ftype="fasta" />
             <output name="output" ftype="tabular" file="sample_output.tab" />
             <output name="barplot" ftype="pdf" file="sample_output.pdf" compare="sim_size" delta="500"/>
-            <output name="unmatched" ftype="fasta" file="unmatched_2.fa" />
-        </test>
-        <test>
-            <param name="input" value ="sample5.fa,sample4.fa,sample3.fa,sample2.fa,sample1.fa" ftype="fasta" />
-            <param name="genomeSource" value="history" />
-            <param name="ownFile" value ="2L-tail.fa" ftype="fasta" />
-            <param name="AdditionalQueries_0|ownFile" value="dme_miR21_hairpin.fa" ftype="fasta" />
-            <param name="AdditionalQueries_1|ownFile" value="Ensembl_transposon_set.fa" ftype="fasta" />
-            <output name="output" ftype="tabular" file="multisample5_output.tab" />
-            <output name="barplot" ftype="pdf" file="multisample5_output.pdf" compare="sim_size" delta="500" />
-            <output name="unmatched" ftype="fasta" file="unmatched_3.fa" />
+            <output_collection name="unmatched" type="list">
+                <element name="sample.fastq_unmatched" file="unmatched_fastq.fa" ftype="fasta"/>
+            </output_collection>
         </test>
     </tests>
   <help>
