@@ -1,21 +1,19 @@
-<tool id="xpore_dataprep" name="xpore-dataprep" version="0.5.6+galaxy2">
+<tool id="xpore_dataprep" name="xpore-dataprep" version="2.1+galaxy0">
   <description></description>
   <requirements>
-        <requirement type="package" version="0.5.6">xpore</requirement>
+        <requirement type="package" version="2.1">xpore</requirement>
   </requirements>
   <stdio>
       <exit_code range="1:" level="fatal" description="Tool exception" />
   </stdio>
   <command detect_errors="exit_code"><![CDATA[
-        xpore-dataprep
+        xpore dataprep
             --eventalign '$eventalign_reads'
-            --summary '$eventalign_summary'
             --out_dir out
             --n_processes \${GALAXY_SLOTS:-4} &&
             mv ./out/data.index $data_index &&
-            mv ./out/eventalign.hdf5 $eventalign_hdf5 &&
             mv ./out/data.log $data_log &&
-            mv ./out/eventalign.log $eventalign_log &&
+            mv ./out/eventalign.index $eventalign_index &&
             mv ./out/data.readcount $data_readcount &&
             mv ./out/data.json $data_json
             
@@ -24,29 +22,24 @@
  <inputs>
     <param name="eventalign_reads" type="data" format="txt,tabular" label="aligned nanopore events"
            help="a nanopolish eventalign output that aligns the nanopore events to a reference" />
-    <param name="eventalign_summary" type="data" format="txt,tabular" label="nanopore eventalign summary"
-           help="a summary of nanopolish eventalign by read_name,read_index" />
  </inputs>
 
  <outputs>
     <data format="txt" name="data_index" label="data.index" />
-    <data format="h5" name="eventalign_hdf5" label="eventalign.hdf5" />
     <data format="txt" name="data_log" label="data.log" />
-    <data format="txt" name="eventalign_log" label="eventalign.log" />
     <data format="txt" name="data_readcount" label="data.readcount" />
+    <data format="txt" name="eventalign_index" label="eventalign.index" />
     <data format="json" name="data_json" label="data.json" />
 </outputs>
 
 <tests>
     <test>
         <param name="eventalign_reads" value="dataprep_eventaligh_reads.tsv" ftype="tabular" />
-        <param name="eventalign_summary" value="dataprep_eventaligh_summary.tsv" ftype="tabular" />
         <output file="data.index" name="data_index" />
+        <output file="eventalign.index" name="eventalign_index" />
         <output file="data.log" name="data_log" />
-        <output file="eventalign.log" name="eventalign_log" />
         <output file="data.readcount" name="data_readcount" />
         <output file="data.json" name="data_json" />
-        <output file="eventalign.hdf5" name="eventalign_hdf5" compare="sim_size" delta="3000" />
     </test>
 </tests>
 <help>
@@ -63,10 +56,9 @@ In its current version, only preparation of data for analysis by xpore-diffmod b
 
 **Inputs**
 
-This tools requires the following inputs::
+This tools requires the following input::
 
 - the "aligned nanopore events" file returned from nanopolish eventalign (also named squiggles)
-- the "nanopolish summary" file also returned by nanopolish eventalign
 
 **Outputs**
 
@@ -76,11 +68,10 @@ This tools requires the following inputs::
 - data.json
 - data.readcount
 
-plus 3 datasets not required by xpore-diffmod::
+plus 2 datasets not required by xpore-diffmod::
 
 - data.log
-- eventalign.hdf5
-- eventalign.log
+- eventalign.index
 
 for details on xpore-data prep, see https://xpore.readthedocs.io/en/latest/index.html
 and https://github.com/GoekeLab/xpore

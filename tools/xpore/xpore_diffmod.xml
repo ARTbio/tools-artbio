@@ -1,7 +1,7 @@
-<tool id="xpore_diffmod" name="xpore-diffmod" version="0.5.6+galaxy2">
+<tool id="xpore_diffmod" name="xpore-diffmod" version="2.1+galaxy0">
   <description></description>
   <requirements>
-        <requirement type="package" version="0.5.6">xpore</requirement>
+        <requirement type="package" version="2.1">xpore</requirement>
   </requirements>
   <stdio>
       <exit_code range="1:" level="fatal" description="Tool exception" />
@@ -30,7 +30,7 @@
     printf "    prefiltering:\n" >> config.yml &&
     printf "        method: t-test\n" >> config.yml &&
     printf "        threshold: 0.1\n" >> config.yml &&
-    xpore-diffmod --config config.yml  --n_processes \${GALAXY_SLOTS:-4} &&
+    xpore diffmod --config config.yml  --n_processes \${GALAXY_SLOTS:-4} &&
     sed -i "s/,/\t/g" ./out/diffmod.table &&
     mv ./out/diffmod.table $diffmod_table &&
     mv ./out/diffmod.log $diffmod_log &&
