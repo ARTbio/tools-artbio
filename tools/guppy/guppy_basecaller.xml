@@ -1,0 +1,273 @@
+<tool id="guppy-basecaller" name="Guppy basecaller wrapper" version="0.2.1" python_template_version="3.5">
+    <description>A simple wrapper for guppy basecaller that depends on configuration files</description>
+    <requirements>
+    </requirements>
+    <command detect_errors="exit_code"><![CDATA[
+
+        #for $file in $infiles:
+            ln -s $file ${file.element_identifier}.fast5 &&
+        #end for
+        tar xf $config &&
+        guppy_basecaller -i .
+                         --save_path out
+                         --data_path .
+                         --config *.cfg
+                         --num_callers 4
+                         --records_per_fastq 0
+                         --cpu_threads_per_caller \${GALAXY_SLOTS:-2}
+                         --disable_pings
+###                         --qscore_filtering
+###                         --calib_detect
+        && cat out/*.fastq | awk '{ if (NR%4 == 2) {gsub(/U/,"T",$1); print $1} else print }' > $output_fastq
+    ]]></command>
+    <inputs>
+        <param name="infiles" type="data_collection" format="h5" label="Fast5 input (datatype h5)" multiple="true"/>
+        <param name="config" type="data" format="tar" label="Guppy basecall configuration model"/>
+    </inputs>
+    <outputs>
+        <data name="output_fastq" format="fastqsanger" />
+    </outputs>
+    <help><![CDATA[
+        A wrapper for guppy basecaller. This expects two type of inputs: a collection of fast5 files,
+        and a configuration in the form of a tar file.
+
+        You can find configurations at https://github.com/nanoporetech/rerio,
+        and in particular the directory https://github.com/nanoporetech/rerio/basecall_models.
+
+        Each file there contains a URL you can download to use, for example
+        https://github.com/nanoporetech/rerio/blob/master/basecall_models/res_rna2_r941_min_flipflop_v001
+        points to 'https://nanoporetech.box.com/shared/static/84e1jeudx8lr8ay7e9u1ebnvx3bk2kjf.tgz'
+
+        When uploading these .tgz files take care to set the format to 'tar' (galaxy doesn't autodetect this?).
+
+        The results should be fastq files.
+
+------
+
+guppy_basecaller --help
+: Guppy Basecalling Software, (C) Oxford Nanopore Technologies, Limited. Version 3.6.1+249406c, client-server API version 1.1.0
+
+**Usage**::
+
+With config file::
+
+  guppy_basecaller -i <input path> -s <save path> -c <config file> [options]
+
+With flowcell and kit name::
+
+  guppy_basecaller -i <input path> -s <save path> --flowcell <flowcell name>
+    --kit <kit name>
+
+List supported flowcells and kits::
+
+  guppy_basecaller --print_workflows
+
+Use server for basecalling::
+
+  guppy_basecaller -i <input path> -s <save path> -c <config file>
+    --port <server address> [options]
+
+
+**Command line parameters**::
+
+    --trim_threshold arg              Threshold above which data will be trimmed
+                                      (in standard deviations of current level
+                                      distribution).
+    --trim_min_events arg             Adapter trimmer minimum stride intervals
+                                      after stall that must be seen.
+    --max_search_len arg              Maximum number of samples to search through
+                                      for the stall
+    --override_scaling                Manually provide scaling parameters rather
+                                      than estimating them from each read.
+    --scaling_med arg                 Median current value to use for manual
+                                      scaling.
+    --scaling_mad arg                 Median absolute deviation to use for manual
+                                      scaling.
+    --trim_strategy arg               Trimming strategy to apply: 'dna' or 'rna'
+                                      (or 'none' to disable trimming)
+    --dmean_win_size arg              Window size for coarse stall event
+                                      detection
+    --dmean_threshold arg             Threhold for coarse stall event detection
+    --jump_threshold arg              Threshold level for rna stall detection
+    --pt_scaling                      Enable polyT/adapter max detection for read
+                                      scaling.
+    --pt_median_offset arg            Set polyT median offset for setting read
+                                      scaling median (default 2.5)
+    --adapter_pt_range_scale arg      Set polyT/adapter range scale for setting
+                                      read scaling median absolute deviation
+                                      (default 5.2)
+    --pt_required_adapter_drop arg    Set minimum required current drop from
+                                      adapter max to polyT detection. (default
+                                      30.0)
+    --pt_minimum_read_start_index arg Set minimum index for read start sample
+                                      required to attempt polyT scaling. (default
+                                      30)
+    --as_model_file arg               Path to JSON model file for adapter
+                                      scaling.
+    --as_gpu_runners_per_device arg   Number of runners per GPU device for
+                                      adapter scaling.
+    --as_cpu_threads_per_scaler arg   Number of CPU worker threads per adapter
+                                      scaler
+    --as_reads_per_runner arg         Maximum reads per runner for adapter
+                                      scaling.
+    --as_num_scalers arg              Number of parallel scalers for adapter
+                                      scaling.
+    -m [ --model_file ] arg           Path to JSON model file.
+    -k [ --kernel_path ] arg          Path to GPU kernel files location (only
+                                      needed if builtin_scripts is false).
+    -x [ --device ] arg               Specify basecalling device: 'auto', or
+                                      'cuda:<device_id>'.
+    --builtin_scripts arg             Whether to use GPU kernels that were
+                                      included at compile-time.
+    --chunk_size arg                  Stride intervals per chunk.
+    --chunks_per_runner arg           Maximum chunks per runner.
+    --chunks_per_caller arg           Soft limit on number of chunks in each
+                                      caller's queue. New reads will not be
+                                      queued while this is exceeded.
+    --high_priority_threshold arg     Number of high priority chunks to process
+                                      for each medium priority chunk.
+    --medium_priority_threshold arg   Number of medium priority chunks to process
+                                      for each low priority chunk.
+    --overlap arg                     Overlap between chunks (in stride
+                                      intervals).
+    --gpu_runners_per_device arg      Number of runners per GPU device.
+    --cpu_threads_per_caller arg      Number of CPU worker threads per
+                                      basecaller.
+    --num_callers arg                 Number of parallel basecallers to create.
+    --post_out                        Return full posterior matrix in output
+                                      fast5 file and/or called read message from
+                                      server.
+    --stay_penalty arg                Scaling factor to apply to stay probability
+                                      calculation during transducer decode.
+    --qscore_offset arg               Qscore calibration offset.
+    --qscore_scale arg                Qscore calibration scale factor.
+    --temp_weight arg                 Temperature adjustment for weight matrix in
+                                      softmax layer of RNN.
+    --temp_bias arg                   Temperature adjustment for bias vector in
+                                      softmax layer of RNN.
+    --qscore_filtering                Enable filtering of reads into PASS/FAIL
+                                      folders based on min qscore.
+    --min_qscore arg                  Minimum acceptable qscore for a read to be
+                                      filtered into the PASS folder
+    --reverse_sequence arg            Reverse the called sequence (for RNA
+                                      sequencing).
+    --u_substitution arg              Substitute 'U' for 'T' in the called
+                                      sequence (for RNA sequencing).
+    --log_speed_frequency arg         How often to print out basecalling speed.
+    --barcode_kits arg                Space separated list of barcoding kit(s) or
+                                      expansion kit(s) to detect against. Must be
+                                      in double quotes.
+    --trim_barcodes                   Trim the barcodes from the output sequences
+                                      in the FastQ files.
+    --num_extra_bases_trim arg        How vigorous to be in trimming the barcode.
+                                      Default is 0 i.e. the length of the
+                                      detected barcode. A positive integer means
+                                      extra bases will be trimmed, a negative
+                                      number is how many fewer bases (less
+                                      vigorous) will be trimmed.
+    --arrangements_files arg          Files containing arrangements.
+    --score_matrix_filename arg       File containing mismatch score matrix.
+    --start_gap1 arg                  Gap penalty for aligning before the
+                                      reference.
+    --end_gap1 arg                    Gap penalty for aligning after the
+                                      reference.
+    --open_gap1 arg                   Penalty for opening a new gap in the
+                                      reference.
+    --extend_gap1 arg                 Penalty for extending a gap in the
+                                      reference.
+    --start_gap2 arg                  Gap penalty for aligning before the query.
+    --end_gap2 arg                    Gap penalty for aligning after the query.
+    --open_gap2 arg                   Penalty for opening a new gap in the query.
+    --extend_gap2 arg                 Penalty for extending a gap in the query.
+    --min_score arg                   Minimum score to consider a valid
+                                      alignment.
+    --min_score_rear_override arg     Minimum score to consider a valid alignment
+                                      for the rear barcode only (and min_score
+                                      will then be used for the front only when
+                                      this is set).
+    --front_window_size arg           Window size for the beginning barcode.
+    --rear_window_size arg            Window size for the ending barcode.
+    --require_barcodes_both_ends      Reads will only be classified if there is a
+                                      barcode above the min_score at both ends of
+                                      the read.
+    --allow_inferior_barcodes         Reads will still be classified even if both
+                                      the barcodes at the front and rear (if
+                                      applicable) were not the best scoring
+                                      barcodes above the min_score.
+    --detect_mid_strand_barcodes      Search for barcodes through the entire
+                                      length of the read.
+    --min_score_mid_barcodes arg      Minimum score for a barcode to be detected
+                                      in the middle of a read.
+    --num_barcoding_buffers arg       Number of GPU memory buffers to allocate to
+                                      perform barcoding into. Controls level of
+                                      parallelism on GPU for barcoding.
+    --num_barcode_threads arg         Number of worker threads to use for
+                                      barcoding.
+    --calib_detect                    Enable calibration strand detection and
+                                      filtering.
+    --calib_reference arg             Reference FASTA file containing calibration
+                                      strand.
+    --calib_min_sequence_length arg   Minimum sequence length for reads to be
+                                      considered candidate calibration strands.
+    --calib_max_sequence_length arg   Maximum sequence length for reads to be
+                                      considered candidate calibration strands.
+    --calib_min_coverage arg          Minimum reference coverage to pass
+                                      calibration strand detection.
+    --print_workflows                 Output available workflows.
+    --flowcell arg                    Flowcell to find a configuration for
+    --kit arg                         Kit to find a configuration for
+    -z [ --quiet ]                    Quiet mode. Nothing will be output to
+                                      STDOUT if this option is set.
+    --trace_categories_logs arg       Enable trace logs - list of strings with
+                                      the desired names.
+    --verbose_logs                    Enable verbose logs.
+    --disable_pings                   Disable the transmission of telemetry
+                                      pings.
+    --ping_url arg                    URL to send pings to
+    --ping_segment_duration arg       Duration in minutes of each ping segment.
+    -q [ --records_per_fastq ] arg    Maximum number of records per fastq file, 0
+                                      means use a single file (per worker, per
+                                      run id).
+    --read_batch_size arg             Maximum batch size, in reads, for grouping
+                                      input files.
+    --compress_fastq                  Compress fastq output files with gzip.
+    -i [ --input_path ] arg           Path to input fast5 files.
+    --input_file_list arg             Optional file containing list of input
+                                      fast5 files to process from the input_path.
+    -s [ --save_path ] arg            Path to save fastq files.
+    -l [ --read_id_list ] arg         File containing list of read ids to filter
+                                      to
+    -r [ --recursive ]                Search for input files recursively.
+    --fast5_out                       Choice of whether to do fast5 output.
+    --resume                          Resume a previous basecall run using the
+                                      same output folder.
+    --progress_stats_frequency arg    Frequency in seconds in which to report
+                                      progress statistics, if supplied will
+                                      replace the default progress display.
+    --max_block_size arg              Maximum block size (in events) of basecall
+                                      messages to server.
+    -p [ --port ] arg                 Port for basecalling service.
+    --barcoding_config_file arg       Configuration file to use for barcoding.
+    --num_barcode_threads arg         Number of worker threads to use for
+                                      barcoding.
+    --disable_events                  Disable the transmission of event tables
+                                      when receiving reads back from the basecall
+                                      server.
+    --client_id arg                   Optional unique identifier (non-negative
+                                      integer) for this instance of the Guppy
+                                      Client Basecaller, if supplied will form
+                                      part of the output filenames.
+    --nested_output_folder            If flagged output fastq files will be
+                                      written to a nested folder structure, based
+                                      on: protocol_group/sample/protocol/qscore_p
+                                      ass_fail/barcode_arrangement/
+    -h [ --help ]                     produce help message
+    -v [ --version ]                  print version number
+    -c [ --config ] arg               Config file to use
+    -d [ --data_path ] arg            Path to use for loading any data files the
+                                      application requires.
+
+
+------
+    ]]></help>
+</tool>

@@ -1,0 +1,116 @@
+<tool id="mergemutectstats" name="gatk4 MergeMutectStats" version="@WRAPPER_VERSION@" profile="18.05">
+    <description>Merge the stats output by scatters of a single Mutect2 job</description>
+    <macros>
+        <import>macros.xml</import>
+    </macros>
+    <expand macro="requirements"/>
+    <expand macro="version_cmd"/>
+    <command detect_errors="exit_code">
+        <![CDATA[
+        gatk MergeMutectStats
+        #for $file in $inputs:
+            --stats $file
+        #end for
+            --output $merge_stats
+        ]]>
+    </command>
+    <inputs>
+        <param name="inputs" type="data" format="tabular" label="stats files" multiple="true"
+               help="merge the stats files from multiple Mutect2 jobs"/>
+    </inputs>
+    <outputs>
+        <data format="tabular" name="merge_stats" label="Merged Mutect2 callable statistics" />
+    </outputs>
+    <tests>
+        <test>
+            <param name="inputs" value="chr1_stats.tsv,chr2_stats.tsv,chrM_stats.tsv" ftype="tabular" />
+            <output name="merge_stats" file="merged_Mutect2_stats.tsv" />
+        </test>
+    </tests>
+    <help><![CDATA[
+Usage examples
+~~~~~~~~~~~~~~
+
+
+::
+
+    gatk MergeMutectStats \
+    
+        -stats unfiltered1.vcf.stats \
+    
+        -stats unfiltered2.vcf.stats \
+    
+        -O merged.stats
+
+
+Mutect2 creates unfiltered.vcf.stats and FilterMutectCalls knows to look for it. However,
+if you are scattering Mutect2 over multiple jobs you must merge the stats files with MergeMutectStats:
+
+Usage
+~~~~~
+
+
+::
+
+    USAGE: MergeMutectStats [arguments]
+    
+    Merge the stats output by scatters of a single Mutect2 job
+    Version:4.1.7.0
+    
+    
+    Required Arguments:
+    
+    --output,-O:File              Output stats  Required.
+    
+    --stats:File                  Stats from Mutect2 scatters of a single tumor or tumor-normal pair  This argument must be
+                                  specified at least once. Required.
+    
+    
+    Optional Arguments:
+    
+    --arguments_file:File         read one or more arguments files and add them to the command line  This argument may be
+                                  specified 0 or more times. Default value: null.
+    
+    --gatk-config-file:String     A configuration file to use with the GATK.  Default value: null.
+    
+    --gcs-max-retries,-gcs-retries:Integer
+                                  If the GCS bucket channel errors out, how many times it will attempt to re-initiate the
+                                  connection  Default value: 20.
+    
+    --gcs-project-for-requester-pays:String
+                                  Project to bill when accessing "requester pays" buckets. If unset, these buckets cannot be
+                                  accessed.  Default value: .
+    
+    --help,-h:Boolean             display the help message  Default value: false. Possible values: {true, false}
+    
+    --QUIET:Boolean               Whether to suppress job-summary info on System.err.  Default value: false. Possible
+                                  values: {true, false}
+    
+    --tmp-dir:GATKPathSpecifier   Temp directory to use.  Default value: null.
+    
+    --use-jdk-deflater,-jdk-deflater:Boolean
+                                  Whether to use the JdkDeflater (as opposed to IntelDeflater)  Default value: false.
+                                  Possible values: {true, false}
+    
+    --use-jdk-inflater,-jdk-inflater:Boolean
+                                  Whether to use the JdkInflater (as opposed to IntelInflater)  Default value: false.
+                                  Possible values: {true, false}
+    
+    --verbosity,-verbosity:LogLevel
+                                  Control verbosity of logging.  Default value: INFO. Possible values: {ERROR, WARNING,
+                                  INFO, DEBUG}
+    
+    --version:Boolean             display the version number for this tool  Default value: false. Possible values: {true,
+                                  false}
+    
+    
+    Advanced Arguments:
+    
+    --showHidden,-showHidden:Boolean
+                                  display hidden arguments  Default value: false. Possible values: {true, false}
+
+]]></help>
+    <citations>
+        <expand macro="citations"/>
+    </citations>
+</tool>

@@ -118,7 +118,7 @@ signature.covariances <- cbind(gene=rownames(signature.covariances), signature.c
 write.table(signature.covariances, file=opt$covariances, quote=F, row.names=F, sep="\t")
 
 # compute signature.correlations
-signature.correlations <- as.data.frame(cov(t(signature.counts)))
+signature.correlations <- as.data.frame(cor(t(signature.counts)))
 signature.correlations <- cbind(gene=rownames(signature.correlations), signature.correlations)
 write.table(signature.correlations, file=opt$correlations, quote=F, row.names=F, sep="\t")
 

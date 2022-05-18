@@ -1,4 +1,4 @@
-<tool id="high_dimensions_visualisation" name="Generate PCA, tSNE and HCPC" version="0.9.5">
+<tool id="high_dimensions_visualisation" name="Generate PCA, tSNE and HCPC" version="0.9.6">
     <description>from highly dimensional expression data</description>
     <requirements>
         <requirement type="package" version="1.6.2=r35h6115d3f_0">r-optparse</requirement>
@@ -7,7 +7,7 @@
         <requirement type="package" version="0.15=r351he1b5a44_0">r-rtsne</requirement>
         <requirement type="package" version="0.4.7=r351h6115d3f_0">r-ggfortify</requirement>
         <requirement type="package" version="1.1.9=r351h0357c0b_0">r-clusterr</requirement>
-        <!--<requirement type="package" version="1.11.6=r351hc070d10_0">r-data.table</requirement>-->
+        <!-- <requirement type="package" version="1.11.6=r351hc070d10_0">r-data.table</requirement> -->
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
@@ -378,8 +378,8 @@
             <param name="Rtsne_perplexity" value="10"/>
             <param name="Rtsne_theta" value="1" />
             <param name="Rtsne_normalize" value="FALSE" />
-            <output name="pdf_out" file="tsne-2.nolabels.pdf" ftype="pdf" compare="sim_size" delta="500"/>
-            <output name="table_coordinates" file="tsne-2.coord.tab" ftype="tabular" compare="sim_size" delta="500"/>
+            <output name="pdf_out" file="tsne-2.nolabels.pdf" ftype="pdf" compare="sim_size" delta="1000"/>
+            <output name="table_coordinates" file="tsne-2.coord.tab" ftype="tabular" compare="sim_size" delta="1000"/>
         </test>
     </tests>
     <help>

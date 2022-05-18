@@ -319,8 +319,8 @@ class Map:
                 Strandbias = round(strandness['F'] / float(Strandbias), 2)
             else:
                 Strandbias = 2
-            Mean = numpy.mean(sizeness.values())
-            StDev = numpy.std(sizeness.values())
+            Mean = numpy.mean(list(sizeness.values()))
+            StDev = numpy.std(list(sizeness.values()))
             for size in sizeness:
                 if StDev:
                     sizeness[size] = (sizeness[size] - Mean) / StDev

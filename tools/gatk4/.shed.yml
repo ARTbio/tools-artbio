@@ -1,0 +1,24 @@
+owner: artbio
+name: gatk4
+description: Find somatic variations
+long_description: |
+  MuTect2 is a somatic SNP and indel caller that combines the DREAM 
+  challenge-winning somatic genotyping engine of the original MuTect
+  with the assembly-based machinery of HaplotypeCaller.
+  The MuTect2 wrapper mirrors the IUC wrapper
+  https://github.com/galaxyproject/tools-iuc/blob/master/tools/gatk4/gatk4_Mutect2.xml.
+  However, appropriate code changes are made in the original wrapper in order to
+  expose parameters or outputs required to run the FilterMutectCall wrapper.
+  
+  FilterMutectCall applies filters to the raw output of Mutect2.
+  see https://gatk.broadinstitute.org/hc/en-us/articles/4409917406107-FilterMutectCalls#--reference
+  for details. Parameters are contained in M2FiltersArgumentCollection and described in
+  https://github.com/broadinstitute/gatk/tree/master/docs/mutect/mutect.pdf. 
+
+categories:
+  - Variant Analysis
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/gatk4
+toolshed:
+  - testtoolshed
+  - toolshed

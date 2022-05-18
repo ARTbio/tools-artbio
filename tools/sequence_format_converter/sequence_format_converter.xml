@@ -1,5 +1,8 @@
-<tool id="sequence_format_converter" name="sequence_format_converter" version="2.1.2">
+<tool id="sequence_format_converter" name="sequence_format_converter" version="2.2.0">
   <description></description>
+    <requirements>
+        <requirement type="package" version="3.7.6">python</requirement>
+    </requirements>
   <command><![CDATA[
     #if $input.is_of_type('fastq.gz'):
       gzip -dc $input > '${input}.tmp';
@@ -38,7 +41,7 @@
             <!-- convertion fasta to tabular -->
             <param name="output_format" value="tabular" />
             <param ftype="fasta" name="input" value="input.fa" />
-            <output file="output.tab" name="output" />
+            <output file="output.tab" name="output" sort="true" />
         </test>
         <test>
             <!-- convertion tabular to fasta -->

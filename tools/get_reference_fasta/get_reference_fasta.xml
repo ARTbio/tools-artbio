@@ -1,4 +1,4 @@
-<tool id="get_fasta_reference" name="get fasta reference"  version="0.2.1">
+<tool id="get_fasta_reference" name="get fasta reference"  version="0.3.1">
 <description>Obtain reference genome sequence</description>
     <stdio>
         <exit_code range="1:" />
@@ -21,7 +21,7 @@
         </test>
     </tests>
     <help><![CDATA[
-Places the reference genome sequence in the current history.    
+Places the galaxy instance pre-built genome index sequence in the current history.    
 Useful for sharing purposes or tools that work directly on fasta files.
     ]]></help>
     <citations>

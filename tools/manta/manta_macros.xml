@@ -1,14 +1,14 @@
 <macros>
 
     <token name="@VERSION@">1.6</token>
-    <token name="@WRAPPER_VERSION@">@VERSION@+galaxy2</token>
+    <token name="@WRAPPER_VERSION@">@VERSION@+galaxy7</token>
     <token name="@pipefail@"><![CDATA[set -o | grep -q pipefail && set -o pipefail;]]></token>
 
     <token name="@set_reference_fasta_filename@"><![CDATA[
     #set $reference_fasta_filename = "localref.fa"
 
     #if str( $reference_source.reference_source_selector ) == "history":
-    ln -s -f '${reference_source.ref_file}' '${reference_fasta_filename}' &&
+    ln -s '${reference_source.ref_file}' '${reference_fasta_filename}' &&
     samtools faidx '${reference_fasta_filename}' 2>&1 || echo "Error running samtools faidx for Manta" >&2 &&
     #else:
     #set $reference_fasta_filename = str( $reference_source.index.fields.path )
@@ -21,7 +21,7 @@
     #else if str( $configuration.configuration_switch )== "Customized":
     #set $config_file = '$configuration.Customized'
     #else:
-    #set $config_file = $__tool_directory__ + '/configManta.py.ini'
+    #set $config_file = 'configManta.py.ini'
     #end if
     ]]></token>
 
@@ -51,7 +51,7 @@
             </param>
             <when value="cached">
                 <param name="index" type="select" label="Using reference genome" help="Select genome from the list">
-                    <options from_data_table="manta_indexes">
+                    <options from_data_table="fasta_indexes">
                         <filter type="sort_by" column="2" />
                         <validator type="no_options" message="No indexes are available" />
                     </options>

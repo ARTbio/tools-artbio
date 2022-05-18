@@ -1,0 +1,14 @@
+owner: artbio
+name: artbio_bam_cleaning
+description: filter bam files before somatic-varscan or lumpy-smoove analysis 
+long_description: |
+  This tools uses sequencially sambamba, RmDup, BamLeftAlign, CalMD and sambamba tools
+  in order to clean BAM before calling for genomic variants usin somatic-varscan or lumpy-smoove
+categories:
+  - SAM
+  - Variant Analysis
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/artbio_bam_cleaning
+toolshed:
+  - testtoolshed
+  - toolshed

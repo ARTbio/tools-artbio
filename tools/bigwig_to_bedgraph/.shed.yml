@@ -1,0 +1,15 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: bigwig_to_bedgraph
+description: Converts a bigWig file to bedGraph format
+long_description: |
+  Converts a bigWig file to bedGraph format
+
+  credit: this Galaxy wrapper was originally developped by Bjoern Gruening
+  https://github.com/bgruening/galaxytools/tree/master/tools/bigwig_to_bedgraph
+categories:
+  - Convert Formats
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/bigwig_to_bedgraph
+toolshed:
+  - toolshed

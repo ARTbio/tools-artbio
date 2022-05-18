@@ -1,25 +1,45 @@
-<tool id="cherry_pick_fasta" name="Pick Fasta sequences" version="2.0.0">
+<tool id="cherry_pick_fasta" name="Pick Fasta sequences" version="3.3">
   <description>with header satisfying a string query</description>
-  <command interpreter="python">cherry_pick_fasta.py
+  <requirements>
+        <requirement type="package" version="3.8.0">python</requirement>
+  </requirements>
+  <command detect_errors="exit_code"><![CDATA[
+                            python '$__tool_directory__/cherry_pick_fasta.py'
                                    --input $input
                                    --searchfor '$search.searchfor'
                                    #if $search.options_selector == 'single':
-                                       --query-string '$search.query'
+                                       #if $search.match == 'exact':
+                                           --query-string '$search.query' --mode exact
+                                       #else:
+                                           --query-string '$search.query' --mode includes
+                                       #end if
                                    #else:
-                                       --query-file '$search.query'
+                                       #if $search.match == 'exact':
+                                           --query-file '$search.query' --mode exact
+                                       #else:
+                                           --query-file '$search.query' --mode includes
+                                       #end if
                                    #end if
                                    --output $output
-  </command>
+  ]]></command>
 
   <inputs>
     <param name="input" type="data" format="fasta" label="Source file" help="Fasta file to parse" />
 
     <conditional name="search">
-        <param name="options_selector" type="select" display="radio" label="by single term or file of terms">
-            <option value="single" selected="True">single term</option>
-            <option value="textdataset">terms in a text dataset</option>
+        <param name="options_selector" type="select" display="radio" label="for a">
+            <option value="single" selected="True">single string</option>
+            <option value="textdataset">list of strings</option>
         </param>
         <when value="single">
+            <param name="match" type="select"  label="retrieve sequences whose headers...">
+                <option value="include" selected="true">partially</option>
+                <option value="exact">exactly</option>
+            </param>
+            <param name="searchfor" type="select" label=" ">
+                <option value="with" selected="true">contain this string</option>
+                <option value="without">do not contain this string</option>
+            </param>
             <param name="query" type="text" size="30" value="" label="Search string" help="exemple: gi|40557596">
                 <sanitizer>
                     <valid initial="string.printable">
@@ -32,17 +52,17 @@
                     </mapping>
                 </sanitizer>
             </param>
-            <param name="searchfor" type="select" label="retrieve sequences whose headers contain or do not contain the search string">
-                <option value="with" selected="true">contain</option>
-                <option value="without">do not contain</option>
-            </param>
         </when>
         <when value="textdataset">
-            <param name="query" type="data" format="txt" label="term dataset" help="a list of term to search for, one term per line" />
-            <param name="searchfor" type="select" label="retrieve sequences whose headers contain or do not contain the search list">
-                <option value="with" selected="true">contain</option>
-                <option value="without">do not contain</option>
+            <param name="match" type="select"  label="retrieve sequences whose headers...">
+                <option value="includes" selected="true">partially</option>
+                <option value="exact">exactly</option>
             </param>
+            <param name="searchfor" type="select" label=" ">
+                <option value="with" selected="true">contain one of these list strings</option>
+                <option value="without">do not contain one of these list strings</option>
+            </param>
+            <param name="query" type="data" format="txt" label="list of strings dataset" help="a list of strings to search for, one string per line" />
         </when>
     </conditional>
   </inputs>
@@ -50,16 +70,58 @@
     <data name="output" format="fasta" label="Fasta sequences ${search.searchfor.value} ${search.options_selector} term(s) in header" />
   </outputs>
   <tests>
+    <!-- test headers with space -->
+    <test>
+        <param ftype="fasta" name="input" value="input_withspace.fa" />
+        <param name="query" value="type=rRNA" />
+        <param name="searchfor" value="with" />
+        <param name="match" value="include" />
+        <output name="output" ftype="fasta" file="output_withspace.fa" />
+    </test>
+    <!-- exact matches -->
     <test>
         <param ftype="fasta" name="input" value="input.fa" />
-        <!-- <param name="options_selector" value="textdataset" /> -->
+        <param name="query" value="gi|81971654|sp|Q9IJX4.1|POLN_CRPVC_RecName:_Full_Replicase_polyprotein;_Contains:_RecName:_Full_Pro--Locus_65_Transcript_1/2_Confidence_0.667_Length_1344_hit1_IdMatch=43.46,AligLength=451,E-val=2e-122" />
+        <param name="searchfor" value="without" />
+        <param name="match" value="exact" />
+        <output name="output" ftype="fasta" file="output_exactly_not.fa" />
+    </test>
+    <test>
+        <param ftype="fasta" name="input" value="input.fa" />
+        <param name="query" value="gi|81971654|sp|Q9IJX4.1|POLN_CRPVC_RecName:_Full_Replicase_polyprotein;_Contains:_RecName:_Full_Pro--Locus_65_Transcript_1/2_Confidence_0.667_Length_1344_hit1_IdMatch=43.46,AligLength=451,E-val=2e-122" />
+        <param name="searchfor" value="with" />
+        <param name="match" value="exact" />
+        <output name="output" ftype="fasta" file="output_exact.fa" />
+    </test>
+
+
+    <test>
+        <param ftype="fasta" name="input" value="input.fa" />
+        <param name="options_selector" value="textdataset" />
+        <param name="query" ftype="txt" value="alt_termlist.txt" />
+        <param name="searchfor" value="without" />
+        <param name="match" value="exact" />
+        <output name="output" ftype="fasta" file="output_alt_termlist_without.fa" />
+    </test>
+    <test>
+        <param ftype="fasta" name="input" value="input.fa" />
+        <param name="options_selector" value="textdataset" />
+        <param name="query" ftype="txt" value="alt_termlist.txt" />
+        <param name="searchfor" value="with" />
+        <param name="match" value="exact" />
+        <output name="output" ftype="fasta" file="output_alt_termlist.fa" />
+    </test>
+
+
+    <!-- partial matches -->
+    <test>
+        <param ftype="fasta" name="input" value="input.fa" />
         <param name="query" value="gi|81971654" />
         <param name="searchfor" value="with" />
         <output name="output" ftype="fasta" file="output.fa" />
     </test>
     <test>
         <param ftype="fasta" name="input" value="input.fa" />
-        <!-- <param name="options_selector" value="textdataset" /> -->
         <param name="query" value="RNA" />
         <param name="searchfor" value="without" />
         <output name="output" ftype="fasta" file="output_without.fa" />
@@ -79,17 +141,11 @@
         <output name="output" ftype="fasta" file="output_termlist_without.fa" />
     </test>
   </tests>
-
   <help>
 **What it does**
 
 This tool retrieves nucleotide/peptide sequences from a fasta file whose headers match
-or do not match a given string.
-
-It is Copyright © 2019 `CNRS and Sorbonne-Université`_ and is released under the `MIT license`_.
-
-.. _CNRS and  Sorbonne-Université: http://www.sorbonne-universite.fr/en
-.. _MIT license: http://opensource.org/licenses/MIT
+or do not match a given string, or a list of strings.
 
   </help>
 </tool>

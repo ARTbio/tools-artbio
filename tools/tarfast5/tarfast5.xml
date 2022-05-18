@@ -1,0 +1,74 @@
+<tool id="tarfast5" name="tarfast5" version="0.6.1">
+  <description></description>
+  <requirements>
+        <requirement type="package" version="2.6">pigz</requirement>
+        <requirement type="package" version="1.34">tar</requirement>
+  </requirements>
+  <stdio>
+      <exit_code range="1:" level="fatal" description="Tool exception" />
+  </stdio>
+  <command detect_errors="exit_code"><![CDATA[
+        #for $file in $inputs:
+            ln -s $file ${file.element_identifier}.fast5 &&
+        #end for
+        #if $output_format == "gzip":
+            export PIGZ="-p \${GALAXY_SLOTS:-4}" &&
+            tar -cvh --use-compress-program=pigz -f $output *.fast5
+        #else:
+            tar -cvh -f $output *.fast5
+        #end if
+  ]]></command>
+ <inputs>
+    <param name="inputs" type="data" format="h5,fast5.tar" label="fast5 sequence files" multiple="true" />
+    <param name="output_format" type="select" label="compression of the tar archive" display="radio">
+        <option value="tar">tar (no compression)</option>
+        <option value="gzip" selected="true">tar.gz</option>
+    </param>
+ </inputs>
+
+ <outputs>
+    <data format="fast5.tar" name="output" label="Archive of fast5" >
+        <change_format>
+            <when input="output_format" value="gzip" format="fast5.tar.gz"/>
+        </change_format>
+    </data>
+
+
+</outputs>
+
+    <tests>
+        <test> <!-- tar -->
+            <param name="inputs" value="F1.fast5.h5" ftype="h5" />
+            <param name="output_format" value="tar" />
+            <output file="archive.tar" name="output" compare="sim_size" delta="3000" />
+        </test>
+
+        <test> <!-- tar.gz -->
+            <param name="inputs" value="F1.fast5.h5,F2.fast5.h5" ftype="h5" />
+            <param name="output_format" value="gzip" />
+            <output file="archive.tar.gz" name="output" compare="sim_size" delta="3000" />
+        </test>
+    </tests>
+<help>
+
+**What it does**
+
+Creates a fast5.tar or fast5.tar.gz archive of fast5 (h5) sequences files
+
+.. class:: warningmark
+
+This tools follows a "map-reduce" procedure: multiple inputs arranged as a
+data collection are compressed into a single tar.gz archive.
+ 
+
+
+**Output**
+
+A fast5.tar.gz archive
+
+</help>
+
+<citations>
+    <citation type="doi">10.11578/dc.20180330.1</citation>
+</citations>
+</tool>
