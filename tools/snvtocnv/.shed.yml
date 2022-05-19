@@ -1,9 +1,10 @@
 # .shed.yml supporting automatic pushes.
 owner: artbio
 name: snvtocnv
-description: infer copy number variations from a vcf file with single nucleotide variations
+description: infer copy number variations from a vcf file with SNVs using R sequenza
 long_description: |
-  infer copy number variations from a vcf file with single nucleotide variations
+  infer copy number variations from a vcf file with single nucleotide variations using
+  the sequenza R package
   see GitHub repo: https://github.com/eyzhao/bio-pipelines/blob/master/oicr/hrdtools/sequenza_to_hrdtools_input.R
 categories:
   - Variant Analysis

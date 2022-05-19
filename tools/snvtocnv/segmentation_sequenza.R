@@ -40,9 +40,9 @@ sample_name <- opt$sample_name
 ## Processing seqz files : normalisation and segmentation for chromosomes 1 to 22
 message(sprintf("\nExtraction step for %s", data_file))
 
-chrom_list <- c("chr1", "chr2", "chr3", "chr4", "chr5", "chr6", "chr7", "chr8", "chr9",
-               "chr10", "chr11", "chr12", "chr13", "chr14", "chr15", "chr16", "chr17",
-               "chr18", "chr19", "chr20", "chr21", "chr22")
+  chrom_list <- c("chr1", "chr2", "chr3", "chr4", "chr5", "chr6", "chr7", "chr8", "chr9",
+                "chr10", "chr11", "chr12", "chr13", "chr14", "chr15", "chr16", "chr17",
+                "chr18", "chr19", "chr20", "chr21", "chr22", "chrX")
 
 Sys.setenv(TZDIR = "/usr/share/zoneinfo/")
 Sys.setenv(TZ = "US/Eastern")
