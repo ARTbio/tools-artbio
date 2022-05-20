@@ -1,4 +1,4 @@
-<tool id="sequenzaindex" name="create GC_wiggle of reference genome" version="0.7.0">
+<tool id="sequenzaindex" name="create GC_wiggle of reference genome" version="3.0.0+galaxy1">
     <description>
     </description>
     <macros>
@@ -20,18 +20,18 @@
         <param name="window" type="integer" value="50" label="window size" help="The size of the wiggle for GC content calculation" />
      </inputs>
     <outputs>
-        <data name="refwig" format="txt" label="reference_wig" />
+        <data name="refwig" format="wig" label="reference_wig" />
     </outputs>
     <tests>
         <test>
             <param name="window" value="100" ftype="vcf" />
             <param name="reference" value="hg19_chr22.fa.gz" />
-            <output name="refwig" file="hg19.GCref.txt" ftype="txt" />
+            <output name="refwig" file="hg19.GCref.txt" ftype="wig" />
         </test>
         <test>
             <param name="window" value="100" ftype="vcf" />
             <param name="reference" value="hg38_chr22.fa.gz" />
-            <output name="refwig" file="hg38.GCref.txt" ftype="txt" />
+            <output name="refwig" file="hg38.GCref.txt" ftype="wig" />
         </test>
 
     </tests>

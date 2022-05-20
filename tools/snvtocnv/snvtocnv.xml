@@ -1,4 +1,4 @@
-<tool id="snvtocnv" name="Infer CNVs from SNVs" version="3.0.0+galaxy0">
+<tool id="snvtocnv" name="Infer CNVs from SNVs" version="3.0.0+galaxy1">
     <description>
     </description>
     <macros>
@@ -34,9 +34,9 @@
         <param name="input_snvs" type="data" format="vcf" label="SNVs to process in a vcf file"/>
     </inputs>
     <outputs>
-        <data name="wiggle" format="txt" label="binned wiggle" />
-        <data name="sample_segment" format="txt" label="sample segments" from_work_dir="test/sample_segments.txt" />
-        <data name="alt_solutions" format="txt" label="alternate solutions" from_work_dir="test/sample_alternative_solutions.txt" />
+        <data name="wiggle" format="wig" label="binned wiggle" />
+        <data name="sample_segment" format="tabular" label="sample segments" from_work_dir="test/sample_segments.txt" />
+        <data name="alt_solutions" format="tabular" label="alternate solutions" from_work_dir="test/sample_alternative_solutions.txt" />
         <data name="cnvs" format="tabular" label="Annotated CNVs" />
         <data name="chrom_depths" format="pdf" label="Chromosomes sequencing depth" from_work_dir="test/sample_chromosome_depths.pdf"/>
         <data name="chrom_view" format="pdf" label="Chromosomes views" from_work_dir="test/sample_chromosome_view.pdf"/>
