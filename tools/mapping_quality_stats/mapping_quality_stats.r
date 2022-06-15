@@ -2,7 +2,7 @@
 options(show.error.messages = FALSE,
         error = function() {
             cat(geterrmessage(), file = stderr())
-            q("no", 1, F)
+            q("no", 1, FALSE)
         }
 )
 
