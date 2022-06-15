@@ -34,4 +34,4 @@ def main(bam, out):
 
 if __name__ == "__main__":
     args = Parser()
-    main(args.bam, args.out)
+    main(args.bam, args.distribution)
