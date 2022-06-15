@@ -26,6 +26,6 @@ colnames(table) <- c("MAPQ", "Counts")
 
 # Barplot
 pdf(file = args$output)
-ggplot(table, aes(x = Counts, y = MAPQ)) +
+ggplot(table, aes(x = MAPQ, y = Counts)) +
     geom_bar(stat = "identity")
 devname <- dev.off()
