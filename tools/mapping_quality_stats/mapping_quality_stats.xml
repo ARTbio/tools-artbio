@@ -10,7 +10,7 @@
   </stdio>
   <command detect_errors="exit_code"><![CDATA[
     ln -f -s $input.metadata.bam_index input.bam.bai &&
-    ln -s $input_bam input.bam &&
+    ln -s $input input.bam &&
     python $__tool_directory__/mapping_quality_stats.py
         -bam input.bam
         -o $table &&

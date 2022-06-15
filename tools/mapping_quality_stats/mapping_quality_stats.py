@@ -9,7 +9,8 @@ def Parser():
     the_parser = argparse.ArgumentParser()
     the_parser.add_argument('-bam', '--bam', dest='bams', required=True,
                             nargs='+', help='input BAM file')
-    the_parser.add_argument('-o', '--output', dest='distribution', required=True,
+    the_parser.add_argument('-o', '--output', dest='distribution',
+                            required=True,
                             help='tabular output for mapq distribution')
     args = the_parser.parse_args()
     return args
@@ -28,7 +29,7 @@ def collect_mapq(bam, out):
 
 
 def main(bam, out):
-    results_dict = collect_mapq(bam, out)
+    collect_mapq(bam, out)
 
 
 if __name__ == "__main__":
