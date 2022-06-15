@@ -7,7 +7,7 @@ import pysam
 
 def Parser():
     the_parser = argparse.ArgumentParser()
-    the_parser.add_argument('-bam', '--bam', dest='bams', required=True,
+    the_parser.add_argument('-bam', '--bam', dest='bam', required=True,
                             nargs='+', help='input BAM file')
     the_parser.add_argument('-o', '--output', dest='distribution',
                             required=True,
