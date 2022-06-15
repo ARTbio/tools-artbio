@@ -1,5 +1,4 @@
 import argparse
-
 from collections import defaultdict
 
 import pysam
@@ -8,7 +7,7 @@ import pysam
 def Parser():
     the_parser = argparse.ArgumentParser()
     the_parser.add_argument('-bam', '--bam', dest='bam', required=True,
-                            nargs='+', help='input BAM file')
+                            help='input BAM file')
     the_parser.add_argument('-o', '--output', dest='distribution',
                             required=True,
                             help='tabular output for mapq distribution')
