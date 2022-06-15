@@ -1,10 +1,12 @@
 ## Setup R error handling to go to stderr
-options(show.error.messages = False,
-            error = function() {
-                cat(geterrmessage(), file = stderr())
-                q("no", 1, False)
-            }
-       )
+options(show.error.messages = FALSE,
+        error = function() {
+            cat(geterrmessage(), file = stderr())
+            q("no", 1, F)
+        }
+)
+
+
 warnings()
 library(optparse)
 library(ggplot2)
@@ -18,12 +20,12 @@ parser <- OptionParser(usage = "%prog [options] file", option_list = option_list
 args <- parse_args(parser)
 
 # data frame implementation
-table <- read.delim(args$input, header = True)
+table <- read.delim(args$input, header = TRUE)
 colnames(table) <- c("MAPQ", "Counts")
 
 
 # Barplot
 pdf(file = args$output)
-ggplot(data, aes(x = Counts, y = MAPQ)) +
+ggplot(table, aes(x = Counts, y = MAPQ)) +
     geom_bar(stat = "identity")
 devname <- dev.off()
