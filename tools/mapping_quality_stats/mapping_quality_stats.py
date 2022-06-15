@@ -21,9 +21,9 @@ def collect_mapq(bam, out):
     for read in samfile:
         mapq_dict[read.mapping_quality] += 1
     with open(out, 'w') as out:
-        out.write('mapq\tnumber_of_alignments')
+        out.write('mapq\tnumber_of_alignments\n')
         for quality in sorted(mapq_dict):
-            out.write(f"{quality}\t{mapq_dict[quality]}")
+            out.write(f"{quality}\t{mapq_dict[quality]}\n")
     return mapq_dict
 
 
