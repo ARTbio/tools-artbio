@@ -1,0 +1,16 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: mapping_quality_stats
+description: Collects and shows the distribution of MAPQ values in a BAM alignment file
+long_description: |
+  Collects and plots the distribution of MAPQ values in a BAM alignment file.
+
+categories:
+  - Sequence Analysis
+  - Statistics
+
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/mapping_quality_stats
+toolshed:
+  - toolshed
+
