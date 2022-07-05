@@ -1,7 +1,8 @@
 # load packages that are provided in the conda env
-options(show.error.messages = F,
+options(show.error.messages = FALSE,
        error = function() {
-           cat(geterrmessage(), file = stderr()); q("no", 1, F)
+           cat(geterrmessage(), file = stderr())
+           q("no", 1, FALSE)
            }
         )
 loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
@@ -212,9 +213,9 @@ if (!is.na(opt$output_denovo)[1]) {
     p5 <- plot_96_profile(nmf_res$signatures, condensed = TRUE)
     new_sig_matrix <- reshape2::dcast(p5$data, substitution + context ~ sample, value.var = "freq")
     new_sig_matrix <- format(new_sig_matrix, scientific = TRUE)
-    newcol <- paste0(gsub("\\..", "", new_sig_matrix$context, perl = T),
+    newcol <- paste0(gsub("\\..", "", new_sig_matrix$context, perl = TRUE),
                      "[", new_sig_matrix$substitution, "]",
-                     gsub("^.\\.", "", new_sig_matrix$context, perl = T))
+                     gsub("^.\\.", "", new_sig_matrix$context, perl = TRUE))
     new_sig_matrix <- cbind(Type = newcol, new_sig_matrix[, seq_along(new_sig_matrix)[-c(1, 2)]])
     write.table(new_sig_matrix, file = opt$sigmatrix, quote = FALSE, row.names = FALSE, sep = "\t")
     grid.arrange(p5)
@@ -332,8 +333,8 @@ if (!is.na(opt$output_sigpattern)[1]) {
     fit_res <- fit_to_signatures(pseudo_mut_mat, sbs_signatures)
 
     # Plot contribution barplots
-    pc3 <- plot_contribution(fit_res$contribution, sbs_signatures, coord_flip = T, mode = "absolute")
-    pc4 <- plot_contribution(fit_res$contribution, sbs_signatures, coord_flip = T, mode = "relative")
+    pc3 <- plot_contribution(fit_res$contribution, sbs_signatures, coord_flip = TRUE, mode = "absolute")
+    pc4 <- plot_contribution(fit_res$contribution, sbs_signatures, coord_flip = TRUE, mode = "relative")
     if (is.na(opt$levels)[1]) {  # if there are NO levels to display in graphs
         pc3_data <- pc3$data
         pc3 <- ggplot(pc3_data, aes(x = Sample, y = Contribution, fill = as.factor(Signature))) +
@@ -400,7 +401,7 @@ if (!is.na(opt$output_sigpattern)[1]) {
                           level = rep("nolabels", length(fit_res_contrib[, 1])),
                           fit_res_contrib,
                           sum = rowSums(fit_res_contrib))
-        worklist <- worklist[order(worklist[, "sum"], decreasing = T), ]
+        worklist <- worklist[order(worklist[, "sum"], decreasing = TRUE), ]
         worklist <- worklist[1:opt$signum, ]
         worklist <- worklist[, -length(worklist[1, ])]
         worklist <- melt(worklist)
@@ -408,10 +409,10 @@ if (!is.na(opt$output_sigpattern)[1]) {
     } else {
         worklist <- list()
         for (i in levels(factor(levels_table$level))) {
-             fit_res$contribution[, levels_table$element_identifier[levels_table$level == i]] -> worklist[[i]]
+             worklist[[i]] <- fit_res$contribution[, levels_table$element_identifier[levels_table$level == i]]
              sum <- rowSums(as.data.frame(worklist[[i]]))
              worklist[[i]] <- cbind(worklist[[i]], sum)
-             worklist[[i]] <- worklist[[i]][order(worklist[[i]][, "sum"], decreasing = T), ]
+             worklist[[i]] <- worklist[[i]][order(worklist[[i]][, "sum"], decreasing = TRUE), ]
              worklist[[i]] <- worklist[[i]][1:opt$signum, ]
              worklist[[i]] <- worklist[[i]][, -length(as.data.frame(worklist[[i]]))]
         }
@@ -427,7 +428,7 @@ if (!is.na(opt$output_sigpattern)[1]) {
     p7 <-  ggplot(worklist, aes(x = "", y = value, group = signature, fill = signature)) +
               geom_bar(width = 1, stat = "identity") +
               geom_text(aes(label = label), position = position_stack(vjust = 0.5), color = "white", size = 3) +
-              coord_polar("y", start = 0) + facet_wrap(.~sample) +
+              coord_polar("y", start = 0) + facet_wrap(. ~ sample) +
               labs(x = "", y = "Samples", fill = tag) +
               scale_fill_manual(name = paste0(opt$signum, " most contributing\nsignatures\n(in each label/tissue)"),
                                 values = signature_colors[levels(worklist$signature)],
@@ -455,7 +456,7 @@ if (!is.na(opt$output_sigpattern)[1]) {
             output_table <- data.frame(sample = rownames(output_table), output_table)
             colnames(output_table) <- gsub("X", "SBS", colnames(output_table))
         }
-        write.table(output_table, file = opt$sig_contrib_matrix, sep = "\t", quote = F, row.names = F)
+        write.table(output_table, file = opt$sig_contrib_matrix, sep = "\t", quote = FALSE, row.names = FALSE)
     }
 
     # calculate all pairwise cosine similarities
