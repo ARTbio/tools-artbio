@@ -202,9 +202,12 @@ if (!is.na(opt$output_denovo)[1]) {
     # (For larger datasets it is wise to perform more iterations by changing the nrun parameter
     # to achieve stability and avoid local minima)
     nmf_res <- extract_signatures(pseudo_mut_mat, rank = opt$newsignum, nrun = opt$nrun)
-    # Assign signature names
-    colnames(nmf_res$signatures) <- paste0("SBS", 1:opt$newsignum)
-    rownames(nmf_res$contribution) <- paste0("SBS", 1:opt$newsignum)
+    # Assign signature COSMICv3.2 names
+    cosmic_signatures <- get_known_signatures()
+    nmf_res <- rename_nmf_signatures(nmf_res, cosmic_signatures, cutoff = 0.85)
+    sim_matrix <- cos_sim_matrix(cosmic_signatures, nmf_res$signatures)
+    plot_cosine_sim <- plot_cosine_heatmap(sim_matrix)
+    grid.arrange(plot_cosine_sim)
     # Plot the 96-profile of the signatures:
     p5 <- plot_96_profile(nmf_res$signatures, condensed = TRUE)
     new_sig_matrix <- reshape2::dcast(p5$data, substitution + context ~ sample, value.var = "freq")

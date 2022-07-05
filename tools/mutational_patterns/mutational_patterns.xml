@@ -1,15 +1,15 @@
-<tool id="mutational_patterns" name="Analyse Mutational Patterns/Signatures" version="3.2.0+galaxy8">
+<tool id="mutational_patterns" name="Analyse Mutational Patterns/Signatures" version="3.4.0+galaxy0">
     <description>from genomic variations in vcf files</description>
     <requirements>
-        <requirement type="package" version="3.2.0=r41hdfd78af_0">bioconductor-mutationalpatterns</requirement>
-        <requirement type="package" version="1.1.1l=h7f98852_0">openssl</requirement>
-        <requirement type="package" version="3.3.5=r41hc72bb7e_0">r-ggplot2</requirement>
-        <requirement type="package" version="1.6.6=r41hc72bb7e_1">r-optparse</requirement>
-        <requirement type="package" version="0.2.20=r41h03ef668_1002">r-rjson</requirement>
+        <requirement type="package" version="3.4.0=r41hdfd78af_0">bioconductor-mutationalpatterns</requirement>
+        <!--requirement type="package" version="1.1.1l=h7f98852_0">openssl</requirement> -->
+        <requirement type="package" version="3.3.6=r41hc72bb7e_0">r-ggplot2</requirement>
+        <requirement type="package" version="1.7.1=r41hc72bb7e_0">r-optparse</requirement>
+        <requirement type="package" version="0.2.21=r41h7525677_1">r-rjson</requirement>
         <requirement type="package" version="0.21.0=r41h03ef668_1004">r-nmf</requirement>
         <requirement type="package" version="2.3=r41hc72bb7e_1003">r-gridextra</requirement>
-        <requirement type="package" version="1.4.3=r41hdfd78af_3">bioconductor-bsgenome.hsapiens.ucsc.hg19</requirement>
-        <requirement type="package" version="1.4.3=r41hdfd78af_3">bioconductor-bsgenome.hsapiens.ucsc.hg38</requirement>
+        <requirement type="package" version="1.4.3=r41hdfd78af_4">bioconductor-bsgenome.hsapiens.ucsc.hg19</requirement>
+        <requirement type="package" version="1.4.4=r41hdfd78af_0">bioconductor-bsgenome.hsapiens.ucsc.hg38</requirement>
 <!--
 install more bioconda genomes
 bioconductor-bsgenome.mmusculus.ucsc.mm9
@@ -200,6 +200,34 @@ Rscript $__tool_directory__/mutational_patterns.R
 
     </outputs>
     <tests>
+         <!-- de novo signatures -->
+        <test>
+            <param name="vcfs">
+                <collection type="list">
+                    <element name="6" value="F.vcf"/>
+                    <element name="7" value="G.vcf"/>
+                    <element name="8" value="H.vcf"/>
+                    <element name="9" value="I.vcf"/>
+                </collection>
+            </param>
+            <param name="genome" value="BSgenome.Hsapiens.UCSC.hg38"/>
+            <conditional name="set_spectrum">
+                <param name="choices" value="no"/>
+            </conditional>
+            <conditional name="set_denovo">
+                <param name="choices" value="yes"/>
+            </conditional>
+            <conditional name="set_preset">
+                <param name="choices" value="no"/>
+            </conditional>
+            <param name="nrun" value="10" />
+            <param name="rank" value="4" />
+            <param name="newsignum" value="4" />
+            <param name="rdata_out" value="true" />
+            <output name="denovo" file="denovo_output1.pdf" compare="sim_size"/>
+            <output name="sigmatrix" file="sigmatrix.tab" compare="sim_size"/>
+            <output name="rdata" file="denovo_1.RData" compare="sim_size" delta="400000"/> <!--  delta="170000" -->
+        </test>
          <!-- user defined (v3.2 restricted 30 minus 27 renamed to test nomenclature effect) -->
         <test>
             <param name="vcfs">
@@ -314,34 +342,6 @@ Rscript $__tool_directory__/mutational_patterns.R
                 <param name="choices" value="no"/>
             </conditional>
             <output name="spectrum" file="spectrum_output1.pdf" compare="sim_size"/>
-        </test>
-         <!-- de novo signatures -->
-        <test>
-            <param name="vcfs">
-                <collection type="list">
-                    <element name="6" value="F.vcf"/>
-                    <element name="7" value="G.vcf"/>
-                    <element name="8" value="H.vcf"/>
-                    <element name="9" value="I.vcf"/>
-                </collection>
-            </param>
-            <param name="genome" value="BSgenome.Hsapiens.UCSC.hg38"/>
-            <conditional name="set_spectrum">
-                <param name="choices" value="no"/>
-            </conditional>
-            <conditional name="set_denovo">
-                <param name="choices" value="yes"/>
-            </conditional>
-            <conditional name="set_preset">
-                <param name="choices" value="no"/>
-            </conditional>
-            <param name="nrun" value="10" />
-            <param name="rank" value="4" />
-            <param name="newsignum" value="4" />
-            <param name="rdata_out" value="true" />
-            <output name="denovo" file="denovo_output1.pdf" compare="sim_size"/>
-            <output name="sigmatrix" file="sigmatrix.tab" compare="sim_size"/>
-            <output name="rdata" file="denovo_1.RData" compare="sim_size" delta="400000"/> <!--  delta="170000" -->
         </test>
     </tests>
     <help>
