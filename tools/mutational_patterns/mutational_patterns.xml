@@ -1,4 +1,4 @@
-<tool id="mutational_patterns" name="Analyse Mutational Patterns/Signatures" version="3.4.0+galaxy0">
+<tool id="mutational_patterns" name="Analyse Mutational Patterns/Signatures" version="3.4.0+galaxy1">
     <description>from genomic variations in vcf files</description>
     <requirements>
         <requirement type="package" version="3.4.0=r41hdfd78af_0">bioconductor-mutationalpatterns</requirement>
@@ -46,6 +46,7 @@ Rscript $__tool_directory__/mutational_patterns.R
         --newsignum '$set_denovo.newsignum'
         --output_denovo '$denovo'
         --sigmatrix '$sigmatrix'
+        --cosmic_id_threshold '$set_denovo.cosmic_id_threshold'
     #end if
 
     #if $set_preset.choices == 'yes':
@@ -127,6 +128,9 @@ Rscript $__tool_directory__/mutational_patterns.R
                 <param name="newsignum" type="integer" value="4" min="2" max="30"
                        label="Number of de novo signatures to capture"
                        help="High values extend the computational time. Note also that you cannot extract more signature than the number of available samples in the study"/>
+                <param name="cosmic_id_threshold" type="float" value="0.85" min="0" max="1"
+                       label="Minimum cosine similarity to rename a signature"
+                       help="If a signature has a cosine similarity higher than this value with a cosmic v3.2 signature, it will renamed accordingly, with a -like suffix"/>
             </when>
             <when value="no" />
         </conditional>
@@ -220,9 +224,10 @@ Rscript $__tool_directory__/mutational_patterns.R
             <conditional name="set_preset">
                 <param name="choices" value="no"/>
             </conditional>
-            <param name="nrun" value="10" />
+            <param name="nrun" value="30" />
             <param name="rank" value="4" />
-            <param name="newsignum" value="4" />
+            <param name="newsignum" value="2" />
+            <param name="cosmic_id_threshold" value="0.84" />
             <param name="rdata_out" value="true" />
             <output name="denovo" file="denovo_output1.pdf" compare="sim_size"/>
             <output name="sigmatrix" file="sigmatrix.tab" compare="sim_size"/>
@@ -367,7 +372,7 @@ user-provided VCFs.
 
 * a collection of VCF files with somatic mutations calls from analysis of samples.
 * a tabular table describing the correspondance of sample names to levels of a factor
-(tissues, ages, sexes, etc.)
+  (tissues, ages, sexes, etc.)
 
 **Outputs**
 

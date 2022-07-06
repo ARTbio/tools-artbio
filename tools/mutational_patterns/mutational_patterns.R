@@ -70,6 +70,12 @@ option_list <- list(
     type = "integer",
     help = "Number of new signatures to be captured"
   ),
+    make_option(
+    "--cosmic_id_threshold",
+    default = 0.85,
+    type = "double",
+    help = "minimu cosine similarity to rename a new signature according to cosmic v3.2"
+  ),
   make_option(
     "--output_spectrum",
     default = NA,
@@ -205,12 +211,14 @@ if (!is.na(opt$output_denovo)[1]) {
     nmf_res <- extract_signatures(pseudo_mut_mat, rank = opt$newsignum, nrun = opt$nrun)
     # Assign signature COSMICv3.2 names
     cosmic_signatures <- get_known_signatures()
-    nmf_res <- rename_nmf_signatures(nmf_res, cosmic_signatures, cutoff = 0.85)
+    nmf_res <- rename_nmf_signatures(nmf_res, cosmic_signatures, cutoff = opt$cosmic_id_threshold)
     sim_matrix <- cos_sim_matrix(cosmic_signatures, nmf_res$signatures)
     plot_cosine_sim <- plot_cosine_heatmap(sim_matrix)
     grid.arrange(plot_cosine_sim)
     # Plot the 96-profile of the signatures:
     p5 <- plot_96_profile(nmf_res$signatures, condensed = TRUE)
+    grid.arrange(p5)
+    # write matrix of deno signatures for user
     new_sig_matrix <- reshape2::dcast(p5$data, substitution + context ~ sample, value.var = "freq")
     new_sig_matrix <- format(new_sig_matrix, scientific = TRUE)
     newcol <- paste0(gsub("\\..", "", new_sig_matrix$context, perl = TRUE),
@@ -218,7 +226,6 @@ if (!is.na(opt$output_denovo)[1]) {
                      gsub("^.\\.", "", new_sig_matrix$context, perl = TRUE))
     new_sig_matrix <- cbind(Type = newcol, new_sig_matrix[, seq_along(new_sig_matrix)[-c(1, 2)]])
     write.table(new_sig_matrix, file = opt$sigmatrix, quote = FALSE, row.names = FALSE, sep = "\t")
-    grid.arrange(p5)
     # Visualize the contribution of the signatures in a barplot
     pc1 <- plot_contribution(nmf_res$contribution, nmf_res$signature, mode = "relative", coord_flip = TRUE)
     # Visualize the contribution of the signatures in absolute number of mutations
@@ -231,18 +238,15 @@ if (!is.na(opt$output_denovo)[1]) {
     # The samples can be hierarchically clustered based on their euclidean dis- tance. The signatures
     # can be plotted in a user-specified order.
     # Plot signature contribution as a heatmap with sample clustering dendrogram and a specified signature order:
-    pch1 <- plot_contribution_heatmap(nmf_res$contribution,
-                                      sig_order = paste0("NewSig_", 1:opt$newsignum))
+    pch1 <- plot_contribution_heatmap(nmf_res$contribution, cluster_samples = TRUE)
     # Plot signature contribution as a heatmap without sample clustering:
     pch2 <- plot_contribution_heatmap(nmf_res$contribution, cluster_samples = FALSE)
     #Combine the plots into one figure:
     grid.arrange(pch1, pch2, ncol = 2, widths = c(2, 1.6))
 
     # Compare the reconstructed mutational profile with the original mutational profile:
-    plot_compare_profiles(pseudo_mut_mat[, 1],
-                          nmf_res$reconstructed[, 1],
-                          profile_names = c("Original", "Reconstructed"),
-                          condensed = TRUE)
+    pch3 <- plot_original_vs_reconstructed(pseudo_mut_mat, nmf_res$reconstructed, y_intercept = 0.95)
+    grid.arrange(pch3)
     dev.off()
     }
 
