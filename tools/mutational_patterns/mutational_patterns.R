@@ -490,7 +490,7 @@ if (!is.na(opt$output_sigpattern)[1]) {
                       theme_bw() +
                       theme(panel.grid.minor.y = element_blank(),
                             panel.grid.major.y = element_blank(),
-                            axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)
+                            axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)
                             ) +
                       # Add cut.off line
                       geom_hline(aes(yintercept = .95))
