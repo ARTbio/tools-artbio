@@ -489,7 +489,9 @@ if (!is.na(opt$output_sigpattern)[1]) {
                       # xlim(rev(levels(factor(cos_sim_ori_rec$sample)))) +
                       theme_bw() +
                       theme(panel.grid.minor.y = element_blank(),
-                      panel.grid.major.y = element_blank()) +
+                            panel.grid.major.y = element_blank(),
+                            axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)
+                            ) +
                       # Add cut.off line
                       geom_hline(aes(yintercept = .95))
     grid.arrange(p9, top = textGrob("Similarity between true profiles and profiles reconstructed with elementary signatures", gp = gpar(fontsize = 12, font = 3)))
