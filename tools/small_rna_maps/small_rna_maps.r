@@ -257,12 +257,12 @@ if (args$extra_plot_method == "" & !exists("global", where = args)) {
 }
 if (exists("global", where = args)) {
   pdf(file = args$output, paper = "special", height = 11.69)
-  table <- within(table, Counts[Polarity == "R"] <- abs(Counts[Polarity == "R"]))
+  table <- within(table, Counts <- abs(Counts))
   library(reshape2)
   ml <- melt(table, id.vars = c("Dataset", "Chromosome", "Polarity", "Size"))
   if (args$global == "nomerge") {
     castml <- dcast(ml, Dataset + Polarity + Size ~ variable, function(x) sum(x))
-    castml <- within(castml, Counts[Polarity == "R"] <- (Counts[Polarity == "R"] * -1))
+    castml <- within(castml, Counts <- abs(Counts) * -1)
     bc <- globalbc(castml, global = "no")
   } else {
     castml <- dcast(ml, Dataset + Size ~ variable, function(x) sum(x))
