@@ -2,7 +2,7 @@
     <description />
     <requirements>
         <requirement type="package" version="0.18.0">pysam</requirement>
-        <requirement type="package" version="1.14">samtools</requirement>
+        <requirement type="package" version="1.13">samtools</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />

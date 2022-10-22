@@ -1,7 +1,7 @@
 <tool id="signature" name="Small RNA Signatures" version="3.3.1>">
     <description />
     <requirements>
-        <requirement type="package" version="1.14">samtools</requirement>
+        <requirement type="package" version="1.13">samtools</requirement>
         <requirement type="package" version="1.23.4">numpy</requirement>
         <requirement type="package" version="0.18.0">pysam</requirement>
         <requirement type="package" version="1.7.3">r-optparse</requirement>
