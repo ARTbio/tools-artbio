@@ -1,14 +1,14 @@
-<tool id="overlapping_reads" name="Get overlapping reads" version="3.3.1">
+<tool id="overlapping_reads" name="Get overlapping reads" version="3.4">
     <description />
     <requirements>
         <requirement type="package" version="0.18.0">pysam</requirement>
-        <requirement type="package" version="1.15.1=h1170115_0">samtools</requirement>
+        <requirement type="package" version="0.8.2">sambamba</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
     </stdio>
       <command detect_errors="exit_code"><![CDATA[
-        samtools index '$input' &&
+        sambamba index -t \${GALAXY_SLOTS} '$input' &&
         python '$__tool_directory__'/overlapping_reads.py
            --input '$input'
            --minquery '$minquery'
