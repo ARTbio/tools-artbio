@@ -1,4 +1,4 @@
-<tool id="signature" name="Small RNA Signatures" version="3.4>">
+<tool id="signature" name="Small RNA Signatures" version="3.4.1>">
     <description />
     <requirements>
         <requirement type="package" version="0.8.2">sambamba</requirement>
