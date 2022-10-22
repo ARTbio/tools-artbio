@@ -1,7 +1,7 @@
 <tool id="signature" name="Small RNA Signatures" version="3.3.1>">
     <description />
     <requirements>
-        <requirement type="package" version="1.15.1">samtools</requirement>
+        <requirement type="package" version="1.15.1=h1170115_0">samtools</requirement>
         <requirement type="package" version="1.23.4">numpy</requirement>
         <requirement type="package" version="0.18.0">pysam</requirement>
         <requirement type="package" version="1.7.3">r-optparse</requirement>
@@ -12,7 +12,7 @@
         <exit_code range="1:" level="fatal" description="Tool exception" />
     </stdio>
       <command detect_errors="exit_code"><![CDATA[
-        samtools index -b '$input' &&
+        samtools index '$input' &&
         python '$__tool_directory__'/signature.py
            --input '$input'
            --minquery '$minquery'
