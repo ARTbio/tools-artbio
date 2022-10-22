@@ -1,7 +1,6 @@
 <tool id="signature" name="Small RNA Signatures" version="3.4.1>">
     <description />
     <requirements>
-        <requirement type="package" version="0.8.2">sambamba</requirement>
         <requirement type="package" version="1.23.4">numpy</requirement>
         <requirement type="package" version="0.18.0">pysam</requirement>
         <requirement type="package" version="1.7.3">r-optparse</requirement>
@@ -12,9 +11,10 @@
         <exit_code range="1:" level="fatal" description="Tool exception" />
     </stdio>
       <command detect_errors="exit_code"><![CDATA[
-        sambamba index -t \${GALAXY_SLOTS} '$input' &&
+        ln -f -s $input.metadata.bam_index input.bam.bai &&
+        ln -s $input input.bam &&
         python '$__tool_directory__'/signature.py
-           --input '$input'
+           --input input.bam
            --minquery '$minquery'
            --maxquery '$maxquery'
            --mintarget '$mintarget'

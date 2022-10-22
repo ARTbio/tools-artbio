@@ -2,15 +2,15 @@
     <description />
     <requirements>
         <requirement type="package" version="0.18.0">pysam</requirement>
-        <requirement type="package" version="0.8.2">sambamba</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
     </stdio>
       <command detect_errors="exit_code"><![CDATA[
-        sambamba index -t \${GALAXY_SLOTS} '$input' &&
+        ln -f -s $input.metadata.bam_index input.bam.bai &&
+        ln -s $input input.bam &&
         python '$__tool_directory__'/overlapping_reads.py
-           --input '$input'
+           --input input.bam
            --minquery '$minquery'
            --maxquery '$maxquery'
            --mintarget '$mintarget'
