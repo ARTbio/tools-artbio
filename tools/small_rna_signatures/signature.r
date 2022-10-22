@@ -1,8 +1,8 @@
 ## Setup R error handling to go to stderr
-options(show.error.messages = F,
+options(show.error.messages = FALSE,
         error = function() {
             cat(geterrmessage(), file = stderr())
-            q("no", 1, F)
+            q("no", 1, FALSE)
         }
 )
 warnings()
@@ -26,12 +26,12 @@ option_list <- list(
     )
 parser <- OptionParser(usage = "%prog [options] file", option_list = option_list)
 args <- parse_args(parser)
- 
+
 # data frames implementation
-h_dataframe <- read.delim(args$h_dataframe, header = F)
+h_dataframe <- read.delim(args$h_dataframe, header = FALSE)
 colnames(h_dataframe) <- c("chrom", "overlap", "sig", "z-score")
 h_dataframe$sig <- h_dataframe$sig * 100  # to get probs in %
-z_dataframe <- read.delim(args$z_dataframe, header = F)
+z_dataframe <- read.delim(args$z_dataframe, header = FALSE)
 colnames(z_dataframe) <- c("chrom", "overlap", "sig", "z-score")
 
 # functions
