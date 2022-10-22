@@ -12,7 +12,7 @@
         <exit_code range="1:" level="fatal" description="Tool exception" />
     </stdio>
       <command detect_errors="exit_code"><![CDATA[
-        samtools index '$input' &&
+        samtools index -b '$input' &&
         python '$__tool_directory__'/signature.py
            --input '$input'
            --minquery '$minquery'
