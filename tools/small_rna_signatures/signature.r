@@ -77,7 +77,7 @@ colnames(z_dataframe) <- c("chrom", "overlap", "sig", "z-score")
                    pch = 19, lwd = 2,
                    as.table = TRUE,
                    layout = c(2, 12),
-                   newpage = T,
+                   newpage = TRUE,
                    ...)
            plot(p)
            dev.off()

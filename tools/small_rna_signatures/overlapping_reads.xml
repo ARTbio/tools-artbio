@@ -1,8 +1,8 @@
-<tool id="overlapping_reads" name="Get overlapping reads" version="3.3">
+<tool id="overlapping_reads" name="Get overlapping reads" version="3.3.1">
     <description />
     <requirements>
-        <requirement type="package" version="0.16.0.1=py37h45aed0b_3">pysam</requirement>
-        <requirement type="package" version="1.13=h8c37831_0">samtools</requirement>
+        <requirement type="package" version="0.18.0">pysam</requirement>
+        <requirement type="package" version="1.14">samtools</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
