@@ -102,7 +102,7 @@ the range of overlaps (in nt) over which to compute the signatures, and whether 
 genome-wide level or by item (chromosomes, genes, etc.). For details on computational algorithmes 
 for piRNA and siRNA signatures, see `Antoniewski (2014)`_.
 
-.. _Brennecke et al, 2009: http://dx.doi.org/10.1126/science.1165171
+.. _Brennecke et al, 2009: https://www.science.org/doi/10.1126/science.1165171
 .. _Antoniewski (2014): https://link.springer.com/protocol/10.1007%2F978-1-4939-0931-5_12
 
 **Input**
