@@ -1,0 +1,330 @@
+{
+    "a_galaxy_workflow": "true",
+    "annotation": "A workflow illustrating the use of the 'Small RNA Signatures' Galaxy tool to compute piRNA signature from of fastq file of drosophila ovaries",
+    "creator": [
+        {
+            "class": "Person",
+            "email": "mailto:drosofff@gmail.com",
+            "identifier": "https://orcid.org/0000-0001-7709-2116",
+            "name": "Christophe Antoniewski"
+        }
+    ],
+    "format-version": "0.1",
+    "name": "Compute piRNA signature from fastq file",
+    "steps": {
+        "0": {
+            "annotation": "",
+            "content_id": null,
+            "errors": null,
+            "id": 0,
+            "input_connections": {},
+            "inputs": [
+                {
+                    "description": "",
+                    "name": "fastq or fastq.gz file"
+                }
+            ],
+            "label": "fastq or fastq.gz file",
+            "name": "Input dataset",
+            "outputs": [],
+            "position": {
+                "bottom": 388.1953125,
+                "height": 82.1953125,
+                "left": -151,
+                "right": 49,
+                "top": 306,
+                "width": 200,
+                "x": -151,
+                "y": 306
+            },
+            "tool_id": null,
+            "tool_state": "{\"optional\": false}",
+            "tool_version": null,
+            "type": "data_input",
+            "uuid": "c6238a3d-bf5c-48c2-8a42-1a1b7713cff1",
+            "workflow_outputs": []
+        },
+        "1": {
+            "annotation": "",
+            "content_id": null,
+            "errors": null,
+            "id": 1,
+            "input_connections": {},
+            "inputs": [
+                {
+                    "description": "",
+                    "name": "Dmel_all-transposon_merge.fasta"
+                }
+            ],
+            "label": "Dmel_all-transposon_merge.fasta",
+            "name": "Input dataset",
+            "outputs": [],
+            "position": {
+                "bottom": 507.1953125,
+                "height": 82.1953125,
+                "left": -104,
+                "right": 96,
+                "top": 425,
+                "width": 200,
+                "x": -104,
+                "y": 425
+            },
+            "tool_id": null,
+            "tool_state": "{\"optional\": false}",
+            "tool_version": null,
+            "type": "data_input",
+            "uuid": "2bcbc911-859c-45e1-8856-26ae84e76de8",
+            "workflow_outputs": []
+        },
+        "2": {
+            "annotation": "",
+            "content_id": "toolshed.g2.bx.psu.edu/repos/artbio/yac_clipper/yac/2.4.0",
+            "errors": null,
+            "id": 2,
+            "input_connections": {
+                "input": {
+                    "id": 0,
+                    "output_name": "output"
+                }
+            },
+            "inputs": [],
+            "label": null,
+            "name": "Clip adapter",
+            "outputs": [
+                {
+                    "name": "output",
+                    "type": "input"
+                }
+            ],
+            "position": {
+                "bottom": 440.9921875,
+                "height": 133.9921875,
+                "left": 139,
+                "right": 339,
+                "top": 307,
+                "width": 200,
+                "x": 139,
+                "y": 307
+            },
+            "post_job_actions": {},
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/artbio/yac_clipper/yac/2.4.0",
+            "tool_shed_repository": {
+                "changeset_revision": "6bfb7e333280",
+                "name": "yac_clipper",
+                "owner": "artbio",
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            },
+            "tool_state": "{\"Nmode\": \"reject\", \"__input_ext\": \"fastqsanger\", \"chromInfo\": \"/home/galaxy/galaxy/config/len/?.len\", \"clip_source\": {\"clip_source_list\": \"prebuilt\", \"__current_case__\": 0, \"clip_sequence\": \"TGGAATTCTCGGGTGCCAAG\"}, \"input\": {\"__class__\": \"ConnectedValue\"}, \"max\": \"32\", \"min\": \"15\", \"out_format\": \"fasta\", \"__page__\": null, \"__rerun_remap_job_id__\": null}",
+            "tool_version": "2.4.0",
+            "type": "tool",
+            "uuid": "3a3b2af5-0766-4993-8259-3d4e3014852a",
+            "workflow_outputs": [
+                {
+                    "label": null,
+                    "output_name": "output",
+                    "uuid": "e44ee61a-456d-41be-89eb-2ac825e599f2"
+                }
+            ]
+        },
+        "3": {
+            "annotation": "",
+            "content_id": "toolshed.g2.bx.psu.edu/repos/artbio/sr_bowtie/bowtieForSmallRNA/2.1.1",
+            "errors": null,
+            "id": 3,
+            "input_connections": {
+                "input": {
+                    "id": 2,
+                    "output_name": "output"
+                },
+                "refGenomeSource|ownFile": {
+                    "id": 1,
+                    "output_name": "output"
+                }
+            },
+            "inputs": [],
+            "label": null,
+            "name": "sR_bowtie",
+            "outputs": [
+                {
+                    "name": "output",
+                    "type": "tabular"
+                },
+                {
+                    "name": "aligned",
+                    "type": "input"
+                }
+            ],
+            "position": {
+                "bottom": 564.5859375,
+                "height": 235.5859375,
+                "left": 433,
+                "right": 633,
+                "top": 329,
+                "width": 200,
+                "x": 433,
+                "y": 329
+            },
+            "post_job_actions": {
+                "RenameDatasetActionaligned": {
+                    "action_arguments": {
+                        "newname": "TE matched reads"
+                    },
+                    "action_type": "RenameDatasetAction",
+                    "output_name": "aligned"
+                }
+            },
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/artbio/sr_bowtie/bowtieForSmallRNA/2.1.1",
+            "tool_shed_repository": {
+                "changeset_revision": "0281bb245635",
+                "name": "sr_bowtie",
+                "owner": "artbio",
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            },
+            "tool_state": "{\"additional_fasta\": \"al\", \"input\": {\"__class__\": \"ConnectedValue\"}, \"method\": \"k_option\", \"output_format\": \"tabular\", \"refGenomeSource\": {\"genomeSource\": \"history\", \"__current_case__\": 1, \"ownFile\": {\"__class__\": \"ConnectedValue\"}}, \"v_mismatches\": \"1\", \"__page__\": null, \"__rerun_remap_job_id__\": null}",
+            "tool_version": "2.1.1",
+            "type": "tool",
+            "uuid": "9f97dbfe-0df8-4fcd-a942-3ccee8bd1172",
+            "workflow_outputs": [
+                {
+                    "label": null,
+                    "output_name": "output",
+                    "uuid": "f510e1c6-235d-4073-b80b-013ec881b808"
+                },
+                {
+                    "label": null,
+                    "output_name": "aligned",
+                    "uuid": "aa8dc756-04ba-42bc-b6a3-d4aaa4b7c3b2"
+                }
+            ]
+        },
+        "4": {
+            "annotation": "",
+            "content_id": "toolshed.g2.bx.psu.edu/repos/artbio/sr_bowtie/bowtieForSmallRNA/2.1.1",
+            "errors": null,
+            "id": 4,
+            "input_connections": {
+                "input": {
+                    "id": 3,
+                    "output_name": "aligned"
+                }
+            },
+            "inputs": [],
+            "label": null,
+            "name": "sR_bowtie",
+            "outputs": [
+                {
+                    "name": "output",
+                    "type": "tabular"
+                }
+            ],
+            "position": {
+                "bottom": 560.390625,
+                "height": 154.390625,
+                "left": 740,
+                "right": 940,
+                "top": 406,
+                "width": 200,
+                "x": 740,
+                "y": 406
+            },
+            "post_job_actions": {
+                "RenameDatasetActionoutput": {
+                    "action_arguments": {
+                        "newname": "TE read alignments to dm6"
+                    },
+                    "action_type": "RenameDatasetAction",
+                    "output_name": "output"
+                }
+            },
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/artbio/sr_bowtie/bowtieForSmallRNA/2.1.1",
+            "tool_shed_repository": {
+                "changeset_revision": "0281bb245635",
+                "name": "sr_bowtie",
+                "owner": "artbio",
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            },
+            "tool_state": "{\"additional_fasta\": \"No\", \"input\": {\"__class__\": \"ConnectedValue\"}, \"method\": \"multiple\", \"output_format\": \"bam\", \"refGenomeSource\": {\"genomeSource\": \"indexed\", \"__current_case__\": 0, \"index\": \"dm6\"}, \"v_mismatches\": \"0\", \"__page__\": null, \"__rerun_remap_job_id__\": null}",
+            "tool_version": "2.1.1",
+            "type": "tool",
+            "uuid": "2ea1a79f-6d70-4709-aa4d-b40b54a0dd85",
+            "workflow_outputs": [
+                {
+                    "label": null,
+                    "output_name": "output",
+                    "uuid": "b757bdc6-ddc2-4147-9b33-5dc20f0b7fe0"
+                }
+            ]
+        },
+        "5": {
+            "annotation": "",
+            "content_id": "toolshed.g2.bx.psu.edu/repos/artbio/small_rna_signatures/signature/3.4.1>",
+            "errors": null,
+            "id": 5,
+            "input_connections": {
+                "input": {
+                    "id": 4,
+                    "output_name": "output"
+                }
+            },
+            "inputs": [],
+            "label": null,
+            "name": "Small RNA Signatures",
+            "outputs": [
+                {
+                    "name": "z_dataframe",
+                    "type": "tabular"
+                },
+                {
+                    "name": "h_dataframe",
+                    "type": "tabular"
+                },
+                {
+                    "name": "pdf",
+                    "type": "pdf"
+                }
+            ],
+            "position": {
+                "bottom": 576.3828125,
+                "height": 276.3828125,
+                "left": 1185,
+                "right": 1385,
+                "top": 300,
+                "width": 200,
+                "x": 1185,
+                "y": 300
+            },
+            "post_job_actions": {},
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/artbio/small_rna_signatures/signature/3.4.1>",
+            "tool_shed_repository": {
+                "changeset_revision": "aa5e2c64dff8",
+                "name": "small_rna_signatures",
+                "owner": "artbio",
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            },
+            "tool_state": "{\"__input_ext\": \"bam\", \"chromInfo\": \"/home/galaxy/galaxy/tool-data/dm6/len/dm6.len\", \"input\": {\"__class__\": \"ConnectedValue\"}, \"maxquery\": \"33\", \"maxscope\": \"26\", \"maxtarget\": \"33\", \"minquery\": \"23\", \"minscope\": \"1\", \"mintarget\": \"23\", \"plot_method\": \"global\", \"__page__\": null, \"__rerun_remap_job_id__\": null}",
+            "tool_version": "3.4.1>",
+            "type": "tool",
+            "uuid": "3a438e36-fde5-457a-ac38-e0f0ff6cd11b",
+            "workflow_outputs": [
+                {
+                    "label": null,
+                    "output_name": "z_dataframe",
+                    "uuid": "221f0130-e049-42d2-a6fe-d436941521b2"
+                },
+                {
+                    "label": null,
+                    "output_name": "h_dataframe",
+                    "uuid": "800067e8-8534-4662-a14b-f927eac22b99"
+                },
+                {
+                    "label": null,
+                    "output_name": "pdf",
+                    "uuid": "f7eba802-d969-4fa3-a399-39a948125e13"
+                }
+            ]
+        }
+    },
+    "tags": [],
+    "uuid": "8f616c00-a462-4bf2-9a7d-5cb3b60b7413",
+    "version": 3
+}
