@@ -4,10 +4,10 @@
       <exit_code range="1:" level="fatal" description="Tool exception" />
   </stdio>
   <command detect_errors="exit_code"><![CDATA[
-       grep -P "(^ID)|(^ +[GATCN ]+\d+)" "$input" > "$output" &&
+       grep -P "(^ID)|(^ +[GATCNgatcn ]+\d+)" "$input" > "$output" &&
        sed -i -E "s/^ID   />/" "$output" &&
        sed -i -E "s/(>[^ ]+) .+/\1/g"  "$output" &&
-       sed -i -E "s/([GATCN]+) /\1/g" "$output" &&
+       sed -i -E "s/([GATCNgatcn]+) /\1/g" "$output" &&
        sed -i -E "s/^ +//g" "$output" &&
        sed -i -E "s/ +[0-9]+//g" "$output"
   ]]></command>
