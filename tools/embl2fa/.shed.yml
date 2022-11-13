@@ -1,0 +1,12 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: embl2fa
+description: Converts EMBL flat format to fasta format
+long_description: |
+  Converts EMBL flat format to fasta format using a combination of grep and sed command line
+categories:
+  - Text Manipulation
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/embl2fa
+toolshed:
+  - https://toolshed.g2.bx.psu.edu/
