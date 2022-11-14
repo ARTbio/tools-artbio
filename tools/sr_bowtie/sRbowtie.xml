@@ -1,4 +1,4 @@
-<tool id="bowtieForSmallRNA" name="sR_bowtie" version="2.2.0">
+<tool id="bowtieForSmallRNA" name="sR_bowtie" version="2.3.0">
     <description>for small RNA short reads</description>
     <requirements>
         <requirement type="package" version="1.3.1">bowtie</requirement>
@@ -6,7 +6,7 @@
     </requirements>
     <command detect_errors="exit_code"><![CDATA[
         #if $refGenomeSource.genomeSource == "history":
-            bowtie-build -f $refGenomeSource.ownFile genome 1>/dev/null &&
+            bowtie-build --threads \${GALAXY_SLOTS:-4} -f $refGenomeSource.ownFile genome 1>/dev/null &&
             ln -s -f '$refGenomeSource.ownFile' genome.fa &&
             #set index_path = 'genome'
         #else:

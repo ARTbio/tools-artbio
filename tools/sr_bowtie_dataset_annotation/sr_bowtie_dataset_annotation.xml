@@ -1,4 +1,4 @@
-<tool id="sr_bowtie_dataset_annotation" name="Annotate smRNA dataset" version="2.7">
+<tool id="sr_bowtie_dataset_annotation" name="Annotate smRNA dataset" version="2.8">
   <description>by iterative alignments with sRbowtie</description>
   <requirements>
         <requirement type="package" version="1.3.1">bowtie</requirement>
@@ -8,14 +8,14 @@
   </requirements>
   <command  detect_errors="exit_code"><![CDATA[
         #if $refGenomeSource1.genomeSource == "history":
-            bowtie-build -f $refGenomeSource1.ownFile genome  1>/dev/null &&
+            bowtie-build --threads \${GALAXY_SLOTS:-4} -f $refGenomeSource1.ownFile genome  1>/dev/null &&
             #set index_path = 'genome'
         #else:
             #set index_path = $refGenomeSource1.index.fields.path
         #end if
         
         #for $i in $AdditionalQueries:
-            bowtie-build -f $i.ownFile $i.ownFile.name  1>/dev/null &&
+            bowtie-build --threads \${GALAXY_SLOTS:-4} -f $i.ownFile $i.ownFile.name  1>/dev/null &&
         #end for
                 
         #set method_prefix = "-v %s -k 1 --best" % str($mismatches)
