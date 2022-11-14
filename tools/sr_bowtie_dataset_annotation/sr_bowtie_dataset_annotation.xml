@@ -112,6 +112,7 @@
         <data name="barplot" format="pdf" label="barplot from ${on_string}" />
     </outputs>
     <tests>
+<!--
         <test>
             <param name="input" value ="sample5.fa,sample4.fa,sample3.fa,sample2.fa,sample1.fa" ftype="fasta" />
             <param name="genomeSource" value="history" />
@@ -128,6 +129,7 @@
                 <element name="sample1.fa_unmatched" file="unmatched_1.fa" ftype="fasta"/>
             </output_collection>
         </test>
+-->
         <test>
             <param name="input" value ="sample1.fa" ftype="fasta" />
             <param name="genomeSource" value="history" />
@@ -137,7 +139,7 @@
             <output name="output" ftype="tabular" file="sample1_output.tab" />
             <output name="barplot" ftype="pdf" file="sample1_output.pdf" compare="sim_size" delta="500"/>
             <output_collection name="unmatched" type="list">
-                <element name="sample1.fa_unmatched" file="unmatched_1.fa" ftype="fasta"/>
+                <element name="sample1.fa_unmatched" file="unmatched_6.fa" ftype="fasta"/>
             </output_collection>
         </test>
         <test>
