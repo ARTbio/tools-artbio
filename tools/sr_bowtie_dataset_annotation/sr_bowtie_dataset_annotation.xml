@@ -139,7 +139,7 @@
             <output name="output" ftype="tabular" file="sample1_output.tab" />
             <output name="barplot" ftype="pdf" file="sample1_output.pdf" compare="sim_size" delta="500"/>
             <output_collection name="unmatched" type="list">
-                <element name="sample1.fa_unmatched" file="unmatched_6.fa" ftype="fasta"/>
+                <element name="sample1.fa_unmatched" file="unmatched_6.fa" ftype="fasta" compare="sim_size" delta="0"/>
             </output_collection>
         </test>
         <test>
