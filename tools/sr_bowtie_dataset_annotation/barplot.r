@@ -1,13 +1,13 @@
 if (length(commandArgs(TRUE)) == 0) {
-  system("Rscript barplot.r -h", intern = F)
+  system("Rscript barplot.r -h", intern = FALSE)
   q("no")
 }
 
 # load packages that are provided in the conda env
-options(show.error.messages = F,
+options(show.error.messages = FALSE,
        error = function() {
            cat(geterrmessage(), file = stderr())
-                           q("no", 1, F)
+                           q("no", 1, FALSE)
        }
 )
 loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
@@ -35,7 +35,7 @@ option_list <- list(
 opt <- parse_args(OptionParser(option_list = option_list),
                  args = commandArgs(trailingOnly = TRUE))
 
-annotations <- read.delim(opt$input, header = F)
+annotations <- read.delim(opt$input, header = FALSE)
 colnames(annotations) <- c("sample", "class", "percent_of_reads", "total")
 annotations$percent <- round(annotations$percent_of_reads / annotations$total * 100,
                             digits = 2)
@@ -51,7 +51,7 @@ ggplot(annotations, aes(x = total / 2, y = percent_of_reads, fill = class, width
        geom_bar(position = "fill", stat = "identity") +
        facet_wrap(~sample, ncol = 3) +
        geom_label_repel(aes(label = percent), position = position_fill(vjust = 0.5),
-                        size = 2, show.legend = F) +
+                        size = 2, show.legend = FALSE) +
        coord_polar(theta = "y") +
        labs(x = "Class fractions (%)") +
        scale_fill_manual(values = mycolors) +
