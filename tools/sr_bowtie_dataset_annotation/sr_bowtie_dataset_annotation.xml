@@ -112,7 +112,6 @@
         <data name="barplot" format="pdf" label="barplot from ${on_string}" />
     </outputs>
     <tests>
-<!--
         <test>
             <param name="input" value ="sample5.fa,sample4.fa,sample3.fa,sample2.fa,sample1.fa" ftype="fasta" />
             <param name="genomeSource" value="history" />
@@ -121,7 +120,7 @@
             <param name="AdditionalQueries_1|ownFile" value="Ensembl_transposon_set.fa" ftype="fasta" />
             <output name="output" ftype="tabular" file="multisample5_output.tab" />
             <output name="barplot" ftype="pdf" file="multisample5_output.pdf" compare="sim_size" delta="500" />
-            <output_collection name="unmatched" type="list" count="5">
+            <output_collection name="unmatched" type="list" count="5"  compare="sim_size" delta="0">
                 <element name="sample5.fa_unmatched" file="unmatched_5.fa" ftype="fasta"/>
                 <element name="sample4.fa_unmatched" file="unmatched_4.fa" ftype="fasta"/>
                 <element name="sample3.fa_unmatched" file="unmatched_3.fa" ftype="fasta"/>
@@ -129,7 +128,6 @@
                 <element name="sample1.fa_unmatched" file="unmatched_1.fa" ftype="fasta"/>
             </output_collection>
         </test>
--->
         <test>
             <param name="input" value ="sample1.fa" ftype="fasta" />
             <param name="genomeSource" value="history" />
