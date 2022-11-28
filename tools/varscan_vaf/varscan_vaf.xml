@@ -47,7 +47,7 @@
 **Output**
 
 + A VCF file
-+ A line '##FORMAT=<ID=VAF,Number=R,Type=float,Description="Variant Allele Frequency">' is added in the header
++ A line '##FORMAT=&lt;ID=VAF,Number=R,Type=float,Description="Variant Allele Frequency"&gt;' is added in the header
 + The VAF value is added in both normal and tumor genotype column, as a last field
 
     </help>
