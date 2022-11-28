@@ -23,11 +23,10 @@ def main(input, output):
     entete = [i for i in mylines[:-1] if i[0] == '#']
     variant = [i for i in mylines[:-1] if i[0] != '#']
     out = open(output, 'w')
-    out.write('\n'.join(entete[:-1]))
-    out.write('\n')
-    out.write('##FORMAT=<ID=VAF,Number=R,Type=float,Description="Variant \
-               Allele Frequency">\n')
-    out.write(entete[-1], '\n')
+    out.write('\n'.join(entete[:-1]) + '\n')
+    out.write('##FORMAT=<ID=VAF,Number=R,Type=float,Description="Variant'
+              'Allele Frequency">\n')
+    out.write(entete[-1] + '\n')
     for i in variant:
         fields = i.split('\t')[9:11]
         af_normal = fields[0].split(':')[3]
@@ -48,8 +47,8 @@ def main(input, output):
         fields[8] += ':VAF'
         fields.append(normal_string)
         fields.append(tumor_string)
-        out.write('\t'.join(fields), '\n')
-        out.close()
+        out.write('\t'.join(fields) + '\n')
+    out.close()
 
 
 if __name__ == "__main__":
