@@ -1,0 +1,248 @@
+##fileformat=VCFv4.2
+##FILTER=<ID=PASS,Description="All filters passed">
+##reference=/home/galaxy/galaxy/tool-data/hg38-bgi-light/sam_indexes/hg38-bgi-light/hg38-bgi-light.fa
+##source=varscan.py
+##contig=<ID=chr1,length=248956422>
+##contig=<ID=chr10,length=133797422>
+##contig=<ID=chr11,length=135086622>
+##contig=<ID=chr12,length=133275309>
+##contig=<ID=chr13,length=114364328>
+##contig=<ID=chr14,length=107043718>
+##contig=<ID=chr15,length=101991189>
+##contig=<ID=chr16,length=90338345>
+##contig=<ID=chr17,length=83257441>
+##contig=<ID=chr18,length=80373285>
+##contig=<ID=chr19,length=58617616>
+##contig=<ID=chr2,length=242193529>
+##contig=<ID=chr20,length=64444167>
+##contig=<ID=chr21,length=46709983>
+##contig=<ID=chr22,length=50818468>
+##contig=<ID=chr3,length=198295559>
+##contig=<ID=chr4,length=190214555>
+##contig=<ID=chr5,length=181538259>
+##contig=<ID=chr6,length=170805979>
+##contig=<ID=chr7,length=159345973>
+##contig=<ID=chr8,length=145138636>
+##contig=<ID=chr9,length=138394717>
+##contig=<ID=chrM,length=16569>
+##contig=<ID=chrX,length=156040895>
+##contig=<ID=chrY,length=57227415>
+##INFO=<ID=INDEL,Number=0,Type=Flag,Description="Indicates that the variant is an INDEL">
+##INFO=<ID=DP,Number=1,Type=Integer,Description="Total depth of quality bases">
+##INFO=<ID=SOMATIC,Number=0,Type=Flag,Description="Indicates if record is a somatic mutation">
+##INFO=<ID=SS,Number=1,Type=String,Description="Somatic status of variant (0=Reference,1=Germline,2=Somatic,3=LOH, or 5=Unknown)">
+##INFO=<ID=SSC,Number=1,Type=String,Description="Somatic score in Phred scale (0-255) derived from somatic p-value">
+##INFO=<ID=GPV,Number=1,Type=Float,Description="Fisher's Exact Test P-value of tumor+normal versus no variant for Germline calls">
+##INFO=<ID=SPV,Number=1,Type=Float,Description="Fisher's Exact Test P-value of tumor versus normal for Somatic/LOH calls">
+##FILTER=<ID=str10,Description="Less than 10% or more than 90% of variant supporting reads on one strand">
+##FILTER=<ID=indelError,Description="Likely artifact due to indel reads at this position">
+##FILTER=<ID=VarCount,Description="Fewer than 4 variant-supporting reads">
+##FILTER=<ID=VarFreq,Description="Variant allele frequency below 0.05">
+##FILTER=<ID=VarAvgRL,Description="Average clipped length of variant-supporting reads < 90">
+##FILTER=<ID=VarReadPos,Description="Relative average read position < 0.1">
+##FILTER=<ID=VarDist3,Description="Average distance to effective 3' end < 0.1">
+##FILTER=<ID=VarMMQS,Description="Average mismatch quality sum for variant reads > 100">
+##FILTER=<ID=VarMapQual,Description="Average mapping quality of variant reads < 15">
+##FILTER=<ID=VarBaseQual,Description="Average base quality of variant reads < 15">
+##FILTER=<ID=Strand,Description="Strand representation of variant reads < 0.01">
+##FILTER=<ID=RefAvgRL,Description="Average clipped length of ref-supporting reads < 90">
+##FILTER=<ID=RefReadPos,Description="Relative average read position < 0.1">
+##FILTER=<ID=RefDist3,Description="Average distance to effective 3' end < 0.1">
+##FILTER=<ID=RefMapQual,Description="Average mapping quality of reference reads < 15">
+##FILTER=<ID=RefBaseQual,Description="Average base quality of ref-supporting reads < 15">
+##FILTER=<ID=RefMMQS,Description="Average mismatch quality sum for ref-supporting reads > 100">
+##FILTER=<ID=MMQSdiff,Description="Mismatch quality sum difference (var - ref) > 50">
+##FILTER=<ID=MinMMQSdiff,Description="Mismatch quality sum difference (var - ref) < 50">
+##FILTER=<ID=MapQualDiff,Description="Mapping quality difference (ref - var) > 50">
+##FILTER=<ID=MaxBAQdiff,Description="Average base quality difference (ref - var) > 50">
+##FILTER=<ID=ReadLenDiff,Description="Average supporting read length difference (ref - var) > 0.25">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype code">
+##FORMAT=<ID=GQ,Number=1,Type=Integer,Description="Genotype quality">
+##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Read depth">
+##FORMAT=<ID=AD,Number=R,Type=Integer,Description="Read depth for each allele">
+##FORMAT=<ID=ADF,Number=R,Type=Integer,Description="Read depth for each allele on the forward strand">
+##FORMAT=<ID=ADR,Number=R,Type=Integer,Description="Read depth for each allele on the reverse strand">
+##bcftools_filterVersion=1.10.2+htslib-1.10.2
+##bcftools_filterCommand=filter --include 'INFO/SPV < 0.12 | INFO/GPV < 0.12' --output-type v --threads 1 input.vcf.gz; Date=Thu Apr 21 00:52:51 2022
+##bcftools_concatVersion=1.10.2+htslib-1.10.2
+##bcftools_concatCommand=concat --allow-overlaps --min-PQ 30 --output-type v --threads 1 input0.vcf.gz input1.vcf.gz input2.vcf.gz input3.vcf.gz input4.vcf.gz input5.vcf.gz input6.vcf.gz input7.vcf.gz input8.vcf.gz input9.vcf.gz input10.vcf.gz input11.vcf.gz input12.vcf.gz input13.vcf.gz input14.vcf.gz input15.vcf.gz input16.vcf.gz input17.vcf.gz input18.vcf.gz input19.vcf.gz input20.vcf.gz input21.vcf.gz input22.vcf.gz input23.vcf.gz input24.vcf.gz; Date=Thu Apr 21 00:53:11 2022
+##bcftools_filterCommand=filter --regions-file regions_file.bed --output-type v --threads 1 input.vcf.gz; Date=Wed Sep  7 23:57:08 2022
+##bcftools_filterCommand=filter --include 'FILTER ~ "PASS" | FILTER ~ "MinMMQSdiff" | FILTER ~ "RefReadPos"' --output-type v --threads 1 input.vcf.gz; Date=Thu Sep  8 00:00:22 2022
+##bcftools_viewVersion=1.10.2+htslib-1.10.2
+##bcftools_viewCommand=view --output-type v; Date=Thu Sep  8 00:00:33 2022
+##bcftools_filterCommand=filter --include 'INFO/SS ~ "2"' --output-type v --threads 1 input.vcf.gz; Date=Thu Sep  8 00:00:44 2022
+##SnpSiftVersion="SnpSift 4.3t (build 2017-11-24 10:18), by Pablo Cingolani"
+##SnpSiftCmd="SnpSift Annotate -info GENEINFO,PSEUDOGENEINFO,SAO,SSR,VC,NSF,NSM,NSN,SYN,U3,U5,ASS,DSS,INT,R3,R5,FREQ,COMMON,CLNVI,CLNORIGIN,CLNSIG,CLNDISDB,CLNDN,CLNREVSTAT,CLNACC dbSnp.vcf /home/galaxy/galaxy/database/datasets/001/336/dataset_1336409.dat"
+##INFO=<ID=NSF,Number=0,Type=Flag,Description="Has non-synonymous frameshift A coding region variation where one allele in the set changes all downstream amino acids. FxnClass = 44">
+##INFO=<ID=R3,Number=0,Type=Flag,Description="In 3' gene region FxnCode = 13">
+##INFO=<ID=R5,Number=0,Type=Flag,Description="In 5' gene region FxnCode = 15">
+##INFO=<ID=CLNSIG,Number=.,Type=String,Description="Variant Clinical Significance, 0 - Uncertain significance, 1 - not provided, 2 - Benign, 3 - Likely benign, 4 - Likely pathogenic, 5 - Pathogenic, 6 - drug response, 8 - confers sensitivity, 9 - risk-factor, 10 - association, 11 - protective, 12 - conflict, 13 - affects, 255 - other">
+##INFO=<ID=NSN,Number=0,Type=Flag,Description="Has non-synonymous nonsense A coding region variation where one allele in the set changes to STOP codon (TER). FxnClass = 41">
+##INFO=<ID=NSM,Number=0,Type=Flag,Description="Has non-synonymous missense A coding region variation where one allele in the set changes protein peptide. FxnClass = 42">
+##INFO=<ID=CLNORIGIN,Number=.,Type=String,Description="Allele Origin. One or more of the following values may be summed: 0 - unknown; 1 - germline; 2 - somatic; 4 - inherited; 8 - paternal; 16 - maternal; 32 - de-novo; 64 - biparental; 128 - uniparental; 256 - not-tested; 512 - tested-inconclusive; 1073741824 - other">
+##INFO=<ID=CLNREVSTAT,Number=.,Type=String,Description="ClinVar Review Status: no_assertion - No asserition provided by submitter, no_criteria - No assertion criteria provided by submitter, single - Classified by single submitter, mult - Classified by multiple submitters, conf - Criteria provided conflicting interpretations, exp - Reviewed by expert panel, guideline - Practice guideline">
+##INFO=<ID=COMMON,Number=0,Type=Flag,Description="RS is a common SNP. A common SNP is one that has at least one 1000Genomes population with a minor allele of frequency >= 1% and for which 2 or more founders contribute to that minor allele frequency.">
+##INFO=<ID=FREQ,Number=.,Type=String,Description="An ordered list of allele frequencies as reported by various genomic studies starting with the reference allele followed by alternate alleles as ordered in the ALT column. When not already in the dbSNP allele set alleles from the studies are added to the ALT column. The minor allele which was previuosly reported in VCF as the GMAF is the second largest value in the list. This is the GMAF reported on the RefSNP and EntrezSNP pages and VariationReporter">
+##INFO=<ID=ASS,Number=0,Type=Flag,Description="In acceptor splice site FxnCode = 73">
+##INFO=<ID=U3,Number=0,Type=Flag,Description="In 3' UTR Location is in an untranslated region (UTR). FxnCode = 53">
+##INFO=<ID=U5,Number=0,Type=Flag,Description="In 5' UTR Location is in an untranslated region (UTR). FxnCode = 55">
+##INFO=<ID=CLNACC,Number=.,Type=String,Description="For each allele (comma delimited), this is a pipe-delimited list of the Clinvar RCV phenotype accession.version strings associated with that allele.">
+##INFO=<ID=CLNDN,Number=.,Type=String,Description="Preferred ClinVar disease name">
+##INFO=<ID=DSS,Number=0,Type=Flag,Description="In donor splice-site FxnCode = 75">
+##INFO=<ID=SYN,Number=0,Type=Flag,Description="Has synonymous A coding region variation where one allele in the set does not change the encoded amino acid. FxnCode = 3">
+##INFO=<ID=CLNVI,Number=.,Type=String,Description="Variant Identifiers provided and maintained by organizations outside of NCBI, such as OMIM. Source and id separated by colon (:). Each identifier is separated by a vertical bar (|)">
+##INFO=<ID=VC,Number=1,Type=String,Description="Variation Class">
+##INFO=<ID=SAO,Number=1,Type=Integer,Description="Variant Allele Origin: 0 - unspecified, 1 - Germline, 2 - Somatic, 3 - Both">
+##INFO=<ID=PSEUDOGENEINFO,Number=1,Type=String,Description="Pairs each of pseudogene symbol:gene id. The pseudogene symbol and id are delimited by a colon (:) and each pair is delimited by a vertical bar (|)">
+##INFO=<ID=CLNDISDB,Number=.,Type=String,Description="Variant disease database name and ID, separated by colon (:)">
+##INFO=<ID=GENEINFO,Number=1,Type=String,Description="Pairs each of gene symbol:gene id. The gene symbol and id are delimited by a colon (:) and each pair is delimited by a vertical bar (|). Does not include pseudogenes.">
+##INFO=<ID=INT,Number=0,Type=Flag,Description="In Intron FxnCode = 6">
+##INFO=<ID=SSR,Number=1,Type=Integer,Description="Variant Suspect Reason Codes (may be more than one value added together) 0 - unspecified, 1 - Paralog, 2 - byEST, 4 - oldAlign, 8 - Para_EST, 16 - 1kg_failed, 1024 - other">
+##bcftools_concatCommand=concat --allow-overlaps --min-PQ 30 --output-type v --threads 1 input0.vcf.gz input1.vcf.gz input2.vcf.gz input3.vcf.gz input4.vcf.gz input5.vcf.gz input6.vcf.gz input7.vcf.gz input8.vcf.gz input9.vcf.gz input10.vcf.gz input11.vcf.gz input12.vcf.gz input13.vcf.gz input14.vcf.gz input15.vcf.gz input16.vcf.gz input17.vcf.gz input18.vcf.gz input19.vcf.gz input20.vcf.gz input21.vcf.gz input22.vcf.gz input23.vcf.gz input24.vcf.gz; Date=Thu Sep  8 00:04:57 2022
+##bcftools_filterCommand=filter --include 'INFO/COMMON = 0' --output-type v --threads 1 input.vcf.gz; Date=Thu Sep  8 00:05:02 2022
+##SnpEffVersion="4.3t (build 2017-11-24 10:18), by Pablo Cingolani"
+##SnpEffCmd="SnpEff  -i vcf -o vcf -stats /home/galaxy/galaxy/database/datasets/001/336/dataset_1336462.dat hg38 /home/galaxy/galaxy/database/datasets/001/336/dataset_1336460.dat "
+##INFO=<ID=ANN,Number=.,Type=String,Description="Functional annotations: 'Allele | Annotation | Annotation_Impact | Gene_Name | Gene_ID | Feature_Type | Feature_ID | Transcript_BioType | Rank | HGVS.c | HGVS.p | cDNA.pos / cDNA.length | CDS.pos / CDS.length | AA.pos / AA.length | Distance | ERRORS / WARNINGS / INFO'">
+##INFO=<ID=LOF,Number=.,Type=String,Description="Predicted loss of function effects for this variant. Format: 'Gene_Name | Gene_ID | Number_of_transcripts_in_gene | Percent_of_transcripts_affected'">
+##INFO=<ID=NMD,Number=.,Type=String,Description="Predicted nonsense mediated decay effects for this variant. Format: 'Gene_Name | Gene_ID | Number_of_transcripts_in_gene | Percent_of_transcripts_affected'">
+##INFO=<ID=ANNOVAR_DATE,Number=1,Type=String,Description="Flag the start of ANNOVAR annotation for one alternative allele">
+##INFO=<ID=cosmic70,Number=.,Type=String,Description="cosmic70 annotation provided by ANNOVAR">
+##INFO=<ID=SIFT_score,Number=.,Type=String,Description="SIFT_score annotation provided by ANNOVAR">
+##INFO=<ID=SIFT_pred,Number=.,Type=String,Description="SIFT_pred annotation provided by ANNOVAR">
+##INFO=<ID=Polyphen2_HDIV_score,Number=.,Type=String,Description="Polyphen2_HDIV_score annotation provided by ANNOVAR">
+##INFO=<ID=Polyphen2_HDIV_pred,Number=.,Type=String,Description="Polyphen2_HDIV_pred annotation provided by ANNOVAR">
+##INFO=<ID=Polyphen2_HVAR_score,Number=.,Type=String,Description="Polyphen2_HVAR_score annotation provided by ANNOVAR">
+##INFO=<ID=Polyphen2_HVAR_pred,Number=.,Type=String,Description="Polyphen2_HVAR_pred annotation provided by ANNOVAR">
+##INFO=<ID=LRT_score,Number=.,Type=String,Description="LRT_score annotation provided by ANNOVAR">
+##INFO=<ID=LRT_pred,Number=.,Type=String,Description="LRT_pred annotation provided by ANNOVAR">
+##INFO=<ID=MutationTaster_score,Number=.,Type=String,Description="MutationTaster_score annotation provided by ANNOVAR">
+##INFO=<ID=MutationTaster_pred,Number=.,Type=String,Description="MutationTaster_pred annotation provided by ANNOVAR">
+##INFO=<ID=MutationAssessor_score,Number=.,Type=String,Description="MutationAssessor_score annotation provided by ANNOVAR">
+##INFO=<ID=MutationAssessor_pred,Number=.,Type=String,Description="MutationAssessor_pred annotation provided by ANNOVAR">
+##INFO=<ID=FATHMM_score,Number=.,Type=String,Description="FATHMM_score annotation provided by ANNOVAR">
+##INFO=<ID=FATHMM_pred,Number=.,Type=String,Description="FATHMM_pred annotation provided by ANNOVAR">
+##INFO=<ID=RadialSVM_score,Number=.,Type=String,Description="RadialSVM_score annotation provided by ANNOVAR">
+##INFO=<ID=RadialSVM_pred,Number=.,Type=String,Description="RadialSVM_pred annotation provided by ANNOVAR">
+##INFO=<ID=LR_score,Number=.,Type=String,Description="LR_score annotation provided by ANNOVAR">
+##INFO=<ID=LR_pred,Number=.,Type=String,Description="LR_pred annotation provided by ANNOVAR">
+##INFO=<ID=VEST3_score,Number=.,Type=String,Description="VEST3_score annotation provided by ANNOVAR">
+##INFO=<ID=CADD_raw,Number=.,Type=String,Description="CADD_raw annotation provided by ANNOVAR">
+##INFO=<ID=CADD_phred,Number=.,Type=String,Description="CADD_phred annotation provided by ANNOVAR">
+##INFO=<ID=GERP++_RS,Number=.,Type=String,Description="GERP++_RS annotation provided by ANNOVAR">
+##INFO=<ID=phyloP46way_placental,Number=.,Type=String,Description="phyloP46way_placental annotation provided by ANNOVAR">
+##INFO=<ID=phyloP100way_vertebrate,Number=.,Type=String,Description="phyloP100way_vertebrate annotation provided by ANNOVAR">
+##INFO=<ID=SiPhy_29way_logOdds,Number=.,Type=String,Description="SiPhy_29way_logOdds annotation provided by ANNOVAR">
+##INFO=<ID=CLNALLELEID,Number=.,Type=String,Description="CLNALLELEID annotation provided by ANNOVAR">
+##INFO=<ID=ALLELE_END,Number=0,Type=Flag,Description="Flag the end of ANNOVAR annotation for one alternative allele">
+##bcftools_filterCommand=filter --include 'INFO/LOF != "." | INFO/CLNSIG != "." | INFO/cosmic70 != "." | INFO/Polyphen2_HDIV_pred != "." | INFO/LRT_pred != "." | INFO/MutationTaster_pred != "." | INFO/MutationAssessor_pred != "." | INFO/FATHMM_pred != "."' --output-type v --threads 1 input.vcf.gz; Date=Thu Sep  8 00:06:53 2022
+##SnpEffCmd="SnpEff  -i vcf -o vcf -stats /home/galaxy/galaxy/database/datasets/001/336/dataset_1336466.dat hg38 /home/galaxy/galaxy/database/datasets/001/336/dataset_1336464.dat "
+##INFO=<ID=ANN,Number=.,Type=String,Description="Functional annotations: 'Allele | Annotation | Annotation_Impact | Gene_Name | Gene_ID | Feature_Type | Feature_ID | Transcript_BioType | Rank | HGVS.c | HGVS.p | cDNA.pos / cDNA.length | CDS.pos / CDS.length | AA.pos / AA.length | Distance | ERRORS / WARNINGS / INFO' ">
+##FORMAT=<ID=VAF,Number=R,Type=float,Description="VariantAllele Frequency">
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	01004_normal	01004_tumor
+chr1	11650684	.	A	C	.	PASS	DP=47;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.11479	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:19:19,0:12,0:7,0:0.000	0/1:.:28:24,4:14,1:10,3:0.143
+chr1	16058496	rs1323290807	A	G	.	PASS	DP=142;SOMATIC;SS=2;SSC=10;GPV=1;SPV=0.099679;GENEINFO=FAM131C:348487;NSM;SSR=0;VC=SNV	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:39:39,0:19,0:20,0:0.000	0/1:.:103:96,7:48,6:48,1:0.068
+chr1	27012594	rs1310186400	A	C	.	PASS	DP=54;SOMATIC;SS=2;SSC=10;GPV=1;SPV=0.090013;FREQ=GnomAD_exomes:1,.,7.598e-06|TOMMO:0.9985,0.001492,.;GENEINFO=TENT5B:115572;NSM;SSR=0;VC=SNV	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:17:17,0:7,0:10,0:0.000	0/1:.:37:31,6:18,1:13,5:0.162
+chr1	44650749	rs201065980	G	A	.	PASS	DP=103;SOMATIC;SS=2;SSC=66;GPV=1;SPV=2.1118e-07;FREQ=1000Genomes:0.9998,0.0001997|ExAC:0.9999,0.0001247|GnomAD:1,2.139e-05|GnomAD_exomes:0.9999,0.0001238|Korea1K:0.9995,0.0005459|TOMMO:0.9994,0.0005967|TOPMED:1,2.645e-05|dbGaP_PopFreq:0.9999,8.681e-05;GENEINFO=RNF220:55182;NSM;R3;SSR=0;VC=SNV	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:26:26,0:15,0:11,0:0.000	0/1:.:77:37,40:16,16:21,24:0.519
+chr1	48736294	.	C	CT	.	MinMMQSdiff	DP=149;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.10454;INDEL;LOF=(BEND5|BEND5|2|1.00)	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:46:45,0:25,0:20,0:0.000	0/1:.:103:95,6:44,4:51,2:0.059
+chr1	167553617	.	T	C	.	PASS	DP=35;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.1143	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:14:14,0:10,0:4,0:0.000	0/1:.:21:17,4:6,1:11,3:0.190
+chr1	181798751	.	A	G	.	PASS	DP=63;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.10662	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:22:22,0:12,0:10,0:0.000	0/1:.:41:36,5:17,4:19,1:0.122
+chr1	200998483	rs777255666	A	C	.	PASS	DP=111;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.11947;FREQ=ExAC:1,8.281e-06|Korea1K:0.9973,0.002729;GENEINFO=KIF21B:23046;NSM;SSR=0;VC=SNV	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:28:28,0:18,0:10,0:0.000	0/1:.:83:75,7:44,1:31,6:0.085
+chr1	235138181	.	CA	C	.	MinMMQSdiff	DP=128;SOMATIC;SS=2;SSC=15;GPV=1;SPV=0.028543;INDEL	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:50:42,3:21,3:21,0:0.067	0/1:.:78:60,16:31,8:29,8:0.211
+chr1	235775088	.	TA	T	.	MinMMQSdiff	DP=181;SOMATIC;SS=2;SSC=10;GPV=1;SPV=0.086694;INDEL	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:53:51,0:25,0:26,0:0.000	0/1:.:128:118,7:63,3:55,4:0.056
+chr2	3702436	.	T	C	.	PASS	DP=100;SOMATIC;SS=2;SSC=11;GPV=1;SPV=0.069291	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:35:35,0:27,0:8,0:0.000	0/1:.:65:59,6:41,1:18,5:0.092
+chr2	5693166	.	A	G	.	PASS	DP=59;SOMATIC;SS=2;SSC=13;GPV=1;SPV=0.047667	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:13:13,0:5,0:8,0:0.000	0/1:.:46:35,11:15,9:20,2:0.239
+chr2	30232202	rs1677600959	A	G	.	PASS	DP=25;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.11647;FREQ=GnomAD:1,8.673e-06|dbGaP_PopFreq:1,0;GENEINFO=LBH:81606;INT;NSM;SSR=0;VC=SNV	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:8:8,0:6,0:2,0:0.000	0/1:.:17:12,5:10,4:2,1:0.294
+chr2	152148302	.	TA	T	.	PASS	DP=118;SOMATIC;SS=2;SSC=12;GPV=1;SPV=0.057995;INDEL	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:30:29,0:12,0:17,0:0.000	0/1:.:88:73,9:45,5:28,4:0.110
+chr2	229271024	rs1690724066	T	C	.	PASS	DP=58;SOMATIC;SS=2;SSC=15;GPV=1;SPV=0.027364;FREQ=TOMMO:0.9987,0.001313;GENEINFO=PID1:55022;NSM;R5;SSR=0;U5;VC=SNV	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:25:25,0:11,0:14,0:0.000	0/1:.:33:27,6:9,2:18,4:0.182
+chr3	24118973	.	G	GT	.	MinMMQSdiff	DP=53;SOMATIC;SS=2;SSC=13;GPV=1;SPV=0.044075;INDEL	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:23:17,1:12,0:5,1:0.056	0/1:.:30:15,7:12,4:3,3:0.318
+chr3	32953733	rs1575380659	T	G	.	PASS	DP=166;SOMATIC;SS=2;SSC=10;GPV=1;SPV=0.096467;FREQ=Korea1K:0.988,0.01201|dbGaP_PopFreq:1,4.677e-05;GENEINFO=CCR4:1233;NSM;SSR=0;VC=SNV	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:46:46,0:22,0:24,0:0.000	0/1:.:120:112,7:46,4:66,3:0.059
+chr3	38485666	.	CTTT	C	.	PASS	DP=33;SOMATIC;SS=2;SSC=16;GPV=1;SPV=0.023839;INDEL	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:12:6,0:4,0:2,0:0.000	0/1:.:21:6,8:4,3:2,5:0.571
+chr3	108505838	.	CA	C	.	MinMMQSdiff	DP=164;SOMATIC;SS=2;SSC=14;GPV=1;SPV=0.037929;INDEL	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:44:36,0:20,0:16,0:0.000	0/1:.:120:98,11:61,6:37,5:0.101
+chr3	129315500	rs2071293837	T	G	.	PASS	DP=29;SOMATIC;SS=2;SSC=23;GPV=1;SPV=0.0041229;FREQ=TOMMO:0.9963,0.003703;GENEINFO=H1-10:8971|H1-10-AS1:339942;NSM;R5;SSR=0;VC=SNV	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:14:14,0:8,0:6,0:0.000	0/1:.:15:8,7:5,4:3,3:0.467
+chr4	122187879	.	A	AT	.	MinMMQSdiff	DP=164;SOMATIC;SS=2;SSC=17;GPV=1;SPV=0.019764;INDEL;LOF=(KIAA1109|KIAA1109|1|1.00)	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:39:37,0:22,0:15,0:0.000	0/1:.:125:107,14:56,5:51,9:0.116
+chr5	137677661	.	CA	C	.	MinMMQSdiff	DP=115;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.10535;INDEL	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:29:21,0:12,0:9,0:0.000	0/1:.:86:69,9:37,6:32,3:0.115
+chr5	160092476	rs1755181710	T	C	.	PASS	DP=139;SOMATIC;SS=2;SSC=18;GPV=1;SPV=0.013;FREQ=TOMMO:0.9967,0.003282;GENEINFO=PWWP2A:114825;INT;NSM;SSR=0;VC=SNV	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:47:47,0:25,0:22,0:0.000	0/1:.:92:81,10:22,9:59,1:0.110
+chr5	177257228	.	C	CT	.	MinMMQSdiff	DP=58;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.1043;INDEL	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:18:13,0:5,0:8,0:0.000	0/1:.:40:25,6:15,3:10,3:0.194
+chr6	35823448	.	T	TAC	.	PASS	DP=62;SOMATIC;SS=2;SSC=15;GPV=1;SPV=0.026386;INDEL	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:18:16,1:12,0:4,1:0.059	0/1:.:44:26,13:16,11:10,2:0.333
+chr6	36200360	.	A	G	.	PASS	DP=113;SOMATIC;SS=2;SSC=11;GPV=1;SPV=0.065653	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:31:31,0:16,0:15,0:0.000	0/1:.:82:72,8:37,4:35,4:0.100
+chr6	39934360	.	T	C	.	PASS	DP=48;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.11077	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:16:16,0:9,0:7,0:0.000	0/1:.:32:26,5:14,1:12,4:0.161
+chr6	87701546	.	T	G	.	PASS	DP=34;SOMATIC;SS=2;SSC=13;GPV=1;SPV=0.044477	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:17:17,0:7,0:10,0:0.000	0/1:.:17:12,4:3,2:9,2:0.250
+chr6	113859846	.	A	G	.	PASS	DP=21;SOMATIC;SS=2;SSC=12;GPV=1;SPV=0.055138	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:10:10,0:2,0:8,0:0.000	0/1:.:11:7,4:7,4:0,0:0.364
+chr6	138107153	.	T	C	.	PASS	DP=52;SOMATIC;SS=2;SSC=11;GPV=1;SPV=0.077483	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:20:20,0:8,0:12,0:0.000	0/1:.:32:27,5:4,1:23,4:0.156
+chr6	152278138	rs2093774796	C	T	.	PASS	DP=103;SOMATIC;SS=2;SSC=57;GPV=1;SPV=1.9582e-06;FREQ=GnomAD:1,7.127e-06|TOPMED:1,3.778e-06|dbGaP_PopFreq:1,0;GENEINFO=SYNE1:23345;NSM;R5;SSR=0;VC=SNV	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:21:21,0:15,0:6,0:0.000	0/1:.:82:39,43:18,25:21,18:0.524
+chr7	44082410	rs2096202919	A	C	.	PASS	DP=62;SOMATIC;SS=2;SSC=13;GPV=1;SPV=0.043;FREQ=GnomAD:1,7.144e-06|TOPMED:1,1.511e-05|dbGaP_PopFreq:1,0;GENEINFO=POLM:27434;NSM;SSR=0;VC=SNV	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:28:28,0:10,0:18,0:0.000	0/1:.:34:29,5:13,1:16,4:0.147
+chr7	100577295	.	A	C	.	PASS	DP=66;SOMATIC;SS=2;SSC=17;GPV=1;SPV=0.01619	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:22:22,0:12,0:10,0:0.000	0/1:.:44:33,9:23,2:10,7:0.214
+chr7	129225249	.	A	G	.	PASS	DP=19;SOMATIC;SS=2;SSC=12;GPV=1;SPV=0.05418	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:9:9,0:3,0:6,0:0.000	0/1:.:10:6,4:6,4:0,0:0.400
+chr7	137015017	.	A	C	.	PASS	DP=154;SOMATIC;SS=2;SSC=10;GPV=1;SPV=0.092245	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:49:49,0:25,0:24,0:0.000	0/1:.:105:97,6:56,1:41,5:0.058
+chr8	64616285	.	G	GA	.	PASS	DP=152;SOMATIC;SS=2;SSC=16;GPV=1;SPV=0.022125;INDEL	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:53:49,0:23,0:26,0:0.000	0/1:.:99:88,9:52,7:36,2:0.093
+chr8	85662359	rs1814217731	A	G	.	PASS	DP=188;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.11249;FREQ=dbGaP_PopFreq:1,0;SSR=0;VC=SNV	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:56:56,0:13,0:43,0:0.000	0/1:.:132:124,6:20,5:104,1:0.046
+chr8	144437095	.	T	G	.	PASS	DP=103;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.10209	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:37:37,0:19,0:18,0:0.000	0/1:.:66:61,5:24,3:37,2:0.076
+chr9	34371544	.	A	C	.	PASS	DP=83;SOMATIC;SS=2;SSC=10;GPV=1;SPV=0.091683	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:30:30,0:12,0:18,0:0.000	0/1:.:53:46,5:27,1:19,4:0.098
+chr9	93257022	rs1843418763	T	C	.	PASS	DP=88;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.11696;FREQ=dbGaP_PopFreq:1,3.13e-05;GENEINFO=WNK2:65268;SSR=0;SYN;VC=SNV	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:30:30,0:18,0:12,0:0.000	0/1:.:58:53,5:39,1:14,4:0.086
+chr9	93257030	rs745449856	A	C	.	PASS	DP=91;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.10193;FREQ=ExAC:1,1.163e-05,.|Korea1K:0.9984,0.001638,.|TOPMED:1,7.964e-06,.|dbGaP_PopFreq:0.9999,7.117e-05,0;GENEINFO=WNK2:65268;NSM;SSR=0;VC=SNV	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:28:28,0:17,0:11,0:0.000	0/1:.:63:57,6:35,2:22,4:0.095
+chr9	122893029	.	TA	T	.	MinMMQSdiff	DP=159;SOMATIC;SS=2;SSC=13;GPV=1;SPV=0.046021;INDEL	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:42:37,1:18,1:19,0:0.026	0/1:.:117:87,14:52,8:35,6:0.139
+chr9	128633818	.	T	C	.	PASS	DP=133;SOMATIC;SS=2;SSC=12;GPV=1;SPV=0.055306	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:39:39,0:20,0:19,0:0.000	0/1:.:94:85,8:51,1:34,7:0.086
+chr9	136763918	.	A	G	.	PASS	DP=109;SOMATIC;SS=2;SSC=10;GPV=1;SPV=0.080707	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:32:32,0:18,0:14,0:0.000	0/1:.:77:70,7:30,6:40,1:0.091
+chr9	137743352	.	CT	C	.	MinMMQSdiff	DP=164;SOMATIC;SS=2;SSC=17;GPV=1;SPV=0.018344;INDEL	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:43:39,1:23,1:16,0:0.025	0/1:.:121:95,18:54,11:41,7:0.159
+chr10	11463685	.	A	G	.	PASS	DP=102;SOMATIC;SS=2;SSC=16;GPV=1;SPV=0.0231	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:41:40,1:23,1:17,0:0.024	0/1:.:61:51,10:18,9:33,1:0.164
+chr10	26697814	.	A	G	.	PASS	DP=46;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.11779	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:18:18,0:6,0:12,0:0.000	0/1:.:28:23,4:8,3:15,1:0.148
+chr10	75108094	.	T	C	.	PASS	DP=93;SOMATIC;SS=2;SSC=11;GPV=1;SPV=0.063155	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:29:29,0:15,0:14,0:0.000	0/1:.:64:56,7:34,1:22,6:0.111
+chr10	119030064	rs1209333669	A	C	.	PASS	DP=29;SOMATIC;SS=2;SSC=19;GPV=1;SPV=0.010536;FREQ=TOPMED:1,.,2.389e-05|dbGaP_PopFreq:1,.,0;GENEINFO=NANOS1:340719;NSM;SSR=0;VC=SNV	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:14:14,0:12,0:2,0:0.000	0/1:.:15:9,6:5,3:4,3:0.400
+chr11	6603418	.	A	G	.	PASS	DP=78;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.10724	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:27:27,0:13,0:14,0:0.000	0/1:.:51:45,5:16,4:29,1:0.100
+chr11	32392004	.	T	TTGGGAGG	.	MinMMQSdiff	DP=150;SOMATIC;SS=2;SSC=101;GPV=1;SPV=6.8811e-11;INDEL;LOF=(WT1|WT1|5|1.00)	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:41:41,0:31,0:10,0:0.000	0/1:.:109:52,55:27,27:25,28:0.514
+chr11	66333308	.	A	G	.	PASS	DP=95;SOMATIC;SS=2;SSC=10;GPV=1;SPV=0.087528	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:24:24,0:10,0:14,0:0.000	0/1:.:71:63,8:29,6:34,2:0.113
+chr11	66591673	rs1590825346	A	C	.	PASS	DP=114;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.11476;FREQ=Korea1K:0.9967,0.003275;GENEINFO=CCS:9973|CCDC87:55231;NSM;R5;SSR=0;VC=SNV	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:39:39,0:19,0:20,0:0.000	0/1:.:75:69,5:47,1:22,4:0.068
+chr12	39293733	.	GA	G	.	PASS	DP=108;SOMATIC;SS=2;SSC=13;GPV=1;SPV=0.046488;INDEL	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:28:28,0:19,0:9,0:0.000	0/1:.:80:64,9:36,6:28,3:0.123
+chr12	52520086	.	A	G	.	PASS	DP=83;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.11591	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:28:28,0:14,0:14,0:0.000	0/1:.:55:49,5:35,4:14,1:0.093
+chr12	113181030	.	A	C	.	PASS	DP=116;SOMATIC;SS=2;SSC=95;GPV=1;SPV=2.8536e-10	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:39:39,0:16,0:23,0:0.000	0/1:.:77:36,41:16,22:20,19:0.532
+chr12	122183296	.	T	G	.	PASS	DP=60;SOMATIC;SS=2;SSC=13;GPV=1;SPV=0.046436;LOF=(LRRC43|LRRC43|2|0.50)	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:23:23,0:9,0:14,0:0.000	0/1:.:37:31,6:12,5:19,1:0.162
+chr14	91969289	.	TA	T	.	MinMMQSdiff	DP=156;SOMATIC;SS=2;SSC=15;GPV=1;SPV=0.02796;INDEL	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:61:58,0:31,0:27,0:0.000	0/1:.:95:83,7:38,5:45,2:0.078
+chr15	41511296	.	A	G	.	PASS	DP=43;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.1021	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:15:15,0:5,0:10,0:0.000	0/1:.:28:23,5:10,3:13,2:0.179
+chr15	50609732	.	TA	T	.	MinMMQSdiff	DP=191;SOMATIC;SS=2;SSC=11;GPV=1;SPV=0.078004;INDEL	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:51:49,0:23,0:26,0:0.000	0/1:.:140:126,8:64,5:62,3:0.060
+chr15	70891968	.	T	C	.	PASS	DP=100;SOMATIC;SS=2;SSC=12;GPV=1;SPV=0.05157	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:38:38,0:23,0:15,0:0.000	0/1:.:62:56,6:31,2:25,4:0.097
+chr16	662321	.	T	C	.	PASS	DP=92;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.11106	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:32:32,0:20,0:12,0:0.000	0/1:.:60:55,5:29,2:26,3:0.083
+chr16	10907873	rs2039285618	A	G	.	PASS	DP=77;SOMATIC;SS=2;SSC=10;GPV=1;SPV=0.096829;FREQ=TOMMO:0.9996,0.000358;GENEINFO=CIITA:4261;INT;NSM;SSR=0;VC=SNV	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:24:24,0:10,0:14,0:0.000	0/1:.:53:47,6:28,1:19,5:0.113
+chr16	30582843	rs1597148926	T	G	.	PASS	DP=71;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.11095;FREQ=Korea1K:0.9973,0.002738;GENEINFO=ZNF785:146540;NSM;SSR=0;VC=SNV	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:21:21,0:10,0:11,0:0.000	0/1:.:50:44,6:5,5:39,1:0.120
+chr16	30659613	rs2052429106	A	G	.	PASS	DP=20;SOMATIC;SS=2;SSC=11;GPV=1;SPV=0.068111;FREQ=dbGaP_PopFreq:1,0;GENEINFO=FBRS:64319;NSM;SSR=0;VC=SNV	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:9:9,0:5,0:4,0:0.000	0/1:.:11:7,4:4,3:3,1:0.364
+chr16	57077971	rs762970987	A	C	.	PASS	DP=98;SOMATIC;SS=2;SSC=11;GPV=1;SPV=0.07847;FREQ=ExAC:1,.,8.548e-06|GnomAD_exomes:1,.,4.01e-06|dbGaP_PopFreq:1,0,.;GENEINFO=NLRC5:84166;NSM;R3;SSR=0;VC=SNV	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:33:33,0:15,0:18,0:0.000	0/1:.:65:59,6:30,1:29,5:0.092
+chr16	67543151	.	A	G	.	PASS	DP=99;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.11701	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:29:29,0:14,0:15,0:0.000	0/1:.:70:64,6:27,5:37,1:0.086
+chr16	84196276	.	A	C	.	PASS	DP=68;SOMATIC;SS=2;SSC=14;GPV=1;SPV=0.03324	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:25:25,0:16,0:9,0:0.000	0/1:.:43:36,7:10,5:26,2:0.163
+chr16	85657427	rs2052056269	T	C	.	PASS	DP=67;SOMATIC;SS=2;SSC=14;GPV=1;SPV=0.033048;FREQ=TOMMO:0.999,0.0009547;GENEINFO=GSE1:23199;NSM;R3;SSR=0;VC=SNV	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:22:22,0:17,0:5,0:0.000	0/1:.:45:37,8:24,1:13,7:0.178
+chr17	7235658	rs1597560221	A	C	.	PASS	DP=148;SOMATIC;SS=2;SSC=11;GPV=1;SPV=0.072541;FREQ=Korea1K:0.9973,0.002729;GENEINFO=DVL2:1856|PHF23:79142;NSM;R5;SSR=0;VC=SNV	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:45:45,0:21,0:24,0:0.000	0/1:.:103:95,7:62,1:33,6:0.069
+chr17	56834826	.	T	C	.	PASS	DP=52;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.11622	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:21:21,0:16,0:5,0:0.000	0/1:.:31:27,4:15,2:12,2:0.129
+chr17	74525837	.	A	G	.	PASS	DP=136;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.10968	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:36:36,0:20,0:16,0:0.000	0/1:.:100:93,7:40,6:53,1:0.070
+chr17	81665449	.	A	G	.	PASS	DP=79;SOMATIC;SS=2;SSC=10;GPV=1;SPV=0.084997	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:20:20,0:10,0:10,0:0.000	0/1:.:59:51,8:14,7:37,1:0.136
+chr18	23136360	.	T	G	.	PASS	DP=31;SOMATIC;SS=2;SSC=13;GPV=1;SPV=0.048889	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:15:14,0:4,0:10,0:0.000	0/1:.:16:10,4:6,3:4,1:0.286
+chr18	33943180	.	TA	T	.	MinMMQSdiff	DP=120;SOMATIC;SS=2;SSC=10;GPV=1;SPV=0.079905;INDEL	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:39:39,0:29,0:10,0:0.000	0/1:.:81:71,6:37,5:34,1:0.078
+chr18	57436318	.	A	G	.	PASS	DP=55;SOMATIC;SS=2;SSC=10;GPV=1;SPV=0.091832	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:13:13,0:7,0:6,0:0.000	0/1:.:42:33,8:9,7:24,1:0.195
+chr19	3753833	.	T	C	.	PASS	DP=49;SOMATIC;SS=2;SSC=13;GPV=1;SPV=0.042387	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:12:12,0:6,0:6,0:0.000	0/1:.:37:27,10:18,1:9,9:0.270
+chr19	6375414	.	T	C	.	PASS	DP=42;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.11302	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:17:17,0:9,0:8,0:0.000	0/1:.:25:21,4:10,1:11,3:0.160
+chr19	6375439	.	A	C	.	PASS	DP=41;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.11076	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:15:15,0:8,0:7,0:0.000	0/1:.:26:18,4:8,1:10,3:0.182
+chr19	10092121	.	A	C	.	PASS	DP=121;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.10576	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:37:37,0:16,0:21,0:0.000	0/1:.:84:78,6:51,1:27,5:0.071
+chr19	16878242	.	A	G	.	PASS	DP=84;SOMATIC;SS=2;SSC=10;GPV=1;SPV=0.099575	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:26:26,0:11,0:15,0:0.000	0/1:.:58:52,6:17,5:35,1:0.103
+chr19	17300950	rs1223479129	C	G	.	PASS	DP=87;SOMATIC;SS=2;SSC=13;GPV=1;SPV=0.049205;FREQ=GnomAD_exomes:1,4.023e-06,.|TOMMO:0.9992,.,0.0008354;GENEINFO=MRPL34:64981|ABHD8:79575;NSM;R5;SSR=0;VC=SNV	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:29:29,0:14,0:15,0:0.000	0/1:.:58:50,7:15,6:35,1:0.123
+chr19	17830104	.	T	C	.	PASS	DP=96;SOMATIC;SS=2;SSC=14;GPV=1;SPV=0.03365	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:26:26,0:13,0:13,0:0.000	0/1:.:70:59,10:33,1:26,9:0.145
+chr19	39425108	.	A	C	.	PASS	DP=91;SOMATIC;SS=2;SSC=13;GPV=1;SPV=0.047715	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:31:31,0:13,0:18,0:0.000	0/1:.:60:53,7:27,3:26,4:0.117
+chr19	42225307	rs757193095	A	C	.	PASS	DP=61;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.11061;FREQ=ExAC:0.9999,0.0001304;GENEINFO=ZNF526:116115;NSM;SSR=0;VC=SNV	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:21:21,0:12,0:9,0:0.000	0/1:.:40:35,5:10,4:25,1:0.125
+chr19	45785825	.	A	C	.	PASS	DP=65;SOMATIC;SS=2;SSC=11;GPV=1;SPV=0.063509	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:23:23,0:11,0:12,0:0.000	0/1:.:42:36,6:21,2:15,4:0.143
+chr19	46787914	rs2055198734	T	G	.	PASS	DP=61;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.11061;FREQ=TOMMO:0.9998,0.000179;GENEINFO=SLC1A5:6510;NSM;R5;SSR=0;VC=SNV	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:21:21,0:13,0:8,0:0.000	0/1:.:40:35,5:21,4:14,1:0.125
+chr19	47754611	.	A	C	.	PASS	DP=44;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.10935	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:15:15,0:8,0:7,0:0.000	0/1:.:29:24,5:8,4:16,1:0.172
+chr19	48837393	.	T	G	.	PASS	DP=111;SOMATIC;SS=2;SSC=10;GPV=1;SPV=0.091093	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:31:31,0:14,0:17,0:0.000	0/1:.:80:72,7:23,6:49,1:0.089
+chr19	49651647	rs7251334	A	C	.	PASS	DP=37;SOMATIC;SS=2;SSC=15;GPV=1;SPV=0.029941;FREQ=1000Genomes:0.003195,0.9968|ALSPAC:0.006746,0.9933|Estonian:0.009865,0.9901|ExAC:0.01316,0.9868|GENOME_DK:0.075,0.925|GnomAD:0.009591,0.9904|GnomAD_exomes:0.01297,0.987|KOREAN:0.0003544,0.9996|Korea1K:0,1|NorthernSweden:0.01333,0.9867|Qatari:0.009259,0.9907|SGDP_PRJ:0.00369,0.9963|Siberian:0,1|TOMMO:5.996e-05,0.9999|TOPMED:0.009007,0.991|TWINSUK:0.002697,0.9973|dbGaP_PopFreq:0.01097,0.989;GENEINFO=SCAF1:58506;NSM;SSR=0;VC=SNV	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:10:9,1:4,1:5,0:0.100	0/1:.:27:13,13:7,7:6,6:0.500
+chr20	36436128	.	A	G	.	PASS	DP=80;SOMATIC;SS=2;SSC=10;GPV=1;SPV=0.085947	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:26:26,0:8,0:18,0:0.000	0/1:.:54:48,6:13,5:35,1:0.111
+chr20	36436160	.	A	G	.	PASS	DP=85;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.11645	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:29:29,0:12,0:17,0:0.000	0/1:.:56:51,5:21,4:30,1:0.089
+chr20	38926705	.	A	G	.	PASS	DP=32;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.10779	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:13:13,0:6,0:7,0:0.000	0/1:.:19:15,4:2,3:13,1:0.211
+chr20	49850763	.	G	GT	.	MinMMQSdiff	DP=138;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.10754;INDEL;LOF=(SLC9A8|SLC9A8|6|0.17)	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:37:36,0:20,0:16,0:0.000	0/1:.:101:92,7:41,2:51,5:0.071
+chr20	58470723	rs780513473	T	C	.	PASS	DP=68;SOMATIC;SS=2;SSC=15;GPV=1;SPV=0.027829;FREQ=ExAC:0.9997,0.0002659|Korea1K:0.9961,0.003855;GENEINFO=APCDD1L:164284;NSM;SSR=0;VC=SNV	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:26:26,0:12,0:14,0:0.000	0/1:.:42:35,7:11,1:24,6:0.167
+chr20	63962289	.	A	G	.	PASS	DP=119;SOMATIC;SS=2;SSC=11;GPV=1;SPV=0.074509	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:32:32,0:12,0:20,0:0.000	0/1:.:87:79,8:28,7:51,1:0.092
+chr21	44294402	.	A	G	.	PASS	DP=39;SOMATIC;SS=2;SSC=10;GPV=1;SPV=0.093821	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:10:10,0:9,0:1,0:0.000	0/1:.:29:21,7:20,7:1,0:0.250
+chr21	46391311	.	A	G	.	PASS	DP=98;SOMATIC;SS=2;SSC=11;GPV=1;SPV=0.07847	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:33:33,0:13,0:20,0:0.000	0/1:.:65:59,6:19,4:40,2:0.092
+chr22	21642940	rs779759705	A	G	.	PASS	DP=54;SOMATIC;SS=2;SSC=10;GPV=1;SPV=0.086849;FREQ=ExAC:0.9999,7.462e-05|GnomAD:1,7.143e-06|GnomAD_exomes:1,2.219e-05|TOPMED:1,7.556e-06|dbGaP_PopFreq:1,0;GENEINFO=SDF2L1:23753;NSM;SSR=0;VC=SNV	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:15:15,0:9,0:6,0:0.000	0/1:.:39:32,7:16,6:16,1:0.179
+chr22	24095973	.	A	G	.	PASS	DP=135;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.11972	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:46:46,0:16,0:30,0:0.000	0/1:.:89:84,5:29,4:55,1:0.056
+chr22	29050610	.	T	C	.	PASS	DP=75;SOMATIC;SS=2;SSC=10;GPV=1;SPV=0.089227	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:21:21,0:14,0:7,0:0.000	0/1:.:54:47,7:36,1:11,6:0.130
+chr22	37373680	.	T	C	.	PASS	DP=91;SOMATIC;SS=2;SSC=9;GPV=1;SPV=0.10913	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:27:27,0:15,0:12,0:0.000	0/1:.:64:57,6:34,4:23,2:0.095
+chrX	13713103	.	CA	C	.	MinMMQSdiff	DP=118;SOMATIC;SS=2;SSC=12;GPV=1;SPV=0.05176;INDEL	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:39:32,0:16,0:16,0:0.000	0/1:.:79:67,8:28,6:39,2:0.107
+chrX	22111531	.	T	C	.	PASS	DP=154;SOMATIC;SS=2;SSC=13;GPV=1;SPV=0.048459	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:53:53,0:31,0:22,0:0.000	0/1:.:101:94,7:42,6:52,1:0.069
+chrX	71132767	.	C	CCTCTT	.	MinMMQSdiff	DP=105;SOMATIC;SS=2;SSC=14;GPV=1;SPV=0.035112;INDEL	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:31:27,1:8,0:19,1:0.036	0/1:.:74:52,13:24,8:28,5:0.200
+chrX	75431524	.	T	TA	.	PASS	DP=201;SOMATIC;SS=2;SSC=11;GPV=1;SPV=0.066007;INDEL	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:58:54,0:25,0:29,0:0.000	0/1:.:143:129,8:61,3:68,5:0.058
+chrX	153647994	.	A	G	.	PASS	DP=31;SOMATIC;SS=2;SSC=10;GPV=1;SPV=0.097251	GT:GQ:DP:AD:ADF:ADR:VAF	0/0:.:13:13,0:5,0:8,0:0.000	0/1:.:18:14,4:4,3:10,1:0.222
