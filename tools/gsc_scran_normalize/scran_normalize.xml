@@ -1,4 +1,4 @@
-<tool id="scran_normalize" name="scran_normalize" version="0.2.0">
+<tool id="scran_normalize" name="scran_normalize" version="0.2.1">
     <description>Normalize raw counts expression values using deconvolution size factors</description>
     <requirements>
         <requirement type="package" version="1.6.2">r-optparse</requirement>
@@ -16,7 +16,7 @@
                 --method '$metacell.method'
                 --size '$metacell.size'
             #end if
-            -o ${output}
+            -o '${output}'
 ]]></command>
     <inputs>
         <param name="input" type="data" format="txt,tabular" label="Raw counts of expression data" help = "Must have an header"/>
@@ -92,16 +92,6 @@ Note: First header row must NOT start with a '#' comment character
 
     </help>
     <citations>
-        <citation type="bibtex">
-            @Article{,
-                author = {Aaron T. L. Lun and Davis J. McCarthy and John C. Marioni},
-                title = {A step-by-step workflow for low-level analysis of single-cell RNA-seq data with Bioconductor},
-                journal = {F1000Res.},
-                year = {2016},
-                volume = {5},
-                pages = {2122},
-                doi = {10.12688/f1000research.9501.2},
-            }
-        </citation>
+        <citation type="doi">10.12688/f1000research.9501.2</citation>
     </citations>
 </tool>
