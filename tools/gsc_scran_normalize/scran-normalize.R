@@ -1,5 +1,5 @@
 # load packages that are provided in the conda env
-options(show.error.messages=F,
+options(show.error.messages = FALSE,
   error = function() {
     cat(geterrmessage(), file = stderr())
     q("no", 1, FALSE)
@@ -56,7 +56,7 @@ opt <- parse_args(OptionParser(option_list = option_list),
                  args = commandArgs(trailingOnly = TRUE))
 
 if (opt$sep == "tab") {
-  opt$sep = "\t"
+  opt$sep <- "\t"
   }
 
 data <- read.table(
