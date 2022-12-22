@@ -194,7 +194,7 @@ def outputParsing(dataset_name, F, Fasta, results, Xblastdict, fastadict,
     def filter_results(results, filter_relativeCov=0, filter_maxScore=0,
                        filter_meanScore=0, filter_term_in="",
                        filter_term_out=""):
-        for subject in results.keys():
+        for subject in list(results):
             if results[subject][
                        "RelativeSubjectCoverage"] < filter_relativeCov:
                 del results[subject]
