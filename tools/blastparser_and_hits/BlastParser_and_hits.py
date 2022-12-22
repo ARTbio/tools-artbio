@@ -47,7 +47,7 @@ def Parser():
                             help="sequences that have not been blast aligned")
     the_parser.add_argument('--dataset_name', action="store", type=str,
                             default="",
-                            help="the name of the dataset that has been parsed,\
+                            help="name of the dataset that has been parsed,\
                                   to be reported in the output")
     args = the_parser.parse_args()
     if not all((args.sequences, args.blast, args.fastaOutput,
