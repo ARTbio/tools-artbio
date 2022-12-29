@@ -1,4 +1,4 @@
-<tool id="cherry_pick_fasta" name="Pick Fasta sequences" version="3.3">
+<tool id="cherry_pick_fasta" name="Pick Fasta sequences" version="4.0">
   <description>with header satisfying a string query</description>
   <requirements>
         <requirement type="package" version="3.8.0">python</requirement>
@@ -71,6 +71,7 @@
   </outputs>
   <tests>
     <!-- test headers with space -->
+
     <test>
         <param ftype="fasta" name="input" value="input_withspace.fa" />
         <param name="query" value="type=rRNA" />

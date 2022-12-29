@@ -1,4 +1,5 @@
 import argparse
+from collections import defaultdict
 
 
 def Parser():
@@ -28,23 +29,49 @@ def Parser():
 
 
 def parse_fasta_dict(query, fasta_dict, mode):
+
     if not isinstance(query, list):
         query = [query]
+
+    def kmers(string, ksize, index):
+        if ksize > len(string):
+            return
+        for i in range(len(string) - ksize + 1):
+            kmer = string[i:i+ksize]
+            index[kmer].append(string)
+
+    def consult_index(word, index):
+        accumulator = []
+        print(len(index[word]))
+        for title in index[word]:
+            accumulator.append(title)
+        print(len(accumulator))
+        for title in set(accumulator):
+            print(title)
+
     accumulator = []
     if mode == 'includes':
-        for seq_id in fasta_dict:
-            for string in query:
-                if string in seq_id:
-                    accumulator.append(seq_id)
-                    continue
+        kmersizes = set([len(word) for word in query])
+        index = defaultdict(list)
+        for size in kmersizes:
+            for header in fasta_dict:
+                kmers(header, size, index)
+        for keyword in query:
+            for header in index[keyword]:
+                accumulator.append(header)
+        accumulator = set(accumulator)
+        res_dict = {k: fasta_dict[k] for k in fasta_dict if k in accumulator}
+        return res_dict
     elif mode == 'exact':
-        for seq_id in fasta_dict:
-            for string in query:
-                if string == seq_id:
-                    accumulator.append(seq_id)
-                    continue
-    res_dict = {k: fasta_dict[k] for k in fasta_dict if k in accumulator}
-    return res_dict
+        for keyword in query:
+            try:
+                len(fasta_dict[keyword])
+                accumulator.append(keyword)
+            except KeyError:
+                pass
+        accumulator = set(accumulator)
+        res_dict = {k: fasta_dict[k] for k in fasta_dict if k in accumulator}
+        return res_dict
 
 
 def complement_fasta_dict(fasta_dict, subfasta_dict):
