@@ -1,4 +1,4 @@
-<tool id="cherry_pick_fasta" name="Pick Fasta sequences" version="3.3">
+<tool id="cherry_pick_fasta" name="Pick Fasta sequences" version="4.0">
   <description>with header satisfying a string query</description>
   <requirements>
         <requirement type="package" version="3.8.0">python</requirement>
@@ -93,8 +93,6 @@
         <param name="match" value="exact" />
         <output name="output" ftype="fasta" file="output_exact.fa" />
     </test>
-
-
     <test>
         <param ftype="fasta" name="input" value="input.fa" />
         <param name="options_selector" value="textdataset" />
@@ -111,8 +109,6 @@
         <param name="match" value="exact" />
         <output name="output" ftype="fasta" file="output_alt_termlist.fa" />
     </test>
-
-
     <!-- partial matches -->
     <test>
         <param ftype="fasta" name="input" value="input.fa" />
@@ -146,6 +142,8 @@
 
 This tool retrieves nucleotide/peptide sequences from a fasta file whose headers match
 or do not match a given string, or a list of strings.
+
+Note that the version 4 of the tools is amazingly accelerated !
 
   </help>
 </tool>
