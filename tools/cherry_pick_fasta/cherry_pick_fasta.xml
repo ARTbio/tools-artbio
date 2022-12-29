@@ -71,7 +71,6 @@
   </outputs>
   <tests>
     <!-- test headers with space -->
-
     <test>
         <param ftype="fasta" name="input" value="input_withspace.fa" />
         <param name="query" value="type=rRNA" />
@@ -94,8 +93,6 @@
         <param name="match" value="exact" />
         <output name="output" ftype="fasta" file="output_exact.fa" />
     </test>
-
-
     <test>
         <param ftype="fasta" name="input" value="input.fa" />
         <param name="options_selector" value="textdataset" />
@@ -112,8 +109,6 @@
         <param name="match" value="exact" />
         <output name="output" ftype="fasta" file="output_alt_termlist.fa" />
     </test>
-
-
     <!-- partial matches -->
     <test>
         <param ftype="fasta" name="input" value="input.fa" />
@@ -147,6 +142,8 @@
 
 This tool retrieves nucleotide/peptide sequences from a fasta file whose headers match
 or do not match a given string, or a list of strings.
+
+Note that the version 4 of the tools is amazingly accelerated !
 
   </help>
 </tool>
