@@ -1,4 +1,4 @@
-<tool id="signature" name="Small RNA Signatures" version="3.4.1>">
+<tool id="signature" name="Small RNA Signatures" version="3.4.2>">
     <description />
     <requirements>
         <requirement type="package" version="1.23.4">numpy</requirement>
