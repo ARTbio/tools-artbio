@@ -358,7 +358,7 @@
       <param name="matepair" value="paired"/>
       <param name="fastq1" value="Ebola_forward.fastqsanger.gz" ftype="fastqsanger.gz"/>
       <param name="fastq2" value="Ebola_reverse.fastqsanger.gz" ftype="fastqsanger.gz"/>
-      <param name="result_bams" value="both"/>
+      <param name="result_bams" value="default"/>
       <output name="reference_file">
         <assert_contents>
           <has_text text="ebola" />
@@ -367,7 +367,6 @@
       <output name="gene_abundances" value="paired_refgen_gene_abundances.bt2.tab"/>
       <output name="isoform_abundances" value="paired_refgen_isoform_abundances.bt2.tab" />
       <output name="transcript_sorted_bam" value="paired_refgen_transcripts.bt2.bam" ftype="bam" lines_diff="4" />
-      <output name="genome_sorted_bam" value="paired_refgen_isoform_abundances.bt2.bam" ftype="bam" lines_diff="4" />
       <output name="log">
         <assert_contents>
           <has_text text="Expression Results are written" />

@@ -40,7 +40,7 @@ def generate_output(genes, log_file):
     output = open(log_file, 'w')
     # output.write('#all genes on several chromosomes' + '\n')
     target_genes = list()
-    for name_gene in genes.keys():
+    for name_gene in sorted(genes.keys()):
         genes[name_gene] = set(genes[name_gene])
         if len(genes[name_gene]) > 1:
             target_genes.append(name_gene)
