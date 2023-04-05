@@ -26,7 +26,7 @@ for id in vcfdict.keys():
                               chrom, coordbreak, "TRA"]
 for id in list(vcfdict):
     if "_" in id:
-        del(vcfdict[id])
+        del vcfdict[id]
 for id in vcfdict.keys():  # only sv that are not of type TRA or INV
     chr1 = vcfdict[id][0]
     chr2 = vcfdict[id][0]
