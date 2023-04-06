@@ -30,10 +30,10 @@
            --pdf '$pdf'
            --title "Overlap Signatures of ${minquery}-${maxquery} against ${mintarget}-${maxtarget}nt small RNAs"
            #if $plot_options.plot_method == "global":
-               --Npairs_ylim $plot_options.Npairs_ylim
-               --NpairsZscore_ylim $plot_options.NpairsZscore_ylim
-               --OverlapProb_ylim $plot_options.OverlapProb_ylim
-               --OverlapProbZscore_ylim $plot_options.OverlapProbZscore_ylim
+               --npairs_ylim $plot_options.npairs_ylim
+               --npairszscore_ylim $plot_options.npairszscore_ylim
+               --overlapprob_ylim $plot_options.overlapprob_ylim
+               --overlapprobzscore_ylim $plot_options.overlapprobzscore_ylim
             #end if
     ]]></command>
     <inputs>
@@ -51,16 +51,16 @@
             </param>
             <when value="lattice" />
             <when value="global">
-                <param name="Npairs_ylim" type="integer" value="0" optional="true"
+                <param name="npairs_ylim" type="integer" value="0" optional="true"
                        label="Maximum of Y-scale of the Numbers-of-pairs plot"
                        help="Interger. Leave 0 for self-determination of Y-scale" />
-                <param name="NpairsZscore_ylim" type="integer" value="0" optional="true"
+                <param name="npairszscore_ylim" type="integer" value="0" optional="true"
                        label="Maximum of Y-scale of the Number-of-pairs-Z−scores plot"
                        help="Integer. Leave 0 for self-determination of Y-scale" />
-                <param name="OverlapProb_ylim" type="integer" value="0" optional="true"
+                <param name="overlapprob_ylim" type="integer" value="0" optional="true"
                        label="Maximum of Y-scale of the Overlap-probabilities plot"
                        help="Percent value as an Integer. Leave 0 for self-determination of % Y-scale" />
-                <param name="OverlapProbZscore_ylim" type="integer" value="0" optional="true"
+                <param name="overlapprobzscore_ylim" type="integer" value="0" optional="true"
                        label="Maximum of Y-scale of the Overlap-probabilities-Z−scores plot"
                        help="Interger. Leave 0 for self-determination of Y-scale" />
             </when>
@@ -107,10 +107,10 @@
             <conditional name="plot_options">
                 <param name="plot_method" value="global" />
             </conditional>
-            <param name="Npairs_ylim" value="100" />
-            <param name="NpairsZscore_ylim" value="0" />
-            <param name="OverlapProb_ylim" value="1" />
-            <param name="OverlapProbZscore_ylim" value="4" />
+            <param name="npairs_ylim" value="100" />
+            <param name="npairszscore_ylim" value="0" />
+            <param name="overlapprob_ylim" value="1" />
+            <param name="overlapprobzscore_ylim" value="4" />
 
             <output file="h.tab" ftype="tabular" name="h_dataframe" />
             <output file="z.tab" ftype="tabular" name="z_dataframe" />

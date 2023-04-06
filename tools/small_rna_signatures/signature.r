@@ -24,10 +24,10 @@ option_list <- list(
     make_option("--pdf", type = "character", help = "path to the pdf file with plots"),
     make_option("--title", type = "character", help = "Graph Title"),
 
-    make_option("--Npairs_ylim", type = "integer", default = 0, help = "Maximum of Y-scale of the Numbers-of-pairs plot"),
-    make_option("--NpairsZscore_ylim", type = "integer", default = 0, help = "Maximum of Y-scale of the Number-of-pairs-Z−scores plot"),
-    make_option("--OverlapProb_ylim", type = "integer", default = 0, help = "Maximum of Y-scale of the Overlap-probabilities plot"),
-    make_option("--OverlapProbZscore_ylim", type = "integer", default = 0, help = "Maximum of Y-scale of the Overlap-probabilities-Z−scores plot")
+    make_option("--npairs_ylim", type = "integer", default = 0, help = "Maximum of Y-scale of the Numbers-of-pairs plot"),
+    make_option("--npairszscore_ylim", type = "integer", default = 0, help = "Maximum of Y-scale of the Number-of-pairs-Z−scores plot"),
+    make_option("--overlapprob_ylim", type = "integer", default = 0, help = "Maximum of Y-scale of the Overlap-probabilities plot"),
+    make_option("--overlapprobzscore_ylim", type = "integer", default = 0, help = "Maximum of Y-scale of the Overlap-probabilities-Z−scores plot")
     )
 parser <- OptionParser(usage = "%prog [options] file", option_list = option_list)
 args <- parse_args(parser)
@@ -40,28 +40,28 @@ z_dataframe <- read.delim(args$z_dataframe, header = FALSE)
 colnames(z_dataframe) <- c("chrom", "overlap", "sig", "z-score")
 
 # graph limits parameters
-if (args$Npairs_ylim == 0){
-    Npairs_ylim = NULL
+if (args$npairs_ylim == 0) {
+    npairs_ylim <- NULL
     } else {
-    Npairs_ylim = c(0, args$Npairs_ylim)
+    npairs_ylim <- c(0, args$npairs_ylim)
 }
 
-if (args$NpairsZscore_ylim == 0){
-    NpairsZscore_ylim = NULL
+if (args$npairszscore_ylim == 0) {
+    npairszscore_ylim <- NULL
     } else {
-    NpairsZscore_ylim = c(0, args$NpairsZscore_ylim)
+    npairszscore_ylim <- c(0, args$npairszscore_ylim)
 }
 
-if (args$OverlapProb_ylim == 0){
-    OverlapProb_ylim = NULL
+if (args$overlapprob_ylim == 0) {
+    overlapprob_ylim <- NULL
     } else {
-    OverlapProb_ylim = c(0, args$OverlapProb_ylim)
+    overlapprob_ylim <- c(0, args$overlapprob_ylim)
 }
 
-if (args$OverlapProbZscore_ylim == 0){
-    OverlapProbZscore_ylim = NULL
+if (args$overlapprobzscore_ylim == 0) {
+    overlapprobzscore_ylim <- NULL
     } else {
-    OverlapProbZscore_ylim = c(0, args$OverlapProbZscore_ylim)
+    overlapprobzscore_ylim <- c(0, args$overlapprobzscore_ylim)
 }
 
 
@@ -73,13 +73,13 @@ if (args$OverlapProbZscore_ylim == 0){
             plot(z_dataframe[z_dataframe$chrom == "all_chromosomes", c(2, 3)],
                      type = "h", main = "Numbers of pairs", cex.main = 1, xlab = "overlap (nt)",
                      ylab = "Numbers of pairs", col = "darkslateblue", lwd = 4,
-                     ylim = Npairs_ylim
+                     ylim = npairs_ylim
                      )
 
             plot(z_dataframe[z_dataframe$chrom == "all_chromosomes", c(2, 4)],
                      type = "l", main = "Number of pairs Z-scores", cex.main = 1, xlab = "overlap (nt)",
                      ylab = "z-score", pch = 19, cex = 0.2, col = "darkslateblue", lwd = 2,
-                     ylim = NpairsZscore_ylim
+                     ylim = npairszscore_ylim
                      )
 
             plot(h_dataframe[h_dataframe$chrom == "all_chromosomes", c(2, 3)],
@@ -87,14 +87,14 @@ if (args$OverlapProbZscore_ylim == 0){
                      xlab = "overlap (nt)",
                      ylab = "Probability [%]", pch = 19,
                      col = "darkslateblue", lwd = 2,
-                     ylim = OverlapProb_ylim
+                     ylim = overlapprob_ylim
                      )
 
             plot(h_dataframe[h_dataframe$chrom == "all_chromosomes", c(2, 4)],
                      type = "l", main = "Overlap Probability Z-scores", cex.main = 1,
                      xlab = "overlap (nt)", ylab = "z-score", pch = 19, cex = 0.2,
                      col = "darkslateblue", lwd = 2,
-                     ylim = OverlapProbZscore_ylim
+                     ylim = overlapprobzscore_ylim
                      )
 
         mtext(args$title, outer = TRUE, cex = 1)
