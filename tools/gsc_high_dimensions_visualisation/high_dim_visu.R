@@ -1,6 +1,9 @@
-# load packages that are provided in the conda env
-options( show.error.messages=F,
-       error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+options(show.error.messages=F,
+        error = function () {
+            cat(geterrmessage(), file = stderr())
+            q("no", 1, FALSE )
+        }
+)
 loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
 warnings()
 library(optparse)
@@ -15,209 +18,209 @@ library(data.table)
 library(Polychrome)
 
 # Arguments
-option_list = list(
+option_list <- list(
   make_option(
     "--data",
     default = NA,
-    type = 'character',
+    type = "character",
     help = "Input file that contains expression value to visualise"
   ),
   make_option(
     "--sep",
-    default = '\t',
-    type = 'character',
+    default = "\t",
+    type = "character",
     help = "File separator [default : '%default' ]"
   ),
   make_option(
     "--colnames",
     default = TRUE,
-    type = 'logical',
+    type = "logical",
     help = "Consider first line as header ? [default : '%default' ]"
   ),
   make_option(
     "--out",
     default = "res.tab",
-    type = 'character',
+    type = "character",
     help = "Output name [default : '%default' ]"
   ),
   make_option(
     "--labels",
     default = FALSE,
-    type = 'logical',
+    type = "logical",
     help = "add labels in scatter plots [default : '%default' ]"
   ),
   make_option(
     "--factor",
-    default = '',
-    type = 'character',
+    default = "",
+    type = "character",
     help = "A two column table that specifies factor levels for contrasting data [default : '%default' ]"
   ),
   make_option(
     "--visu_choice",
-    default = 'PCA',
-    type = 'character',
+    default = "PCA",
+    type = "character",
     help = "visualisation method ('PCA', 'tSNE', 'HCPC') [default : '%default' ]"
   ),
   make_option(
     "--table_coordinates",
-    default = '',
-    type = 'character',
+    default = "",
+    type = "character",
     help = "Table with plot coordinates [default : '%default' ]"
   ),
   make_option(
     "--Rtsne_seed",
     default = 42,
-    type = 'integer',
+    type = "integer",
     help = "Seed value for reproducibility [default : '%default' ]"
   ),
   make_option(
     "--Rtsne_dims",
     default = 2,
-    type = 'integer',
+    type = "integer",
     help = "Output dimensionality [default : '%default' ]"
   ),
   make_option(
     "--Rtsne_initial_dims",
     default = 50,
-    type = 'integer',
+    type = "integer",
     help = "The number of dimensions that should be retained in the initial PCA step [default : '%default' ]"
   ),
   make_option(
     "--Rtsne_perplexity",
     default = 5.0,
-    type = 'numeric',
+    type = "numeric",
     help = "perplexity [default : '%default' ]"
   ),
   make_option(
     "--Rtsne_theta",
     default = 1.0,
-    type = 'numeric',
+    type = "numeric",
     help = "theta [default : '%default' ]"
   ),
   make_option(
     "--Rtsne_max_iter",
     default = 1000,
-    type = 'integer',
+    type = "integer",
     help = "max_iter [default : '%default' ]"
   ),
   make_option(
     "--Rtsne_pca",
     default = TRUE,
-    type = 'logical',
+    type = "logical",
     help = "Whether an initial PCA step should be performed [default : '%default' ]"
   ),
   make_option(
     "--Rtsne_pca_center",
     default = TRUE,
-    type = 'logical',
+    type = "logical",
     help = "Should data be centered before pca is applied? [default : '%default' ]"
   ),
    make_option(
     "--Rtsne_pca_scale",
     default = FALSE,
-    type = 'logical',
+    type = "logical",
     help = "Should data be scaled before pca is applied? [default : '%default' ]"
   ),
   make_option(
     "--Rtsne_normalize",
     default = TRUE,
-    type = 'logical',
+    type = "logical",
     help = "Should data be normalized internally prior to distance calculations? [default : '%default' ]"
   ),
   make_option(
     "--Rtsne_exaggeration_factor",
     default = 12.0,
-    type = 'numeric',
+    type = "numeric",
     help = " Exaggeration factor used to multiply the P matrix in the first part of the optimization [default : '%default' ]"
   ),
    make_option(
     "--PCA_npc",
     default = 5,
-    type = 'integer',
+    type = "integer",
     help = "number of dimensions kept in the results [default : '%default' ]"
   ),
    make_option(
     "--PCA_x_axis",
     default = 1,
-    type = 'integer',
+    type = "integer",
     help = "PC to plot in the x axis [default : '%default' ]"
   ),
    make_option(
     "--PCA_y_axis",
     default = 2,
-    type = 'integer',
+    type = "integer",
     help = "PC to plot in the y axis [default : '%default' ]"
   ),
   make_option(
     "--HCPC_ncluster",
     default = -1,
-    type = 'numeric',
+    type = "numeric",
     help = "nb.clust, number of clusters to consider in the hierarchical clustering. [default : -1 let HCPC to optimize the number]"
   ),
    make_option(
     "--HCPC_npc",
     default = 5,
-    type = 'integer',
+    type = "integer",
     help = "npc, number of dimensions which are kept for HCPC analysis [default : '%default' ]"
   ),
   make_option(
     "--HCPC_metric",
-    default = 'euclidean',
-    type = 'character',
+    default = "euclidean",
+    type = "character",
     help = "Metric to be used for calculating dissimilarities between observations, available 'euclidean' or 'manhattan' [default : '%default' ]"
   ),
   make_option(
     "--HCPC_method",
-    default = 'ward',
-    type = 'character',
+    default = "ward",
+    type = "character",
     help = "Clustering method between 'ward','average','single', 'complete', 'weighted'  [default :'%default']"
   ),
   make_option(
     "--pdf_out",
     default = "out.pdf",
-    type = 'character',
+    type = "character",
     help = "pdf of plots [default : '%default' ]"
   ),
   make_option(
     "--HCPC_consol",
-    default = 'TRUE',
-    type = 'logical',
+    default = "TRUE",
+    type = "logical",
     help = "If TRUE, a k-means consolidation is performed [default :'%default']"
   ),
   make_option(
     "--HCPC_itermax",
-    default = '10',
-    type = 'integer',
+    default = "10",
+    type = "integer",
     help = "The maximum number of iterations for the consolidation [default :'%default']"
   ),
   make_option(
     "--HCPC_min",
-    default = '3',
-    type = 'integer',
+    default = "3",
+    type = "integer",
     help = "The least possible number of clusters suggested [default :'%default']"
   ),
    make_option(
     "--HCPC_max",
     default = -1,
-    type = 'integer',
+    type = "integer",
     help = "The higher possible number of clusters suggested [default :'%default']"
   ),
    make_option(
     "--HCPC_clusterCA",
-    default = 'rows',
-    type = 'character',
+    default = "rows",
+    type = "character",
     help = "A string equals to 'rows' or 'columns' for the clustering of Correspondence Analysis results [default :'%default']"
   ),
   make_option(
     "--HCPC_kk",
     default = Inf,
-    type = 'numeric',
+    type = "numeric",
     help = "The maximum number of iterations for the consolidation [default :'%default']"
   ),
   make_option(
     "--HCPC_clust",
     default = "",
-    type = 'character',
+    type = "character",
     help = "Output result of HCPC clustering : two column table (cell identifiers and clusters) [default :'%default']"
   ),
   make_option(
@@ -234,13 +237,21 @@ option_list = list(
   )
 )
 
-opt = parse_args(OptionParser(option_list = option_list),
-                 args = commandArgs(trailingOnly = TRUE))
+opt <- parse_args(OptionParser(option_list = option_list),
+                  args = commandArgs(trailingOnly = TRUE))
 
-if (opt$sep == "tab") {opt$sep <- "\t"}
-if (opt$sep == "comma") {opt$sep <- ","}
-if(opt$HCPC_max == -1) {opt$HCPC_max <- NULL}
-if(opt$HCPC_kk == -1) {opt$HCPC_kk <- Inf}
+if (opt$sep == "tab") {
+    opt$sep <- "\t"
+}
+if (opt$sep == "comma") {
+    opt$sep <- ","
+}
+if (opt$HCPC_max == -1) {
+    opt$HCPC_max <- NULL
+}
+if (opt$HCPC_kk == -1) {
+    opt$HCPC_kk <- Inf
+}
 
 ##Add legend to plot()
 legend.col <- function(col, lev){
@@ -421,29 +432,29 @@ PCA_IndCoord = as.data.frame(pca$ind$coord) # coordinates of observations in PCA
 
 # Hierarchical Clustering On Principal Components Followed By Kmean Clustering
 res.hcpc <- HCPC(pca,
-                 nb.clust=opt$HCPC_ncluster, metric=opt$HCPC_metric, method=opt$HCPC_method,
-                 graph=F,consol=opt$HCPC_consol,iter.max=opt$HCPC_itermax,min=opt$HCPC_min,max=opt$HCPC_max,
-                 cluster.CA=opt$HCPC_clusterCA,kk=opt$HCPC_kk)
+                 nb.clust = opt$HCPC_ncluster, metric = opt$HCPC_metric, method = opt$HCPC_method,
+                 graph = FALSE, consol = opt$HCPC_consol, iter.max = opt$HCPC_itermax, min = opt$HCPC_min, max = opt$HCPC_max,
+                 cluster.CA = opt$HCPC_clusterCA, kk = opt$HCPC_kk)
 # HCPC plots
-dims <- head(as.data.frame(res.hcpc$call$t$res$eig),2) # dims variances in column 2
+dims <- head(as.data.frame(res.hcpc$call$t$res$eig), 2) # dims variances in column 2
 pdf(opt$pdf_out)
-plot(res.hcpc, choice="tree")
-plot(res.hcpc, choice="bar")
-plot(res.hcpc, choice="3D.map")
+plot(res.hcpc, choice = "tree")
+plot(res.hcpc, choice = "bar")
+plot(res.hcpc, choice = "3D.map")
 if (opt$labels == FALSE) {
-plot(res.hcpc, choice="map", label="none")
+plot(res.hcpc, choice = "map", label = "none")
 } else {
-plot(res.hcpc, choice="map")
+plot(res.hcpc, choice = "map")
 }
 
 # user contrasts on the pca
-if (opt$factor != '') {
-  plot(pca, label="none", col.ind = factor_cols)
-  if(is.factor(contrasting_factor$factor)) {
-    legend(x = 'topright', 
+if (opt$factor != "") {
+  plot(pca, label = "none", col.ind = factor_cols)
+  if (is.factor(contrasting_factor$factor)) {
+    legend(x = "topright",
        legend = as.character(factorColors$factor),
-       col = factorColors$color, pch = 16, bty = 'n', xjust = 1, cex=0.7)
-    
+       col = factorColors$color, pch = 16, bty = "n", xjust = 1, cex = 0.7)
+
     ## Normalized Mutual Information
     sink(opt$HCPC_mutual_info)
     res <- external_validation(
@@ -458,40 +469,20 @@ if (opt$factor != '') {
   }
 }
 
-## Clusters to which individual observations belong # used ?
-# Clust <- data.frame(Cluster = res.hcpc$data.clust[, (nrow(data) + 1)],
-#                     Observation = rownames(res.hcpc$data.clust))
-# metadata <- data.frame(Observation=colnames(data), row.names=colnames(data))
-# metadata = merge(y = metadata,
-#                  x = Clust,
-#                  by = "Observation")
-
-# unclear utility
-# ObsNumberPerCluster = as.data.frame(table(metadata$Cluster))
-# colnames(ObsNumberPerCluster) = c("Cluster", "ObsNumber")
-# 
-# ## Silhouette Plot # not used
-# hc.cut = hcut(PCA_IndCoord,
-#               k = nlevels(metadata$Cluster),
-#               hc_method = "ward.D2")
-#               
-# Sil = fviz_silhouette(hc.cut)
-# sil1 = as.data.frame(Sil$data)
-
 dev.off()
 
- if(opt$table_coordinates != ''){
+if (opt$table_coordinates != "") {
   coord_table <- cbind(Cell=rownames(res.hcpc$call$X),
                        round(as.data.frame(res.hcpc$call$X[, -length(res.hcpc$call$X)]), 6),
                        as.data.frame(res.hcpc$call$X[, length(res.hcpc$call$X)])
                        )
-  colnames(coord_table)=c("Cells",paste0("DIM",(1:opt$HCPC_npc)),"Cluster")
+  colnames(coord_table) <- c("Cells", paste0("DIM", (1:opt$HCPC_npc)), "Cluster")
   }
 
- if(opt$HCPC_clust != ""){
- res_clustering <- data.frame(Cell = rownames(res.hcpc$data.clust),
-                              Cluster = res.hcpc$data.clust$clust)
- 
+if (opt$HCPC_clust != "") {
+res_clustering <- data.frame(Cell = rownames(res.hcpc$data.clust),
+                             Cluster = res.hcpc$data.clust$clust)
+
  }
 
 # Description of cluster by most contributing variables / gene expressions
@@ -501,12 +492,12 @@ extract_description <- lapply(res.hcpc$desc.var$quanti, as.data.frame)
 # second, transfer rownames (genes) to column in the dataframe, before rbinding
 extract_description_w_genes <- Map(cbind,
                                    extract_description,
-                                   genes= lapply(extract_description, rownames)
+                                   genes = lapply(extract_description, rownames)
                                    )
 # Then use data.table to collapse all generated dataframe, with the cluster id in first column
 # using the {data.table} rbindlist function
 cluster_description <- rbindlist(extract_description_w_genes, idcol = "cluster_id")
-cluster_description = cluster_description[ ,c(8, 1, 2, 3,4,5,6,7)] # reorganize columns
+cluster_description <- cluster_description[, c(8, 1, 2, 3, 4, 5, 6, 7)] # reorganize columns
 
 
 # Finally, output cluster description data frame
@@ -514,34 +505,34 @@ write.table(
     cluster_description,
     file = opt$HCPC_cluster_description,
     sep = "\t",
-    quote = F,
-    col.names = T,
-    row.names = F
+    quote = FALSE,
+    col.names = TRUE,
+    row.names = FALSE
     )
 
 }
 
 ## Return coordinates file to user
 
-if(opt$table_coordinates != ''){
+if (opt$table_coordinates != "") {
   write.table(
     coord_table,
     file = opt$table_coordinates,
     sep = "\t",
-    quote = F,
-    col.names = T,
-    row.names = F
+    quote = FALSE,
+    col.names = TRUE,
+    row.names = FALSE
     )
 }
 
 
-if(opt$HCPC_clust != ""){
+if (opt$HCPC_clust != "") {
   write.table(
     res_clustering,
     file = opt$HCPC_clust,
     sep = "\t",
-    quote = F,
-    col.names = T,
-    row.names = F
+    quote = FALSE,
+    col.names = TRUE,
+    row.names = FALSE
     )
 }
