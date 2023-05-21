@@ -270,7 +270,7 @@ box_sy <- (bx[4] - bx[3]) / n
 xx <- rep(box_cx, each = 2)
 
 par(xpd = TRUE)
-for(i in 1:n) {
+for (i in 1:n) {
   yy <- c(box_cy[1] + (box_sy * (i - 1)),
   box_cy[1] + (box_sy * (i)),
   box_cy[1] + (box_sy * (i)),
@@ -358,7 +358,7 @@ if (opt$visu_choice == "tSNE") {
       ylab("t-SNE 2") +
       ggtitle("t-SNE") +
       if (opt$labels) {
-        geom_text(aes(label=Class), hjust = -0.2, vjust = -0.5, size = 1.5, color = "deepskyblue4")
+        geom_text(aes(label = Class), hjust = -0.2, vjust = -0.5, size = 1.5, color = "deepskyblue4")
       }
     } else {
     if (is.numeric(contrasting_factor$factor)) {
@@ -389,12 +389,12 @@ if (opt$visu_choice == "tSNE") {
 
 ######### make PCA with FactoMineR #################
 if (opt$visu_choice == "PCA") {
-  pca <- PCA(t(data), ncp=opt$PCA_npc, graph=FALSE)
+  pca <- PCA(t(data), ncp = opt$PCA_npc, graph = FALSE)
   pdf(opt$pdf_out)
   if (opt$labels == FALSE) {
-    plot(pca, axes = c(opt$PCA_x_axis, opt$PCA_y_axis), label = "none" , col.ind = factor_cols)
+    plot(pca, axes = c(opt$PCA_x_axis, opt$PCA_y_axis), label = "none", col.ind = factor_cols)
     } else {
-    plot(pca, axes = c(opt$PCA_x_axis, opt$PCA_y_axis), cex=0.2 , col.ind = factor_cols)
+    plot(pca, axes = c(opt$PCA_x_axis, opt$PCA_y_axis), cex = 0.2, col.ind = factor_cols)
   }
 if (opt$factor != "") {
   if (is.factor(contrasting_factor$factor)) {
@@ -410,7 +410,7 @@ dev.off()
   #save coordinates table
   if (opt$table_coordinates != "") {
   coord_table <- cbind(rownames(pca$ind$coord), round(as.data.frame(pca$ind$coord), 6))
-  colnames(coord_table) = c("Cells", paste0("DIM", (1:opt$PCA_npc)))
+  colnames(coord_table) <- c("Cells", paste0("DIM", (1:opt$PCA_npc)))
   }
 
 }
