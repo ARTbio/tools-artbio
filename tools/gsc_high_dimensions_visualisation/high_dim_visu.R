@@ -12,6 +12,7 @@ library(ggfortify)
 library(RColorBrewer)
 library(ClusterR)
 library(data.table)
+library(Polychrome)
 
 # Arguments
 option_list = list(
@@ -302,7 +303,9 @@ if (opt$factor != '') {
     if(nlevels(contrasting_factor$factor) == 2){
       colors_labels <- c("#E41A1C", "#377EB8")
     } else {
-      colors_labels <- brewer.pal(nlevels(contrasting_factor$factor), name = 'Paired')
+      set.seed(567629)
+      colors_labels <- createPalette(nlevels(contrasting_factor$factor), c("#5A5156", "#E4E1E3", "#F6222E"))
+      names(colors_labels) <- NULL
     }
     factorColors <-
       with(contrasting_factor,
