@@ -29,7 +29,7 @@
     <xml name="requirements">
         <requirements>
             <requirement type="package" version="1.7">samtools</requirement>
-            <requirement type="package" version="@VERSION@">manta</requirement>
+            <requirement type="package" version="@TOOL_VERSION@">manta</requirement>
         </requirements>
     </xml>
 
