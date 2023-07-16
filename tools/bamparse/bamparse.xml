@@ -55,7 +55,7 @@
             <param name="input_list" value="alignment1.bam,alignment2.bam" ftype="bam" />
             <param name="polarity" value="both" />
             <param name="output_option" value="unique" />
-            <output name="output" ftype="tabular" file="table.tabular" />
+            <output name="output" ftype="tabular" file="table.tabular" count="1"/>
         </test>
         <test>
             <param name="input_list" value="alignment1.bam,alignment2.bam" ftype="bam" />
@@ -69,13 +69,13 @@
             <param name="input_list" value="alignment1.bam,alignment2.bam" ftype="bam" />
             <param name="polarity" value="sense" />
             <param name="output_option" value="unique" />
-            <output name="output" ftype="tabular" file="table.tabular" />
+            <output name="output" ftype="tabular" file="table.tabular" count="1"/>
         </test>
         <test>
             <param name="input_list" value="alignment1.bam,alignment2.bam" ftype="bam" />
             <param name="polarity" value="antisense" />
             <param name="output_option" value="unique" />
-            <output name="output" ftype="tabular" file="table_antisense.tabular" />
+            <output name="output" ftype="tabular" file="table_antisense.tabular" count="1"/>
         </test>
 
         <test>
@@ -91,13 +91,13 @@
             <param name="input_list" value="input1.bam,input2.bam,input_new2.bam" ftype="bam" />
             <param name="polarity" value="sense" />
             <param name="output_option" value="unique" />
-            <output name="output" ftype="tabular" file="more_sense_table.tabular" />
+            <output name="output" ftype="tabular" file="more_sense_table.tabular" count="1"/>
         </test>
         <test>
             <param name="input_list" value="input1.bam,input2.bam,input_new2.bam" ftype="bam" />
             <param name="polarity" value="antisense" />
             <param name="output_option" value="unique" />
-            <output name="output" ftype="tabular" file="more_antisense_table.tabular" />
+            <output name="output" ftype="tabular" file="more_antisense_table.tabular" count="1"/>
         </test>
 
 
