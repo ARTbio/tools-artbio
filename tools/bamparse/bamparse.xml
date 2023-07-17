@@ -3,6 +3,7 @@
     <requirements>
             <requirement type="package" version="0.21.0=py310h41dec4a_1">pysam</requirement>
             <requirement type="package" version="1.0=h98b6b92_0">sambamba</requirement>
+            <requirement type="package" version="1.17=hd87286a_1">samtools</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
