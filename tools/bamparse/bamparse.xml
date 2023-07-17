@@ -1,8 +1,9 @@
-<tool id="bamparse" name="Count alignments" version="3.0.0">
+<tool id="bamparse" name="Count alignments" version="4.0.0">
     <description>in a BAM file</description>
     <requirements>
-            <requirement type="package" version="0.11.2.1">pysam</requirement>
-            <requirement type="package" version="0.6.6">sambamba</requirement>
+            <requirement type="package" version="0.21.0=py310h41dec4a_1">pysam</requirement>
+            <requirement type="package" version="1.0=h98b6b92_0">sambamba</requirement>
+            <requirement type="package" version="1.17=hd87286a_1">samtools</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
@@ -55,7 +56,7 @@
             <param name="input_list" value="alignment1.bam,alignment2.bam" ftype="bam" />
             <param name="polarity" value="both" />
             <param name="output_option" value="unique" />
-            <output name="output" ftype="tabular" file="table.tabular" />
+            <output name="output" ftype="tabular" file="table.tabular" count="1"/>
         </test>
         <test>
             <param name="input_list" value="alignment1.bam,alignment2.bam" ftype="bam" />
@@ -69,13 +70,13 @@
             <param name="input_list" value="alignment1.bam,alignment2.bam" ftype="bam" />
             <param name="polarity" value="sense" />
             <param name="output_option" value="unique" />
-            <output name="output" ftype="tabular" file="table.tabular" />
+            <output name="output" ftype="tabular" file="table.tabular" count="1"/>
         </test>
         <test>
             <param name="input_list" value="alignment1.bam,alignment2.bam" ftype="bam" />
             <param name="polarity" value="antisense" />
             <param name="output_option" value="unique" />
-            <output name="output" ftype="tabular" file="table_antisense.tabular" />
+            <output name="output" ftype="tabular" file="table_antisense.tabular" count="1"/>
         </test>
 
         <test>
@@ -91,13 +92,13 @@
             <param name="input_list" value="input1.bam,input2.bam,input_new2.bam" ftype="bam" />
             <param name="polarity" value="sense" />
             <param name="output_option" value="unique" />
-            <output name="output" ftype="tabular" file="more_sense_table.tabular" />
+            <output name="output" ftype="tabular" file="more_sense_table.tabular" count="1"/>
         </test>
         <test>
             <param name="input_list" value="input1.bam,input2.bam,input_new2.bam" ftype="bam" />
             <param name="polarity" value="antisense" />
             <param name="output_option" value="unique" />
-            <output name="output" ftype="tabular" file="more_antisense_table.tabular" />
+            <output name="output" ftype="tabular" file="more_antisense_table.tabular" count="1"/>
         </test>
 
 
