@@ -1,4 +1,4 @@
-<tool id="bamparse" name="Count alignments" version="4.0.0">
+<tool id="bamparse" name="Count alignments" version="4.1.0">
     <description>in a BAM file</description>
     <requirements>
             <requirement type="package" version="0.21.0=py310h41dec4a_1">pysam</requirement>
@@ -30,7 +30,12 @@
         #for $file in $input_list
             '$file.element_identifier'
         #end for
-        --number '$output_option'
+        --number '$output_option' &&
+        #if $output_option == 'unique':
+            cp ./outputdir/table.tabular $table 
+        #else if $output_option == 'multiple':
+            cp outputdir/* ./ && ls -latr ./
+        #end if 
  ]]></command>
     <inputs>
         <param name="input_list" type="data" format="bam" label="Select multiple alignments to parse" multiple="true"/>
@@ -40,68 +45,74 @@
             <option value="antisense">count only antisense reads</option>
         </param>
         <param name="output_option" type="select" display="radio" label="Select the number of files for results"
-               help="Results can be returned either as a single multi-column table or in separate two-column
+               help="Results can be returned either as a single multi-column table or in a collection of separate two-column
                datasets (useful for DESeq subsequent analysis)">
                 <option value="unique">A multi-column table</option> 
                 <option value="multiple">One separate two-columns dataset per input bam alignment</option> 
         </param>
     </inputs>
     <outputs>
-        <data name="output" format="tabular" label="Counts">
-            <discover_datasets pattern="(?P&lt;designation&gt;.*)\.tabular" ext="tabular" visible="true" assign_primary_output="true" directory="outputdir"/>
+        <data name="table" format="tabular" label="Table of Counts">
+            <filter>output_option == "unique"</filter>
         </data>
+
+        <collection name="split_output" type="list" label="Collection of Count Tables">
+            <filter>output_option == "multiple"</filter>
+            <discover_datasets pattern="(?P&lt;designation&gt;.*)\.tabular" format="tabular" visible="false" directory="outputdir"/>
+        </collection>
+
     </outputs>
     <tests>
-        <test>
+        <test expect_num_outputs="1">
             <param name="input_list" value="alignment1.bam,alignment2.bam" ftype="bam" />
             <param name="polarity" value="both" />
             <param name="output_option" value="unique" />
-            <output name="output" ftype="tabular" file="table.tabular" count="1"/>
+            <output name="table" ftype="tabular" file="table.tabular" count="1"/>
         </test>
-        <test>
+        <test expect_num_outputs="1">
             <param name="input_list" value="alignment1.bam,alignment2.bam" ftype="bam" />
             <param name="polarity" value="both" />
             <param name="output_option" value="multiple" />
-            <output name="output" ftype="tabular" file="table0.tabular">
-                <discovered_dataset designation="table1" ftype="tabular" file="table1.tabular" />
-            </output>
+            <output_collection name="split_output" type="list" count="2">
+                <element name="table0" file="table0.tabular" ftype="tabular" compare="contains" />
+                <element name="table1" file="table1.tabular" ftype="tabular" compare="contains" />
+            </output_collection>
         </test>
-        <test>
+        <test expect_num_outputs="1">
             <param name="input_list" value="alignment1.bam,alignment2.bam" ftype="bam" />
             <param name="polarity" value="sense" />
             <param name="output_option" value="unique" />
-            <output name="output" ftype="tabular" file="table.tabular" count="1"/>
+            <output name="table" ftype="tabular" file="table.tabular" count="1"/>
         </test>
-        <test>
+        <test expect_num_outputs="1">
             <param name="input_list" value="alignment1.bam,alignment2.bam" ftype="bam" />
             <param name="polarity" value="antisense" />
             <param name="output_option" value="unique" />
-            <output name="output" ftype="tabular" file="table_antisense.tabular" count="1"/>
+            <output name="table" ftype="tabular" file="table_antisense.tabular" count="1"/>
         </test>
 
-        <test>
+        <test expect_num_outputs="1">
             <param name="input_list" value="input1.bam,input2.bam,input_new2.bam" ftype="bam" />
             <param name="polarity" value="both" />
             <param name="output_option" value="multiple" />
-            <output name="output" ftype="tabular" file="more_table0.tabular">
-                <discovered_dataset designation="table1" ftype="tabular" file="more_table1.tabular" />
-                <discovered_dataset designation="table2" ftype="tabular" file="more_table2.tabular" />
-            </output>
+            <output_collection name="split_output" type="list" count="3">
+                <element name="table0" file="more_table0.tabular" ftype="tabular" compare="contains" />
+                <element name="table1" file="more_table1.tabular" ftype="tabular" compare="contains" />
+                <element name="table2" file="more_table2.tabular" ftype="tabular" compare="contains" />
+            </output_collection>
         </test>
-        <test>
+        <test expect_num_outputs="1">
             <param name="input_list" value="input1.bam,input2.bam,input_new2.bam" ftype="bam" />
             <param name="polarity" value="sense" />
             <param name="output_option" value="unique" />
-            <output name="output" ftype="tabular" file="more_sense_table.tabular" count="1"/>
+            <output name="table" ftype="tabular" file="more_sense_table.tabular" count="1"/>
         </test>
-        <test>
+        <test expect_num_outputs="1">
             <param name="input_list" value="input1.bam,input2.bam,input_new2.bam" ftype="bam" />
             <param name="polarity" value="antisense" />
             <param name="output_option" value="unique" />
-            <output name="output" ftype="tabular" file="more_antisense_table.tabular" count="1"/>
+            <output name="table" ftype="tabular" file="more_antisense_table.tabular" count="1"/>
         </test>
-
-
     </tests>
     <help>
 
