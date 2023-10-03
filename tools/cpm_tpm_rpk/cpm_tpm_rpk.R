@@ -6,9 +6,11 @@ if (length(commandArgs(TRUE)) == 0) {
 
 # load packages that are provided in the conda env
 options(show.error.messages = FALSE,
-        error = function() {
-          cat(geterrmessage(), file = stderr())
-          q("no", 1, FALSE)})
+          error = function() {
+            cat(geterrmessage(), file = stderr())
+            q("no", 1, FALSE)
+          }
+       )
 loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8") # nolint⁠
 warnings()
 library(optparse)
