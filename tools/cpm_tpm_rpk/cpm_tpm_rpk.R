@@ -5,9 +5,10 @@ if (length(commandArgs(TRUE)) == 0) {
 
 
 # load packages that are provided in the conda env
-options(show.error.messages = F,
-         error = function() {cat(geterrmessage(), file = stderr())
-         q( "no", 1, FALSE)})
+options(show.error.messages = FALSE,
+        error = function() {
+          cat(geterrmessage(), file = stderr())
+          q("no", 1, FALSE)})
 loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8") # nolint⁠
 warnings()
 library(optparse)
@@ -120,9 +121,9 @@ option_list <- list(
 )
 
 opt <- parse_args(OptionParser(option_list = option_list),
-                 args = commandArgs(trailingOnly = TRUE))
+                  args = commandArgs(trailingOnly = TRUE))
 
-if (opt$data == "" & !(opt$help)) {
+if (opt$data == "" && !(opt$help)) {
   stop("At least one argument must be supplied (count data).\n",
        call. = FALSE)
 } else if ((opt$type == "tpm" || opt$type == "rpk") && opt$gene == "") {
@@ -151,8 +152,8 @@ rpk <- function(count, length) {
 
 tpm <- function(count, length) {
   rpk <- rpk(count, length)
-  perMillion_factor <- colSums(rpk) / 1000000
-  tpm <- rpk / perMillion_factor
+  per_million_factor <- colSums(rpk) / 1000000
+  tpm <- rpk / per_million_factor
   return(tpm)
 }
 
@@ -227,8 +228,8 @@ if (opt$visu == TRUE) {
   tdf_pca <- prcomp(tdf, center = TRUE, scale. = TRUE)
   if (opt$tsne_labels == TRUE) {
     autoplot(tdf_pca, shape = FALSE, label = TRUE, label.size = 2.5, label.vjust = 1.2,
-               label.hjust = 1.2,
-               colour = "darkblue") +
+             label.hjust = 1.2,
+             colour = "darkblue") +
       geom_point(size = 1, color = "red") +
       xlab(paste("PC1", summary(tdf_pca)$importance[2, 1] * 100, "%")) +
       ylab(paste("PC2", summary(tdf_pca)$importance[2, 2] * 100, "%")) +
