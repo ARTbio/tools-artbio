@@ -8,12 +8,12 @@ if (length(commandArgs(TRUE)) == 0) {
 options(show.error.messages = F,
          error = function() {cat(geterrmessage(), file = stderr())
          q( "no", 1, FALSE)})
-loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
+loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8") # nolint⁠
 warnings()
 library(optparse)
 library(ggplot2)
 library(reshape2)
-library(Rtsne)
+library(Rtsne) # nolint⁠
 library(ggfortify)
 
 
@@ -23,85 +23,85 @@ option_list <- list(
   make_option(
     c("-d", "--data"),
     default = NA,
-    type = "character"',
+    type = "character",
     help = "Input file that contains count values to transform"
   ),
   make_option(
     c("-t", "--type"),
-    default = "cpm"',
-    type = "character"',
+    default = "cpm",
+    type = "character",
     help = "Transformation type, either cpm, tpm, rpk or none[default : '%default' ]"
   ),
   make_option(
     c("-s", "--sep"),
-    default = "\t"',
-    type = "character"',
+    default = "\t",
+    type = "character",
     help = "File separator [default : '%default' ]"
   ),
   make_option(
     c("-c", "--colnames"),
     default = TRUE,
-    type = "logical"',
+    type = "logical",
     help = "Consider first line as header ? [default : '%default' ]"
   ),
   make_option(
     c("-f", "--gene"),
     default = NA,
-    type = "character"',
+    type = "character",
     help = "Two column of gene length file"
   ),
   make_option(
     c("-a", "--gene_sep"),
-    default = "\t"',
-    type = "character"',
+    default = "\t",
+    type = "character",
     help = "Gene length file separator [default : '%default' ]"
   ),
   make_option(
     c("-b", "--gene_header"),
     default = TRUE,
-    type = "logical"',
+    type = "logical",
     help = "Consider first line of gene length as header ? [default : '%default' ]"
   ),
   make_option(
     c("-l", "--log"),
     default = FALSE,
-    type = "logical"',
+    type = "logical",
     help = "Should be log transformed as well ? (log2(data +1)) [default : '%default' ]"
   ),
   make_option(
     c("-o", "--out"),
     default = "res.tab",
-    type = "character"',
+    type = "character",
     help = "Output name [default : '%default' ]"
   ),
   make_option(
     "--visu",
     default = FALSE,
-    type = "logical"',
+    type = "logical",
     help = "performs T-SNE [default : '%default' ]"
   ),
   make_option(
     "--tsne_labels",
     default = FALSE,
-    type = "logical"',
+    type = "logical",
     help = "add labels to t-SNE plot [default : '%default' ]"
   ),
   make_option(
     "--seed",
     default = 42,
-    type = "integer"',
+    type = "integer",
     help = "Seed value for reproducibility [default : '%default' ]"
   ),
   make_option(
     "--perp",
     default = 5.0,
-    type = "numeric"',
+    type = "numeric",
     help = "perplexity [default : '%default' ]"
   ),
   make_option(
     "--theta",
     default = 1.0,
-    type = "numeric"',
+    type = "numeric",
     help = "theta [default : '%default' ]"
   ),
   make_option(
