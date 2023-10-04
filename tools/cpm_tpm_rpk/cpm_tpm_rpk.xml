@@ -5,6 +5,7 @@
         <requirement type="package" version="0.16">r-rtsne</requirement>
         <requirement type="package" version="3.3.6">r-ggplot2</requirement>
         <requirement type="package" version="0.4.14">r-ggfortify</requirement>
+        <requirement type="package" version="1.4.4">r-reshape2</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
