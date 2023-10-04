@@ -148,9 +148,9 @@
             <param name="perp" value="10"/>
             <param name="theta" value="1" />
             <param name="tsne_labels" value="yes" />
-            <output name="output" file="none.tab" ftype="tabular"/>
-            <output name="tsne_out" file="none_tsne.pdf" ftype="pdf"/>
-            <output name="pca_out" file="none_pca.pdf" ftype="pdf"/>
+            <output name="output" file="none.tab" ftype="tabular" lines_diff="22" />
+            <output name="tsne_out" file="none_tsne.pdf" ftype="pdf" lines_diff="22" />
+            <output name="pca_out" file="none_pca.pdf" ftype="pdf" lines_diff="22" />
         </test>
         <test>
             <param name="input" value="counts.tab" ftype="tabular"/>
@@ -161,9 +161,9 @@
             <param name="perp" value="2"/>
             <param name="theta" value="1" />
             <param name="tsne_labels" value="yes" />
-            <output name="output" file="logcpm.tab" ftype="tabular"/>
-            <output name="tsne_out" file="tsne.pdf" ftype="pdf"/>
-            <output name="pca_out" file="pca.pdf" ftype="pdf"/>
+            <output name="output" file="logcpm.tab" ftype="tabular" lines_diff="22" />
+            <output name="tsne_out" file="tsne.pdf" ftype="pdf" lines_diff="22" />
+            <output name="pca_out" file="pca.pdf" ftype="pdf" lines_diff="22" />
         </test>
         <test>
             <param name="input" value="counts.tab" ftype="tabular"/>
@@ -175,9 +175,9 @@
             <param name="perp" value="2"/>
             <param name="theta" value="1" />
             <param name="tsne_labels" value="no" />
-            <output name="output" file="logtpm.tab" ftype="tabular"/>
-            <output name="tsne_out" file="tsne.nolab.pdf" ftype="pdf"/>
-            <output name="pca_out" file="pca.nolab.pdf" ftype="pdf"/>
+            <output name="output" file="logtpm.tab" ftype="tabular" lines_diff="22" />
+            <output name="tsne_out" file="tsne.nolab.pdf" ftype="pdf" lines_diff="22" />
+            <output name="pca_out" file="pca.nolab.pdf" ftype="pdf" lines_diff="22" />
         </test>
         <!-- test without t-SNE -->
         <test>
@@ -189,7 +189,7 @@
             <param name="input" value="counts.tab" ftype="tabular"/>
             <param name="type_transfo" value="cpm"/>
             <param name="log" value="TRUE"/>
-            <output name="output" file="logcpm.tab" ftype="tabular"/>
+            <output name="output" file="logcpm.tab" ftype="tabular" lines_diff="22" />
         </test>
         <test>
             <param name="input" value="counts.tab" ftype="tabular"/>
@@ -204,14 +204,14 @@
             <param name="gene_file" value="gene_length.tab" ftype="tabular"/>
             <param name="gene_header" value="TRUE"/>
             <param name="log" value="TRUE"/>
-            <output name="output" file="logtpm.tab" ftype="tabular"/>
+            <output name="output" file="logtpm.tab" ftype="tabular" lines_diff="22" />
         </test>
         <test>
             <param name="input" value="counts.tab" ftype="tabular"/>
             <param name="type_transfo" value="rpk"/>
             <param name="gene_file" value="gene_length.tab" ftype="tabular"/>
             <param name="gene_header" value="TRUE"/>
-            <output name="output" file="rpk.tab" ftype="tabular"/>
+            <output name="output" file="rpk.tab" ftype="tabular" />
         </test>
         <test>
             <param name="input" value="counts.tab" ftype="tabular"/>
@@ -219,7 +219,7 @@
             <param name="gene_file" value="gene_length.tab" ftype="tabular"/>
             <param name="gene_header" value="TRUE"/>
             <param name="log" value="TRUE"/>
-            <output name="output" file="logrpk.tab" ftype="tabular"/>
+            <output name="output" file="logrpk.tab" ftype="tabular" lines_diff="22" />
         </test>
     </tests>
     <help>
