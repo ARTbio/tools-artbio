@@ -23,13 +23,13 @@
 	      <param name="input" value="1.bigwig" />
 	      <param name="bin_size" value="500" />
 	      <param name="mylab" value="wiggle_file" />
-	      <output name="output" file="1.wig" />	  
+	      <output name="output" file="1.wig" compare="sim_size" />	  
       </test>
       <test>
 	      <param name="input" value="2.bigwig" />
 	      <param name="bin_size" value="2000" />
 	      <param name="mylab" value="wiggle_file" />
-	      <output name="output" file="2.wig" />	  
+	      <output name="output" file="2.wig" compare="sim_size" />	  
       </test>
     </tests>
     <help><![CDATA[
