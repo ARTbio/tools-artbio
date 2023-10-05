@@ -2,9 +2,9 @@
     <token name="@VERSION@">2.0.0</token>
     <macro name="requirements">
     <requirements>
-        <requirement type="package" version="366">ucsc-bigwiginfo</requirement>
-        <requirement type="package" version="366">ucsc-bigwigsummary</requirement>
-        <requirement type="package" version="1.06">bc</requirement>
+        <requirement type="package" version="377">ucsc-bigwiginfo</requirement>
+        <requirement type="package" version="377">ucsc-bigwigsummary</requirement>
+        <requirement type="package" version="1.07.1">bc</requirement>
     </requirements>
     </macro>
 
