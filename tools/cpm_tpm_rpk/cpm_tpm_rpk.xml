@@ -139,7 +139,7 @@
     </outputs>
     <tests>
         <!-- test t-SNE -->
-        <test>
+        <test expect_num_outputs="3">
             <param name="input" value="none.tab" ftype="tabular"/>
             <param name="type_transfo" value="none"/>
             <param name="log" value="FALSE"/>
@@ -152,7 +152,7 @@
             <output name="tsne_out" file="none_tsne.pdf" ftype="pdf" lines_diff="22" />
             <output name="pca_out" file="none_pca.pdf" ftype="pdf" lines_diff="22" />
         </test>
-        <test>
+        <test expect_num_outputs="3">
             <param name="input" value="counts.tab" ftype="tabular"/>
             <param name="type_transfo" value="cpm"/>
             <param name="log" value="TRUE"/>
@@ -165,7 +165,7 @@
             <output name="tsne_out" file="tsne.pdf" ftype="pdf" lines_diff="50" />
             <output name="pca_out" file="pca.pdf" ftype="pdf" lines_diff="50" />
         </test>
-        <test>
+        <test expect_num_outputs="3">
             <param name="input" value="counts.tab" ftype="tabular"/>
             <param name="type_transfo" value="tpm"/>
             <param name="gene_file" value="gene_length.tab" ftype="tabular"/>
@@ -180,25 +180,25 @@
             <output name="pca_out" file="pca.nolab.pdf" ftype="pdf" lines_diff="50" />
         </test>
         <!-- test without t-SNE -->
-        <test>
+        <test expect_num_outputs="1">
             <param name="input" value="counts.tab" ftype="tabular"/>
             <param name="type_transfo" value="cpm"/>
             <output name="output" file="cpm.tab" ftype="tabular"/>
         </test>
-        <test>
+        <test expect_num_outputs="1">
             <param name="input" value="counts.tab" ftype="tabular"/>
             <param name="type_transfo" value="cpm"/>
             <param name="log" value="TRUE"/>
             <output name="output" file="logcpm.tab" ftype="tabular" lines_diff="50" />
         </test>
-        <test>
+        <test expect_num_outputs="1">
             <param name="input" value="counts.tab" ftype="tabular"/>
             <param name="type_transfo" value="tpm"/>
             <param name="gene_file" value="gene_length.tab" ftype="tabular"/>
             <param name="gene_header" value="TRUE"/>
             <output name="output" file="tpm.tab" ftype="tabular"/>
         </test>
-        <test>
+        <test expect_num_outputs="1">
             <param name="input" value="counts.tab" ftype="tabular"/>
             <param name="type_transfo" value="tpm"/>
             <param name="gene_file" value="gene_length.tab" ftype="tabular"/>
@@ -206,14 +206,14 @@
             <param name="log" value="TRUE"/>
             <output name="output" file="logtpm.tab" ftype="tabular" lines_diff="50" />
         </test>
-        <test>
+        <test expect_num_outputs="1">
             <param name="input" value="counts.tab" ftype="tabular"/>
             <param name="type_transfo" value="rpk"/>
             <param name="gene_file" value="gene_length.tab" ftype="tabular"/>
             <param name="gene_header" value="TRUE"/>
             <output name="output" file="rpk.tab" ftype="tabular" />
         </test>
-        <test>
+        <test expect_num_outputs="1">
             <param name="input" value="counts.tab" ftype="tabular"/>
             <param name="type_transfo" value="rpk"/>
             <param name="gene_file" value="gene_length.tab" ftype="tabular"/>
@@ -241,4 +241,24 @@ Note: do not comment you header line if you have header line in you tabular inpu
 Computed values may be log-transformed (log2([CPM or RPK or TPM]+1))
 
     </help>
+    <citations>
+        <citation type="bibtex">@Article{,
+            title = {Visualizing High-Dimensional Data Using t-SNE},
+            volume = {9},
+            pages = {2579-2605},
+            year = {2008},
+            author = {L.J.P. {van der Maaten} and G.E. Hinton},
+            journal = {Journal of Machine Learning Research},
+            }
+        </citation>
+        <citation type="bibtex">@Manual{,
+            title = {{ClusterR}: Gaussian Mixture Models, K-Means, Mini-Batch-Kmeans,
+            K-Medoids and Affinity Propagation Clustering},
+            author = {Lampros Mouselimis},
+            year = {2019},
+            note = {R package version 1.1.9},
+            url = {https://github.com/mlampros/ClusterR},
+            }
+        </citation>
+    </citations>
 </tool>
