@@ -159,6 +159,8 @@ tpm <- function(count, length) {
   return(tpm)
 }
 
+#### running code ####
+
 data <- read.table(
   opt$data,
   check.names = FALSE,
@@ -190,21 +192,10 @@ if (opt$type == "none")
   res <- data
 colnames(res) <- colnames(data)
 
-
 if (opt$log == TRUE) {
   res <- log2(res + 1)
 }
 
-write.table(
-  cbind(Features = rownames(res), res),
-  opt$out,
-  col.names = opt$colnames,
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t"
-)
-
-#### running code
 if (opt$visu == TRUE) {
   df <- res
   # filter and transpose df for tsne and pca
@@ -246,3 +237,16 @@ if (opt$visu == TRUE) {
     ggsave(file = opt$pca_out, device = "pdf")
   }
 }
+
+# at this stage, we select numeric columns and round theirs values to 8 decimals for cleaner output
+is_num <- sapply(res, is.numeric)
+res[is_num] <- lapply(res[is_num], round, 8)
+
+write.table(
+  cbind(Features = rownames(res), res),
+  opt$out,
+  col.names = opt$colnames,
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t"
+)
