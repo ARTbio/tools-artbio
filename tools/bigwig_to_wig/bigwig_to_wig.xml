@@ -1,4 +1,4 @@
-<tool id="bigwig_to_wig" name="BigWig to Wig" version="2.0.0">
+<tool id="bigwig_to_wig" name="BigWig to Wig" version="@VERSION@">
     <description>converter</description>
     <macros>
         <import>macros.xml</import>

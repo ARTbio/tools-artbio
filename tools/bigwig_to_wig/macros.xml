@@ -1,5 +1,5 @@
 <macros>
-    <token name="@VERSION@">2.0.0</token>
+    <token name="@VERSION@">3+galaxy0</token>
     <macro name="requirements">
     <requirements>
         <requirement type="package" version="377">ucsc-bigwiginfo</requirement>
