@@ -1,4 +1,4 @@
-<tool id="cpm_tpm_rpk" name="Generate CPM, TPM, RPK" version="0.5.0">
+<tool id="cpm_tpm_rpk" name="Generate CPM, TPM, RPK" version="0.5.1">
     <description>from raw counts expression values</description>
     <requirements>
         <requirement type="package" version="1.7.1">r-optparse</requirement>

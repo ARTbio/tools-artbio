@@ -161,7 +161,7 @@ tpm <- function(count, length) {
 
 #### running code ####
 
-data <- read.table(
+data <- read.delim(
   opt$data,
   check.names = FALSE,
   header = opt$colnames,
@@ -171,7 +171,7 @@ data <- read.table(
 
 if (opt$type == "tpm" || opt$type == "rpk") {
   gene_length <- as.data.frame(
-    read.table(
+    read.delim(
       opt$gene,
       header = opt$gene_header,
       row.names = 1,
