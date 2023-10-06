@@ -1,4 +1,4 @@
-<tool id="bigwig_to_wig" name="BigWig to Wig" version="2.0.0">
+<tool id="bigwig_to_wig" name="BigWig to Wig" version="@VERSION@">
     <description>converter</description>
     <macros>
         <import>macros.xml</import>
@@ -8,7 +8,7 @@
         <exit_code range="1:" level="fatal" description="Tool exception" />
     </stdio>
     <command detect_errors="exit_code"><![CDATA[
-        sh $__tool_directory__/bigwig_to_wig.sh -f $input -b $bin_size -l $mylab > $output
+        bash $__tool_directory__/bigwig_to_wig.sh -f $input -b $bin_size -l $mylab > $output
     ]]></command>
   <inputs>
       <param name="input" format="bigwig" type="data" label="BigWig file to convert" />
@@ -23,13 +23,13 @@
 	      <param name="input" value="1.bigwig" />
 	      <param name="bin_size" value="500" />
 	      <param name="mylab" value="wiggle_file" />
-	      <output name="output" file="1.wig" />	  
+	      <output name="output" file="1.wig" compare="sim_size" />	  
       </test>
       <test>
 	      <param name="input" value="2.bigwig" />
 	      <param name="bin_size" value="2000" />
 	      <param name="mylab" value="wiggle_file" />
-	      <output name="output" file="2.wig" />	  
+	      <output name="output" file="2.wig" compare="sim_size" />	  
       </test>
     </tests>
     <help><![CDATA[

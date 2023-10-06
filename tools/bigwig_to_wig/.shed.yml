@@ -6,7 +6,7 @@ long_description: |
   Converts a bigWig file to Wiggle (WIG) format
 categories:
   - Convert Formats
-homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/bigwig_to_wig
+homepage_url: https://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/bigwig_to_wig
 toolshed:
   - toolshed
