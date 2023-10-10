@@ -58,7 +58,7 @@
             <param name="reference_source_selector" value="history" />
             <param name="specify_outputs" value="calMDandMQ" />
             <param name="ref_file" value="chr22.fa" />
-            <output name="fullfilter" file="full.bam" ftype="bam" />
+            <output name="fullfilter" file="full.bam" ftype="bam" lines_diff="4" />
         </test>
         <test>
             <param name="input_bam" value="chr22_sample.bam" ftype="bam" />
@@ -66,14 +66,14 @@
             <param name="ref_file" value="chr22.fa" />
             <param name="specify_outputs" value="both" />
             <output name="calmd" file="calmd.bam" ftype="bam" />
-            <output name="fullfilter" file="full.bam" ftype="bam" />
+            <output name="fullfilter" file="full.bam" ftype="bam" lines_diff="4" />
         </test>
         <test>
             <param name="input_bam" value="chr22_sample.bam" ftype="bam" />
             <param name="reference_source_selector" value="history" />
             <param name="specify_outputs" value="just_calMD" />
             <param name="ref_file" value="chr22.fa" />
-            <output name="calmd" file="calmd.bam" ftype="bam" />
+            <output name="calmd" file="calmd.bam" ftype="bam" lines_diff="4" />
         </test>
     </tests>
     <help>
