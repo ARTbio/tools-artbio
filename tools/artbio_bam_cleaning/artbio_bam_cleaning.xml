@@ -1,4 +1,4 @@
-<tool id="artbio_bam_cleaning" name="ARTbio bam cleaning" version="1.7+galaxy4">
+<tool id="artbio_bam_cleaning" name="ARTbio bam cleaning" version="1.10+galaxy0">
     <description>
         on flags and PCR Duplicates and MD recalibration
     </description>
@@ -6,9 +6,9 @@
         <import>macro.xml</import>
     </macros>
     <requirements>
-        <requirement type="package" version="1.6=hb116620_7">samtools</requirement>
-        <requirement type="package" version="0.8.1=h41abebc_0">sambamba</requirement>
-        <requirement type="package" version="1.3.5=py39hba5d119_3">freebayes</requirement>
+        <requirement type="package" version="1.10=h2e538c0_3">samtools</requirement>
+        <requirement type="package" version="0.8.1=hadffe2f_1">sambamba</requirement>
+        <requirement type="package" version="1.3.7">freebayes</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Error occured" />
@@ -53,27 +53,27 @@
         </data>
     </outputs>
     <tests>
-        <test>
+        <test expect_num_outputs="1">
             <param name="input_bam" value="chr22_sample.bam" ftype="bam" />
             <param name="reference_source_selector" value="history" />
             <param name="specify_outputs" value="calMDandMQ" />
             <param name="ref_file" value="chr22.fa" />
-            <output name="fullfilter" file="full.bam" ftype="bam" />
+            <output name="fullfilter" file="full.bam" ftype="bam" lines_diff="4" />
         </test>
-        <test>
+        <test expect_num_outputs="2">
             <param name="input_bam" value="chr22_sample.bam" ftype="bam" />
             <param name="reference_source_selector" value="history" />
             <param name="ref_file" value="chr22.fa" />
             <param name="specify_outputs" value="both" />
-            <output name="calmd" file="calmd.bam" ftype="bam" />
-            <output name="fullfilter" file="full.bam" ftype="bam" />
+            <output name="calmd" file="calmd.bam" ftype="bam" lines_diff="4" />
+            <output name="fullfilter" file="full.bam" ftype="bam" lines_diff="4" />
         </test>
-        <test>
+        <test expect_num_outputs="1">
             <param name="input_bam" value="chr22_sample.bam" ftype="bam" />
             <param name="reference_source_selector" value="history" />
             <param name="specify_outputs" value="just_calMD" />
             <param name="ref_file" value="chr22.fa" />
-            <output name="calmd" file="calmd.bam" ftype="bam" />
+            <output name="calmd" file="calmd.bam" ftype="bam" lines_diff="4" />
         </test>
     </tests>
     <help>
