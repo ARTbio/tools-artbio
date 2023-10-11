@@ -47,4 +47,8 @@ Nucleotides of the guide sequence which were not covered by contigs are in small
 This Galaxy tool was created by drosofff@gmail.com on 5/01/2016
 </help>
 
+<citations>
+    <citation type="doi">10.1186/s13742-015-0080-7</citation>
+</citations>
+
 </tool>
