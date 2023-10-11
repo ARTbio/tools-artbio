@@ -7,6 +7,6 @@ long_description: |
 categories:
   - Fasta Manipulation
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/blast_unmatched
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/blast_unmatched
 toolshed:
   - toolshed

@@ -1,4 +1,4 @@
-<tool id="blast_unmatched" name="Blast Unmatched" version="1.0.0">
+<tool id="blast_unmatched" name="Blast Unmatched" version="1.0.1">
     <description>get query sequences that didn't get a match during a blast</description>
     <requirements>
         <requirement type="package" version="3.7.6">python</requirement>
@@ -32,5 +32,6 @@ This tool takes a `blast`_ output in tabular format(with the query id in 1rst co
 
     ]]></help>
     <citations>
+        <citation type="doi">10.1186/s13742-015-0080-7</citation>
     </citations>
 </tool>
