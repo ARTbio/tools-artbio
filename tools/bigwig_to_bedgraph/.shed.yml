@@ -10,6 +10,6 @@ long_description: |
 categories:
   - Convert Formats
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/bigwig_to_bedgraph
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/bigwig_to_bedgraph
 toolshed:
   - toolshed
