@@ -14,6 +14,6 @@ categories:
   - Sequence Analysis
   - Assembly
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/blast_to_scaffold
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/blast_to_scaffold
 toolshed:
   - toolshed
