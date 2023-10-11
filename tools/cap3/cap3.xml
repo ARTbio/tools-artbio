@@ -2,7 +2,7 @@
 <description>Sequence Assembly tool</description>
     <requirements>
         <requirement type="package" version="10.2011=h779adbc_3">cap3</requirement>
-        <requirement type="package" version="4.8.4_1">libgcc</requirement>
+        <requirement type="package" version="4.8.4">libgcc</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
