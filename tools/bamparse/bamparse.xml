@@ -67,7 +67,7 @@
             <param name="input_list" value="alignment1.bam,alignment2.bam" ftype="bam" />
             <param name="polarity" value="both" />
             <param name="output_option" value="unique" />
-            <output name="table" ftype="tabular" file="table.tabular" count="1"/>
+            <output name="table" ftype="tabular" file="table.tabular" />
         </test>
         <test expect_num_outputs="1">
             <param name="input_list" value="alignment1.bam,alignment2.bam" ftype="bam" />
@@ -82,13 +82,13 @@
             <param name="input_list" value="alignment1.bam,alignment2.bam" ftype="bam" />
             <param name="polarity" value="sense" />
             <param name="output_option" value="unique" />
-            <output name="table" ftype="tabular" file="table.tabular" count="1"/>
+            <output name="table" ftype="tabular" file="table.tabular" />
         </test>
         <test expect_num_outputs="1">
             <param name="input_list" value="alignment1.bam,alignment2.bam" ftype="bam" />
             <param name="polarity" value="antisense" />
             <param name="output_option" value="unique" />
-            <output name="table" ftype="tabular" file="table_antisense.tabular" count="1"/>
+            <output name="table" ftype="tabular" file="table_antisense.tabular" />
         </test>
 
         <test expect_num_outputs="1">
@@ -105,13 +105,13 @@
             <param name="input_list" value="input1.bam,input2.bam,input_new2.bam" ftype="bam" />
             <param name="polarity" value="sense" />
             <param name="output_option" value="unique" />
-            <output name="table" ftype="tabular" file="more_sense_table.tabular" count="1"/>
+            <output name="table" ftype="tabular" file="more_sense_table.tabular" />
         </test>
         <test expect_num_outputs="1">
             <param name="input_list" value="input1.bam,input2.bam,input_new2.bam" ftype="bam" />
             <param name="polarity" value="antisense" />
             <param name="output_option" value="unique" />
-            <output name="table" ftype="tabular" file="more_antisense_table.tabular" count="1"/>
+            <output name="table" ftype="tabular" file="more_antisense_table.tabular" />
         </test>
     </tests>
     <help>
@@ -126,4 +126,7 @@ Sense, antisense or both sense and antisense alignments can be counted
 The library labels in the returned count table are taken from the input bam datasets
 names in the Galaxy history.
     </help>
+    <citations>
+        <citation type="doi">10.1093/bioinformatics/btp352</citation>
+    </citations>
 </tool>
