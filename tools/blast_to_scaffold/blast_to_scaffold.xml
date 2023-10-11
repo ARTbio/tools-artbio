@@ -3,14 +3,15 @@
 <requirements>
     <requirement type="package" version="3.7.6">python</requirement>
 </requirements>
-<command interpreter="python">
-        blast_to_scaffold.py --sequences "$sequences"
-                             --guideSequence "$guideSequence"
-                             --blast-tab "$blast_tab"
-                             --output "$output"
-                             --scaffold_prefix "$sequences.element_identifier"
-                             --scaffold_suffix "$guideSequence.element_identifier"
-</command>
+<command detect_errors="exit_code"><![CDATA[
+        python $__tool_directory__/blast_to_scaffold.py
+                                      --sequences "$sequences"
+                                      --guideSequence "$guideSequence"
+                                      --blast-tab "$blast_tab"
+                                      --output "$output"
+                                      --scaffold_prefix "$sequences.element_identifier"
+                                      --scaffold_suffix "$guideSequence.element_identifier"
+]]></command>
 <inputs>
 <param name="sequences" type="data" format="fasta" label="Select a fasta contigs file"/> 
 <param name="guideSequence" type="data" format="fasta" label="Select the fasta guide sequence for scaffolding"/> 
@@ -46,5 +47,9 @@ Nucleotides of the guide sequence which were not covered by contigs are in small
 **Attribution**
 This Galaxy tool was created by drosofff@gmail.com on 5/01/2016
 </help>
+
+<citations>
+    <citation type="doi">10.1186/s13742-015-0080-7</citation>
+</citations>
 
 </tool>
