@@ -13,8 +13,6 @@ categories:
   - Sequence Analysis
   - Assembly
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/blastx_to_scaffold
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/blastx_to_scaffold
 toolshed:
-  - https://lbcd41.snv.jussieu.fr/toolshed/
-  - testtoolshed
   - toolshed
