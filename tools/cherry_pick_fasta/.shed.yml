@@ -9,7 +9,7 @@ long_description: |
 categories:
   - Fasta Manipulation
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/cherry_pick_fasta
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/cherry_pick_fasta
 toolshed:
   - https://lbcd41.snv.jussieu.fr/toolshed/
   - testtoolshed
