@@ -1,8 +1,8 @@
 <tool id="cap3" name="cap3" version="2.0.1">
 <description>Sequence Assembly tool</description>
     <requirements>
-        <requirement type="package" version="10.2011=h779adbc_3">cap3</requirement>
-        <requirement type="package" version="7.2.0=h69d50b8_2">libgcc</requirement>
+        <requirement type="package" version="10.2011=0">cap3</requirement>
+        <requirement type="package" version="3.7.8=hffdb5ce_3_cpython">python</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
