@@ -1,7 +1,6 @@
 <tool id="cap3" name="cap3" version="2.0.1">
 <description>Sequence Assembly tool</description>
     <requirements>
-        <requirement type="package" version="1.3.7">freebayes</requirement>
         <requirement type="package" version="10.2011">cap3</requirement>
     </requirements>
     <stdio>
