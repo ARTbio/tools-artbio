@@ -7,6 +7,6 @@ long_description: |
 categories:
   - Text Manipulation
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/concat_multi_datasets
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/concat_multi_datasets
 toolshed:
   - toolshed
