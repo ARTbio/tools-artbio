@@ -7,8 +7,9 @@
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
     </stdio>
-    <command detect_errors="exit_code"><![CDATA[
+    <command><![CDATA[
     which cap3 &&
+    echo $PATH &&
     cap3 "$inputSequences" -o $overlaplength -p $overlapidentity > "$cap3stdout" &&
                 mv "$inputSequences".cap.contigs $contigs &&
                 mv "$inputSequences".cap.contigs.qual $contigsqual &&
