@@ -9,7 +9,7 @@
     </stdio>
     <command><![CDATA[
     which cap3 &&
-    echo $PATH &&
+    echo \$PATH &&
     cap3 "$inputSequences" -o $overlaplength -p $overlapidentity > "$cap3stdout" &&
                 mv "$inputSequences".cap.contigs $contigs &&
                 mv "$inputSequences".cap.contigs.qual $contigsqual &&
