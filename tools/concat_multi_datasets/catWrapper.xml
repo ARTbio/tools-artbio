@@ -274,35 +274,35 @@
     </outputs>
     <tests>
         <!-- Single files concatenation -->
-        <test> <!-- Test 1 single files concatenation with no other option -->
+        <test expect_num_outputs="1"> <!-- Test 1 single files concatenation with no other option -->
             <param name="input_type" value="singles" />
             <param name="inputs" value="1.bed,2.bed"/>
             <param name="dataset_names" value="No" />
             <param name="headers" value="0" />
             <output name="out_file1" file="cat_wrapper_out1.bed"/>
         </test>
-        <test> <!-- Test 2 single files concatenation with dataset names activated -->
+        <test expect_num_outputs="1"> <!-- Test 2 single files concatenation with dataset names activated -->
             <param name="input_type" value="singles" />
             <param name="inputs" value="1.bed,2.bed"/>
             <param name="dataset_names" value="Yes" />
             <param name="headers" value="0" />
             <output name="out_file1" file="cat_wrapper_out2.bed"/>
         </test>
-        <test> <!-- Test 3 single files concatenation skipping 1 line -->
+        <test expect_num_outputs="1"> <!-- Test 3 single files concatenation skipping 1 line -->
             <param name="input_type" value="singles" />
             <param name="inputs" value="1.bed,2.bed"/>
             <param name="dataset_names" value="No" />
             <param name="headers" value="1" />
             <output name="out_file1" file="cat_wrapper_out3.bed"/>
         </test>
-        <test> <!-- Test 4 gz handling with no options -->
+        <test expect_num_outputs="1"> <!-- Test 4 gz handling with no options -->
             <param name="input_type" value="singles" />
             <param name="inputs" value="1_f.fastq.gz,1_r.fastq.gz"/>
             <param name="dataset_names" value="No" />
             <param name="headers" value="0" />
             <output name="out_file1" file="1.fastq.gz" decompress="True"/>
         </test>
-        <test> <!-- Test 5 gz handling with options -->
+        <test expect_num_outputs="1"> <!-- Test 5 gz handling with options -->
             <param name="input_type" value="singles" />
             <param name="inputs" value="1_f.fastq.gz,1_r.fastq.gz"/>
             <param name="dataset_names" value="Yes" />
@@ -310,7 +310,7 @@
             <output name="out_file1" file="1_options.fastq.gz" decompress="True"/>
         </test>
         <!-- Test paired options -->
-        <test> <!-- Test 6 paired collection concatenation by_pair with no other option -->
+        <test expect_num_outputs="3"> <!-- Test 6 paired collection concatenation by_pair with no other option -->
             <param name="input_type" value="paired_collection" />
             <param name="paired_cat_type" value="by_pair"/>
             <param name="inputs">
@@ -343,7 +343,7 @@
                 <element name="4" file="4.fastq"/>
             </output_collection>
         </test>
-        <test> <!-- Test 7 paired collection concatenation by_strand with no other option -->
+        <test expect_num_outputs="2"> <!-- Test 7 paired collection concatenation by_strand with no other option -->
             <param name="input_type" value="paired_collection" />
             <param name="paired_cat_type" value="by_strand"/>
             <param name="inputs">
@@ -375,7 +375,7 @@
                 <element name="reverse" file="r.fastq"/>
             </output_collection>
         </test>
-        <test> <!-- Test 8 - 2 collections concatenation -->
+        <test expect_num_outputs="3"> <!-- Test 8 - 2 collections concatenation -->
             <param name="input_type" value="simple_collections" />
             <param name="input_1">
                 <collection type="list">
@@ -399,7 +399,7 @@
                 <element name="4" file="4.fastq"/>
             </output_collection>
         </test>
-        <test> <!-- Test 9 - 2 collections concatenation with other options-->
+        <test expect_num_outputs="1"> <!-- Test 9 - 2 collections concatenation with other options-->
             <param name="input_type" value="simple_collections" />
             <param name="input_1">
                 <collection type="list">
@@ -417,7 +417,7 @@
                 <element name="1_f.fastq.gz_1_r.fastq.gz" file="1_options.fastq.gz" decompress="True"/>
             </output_collection>
         </test>
-        <test> <!-- Test 10 nested collections concatenation -->
+        <test expect_num_outputs="2"> <!-- Test 10 nested collections concatenation -->
             <param name="input_type" value="nested_collection" />
             <param name="inputs">
                 <collection type="list:list">
@@ -441,7 +441,7 @@
                 <element name="3" file="3.fastq"/>
             </output_collection>
         </test>
-        <test> <!-- Test 11 nested collections concatenation with options and gzip-->
+        <test expect_num_outputs="1"> <!-- Test 11 nested collections concatenation with options and gzip-->
             <param name="input_type" value="nested_collection" />
             <param name="inputs">
                 <collection type="list:list">
