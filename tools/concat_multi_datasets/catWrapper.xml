@@ -233,10 +233,12 @@
                 <option value="nested_collection">Nested collection</option>
             </param>
             <when value="singles">
-                <param name="inputs" type="data" label="Concatenate Datasets" multiple="True" help="All inputed datasets will be concatenated tail-to-head."/>
+                <param name="inputs" type="data" label="Concatenate Datasets" multiple="True" format="fastq,fastq.gz,txt,tabular,bed"
+                       help="All inputed datasets will be concatenated tail-to-head."/>
             </when>
             <when value="paired_collection">
-                <param name="inputs" type="data_collection" collection_type="list:paired" label="Input paired collection to concatenate"/>
+                <param name="inputs" type="data_collection" collection_type="list:paired" format="fastq,fastq.gz,txt,tabular,bed"
+                       label="Input paired collection to concatenate"/>
                 <param name="paired_cat_type" type="select" label="What type of concatenation do you wish to perform?">
                     <option value="by_strand">Concatenate all datsets of same strand (outputs a single pair of datasets)</option>
                     <option value="by_pair">Concatenate pairs of datasets (outputs an unpaired collection of datasets)</option>
