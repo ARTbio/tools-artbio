@@ -672,4 +672,7 @@ output::
 Adapted from galaxy's catWrapper.xml to allow multiple input files.
 
     </help>
+    <citations>
+        <citation type="doi">10.1186/gb-2010-11-8-r86</citation>
+    </citations>
 </tool>
