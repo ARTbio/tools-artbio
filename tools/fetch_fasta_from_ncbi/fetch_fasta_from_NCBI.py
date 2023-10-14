@@ -205,7 +205,7 @@ class Eutils:
                 fasta = response.read()
                 self.logger.debug("Did all that")
                 response.close()
-                if((response_code != 200) or
+                if ((response_code != 200) or
                    (b"Resource temporarily unavailable" in fasta) or
                    (b"Error" in fasta) or (not fasta.startswith(b">"))):
                     serverTransaction = False
@@ -260,7 +260,7 @@ class Eutils:
         return querylog
 
     def sanitiser(self, db, fastaseq):
-        if(db not in "nuccore protein"):
+        if (db not in "nuccore protein"):
             return fastaseq
         regex = re.compile(r"[ACDEFGHIKLMNPQRSTVWYBZ]{49,}")
         sane_seqlist = []
