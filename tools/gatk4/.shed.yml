@@ -18,7 +18,6 @@ long_description: |
 categories:
   - Variant Analysis
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/gatk4
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/gatk4
 toolshed:
-  - testtoolshed
   - toolshed
