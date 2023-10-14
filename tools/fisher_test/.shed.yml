@@ -8,6 +8,6 @@ categories:
   - RNA
   - Statistics
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/fisher_test
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/fisher_test
 toolshed:
   - toolshed

@@ -1,7 +1,7 @@
-<tool id="fishertest" name="Fisher's exact test" version="2.22.0+galaxy0">
+<tool id="fishertest" name="Fisher's exact test" version="2.32.0+galaxy0">
 	<description>on two gene hit lists</description>
         <requirements>
-            <requirement type="package" version="2.22.0">bioconductor-qvalue</requirement>
+            <requirement type="package" version="2.32.0">bioconductor-qvalue</requirement>
         </requirements>
         <command><![CDATA[
             Rscript '$fisher_test' "\${GALAXY_SLOTS:-1}"
@@ -56,13 +56,17 @@
 
 **What it does**
 
-Runs Fisher's exact test for testing the null of independence of rows and columns in a contingency table of two columns.
+Runs Fisher's exact test for testing the null of independence of rows and columns
+in a contingency table of two columns.
 
-p.pvalues: the chance of getting this data if it is independent between columns (false negative); the p-value.
+p.pvalues: the chance of getting this data if it is independent between columns
+(false negative); the p-value.
 
-q.qvalues: FDR (Faslse Detection Rate) adjusted p-values; a q-value of 0.05 implies that 5% of significant tests will result in false positives.
+q.qvalues: FDR (Faslse Detection Rate) adjusted p-values;
+a q-value of 0.05 implies that 5% of significant tests will result in false positives.
 
-Be aware that this test does not take into account the biological noise that would be visible if replicates were available.
+Be aware that this test does not take into account the biological noise
+that would be visible if replicates were available.
 
 
 </help>
