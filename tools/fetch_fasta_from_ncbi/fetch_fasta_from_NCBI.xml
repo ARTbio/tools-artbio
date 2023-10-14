@@ -1,4 +1,4 @@
-<tool id="retrieve_fasta_from_NCBI" name="Retrieve FASTA from NCBI" version="3.0.0">
+<tool id="retrieve_fasta_from_NCBI" name="Retrieve FASTA from NCBI" version="3.1.0">
     <description></description>
     <requirements>
         <requirement type="package" version="1.25.9">urllib3</requirement>
@@ -64,34 +64,34 @@
     <data format="txt" name="logfile" label="logs"/>
   </outputs>
   <tests>
-      <test>
+      <test expect_num_outputs="3">
           <param name="queryString" value="9629650[gi]" />
           <param name="dbname" value="nuccore" />
           <param name="fetch_option" value="fasta"/>
           <output name="fasta" ftype="fasta" file="output.fa" />
       </test>
-      <test>
+      <test expect_num_outputs="2">
           <param name="queryString" value="CU929326[Accession]" />
           <param name="dbname" value="nuccore" />
           <param name="fetch_option" value="justiuds"/>
           <output name="logfile" ftype="txt" file="dry_run.log" compare="sim_size"/>
       </test>
-      <test>
+      <test expect_num_outputs="2">
           <param name="option" value="list" />
           <param name="iud_list" value="input_list.txt" ftype="txt" />
           <param name="dbname" value="nuccore" />
           <param name="fetch_option" value="fasta"/>
           <output name="fasta" ftype="fasta" file="output_list.fa"/>
       </test>
-      <test>
+      <test expect_num_outputs="3">
           <param name="queryString" value="Drosophila[Organism] AND 2017[Modification Date] AND virus" />
           <param name="dbname" value="nuccore" />
           <param name="fetch_option" value="fasta"/>
           <output name="fasta" ftype="fasta" >
-              <metadata name="sequences" value="9" />
+              <metadata name="sequences" value="2" />
           </output>
       </test>
-      <test>
+      <test expect_num_outputs="2">
           <param name="queryString" value="labalbalbalbaalablalbabal[Title]" />
           <param name="dbname" value="nuccore" />
           <param name="fetch_option" value="justiuds"/>
@@ -105,15 +105,19 @@
   <help>
 **What it does**
 
-This tool retrieves nucleotide/peptide sequences from the corresponding NCBI database (nuccore or protein) for a given entrez query.
+This tool retrieves nucleotide/peptide sequences from the corresponding
+NCBI database (nuccore or protein) for a given entrez query.
 
-The tool can be set with the query "txid10239[orgn] NOT txid131567[orgn] AND complete NOT partial[title] NOT phage[title]" for metaVisitor use purpose
+The tool can be set with the query
+"txid10239[orgn] NOT txid131567[orgn] AND complete NOT partial[title] NOT phage[title]"
+for metaVisitor use purpose
 
 See `Entrez help`_ for explanation of query formats
 
 Be sure to use the appropriate NCBI query syntax. Always use [] to specify the search fields.
 
-By checking the checkbox you can also run your query without sequence retrieval and get the number of sequences your query will fetch.
+By checking the checkbox you can also run your query without sequence
+retrieval and get the number of sequences your query will fetch.
 
 Note that the tool may fail in case of interrupted connexion with the NCBI database (see the log dataset)
 
@@ -146,16 +150,8 @@ Retrieval progress is reported in the log dataset.
                           logging level (default: INFO)
   ]]>
 
-**Acknowledgments**
-
-This Galaxy tool has been adapted from the galaxy tool `get_fasta_from_taxon`_.
-
-It is Copyright © 2014-2015 `CNRS and University Pierre et Marie Curie`_ and is released under the `MIT license`_.
 
 .. _Entrez help: https://www.ncbi.nlm.nih.gov/books/NBK3837/#EntrezHelp.Entrez_Searching_Options
-.. _get_fasta_from_taxon: https://toolshed.g2.bx.psu.edu/view/crs4/get_fasta_from_taxon
-.. _CNRS and University Pierre et Marie Curie: http://www.ibps.upmc.fr/en
-.. _MIT license: http://opensource.org/licenses/MIT
 
   </help>
   <citations>

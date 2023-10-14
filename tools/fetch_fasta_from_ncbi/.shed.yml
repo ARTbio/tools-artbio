@@ -8,6 +8,6 @@ categories:
   - Fasta Manipulation
   - Data Source
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/fetch_fasta_from_ncbi
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/fetch_fasta_from_ncbi
 toolshed:
   - toolshed
