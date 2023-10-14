@@ -10,6 +10,6 @@ long_description: |
 categories:
   - Transcriptomics
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/cpm_tpm_rpk
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/cpm_tpm_rpk
 toolshed:
   - toolshed
