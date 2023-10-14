@@ -1,4 +1,4 @@
-<tool id="embl2fa" name="Convert embl flat file to fasta" version="0.1">
+<tool id="embl2fa" name="Convert embl flat file to fasta" version="0.2">
   <description></description>
   <stdio>
       <exit_code range="1:" level="fatal" description="Tool exception" />
@@ -31,5 +31,8 @@
 
 Converts file in EMBL flat format to fasta file
   </help>
+  <citations>
+    <citation type="doi">10.1093/nar/gki098</citation>
+  </citations>
 </tool>
 

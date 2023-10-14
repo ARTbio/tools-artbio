@@ -7,6 +7,6 @@ long_description: |
 categories:
   - Text Manipulation
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/embl2fa
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/embl2fa
 toolshed:
   - https://toolshed.g2.bx.psu.edu/
