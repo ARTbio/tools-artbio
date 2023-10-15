@@ -10,7 +10,6 @@ categories:
   - Data Source
   - Fasta Manipulation
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/get_reference_fasta
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/get_reference_fasta
 toolshed:
   - toolshed
-  - testtoolshed
