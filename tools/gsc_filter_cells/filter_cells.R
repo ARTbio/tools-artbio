@@ -66,7 +66,7 @@ if ((opt$percentile_genes > 0) && (opt$absolute_genes > 0)) {
 }
 
 # Import datasets
-data.counts <- read.table(
+data_counts <- read.table(
   opt$file,
   header = TRUE,
   stringsAsFactors = FALSE,
@@ -75,9 +75,9 @@ data.counts <- read.table(
   row.names = 1
 )
 
-QC_metrics <- data.frame(cell_id = colnames(data.counts),
-                         nGenes = colSums(data.counts != 0),  # nGenes is Number of detected genes for each cell
-                         total_counts = colSums(data.counts),  # total_counts is Total counts per cell
+QC_metrics <- data.frame(cell_id = colnames(data_counts),
+                         nGenes = colSums(data_counts != 0),  # nGenes is Number of detected genes for each cell
+                         total_counts = colSums(data_counts),  # total_counts is Total counts per cell
                          stringsAsFactors = FALSE)
 
 plot_hist <- function(mydata, variable, title, cutoff) {
@@ -115,29 +115,24 @@ pdf(file = opt$pdfplot)
 # Determine thresholds based on percentile
 
 if (opt$percentile_counts > 0) {
-  counts_threshold <- percentile_cutoff(
-    opt$percentile_counts,
-    QC_metrics,
-    "total_counts",
-    "Histogram of Aligned read counts per cell"
-  )
-  } else {
+  counts_threshold <- percentile_cutoff(opt$percentile_counts,
+                                        QC_metrics,
+                                        "total_counts",
+                                        "Histogram of Aligned read counts per cell")
+} else {
   counts_threshold <- opt$absolute_counts
   plot_hist(QC_metrics,
-    variable = "total_counts",
+            variable = "total_counts",
             title = "Histogram of Total counts per cell",
-            cutoff = counts_threshold
-  )
+            cutoff = counts_threshold )
 }
 
 if (opt$percentile_genes > 0) {
-  genes_threshold <- percentile_cutoff(
-    opt$percentile_genes,
-    QC_metrics,
-    "nGenes",
-    "Histogram of Number of detected genes per cell"
-  )
-  } else {
+  genes_threshold <- percentile_cutoff(opt$percentile_genes,
+                                       QC_metrics,
+                                       "nGenes",
+                                       "Histogram of Number of detected genes per cell")
+} else {
   genes_threshold <- opt$absolute_genes
   plot_hist(QC_metrics,
             variable = "nGenes",
@@ -184,15 +179,13 @@ ggplot(QC_metrics, aes(nGenes, total_counts, colour = filtered)) +
   geom_point() +
   scale_y_log10() +
   scale_colour_discrete(name  = "",
-    breaks = c(FALSE, TRUE),
+                        breaks = c(FALSE, TRUE),
                         labels = c(paste0("Not filtered (",
-        table(QC_metrics$filtered)[1],
-                                          " cells)"
-      ),
-      paste0("Filtered (",
-        table(QC_metrics$filtered)[2],
-                                          " cells)"
-      )
+                                   table(QC_metrics$filtered)[1],
+                                   " cells)"),
+                                   paste0("Filtered (",
+                                   table(QC_metrics$filtered)[2],
+                                   " cells)")
     )
   ) +
   xlab("Detected genes per cell") +
@@ -208,29 +201,27 @@ dev.off()
 # Retrieve identifier of kept_cells
 kept_cells <- QC_metrics$cell_id[!QC_metrics$filtered]
 
-data.counts <- data.frame(Genes = rownames(data. counts[, kept_cells]),
-                          data.counts[, kept_cells],
-                          check.names = FALSE)
+data_counts <- data.frame(Genes = rownames(data_counts[, kept_cells]),
+  data_counts[, kept_cells],
+ check.names = FALSE)
 
 # Save filtered cells
-write.table(
-  data.counts,
-  opt$output,
-  sep = "\t",
-  quote = FALSE,
-  col.names = TRUE,
-  row.names = FALSE
+write.table(data_counts,
+            opt$output,
+            sep = "\t",
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = FALSE
 )
 
 # Add QC metrics of filtered cells to a metadata file
 metadata <- QC_metrics
 
 # Save the metadata (QC metrics) file
-write.table(
-  metadata,
-  opt$output_metada,
-  sep = "\t",
-  quote = FALSE,
-  col.names = TRUE,
-  row.names = FALSE
+write.table(metadata,
+            opt$output_metada,
+            sep = "\t",
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = FALSE
 )
