@@ -25,12 +25,10 @@
             #set ref_flag=''
         #end if
 
-        #if str($mode.mode_parameters) == 'tumor_only'
-            ln -s $mode.tumor tumor.bam &&
-            ln -s $mode.tumor.metadata.bam_index tumor.bam.bai &&
-        #else
-            ln -s $mode.tumor tumor.bam &&
-            ln -s $mode.tumor.metadata.bam_index tumor.bam.bai &&
+        ln -s $tumor tumor.bam &&
+        ln -s $tumor.metadata.bam_index tumor.bam.bai &&
+
+        #if str($mode.mode_parameters) == 'somatic'
             ln -s $mode.normal normal.bam &&
             ln -s $mode.normal.metadata.bam_index normal.bam.bai &&
         #end if
@@ -288,16 +286,15 @@
         ]]>
     </command>
     <inputs>
+        <param name="tumor" argument="--tumor" type="data" format="bam" label="Input Tumor BAM file" />
         <conditional name="mode">
             <param name="mode_parameters" type="select" label="Type of analysis">
                 <option value="tumor_only">Tumor-only</option>
                 <option value="somatic">Somatic</option>
             </param>
             <when value="tumor_only">
-                <param name="tumor" argument="--tumor" type="data" format="bam" label="Input Tumor BAM file" />
             </when>
             <when value="somatic">
-                <param name="tumor" argument="--tumor" type="data" format="bam" label="Input Tumor BAM file" />
                 <param name="normal" argument="--normal" type="data" format="bam" label="Input Normal BAM file" />
             </when>
         </conditional>
@@ -602,9 +599,9 @@
     </outputs>
     <tests>
         <test expect_num_outputs="2">
+            <param name="tumor" ftype="bam" value="Mutect2-in1.bam" />
             <conditional name="mode">
                 <param name="mode_parameters" value="tumor_only"/>
-                <param name="tumor" ftype="bam" value="Mutect2-in1.bam" />
             </conditional>
             <param name="reference_sequence" ftype="fasta" value="reference.fa" />
             <param name="gzipped_output" value="false" />
@@ -616,9 +613,9 @@
             <output name="output_vcf_stats" file="Mutect2-out1.vcf.stats" />
         </test>
         <test expect_num_outputs="2">
+            <param name="tumor" ftype="bam" value="Mutect2-in2.bam" />
             <conditional name="mode">
                 <param name="mode_parameters" value="tumor_only"/>
-                <param name="tumor" ftype="bam" value="Mutect2-in2.bam" />
             </conditional>
             <param name="reference_sequence" ftype="fasta" value="reference.fa" />
             <param name="gzipped_output" value="false" />
@@ -631,9 +628,9 @@
             <output name="output_vcf" file="Mutect2-out2.vcf" lines_diff="2" />
         </test>
         <test expect_num_outputs="2">
+            <param name="tumor" ftype="bam" value="Mutect2-in3.bam" />
             <conditional name="mode">
                 <param name="mode_parameters" value="tumor_only"/>
-                <param name="tumor" ftype="bam" value="Mutect2-in3.bam" />
             </conditional>
             <param name="reference_sequence" ftype="fasta" value="reference.fa" />
             <param name="gzipped_output" value="false" />
@@ -646,9 +643,9 @@
             <output name="output_vcf" file="Mutect2-out3.vcf" lines_diff="4" />
         </test>
         <test expect_num_outputs="2">
+            <param name="tumor" ftype="bam" value="Mutect2-in4.bam" />
             <conditional name="mode">
                 <param name="mode_parameters" value="tumor_only"/>
-                <param name="tumor" ftype="bam" value="Mutect2-in4.bam" />
             </conditional>
             <param name="reference_sequence" value="hg38"/>
             <param name="gzipped_output" value="false" />
@@ -660,9 +657,9 @@
             <output name="output_vcf" file="Mutect2-out4.vcf" lines_diff="2" />
         </test>
         <test expect_num_outputs="4">
+            <param name="tumor" ftype="bam" value="Mutect2-in5.bam" />
             <conditional name="mode">
                 <param name="mode_parameters" value="tumor_only"/>
-                <param name="tumor" ftype="bam" value="Mutect2-in5.bam" />
             </conditional>
             <param name="reference_sequence" ftype="fasta" value="reference.fa" />
             <param name="gzipped_output" value="false" />
@@ -678,9 +675,9 @@
             <output name="bam_output" file="Mutect2-out5.bam" />
         </test>
         <test expect_num_outputs="2">
+            <param name="tumor" ftype="bam" value="tumor.bam" />
             <conditional name="mode">
                 <param name="mode_parameters" value="somatic"/>
-                <param name="tumor" ftype="bam" value="tumor.bam" />
                 <param name="normal" ftype="bam" value="normal.bam" />
             </conditional>
             <param name="reference_sequence" ftype="fasta" value="chr20.fa" />
