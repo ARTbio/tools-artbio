@@ -1,4 +1,4 @@
-<tool id="mutect2" name="gatk4 Mutect2" version="@WRAPPER_VERSION@" profile="18.05">
+<tool id="mutect2" name="gatk4 Mutect2" version="@WRAPPER_VERSION@" profile="21.01">
     <description>- Call somatic SNVs and indels via local assembly of haplotypes</description>
     <macros>
         <import>macros.xml</import>

@@ -1,4 +1,4 @@
-<tool id="filtermutectcalls" name="gatk4 FilterMutectCalls" version="@WRAPPER_VERSION@" profile="18.05">
+<tool id="filtermutectcalls" name="gatk4 FilterMutectCalls" version="@WRAPPER_VERSION@" profile="21.01">
     <description>Filter variants in a GATK4 Mutect2 VCF callset</description>
     <macros>
         <import>macros.xml</import>
