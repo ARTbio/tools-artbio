@@ -6,8 +6,8 @@ long_description: |
   Mean centers, standard deviation rescales, or does both operations on single cell
   transcriptomic data, or any type of numerical data
 categories:
-  - Transcriptomics
+  - Statistics
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/gsc_center_scale
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/gsc_center_scale
 toolshed:
   - toolshed
