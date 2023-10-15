@@ -45,9 +45,9 @@ option_list <- list(
 
 transform <- function(df, center = TRUE, scale = TRUE) {
   transfo <- scale(t(df),
-                   center = center,
-                   scale = scale
-                   )
+    center = center,
+    scale = scale
+  )
   return(as.data.frame(t(transfo)))
 }
 
@@ -69,7 +69,7 @@ if (opt$factor != "") {
     header = TRUE,
     sep = "\t",
     stringsAsFactors = TRUE
-    )
+  )
   colnames(data_factor) <- c("cellid", "level")
   data_transformed <- data.frame(row.names = rownames(data))
   for (group in levels(data_factor$level)) {
