@@ -1,7 +1,7 @@
-<tool id="center_scale" name="Center or scale (standardize) data" version="0.9.5">
+<tool id="center_scale" name="Center or scale (standardize) data" version="4.3.1+galaxy0" profile="21.01">
     <description></description>
     <requirements>
-        <requirement type="package" version="1.6.0">r-optparse</requirement>
+        <requirement type="package" version="1.7.3">r-optparse</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
@@ -94,7 +94,7 @@
 The tool perform various normalization operations on a data table, including mean centering,
 standard deviation rescaling, or both (standardization).
 
-In addition, these operations can be performed on subsets of observations, is the user provides
+In addition, these operations can be performed on subsets of observations, if the user provides
 a two-column table that maps observations to groups (factor levels).
 
 **Inputs**

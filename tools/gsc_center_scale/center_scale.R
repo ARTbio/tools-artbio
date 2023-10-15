@@ -1,11 +1,15 @@
-options( show.error.messages=F,
-       error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+options(show.error.messages = FALSE,
+        error = function(){
+            cat(geterrmessage(), file=stderr())
+            q("no", 1, FALSE)
+            }
+)
 loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
 warnings()
 library(optparse)
 
 # Arguments
-option_list = list(
+option_list <- list(
   make_option(
     '--data',
     default = NA,
@@ -39,19 +43,19 @@ option_list = list(
   )
 )
 
-transform <- function(df, center=TRUE, scale=TRUE) {
+transform <- function(df, center = TRUE, scale = TRUE) {
     transfo <- scale(
         t(df),
-        center=center,
-        scale=scale
+        center = center,
+        scale = scale
         )
     return(as.data.frame(t(transfo)))
 }
 
-opt = parse_args(OptionParser(option_list = option_list),
+opt <- parse_args(OptionParser(option_list = option_list),
                  args = commandArgs(trailingOnly = TRUE))
 
-data = read.table(
+data <- read.delim(
     opt$data,
     check.names = FALSE,
     header = TRUE,
@@ -60,44 +64,32 @@ data = read.table(
 )
 
 if (opt$factor != '') {
-    data.factor = read.table(
+    data.factor = read.delim(
         opt$factor,
         check.names = FALSE,
         header = TRUE,
         sep = '\t'
         )
     colnames(data.factor) <- c("cellid", "level")
-    data.transformed <- data.frame(row.names=rownames(data), stringsAsFactors=FALSE)
+    data.transformed <- data.frame(row.names=rownames(data), stringsAsFactors = FALSE)
     for (group in levels(data.factor$level)){
-        subcells <- as.data.frame(subset(data.factor, level==group, select=cellid))
-        subdata <- as.data.frame(subset(data, select=as.vector(subcells$cellid)))
-        subdata.transformed <- transform(subdata, center=as.logical(opt$center),
-                                                  scale=as.logical(opt$scale))
+        subcells <- as.data.frame(subset(data.factor, level == group, select = cellid))
+        subdata <- as.data.frame(subset(data, select = as.vector(subcells$cellid)))
+        subdata.transformed <- transform(subdata, center = as.logical(opt$center),
+                                                  scale = as.logical(opt$scale))
         data.transformed <- cbind(data.transformed, subdata.transformed)
     }
 } else {
-    data.transformed <- transform(data, center=as.logical(opt$center),
-                                        scale=as.logical(opt$scale))
+    data.transformed <- transform(data, center = as.logical(opt$center),
+                                        scale = as.logical(opt$scale))
 }
 
 
 write.table(
-  cbind(gene=rownames(data.transformed), data.transformed),
+  cbind(gene = rownames(data.transformed), data.transformed),
   opt$output,
   col.names = TRUE,
   row.names = FALSE,
-  quote = F,
+  quote = FALSE,
   sep = "\t"
 )
-
-
-
-
-
-
-
-
-
-
-
-
