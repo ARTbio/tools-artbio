@@ -114,7 +114,7 @@ jobs:
     - name: Set fail level for pull request
       if: ${{ github.event_name == 'pull_request' }}
       run:
-        echo "FAIL_LEVEL=warn" >> "$GITHUB_ENV"
+        echo "FAIL_LEVEL=error" >> "$GITHUB_ENV"
     - name: Set fail level for merge
       if: ${{ github.event_name != 'pull_request' }}
       run:

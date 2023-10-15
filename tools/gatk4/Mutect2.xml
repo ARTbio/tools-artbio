@@ -1,4 +1,4 @@
-<tool id="mutect2" name="gatk4 Mutect2" version="@WRAPPER_VERSION@" profile="18.05">
+<tool id="mutect2" name="gatk4 Mutect2" version="@WRAPPER_VERSION@" profile="21.01">
     <description>- Call somatic SNVs and indels via local assembly of haplotypes</description>
     <macros>
         <import>macros.xml</import>
@@ -25,12 +25,10 @@
             #set ref_flag=''
         #end if
 
-        #if str($mode.mode_parameters) == 'tumor_only'
-            ln -s $mode.tumor tumor.bam &&
-            ln -s $mode.tumor.metadata.bam_index tumor.bam.bai &&
-        #else
-            ln -s $mode.tumor tumor.bam &&
-            ln -s $mode.tumor.metadata.bam_index tumor.bam.bai &&
+        ln -s $tumor tumor.bam &&
+        ln -s $tumor.metadata.bam_index tumor.bam.bai &&
+
+        #if str($mode.mode_parameters) == 'somatic'
             ln -s $mode.normal normal.bam &&
             ln -s $mode.normal.metadata.bam_index normal.bam.bai &&
         #end if
@@ -288,16 +286,15 @@
         ]]>
     </command>
     <inputs>
+        <param name="tumor" argument="--tumor" type="data" format="bam" label="Input Tumor BAM file" />
         <conditional name="mode">
             <param name="mode_parameters" type="select" label="Type of analysis">
                 <option value="tumor_only">Tumor-only</option>
                 <option value="somatic">Somatic</option>
             </param>
             <when value="tumor_only">
-                <param name="tumor" argument="--tumor" type="data" format="bam" label="Input Tumor BAM file" />
             </when>
             <when value="somatic">
-                <param name="tumor" argument="--tumor" type="data" format="bam" label="Input Tumor BAM file" />
                 <param name="normal" argument="--normal" type="data" format="bam" label="Input Normal BAM file" />
             </when>
         </conditional>
@@ -504,7 +501,6 @@
                     <option value="STRICT">Strict</option>
                     <option value="LENIENT">Lenient</option>
                 </param>
-                <param name="sites_only_vcf_output" argument="--sites-only-vcf-output" type="boolean" truevalue="--sites-only-vcf-output" falsevalue="" optional="true" checked="false" label="Sites Only Vcf Output" help="If true, don&amp;apos;t emit genotype fields when writing vcf file output."/>
                 <param name="tumor_lod_to_emit" argument="--tumor-lod-to-emit" type="float" optional="true" value="3.0" label="Tumor Lod To Emit" help="LOD threshold to emit tumor variant to VCF."/>
             </when>
             <when value="no" />
@@ -602,10 +598,10 @@
         </data>
     </outputs>
     <tests>
-        <test>
+        <test expect_num_outputs="2">
+            <param name="tumor" ftype="bam" value="Mutect2-in1.bam" />
             <conditional name="mode">
                 <param name="mode_parameters" value="tumor_only"/>
-                <param name="tumor" ftype="bam" value="Mutect2-in1.bam" />
             </conditional>
             <param name="reference_sequence" ftype="fasta" value="reference.fa" />
             <param name="gzipped_output" value="false" />
@@ -616,26 +612,25 @@
             <output name="output_vcf" file="Mutect2-out1.vcf" lines_diff="2" />
             <output name="output_vcf_stats" file="Mutect2-out1.vcf.stats" />
         </test>
-        <test>
+        <test expect_num_outputs="2">
+            <param name="tumor" ftype="bam" value="Mutect2-in2.bam" />
             <conditional name="mode">
                 <param name="mode_parameters" value="tumor_only"/>
-                <param name="tumor" ftype="bam" value="Mutect2-in2.bam" />
             </conditional>
             <param name="reference_sequence" ftype="fasta" value="reference.fa" />
             <param name="gzipped_output" value="false" />
             <param name="reference_source_selector" value="history" />
             <param name="read_filter" value="AmbiguousBaseReadFilter,FirstOfPairReadFilter,GoodCigarReadFilter" />
-            <param name="seqdict_source" value="history" />
             <param name="seqdict_sequence" value="Mutect2-in2.dict" />
             <param name="optional_parameters" value="no" />
             <param name="advanced_parameters" value="no" />
             <param name="output_parameters" value="no" />
             <output name="output_vcf" file="Mutect2-out2.vcf" lines_diff="2" />
         </test>
-        <test>
+        <test expect_num_outputs="2">
+            <param name="tumor" ftype="bam" value="Mutect2-in3.bam" />
             <conditional name="mode">
                 <param name="mode_parameters" value="tumor_only"/>
-                <param name="tumor" ftype="bam" value="Mutect2-in3.bam" />
             </conditional>
             <param name="reference_sequence" ftype="fasta" value="reference.fa" />
             <param name="gzipped_output" value="false" />
@@ -647,10 +642,10 @@
             <param name="output_parameters" value="no" />
             <output name="output_vcf" file="Mutect2-out3.vcf" lines_diff="4" />
         </test>
-        <test>
+        <test expect_num_outputs="2">
+            <param name="tumor" ftype="bam" value="Mutect2-in4.bam" />
             <conditional name="mode">
                 <param name="mode_parameters" value="tumor_only"/>
-                <param name="tumor" ftype="bam" value="Mutect2-in4.bam" />
             </conditional>
             <param name="reference_sequence" value="hg38"/>
             <param name="gzipped_output" value="false" />
@@ -661,10 +656,10 @@
             <param name="output_parameters" value="no" />
             <output name="output_vcf" file="Mutect2-out4.vcf" lines_diff="2" />
         </test>
-        <test>
+        <test expect_num_outputs="4">
+            <param name="tumor" ftype="bam" value="Mutect2-in5.bam" />
             <conditional name="mode">
                 <param name="mode_parameters" value="tumor_only"/>
-                <param name="tumor" ftype="bam" value="Mutect2-in5.bam" />
             </conditional>
             <param name="reference_sequence" ftype="fasta" value="reference.fa" />
             <param name="gzipped_output" value="false" />
@@ -679,10 +674,10 @@
             <output name="assembly_region_out" file="Mutect2-out5-1.tabular" />
             <output name="bam_output" file="Mutect2-out5.bam" />
         </test>
-        <test>
+        <test expect_num_outputs="2">
+            <param name="tumor" ftype="bam" value="tumor.bam" />
             <conditional name="mode">
                 <param name="mode_parameters" value="somatic"/>
-                <param name="tumor" ftype="bam" value="tumor.bam" />
                 <param name="normal" ftype="bam" value="normal.bam" />
             </conditional>
             <param name="reference_sequence" ftype="fasta" value="chr20.fa" />
@@ -697,16 +692,17 @@
     <help><![CDATA[Call somatic short variants via local assembly of haplotypes. Short
 variants include single nucleotide (SNV) and insertion and deletion
 (indel) variants. The caller combines the DREAM challenge-winning
-somatic genotyping engine of the original MuTect (`Cibulskis et al.,
-2013 <http://www.nature.com/nbt/journal/v31/n3/full/nbt.2514.html>`__)
-with the assembly-based machinery of
-`HaplotypeCaller <https://gatk.broadinstitute.org/hc/en-us/articles/360035531412-HaplotypeCaller-in-a-nutshell>`__.
+somatic genotyping engine of the original MuTect_ (Cibulskis et al. 2013)
+with the assembly-based machinery of HaplotypeCaller (see
+gatk.broadinstitute.org/hc/en-us/articles/360035531412-HaplotypeCaller-in-a-nutshell).
+
+.. _MuTect: http://www.nature.com/nbt/journal/v31/n3/full/nbt.2514.html
 
 This tool is featured in the *Somatic Short Mutation calling Best
-Practice Workflow*. See `this article <https://gatk.broadinstitute.org/hc/en-us/articles/360035531132>`__
+Practice Workflow*. See gatk.broadinstitute.org/hc/en-us/articles/360035531132 
 for an overview of what traditional somatic calling entails, with usage examples. For the
-latest pipeline scripts, see the `Mutect2 WDL scripts
-directory <https://github.com/broadinstitute/gatk/tree/master/scripts/mutect2_wdl>`__.
+latest pipeline scripts, see the Mutect2 WDL scripts directory (see
+github.com/broadinstitute/gatk/tree/master/scripts/mutect2_wdl).
 Although we present the tool for somatic calling, it may apply to other
 contexts, such as mitochondrial variant calling.
 

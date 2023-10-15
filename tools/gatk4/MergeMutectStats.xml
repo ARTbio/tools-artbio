@@ -1,4 +1,4 @@
-<tool id="mergemutectstats" name="gatk4 MergeMutectStats" version="@WRAPPER_VERSION@" profile="18.05">
+<tool id="mergemutectstats" name="gatk4 MergeMutectStats" version="@WRAPPER_VERSION@" profile="21.01">
     <description>Merge the stats output by scatters of a single Mutect2 job</description>
     <macros>
         <import>macros.xml</import>

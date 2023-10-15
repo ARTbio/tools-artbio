@@ -1,4 +1,4 @@
-<tool id="filtermutectcalls" name="gatk4 FilterMutectCalls" version="@WRAPPER_VERSION@" profile="18.05">
+<tool id="filtermutectcalls" name="gatk4 FilterMutectCalls" version="@WRAPPER_VERSION@" profile="21.01">
     <description>Filter variants in a GATK4 Mutect2 VCF callset</description>
     <macros>
         <import>macros.xml</import>
@@ -91,7 +91,7 @@
         </data>
     </outputs>
     <tests>
-        <test>
+        <test expect_num_outputs="2">
             <param name="reference_source_selector" value="history" />
             <param name="reference_sequence" ftype="fasta" value="reference.fa" />
             <conditional name="input_options">
@@ -101,7 +101,7 @@
             <output name="output_vcf" file="filtered_Mutect2-out1.vcf" lines_diff="2" />
             <output name="output_vcf_stats" file="filtered_Mutect2-out1_stats.tsv" />
         </test>
-        <test>
+        <test expect_num_outputs="2">
             <param name="reference_source_selector" value="history" />
             <param name="reference_sequence" ftype="fasta" value="chr20.fa" />
             <conditional name="input_options">
@@ -112,7 +112,7 @@
             <output name="output_vcf" file="filtered_Mutect2-out6.vcf_bgzip" compare="sim_size" />
             <output name="output_vcf_stats" file="filtered_Mutect2-out6_stats.tsv" />
         </test>
-        <test>
+        <test expect_num_outputs="2">
             <param name="reference_source_selector" value="history" />
             <param name="reference_sequence" ftype="fasta" value="chr20.fa" />
             <conditional name="input_options">
