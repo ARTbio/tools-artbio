@@ -64,29 +64,30 @@ data <- read.delim(
 )
 
 if (opt$factor != '') {
-    data.factor = read.delim(
+    data_factor = read.delim(
         opt$factor,
         check.names = FALSE,
         header = TRUE,
         sep = '\t'
+        stringsAsFactors = TRUE
         )
-    colnames(data.factor) <- c("cellid", "level")
-    data.transformed <- data.frame(row.names=rownames(data), stringsAsFactors = FALSE)
-    for (group in levels(data.factor$level)){
-        subcells <- as.data.frame(subset(data.factor, level == group, select = cellid))
+    colnames(data_factor) <- c("cellid", "level")
+    data_transformed <- data.frame(row.names=rownames(data))
+    for (group in levels(data_factor$level)){
+        subcells <- as.data.frame(subset(data_factor, level == group, select = cellid))
         subdata <- as.data.frame(subset(data, select = as.vector(subcells$cellid)))
-        subdata.transformed <- transform(subdata, center = as.logical(opt$center),
+        subdata_transformed <- transform(subdata, center = as.logical(opt$center),
                                                   scale = as.logical(opt$scale))
-        data.transformed <- cbind(data.transformed, subdata.transformed)
+        data_transformed <- cbind(data_transformed, subdata_transformed)
     }
 } else {
-    data.transformed <- transform(data, center = as.logical(opt$center),
+    data_transformed <- transform(data, center = as.logical(opt$center),
                                         scale = as.logical(opt$scale))
 }
 
 
 write.table(
-  cbind(gene = rownames(data.transformed), data.transformed),
+  cbind(gene = rownames(data_transformed), data_transformed),
   opt$output,
   col.names = TRUE,
   row.names = FALSE,
