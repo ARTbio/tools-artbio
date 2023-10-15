@@ -124,7 +124,7 @@ if (opt$percentile_counts > 0) {
   plot_hist(QC_metrics,
             variable = "total_counts",
             title = "Histogram of Total counts per cell",
-            cutoff = counts_threshold )
+            cutoff = counts_threshold)
 }
 
 if (opt$percentile_genes > 0) {
@@ -181,20 +181,18 @@ ggplot(QC_metrics, aes(nGenes, total_counts, colour = filtered)) +
   scale_colour_discrete(name  = "",
                         breaks = c(FALSE, TRUE),
                         labels = c(paste0("Not filtered (",
-                                   table(QC_metrics$filtered)[1],
-                                   " cells)"),
+                                          table(QC_metrics$filtered)[1],
+                                          " cells)"),
                                    paste0("Filtered (",
-                                   table(QC_metrics$filtered)[2],
-                                   " cells)")
-    )
+                                          table(QC_metrics$filtered)[2],
+                                          " cells)"))
   ) +
   xlab("Detected genes per cell") +
   ylab("Aligned reads per cell (log10 scale)") +
   geom_vline(xintercept = genes_threshold) +
   geom_hline(yintercept = counts_threshold) +
   ggtitle(paste0(part_one, conjunction, part_two, "\nwere filtered out")) +
-  theme(plot.title = element_text(size = 8, face = "bold")
-  )
+  theme(plot.title = element_text(size = 8, face = "bold"))
 
 dev.off()
 
@@ -202,16 +200,16 @@ dev.off()
 kept_cells <- QC_metrics$cell_id[!QC_metrics$filtered]
 
 data_counts <- data.frame(Genes = rownames(data_counts[, kept_cells]),
-  data_counts[, kept_cells],
- check.names = FALSE)
+                          data_counts[, kept_cells],
+                          check.names = FALSE)
 
 # Save filtered cells
 write.table(data_counts,
-            opt$output,
-            sep = "\t",
-            quote = FALSE,
-            col.names = TRUE,
-            row.names = FALSE
+  opt$output,
+  sep = "\t",
+  quote = FALSE,
+  col.names = TRUE,
+  row.names = FALSE
 )
 
 # Add QC metrics of filtered cells to a metadata file
@@ -219,9 +217,9 @@ metadata <- QC_metrics
 
 # Save the metadata (QC metrics) file
 write.table(metadata,
-            opt$output_metada,
-            sep = "\t",
-            quote = FALSE,
-            col.names = TRUE,
-            row.names = FALSE
+  opt$output_metada,
+  sep = "\t",
+  quote = FALSE,
+  col.names = TRUE,
+  row.names = FALSE
 )
