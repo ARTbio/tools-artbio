@@ -1,12 +1,12 @@
 # First step of the signature-based workflow
-# Remove low quality cells below a user-fixed cutoff of 
+# Remove low quality cells below a user-fixed cutoff of
 # percentiles or raw values of number of genes detected or
 # total aligned reads
 
 options(show.error.messages = FALSE,
-  error <- function(){
+  error <- function() {
     cat(geterrmessage(), file = stderr())
-    q( "no", 1, FALSE)
+    q("no", 1, FALSE)
   }
 )
 
@@ -40,8 +40,8 @@ option_list <- list(
               help = "Path to tsv file of filtered cell metadata")
 )
 opt <- parse_args(OptionParser(option_list = option_list),
-                  args = commandArgs(trailingOnly = TRUE)
-                  )
+  args = commandArgs(trailingOnly = TRUE)
+)
 if (opt$sep == "tab") {
   opt$sep <- "\t"
 }
@@ -56,13 +56,14 @@ if (opt$sep == "space") {
 ## check consistency of filtering options
 
 # if input parameters are not consistent (one or either method, not both), no filtering
-if ((opt$percentile_counts > 0) & (opt$absolute_counts > 0)) {
+if ((opt$percentile_counts > 0) && (opt$absolute_counts > 0)) {
   opt$percentile_counts <- 0
 }
 
 # if input parameters are not consistent (one or either method, not both), no filtering
-if ((opt$percentile_genes > 0) & (opt$absolute_genes > 0)) {
-  opt$percentile_genes <- 0 }
+if ((opt$percentile_genes > 0) && (opt$absolute_genes > 0)) {
+  opt$percentile_genes <- 0
+}
 
 # Import datasets
 data.counts <- read.table(
@@ -79,7 +80,7 @@ QC_metrics <- data.frame(cell_id = colnames(data.counts),
                          total_counts = colSums(data.counts),  # total_counts is Total counts per cell
                          stringsAsFactors = FALSE)
 
-plot_hist <- function(mydata, variable, title, cutoff){
+plot_hist <- function(mydata, variable, title, cutoff) {
   mybinwidth <- round(max(mydata[, variable]) * 5 / 100)
   mylabel <- paste0("cutoff= ", cutoff)
   hist_plot <- qplot(
@@ -89,12 +90,12 @@ plot_hist <- function(mydata, variable, title, cutoff){
     geom = "histogram",
     binwidth = mybinwidth,
     col = I("white")
-    ) +
+  ) +
     geom_vline(xintercept = cutoff) +
     annotate(geom = "text",
              x = cutoff + mybinwidth, y = 1,
              label = mylabel, color = "white")
-    plot(hist_plot)
+  plot(hist_plot)
 }
 
 # returns the highest value such as the sum of the ordered values including this highest
@@ -107,7 +108,7 @@ percentile_cutoff <- function(n, qcmetrics, variable, plot_title, ...) {
             plot_title,
             percentile_threshold)
   return(percentile_threshold)
-  }
+}
 
 pdf(file = opt$pdfplot)
 
@@ -119,15 +120,15 @@ if (opt$percentile_counts > 0) {
     QC_metrics,
     "total_counts",
     "Histogram of Aligned read counts per cell"
-    )
+  )
   } else {
   counts_threshold <- opt$absolute_counts
   plot_hist(QC_metrics,
-            variable = "total_counts",
+    variable = "total_counts",
             title = "Histogram of Total counts per cell",
             cutoff = counts_threshold
-            )
-  }
+  )
+}
 
 if (opt$percentile_genes > 0) {
   genes_threshold <- percentile_cutoff(
@@ -135,17 +136,17 @@ if (opt$percentile_genes > 0) {
     QC_metrics,
     "nGenes",
     "Histogram of Number of detected genes per cell"
-    )
+  )
   } else {
   genes_threshold <- opt$absolute_genes
   plot_hist(QC_metrics,
             variable = "nGenes",
-            title = "Histogram of Number of detected genes per cell",         
+            title = "Histogram of Number of detected genes per cell",
             cutoff = genes_threshold)
-  }
+}
 
 # Filter out rows below thresholds (genes and read counts)
-if (opt$manage_cutoffs == "union"){
+if (opt$manage_cutoffs == "union") {
   QC_metrics$filtered <- (QC_metrics$nGenes < genes_threshold) | (QC_metrics$total_counts < counts_threshold)
 } else {
   QC_metrics$filtered <- (QC_metrics$nGenes < genes_threshold) & (QC_metrics$total_counts < counts_threshold)
@@ -154,27 +155,27 @@ if (opt$manage_cutoffs == "union"){
 ## Plot the results
 
 # Determine title from the parameter logics
-if (opt$percentile_counts > 0){
+if (opt$percentile_counts > 0) {
   part_one <- paste0("Cells with aligned reads counts below the ",
                      opt$percentile_counts,
                      "th percentile of aligned read counts")
-  } else {
+} else {
   part_one <- paste0("Cells with aligned read counts below ",
                      opt$absolute_counts)
 }
 
-if (opt$percentile_genes > 0){
+if (opt$percentile_genes > 0) {
   part_two <- paste0("with number of detected genes below the ",
                      opt$percentile_genes,
                      "th percentile of detected gene counts")
-  } else {
+} else {
   part_two <- paste0("with number of detected genes below ",
                      opt$absolute_genes)
 }
 
 if (opt$manage_cutoffs == "intersect") {
   conjunction <- " and\n"
-  } else {
+} else {
   conjunction <- " or\n"
 }
 
@@ -183,35 +184,35 @@ ggplot(QC_metrics, aes(nGenes, total_counts, colour = filtered)) +
   geom_point() +
   scale_y_log10() +
   scale_colour_discrete(name  = "",
-                        breaks = c(FALSE, TRUE),
+    breaks = c(FALSE, TRUE),
                         labels = c(paste0("Not filtered (",
-                                          table(QC_metrics$filtered)[1],
+        table(QC_metrics$filtered)[1],
                                           " cells)"
-                                         ), 
-                                   paste0("Filtered (",
-                                          table(QC_metrics$filtered)[2],
+      ),
+      paste0("Filtered (",
+        table(QC_metrics$filtered)[2],
                                           " cells)"
-                                          )
-                                  )
-                       ) +
+      )
+    )
+  ) +
   xlab("Detected genes per cell") +
   ylab("Aligned reads per cell (log10 scale)") +
   geom_vline(xintercept = genes_threshold) +
   geom_hline(yintercept = counts_threshold) +
-  ggtitle( paste0(part_one, conjunction, part_two, "\nwere filtered out")) +
+  ggtitle(paste0(part_one, conjunction, part_two, "\nwere filtered out")) +
   theme(plot.title = element_text(size = 8, face = "bold")
-)
+  )
 
 dev.off()
 
 # Retrieve identifier of kept_cells
 kept_cells <- QC_metrics$cell_id[!QC_metrics$filtered]
 
-data.counts <- data.frame(Genes = rownames(data.counts[,kept_cells]),
-                          data.counts[,kept_cells],
+data.counts <- data.frame(Genes = rownames(data. counts[, kept_cells]),
+                          data.counts[, kept_cells],
                           check.names = FALSE)
 
-# Save filtered cells 
+# Save filtered cells
 write.table(
   data.counts,
   opt$output,
