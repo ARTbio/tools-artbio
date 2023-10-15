@@ -699,7 +699,7 @@ somatic genotyping engine of the original MuTect_ (Cibulskis et al. 2013)
 with the assembly-based machinery of HaplotypeCaller_.
 
 .. _MuTect: http://www.nature.com/nbt/journal/v31/n3/full/nbt.2514.html
-.. _HaplotypeCaller: gatk.broadinstitute.org/hc/en-us/articles/360035531412-HaplotypeCaller-in-a-nutshell
+.. _HaplotypeCaller: http://gatk.broadinstitute.org/hc/en-us/articles/360035531412-HaplotypeCaller-in-a-nutshell
 
 This tool is featured in the *Somatic Short Mutation calling Best
 Practice Workflow*. See this article_ 
@@ -709,7 +709,7 @@ Although we present the tool for somatic calling, it may apply to other
 contexts, such as mitochondrial variant calling.
 
 .. _article: gatk.broadinstitute.org/hc/en-us/articles/360035531132
-.. _scripts: https://github.com/broadinstitute/gatk/tree/master/scripts/mutect2_wdl
+.. _scripts: http://github.com/broadinstitute/gatk/tree/master/scripts/mutect2_wdl
 
 Usage examples
 ~~~~~~~~~~~~~~
