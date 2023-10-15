@@ -68,7 +68,7 @@ if (opt$factor != '') {
         opt$factor,
         check.names = FALSE,
         header = TRUE,
-        sep = '\t'
+        sep = '\t',
         stringsAsFactors = TRUE
         )
     colnames(data_factor) <- c("cellid", "level")
