@@ -4,7 +4,7 @@
 # total aligned reads
 
 options(show.error.messages = FALSE,
-  error <- function() {
+  error = function() {
     cat(geterrmessage(), file = stderr())
     q("no", 1, FALSE)
   }
