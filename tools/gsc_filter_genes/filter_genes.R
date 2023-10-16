@@ -5,10 +5,10 @@
 
 # load packages that are provided in the conda env
 options(show.error.messages = FALSE,
-        error = function() {
-          cat(geterrmessage(), file = stderr())
-          q("no", 1, FALSE)
-        }
+  error = function() {
+    cat(geterrmessage(), file = stderr())
+    q("no", 1, FALSE)
+  }
 )
 loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
 library(optparse)
@@ -77,7 +77,7 @@ data.counts <- read.delim(
 # Search for genes that are expressed in a certain percent of cells
 if (opt$percentile_detection > 0) {
   kept_genes <- rowSums(data.counts != 0) >= (opt$percentile_detection * ncol(data.counts))
-  } else {
+} else {
 
   # Search for genes that are expressed in more than an absolute number of cells
   kept_genes <- rowSums(data.counts != 0) >= (opt$absolute_detection)
