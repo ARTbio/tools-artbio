@@ -66,7 +66,7 @@ if ((opt$percentile_genes > 0) && (opt$absolute_genes > 0)) {
 }
 
 # Import datasets
-data_counts <- read.table(
+data_counts <- read.delim(
   opt$file,
   header = TRUE,
   stringsAsFactors = FALSE,
@@ -80,22 +80,21 @@ QC_metrics <- data.frame(cell_id = colnames(data_counts),
                          total_counts = colSums(data_counts),  # total_counts is Total counts per cell
                          stringsAsFactors = FALSE)
 
+
 plot_hist <- function(mydata, variable, title, cutoff) {
   mybinwidth <- round(max(mydata[, variable]) * 5 / 100)
   mylabel <- paste0("cutoff= ", cutoff)
-  hist_plot <- qplot(
-    mydata[, variable],
-    main = title,
-    xlab = variable,
-    geom = "histogram",
-    binwidth = mybinwidth,
-    col = I("white")
-  ) +
+  hist_plot <- ggplot(as.data.frame(mydata[, variable]),
+                      aes(x = mydata[, variable], colour = I("white"))) +
+    geom_histogram(binwidth = mybinwidth) +
+    labs(title = title, x = variable, y = "count") +
+    scale_x_continuous() +
     geom_vline(xintercept = cutoff) +
     annotate(geom = "text",
              x = cutoff + mybinwidth, y = 1,
              label = mylabel, color = "white")
   plot(hist_plot)
+  return
 }
 
 # returns the highest value such as the sum of the ordered values including this highest
@@ -179,13 +178,13 @@ ggplot(QC_metrics, aes(nGenes, total_counts, colour = filtered)) +
   geom_point() +
   scale_y_log10() +
   scale_colour_discrete(name  = "",
-    breaks = c(FALSE, TRUE),
-    labels = c(paste0("Not filtered (",
-                      table(QC_metrics$filtered)[1],
-                      " cells)"),
-               paste0("Filtered (",
-                      table(QC_metrics$filtered)[2],
-                      " cells)"))
+                        breaks = c(FALSE, TRUE),
+                        labels = c(paste0("Not filtered (",
+                                          table(QC_metrics$filtered)[1],
+                                          " cells)"),
+                                   paste0("Filtered (",
+                                          table(QC_metrics$filtered)[2],
+                                          " cells)"))
   ) +
   xlab("Detected genes per cell") +
   ylab("Aligned reads per cell (log10 scale)") +
@@ -205,11 +204,11 @@ data_counts <- data.frame(Genes = rownames(data_counts[, kept_cells]),
 
 # Save filtered cells
 write.table(data_counts,
-  opt$output,
-  sep = "\t",
-  quote = FALSE,
-  col.names = TRUE,
-  row.names = FALSE
+            opt$output,
+            sep = "\t",
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = FALSE
 )
 
 # Add QC metrics of filtered cells to a metadata file
@@ -217,9 +216,9 @@ metadata <- QC_metrics
 
 # Save the metadata (QC metrics) file
 write.table(metadata,
-  opt$output_metada,
-  sep = "\t",
-  quote = FALSE,
-  col.names = TRUE,
-  row.names = FALSE
+            opt$output_metada,
+            sep = "\t",
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = FALSE
 )
