@@ -179,12 +179,8 @@ ggplot(QC_metrics, aes(nGenes, total_counts, colour = filtered)) +
   scale_y_log10() +
   scale_colour_discrete(name  = "",
     breaks = c(FALSE, TRUE),
-    labels = c(paste0("Not filtered (",
-    table(QC_metrics$filtered)[1],
-    " cells)"),
-    paste0("Filtered (",
-      table(QC_metrics$filtered)[2],
-      " cells)"))
+    labels = c(paste0("Not filtered (", table(QC_metrics$filtered)[1], " cells)"),
+    paste0("Filtered (", table(QC_metrics$filtered)[2], " cells)"))
   ) +
   xlab("Detected genes per cell") +
   ylab("Aligned reads per cell (log10 scale)") +
