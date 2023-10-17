@@ -34,7 +34,7 @@ option_list <- list(
     default = TRUE,
     type = "logical",
     help = "Consider first lines as header (must stand for all input files) [default : '%default' ]"
-  ),  
+  ),
   make_option(
     "--expression_file",
     default = NA,
@@ -68,10 +68,14 @@ option_list <- list(
 )
 
 opt <- parse_args(OptionParser(option_list = option_list),
-                 args = commandArgs(trailingOnly = TRUE))
+                  args = commandArgs(trailingOnly = TRUE))
 
-if (opt$sep == "tab") {opt$sep = "\t"}
-if (opt$sep == "comma") {opt$sep = ","}
+if (opt$sep == "tab") {
+  opt$sep <- "\t"
+}
+if (opt$sep == "comma") {
+  opt$sep <- ","
+}
 
 # Open files
 data <- read.delim(
@@ -102,9 +106,9 @@ gene_corr <- rcorr(t(data), type = "pearson") # transpose because we correlate g
 
 # Gene correlation with signature score
 gene_signature_corr <- cbind.data.frame(gene = colnames(gene_corr$r),
-                                        Pearson_correlation = gene_corr$r[, 1], 
+                                        Pearson_correlation = gene_corr$r[, 1],
                                         p_value = gene_corr$P[, 1])
-gene_signature_corr <- gene_signature_corr[ order(gene_signature_corr[, 2], decreasing = TRUE), ]
+gene_signature_corr <- gene_signature_corr[order(gene_signature_corr[, 2], decreasing = TRUE), ]
 
 
 # Save files
@@ -128,7 +132,7 @@ write.table(
   row.names = FALSE
 )
 write.table(
-  p_genes[-1, -2], 
+  p_genes[-1, -2],
   file = opt$gene_corr_pval,
   sep = "\t",
   quote = FALSE,
