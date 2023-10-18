@@ -113,15 +113,8 @@ gene_signature_corr <- gene_signature_corr[order(gene_signature_corr[, 2], decre
 
 ###  Save files  ###
 
-round_data_frame <- function(df, digits) {
-  is_num <- sapply(df, is.numeric)
-  df[is_num] <- lapply(df[is_num], round, digits)
-  return
-}
-
-gene_signature_corr <- round_data_frame(gene_signature_corr, 8)
 write.table(
-  format(gene_signature_corr, digits = 8),
+  format(gene_signature_corr, digits = 2),
   file = opt$sig_corr,
   sep = "\t",
   quote = FALSE,
@@ -130,9 +123,8 @@ write.table(
 )
 
 r_genes <- data.frame(gene = rownames(gene_corr$r), gene_corr$r) # add rownames as a variable for output
-r_genes <- round_data_frame(r_genes, 8)
 write.table(
-  format(r_genes[-1, -2], digits = 8),
+  format(r_genes[-1, -2], digits = 2),
   file = opt$gene_corr,
   sep = "\t",
   quote = FALSE,
@@ -141,9 +133,8 @@ write.table(
 )
 
 p_genes <- data.frame(gene = rownames(gene_corr$P), gene_corr$P) # add rownames as a variable for output
-p_genes <- round_data_frame(p_genes, 8)
 write.table(
-  format(p_genes[-1, -2], digits = 8),
+  format(p_genes[-1, -2], digits = 2),
   file = opt$gene_corr_pval,
   sep = "\t",
   quote = FALSE,
