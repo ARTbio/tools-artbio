@@ -1,7 +1,6 @@
 # Performs multi-correlation analysis between the vectors of gene expressions
 # in single cell RNAseq libraries and the vectors of signature scores in these
 # same single cell RNAseq libraries.
-
 # Example of command
 # Rscript correlations_with_signature.R --expression_file <expression_data.tsv>
 #                                       --signatures_file <signature_scores.tsv>
@@ -11,82 +10,88 @@
 #                                       --gene_corr_pval <gene-gene corr pvalues file>
 #                                       --sig_corr <genes correlation to signature file>
 
-# load packages that are provided in the conda env
-options( show.error.messages=F,
-       error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+options(show.error.messages = FALSE,
+  error = function() {
+    cat(geterrmessage(), file = stderr())
+    q("no", 1, FALSE)
+  }
+)
 loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
-warnings()
 
 library(optparse)
 library(Hmisc)
 
 # Arguments
-option_list = list(
+option_list <- list(
   make_option(
     "--sep",
-    default = '\t',
-    type = 'character',
+    default = "\t",
+    type = "character",
     help = "File separator, must be the same for all input files [default : '%default' ]"
   ),
   make_option(
     "--colnames",
     default = TRUE,
-    type = 'logical',
+    type = "logical",
     help = "Consider first lines as header (must stand for all input files) [default : '%default' ]"
-  ),  
+  ),
   make_option(
     "--expression_file",
     default = NA,
-    type = 'character',
+    type = "character",
     help = "Input file that contains log2(CPM +1) expression values"
   ),
   make_option(
     "--signatures_file",
     default = NA,
-    type = 'character',
+    type = "character",
     help = "Input file that contains cell signature"
   ),
   make_option(
     "--sig_corr",
     default = "sig_corr.tsv",
-    type = 'character',
+    type = "character",
     help = "signature correlations output [default : '%default' ]"
   ),
   make_option(
     "--gene_corr",
     default = "gene_corr.tsv",
-    type = 'character',
+    type = "character",
     help = "genes-genes correlations output [default : '%default' ]"
   ),
   make_option(
     "--gene_corr_pval",
     default = "gene_corr_pval.tsv",
-    type = 'character',
+    type = "character",
     help = "genes-genes correlations pvalues output [default : '%default' ]"
   )
 )
 
-opt = parse_args(OptionParser(option_list = option_list),
-                 args = commandArgs(trailingOnly = TRUE))
+opt <- parse_args(OptionParser(option_list = option_list),
+                  args = commandArgs(trailingOnly = TRUE))
 
-if (opt$sep == "tab") {opt$sep = "\t"}
-if (opt$sep == "comma") {opt$sep = ","}
+if (opt$sep == "tab") {
+  opt$sep <- "\t"
+}
+if (opt$sep == "comma") {
+  opt$sep <- ","
+}
 
 # Open files
-data <- read.table(
+data <- read.delim(
   opt$expression_file,
   header = opt$colnames,
   row.names = 1,
   sep = opt$sep,
-  check.names = F
+  check.names = FALSE
 )
 signature <- read.delim(
   opt$signatures_file,
-  header = T,
-  stringsAsFactors = F,
+  header = TRUE,
+  stringsAsFactors = FALSE,
   row.names = 1,
   sep = opt$sep,
-  check.names = F
+  check.names = FALSE
 )
 
 
@@ -101,36 +106,38 @@ gene_corr <- rcorr(t(data), type = "pearson") # transpose because we correlate g
 
 # Gene correlation with signature score
 gene_signature_corr <- cbind.data.frame(gene = colnames(gene_corr$r),
-                                        Pearson_correlation = gene_corr$r[, 1], 
+                                        Pearson_correlation = gene_corr$r[, 1],
                                         p_value = gene_corr$P[, 1])
-gene_signature_corr <- gene_signature_corr[ order(gene_signature_corr[,2], decreasing = T), ]
+gene_signature_corr <- gene_signature_corr[order(gene_signature_corr[, 2], decreasing = TRUE), ]
 
 
-# Save files
+###  Save files  ###
+
 write.table(
-  gene_signature_corr,
+  format(gene_signature_corr, digits = 2),
   file = opt$sig_corr,
   sep = "\t",
-  quote = F,
-  col.names = T,
-  row.names = F
+  quote = FALSE,
+  col.names = TRUE,
+  row.names = FALSE
 )
 
-r_genes <- data.frame(gene=rownames(gene_corr$r), gene_corr$r) # add rownames as a variable for output
-p_genes <- data.frame(gene=rownames(gene_corr$P), gene_corr$P) # add rownames as a variable for output
+r_genes <- data.frame(gene = rownames(gene_corr$r), gene_corr$r) # add rownames as a variable for output
 write.table(
-  r_genes[-1,-2],
+  format(r_genes[-1, -2], digits = 2),
   file = opt$gene_corr,
   sep = "\t",
-  quote = F,
-  col.names = T,
-  row.names = F
+  quote = FALSE,
+  col.names = TRUE,
+  row.names = FALSE
 )
+
+p_genes <- data.frame(gene = rownames(gene_corr$P), gene_corr$P) # add rownames as a variable for output
 write.table(
-  p_genes[-1,-2], 
+  format(p_genes[-1, -2], digits = 2),
   file = opt$gene_corr_pval,
   sep = "\t",
-  quote = F,
-  col.names = T,
-  row.names = F
+  quote = FALSE,
+  col.names = TRUE,
+  row.names = FALSE
 )
