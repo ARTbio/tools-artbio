@@ -1,13 +1,13 @@
-<tool id="high_dimensions_visualisation" name="Generate PCA, tSNE and HCPC" version="0.9.6">
+<tool id="high_dimensions_visualisation" name="Generate PCA, tSNE and HCPC" version="4.3+galaxy0" profile="20.01">
     <description>from highly dimensional expression data</description>
     <requirements>
-        <requirement type="package" version="1.6.2=r35h6115d3f_0">r-optparse</requirement>
-        <requirement type="package" version="1.42=r35h6115d3f_0">r-factominer</requirement>
-        <requirement type="package" version="1.0.5">r-factoextra</requirement>
-        <requirement type="package" version="0.15=r351he1b5a44_0">r-rtsne</requirement>
-        <requirement type="package" version="0.4.7=r351h6115d3f_0">r-ggfortify</requirement>
-        <requirement type="package" version="1.1.9=r351h0357c0b_0">r-clusterr</requirement>
-        <requirement type="package" version="1.2.5=r35h6115d3f_0">r-polychrome</requirement>
+        <requirement type="package" version="1.7.3=r43hc72bb7e_2">r-optparse</requirement>
+        <requirement type="package" version="2.9=r43h57805ef_0">r-factominer</requirement>
+        <requirement type="package" version="1.0.7=r43hc72bb7e_3">r-factoextra</requirement>
+        <requirement type="package" version="0.16=r43h7ce84a7_2">r-rtsne</requirement>
+        <requirement type="package" version="0.4.16=r43hc72bb7e_1">r-ggfortify</requirement>
+        <requirement type="package" version="1.3.1=r43h08d816e_1">r-clusterr</requirement>
+        <requirement type="package" version="1.5.1=r43hc72bb7e_2">r-polychrome</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
@@ -206,16 +206,15 @@
         </data>
     </outputs>
     <tests>
-        <!-- test first (for developpers) -->
         <!-- test PCA -->
-        <test>
+        <test expect_num_outputs="1">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="yes" />
             <param name="visu_choice" value="PCA" />
             <param name="factor_choice" value="No" />
             <output name="pdf_out" file="pca.labels.pdf" ftype="pdf"/>
         </test>
-        <test>
+        <test expect_num_outputs="1">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="no" />
             <param name="visu_choice" value="PCA" />
@@ -223,7 +222,7 @@
             <output name="pdf_out" file="pca.nolabels.pdf" ftype="pdf"/>
         </test>
         <!-- test PCA PC2 vs PC3 -->
-        <test>
+        <test expect_num_outputs="1">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="no" />
             <param name="visu_choice" value="PCA" />
@@ -234,7 +233,7 @@
         </test>
 
         <!-- test Coordinates tables on PCA -->
-        <test>
+        <test expect_num_outputs="2">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="no" />
             <param name="visu_choice" value="PCA" />
@@ -244,7 +243,7 @@
             <output name="table_coordinates" file="pca.coord.tab" ftype="tabular"/>       
 		</test>
         <!-- test factor contrasting on PCA -->
-        <test>
+        <test expect_num_outputs="1">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="no" />
             <param name="visu_choice" value="PCA" />
@@ -253,7 +252,7 @@
             <output name="pdf_out" file="pca.nolabels.factors.pdf" ftype="pdf"/>
         </test>
         <!-- test two-level factor contrasting on PCA -->
-        <test>
+        <test expect_num_outputs="1">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="no" />
             <param name="visu_choice" value="PCA" />
@@ -262,7 +261,7 @@
             <output name="pdf_out" file="pca.nolabels.2-lev-factor.pdf" compare="sim_size" ftype="pdf"/>
         </test>
         <!-- test numerical factor contrasting on PCA -->
-        <test>
+        <test expect_num_outputs="1">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="no" />
             <param name="visu_choice" value="PCA" />
@@ -270,7 +269,7 @@
             <param name="factor" value="numeric_factor.tsv" ftype="txt"/>
             <output name="pdf_out" file="pca.nolabels.numerical-factor.pdf" compare="sim_size" ftype="pdf"/>
         </test>
-        <test>
+        <test expect_num_outputs="1">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="no" />
             <param name="visu_choice" value="PCA" />
@@ -279,7 +278,7 @@
             <output name="pdf_out" file="pca.nolabels.factors.pdf" compare="sim_size" ftype="pdf"/>
         </test>
         <!-- test HCPC -->
-        <test>
+        <test expect_num_outputs="1">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="yes" />
             <param name="visu_choice" value="HCPC" />
@@ -289,7 +288,7 @@
             <output name="HCPC_cluster_description" file="hcpc.cluster_description.1.tab" ftype="tabular"/>
         </test>
         <!-- test factor contrasting on HCPC -->
-        <test>
+        <test expect_num_outputs="4">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="no" />
             <param name="visu_choice" value="HCPC" />
@@ -303,7 +302,7 @@
             <output name="HCPC_clust" file="hcpc.clusters.tab" ftype="tabular"/>
             <output name="HCPC_cluster_description" file="hcpc.cluster_description.1.tab" ftype="tabular"/>
         </test>
-        <test>
+        <test expect_num_outputs="2">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="no" />
             <param name="HCPC_npc" value="5"/>
@@ -312,7 +311,7 @@
             <output name="pdf_out" file="hcpc.nolabels.pdf" compare="sim_size" ftype="pdf"/>
             <output name="HCPC_cluster_description" file="hcpc.cluster_description.1.tab" ftype="tabular"/>
         </test>
-        <test>
+        <test expect_num_outputs="3">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="yes" />
             <param name="visu_choice" value="HCPC" />
@@ -324,7 +323,7 @@
             <output name="table_coordinates" file="hcpc-2.coord.tab" ftype="tabular"/>
             <output name="HCPC_cluster_description" file="hcpc.cluster_description.4.tab" ftype="tabular"/>
         </test>
-        <test>
+        <test expect_num_outputs="3">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="yes" />
             <param name="visu_choice" value="HCPC" />
@@ -338,7 +337,7 @@
             <output name="HCPC_cluster_description" file="hcpc.cluster_description.5.tab" ftype="tabular"/>
         </test>
         <!-- test t-SNE -->
-        <test>
+        <test expect_num_outputs="1">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="yes" />
             <param name="visu_choice" value="tSNE" />
@@ -347,7 +346,7 @@
             <param name="Rtsne_theta" value="1" />
             <output name="pdf_out" file="tsne.labels.pdf" ftype="pdf" compare="sim_size" delta="500"/>
         </test>
-        <test>
+        <test expect_num_outputs="1">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="no" />
             <param name="visu_choice" value="tSNE" />
@@ -357,7 +356,7 @@
             <output name="pdf_out" file="tsne.nolabels.pdf" ftype="pdf" compare="sim_size" delta="500"/>
         </test>
                 <!-- test factor contrasting on t-SNE -->
-        <test>
+        <test expect_num_outputs="1">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="yes" />
             <param name="visu_choice" value="tSNE" />
@@ -368,7 +367,7 @@
             <param name="Rtsne_theta" value="1" />
             <output name="pdf_out" file="tsne.labels.factor.pdf" ftype="pdf" compare="sim_size" delta="500"/>
         </test>
-       	<test>
+       	<test expect_num_outputs="2">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="no" />
             <param name="visu_choice" value="tSNE" />
