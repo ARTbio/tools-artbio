@@ -6,7 +6,7 @@ options(show.error.messages = FALSE,
 )
 loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
 warnings()
-library(optparse)
+
 library(FactoMineR)
 library(factoextra)
 library(Rtsne)
@@ -17,31 +17,13 @@ library(ClusterR)
 library(data.table)
 library(Polychrome)
 
-# Arguments
+#### Arguments ####
 option_list <- list(
   make_option(
     "--data",
     default = NA,
     type = "character",
     help = "Input file that contains expression value to visualise"
-  ),
-  make_option(
-    "--sep",
-    default = "\t",
-    type = "character",
-    help = "File separator [default : '%default' ]"
-  ),
-  make_option(
-    "--colnames",
-    default = TRUE,
-    type = "logical",
-    help = "Consider first line as header ? [default : '%default' ]"
-  ),
-  make_option(
-    "--out",
-    default = "res.tab",
-    type = "character",
-    help = "Output name [default : '%default' ]"
   ),
   make_option(
     "--labels",
@@ -60,12 +42,6 @@ option_list <- list(
     default = "PCA",
     type = "character",
     help = "visualisation method ('PCA', 'tSNE', 'HCPC') [default : '%default' ]"
-  ),
-  make_option(
-    "--table_coordinates",
-    default = "",
-    type = "character",
-    help = "Table with plot coordinates [default : '%default' ]"
   ),
   make_option(
     "--Rtsne_seed",
@@ -140,13 +116,19 @@ option_list <- list(
     help = "number of dimensions kept in the results [default : '%default' ]"
   ),
    make_option(
-    "--PCA_x_axis",
+    "--item_size",
+    default = 1,
+    type = "numeric",
+    help = "Size of points/labels in PCA [default : '%default' ]"
+  ),
+   make_option(
+    "--x_axis",
     default = 1,
     type = "integer",
     help = "PC to plot in the x axis [default : '%default' ]"
   ),
    make_option(
-    "--PCA_y_axis",
+    "--y_axis",
     default = 2,
     type = "integer",
     help = "PC to plot in the y axis [default : '%default' ]"
@@ -240,93 +222,68 @@ option_list <- list(
 opt <- parse_args(OptionParser(option_list = option_list),
                   args = commandArgs(trailingOnly = TRUE))
 
-if (opt$sep == "tab") {
-    opt$sep <- "\t"
-}
-if (opt$sep == "comma") {
-    opt$sep <- ","
-}
 if (opt$HCPC_max == -1) {
     opt$HCPC_max <- NULL
 }
 if (opt$HCPC_kk == -1) {
     opt$HCPC_kk <- Inf
 }
+#### End of argument implementation ####
 
-##Add legend to plot()
-legend_col <- function(col, lev) {
+#### Input data ####
 
-opar <- par
-
-n <- length(col)
-
-bx <- par("usr")
-
-box_cx <- c(bx[2] + (bx[2] - bx[1]) / 1000,
-bx[2] + (bx[2] - bx[1]) / 1000 + (bx[2] - bx[1]) / 50)
-box_cy <- c(bx[3], bx[3])
-box_sy <- (bx[4] - bx[3]) / n
-
-xx <- rep(box_cx, each = 2)
-
-par(xpd = TRUE)
-for (i in 1:n) {
-  yy <- c(box_cy[1] + (box_sy * (i - 1)),
-  box_cy[1] + (box_sy * (i)),
-  box_cy[1] + (box_sy * (i)),
-  box_cy[1] + (box_sy * (i - 1)))
-  polygon(xx, yy, col = col[i], border = col[i])
-}
-par(new = TRUE)
-plot(0, 0, type = "n",
-ylim = c(min(lev), max(lev)),
-yaxt = "n", ylab = "",
-xaxt = "n", xlab = "",
-frame.plot = FALSE)
-axis(side = 4, las = 2, tick = FALSE, line = .25)
-par <- opar
-}
-
+#We treat data once, at the beginning of the script ####
 data <- read.delim(
   opt$data,
   check.names = FALSE,
-  header = opt$colnames,
+  header = TRUE,
   row.names = 1,
-  sep = opt$sep
+  sep = "\t"
 )
+# we transpose immediately, because this is the right data structure
+data <- as.data.frame(t(data))
+#### End of input data ####
 
-# Contrasting factor and its colors
-if (opt$factor != "") {
-  contrasting_factor <- read.delim(
-    opt$factor,
-    header = TRUE
-  )
-  rownames(contrasting_factor) <- contrasting_factor[, 1]
-  contrasting_factor <- contrasting_factor[colnames(data), ]
-  colnames(contrasting_factor) <- c("id", "factor")
-  if (is.numeric(contrasting_factor$factor)) {
-    factor_cols <- rev(brewer.pal(n = 11, name = "RdYlGn"))[contrasting_factor$factor]
-  } else {
-    contrasting_factor$factor <- as.factor(contrasting_factor$factor)
-    if (nlevels(contrasting_factor$factor) == 2) {
-      colors_labels <- c("#E41A1C", "#377EB8")
+######### make PCA with FactoMineR #################
+if (opt$visu_choice == "PCA") {
+    pdf(opt$pdf_out)
+    if (opt$labels) {
+        labels <- "ind"
     } else {
-      set.seed(567629)
-      colors_labels <- createPalette(nlevels(contrasting_factor$factor), c("#5A5156", "#E4E1E3", "#F6222E"))
-      names(colors_labels) <- NULL
+        labels <- "none"
     }
-    factor_colors <-
-      with(contrasting_factor,
-           data.frame(factor = levels(contrasting_factor$factor),
-                      color = I(colors_labels)
-           )
-      )
-    factor_cols <- factor_colors$color[match(contrasting_factor$factor,
-                                          factor_colors$factor)]
-  }
-} else {
-  factor_cols <- rep("deepskyblue4", length(rownames(data)))
+
+    if (opt$factor != "") {
+        contrasting_factor <- read.delim(
+            opt$factor,
+            header = TRUE)
+        rownames(contrasting_factor) <- contrasting_factor[, 1]
+        # we pick only the relevant values of the contrasting factor
+        contrasting_factor <- contrasting_factor[rownames(data), ]
+        sup <- colnames(contrasting_factor)[2]
+        data <- cbind(data, contrasting_factor[, 2])
+        colnames(data)[length(data)] <- sup
+        if (is.numeric(contrasting_factor[, 2])) {
+            res_pca <- PCA(X = data, quanti.sup = sup, graph = FALSE)
+            plot(res_pca, habillage = sup, label = labels,
+                 title = "PCA graph of cells", cex = opt$item_size,
+                 axes = c(opt$x_axis, opt$y_axis))
+        } else{
+            res_pca <- PCA(X = data, quali.sup = sup, graph = FALSE)
+            plot(res_pca, habillage = sup, label = labels,
+                 title = "PCA graph of cells", cex = opt$item_size,
+                 axes = c(opt$x_axis, opt$y_axis))
+        }
+    } else {
+        res_pca <- PCA(X = data, graph = FALSE)
+        plot(res_pca, label = labels,
+             title = "PCA graph of cells", cex = opt$item_size,
+             axes = c(opt$x_axis, opt$y_axis), col.ind = "deepskyblue4")
+    }
+  
+    dev.off()
 }
+######### END PCA with FactoMineR #################
 
 ################  t-SNE ####################
 if (opt$visu_choice == "tSNE") {
@@ -379,41 +336,8 @@ if (opt$visu_choice == "tSNE") {
     }
   ggsave(file = opt$pdf_out, device = "pdf")
 
-  #save coordinates table
-  if (opt$table_coordinates != "") {
-  coord_table <- cbind(rownames(tdf), round(as.data.frame(tsne_out$Y), 6))
-  colnames(coord_table) <- c("Cells", paste0("DIM", (1:opt$Rtsne_dims)))
-  }
 }
 
-
-######### make PCA with FactoMineR #################
-if (opt$visu_choice == "PCA") {
-  pca <- PCA(t(data), ncp = opt$PCA_npc, graph = FALSE)
-  pdf(opt$pdf_out)
-  if (opt$labels == FALSE) {
-    plot(pca, axes = c(opt$PCA_x_axis, opt$PCA_y_axis), label = "none", col.ind = factor_cols)
-    } else {
-    plot(pca, axes = c(opt$PCA_x_axis, opt$PCA_y_axis), cex = 0.2, col.ind = factor_cols)
-  }
-if (opt$factor != "") {
-  if (is.factor(contrasting_factor$factor)) {
-    legend(x = "topright",
-       legend = as.character(factor_colors$factor),
-       col = factor_colors$color, pch = 16, bty = "n", xjust = 1, cex = 0.7)
-  } else {
-    legend_col(col = rev(brewer.pal(n = 11, name = "RdYlGn")), lev = cut(contrasting_factor$factor, 11, label = FALSE))
-  }
-}
-dev.off()
-
-  #save coordinates table
-  if (opt$table_coordinates != "") {
-  coord_table <- cbind(rownames(pca$ind$coord), round(as.data.frame(pca$ind$coord), 6))
-  colnames(coord_table) <- c("Cells", paste0("DIM", (1:opt$PCA_npc)))
-  }
-
-}
 
 ########### make HCPC with FactoMineR ##########
 if (opt$visu_choice == "HCPC") {
@@ -468,14 +392,6 @@ if (opt$factor != "") {
 
 dev.off()
 
-if (opt$table_coordinates != "") {
-  coord_table <- cbind(Cell = rownames(res_hcpc$call$X),
-                       round(as.data.frame(res_hcpc$call$X[, -length(res_hcpc$call$X)]), 6),
-                       as.data.frame(res_hcpc$call$X[, length(res_hcpc$call$X)])
-                       )
-  colnames(coord_table) <- c("Cells", paste0("DIM", (1:opt$HCPC_npc)), "Cluster")
-  }
-
 if (opt$HCPC_clust != "") {
 res_clustering <- data.frame(Cell = rownames(res_hcpc$data.clust),
                              Cluster = res_hcpc$data.clust$clust)
@@ -509,19 +425,7 @@ write.table(
 
 }
 
-## Return coordinates file to user
-
-if (opt$table_coordinates != "") {
-  write.table(
-    coord_table,
-    file = opt$table_coordinates,
-    sep = "\t",
-    quote = FALSE,
-    col.names = TRUE,
-    row.names = FALSE
-    )
-}
-
+## Return cluster table to user
 
 if (opt$HCPC_clust != "") {
   write.table(
