@@ -1,8 +1,8 @@
 options(show.error.messages = FALSE,
-        error = function() {
-            cat(geterrmessage(), file = stderr())
-            q("no", 1, FALSE)
-        }
+  error = function() {
+    cat(geterrmessage(), file = stderr())
+    q("no", 1, FALSE)
+  }
 )
 loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
 warnings()
@@ -92,7 +92,7 @@ option_list <- list(
     type = "logical",
     help = "Should data be centered before pca is applied? [default : '%default' ]"
   ),
-   make_option(
+  make_option(
     "--Rtsne_pca_scale",
     default = FALSE,
     type = "logical",
@@ -110,25 +110,25 @@ option_list <- list(
     type = "numeric",
     help = " Exaggeration factor used to multiply the P matrix in the first part of the optimization [default : '%default' ]"
   ),
-   make_option(
+  make_option(
     "--PCA_npc",
     default = 5,
     type = "integer",
     help = "number of dimensions kept in the results [default : '%default' ]"
   ),
-   make_option(
+  make_option(
     "--item_size",
     default = 1,
     type = "numeric",
     help = "Size of points/labels in PCA [default : '%default' ]"
   ),
-   make_option(
+  make_option(
     "--x_axis",
     default = 1,
     type = "integer",
     help = "PC to plot in the x axis [default : '%default' ]"
   ),
-   make_option(
+  make_option(
     "--y_axis",
     default = 2,
     type = "integer",
@@ -140,7 +140,7 @@ option_list <- list(
     type = "numeric",
     help = "nb.clust, number of clusters to consider in the hierarchical clustering. [default : -1 let HCPC to optimize the number]"
   ),
-   make_option(
+  make_option(
     "--HCPC_npc",
     default = 5,
     type = "integer",
@@ -182,13 +182,13 @@ option_list <- list(
     type = "integer",
     help = "The least possible number of clusters suggested [default :'%default']"
   ),
-   make_option(
+  make_option(
     "--HCPC_max",
     default = -1,
     type = "integer",
     help = "The higher possible number of clusters suggested [default :'%default']"
   ),
-   make_option(
+  make_option(
     "--HCPC_clusterCA",
     default = "rows",
     type = "character",
@@ -224,10 +224,10 @@ opt <- parse_args(OptionParser(option_list = option_list),
                   args = commandArgs(trailingOnly = TRUE))
 
 if (opt$HCPC_max == -1) {
-    opt$HCPC_max <- NULL
+ opt$HCPC_max <- NULL
 }
 if (opt$HCPC_kk == -1) {
-    opt$HCPC_kk <- Inf
+  opt$HCPC_kk <- Inf
 }
 #### End of argument implementation ####
 
@@ -247,42 +247,38 @@ data <- as.data.frame(t(data))
 
 ######### make PCA with FactoMineR #################
 if (opt$visu_choice == "PCA") {
-    pdf(opt$pdf_out)
-    if (opt$labels) {
-        labels <- "ind"
+  pdf(opt$pdf_out)
+  if (opt$labels) {
+    labels <- "ind"
+  } else {
+    labels <- "none"
+  }
+  if (opt$factor != "") {
+    contrasting_factor <- read.delim(opt$factor, header = TRUE)
+    rownames(contrasting_factor) <- contrasting_factor[, 1]
+    # we pick only the relevant values of the contrasting factor
+    contrasting_factor <- contrasting_factor[rownames(data), ]
+    sup <- colnames(contrasting_factor)[2]
+    data <- cbind(data, contrasting_factor[, 2])
+    colnames(data)[length(data)] <- sup
+    if (is.numeric(contrasting_factor[, 2])) {
+      res_pca <- PCA(X = data, quanti.sup = sup, graph = FALSE)
+      plot(res_pca, habillage = sup, label = labels,
+           title = "PCA graph of cells", cex = opt$item_size,
+           axes = c(opt$x_axis, opt$y_axis))
     } else {
-        labels <- "none"
+    res_pca <- PCA(X = data, quali.sup = sup, graph = FALSE)
+    plot(res_pca, habillage = sup, label = labels,
+         title = "PCA graph of cells", cex = opt$item_size,
+         axes = c(opt$x_axis, opt$y_axis))
     }
-
-    if (opt$factor != "") {
-        contrasting_factor <- read.delim(
-            opt$factor,
-            header = TRUE)
-        rownames(contrasting_factor) <- contrasting_factor[, 1]
-        # we pick only the relevant values of the contrasting factor
-        contrasting_factor <- contrasting_factor[rownames(data), ]
-        sup <- colnames(contrasting_factor)[2]
-        data <- cbind(data, contrasting_factor[, 2])
-        colnames(data)[length(data)] <- sup
-        if (is.numeric(contrasting_factor[, 2])) {
-            res_pca <- PCA(X = data, quanti.sup = sup, graph = FALSE)
-            plot(res_pca, habillage = sup, label = labels,
-                 title = "PCA graph of cells", cex = opt$item_size,
-                 axes = c(opt$x_axis, opt$y_axis))
-        } else{
-            res_pca <- PCA(X = data, quali.sup = sup, graph = FALSE)
-            plot(res_pca, habillage = sup, label = labels,
-                 title = "PCA graph of cells", cex = opt$item_size,
-                 axes = c(opt$x_axis, opt$y_axis))
-        }
-    } else {
-        res_pca <- PCA(X = data, graph = FALSE)
-        plot(res_pca, label = labels,
-             title = "PCA graph of cells", cex = opt$item_size,
-             axes = c(opt$x_axis, opt$y_axis), col.ind = "deepskyblue4")
-    }
-  
-    dev.off()
+  } else {
+    res_pca <- PCA(X = data, graph = FALSE)
+    plot(res_pca, label = labels,
+         title = "PCA graph of cells", cex = opt$item_size,
+         axes = c(opt$x_axis, opt$y_axis), col.ind = "deepskyblue4")
+  }
+  dev.off()
 }
 ######### END PCA with FactoMineR #################
 
