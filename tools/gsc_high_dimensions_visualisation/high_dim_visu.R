@@ -224,7 +224,7 @@ opt <- parse_args(OptionParser(option_list = option_list),
                   args = commandArgs(trailingOnly = TRUE))
 
 if (opt$HCPC_max == -1) {
- opt$HCPC_max <- NULL
+  opt$HCPC_max <- NULL
 }
 if (opt$HCPC_kk == -1) {
   opt$HCPC_kk <- Inf
@@ -267,10 +267,10 @@ if (opt$visu_choice == "PCA") {
            title = "PCA graph of cells", cex = opt$item_size,
            axes = c(opt$x_axis, opt$y_axis))
     } else {
-    res_pca <- PCA(X = data, quali.sup = sup, graph = FALSE)
-    plot(res_pca, habillage = sup, label = labels,
-         title = "PCA graph of cells", cex = opt$item_size,
-         axes = c(opt$x_axis, opt$y_axis))
+      res_pca <- PCA(X = data, quali.sup = sup, graph = FALSE)
+      plot(res_pca, habillage = sup, label = labels,
+           title = "PCA graph of cells", cex = opt$item_size,
+           axes = c(opt$x_axis, opt$y_axis))
     }
   } else {
     res_pca <- PCA(X = data, graph = FALSE)
