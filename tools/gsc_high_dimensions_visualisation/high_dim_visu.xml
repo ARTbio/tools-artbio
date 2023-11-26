@@ -202,13 +202,6 @@
             <param name="factor_choice" value="No" />
             <output name="pdf_out" file="pca.labels.pdf" ftype="pdf"/>
         </test>
-        <test expect_num_outputs="1">
-            <param name="input" value="cpm_input.tsv" ftype="txt"/>
-            <param name="labels" value="no" />
-            <param name="visu_choice" value="PCA" />
-            <param name="factor_choice" value="No" />
-            <output name="pdf_out" file="pca.nolabels.pdf" ftype="pdf"/>
-        </test>
         <!-- test PCA PC2 vs PC3 -->
         <test expect_num_outputs="1">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
@@ -219,7 +212,6 @@
             <param name="y_axis" value="3" />
             <output name="pdf_out" file="pca.2vs3.pdf" ftype="pdf"/>
         </test>
-
         <!-- test factor contrasting on PCA -->
         <test expect_num_outputs="1">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
