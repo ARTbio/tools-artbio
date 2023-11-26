@@ -183,9 +183,6 @@
     </inputs>
     <outputs>
         <data name="pdf_out" format="pdf" label="${visualisation.visu_choice} of ${on_string}"/>
-        <data name="table_coordinates" format="tabular" label="Scatter plot coordinates from ${visualisation.visu_choice} of ${on_string}">
-            <filter>coord == 'yes'</filter>
-        </data>
         <data name="HCPC_mutual_info" format="txt" label="External validation of clustering from ${visualisation.visu_choice} of ${on_string}">
             <filter>visualisation['visu_choice'] == 'HCPC' and factor_condition['factor_choice'] == 'Yes'</filter>
         </data>
