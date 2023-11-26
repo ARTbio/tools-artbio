@@ -59,7 +59,7 @@
                 --PCA_npc '$visualisation.PCA_npc'
                 --x_axis '$visualisation.x_axis'
                 --y_axis '$visualisation.y_axis'
-                --item_size 'visualisation.item_size'
+                --item_size '$visualisation.item_size'
             #end if
             
             #if $visualisation.visu_choice == "HCPC" and $factor_condition.factor_choice == "Yes":
