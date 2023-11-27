@@ -292,7 +292,6 @@ if (opt$visu_choice == "HCPC") {
   # HCPC starts with a PCA
   pca <- PCA(X = data, ncp = opt$HCPC_npc, quali.sup = sup, graph = FALSE)
   pca_ind_coord <- as.data.frame(pca$ind$coord) # coordinates of observations in PCA
-  
   # Hierarchical Clustering On Principal Components Followed By Kmean Clustering
   res_hcpc <- HCPC(pca,
                    nb.clust = opt$HCPC_ncluster,
@@ -324,52 +323,40 @@ if (opt$visu_choice == "HCPC") {
                              summary_stats = TRUE)
   sink()
   dev.off()
-}
 
-if (opt$HCPC_clust != "") {
-  res_clustering <- data.frame(Cell = rownames(res_hcpc$data.clust),
-                               Cluster = res_hcpc$data.clust$clust)
-  
-}
+  if (opt$HCPC_clust != "") {
+    res_clustering <- data.frame(Cell = rownames(res_hcpc$data.clust),
+                                 Cluster = res_hcpc$data.clust$clust)
+    # Description of cluster by most contributing variables / gene expressions
+    # first transform list of vectors in a list of dataframes
+    extract_description <- lapply(res_hcpc$desc.var$quanti, as.data.frame)
+    # second, transfer rownames (genes) to column in the dataframe, before rbinding
+    extract_description_w_genes <- Map(cbind,
+                                       extract_description,
+                                       genes = lapply(extract_description, rownames))
+    # Then collapse all dataframes with cluster_id in 1st column using {data.table} rbindlist()
+    cluster_description <- rbindlist(extract_description_w_genes, idcol = "cluster_id")
+    cluster_description <- cluster_description[, c(8, 1, 2, 3, 4, 5, 6, 7)] # swap columns
+    cluster_description <- cluster_description[order(cluster_description[[2]],
+                                                     cluster_description[[8]]), ] # sort by cluster then by pval
+  # Finally, output cluster description data frame
+    write.table(cluster_description,
+                file = opt$HCPC_cluster_description,
+                sep = "\t",
+                quote = FALSE,
+                col.names = TRUE,
+                row.names = FALSE)
 
-# Description of cluster by most contributing variables / gene expressions
-
-# first transform list of vectors in a list of dataframes
-extract_description <- lapply(res_hcpc$desc.var$quanti, as.data.frame)
-# second, transfer rownames (genes) to column in the dataframe, before rbinding
-extract_description_w_genes <- Map(cbind,
-                                   extract_description,
-                                   genes = lapply(extract_description, rownames)
-)
-# Then use data.table to collapse all generated dataframe, with the cluster id in first column
-# using the {data.table} rbindlist function
-cluster_description <- rbindlist(extract_description_w_genes, idcol = "cluster_id")
-cluster_description <- cluster_description[, c(8, 1, 2, 3, 4, 5, 6, 7)] # reorganize columns
-cluster_description <- cluster_description[order(cluster_description[[2]],
-                                                 cluster_description[[8]]), ] # sort by cluster then by p.value
-
-# Finally, output cluster description data frame
-write.table(
-  cluster_description,
-  file = opt$HCPC_cluster_description,
-  sep = "\t",
-  quote = FALSE,
-  col.names = TRUE,
-  row.names = FALSE
-)
-
-
-## Return cluster table to user
-
-if (opt$HCPC_clust != "") {
-  write.table(
-    res_clustering,
-    file = opt$HCPC_clust,
-    sep = "\t",
-    quote = FALSE,
-    col.names = TRUE,
-    row.names = FALSE
-  )
+    ## Return cluster table to user
+    if (opt$HCPC_clust != "") {
+      write.table(res_clustering,
+                  file = opt$HCPC_clust,
+                  sep = "\t",
+                  quote = FALSE,
+                  col.names = TRUE,
+                  row.names = FALSE)
+    }
+  }
 }
 
 ################  t-SNE ####################
