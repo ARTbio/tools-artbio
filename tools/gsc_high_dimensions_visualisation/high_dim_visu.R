@@ -282,60 +282,6 @@ if (opt$visu_choice == "PCA") {
 }
 ######### END PCA with FactoMineR #################
 
-################  t-SNE ####################
-if (opt$visu_choice == "tSNE") {
-  # filter and transpose df for tsne and pca
-  tdf <- t(data)
-  # make tsne and plot results
-  set.seed(opt$Rtsne_seed) ## Sets seed for reproducibility
-
-  tsne_out <- Rtsne(tdf,
-                    dims = opt$Rtsne_dims,
-                    initial_dims = opt$Rtsne_initial_dims,
-                    perplexity = opt$Rtsne_perplexity,
-                    theta = opt$Rtsne_theta,
-                    max_iter = opt$Rtsne_max_iter,
-                    pca = opt$Rtsne_pca,
-                    pca_center = opt$Rtsne_pca_center,
-                    pca_scale = opt$Rtsne_pca_scale,
-                    normalize = opt$Rtsne_normalize,
-                    exaggeration_factor = opt$Rtsne_exaggeration_factor)
-
-  embedding <- as.data.frame(tsne_out$Y[, 1:2])
-  embedding$Class <- as.factor(rownames(tdf))
-  gg_legend <- theme(legend.position = "right")
-  if (opt$factor == "") {
-    ggplot(embedding, aes(x = V1, y = V2)) +
-      geom_point(size = 1, color = "deepskyblue4") +
-      gg_legend +
-      xlab("t-SNE 1") +
-      ylab("t-SNE 2") +
-      ggtitle("t-SNE") +
-      if (opt$labels) {
-        geom_text(aes(label = Class), hjust = -0.2, vjust = -0.5, size = 1.5, color = "deepskyblue4")
-      }
-    } else {
-    if (is.numeric(contrasting_factor$factor)) {
-      embedding$factor <- contrasting_factor$factor
-    } else {
-      embedding$factor <- as.factor(contrasting_factor$factor)
-    }
-
-    ggplot(embedding, aes(x = V1, y = V2, color = factor)) +
-      geom_point(size = 1) +
-      gg_legend +
-      xlab("t-SNE 1") +
-      ylab("t-SNE 2") +
-      ggtitle("t-SNE") +
-      if (opt$labels) {
-        geom_text(aes(label = Class, colour = factor), hjust = -0.2, vjust = -0.5, size = 1.5)
-      }
-    }
-  ggsave(file = opt$pdf_out, device = "pdf")
-
-}
-
-
 ########### make HCPC with FactoMineR ##########
 if (opt$visu_choice == "HCPC") {
 
@@ -434,3 +380,57 @@ if (opt$HCPC_clust != "") {
     row.names = FALSE
     )
 }
+
+################  t-SNE ####################
+if (opt$visu_choice == "tSNE") {
+  # filter and transpose df for tsne and pca
+  tdf <- t(data)
+  # make tsne and plot results
+  set.seed(opt$Rtsne_seed) ## Sets seed for reproducibility
+
+  tsne_out <- Rtsne(tdf,
+                    dims = opt$Rtsne_dims,
+                    initial_dims = opt$Rtsne_initial_dims,
+                    perplexity = opt$Rtsne_perplexity,
+                    theta = opt$Rtsne_theta,
+                    max_iter = opt$Rtsne_max_iter,
+                    pca = opt$Rtsne_pca,
+                    pca_center = opt$Rtsne_pca_center,
+                    pca_scale = opt$Rtsne_pca_scale,
+                    normalize = opt$Rtsne_normalize,
+                    exaggeration_factor = opt$Rtsne_exaggeration_factor)
+
+  embedding <- as.data.frame(tsne_out$Y[, 1:2])
+  embedding$Class <- as.factor(rownames(tdf))
+  gg_legend <- theme(legend.position = "right")
+  if (opt$factor == "") {
+    ggplot(embedding, aes(x = V1, y = V2)) +
+      geom_point(size = 1, color = "deepskyblue4") +
+      gg_legend +
+      xlab("t-SNE 1") +
+      ylab("t-SNE 2") +
+      ggtitle("t-SNE") +
+      if (opt$labels) {
+        geom_text(aes(label = Class), hjust = -0.2, vjust = -0.5, size = 1.5, color = "deepskyblue4")
+      }
+    } else {
+    if (is.numeric(contrasting_factor$factor)) {
+      embedding$factor <- contrasting_factor$factor
+    } else {
+      embedding$factor <- as.factor(contrasting_factor$factor)
+    }
+
+    ggplot(embedding, aes(x = V1, y = V2, color = factor)) +
+      geom_point(size = 1) +
+      gg_legend +
+      xlab("t-SNE 1") +
+      ylab("t-SNE 2") +
+      ggtitle("t-SNE") +
+      if (opt$labels) {
+        geom_text(aes(label = Class, colour = factor), hjust = -0.2, vjust = -0.5, size = 1.5)
+      }
+    }
+  ggsave(file = opt$pdf_out, device = "pdf")
+
+}
+
