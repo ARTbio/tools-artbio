@@ -263,21 +263,22 @@ if (opt$visu_choice == "PCA") {
     colnames(data)[length(data)] <- sup
     if (is.numeric(contrasting_factor[, 2])) {
       res_pca <- PCA(X = data, quanti.sup = sup, graph = FALSE)
-      plot(res_pca, habillage = sup, label = labels,
+      pca_plot <- plot(res_pca, habillage = sup, label = labels,
            title = "PCA graph of cells", cex = opt$item_size,
            axes = c(opt$x_axis, opt$y_axis))
     } else {
       res_pca <- PCA(X = data, quali.sup = sup, graph = FALSE)
-      plot(res_pca, habillage = sup, label = labels,
-           title = "PCA graph of cells", cex = opt$item_size,
-           axes = c(opt$x_axis, opt$y_axis))
+      pca_plot <- plot(res_pca, habillage = sup, label = labels,
+                       title = "PCA graph of cells", cex = opt$item_size,
+                       axes = c(opt$x_axis, opt$y_axis))
     }
   } else {
     res_pca <- PCA(X = data, graph = FALSE)
-    plot(res_pca, label = labels,
-         title = "PCA graph of cells", cex = opt$item_size,
-         axes = c(opt$x_axis, opt$y_axis), col.ind = "deepskyblue4")
+    pca_plot <- plot(res_pca, label = labels,
+                     title = "PCA graph of cells", cex = opt$item_size,
+                     axes = c(opt$x_axis, opt$y_axis), col.ind = "deepskyblue4")
   }
+  print(pca_plot)
   dev.off()
 }
 ######### END PCA with FactoMineR #################
