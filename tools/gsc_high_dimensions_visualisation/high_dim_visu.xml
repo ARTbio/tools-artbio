@@ -200,6 +200,7 @@
             <param name="labels" value="yes" />
             <param name="visu_choice" value="PCA" />
             <param name="factor_choice" value="No" />
+            <param name="item_size" value="0.5" />
             <output name="pdf_out" file="pca.labels.pdf" ftype="pdf"/>
         </test>
         <!-- test PCA PC2 vs PC3 -->
