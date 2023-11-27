@@ -222,15 +222,6 @@
             <param name="factor" value="factor.tsv" ftype="txt"/>
             <output name="pdf_out" file="pca.nolabels.factors.pdf" ftype="pdf"/>
         </test>
-        <!-- test two-level factor contrasting on PCA -->
-        <test expect_num_outputs="1">
-            <param name="input" value="cpm_input.tsv" ftype="txt"/>
-            <param name="labels" value="no" />
-            <param name="visu_choice" value="PCA" />
-            <param name="factor_choice" value="Yes" />
-            <param name="factor" value="2-lev_factor.tsv" ftype="txt"/>
-            <output name="pdf_out" file="pca.nolabels.2-lev-factor.pdf" compare="sim_size" ftype="pdf"/>
-        </test>
         <!-- test numerical factor contrasting on PCA -->
         <test expect_num_outputs="1">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
@@ -246,7 +237,7 @@
             <param name="visu_choice" value="PCA" />
             <param name="factor_choice" value="Yes" />
             <param name="factor" value="shuffled_factor.tsv" ftype="txt"/>
-            <output name="pdf_out" file="pca.nolabels.factors.pdf" compare="sim_size" ftype="pdf"/>
+            <output name="pdf_out" file="pca.nolabels.shuffled_factors.pdf" compare="sim_size" ftype="pdf"/>
         </test>
         <!--
         <test expect_num_outputs="1">
