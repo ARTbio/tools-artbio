@@ -153,9 +153,9 @@
                        help="An integer. The maximum number of iterations for the consolidation. (default=10)"/>
                 <param name="HCPC_min" value="3" type="integer" label="min number of clusters"
                        help="an integer. The least possible number of clusters suggested. (default=3)"/>
-                <param name="HCPC_max" value="-1" type="text" label="max number of clusters"
+                <param name="HCPC_max" value="NULL" type="text" label="max number of clusters"
                        help="The higher possible number of clusters suggested, by default the minimum between 10
-                             and the number of individuals divided by 2. (default=-1)"/>
+                             and the number of individuals divided by 2. (default = NULL)"/>
                 <param name="HCPC_clusterCA"  type="select" label="cluster.CA, Clustering against rows or columns"
                        help="A string equals to 'rows' or 'columns' for the clustering of Correspondence Analysis results.default(rows)">
                     <option value="rows" selected="true">Rows</option>
