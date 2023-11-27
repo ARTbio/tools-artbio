@@ -239,7 +239,6 @@
             <param name="factor" value="shuffled_factor.tsv" ftype="txt"/>
             <output name="pdf_out" file="pca.nolabels.shuffled_factors.pdf" compare="sim_size" ftype="pdf"/>
         </test>
-        <!--
         <test expect_num_outputs="1">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="yes" />
@@ -249,7 +248,7 @@
             <output name="pdf_out" file="hcpc.labels.pdf" compare="sim_size" ftype="pdf"/>
             <output name="HCPC_cluster_description" file="hcpc.cluster_description.1.tab" ftype="tabular"/>
         </test>
-
+        <!--
         <test expect_num_outputs="4">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="no" />
