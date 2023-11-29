@@ -1,7 +1,8 @@
-<tool id="mannwhitney_de" name="Perform a differential analysis" version="4.2+galaxy0">
+<tool id="mannwhitney_de" name="Perform a differential analysis" version="4.3.1+galaxy0">
     <description>using a Mann-Whitney test</description>
     <requirements>
-        <requirement type="package" version="1.7.3=r42hc72bb7e_2">r-optparse</requirement>
+        <requirement type="package" version="4.3.1=hfabd6f2_1">r-base</requirement>
+        <requirement type="package" version="1.7.3">r-optparse</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
