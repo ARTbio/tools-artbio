@@ -186,6 +186,47 @@
         </data>
     </outputs>
     <tests>
+        <!-- test tSNE -->
+        <test expect_num_outputs="1">
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="yes" />
+            <param name="visu_choice" value="tSNE" />
+            <param name="Rtsne_seed" value="49"/>
+            <param name="Rtsne_perplexity" value="10"/>
+            <param name="Rtsne_theta" value="1" />
+            <output name="pdf_out" file="tsne.1.pdf" ftype="pdf" compare="sim_size" delta="500"/>
+        </test>
+        <test expect_num_outputs="1">
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="no" />
+            <param name="visu_choice" value="tSNE" />
+            <param name="Rtsne_seed" value="49"/>
+            <param name="Rtsne_perplexity" value="10"/>
+            <param name="Rtsne_theta" value="1" />
+            <output name="pdf_out" file="tsne.2.pdf" ftype="pdf" compare="sim_size" delta="500"/>
+        </test>
+        <test expect_num_outputs="1">
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="yes" />
+            <param name="visu_choice" value="tSNE" />
+            <param name="factor_choice" value="Yes" />
+            <param name="factor" value="shuffled_factor.tsv" ftype="txt"/>
+            <param name="Rtsne_seed" value="49"/>
+            <param name="Rtsne_perplexity" value="10"/>
+            <param name="Rtsne_theta" value="1" />
+            <output name="pdf_out" file="tsne.3.pdf" ftype="pdf" compare="sim_size" delta="500"/>
+        </test>
+            <test expect_num_outputs="1">
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="no" />
+            <param name="visu_choice" value="tSNE" />
+            <param name="Rtsne_seed" value="49" />
+            <param name="Rtsne_dims" value="3" />
+            <param name="Rtsne_perplexity" value="10"/>
+            <param name="Rtsne_theta" value="1" />
+            <param name="Rtsne_normalize" value="FALSE" />
+            <output name="pdf_out" file="tsne.4.pdf" ftype="pdf" compare="sim_size" delta="1000"/>
+        </test>
         <!-- test PCA -->
         <test expect_num_outputs="1">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
@@ -282,48 +323,6 @@
             <output name="HCPC_cell_clust" file="hcpc.cell-cluster.4.tsv" ftype="tabular"/>
             <output name="HCPC_contributions" file="hcpc.component-impact.4.tsv" ftype="tabular"/>
         </test>
-        <!--
-        <test expect_num_outputs="1">
-            <param name="input" value="cpm_input.tsv" ftype="txt"/>
-            <param name="labels" value="yes" />
-            <param name="visu_choice" value="tSNE" />
-            <param name="Rtsne_seed" value="49"/>
-            <param name="Rtsne_perplexity" value="10"/>
-            <param name="Rtsne_theta" value="1" />
-            <output name="pdf_out" file="tsne.labels.pdf" ftype="pdf" compare="sim_size" delta="500"/>
-        </test>
-        <test expect_num_outputs="1">
-            <param name="input" value="cpm_input.tsv" ftype="txt"/>
-            <param name="labels" value="no" />
-            <param name="visu_choice" value="tSNE" />
-            <param name="Rtsne_seed" value="49"/>
-            <param name="Rtsne_perplexity" value="10"/>
-            <param name="Rtsne_theta" value="1" />
-            <output name="pdf_out" file="tsne.nolabels.pdf" ftype="pdf" compare="sim_size" delta="500"/>
-        </test>
-        <test expect_num_outputs="1">
-            <param name="input" value="cpm_input.tsv" ftype="txt"/>
-            <param name="labels" value="yes" />
-            <param name="visu_choice" value="tSNE" />
-            <param name="factor_choice" value="Yes" />
-            <param name="factor" value="shuffled_factor.tsv" ftype="txt"/>
-            <param name="Rtsne_seed" value="49"/>
-            <param name="Rtsne_perplexity" value="10"/>
-            <param name="Rtsne_theta" value="1" />
-            <output name="pdf_out" file="tsne.labels.factor.pdf" ftype="pdf" compare="sim_size" delta="500"/>
-        </test>
-            <test expect_num_outputs="2">
-            <param name="input" value="cpm_input.tsv" ftype="txt"/>
-            <param name="labels" value="no" />
-            <param name="visu_choice" value="tSNE" />
-            <param name="Rtsne_seed" value="49" />
-            <param name="Rtsne_dims" value="3" />
-            <param name="Rtsne_perplexity" value="10"/>
-            <param name="Rtsne_theta" value="1" />
-            <param name="Rtsne_normalize" value="FALSE" />
-            <output name="pdf_out" file="tsne-2.nolabels.pdf" ftype="pdf" compare="sim_size" delta="1000"/>
-        </test>
-        -->
     </tests>
     <help>
 

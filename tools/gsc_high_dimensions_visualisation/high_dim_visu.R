@@ -18,7 +18,6 @@ library(ClusterR)
 library(data.table)
 library(Polychrome)
 
-#### Arguments ####
 option_list <- list(
   make_option(
     "--data",
@@ -230,7 +229,7 @@ if (opt$HCPC_kk == -1) {
   opt$HCPC_kk <- Inf
 }
 
-# We treat data once, at the beginning of the script ####
+#### We treat data once, at the beginning of the script ####
 data <- read.delim(
   opt$data,
   check.names = FALSE,
@@ -238,10 +237,10 @@ data <- read.delim(
   row.names = 1,
   sep = "\t"
 )
-# we transpose immediately, because this is the right data structure
+# we transpose immediately, because this is the common data structure
 data <- as.data.frame(t(data))
 
-# we treat globally the factor if there is one
+# we treat the factor for usage in 3 methods
 if (opt$factor != "") {
   contrasting_factor <- read.delim(opt$factor, header = TRUE)
   rownames(contrasting_factor) <- contrasting_factor[, 1]
@@ -355,15 +354,10 @@ if (opt$visu_choice == "HCPC") {
                 col.names = TRUE,
                 row.names = FALSE)
 }
-
 ################  t-SNE ####################
 if (opt$visu_choice == "tSNE") {
-  # filter and transpose df for tsne and pca
-  tdf <- t(data)
-  # make tsne and plot results
-  set.seed(opt$Rtsne_seed) ## Sets seed for reproducibility
-
-  tsne_out <- Rtsne(tdf,
+   set.seed(opt$Rtsne_seed) ## Sets seed for reproducibility
+   tsne_out <- Rtsne(data,
                     dims = opt$Rtsne_dims,
                     initial_dims = opt$Rtsne_initial_dims,
                     perplexity = opt$Rtsne_perplexity,
@@ -374,38 +368,50 @@ if (opt$visu_choice == "tSNE") {
                     pca_scale = opt$Rtsne_pca_scale,
                     normalize = opt$Rtsne_normalize,
                     exaggeration_factor = opt$Rtsne_exaggeration_factor)
-
+  
   embedding <- as.data.frame(tsne_out$Y[, 1:2])
-  embedding$Class <- as.factor(rownames(tdf))
+  embedding$Class <- as.factor(rownames(data))
   gg_legend <- theme(legend.position = "right")
+  pointcolor <- "#E70000"
+  pointsize <- opt$item_size * 1.5
+  the_theme <- theme(
+    panel.background = element_rect(fill = "gray100", colour = "#6D9EC1",
+                                    size = 2, linetype = "solid"),
+    panel.grid.major = element_line(size = 0.5, linetype = 'solid',
+                                    colour = "#6D9EC1"), 
+    panel.grid.minor = element_line(size = 0.25, linetype = 'solid',
+                                    colour = "darkslategray3")
+  )
   if (opt$factor == "") {
-    ggplot(embedding, aes(x = V1, y = V2)) +
-      geom_point(size = 1, color = "deepskyblue4") +
+    p <- ggplot(embedding, aes(x = V1, y = V2)) +
+      geom_point(size = pointsize * 0.25, color = pointcolor) +
       gg_legend +
       xlab("t-SNE 1") +
       ylab("t-SNE 2") +
       ggtitle("t-SNE") +
-      if (opt$labels) {
-        geom_text(aes(label = Class), hjust = -0.2, vjust = -0.5, size = 1.5, color = "deepskyblue4")
+      the_theme +
+    if (opt$labels) {
+        geom_text(aes(label = Class), hjust = -0.2, vjust = -0.5, size = pointsize, color = pointcolor)
       }
+  } else {
+    if (is.numeric(contrasting_factor[, 2])) {
+      embedding$factor <- contrasting_factor[, 2]
     } else {
-    if (is.numeric(contrasting_factor$factor)) {
-      embedding$factor <- contrasting_factor$factor
-    } else {
-      embedding$factor <- as.factor(contrasting_factor$factor)
+      embedding$factor <- as.factor(contrasting_factor[, 2])
     }
-
-    ggplot(embedding, aes(x = V1, y = V2, color = factor)) +
-      geom_point(size = 1) +
+    
+    p<- ggplot(embedding, aes(x = V1, y = V2, color = factor)) +
+      geom_point(size = pointsize * 0.25) +
       gg_legend +
       xlab("t-SNE 1") +
       ylab("t-SNE 2") +
       ggtitle("t-SNE") +
+      the_theme +
       if (opt$labels) {
-        geom_text(aes(label = Class, colour = factor), hjust = -0.2, vjust = -0.5, size = 1.5)
+        geom_text(aes(label = Class, colour = factor), hjust = -0.2, vjust = -0.5, size = pointsize)
       }
-    }
-  ggsave(file = opt$pdf_out, device = "pdf")
-
+  }
+  pdf(opt$pdf_out)
+  print(p)
+  dev.off()
 }
-
