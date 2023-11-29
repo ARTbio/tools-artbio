@@ -13,7 +13,7 @@ options(show.error.messages = FALSE,
 loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
 
 suppressPackageStartupMessages({
-  library("optparse")
+  library(optparse)
 })
 
 sessionInfo()
