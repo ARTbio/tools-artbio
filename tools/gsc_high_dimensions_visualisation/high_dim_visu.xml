@@ -200,6 +200,8 @@
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="no" />
             <param name="visu_choice" value="tSNE" />
+            <param name="factor_choice" value="Yes" />
+            <param name="factor" value="numeric_factor.tsv" ftype="txt"/>
             <param name="Rtsne_seed" value="49"/>
             <param name="Rtsne_perplexity" value="10"/>
             <param name="Rtsne_theta" value="1" />
@@ -310,7 +312,6 @@
             <output name="HCPC_cell_clust" file="hcpc.cell-cluster.3.tsv" ftype="tabular"/>
             <output name="HCPC_contributions" file="hcpc.component-impact.3.tsv" ftype="tabular"/>
         </test>
-
         <test expect_num_outputs="3">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="no" />
