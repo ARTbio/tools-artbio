@@ -267,7 +267,7 @@ if (opt$visu_choice == "PCA") {
       res_pca <- PCA(X = data, quanti.sup = sup, graph = FALSE)
       pca_plot <- plot(res_pca, habillage = sup, label = labels,
                        title = "PCA graph of cells", cex = opt$item_size,
-           axes = c(opt$x_axis, opt$y_axis))
+                       axes = c(opt$x_axis, opt$y_axis))
     } else {
       res_pca <- PCA(X = data, quali.sup = sup, graph = FALSE)
       pca_plot <- plot(res_pca, habillage = sup, label = labels,
@@ -399,15 +399,15 @@ if (opt$visu_choice == "tSNE") {
       embedding$factor <- as.factor(contrasting_factor[, 2])
     }
     p <- ggplot(embedding, aes(x = V1, y = V2, color = factor)) +
-                geom_point(size = pointsize * 0.25) +
-                gg_legend +
-                xlab("t-SNE 1") +
-                ylab("t-SNE 2") +
-                ggtitle("t-SNE") +
-                the_theme +
-                if (opt$labels) {
-                geom_text(aes(label = Class, colour = factor), hjust = -0.2, vjust = -0.5, size = pointsize)
-                }
+      geom_point(size = pointsize * 0.25) +
+      gg_legend +
+      xlab("t-SNE 1") +
+      ylab("t-SNE 2") +
+      ggtitle("t-SNE") +
+      the_theme +
+      if (opt$labels) {
+        geom_text(aes(label = Class, colour = factor), hjust = -0.2, vjust = -0.5, size = pointsize)
+      }
   }
   pdf(opt$pdf_out)
   print(p)
