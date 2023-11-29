@@ -266,7 +266,7 @@ if (opt$visu_choice == "PCA") {
     if (is.numeric(contrasting_factor[, 2])) {
       res_pca <- PCA(X = data, quanti.sup = sup, graph = FALSE)
       pca_plot <- plot(res_pca, habillage = sup, label = labels,
-           title = "PCA graph of cells", cex = opt$item_size,
+                       title = "PCA graph of cells", cex = opt$item_size,
            axes = c(opt$x_axis, opt$y_axis))
     } else {
       res_pca <- PCA(X = data, quali.sup = sup, graph = FALSE)
@@ -307,7 +307,7 @@ if (opt$visu_choice == "HCPC") {
   plot(res_hcpc, choice = "tree")
   plot(res_hcpc, choice = "bar")
   if (opt$labels == FALSE) {
-    plot(res_hcpc, choice = "3D.map", ind.names=FALSE)
+    plot(res_hcpc, choice = "3D.map", ind.names = FALSE)
     plot(res_hcpc, choice = "map", label = "none")
   } else {
     plot(res_hcpc, choice = "3D.map")
@@ -347,17 +347,17 @@ if (opt$visu_choice == "HCPC") {
               row.names = FALSE)
 
   ## Return cluster table to user
-    write.table(res_clustering,
-                file = opt$HCPC_cell_clust,
-                sep = "\t",
-                quote = FALSE,
-                col.names = TRUE,
-                row.names = FALSE)
+  write.table(res_clustering,
+              file = opt$HCPC_cell_clust,
+              sep = "\t",
+              quote = FALSE,
+              col.names = TRUE,
+              row.names = FALSE)
 }
 ################  t-SNE ####################
 if (opt$visu_choice == "tSNE") {
-   set.seed(opt$Rtsne_seed) ## Sets seed for reproducibility
-   tsne_out <- Rtsne(data,
+  set.seed(opt$Rtsne_seed) ## Sets seed for reproducibility
+  tsne_out <- Rtsne(data,
                     dims = opt$Rtsne_dims,
                     initial_dims = opt$Rtsne_initial_dims,
                     perplexity = opt$Rtsne_perplexity,
@@ -368,7 +368,6 @@ if (opt$visu_choice == "tSNE") {
                     pca_scale = opt$Rtsne_pca_scale,
                     normalize = opt$Rtsne_normalize,
                     exaggeration_factor = opt$Rtsne_exaggeration_factor)
-  
   embedding <- as.data.frame(tsne_out$Y[, 1:2])
   embedding$Class <- as.factor(rownames(data))
   gg_legend <- theme(legend.position = "right")
@@ -377,9 +376,9 @@ if (opt$visu_choice == "tSNE") {
   the_theme <- theme(
     panel.background = element_rect(fill = "gray100", colour = "#6D9EC1",
                                     size = 2, linetype = "solid"),
-    panel.grid.major = element_line(size = 0.5, linetype = 'solid',
-                                    colour = "#6D9EC1"), 
-    panel.grid.minor = element_line(size = 0.25, linetype = 'solid',
+    panel.grid.major = element_line(size = 0.5, linetype = "solid",
+                                    colour = "#6D9EC1"),
+    panel.grid.minor = element_line(size = 0.25, linetype = "solid",
                                     colour = "darkslategray3")
   )
   if (opt$factor == "") {
@@ -390,7 +389,7 @@ if (opt$visu_choice == "tSNE") {
       ylab("t-SNE 2") +
       ggtitle("t-SNE") +
       the_theme +
-    if (opt$labels) {
+      if (opt$labels) {
         geom_text(aes(label = Class), hjust = -0.2, vjust = -0.5, size = pointsize, color = pointcolor)
       }
   } else {
@@ -399,17 +398,16 @@ if (opt$visu_choice == "tSNE") {
     } else {
       embedding$factor <- as.factor(contrasting_factor[, 2])
     }
-    
-    p<- ggplot(embedding, aes(x = V1, y = V2, color = factor)) +
-      geom_point(size = pointsize * 0.25) +
-      gg_legend +
-      xlab("t-SNE 1") +
-      ylab("t-SNE 2") +
-      ggtitle("t-SNE") +
-      the_theme +
-      if (opt$labels) {
-        geom_text(aes(label = Class, colour = factor), hjust = -0.2, vjust = -0.5, size = pointsize)
-      }
+    p <- ggplot(embedding, aes(x = V1, y = V2, color = factor)) +
+                geom_point(size = pointsize * 0.25) +
+                gg_legend +
+                xlab("t-SNE 1") +
+                ylab("t-SNE 2") +
+                ggtitle("t-SNE") +
+                the_theme +
+                if (opt$labels) {
+                geom_text(aes(label = Class, colour = factor), hjust = -0.2, vjust = -0.5, size = pointsize)
+                }
   }
   pdf(opt$pdf_out)
   print(p)
