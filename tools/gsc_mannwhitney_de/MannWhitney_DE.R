@@ -1,22 +1,20 @@
-####################
-#   Differential   #
-#     analysis     #
-####################
-
-# Perform a differential analysis between 2
-# groups of cells.
+# Perform a differential analysis between 2 groups of cells.
 
 # Example of command
 # Rscript MannWhitney_DE.R --input <input.tsv> --sep <tab> --colnames <TRUE> --metadata <signature.tsv> --column_name <rate> --fdr <0.01> --output <diff_analysis.tsv>
 
-# load packages that are provided in the conda env
-options( show.error.messages=F,
-       error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+options(show.error.messages = FALSE,
+  error = function() {
+    cat(geterrmessage(), file = stderr())
+    q("no", 1, FALSE)
+  }
+)
 loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
 warnings()
+
+
 library(optparse)
 
-#Arguments
 option_list = list(
   make_option(
     "--input",

@@ -1,7 +1,7 @@
-<tool id="mannwhitney_de" name="Perform a differential analysis" version="0.9.4">
+<tool id="mannwhitney_de" name="Perform a differential analysis" version="4.3+galaxy0">
     <description>using a Mann-Whitney test</description>
     <requirements>
-        <requirement type="package" version="1.3.2=r3.3.2_0">r-optparse</requirement>
+        <requirement type="package" version="1.7.3_r42hc72bb7e_2">r-optparse</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
@@ -48,7 +48,7 @@
     </outputs>
     <tests>
         <test>
-            <param name="input" value="filtered-0.05.tab" ftype="txt"/>
+            <param name="input" value="filtered-0.05.tsv" ftype="txt"/>
             <param name="sep" value="tab" />
             <param name="colnames" value="TRUE"/>
             <param name="comparison_factor_file" value="signature_2columns.tsv" ftype="tabular"/>
@@ -59,15 +59,15 @@
             <output name="output" file="geneMetadata_log.tsv" ftype="tabular"/>
         </test>
         <test>
-            <param name="input" value="filtered-0.05.tab" ftype="txt"/>
-            <param name="sep" value="tab" />
+            <param name="input" value="filtered-0.05.csv" ftype="txt"/>
+            <param name="sep" value="comma" />
             <param name="colnames" value="TRUE"/>
             <param name="comparison_factor_file" value="signature_3columns.tsv" ftype="tabular"/>
             <param name="factor1" value="LOW"/>
             <param name="factor2" value="HIGH"/>
             <param name="fdr" value="0.01"/>
             <param name="log" value="true"/>
-            <output name="output" file="geneMetadata_log.tsv" ftype="tabular"/>
+            <output name="output" file="geneMetadata_log2.tsv" ftype="tabular"/>
         </test>
         <test>
             <param name="input" value="filterCells_100.tsv" ftype="txt"/>
