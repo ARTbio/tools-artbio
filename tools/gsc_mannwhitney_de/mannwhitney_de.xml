@@ -58,30 +58,17 @@
             <param name="log" value="true"/>
             <output name="output" file="result.tsv" ftype="tabular"/>
         </test>
-<!--
         <test>
-            <param name="input" value="filtered-0.05.csv" ftype="txt"/>
+            <param name="input" value="input.csv" ftype="txt"/>
             <param name="sep" value="comma" />
             <param name="colnames" value="TRUE"/>
-            <param name="comparison_factor_file" value="signature_3columns.tsv" ftype="tabular"/>
+            <param name="comparison_factor_file" value="factor_3col.tsv" ftype="tabular"/>
             <param name="factor1" value="LOW"/>
             <param name="factor2" value="HIGH"/>
-            <param name="fdr" value="0.01"/>
+            <param name="fdr" value="0.05"/>
             <param name="log" value="true"/>
-            <output name="output" file="geneMetadata_log2.tsv" ftype="tabular"/>
+            <output name="output" file="result_from_csv.tsv" ftype="tabular"/>
         </test>
-        <test>
-            <param name="input" value="filterCells_100.tsv" ftype="txt"/>
-            <param name="sep" value="tab" />
-            <param name="colnames" value="TRUE"/>
-            <param name="comparison_factor_file" value="signature_2columns.tsv" ftype="tabular"/>
-            <param name="factor1" value="LOW"/>
-            <param name="factor2" value="HIGH"/>
-            <param name="fdr" value="0.01"/>
-            <param name="log" value="false"/>
-            <output name="output" file="geneMetadata_nolog.tsv" ftype="tabular"/>
-        </test>
--->
     </tests>
     <help>
 
