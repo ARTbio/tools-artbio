@@ -75,7 +75,7 @@ option_list <- list(
 )
 
 opt <- parse_args(OptionParser(option_list = option_list),
-                 args = commandArgs(trailingOnly = TRUE))
+                  args = commandArgs(trailingOnly = TRUE))
 
 if (opt$sep == "tab") {
   opt$sep <- "\t"
