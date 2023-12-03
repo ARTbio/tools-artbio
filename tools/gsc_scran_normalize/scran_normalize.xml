@@ -10,7 +10,6 @@
     <command detect_errors="exit_code"><![CDATA[ 
         Rscript $__tool_directory__/scran-normalize.R 
             --data '$input'
-            --sep '$input_sep' 
             #if $metacell.cluster == "Yes":
                 --cluster
                 --method '$metacell.method'
@@ -19,11 +18,7 @@
             -o '${output}'
 ]]></command>
     <inputs>
-        <param name="input" type="data" format="txt,tabular" label="Raw counts of expression data" help = "Must have an header"/>
-        <param name="input_sep" type="select" label="Input column separator">
-            <option value="tab" selected="true">Tabulation</option>
-            <option value=",">Comma</option>
-        </param>
+        <param name="input" type="data" format="tabular" label="Raw counts of expression data" help = "A tsv file that must have an header line"/>
         <conditional name="metacell">
             <param name="cluster" type="select" label = "Do you want to cluster cells ?" help="Perform scaling method on metacell, see Details">
                 <option value="Yes">Yes</option>

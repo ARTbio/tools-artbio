@@ -81,7 +81,7 @@ if (opt$cluster) {
   sce <- computeSumFactors(sce)
 }
 
-sce <- normalize(sce)
+sce <- logNormCounts(sce)
 
 logcounts <- data.frame(genes = rownames(sce), round(logcounts(sce), digits = 5), check.names = FALSE)
 
