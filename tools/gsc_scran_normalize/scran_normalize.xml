@@ -2,6 +2,7 @@
     <description>Normalize raw counts expression values using deconvolution size factors</description>
     <requirements>
         <requirement type="package" version="1.28.1">bioconductor-scran</requirement>
+        <requirement type="package" version="1.63_1">r-dynamictreecut</requirement>
         <requirement type="package" version="1.7.3">r-optparse</requirement>
     </requirements>
     <stdio>
@@ -40,18 +41,18 @@
     </outputs>
     <tests>
         <test>
-            <param name="input" value="counts.tab" ftype="tabular"/>
+            <param name="input" value="counts.tsv" ftype="tabular"/>
             <output name="output" file="logcounts.tab" ftype="tabular"/>
         </test>
         <test>
-            <param name="input" value="counts.tab" ftype="tabular"/>
+            <param name="input" value="counts.tsv" ftype="tabular"/>
             <param name="cluster" value="Yes"/>
             <param name="method" value="igraph"/>
             <param name="size" value="25"/>
             <output name="output" file="logcounts_igraph.tsv" ftype="tabular"/>
         </test>
         <test>
-            <param name="input" value="counts.tab" ftype="tabular"/>
+            <param name="input" value="counts.tsv" ftype="tabular"/>
             <param name="cluster" value="Yes"/>
             <param name="method" value="hclust"/>
             <param name="size" value="25"/>

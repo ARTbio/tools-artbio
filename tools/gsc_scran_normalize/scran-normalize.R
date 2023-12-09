@@ -1,4 +1,3 @@
-# load packages that are provided in the conda env
 options(show.error.messages = FALSE,
   error = function() {
     cat(geterrmessage(), file = stderr())
@@ -10,6 +9,7 @@ warnings()
 
 library(optparse)
 library(scran)
+library(dynamicTreeCut)
 
 # Arguments
 option_list <- list(
