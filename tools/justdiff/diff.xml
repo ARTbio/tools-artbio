@@ -1,10 +1,15 @@
-<tool id="justdiff" name="Differences between two files" version="0.6.0">
+<tool id="justdiff" name="Differences between two files" version="3.10+galaxy0">
   <description></description>
+  <requirements>
+    <requirement type="package" version="3.10">diffutils</requirement>
+  </requirements>
+
+
   <stdio>
       <exit_code range="1:" level="fatal" description="Tool exception" />
   </stdio>
   <command detect_errors="exit_code"><![CDATA[
-       diff '${input1}' '${input2}' | cat > '$output'
+       diff --side-by-side --suppress-common-lines '${input1}' '${input2}' | cat > '$output'
   ]]></command>
   <inputs>
       <param format="txt" name="input1" type="data" label="first file" help="first file" />
@@ -26,7 +31,8 @@
 
 **What it does**
 
-Just returns the Unix-style **diff** between two files !
+Just returns the Unix-style **diff** between two files,
+using options --side-by-side and --suppress-common-lines, to make easier difference search.
   </help>
 </tool>
 
