@@ -10,5 +10,5 @@ long_description: |
   3 parameters can be adjust to better plot heatmaps with a high number of rows
 owner: artbio
 name: high_dim_heatmap
-remote_repository_url: https://github.com/artbio/tools-artbio/tree/master/tools/high_dim_heatmap
+remote_repository_url: https://github.com/artbio/tools-artbio/tree/main/tools/high_dim_heatmap
 type: unrestricted
