@@ -1,6 +1,2 @@
-1c1
-< Je fais souvent ce reve etrange et penetrant
----
-> Il fait souvent ce reve etrange et penetrant
-5d4
-<  
+Je fais souvent ce reve etrange et penetrant		      |	Il fait souvent ce reve etrange et penetrant
+ 							      <

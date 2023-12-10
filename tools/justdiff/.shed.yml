@@ -4,9 +4,11 @@ name: justdiff
 description: Unix diff
 long_description: |
   Returns the output of the unix diff command between two files.
+  Uses the conda package diffutils.
+  Command options used are --side-by-side and --suppress-common-lines
 categories:
   - Text Manipulation
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/justdiff
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/justdiff
 toolshed:
   - https://toolshed.g2.bx.psu.edu/
