@@ -42,7 +42,7 @@
     <tests>
         <test>
             <param name="input" value="counts.tsv" ftype="tabular"/>
-            <output name="output" file="logcounts.tab" ftype="tabular"/>
+            <output name="output" file="logcounts.tsv" ftype="tabular"/>
         </test>
         <test>
             <param name="input" value="counts.tsv" ftype="tabular"/>
