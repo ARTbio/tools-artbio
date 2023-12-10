@@ -1,15 +1,15 @@
-# load packages that are provided in the conda env
 options(show.error.messages = FALSE,
   error = function() {
     cat(geterrmessage(), file = stderr())
     q("no", 1, FALSE)
-    }
+  }
 )
 loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
 warnings()
 
 library(optparse)
 library(scran)
+library(dynamicTreeCut)
 
 # Arguments
 option_list <- list(
@@ -18,12 +18,6 @@ option_list <- list(
     default = NA,
     type = "character",
     help = "Input file that contains count values to transform"
-  ),
-  make_option(
-    c("-s", "--sep"),
-    default = "\t",
-    type = "character",
-    help = "File separator [default : '%default' ]"
   ),
   make_option(
     "--cluster",
@@ -53,18 +47,15 @@ option_list <- list(
 )
 
 opt <- parse_args(OptionParser(option_list = option_list),
-                 args = commandArgs(trailingOnly = TRUE))
+                  args = commandArgs(trailingOnly = TRUE))
 
-if (opt$sep == "tab") {
-  opt$sep <- "\t"
-  }
 
 data <- read.table(
   opt$data,
   check.names = FALSE,
   header = TRUE,
   row.names = 1,
-  sep = opt$sep
+  sep = "\t"
 )
 
 ## Import data as a SingleCellExperiment object
@@ -81,7 +72,7 @@ if (opt$cluster) {
   sce <- computeSumFactors(sce)
 }
 
-sce <- normalize(sce)
+sce <- logNormCounts(sce)
 
 logcounts <- data.frame(genes = rownames(sce), round(logcounts(sce), digits = 5), check.names = FALSE)
 

@@ -1,8 +1,9 @@
-<tool id="scran_normalize" name="scran_normalize" version="0.2.1">
+<tool id="scran_normalize" name="scran_normalize" version="1.28.1+galaxy0">
     <description>Normalize raw counts expression values using deconvolution size factors</description>
     <requirements>
-        <requirement type="package" version="1.6.2">r-optparse</requirement>
-        <requirement type="package" version="1.12.1=r36he1b5a44_0">bioconductor-scran</requirement>
+        <requirement type="package" version="1.28.1">bioconductor-scran</requirement>
+        <requirement type="package" version="1.63_1">r-dynamictreecut</requirement>
+        <requirement type="package" version="1.7.3">r-optparse</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
@@ -10,7 +11,6 @@
     <command detect_errors="exit_code"><![CDATA[ 
         Rscript $__tool_directory__/scran-normalize.R 
             --data '$input'
-            --sep '$input_sep' 
             #if $metacell.cluster == "Yes":
                 --cluster
                 --method '$metacell.method'
@@ -19,11 +19,7 @@
             -o '${output}'
 ]]></command>
     <inputs>
-        <param name="input" type="data" format="txt,tabular" label="Raw counts of expression data" help = "Must have an header"/>
-        <param name="input_sep" type="select" label="Input column separator">
-            <option value="tab" selected="true">Tabulation</option>
-            <option value=",">Comma</option>
-        </param>
+        <param name="input" type="data" format="tabular" label="Raw counts of expression data" help = "A tsv file that must have an header line"/>
         <conditional name="metacell">
             <param name="cluster" type="select" label = "Do you want to cluster cells ?" help="Perform scaling method on metacell, see Details">
                 <option value="Yes">Yes</option>
@@ -45,18 +41,18 @@
     </outputs>
     <tests>
         <test>
-            <param name="input" value="counts.tab" ftype="tabular"/>
-            <output name="output" file="logcounts.tab" ftype="tabular"/>
+            <param name="input" value="counts.tsv" ftype="tabular"/>
+            <output name="output" file="logcounts.tsv" ftype="tabular"/>
         </test>
         <test>
-            <param name="input" value="counts.tab" ftype="tabular"/>
+            <param name="input" value="counts.tsv" ftype="tabular"/>
             <param name="cluster" value="Yes"/>
             <param name="method" value="igraph"/>
             <param name="size" value="25"/>
             <output name="output" file="logcounts_igraph.tsv" ftype="tabular"/>
         </test>
         <test>
-            <param name="input" value="counts.tab" ftype="tabular"/>
+            <param name="input" value="counts.tsv" ftype="tabular"/>
             <param name="cluster" value="Yes"/>
             <param name="method" value="hclust"/>
             <param name="size" value="25"/>
