@@ -5,7 +5,7 @@ long_description: |
 categories:
   - Nanopore
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/guppy
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/guppy
 toolshed:
   - testtoolshed
 #  - toolshed
