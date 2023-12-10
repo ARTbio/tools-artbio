@@ -6,7 +6,7 @@ options(show.error.messages = FALSE,
   error = function() {
     cat(geterrmessage(), file = stderr())
     q("no", 1, FALSE)
-    }
+  }
 )
 loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
 warnings()
@@ -81,7 +81,7 @@ option_list <- list(
 )
 
 opt <- parse_args(OptionParser(option_list = option_list),
-                 args = commandArgs(trailingOnly = TRUE))
+                  args = commandArgs(trailingOnly = TRUE))
 
 if (opt$sep == "tab") {
   opt$sep <- "\t"
@@ -195,7 +195,7 @@ score <- data.frame(score = score,
 
 pdf(file = opt$pdf)
 myplot <- ggplot(signature_output, aes(x = rate, y = score)) +
-  geom_violin(aes(fill = rate), alpha = .5, trim = FALSE, show.legend = FALSE, cex=0.5) +
+  geom_violin(aes(fill = rate), alpha = .5, trim = FALSE, show.legend = FALSE, cex = 0.5) +
   geom_abline(slope = 0, intercept = mean(score$score), lwd = 0.5, color = "red") +
   scale_fill_manual(values = c("#ff0000", "#08661e")) +
   geom_jitter(size = 0.2) + labs(y = "Score", x = "Rate") +
