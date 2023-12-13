@@ -4,7 +4,7 @@ name: justgzip
 description: Compress fastq sequence files
 long_description: |
   Returns the compressed gzip version of files using the multithreaded pigz program.
-  accepted input formats include:
+  Accepted input formats include:
   - fastq
   - fastqsanger
   - fasta
