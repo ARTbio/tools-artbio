@@ -1,22 +1,28 @@
-<tool id="justgzip" name="Gzip datasets" version="0.2" profile="21.01">
+<tool id="justgzip" name="Gzip datasets" version="2.8+galaxy0" profile="21.01">
   <description></description>
+
+  <requirements>
+    <requirement type="package" version="2.8">pigz</requirement>
+  </requirements>
+
   <stdio>
       <exit_code range="1:" level="fatal" description="Tool exception" />
   </stdio>
-  <command detect_errors="exit_code"><![CDATA[  
-gzip -c '${input1}' >  '$output'
-#if ($input1.ext.startswith("fastq")  and not $input1.ext.endswith(".gz")) or $input1.ext in ["fasta", "paf", "gff3", "nii1", "nii2", "gii", "tabular"]:
-    #set ext = $input1.ext + ".gz"
-#else
-    #set ext = "gz"
-#end if
-&& echo '{"output": {"ext": "$ext"}}' >> galaxy.json
+
+  <command detect_errors="exit_code"><![CDATA[
+      pigz --processes \${GALAXY_SLOTS:-4} -c '${input1}' > '$output'
+      #if ($input1.ext.startswith("fastq")  and not $input1.ext.endswith(".gz")) or $input1.ext in ["fasta", "paf", "gff3", "nii1", "nii2", "gii", "tabular"]:
+          #set ext = $input1.ext + ".gz"
+      #else
+          #set ext = "gz"
+      #end if
+      && echo '{"output": {"ext": "$ext"}}' >> galaxy.json
   ]]></command>
   <inputs>
-    <param format="data" name="input1" type="data" label="Input file" help="file to compress" />
+      <param format="data" name="input1" type="data" label="Input file" help="file to compress" />
   </inputs>
   <outputs>
-    <data name="output" format="auto" label="${input1.name}.gz" />
+      <data name="output" format="auto" label="${input1.name}.gz" />
   </outputs>
   <tests>
       <test>
@@ -27,16 +33,29 @@ gzip -c '${input1}' >  '$output'
           <param name="input1" value="file1" ftype="fastqsanger" />
           <output name="output" file="file1.gz" decompress="True" ftype="fastqsanger.gz" />
       </test>   
-
   </tests>
+
   <help>
 
 .. class:: infomark
 
 **What it does**
 
-Just **gzip** datasets.
-    
+Just **gzip** datasets, but does it faster with the multithreaded pigz program !
+
+  Accepted input formats include:
+  - fastq
+  - fastqsanger
+  - fasta
+  - paf
+  - gff3
+  - nii1
+  - nii2
+  - gii
+  - tabular
+  - txt
+  - ...
+
   </help>
 </tool>
 
