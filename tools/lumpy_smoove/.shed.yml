@@ -3,14 +3,13 @@ owner: artbio
 name: lumpy_smoove
 description: Galaxy wrapper of the lumpy-using smoove workflow
 long_description: |
-  smoove simplifies and speeds calling and genotyping SVs for short reads.
+  smoove simplifies and speeds up SV calling and genotyping with short sequencing reads.
   It also improves specificity by removing many spurious alignment signals
   that are indicative of low-level noise and often contribute to spurious calls.
   see smoove GitHub repo: https://github.com/brentp/smoove
 categories:
   - Variant Analysis
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/lumpy_smoove
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/lumpy_smoove
 toolshed:
-  - testtoolshed
   - toolshed
