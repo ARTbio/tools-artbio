@@ -3,10 +3,10 @@
 #     -i shed_tool_conf.xml
 #     -o shed_tool_conf.xml
 
-from xml.dom import minidom
 import xml.etree.ElementTree as ET
 from argparse import ArgumentParser
 from argparse import RawTextHelpFormatter
+from xml.dom import minidom
 
 
 def merge_xml_sections(input_file, output_file):
