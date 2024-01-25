@@ -15,7 +15,7 @@ def merge_xml_sections(input_file, output_file):
     tool_counter = 0
     tree = ET.parse(input_file)
     root = tree.getroot()
-    children = root.getchildren()
+    children = list(root)
     section_list = []
     for child in children:
         initial_section_number += 1
@@ -42,7 +42,7 @@ def merge_xml_sections(input_file, output_file):
                         tool = ET.SubElement(child, "tool",
                                              file=item.attrib['file'],
                                              guid=item.attrib['guid'])
-                    for subitem in item.getchildren():
+                    for subitem in list(item):
                         buffer = ET.SubElement(tool, subitem.tag)
                         buffer.text = subitem.text
     newtree = ET.ElementTree(toolbox)
