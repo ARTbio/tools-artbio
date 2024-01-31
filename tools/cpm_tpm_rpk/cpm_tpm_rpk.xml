@@ -1,10 +1,11 @@
-<tool id="cpm_tpm_rpk" name="Generate CPM, TPM, RPK" version="0.4.0">
+<tool id="cpm_tpm_rpk" name="Generate CPM, TPM, RPK" version="0.5.2">
     <description>from raw counts expression values</description>
     <requirements>
-        <requirement type="package" version="1.3.2=r3.3.2_0">r-optparse</requirement>
-        <requirement type="package" version="0.13=r3.3.2_0">r-rtsne</requirement>
-        <requirement type="package" version="2.2.1=r3.3.2_0">r-ggplot2</requirement>
-        <requirement type="package" version="0.4.1=r3.3.2_0">r-ggfortify</requirement>
+        <requirement type="package" version="1.7.1">r-optparse</requirement>
+        <requirement type="package" version="0.16">r-rtsne</requirement>
+        <requirement type="package" version="3.3.6">r-ggplot2</requirement>
+        <requirement type="package" version="0.4.14">r-ggfortify</requirement>
+        <requirement type="package" version="1.4.4">r-reshape2</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
@@ -138,7 +139,7 @@
     </outputs>
     <tests>
         <!-- test t-SNE -->
-        <test>
+        <test expect_num_outputs="3">
             <param name="input" value="none.tab" ftype="tabular"/>
             <param name="type_transfo" value="none"/>
             <param name="log" value="FALSE"/>
@@ -147,11 +148,11 @@
             <param name="perp" value="10"/>
             <param name="theta" value="1" />
             <param name="tsne_labels" value="yes" />
-            <output name="output" file="none.tab" ftype="tabular"/>
-            <output name="tsne_out" file="none_tsne.pdf" ftype="pdf"/>
-            <output name="pca_out" file="none_pca.pdf" ftype="pdf"/>
+            <output name="output" file="none.tab" ftype="tabular"  />
+            <output name="tsne_out" file="none_tsne.pdf" ftype="pdf" compare="sim_size" delta="1000" />
+            <output name="pca_out" file="none_pca.pdf" ftype="pdf" />
         </test>
-        <test>
+        <test expect_num_outputs="3">
             <param name="input" value="counts.tab" ftype="tabular"/>
             <param name="type_transfo" value="cpm"/>
             <param name="log" value="TRUE"/>
@@ -160,11 +161,11 @@
             <param name="perp" value="2"/>
             <param name="theta" value="1" />
             <param name="tsne_labels" value="yes" />
-            <output name="output" file="logcpm.tab" ftype="tabular"/>
-            <output name="tsne_out" file="tsne.pdf" ftype="pdf"/>
-            <output name="pca_out" file="pca.pdf" ftype="pdf"/>
+            <output name="output" file="logcpm.tab" ftype="tabular" />
+            <output name="tsne_out" file="tsne.pdf" ftype="pdf" compare="sim_size" delta="1000" />
+            <output name="pca_out" file="pca.pdf" ftype="pdf" />
         </test>
-        <test>
+        <test expect_num_outputs="3">
             <param name="input" value="counts.tab" ftype="tabular"/>
             <param name="type_transfo" value="tpm"/>
             <param name="gene_file" value="gene_length.tab" ftype="tabular"/>
@@ -174,51 +175,51 @@
             <param name="perp" value="2"/>
             <param name="theta" value="1" />
             <param name="tsne_labels" value="no" />
-            <output name="output" file="logtpm.tab" ftype="tabular"/>
-            <output name="tsne_out" file="tsne.nolab.pdf" ftype="pdf"/>
-            <output name="pca_out" file="pca.nolab.pdf" ftype="pdf"/>
+            <output name="output" file="logtpm.tab" ftype="tabular" />
+            <output name="tsne_out" file="tsne.nolab.pdf" ftype="pdf" compare="sim_size" delta="1000" />
+            <output name="pca_out" file="pca.nolab.pdf" ftype="pdf" />
         </test>
         <!-- test without t-SNE -->
-        <test>
+        <test expect_num_outputs="1">
             <param name="input" value="counts.tab" ftype="tabular"/>
             <param name="type_transfo" value="cpm"/>
             <output name="output" file="cpm.tab" ftype="tabular"/>
         </test>
-        <test>
+        <test expect_num_outputs="1">
             <param name="input" value="counts.tab" ftype="tabular"/>
             <param name="type_transfo" value="cpm"/>
             <param name="log" value="TRUE"/>
-            <output name="output" file="logcpm.tab" ftype="tabular"/>
+            <output name="output" file="logcpm.tab" ftype="tabular" />
         </test>
-        <test>
+        <test expect_num_outputs="1">
             <param name="input" value="counts.tab" ftype="tabular"/>
             <param name="type_transfo" value="tpm"/>
             <param name="gene_file" value="gene_length.tab" ftype="tabular"/>
             <param name="gene_header" value="TRUE"/>
             <output name="output" file="tpm.tab" ftype="tabular"/>
         </test>
-        <test>
+        <test expect_num_outputs="1">
             <param name="input" value="counts.tab" ftype="tabular"/>
             <param name="type_transfo" value="tpm"/>
             <param name="gene_file" value="gene_length.tab" ftype="tabular"/>
             <param name="gene_header" value="TRUE"/>
             <param name="log" value="TRUE"/>
-            <output name="output" file="logtpm.tab" ftype="tabular"/>
+            <output name="output" file="logtpm.tab" ftype="tabular" />
         </test>
-        <test>
+        <test expect_num_outputs="1">
             <param name="input" value="counts.tab" ftype="tabular"/>
             <param name="type_transfo" value="rpk"/>
             <param name="gene_file" value="gene_length.tab" ftype="tabular"/>
             <param name="gene_header" value="TRUE"/>
-            <output name="output" file="rpk.tab" ftype="tabular"/>
+            <output name="output" file="rpk.tab" ftype="tabular" />
         </test>
-        <test>
+        <test expect_num_outputs="1">
             <param name="input" value="counts.tab" ftype="tabular"/>
             <param name="type_transfo" value="rpk"/>
             <param name="gene_file" value="gene_length.tab" ftype="tabular"/>
             <param name="gene_header" value="TRUE"/>
             <param name="log" value="TRUE"/>
-            <output name="output" file="logrpk.tab" ftype="tabular"/>
+            <output name="output" file="logrpk.tab" ftype="tabular" />
         </test>
     </tests>
     <help>
@@ -240,4 +241,24 @@ Note: do not comment you header line if you have header line in you tabular inpu
 Computed values may be log-transformed (log2([CPM or RPK or TPM]+1))
 
     </help>
+    <citations>
+        <citation type="bibtex">@Article{,
+            title = {Visualizing High-Dimensional Data Using t-SNE},
+            volume = {9},
+            pages = {2579-2605},
+            year = {2008},
+            author = {L.J.P. {van der Maaten} and G.E. Hinton},
+            journal = {Journal of Machine Learning Research},
+            }
+        </citation>
+        <citation type="bibtex">@Manual{,
+            title = {{ClusterR}: Gaussian Mixture Models, K-Means, Mini-Batch-Kmeans,
+            K-Medoids and Affinity Propagation Clustering},
+            author = {Lampros Mouselimis},
+            year = {2019},
+            note = {R package version 1.1.9},
+            url = {https://github.com/mlampros/ClusterR},
+            }
+        </citation>
+    </citations>
 </tool>

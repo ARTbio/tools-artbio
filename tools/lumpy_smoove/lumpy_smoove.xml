@@ -1,10 +1,11 @@
-<tool id="lumpy_smoove" name="lumpy_smoove" version="0.2.5+galaxy8">
+<tool id="lumpy_smoove" name="lumpy_smoove" version="0.2.8+galaxy1">
     <description>find structural variants using the smoove workflow</description>
     <macros>
         <import>macro_lumpy_smoove.xml</import>
     </macros>
     <requirements>
-        <requirement type="package" version="0.2.5">smoove</requirement>
+        <requirement type="package" version="0.7.1">svtyper</requirement>
+        <requirement type="package" version="0.2.8">smoove</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
@@ -151,7 +152,7 @@
     </tests>
 
     <help>
-**smoove** simplifies and speeds calling and genotyping SVs for short reads. It also improves
+**smoove** simplifies and speeds up SV calling and genotyping for short reads. It also improves
 specificity by removing many spurious alignment signals that are indicative of low-level
 noise and often contribute to spurious calls.
 

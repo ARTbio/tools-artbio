@@ -1,0 +1,9 @@
+genome	cosmic_version	url
+BSgenome.Hsapiens.UCSC.hg38	v3.2	COSMIC_v3.2_SBS_GRCh38.txt
+BSgenome.Hsapiens.UCSC.hg38	v3.1	COSMIC_v3.1_SBS_GRCh38.txt
+BSgenome.Hsapiens.UCSC.hg38	v3	COSMIC_v3_SBS_GRCh38.txt
+BSgenome.Hsapiens.UCSC.hg38	v2	COSMIC_v2_SBS_GRCh38.txt
+BSgenome.Hsapiens.UCSC.hg19	v3.2	COSMIC_v3.2_SBS_GRCh37.txt
+BSgenome.Hsapiens.UCSC.hg19	v3.1	COSMIC_v3.1_SBS_GRCh37.txt
+BSgenome.Hsapiens.UCSC.hg19	v3	COSMIC_v3_SBS_GRCh37.txt
+BSgenome.Hsapiens.UCSC.hg19	v2	COSMIC_v2_SBS_GRCh37.txt

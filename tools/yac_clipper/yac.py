@@ -1,7 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # yac = yet another clipper
-# v 1.2.1 - 23-08-2014 - Support FastQ output
-# v 1.1.0 - 23-08-2014 - argparse implementation
 # Christophe Antoniewski <drosofff@gmail.com>
 
 import argparse

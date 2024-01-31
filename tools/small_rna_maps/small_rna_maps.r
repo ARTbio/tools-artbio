@@ -1,7 +1,8 @@
 ## Setup R error handling to go to stderr
-options(show.error.messages = F,
+options(show.error.messages = FALSE,
         error = function() {
-            cat(geterrmessage(), file = stderr()); q("no", 1, F)
+            cat(geterrmessage(), file = stderr())
+            q("no", 1, FALSE)
         }
 )
 options(warn = -1)
@@ -31,12 +32,12 @@ args <- parse_args(parser)
 # data frames implementation
 
 ## first table
-table <- read.delim(args$first_dataframe, header = T, row.names = NULL)
+table <- read.delim(args$first_dataframe, header = TRUE, row.names = NULL)
 colnames(table)[1] <- "Dataset"
 dropcol <- c("Strandness", "z.score") # not used by this Rscript and is dropped for backward compatibility
 table <- table[, !(names(table) %in% dropcol)]
-if (args$first_plot_method == "Counts" | args$first_plot_method == "Size") {
-  table <- within(table, Counts[Polarity == "R"] <- (Counts[Polarity == "R"] * - 1))
+if (args$first_plot_method == "Counts" || args$first_plot_method == "Size") {
+  table <- within(table, Counts[Polarity == "R"] <- (Counts[Polarity == "R"] * - 1)) # nolint
 }
 n_samples <- length(unique(table$Dataset))
 samples <- unique(table$Dataset)
@@ -45,7 +46,7 @@ if (args$normalization != "") {
 } else {
   norm_factors <- rep(1, n_samples)
 }
-if (args$first_plot_method == "Counts" | args$first_plot_method == "Size" | args$first_plot_method == "Coverage") {
+if (args$first_plot_method == "Counts" || args$first_plot_method == "Size" || args$first_plot_method == "Coverage") {
   i <- 1
   for (sample in samples) {
     # Warning Here the column is hard coded as the last column (dangerous)
@@ -61,14 +62,14 @@ n_genes <- length(per_gene_readmap)
 
 # second table
 if (args$extra_plot_method != "") {
-  extra_table <- read.delim(args$extra_dataframe, header = T, row.names = NULL)
+  extra_table <- read.delim(args$extra_dataframe, header = TRUE, row.names = NULL)
   colnames(extra_table)[1] <- "Dataset"
   dropcol <- c("Strandness", "z.score")
   table <- table[, !(names(table) %in% dropcol)]
-  if (args$extra_plot_method == "Counts" | args$extra_plot_method == "Size") {
-    extra_table <- within(extra_table, Counts[Polarity == "R"] <- (Counts[Polarity == "R"] * -1))
+  if (args$extra_plot_method == "Counts" || args$extra_plot_method == "Size") {
+    extra_table <- within(extra_table, Counts[Polarity == "R"] <- (Counts[Polarity == "R"] * -1)) # nolint
   }
-  if (args$extra_plot_method == "Counts" | args$extra_plot_method == "Size" | args$extra_plot_method == "Coverage") {
+  if (args$extra_plot_method == "Counts" || args$extra_plot_method == "Size" || args$extra_plot_method == "Coverage") {
     i <- 1
     for (sample in samples) {
       extra_table[, length(extra_table)][extra_table$Dataset == sample] <- extra_table[, length(extra_table)][extra_table$Dataset == sample] * norm_factors[i]
@@ -85,11 +86,11 @@ globalbc <- function(df, global = "", ...) {
                    data = df, origin = 0,
                    horizontal = FALSE,
                    col = c("darkblue"),
-                   scales = list(y = list(tick.number = 4, rot = 90, relation = "same", cex = 0.5, alternating = T), x = list(rot = 0, cex = 0.6, tck = 0.5, alternating = c(3, 3))),
+                   scales = list(y = list(tick.number = 4, rot = 90, relation = "same", cex = 0.5, alternating = TRUE), x = list(rot = 0, cex = 0.6, tck = 0.5, alternating = c(3, 3))),
                    xlab = list(label = bottom_first_method[[args$first_plot_method]], cex = .85),
                    ylab = list(label = legend_first_method[[args$first_plot_method]], cex = .85),
                    main = title_first_method[[args$first_plot_method]],
-                   layout = c(2, 6), newpage = T,
+                   layout = c(2, 6), newpage = TRUE,
                    as.table = TRUE,
                    aspect = 0.5,
                    strip = strip.custom(par.strip.text = list(cex = 1), which.given = 1, bg = "lightblue"),
@@ -102,11 +103,11 @@ globalbc <- function(df, global = "", ...) {
                    group = Polarity,
                    stack = TRUE,
                    col = c("red", "blue"),
-                   scales = list(y = list(tick.number = 4, rot = 90, relation = "same", cex = 0.5, alternating = T), x = list(rot = 0, cex = 0.6, tck = 0.5, alternating = c(3, 3))),
+                   scales = list(y = list(tick.number = 4, rot = 90, relation = "same", cex = 0.5, alternating = TRUE), x = list(rot = 0, cex = 0.6, tck = 0.5, alternating = c(3, 3))),
                    xlab = list(label = bottom_first_method[[args$first_plot_method]], cex = .85),
                    ylab = list(label = legend_first_method[[args$first_plot_method]], cex = .85),
                    main = title_first_method[[args$first_plot_method]],
-                   layout = c(2, 6), newpage = T,
+                   layout = c(2, 6), newpage = TRUE,
                    as.table = TRUE,
                    aspect = 0.5,
                    strip = strip.custom(par.strip.text = list(cex = 1), which.given = 1, bg = "lightblue"),
@@ -134,7 +135,7 @@ plot_unit <- function(df, method = args$first_plot_method, ...) {
                lwd = 1.5,
                scales = list(relation = "free", x = list(rot = 0, cex = 0.7, axs = "i", tck = 0.5), y = list(tick.number = 4, rot = 90, cex = 0.7)),
                xlab = NULL, main = NULL, ylab = NULL, ylim = ylimits,
-               as.table = T,
+               as.table = TRUE,
                origin = 0,
                horizontal = FALSE,
                group = Polarity,
@@ -150,7 +151,7 @@ plot_unit <- function(df, method = args$first_plot_method, ...) {
                cex = 0.35,
                scales = list(relation = "free", x = list(rot = 0, cex = 0.7, axs = "i", tck = 0.5), y = list(tick.number = 4, rot = 90, cex = 0.7)),
                xlab = NULL, main = NULL, ylab = NULL, ylim = ylimits,
-               as.table = T,
+               as.table = TRUE,
                origin = 0,
                horizontal = FALSE,
                group = Polarity,
@@ -252,17 +253,17 @@ single_plot <- function(...) {
 if (args$extra_plot_method != "") {
   double_plot()
 }
-if (args$extra_plot_method == "" & !exists("global", where = args)) {
+if (args$extra_plot_method == "" && !exists("global", where = args)) {
   single_plot()
 }
 if (exists("global", where = args)) {
   pdf(file = args$output, paper = "special", height = 11.69)
-  table <- within(table, Counts[Polarity == "R"] <- abs(Counts[Polarity == "R"]))
+  table <- within(table, Counts[Polarity == "R"] <- abs(Counts[Polarity == "R"])) # nolint
   library(reshape2)
   ml <- melt(table, id.vars = c("Dataset", "Chromosome", "Polarity", "Size"))
   if (args$global == "nomerge") {
     castml <- dcast(ml, Dataset + Polarity + Size ~ variable, function(x) sum(x))
-    castml <- within(castml, Counts[Polarity == "R"] <- (Counts[Polarity == "R"] * -1))
+    castml <- within(castml, Counts[Polarity == "R"] <- (Counts[Polarity == "R"] * -1)) # nolint
     bc <- globalbc(castml, global = "no")
   } else {
     castml <- dcast(ml, Dataset + Size ~ variable, function(x) sum(x))

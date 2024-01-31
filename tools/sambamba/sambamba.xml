@@ -1,4 +1,4 @@
-<tool id="sambamba_sample_or_filter" name="Sample or Filter BAM" version="0.6">
+<tool id="sambamba_sample_or_filter" name="Sample, Slice or Filter BAM" version="0.7.1+galaxy1">
     <description>
         on flags, fields, and tags using Sambamba
     </description>
@@ -12,30 +12,43 @@
     <command detect_errors="exit_code"><![CDATA[
         ln -s $input input.bam &&
         ln -s $input.metadata.bam_index input.bai &&
+
         #if $sambamba_options.selector == 'filter'
             sambamba view -h -t \${GALAXY_SLOTS:-4}
             #if $sambamba_options.query != '':
                 --filter='$sambamba_options.query'
             #end if
-                -f '$format' -o $outfile input.bam $sambamba_options.region
-         #else
-             sambamba view -h -t \${GALAXY_SLOTS:-4} -f '$format'
-             --subsampling-seed='$sambamba_options.seed'
-             -s '$sambamba_options.fraction' -o '$outfile' input.bam
-         #end if
+                -f '$sambamba_options.format'
+                -o $outfile input.bam $sambamba_options.region
+
+        #else if $sambamba_options.selector == 'sample'
+            sambamba view -h -t \${GALAXY_SLOTS:-4} -f '$sambamba_options.format'
+                 --subsampling-seed='$sambamba_options.seed'
+                 -s '$sambamba_options.fraction'
+                 -o '$outfile' input.bam
+        #end if
+
+        #if $sambamba_options.selector == 'slice'
+            #if $sambamba_options.slice.slice_format == 'text'
+                sambamba slice -o '$outfile' input.bam $sambamba_options.slice.region
+            #else
+                sambamba slice --regions $sambamba_options.slice.bed_file -o '$outfile' input.bam
+            #end if
+        #end if
     ]]></command>
     <inputs>
-        <param name="input" type="data" format="bam" label="BAM or SAM file to filter"/>
-        <param name="format" type="select" label="format of the tool output">
-            <option value="bam">BAM</option>
-            <option value="sam">SAM</option>
-        </param>
+        <param name="input" type="data" format="bam" label="BAM or SAM input file(s)"/>
         <conditional name="sambamba_options">
-            <param name="selector" type="select" label="Filter or Down-sample alignments">
+            <param name="selector" type="select" label="Filter, Down-sample or slice alignments">
                 <option value="sample">Down-sample bam or sam alignments</option>
                 <option value="filter" selected="true">Filter bam or sam alignements</option>
+                <option value="slice">Slice bam or sam alignements by chromosome or chromosome region</option>
             </param>
             <when value="filter">
+                <param name="format" type="select" label="format of the tool output">
+                    <option value="bam">BAM</option>
+                    <option value="sam">SAM</option>
+                </param>
                 <param name="query" type="text" size="80">
                     <sanitizer invalid_char="X">
                         <valid initial="string.ascii_letters,string.digits, string.punctuation">
@@ -54,7 +67,36 @@
                     </help>
                 </param>
             </when>
+
+            <when value="slice">
+                <conditional name="slice">
+                    <param name="slice_format" type="select" label="specify in text field or a bed file">
+                        <option value="text">Specify in the region field</option>
+                        <option value="bed" selected="true">BED file</option>
+                    </param>
+                    <when value="bed">
+                        <param name="bed_file" type="data" format="bed" label="BED file"
+                               help="The coordinates are 0-based. NOTE that sambamba slice only outputs BAM-format datasets."/>
+                    </when>
+                    <when value="text">
+                        <param name="region" type="text" size="40" label="Region(s) in space-separated format chr:start-end">
+                            <help>
+                            Regions can be specified as 'chr2' (the whole chr2), 'chr2:1000000'
+                            (region starting from 1,000,000bp) or 'chr2:1,000,000-2,000,000'
+                            (region between 1,000,000 and 2,000,000bp including the end points).
+                            The coordinates are 1-based. NOTE that sambamba slice only outputs
+                            BAM-format datasets.
+                            </help>
+                        </param>
+                    </when>
+                </conditional>
+            </when>
+
             <when value="sample">
+                <param name="format" type="select" label="format of the tool output">
+                    <option value="bam">BAM</option>
+                    <option value="sam">SAM</option>
+                </param>
                 <param name="seed" type="integer" value="123" size="10">
                     <label>Seed value for randomisation</label>
                     <help>
@@ -72,9 +114,9 @@
         </conditional>
     </inputs>
     <outputs>
-        <data name="outfile" format="bam">
+        <data name="outfile" format="bam" label="Filter, slice or sample on ${on_string}">
             <change_format>
-                <when input="format" value="sam" format="sam" />
+                <when input="sambamba_options['format']" value="sam" format="sam" />
             </change_format>
         </data>
     </outputs>
@@ -85,7 +127,7 @@
             <param name="query" value="[H0] == 1 and read_name =~ /^EAS51_62/" />
             <param name="format" value="bam" />
             <param name="region" value="" />
-            <output name="outfile" file="ex1_header_filtered.bam" ftype="bam" />
+            <output name="outfile" file="ex1_header_filtered.bam" ftype="bam" lines_diff="2"/>
         </test>
         <test>
             <param name="input" value="c1215_fixmate.bam" ftype="bam" />
@@ -103,13 +145,29 @@
             <param name="region" value="AL096846:1000-5000" />
             <output name="outfile" file="c1215_fixmate_region-filtered.sam" ftype="sam" lines_diff="2"/>
         </test>
+        <test>
+            <param name="input" value="c1215_fixmate.bam" ftype="bam" />
+            <param name="selector" value="slice" />
+            <param name="slice_format" value="text" />
+            <param name="query" value='' />
+            <param name="region" value="AL096846:1000-2000 AL096846:4000-5000" />
+            <output name="outfile" file="c1215_fixmate_region-sliced.bam" ftype="bam"/>
+        </test>
+        <test>
+            <param name="input" value="c1215_fixmate.bam" ftype="bam" />
+            <param name="selector" value="slice" />
+            <param name="slice_format" value="bed" />
+            <param name="query" value='' />
+            <param name="bed_file" value="regions.bed" />
+            <output name="outfile" file="c1215_fixmate_region-sliced.bam" ftype="bam"/>
+        </test>
          <test>
             <param name="input" value="ex1_header.sam" ftype="sam" />
             <param name="selector" value="sample" />
             <param name="seed" value="123" />
             <param name="fraction" value="0.1" />
             <param name="format" value="bam" />
-            <output name="outfile" file="ex1_header_sampled.bam" ftype="bam" />
+            <output name="outfile" file="ex1_header_sampled.bam" ftype="bam" lines_diff="2"/>
         </test>
         <test>
             <param name="input" value="c1215_fixmate.bam" ftype="bam" />

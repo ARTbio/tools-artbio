@@ -1,10 +1,11 @@
 <macros>
-    <token name="@VERSION@">2.0.0</token>
+    <token name="@VERSION@">3+galaxy0</token>
     <macro name="requirements">
     <requirements>
-        <requirement type="package" version="366">ucsc-bigwiginfo</requirement>
-        <requirement type="package" version="366">ucsc-bigwigsummary</requirement>
-        <requirement type="package" version="1.06">bc</requirement>
+        <requirement type="package" version="377">ucsc-bigwiginfo</requirement>
+        <requirement type="package" version="377">ucsc-bigwigsummary</requirement>
+        <requirement type="package" version="1.07.1">bc</requirement>
+        <requirement type="package" version="5.32.1">perl</requirement>
     </requirements>
     </macro>
 
@@ -33,15 +34,10 @@ The larger the bin size you choose, the lower resolution and the faster the conv
 
 **Credits**
 
-This tool is based on the script written by Jens Vilstrup Johansen and is an update of a Galaxy tool previously developed by nikos_.
-
-It uses bigWigInfo_ and bigWigSummary_.
-
-For support and bug reports contact Cedric Mendoza or Christophe Antoniewski or go to https://github.com/ARTbio/tools-artbio
+This tool is based on the script written by Jens Vilstrup Johansen and is an update
+of a Galaxy tool previously developed by nikos_.
 
 .. _nikos: https://toolshed.g2.bx.psu.edu/view/nikos/bigwig_to_wig/974af3268394
-.. _bigWigInfo: https://github.com/adamlabadorf/ucsc_tools/blob/master/executables/bigWigInfo
-.. _bigWigSummary: https://github.com/adamlabadorf/ucsc_tools/blob/master/executables/bigWigSummary
 
     </token>
 </macros>

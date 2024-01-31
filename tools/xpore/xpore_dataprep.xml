@@ -1,0 +1,84 @@
+<tool id="xpore_dataprep" name="xpore-dataprep" version="2.1+galaxy0">
+  <description></description>
+  <requirements>
+        <requirement type="package" version="2.1">xpore</requirement>
+  </requirements>
+  <stdio>
+      <exit_code range="1:" level="fatal" description="Tool exception" />
+  </stdio>
+  <command detect_errors="exit_code"><![CDATA[
+        xpore dataprep
+            --eventalign '$eventalign_reads'
+            --out_dir out
+            --n_processes \${GALAXY_SLOTS:-4} &&
+            mv ./out/data.index $data_index &&
+            mv ./out/data.log $data_log &&
+            mv ./out/eventalign.index $eventalign_index &&
+            mv ./out/data.readcount $data_readcount &&
+            mv ./out/data.json $data_json
+            
+            
+  ]]></command>
+ <inputs>
+    <param name="eventalign_reads" type="data" format="txt,tabular" label="aligned nanopore events"
+           help="a nanopolish eventalign output that aligns the nanopore events to a reference" />
+ </inputs>
+
+ <outputs>
+    <data format="txt" name="data_index" label="data.index" />
+    <data format="txt" name="data_log" label="data.log" />
+    <data format="txt" name="data_readcount" label="data.readcount" />
+    <data format="txt" name="eventalign_index" label="eventalign.index" />
+    <data format="json" name="data_json" label="data.json" />
+</outputs>
+
+<tests>
+    <test>
+        <param name="eventalign_reads" value="dataprep_eventaligh_reads.tsv" ftype="tabular" />
+        <output file="data.index" name="data_index" />
+        <output file="eventalign.index" name="eventalign_index" />
+        <output file="data.log" name="data_log" />
+        <output file="data.readcount" name="data_readcount" />
+        <output file="data.json" name="data_json" />
+    </test>
+</tests>
+<help>
+
+**What it does**
+
+Prepare data for differential analysis by xpore-diffmod analysis of differential RNA
+modification across all tested positions.
+
+.. class:: warningmark
+
+In its current version, only preparation of data for analysis by xpore-diffmod based on a
+**transcripts** collection reference is implemented.
+
+**Inputs**
+
+This tools requires the following input::
+
+- the "aligned nanopore events" file returned from nanopolish eventalign (also named squiggles)
+
+**Outputs**
+
+3 datasets that will be required by xpore-diffmod::
+
+- data.index
+- data.json
+- data.readcount
+
+plus 2 datasets not required by xpore-diffmod::
+
+- data.log
+- eventalign.index
+
+for details on xpore-data prep, see https://xpore.readthedocs.io/en/latest/index.html
+and https://github.com/GoekeLab/xpore
+
+</help>
+
+<citations>
+    <citation type="doi">10.1101/2020.06.18.160010</citation>
+</citations>
+</tool>

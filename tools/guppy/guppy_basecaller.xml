@@ -1,4 +1,4 @@
-<tool id="guppy-basecaller" name="Guppy basecaller wrapper" version="0.2.1" python_template_version="3.5">
+<tool id="guppy-basecaller" name="Guppy basecaller wrapper" version="0.2.2" python_template_version="3.8">
     <description>A simple wrapper for guppy basecaller that depends on configuration files</description>
     <requirements>
     </requirements>
@@ -32,7 +32,7 @@
         and a configuration in the form of a tar file.
 
         You can find configurations at https://github.com/nanoporetech/rerio,
-        and in particular the directory https://github.com/nanoporetech/rerio/basecall_models.
+        and in particular the directory `nanoporetech/rerio/basecall_models`.
 
         Each file there contains a URL you can download to use, for example
         https://github.com/nanoporetech/rerio/blob/master/basecall_models/res_rna2_r941_min_flipflop_v001

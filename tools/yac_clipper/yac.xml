@@ -1,4 +1,4 @@
-<tool id="yac" name="Clip adapter" version="2.4.0">
+<tool id="yac" name="Clip adapter" version="2.5.1">
     <description />
     <requirements>
         <requirement type="package" version="3.7.6">python</requirement>
@@ -149,12 +149,14 @@
 
 -------
 
+yac_clipper clips 7nt long motives in 5' of adapter sequences. *It is accepting 1 mismatch in the searched 7nt motif.*
+
 **Inputs**
 
 1. A fastq or fasta file of reads to be clipped
 2. Select the size of the reads to be kept
 3. Select an output format. When input is a fastq file, this may be fastq or fasta, whereas
-when input is a fasta file, this only may be a fasta.
+   when input is a fasta file, this only may be a fasta.
 4. Select whether you wish or do not wish to keep clipped sequences with unknown nucleotides (N)
 5. Select a pre-built adapter sequence or enter your own sequence (at least 7 nucleotides long)
 

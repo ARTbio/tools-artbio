@@ -82,7 +82,7 @@ class Map:
         ''' this method does not filter on read size, just forward reads
         that overlap reverse reads in the overlap range'''
         all_query_positions = defaultdict(list)
-        for genomicKey in self.map_dict.keys():
+        for genomicKey in list(self.map_dict):
             chrom, coord, pol = genomicKey
             for i in self.scope:
                 if pol == 'F' and len(self.map_dict[chrom,

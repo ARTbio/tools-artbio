@@ -10,6 +10,6 @@ categories:
   - Transcriptomics
   - Visualization
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/gsc_high_dimension_visualization
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/gsc_high_dimension_visualization
 toolshed:
   - toolshed

@@ -1,4 +1,4 @@
-<tool id="snvtocnv" name="Infer CNVs from SNVs" version="0.7.0">
+<tool id="snvtocnv" name="Infer CNVs from SNVs" version="3.0.0+galaxy1">
     <description>
     </description>
     <macros>
@@ -26,28 +26,44 @@
     Rscript $__tool_directory__/sequenza_to_hrdtools_input.R
             -i test/sample_segments.txt
             -s test/sample_alternative_solutions.txt
-            -o '$cnvs'
+            -o '$cnvs' &&
+    ls test
     ]]></command>
     <inputs>
         <param name="refwig" type="data" format="txt" label="GC wigle of reference genome"/>
         <param name="input_snvs" type="data" format="vcf" label="SNVs to process in a vcf file"/>
     </inputs>
     <outputs>
-        <data name="wiggle" format="txt" label="binned wiggle" />
-        <data name="sample_segment" format="txt" label="sample segments" from_work_dir="test/sample_segments.txt" />
-        <data name="alt_solutions" format="txt" label="alternate solutions" from_work_dir="test/sample_alternative_solutions.txt" />
+        <data name="wiggle" format="wig" label="binned wiggle" />
+        <data name="sample_segment" format="tabular" label="sample segments" from_work_dir="test/sample_segments.txt" />
+        <data name="alt_solutions" format="tabular" label="alternate solutions" from_work_dir="test/sample_alternative_solutions.txt" />
         <data name="cnvs" format="tabular" label="Annotated CNVs" />
+        <data name="chrom_depths" format="pdf" label="Chromosomes sequencing depth" from_work_dir="test/sample_chromosome_depths.pdf"/>
+        <data name="chrom_view" format="pdf" label="Chromosomes views" from_work_dir="test/sample_chromosome_view.pdf"/>
+        <data name="genome_view" format="pdf" label="Genome view" from_work_dir="test/sample_genome_view.pdf"/>        
+        <data name="model_fit" format="pdf" label="Cellularity and Diploidy model" from_work_dir="test/sample_model_fit.pdf"/>        
+        <data name="CN_histo" format="pdf" label="Copy Numbers histogram" from_work_dir="test/sample_CN_bars.pdf"/>        
     </outputs>
     <tests>
         <test>
             <param name="input_snvs" value="hg19_chr22.vcf" ftype="vcf" />
             <param name="refwig" value="hg19.GCref.txt" />
             <output name="cnvs" file="hg19.cnv.tab" ftype="tabular" />
+            <output name="chrom_depths" ftype="pdf" file="hg19_chrom_depths.pdf"/>
+            <output name="chrom_view" ftype="pdf" file="hg19_chrom_view.pdf"/>
+            <output name="genome_view" ftype="pdf" file="hg19_genome_view.pdf"/>        
+            <output name="model_fit" ftype="pdf" file="hg19_model.pdf"/>        
+            <output name="CN_histo" ftype="pdf" file="hg19_CN_histo.pdf"/>        
         </test>
         <test>
             <param name="input_snvs" value="hg38_chr22.vcf" ftype="vcf" />
             <param name="refwig" value="hg38.GCref.txt" />
             <output name="cnvs" file="hg38.cnv.tab" ftype="tabular" />
+            <output name="chrom_depths" ftype="pdf" file="hg38_chrom_depths.pdf"/>
+            <output name="chrom_view" ftype="pdf" file="hg38_chrom_view.pdf"/>
+            <output name="genome_view" ftype="pdf" file="hg38_genome_view.pdf"/>        
+            <output name="model_fit" ftype="pdf" file="hg38_model.pdf"/>        
+            <output name="CN_histo" ftype="pdf" file="hg38_CN_histo.pdf"/>        
         </test>
     </tests>
     <help>

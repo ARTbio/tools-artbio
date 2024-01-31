@@ -1,0 +1,135 @@
+<tool id="xpore_diffmod" name="xpore-diffmod" version="2.1+galaxy0">
+  <description></description>
+  <requirements>
+        <requirement type="package" version="2.1">xpore</requirement>
+  </requirements>
+  <stdio>
+      <exit_code range="1:" level="fatal" description="Tool exception" />
+  </stdio>
+  <command detect_errors="exit_code"><![CDATA[
+    printf "notes: Pairwise comparison without replicates with default parameter setting.\n\n" >> config.yml &&
+    printf "data:\n" >> config.yml &&
+    printf "    ${control_name}:\n" >> config.yml &&
+    #for $i, $s in enumerate($ControlReplicates):
+        printf "        rep${i}: ./${control_name}_${i}\n" >> config.yml &&
+        mkdir ${control_name}_${i} &&
+        ln -s ${s.ControlJson} ${control_name}_${i}/data.json &&
+        ln -s ${s.ControlIndex} ${control_name}_${i}/data.index &&
+        ln -s ${s.ControlReadcount} ${control_name}_${i}/data.readcount &&
+    #end for
+    printf "    ${test_name}:\n" >> config.yml &&    
+    #for $i, $s in enumerate($TestReplicates):
+        printf "        rep${i}: ./${test_name}_${i}\n" >> config.yml &&
+        mkdir ${test_name}_${i} &&
+        ln -s ${s.TestJson} ${test_name}_${i}/data.json &&
+        ln -s ${s.TestIndex} ${test_name}_${i}/data.index &&
+        ln -s ${s.TestReadcount} ${test_name}_${i}/data.readcount &&
+    #end for
+    printf "\nout: ./out\n" >> config.yml &&
+    printf "\nmethod:\n" >> config.yml &&
+    printf "    prefiltering:\n" >> config.yml &&
+    printf "        method: t-test\n" >> config.yml &&
+    printf "        threshold: 0.1\n" >> config.yml &&
+    xpore diffmod --config config.yml  --n_processes \${GALAXY_SLOTS:-4} &&
+    sed -i "s/,/\t/g" ./out/diffmod.table &&
+    mv ./out/diffmod.table $diffmod_table &&
+    mv ./out/diffmod.log $diffmod_log &&
+    mv ./config.yml $config
+
+  ]]></command>
+ <inputs>
+    <param name="control_name" type="text" label="Control condition name"
+           help="Only letters, digits and _ will be retained in this field">
+        <sanitizer>
+            <valid initial="string.letters,string.digits"><add value="_" /></valid>
+        </sanitizer>
+    </param>
+    <repeat name="ControlReplicates" title="Control replicates" min="1">
+        <param name="ControlJson" label="json from xpore-dataprep" type="data" format="json" />
+        <param name="ControlIndex" label="index from xpore-dataprep" type="data" format="txt" />
+        <param name="ControlReadcount" label="Readcount from xpore-dataprep" type="data" format="txt" />
+    </repeat>
+
+    <param name="test_name" type="text" label="Test condition name"
+           help="Only letters, digits and _ will be retained in this field">
+            <sanitizer>
+                <valid initial="string.letters,string.digits"><add value="_" /></valid>
+            </sanitizer>
+    </param>
+    <repeat name="TestReplicates" title="Test replicates" min="1">
+        <param name="TestJson" label="json from xpore-dataprep" type="data" format="json" />
+        <param name="TestIndex" label="index from xpore-dataprep" type="data" format="txt" />
+        <param name="TestReadcount" label="Readcount from xpore-dataprep" type="data" format="txt" />
+    </repeat>
+
+ </inputs>
+
+ <outputs>
+    <data format="tabular" name="diffmod_table" label="diffmod table" />
+    <data format="txt" name="diffmod_log" label="diffmod log" />
+    <data format="txt" name="config" label="configuration.yml" />
+</outputs>
+<tests>
+    <test> 
+        <param name="control_name" value="control" />
+        <repeat name="ControlReplicates">
+            <param name="ControlJson" value="inputs_xpore-diffmod/C1_data.json" ftype="json" />
+            <param name="ControlIndex" value="inputs_xpore-diffmod/C1_data.index" ftype="txt" />
+            <param name="ControlReadcount" value="inputs_xpore-diffmod/C1_data.readcount" />
+        </repeat>
+        <repeat name="ControlReplicates">
+            <param name="ControlJson" value="inputs_xpore-diffmod/C2_data.json" ftype="json" />
+            <param name="ControlIndex" value="inputs_xpore-diffmod/C2_data.index" ftype="txt" />
+            <param name="ControlReadcount" value="inputs_xpore-diffmod/C2_data.readcount" ftype="txt" />
+        </repeat>
+        <param name="test_name" value="test" />
+        <repeat name="TestReplicates">
+            <param name="TestJson" value="inputs_xpore-diffmod/T1_data.json" ftype="json"/>
+            <param name="TestIndex" value="inputs_xpore-diffmod/T1_data.index" ftype="txt" />
+            <param name="TestReadcount" value="inputs_xpore-diffmod/T1_data.readcount" ftype="txt" />
+        </repeat>
+        <repeat name="TestReplicates">
+            <param name="TestJson" value="inputs_xpore-diffmod/T2_data.json" ftype="json"/>
+            <param name="TestIndex" value="inputs_xpore-diffmod/T2_data.index" ftype="txt" />
+            <param name="TestReadcount" value="inputs_xpore-diffmod/T2_data.readcount" ftype="txt" />
+        </repeat>
+        <output file="diffmod.table" name="diffmod_table" ftype="tabular" compare="sim_size" delta="400" />
+        <output file="diffmod.log" name="diffmod_log" ftype="txt" />
+    </test>
+</tests>
+<help>
+
+**What it does**
+
+This tool is a basic wrapper of xpore-diffmod for analysis of differential RNA modification
+across all tested positions.
+
+.. class:: warningmark
+
+In its current version, only the analysis based on a transcripts collection reference is
+implemented.
+
+**Inputs**
+
+You need 3 input datasets generated by the tool xpore-dataprep::
+
+- data.index
+- data.json
+- data.readcount
+
+
+**Output**
+
+- a diffmod_table of the differential RNA modifications across all tested positions of transcripts
+- a diffmod.log of the analysis
+
+for details on xpore-diffmod, see https://xpore.readthedocs.io/en/latest/index.html
+and https://github.com/GoekeLab/xpore
+
+
+</help>
+
+<citations>
+    <citation type="doi">10.1101/2020.06.18.160010</citation>
+</citations>
+</tool>

@@ -54,22 +54,22 @@ echo "track type=wiggle_0 name=$mylab description=\"fixedStep format\""
 
 #for each chromsome
 while read line; do
- 
-  cur_chr=$(echo $line | cut --delimiter=" " -f1)
-  cur_length=$(echo $line | cut --delimiter=" " -f2)
-  
+
+  cur_chr=$(echo $line | cut -d " " -f1)
+  cur_length=$(echo $line | cut -d " " -f2)
+
   n_bins=$(echo "scale=0; (${cur_length}-${step_size})/${bin_size}" | bc)
- 
+
   start=1
   stop=$(echo "$n_bins * $bin_size" | bc)
 
   #write header line for each chromosome
   echo "fixedStep chrom=$cur_chr start=$start step=$step_size span=$step_size"
-  
+
   #get densities along chr in n_bins with chosen bin_size and step_size (giving overlap in bins)
   nice bigWigSummary $bigwig_file $cur_chr $start $stop $n_bins | perl -pe 's/\t/\n/g' | perl -pe "s/n\/a/0/" 
   #gives warning if no data in/for current chromosome
-  
+
 done < $org_assembly_file
 
 #rm tmp

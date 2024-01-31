@@ -8,7 +8,7 @@ categories:
   - SAM
   - Variant Analysis
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/artbio_bam_cleaning
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/artbio_bam_cleaning
 toolshed:
   - testtoolshed
   - toolshed

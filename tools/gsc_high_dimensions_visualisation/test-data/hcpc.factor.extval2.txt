@@ -1,0 +1,20 @@
+Relationship between input factor and its levels and the HCPC clusters 
+---------------------------------------- 
+purity                         : 0.5171 
+entropy                        : 0.3857 
+normalized mutual information  : 0.282 
+variation of information       : 2.4991 
+normalized var. of information : 0.8359 
+---------------------------------------- 
+specificity                    : 0.6496 
+sensitivity                    : 0.6102 
+precision                      : 0.3547 
+recall                         : 0.6102 
+F-measure                      : 0.4487 
+---------------------------------------- 
+accuracy OR rand-index         : 0.6401 
+adjusted-rand-index            : 0.2084 
+jaccard-index                  : 0.2892 
+fowlkes-mallows-index          : 0.4653 
+mirkin-metric                  : 88712 
+---------------------------------------- 

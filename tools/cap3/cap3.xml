@@ -1,7 +1,7 @@
-<tool id="cap3" name="cap3" version="2.0.0">
+<tool id="cap3" name="cap3" version="2.0.1">
 <description>Sequence Assembly tool</description>
     <requirements>
-    	<requirement type="package" version="10.2011">cap3</requirement>
+        <requirement type="package" version="10.2011=1">cap3</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />

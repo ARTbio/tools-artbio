@@ -1,19 +1,20 @@
-<tool id="signature" name="Small RNA Signatures" version="3.2.1">
+<tool id="signature" name="Small RNA Signatures" version="3.5.0">
     <description />
     <requirements>
-        <requirement type="package" version="1.11.2=py27_0">numpy</requirement>
-        <requirement type="package" version="0.11.2.1=py27_0">pysam</requirement>
-        <requirement type="package" version="1.6.1=r351h6115d3f_0">r-optparse</requirement>
-        <requirement type="package" version="0.6_28=r351h6115d3f_0">r-latticeextra</requirement>
-        <requirement type="package" version="2.3=r351h6115d3f_0">r-gridextra</requirement>
+        <requirement type="package" version="1.23.4">numpy</requirement>
+        <requirement type="package" version="0.18.0">pysam</requirement>
+        <requirement type="package" version="1.7.3">r-optparse</requirement>
+        <requirement type="package" version="0.6_30">r-latticeextra</requirement>
+        <requirement type="package" version="2.3">r-gridextra</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
     </stdio>
       <command detect_errors="exit_code"><![CDATA[
-        samtools index '$input' &&
+        ln -f -s $input.metadata.bam_index input.bam.bai &&
+        ln -s $input input.bam &&
         python '$__tool_directory__'/signature.py
-           --input '$input'
+           --input input.bam
            --minquery '$minquery'
            --maxquery '$maxquery'
            --mintarget '$mintarget'
@@ -25,9 +26,15 @@
         Rscript '$__tool_directory__'/signature.r
            --h_dataframe '$h_dataframe'
            --z_dataframe '$z_dataframe'
-           --plot_method '$plot_method'
+           --plot_method '$plot_options.plot_method'
            --pdf '$pdf'
            --title "Overlap Signatures of ${minquery}-${maxquery} against ${mintarget}-${maxtarget}nt small RNAs"
+           #if $plot_options.plot_method == "global":
+               --npairs_ylim $plot_options.npairs_ylim
+               --npairszscore_ylim $plot_options.npairszscore_ylim
+               --overlapprob_ylim $plot_options.overlapprob_ylim
+               --overlapprobzscore_ylim $plot_options.overlapprobzscore_ylim
+            #end if
     ]]></command>
     <inputs>
         <param format="bam" label="Compute signature from this bowtie standard output" name="input" type="data" />
@@ -37,10 +44,27 @@
         <param help="'29' = 29 nucleotides" label="Max size of target small RNAs" name="maxtarget" size="3" type="integer" value="29" />
         <param help="'1' = 1 nucleotide overlap" label="Minimal relative overlap analyzed" name="minscope" size="3" type="integer" value="1" />
         <param help="'1' = 1 nucleotide overlap" label="Maximal relative overlap analyzed" name="maxscope" size="3" type="integer" value="26" />
-        <param help="Signature can be computed globally or by item present in the alignment file" label="Graph type" name="plot_method" type="select">
-            <option selected="True" value="global">Global</option>
-            <option value="lattice">Lattice</option>
-        </param>
+        <conditional name="plot_options">
+            <param help="Signature can be computed globally or by item present in the alignment file" label="Graph type" name="plot_method" type="select">
+                <option selected="True" value="global">Global</option>
+                <option value="lattice">Lattice</option>
+            </param>
+            <when value="lattice" />
+            <when value="global">
+                <param name="npairs_ylim" type="integer" value="0" optional="true"
+                       label="Maximum of Y-scale of the Numbers-of-pairs plot"
+                       help="Interger. Leave 0 for self-determination of Y-scale" />
+                <param name="npairszscore_ylim" type="integer" value="0" optional="true"
+                       label="Maximum of Y-scale of the Number-of-pairs-Z−scores plot"
+                       help="Integer. Leave 0 for self-determination of Y-scale" />
+                <param name="overlapprob_ylim" type="integer" value="0" optional="true"
+                       label="Maximum of Y-scale of the Overlap-probabilities plot"
+                       help="Percent value as an Integer. Leave 0 for self-determination of % Y-scale" />
+                <param name="overlapprobzscore_ylim" type="integer" value="0" optional="true"
+                       label="Maximum of Y-scale of the Overlap-probabilities-Z−scores plot"
+                       help="Interger. Leave 0 for self-determination of Y-scale" />
+            </when>
+        </conditional>
     </inputs>
     <outputs>
         <data format="tabular" label="z-signature data frame" name="z_dataframe">
@@ -64,11 +88,14 @@
             <param name="maxtarget" value="29" />
             <param name="minscope" value="5" />
             <param name="maxscope" value="15" />
-            <param name="plot_method" value="global" />
+            <conditional name="plot_options">
+                <param name="plot_method" value="global" />
+            </conditional>
             <output file="h.tab" ftype="tabular" name="h_dataframe" />
             <output file="z.tab" ftype="tabular" name="z_dataframe" />
             <output file="global.pdf" ftype="pdf" name="pdf" />
         </test>
+
         <test>
             <param ftype="bam" name="input" value="sr_bowtie.bam" />
             <param name="minquery" value="23" />
@@ -77,7 +104,30 @@
             <param name="maxtarget" value="29" />
             <param name="minscope" value="5" />
             <param name="maxscope" value="15" />
-            <param name="plot_method" value="lattice" />
+            <conditional name="plot_options">
+                <param name="plot_method" value="global" />
+            </conditional>
+            <param name="npairs_ylim" value="100" />
+            <param name="npairszscore_ylim" value="0" />
+            <param name="overlapprob_ylim" value="1" />
+            <param name="overlapprobzscore_ylim" value="4" />
+
+            <output file="h.tab" ftype="tabular" name="h_dataframe" />
+            <output file="z.tab" ftype="tabular" name="z_dataframe" />
+            <output file="global-limited.pdf" ftype="pdf" name="pdf" />
+        </test>
+
+        <test>
+            <param ftype="bam" name="input" value="sr_bowtie.bam" />
+            <param name="minquery" value="23" />
+            <param name="maxquery" value="29" />
+            <param name="mintarget" value="23" />
+            <param name="maxtarget" value="29" />
+            <param name="minscope" value="5" />
+            <param name="maxscope" value="15" />
+            <conditional name="plot_options">
+                <param name="plot_method" value="lattice" />
+            </conditional>
             <output file="h.tab" ftype="tabular" name="h_dataframe" />
             <output file="z.tab" ftype="tabular" name="z_dataframe" />
             <output file="lattice.pdf" ftype="pdf" name="pdf" />
@@ -90,7 +140,7 @@
 Compute small RNA (piRNA, siRNA, ...) signatures.
 
 This tool computes (i) the number of pairs **aligned** reads by overlap classes (in nt) and associated z-scores,
-and (ii) the ping-pong signal (`Brennecke et al, 2009`_) and associated z-scores.
+and (ii) the ping-pong signal (Brennecke et al. Science. 2008;322: 1387–1392) and associated z-scores.
 
 **Note** that the number of pairs of aligned reads is disctint from the number of pairs of reads
 when these reads can be aligned at multiple positions in the genome. The two values are equal only
@@ -101,7 +151,6 @@ the range of overlaps (in nt) over which to compute the signatures, and whether 
 genome-wide level or by item (chromosomes, genes, etc.). For details on computational algorithmes 
 for piRNA and siRNA signatures, see `Antoniewski (2014)`_.
 
-.. _Brennecke et al, 2009: http://dx.doi.org/10.1126/science.1165171
 .. _Antoniewski (2014): https://link.springer.com/protocol/10.1007%2F978-1-4939-0931-5_12
 
 **Input**

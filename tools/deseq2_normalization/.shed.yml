@@ -10,6 +10,6 @@ categories:
   - Sequence Analysis
   - Statistics
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/deseq2_normalization
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/deseq2_normalization
 toolshed:
   - toolshed

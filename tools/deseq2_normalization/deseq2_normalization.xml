@@ -1,7 +1,7 @@
-<tool id="deseq2_normalization" name="DESeq2 normalization" version="1.0.1">
+<tool id="deseq2_normalization" name="DESeq2 normalization" version="1.40.2+galaxy0" profile="22.01">
 	<description>of hit lists (geometric method)</description>
     <requirements>
-      <requirement type="package" version="1.8.2gx=r3.2.1_0">bioconductor-deseq2</requirement>
+      <requirement type="package" version="1.40.2">bioconductor-deseq2</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
@@ -10,19 +10,25 @@
     <configfiles>
         <configfile name="normalizationDESeq">
       ## Setup R error handling to go to stderr
-      options( show.error.messages=F,  error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+      options(show.error.messages =FALSE, error = function(){
+          cat(geterrmessage(), file=stderr())
+          q("no", 1, FALSE)
+          }
+      )
       suppressMessages(require(DESeq2))
-      countsTable = read.delim("${input}", header=TRUE, check.names=FALSE)
-      rownames( countsTable )= countsTable[,1]
-      countsTable= countsTable[ , -1 ]
-      conds = factor(c(rep ("C", length(countsTable[1,])-1 ), "T"))
+      countsTable = read.delim("${input}", header = TRUE, check.names = FALSE)
+      rownames(countsTable ) = countsTable[,1]
+      countsTable = countsTable[, -1]
+      conds = factor(c(rep("C", length(countsTable[1, ]) - 1), "T"))
       cds = DESeqDataSetFromMatrix(countsTable, DataFrame(conds), ~ conds)
       cds = estimateSizeFactors( cds )
-      write.table (as.data.frame(sizeFactors(cds)), file="${output_factors}", row.names=TRUE, col.names=TRUE, quote= FALSE, dec = ".", sep = "\t", eol = "\n")
+      write.table(as.data.frame(sizeFactors(cds)), file = "${output_factors}", row.names = TRUE,
+                  col.names = TRUE, quote = FALSE, dec = ".", sep = "\t", eol = "\n")
       norm_table = as.data.frame(counts( cds, normalized=TRUE ))
       norm_table = cbind(rownames(norm_table), norm_table)
-      colnames(norm_table) = c("gene", colnames(countsTable) )
-      write.table (norm_table, file="${norm_hit_table}", row.names=FALSE, col.names=TRUE, quote= FALSE, dec = ".", sep = "\t", eol = "\n")
+      colnames(norm_table) = c("gene", colnames(countsTable))
+      write.table(norm_table, file = "${norm_hit_table}", row.names = FALSE, col.names = TRUE,
+                  quote = FALSE, dec = ".", sep = "\t", eol = "\n")
         </configfile>
     </configfiles>
 	<inputs>

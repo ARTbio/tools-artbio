@@ -1,8 +1,8 @@
 owner: artbio
 name: sambamba
-description: filter BAM/SAM on flags, fields, tags, and region, or down-sample BAM/SAM 
+description: filter BAM/SAM on flags, fields, tags, and region, or down-sample, or slice BAM/SAM 
 long_description: |
-  This tools uses sambaba to downsample BAM/SAM or filter BAM/SAM
+  This tools uses sambaba to downsample or slice BAM/SAM, or filter BAM/SAM
   on flags, fields, tags, and region 
 categories:
   - SAM

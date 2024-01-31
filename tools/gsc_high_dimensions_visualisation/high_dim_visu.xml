@@ -1,13 +1,13 @@
-<tool id="high_dimensions_visualisation" name="Generate PCA, tSNE and HCPC" version="0.9.6">
+<tool id="high_dimensions_visualisation" name="Generate PCA, tSNE and HCPC" version="4.3+galaxy0" profile="20.01">
     <description>from highly dimensional expression data</description>
     <requirements>
-        <requirement type="package" version="1.6.2=r35h6115d3f_0">r-optparse</requirement>
-        <requirement type="package" version="1.42=r35h6115d3f_0">r-factominer</requirement>
-        <requirement type="package" version="1.0.5">r-factoextra</requirement>
-        <requirement type="package" version="0.15=r351he1b5a44_0">r-rtsne</requirement>
-        <requirement type="package" version="0.4.7=r351h6115d3f_0">r-ggfortify</requirement>
-        <requirement type="package" version="1.1.9=r351h0357c0b_0">r-clusterr</requirement>
-        <!-- <requirement type="package" version="1.11.6=r351hc070d10_0">r-data.table</requirement> -->
+        <requirement type="package" version="1.7.3=r43hc72bb7e_2">r-optparse</requirement>
+        <requirement type="package" version="2.9=r43h57805ef_0">r-factominer</requirement>
+        <requirement type="package" version="1.0.7=r43hc72bb7e_3">r-factoextra</requirement>
+        <requirement type="package" version="0.16=r43h7ce84a7_2">r-rtsne</requirement>
+        <requirement type="package" version="0.4.16=r43hc72bb7e_1">r-ggfortify</requirement>
+        <requirement type="package" version="1.3.1=r43h08d816e_1">r-clusterr</requirement>
+        <requirement type="package" version="1.5.1=r43hc72bb7e_2">r-polychrome</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
@@ -15,8 +15,6 @@
     <command detect_errors="exit_code"><![CDATA[ 
         Rscript $__tool_directory__/high_dim_visu.R 
             --data '$input'
-            --sep '$input_sep'
-            --colnames '$input_header'
             #if $factor_condition.factor_choice == 'Yes'
                 --factor '$factor_condition.factor'
             #end if
@@ -25,10 +23,8 @@
             #else
                 --labels 'FALSE'
             #end if
-            #if $coord == "yes":
-             	--table_coordinates '$table_coordinates'
-            #end if
             --visu_choice '$visualisation.visu_choice'
+
             #if $visualisation.visu_choice == "tSNE":
                 --Rtsne_seed '$visualisation.Rtsne_seed'
                 --Rtsne_perplexity '$visualisation.Rtsne_perplexity'
@@ -54,35 +50,23 @@
                 --HCPC_max '$visualisation.HCPC_max'
                 --HCPC_clusterCA '$visualisation.HCPC_clusterCA'
                 --HCPC_kk '$visualisation.HCPC_kk'
-                --HCPC_cluster_description '$HCPC_cluster_description'
-                #if $visualisation.res_clustering == "yes":
-                    --HCPC_clust '$HCPC_clust'
-                #end if 
+                --HCPC_contributions '$HCPC_contributions'
+                --HCPC_cell_clust '$HCPC_cell_clust'
+                #if $factor_condition.factor_choice == "Yes":
+                    --HCPC_mutual_info '$HCPC_mutual_info'
+                #end if
             #end if
-            
+
             #if $visualisation.visu_choice == "PCA":
                 --PCA_npc '$visualisation.PCA_npc'
-                --PCA_x_axis '$visualisation.PCA_x_axis'
-                --PCA_y_axis '$visualisation.PCA_y_axis'
+                --x_axis '$visualisation.x_axis'
+                --y_axis '$visualisation.y_axis'
+                --item_size '$visualisation.item_size'
             #end if
-            
-            #if $visualisation.visu_choice == "HCPC" and $factor_condition.factor_choice == "Yes":
-                --HCPC_mutual_info '$HCPC_mutual_info'
-            #end if            
-
             --pdf_out '$pdf_out'
-            
 ]]></command>
     <inputs>
         <param name="input" type="data" format="txt,tabular" label="expression data"/>
-        <param name="input_sep" type="select" label="Input column separator">
-            <option value="tab" selected="true">Tabs</option>
-            <option value=",">Comma</option>
-        </param>
-        <param name="input_header" type="select" label="Consider first line of input file as header?">
-            <option value="TRUE" selected="true">Yes</option>
-            <option value="FALSE">No</option>
-        </param>
         <param name="labels" type="select" label="Add sample labels to scatter plot" >
             <option value="no" selected="true">No Labels</option>
             <option value="yes" >Label points</option>
@@ -94,7 +78,8 @@
             </param>
             <when value="Yes">
                 <param name="factor" type="data" format="tabular" label="Factor to constrast data"
-                       help="A two-column data frame, first column contains data labels, second column contains the levels of a factor to contrast visualisation" />
+                       help="A two-column data frame, with column headers, first column contains data labels,
+                             second column contains the levels of a factor to contrast visualisation" />
             </when>
             <when value="No">
             </when>
@@ -106,288 +91,249 @@
                 <option value="tSNE">t-SNE</option>
             </param>
             <when value="tSNE">
-                <param name="Rtsne_seed" value="42" type="integer" label="Seed value for reproducibility of t-SNE" help="Set to 42 as default" />
-                <param name="Rtsne_dims" value="2" type="integer" label="dims (t-SNE)" help="Output dimensionality (should not be greater than 3)" /> 
-				<param name="Rtsne_pca"  type="select" label="pca (t-SNE)" help="Whether an initial PCA step should be performed" > 
-					<option value="TRUE" selected="true">Yes</option>
-					<option value="FALSE">False</option>
-				</param>
-                <param name="Rtsne_initial_dims" value="50" type="integer" label="initial dims (t-SNE)" help="The number of dimensions that should be retained in the initial PCA step" /> 
-				<param name="Rtsne_pca_center"  type="select" label="Centering data" help="Should data be centered before pca is applied? " > 
-					<option value="TRUE" selected="true">Yes</option>
-					<option value="FALSE">False</option>
-				</param>
-				<param name="Rtsne_pca_scale"  type="select" label="Scalling data" help="Should data be scaled before pca is applied? " > 
-					<option value="TRUE">Yes</option>
-					<option value="FALSE" selected="true">False</option>
-				</param>
-				<param name="Rtsne_normalize"  type="select" label="Normalisation of data"	
-				             help="Should variables (gene expressions) be normalized internally prior to distance calculations? " > 	
-					<option value="TRUE" selected="true">Yes</option>	
-					<option value="FALSE">False</option>	
-				</param>
-                <param name="Rtsne_perplexity" value="10.0" type="float" label="perplexity (t-SNE)" help="should be less than ((nbr observations)-1)/3" /> 
+                <param name="Rtsne_seed" value="42" type="integer" label="Seed value for reproducibility of t-SNE" help="Set to 42 as default"/>
+                <param name="Rtsne_dims" value="2" type="integer" label="dims (t-SNE)" help="Output dimensionality (should not be greater than 3)"/>
+                <param name="Rtsne_pca"  type="select" label="pca (t-SNE)" help="Whether an initial PCA step should be performed" > 
+                    <option value="TRUE" selected="true">Yes</option>
+                    <option value="FALSE">False</option>
+                </param>
+                <param name="Rtsne_initial_dims" value="50" type="integer" label="initial dims (t-SNE)"
+                       help="The number of dimensions that should be retained in the initial PCA step"/>
+                <param name="Rtsne_pca_center"  type="select" label="Centering data" help="Should data be centered before pca is applied?">
+                    <option value="TRUE" selected="true">Yes</option>
+                    <option value="FALSE">False</option>
+                </param>
+                <param name="Rtsne_pca_scale"  type="select" label="Scalling data" help="Should data be scaled before pca is applied?">
+                    <option value="TRUE">Yes</option>
+                    <option value="FALSE" selected="true">False</option>
+                </param>
+                <param name="Rtsne_normalize"  type="select" label="Normalisation of data"    
+                             help="Should variables (gene expressions) be normalized internally prior to distance calculations?">
+                    <option value="TRUE" selected="true">Yes</option>
+                    <option value="FALSE">False</option>
+                </param>
+                <param name="Rtsne_perplexity" value="10.0" type="float" label="perplexity (t-SNE)" help="should be less than ((nbr observations)-1)/3"/>
                 <param name="Rtsne_theta" value="1.0" type="float" label="theta (t-SNE)"/>
-				<param name="Rtsne_exaggeration_factor" value="12.0" type="float" label="Exageration factor" help="Exaggeration factor used to multiply the P matrix in the first part of the optimization" />
+                <param name="Rtsne_exaggeration_factor" value="12.0" type="float" label="Exageration factor"
+                       help="Exaggeration factor used to multiply the P matrix in the first part of the optimization"/>
                 <param name="Rtsne_max_iter" value="1000" type="integer" label="Number of iterations (default: 1000)"
-                             help="The number of iterations that Rtsne executes to improve low dim representation (gradient descent optimization)" /> 
+                             help="The number of iterations that Rtsne executes to improve low dim representation (gradient descent optimization)"/>
             </when>
             <when value="HCPC">
                 <param name="HCPC_npc" value="5" type="integer" label="Number of principal components to keep"
-                       help="The number of dimensions which are kept for HCPC analysis (default=5)" />
+                       help="The number of dimensions which are kept for HCPC analysis (default=5)"/>
                 <param name="HCPC_ncluster" value="-1" type="integer" label="Number of clusters in Hierar. Clustering"
                        help="nb.clust - an integer. If 0, the tree is cut at the level the user clicks on (not working in Galaxy). If -1, the tree is
-                             automatically cut at the suggested level (see details). If a (positive) integer, the tree is cut with nb.cluters clusters." />
-				<param name="HCPC_metric"  type="select" label="Dissimilarity metric" help="Metric to be used for calculating dissimilarities between observations, can be 'euclidean' or 'manhattan' " > 
-					<option value="euclidean" selected="true">euclidean</option>
-					<option value="manhattan">manhattan</option>
-				</param>
-			    <param name="HCPC_method"  type="select" label="Clustering method" help="character string defining the clustering method.
-			           The four methods implemented are 'average' ([unweighted pair-]group [arithMetic] average method, aka ‘UPGMA’),
-			           'single' (single linkage), 'complete' (complete linkage), and 'ward' (Ward's method).
-			           The default with this Galaxy tool is is 'ward'." > 
-					<option value="ward" selected="true">ward</option>
-					<option value="average">average</option>
-					<option value="single">single</option>
-					<option value="complete">complete</option>
-				</param>
-				<param name="HCPC_consol"  type="select" label="k-means consolidation" help="a boolean. If TRUE, a k-means consolidation is performed
-				       (consolidation cannot be performed if kk is used and equals a number)." > 
-					<option value="TRUE" selected="true">Yes</option>
-					<option value="FALSE">False</option>
-				</param>
-				<param name="HCPC_itermax" value="10" type="integer" label="Maximum number of iterations for consolidation"
-                       help="An integer. The maximum number of iterations for the consolidation. (default=10)" />
+                             automatically cut at the suggested level (see details). If a (positive) integer, the tree is cut with nb.cluters clusters."/>
+                <param name="HCPC_metric"  type="select" label="Dissimilarity metric"
+                       help="Metric to be used for calculating dissimilarities between observations, can be 'euclidean' or 'manhattan'">
+                    <option value="euclidean" selected="true">euclidean</option>
+                    <option value="manhattan">manhattan</option>
+                </param>
+                <param name="HCPC_method"  type="select" label="Clustering method"
+                       help="character string defining the clustering method. The four methods implemented are 'average'
+                       ([unweighted pair-]group [arithMetic] average method, aka ‘UPGMA’), 'single' (single linkage), 'complete'
+                       (complete linkage), and 'ward' (Ward's method). The default with this Galaxy tool is is 'ward'.">
+                    <option value="ward" selected="true">ward</option>
+                    <option value="average">average</option>
+                    <option value="single">single</option>
+                    <option value="complete">complete</option>
+                </param>
+                <param name="HCPC_consol"  type="select" label="k-means consolidation"
+                       help="A boolean. If TRUE, a k-means consolidation is performed (consolidation cannot be performed
+                             if kk is used and equals a number).">
+                    <option value="TRUE" selected="true">Yes</option>
+                    <option value="FALSE">False</option>
+                </param>
+                <param name="HCPC_itermax" value="10" type="integer" label="Maximum number of iterations for consolidation"
+                       help="An integer. The maximum number of iterations for the consolidation. (default=10)"/>
                 <param name="HCPC_min" value="3" type="integer" label="min number of clusters"
-                       help="an integer. The least possible number of clusters suggested. (default=3)" />
+                       help="an integer. The least possible number of clusters suggested. (default=3)"/>
                 <param name="HCPC_max" value="-1" type="text" label="max number of clusters"
-                       help="The higher possible number of clusters suggested, by default the minimum between 10 and the number of individuals divided by 2. (default=-1)" />
-				<param name="HCPC_clusterCA"  type="select" label="cluster.CA, Clustering against rows or columns"
-				       help="A string equals to 'rows' or 'columns' for the clustering of Correspondence Analysis results.default(rows)"> 
-					<option value="rows" selected="true">Rows</option>
-					<option value="cols">Columns</option>
-				</param>
-				 <param name="HCPC_kk" value="Inf" type="text" label="kk, Number of clusters used in a Kmeans preprocessing "
+                       help="The higher possible number of clusters suggested, by default the minimum between 10
+                             and the number of individuals divided by 2. (default = NULL)"/>
+                <param name="HCPC_clusterCA"  type="select" label="cluster.CA, Clustering against rows or columns"
+                       help="A string equals to 'rows' or 'columns' for the clustering of Correspondence Analysis results.default(rows)">
+                    <option value="rows" selected="true">Rows</option>
+                    <option value="cols">Columns</option>
+                </param>
+                 <param name="HCPC_kk" value="Inf" type="text" label="kk, Number of clusters used in a Kmeans preprocessing"
                        help="An integer corresponding to the number of clusters used in a Kmeans preprocessing before the
                              hierarchical clustering; the top of the hierarchical tree is then constructed from this partition.
                              This is very useful if the number of individuals is high. Note that consolidation cannot be performed
                              if kk is different from Inf and some graphics are not drawn. Inf is used by default and no preprocessing
-                             is done, all the graphical outputs are then given." />
-                <param label="Return HCPC clustering table" name="res_clustering" type="select">
-                    <option value="no" selected="True">No</option>
-                    <option value="yes">Yes</option>
-                </param>
+                             is done, all the graphical outputs are then given."/>
             </when>
             <when value="PCA">
-            	  <param name="PCA_npc" value="5" type="integer" label="Number of principal components to keep" help="The number of dimensions which are kept for PCA analysis (default=5)" />
-                  <param name="PCA_x_axis" value="1" type="integer" label="First principal component to plot" help="X axis for PCA plot (default=1)" />
-                  <param name="PCA_y_axis" value="2" type="integer" label="Second principal component to plot" help="Y axis for PCA plot (default=2)" />
+                  <param name="PCA_npc" value="5" type="integer" label="Number of principal components to keep"
+                         help="The number of dimensions which are kept for PCA analysis (default=5)"/>
+                  <param name="item_size" value="1" type="float" label="Adjust size of points/labels in PCA graph" help="size of points/labels (default=1)"/>
+                  <param name="x_axis" value="1" type="integer" label="Principal component to plot to x axis" help="PC to plot as x (default=1)"/>
+                  <param name="y_axis" value="2" type="integer" label="Principal component to plot to y axis" help="PCA plot as y (default=2)"/>
             </when>
         </conditional>
-            <param label="Return scatter plot table coordinates" name="coord" type="select">
-                <option value="no" selected="True">No</option>
-                <option value="yes">Yes</option>
-            </param>
-             
     </inputs>
     <outputs>
-        <data name="pdf_out" format="pdf" label="${visualisation.visu_choice} of ${on_string}" />
-        <data name="table_coordinates" format="tabular" label="Scatter plot coordinates from ${visualisation.visu_choice} of ${on_string}" >
-            <filter>coord == 'yes'</filter>
+        <data name="pdf_out" format="pdf" label="${visualisation.visu_choice} of ${on_string}"/>
+        <data name="HCPC_cell_clust" format="tabular" label="Clustering table from ${visualisation.visu_choice} of ${on_string}">
+            <filter>visualisation['visu_choice'] == 'HCPC'</filter>
         </data>
-        <data name="HCPC_mutual_info" format="txt" label="External validation of clustering from ${visualisation.visu_choice} of ${on_string}" >
+        <data name="HCPC_contributions" format="tabular" label="Cluster information from ${visualisation.visu_choice}">
+            <filter>visualisation['visu_choice'] == 'HCPC'</filter>
+        </data>
+        <data name="HCPC_mutual_info" format="txt" label="External validation of clustering from ${visualisation.visu_choice} of ${on_string}">
             <filter>visualisation['visu_choice'] == 'HCPC' and factor_condition['factor_choice'] == 'Yes'</filter>
-        </data>
-        <data name="HCPC_clust" format="tabular" label="Clustering table from ${visualisation.visu_choice} of ${on_string}" >
-            <filter>visualisation['visu_choice'] == 'HCPC' and visualisation['res_clustering'] == 'yes'</filter>
-        </data>
-        <data name="HCPC_cluster_description" format="tabular" label="Cluster information from ${visualisation.visu_choice}" >
-            <filter>visualisation['visu_choice'] == 'HCPC' </filter>
         </data>
     </outputs>
     <tests>
-        <!-- test first (for developpers) -->
+        <!-- test tSNE -->
+        <test expect_num_outputs="1">
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="yes" />
+            <param name="visu_choice" value="tSNE" />
+            <param name="Rtsne_seed" value="49"/>
+            <param name="Rtsne_perplexity" value="10"/>
+            <param name="Rtsne_theta" value="1" />
+            <output name="pdf_out" file="tsne.1.pdf" ftype="pdf" compare="sim_size" delta="500"/>
+        </test>
+        <test expect_num_outputs="1">
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="no" />
+            <param name="visu_choice" value="tSNE" />
+            <param name="factor_choice" value="Yes" />
+            <param name="factor" value="numeric_factor.tsv" ftype="txt"/>
+            <param name="Rtsne_seed" value="49"/>
+            <param name="Rtsne_perplexity" value="10"/>
+            <param name="Rtsne_theta" value="1" />
+            <output name="pdf_out" file="tsne.2.pdf" ftype="pdf" compare="sim_size" delta="500"/>
+        </test>
+        <test expect_num_outputs="1">
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="yes" />
+            <param name="visu_choice" value="tSNE" />
+            <param name="factor_choice" value="Yes" />
+            <param name="factor" value="shuffled_factor.tsv" ftype="txt"/>
+            <param name="Rtsne_seed" value="49"/>
+            <param name="Rtsne_perplexity" value="10"/>
+            <param name="Rtsne_theta" value="1" />
+            <output name="pdf_out" file="tsne.3.pdf" ftype="pdf" compare="sim_size" delta="500"/>
+        </test>
+            <test expect_num_outputs="1">
+            <param name="input" value="cpm_input.tsv" ftype="txt"/>
+            <param name="labels" value="no" />
+            <param name="visu_choice" value="tSNE" />
+            <param name="Rtsne_seed" value="49" />
+            <param name="Rtsne_dims" value="3" />
+            <param name="Rtsne_perplexity" value="10"/>
+            <param name="Rtsne_theta" value="1" />
+            <param name="Rtsne_normalize" value="FALSE" />
+            <output name="pdf_out" file="tsne.4.pdf" ftype="pdf" compare="sim_size" delta="1000"/>
+        </test>
         <!-- test PCA -->
-        <test>
+        <test expect_num_outputs="1">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="yes" />
             <param name="visu_choice" value="PCA" />
             <param name="factor_choice" value="No" />
-            <output name="pdf_out" file="pca.labels.pdf" ftype="pdf"/>
-        </test>
-        <test>
-            <param name="input" value="cpm_input.tsv" ftype="txt"/>
-            <param name="labels" value="no" />
-            <param name="visu_choice" value="PCA" />
-            <param name="factor_choice" value="No" />
-            <output name="pdf_out" file="pca.nolabels.pdf" ftype="pdf"/>
+            <param name="item_size" value="0.5" />
+            <output name="pdf_out" file="pca.1.pdf" ftype="pdf"/>
         </test>
         <!-- test PCA PC2 vs PC3 -->
-        <test>
+        <test expect_num_outputs="1">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="no" />
             <param name="visu_choice" value="PCA" />
             <param name="factor_choice" value="No" />
-            <param name="PCA_x_axis" value="2" />
-            <param name="PCA_y_axis" value="3" />
-            <output name="pdf_out" file="pca.2vs3.pdf" ftype="pdf"/>
+            <param name="x_axis" value="2" />
+            <param name="y_axis" value="3" />
+            <output name="pdf_out" file="pca.2.pdf" ftype="pdf"/>
         </test>
-
-        <!-- test Coordinates tables on PCA -->
-        <test>
-            <param name="input" value="cpm_input.tsv" ftype="txt"/>
-            <param name="labels" value="no" />
-            <param name="visu_choice" value="PCA" />
-            <param name="coord" value="yes" />
-            <param name="factor_choice" value="No" />
-            <output name="pdf_out" file="pca.nolabels.pdf" ftype="pdf"/>
-            <output name="table_coordinates" file="pca.coord.tab" ftype="tabular"/>       
-		</test>
         <!-- test factor contrasting on PCA -->
-        <test>
+        <test expect_num_outputs="1">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="no" />
             <param name="visu_choice" value="PCA" />
             <param name="factor_choice" value="Yes" />
             <param name="factor" value="factor.tsv" ftype="txt"/>
-            <output name="pdf_out" file="pca.nolabels.factors.pdf" ftype="pdf"/>
-        </test>
-        <!-- test two-level factor contrasting on PCA -->
-        <test>
-            <param name="input" value="cpm_input.tsv" ftype="txt"/>
-            <param name="labels" value="no" />
-            <param name="visu_choice" value="PCA" />
-            <param name="factor_choice" value="Yes" />
-            <param name="factor" value="2-lev_factor.tsv" ftype="txt"/>
-            <output name="pdf_out" file="pca.nolabels.2-lev-factor.pdf" compare="sim_size" ftype="pdf"/>
+            <output name="pdf_out" file="pca.3.pdf" ftype="pdf"/>
         </test>
         <!-- test numerical factor contrasting on PCA -->
-        <test>
+        <test expect_num_outputs="1">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="no" />
             <param name="visu_choice" value="PCA" />
             <param name="factor_choice" value="Yes" />
             <param name="factor" value="numeric_factor.tsv" ftype="txt"/>
-            <output name="pdf_out" file="pca.nolabels.numerical-factor.pdf" compare="sim_size" ftype="pdf"/>
+            <output name="pdf_out" file="pca.4.pdf" compare="sim_size" ftype="pdf"/>
         </test>
-        <test>
+        <test expect_num_outputs="1">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="no" />
             <param name="visu_choice" value="PCA" />
             <param name="factor_choice" value="Yes" />
             <param name="factor" value="shuffled_factor.tsv" ftype="txt"/>
-            <output name="pdf_out" file="pca.nolabels.factors.pdf" compare="sim_size" ftype="pdf"/>
+            <output name="pdf_out" file="pca.5.pdf" compare="sim_size" ftype="pdf"/>
         </test>
-        <!-- test HCPC -->
-        <test>
+        <!-- HCPC tests -->
+        <test expect_num_outputs="3">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="yes" />
             <param name="visu_choice" value="HCPC" />
             <param name="HCPC_npc" value="5"/>
             <param name="HCPC_ncluster" value="-1"/>
-            <output name="pdf_out" file="hcpc.labels.pdf" compare="sim_size" ftype="pdf"/>
-            <output name="HCPC_cluster_description" file="hcpc.cluster_description.1.tab" ftype="tabular"/>
+            <output name="pdf_out" file="hcpc.1.pdf" compare="sim_size" ftype="pdf"/>
+            <output name="HCPC_cell_clust" file="hcpc.cell-cluster.1.tsv" ftype="tabular"/>
+            <output name="HCPC_contributions" file="hcpc.component-impact.1.tsv" ftype="tabular"/>
         </test>
-        <!-- test factor contrasting on HCPC -->
-        <test>
+        <test expect_num_outputs="4">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="no" />
             <param name="visu_choice" value="HCPC" />
             <param name="HCPC_npc" value="5"/>
             <param name="HCPC_ncluster" value="-1"/>
-            <param name="res_clustering" value="yes"/>
             <param name="factor_choice" value="Yes" />
             <param name="factor" value="factor.tsv" ftype="txt"/>
-            <output name="pdf_out" file="hcpc.nolabels.factor.pdf" compare="sim_size" ftype="pdf"/>
+            <output name="pdf_out" file="hcpc.2.pdf" compare="sim_size" ftype="pdf"/>
             <output name="HCPC_mutual_info" file="hcpc.factor.extval.txt" ftype="txt"/>
-            <output name="HCPC_clust" file="hcpc.clusters.tab" ftype="tabular"/>
-            <output name="HCPC_cluster_description" file="hcpc.cluster_description.1.tab" ftype="tabular"/>
+            <output name="HCPC_cell_clust" file="hcpc.cell-cluster.2.tsv" ftype="tabular"/>
+            <output name="HCPC_contributions" file="hcpc.component-impact.2.tsv" ftype="tabular"/>
         </test>
-        <test>
-            <param name="input" value="cpm_input.tsv" ftype="txt"/>
-            <param name="labels" value="no" />
-            <param name="HCPC_npc" value="5"/>
-            <param name="HCPC_ncluster" value="-1"/>
-            <param name="visu_choice" value="HCPC" />
-            <output name="pdf_out" file="hcpc.nolabels.pdf" compare="sim_size" ftype="pdf"/>
-            <output name="HCPC_cluster_description" file="hcpc.cluster_description.1.tab" ftype="tabular"/>
-        </test>
-        <test>
+        <test expect_num_outputs="4">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
             <param name="labels" value="yes" />
             <param name="visu_choice" value="HCPC" />
-            <param name="coord" value="yes" />
+            <param name="factor_choice" value="Yes" />
+            <param name="factor" value="factor.tsv" ftype="txt"/>
             <param name="HCPC_method" value="average"/>
             <param name="HCPC_metric" value="manhattan"/>
             <param name="HCPC_npc" value="4" />
-            <output name="pdf_out" file="hcpc-2.labels.pdf" ftype="pdf"/>
-            <output name="table_coordinates" file="hcpc-2.coord.tab" ftype="tabular"/>
-            <output name="HCPC_cluster_description" file="hcpc.cluster_description.4.tab" ftype="tabular"/>
+            <output name="pdf_out" file="hcpc.3.pdf" ftype="pdf"/>
+            <output name="HCPC_mutual_info" file="hcpc.extval.1.txt" ftype="txt"/>
+            <output name="HCPC_cell_clust" file="hcpc.cell-cluster.3.tsv" ftype="tabular"/>
+            <output name="HCPC_contributions" file="hcpc.component-impact.3.tsv" ftype="tabular"/>
         </test>
-        <test>
+        <test expect_num_outputs="3">
             <param name="input" value="cpm_input.tsv" ftype="txt"/>
-            <param name="labels" value="yes" />
+            <param name="labels" value="no" />
             <param name="visu_choice" value="HCPC" />
-            <param name="coord" value="yes" />
             <param name="HCPC_method" value="single"/>
             <param name="HCPC_metric" value="euclidean"/>
             <param name="HCPC_npc" value="4" />
             <param name="HCPC_clusterCA" value="cols" />
-            <output name="pdf_out" file="hcpc-3.labels.pdf" compare="sim_size" ftype="pdf"/>
-            <output name="table_coordinates" file="hcpc-3.coord.tab" ftype="tabular"/>
-            <output name="HCPC_cluster_description" file="hcpc.cluster_description.5.tab" ftype="tabular"/>
-        </test>
-        <!-- test t-SNE -->
-        <test>
-            <param name="input" value="cpm_input.tsv" ftype="txt"/>
-            <param name="labels" value="yes" />
-            <param name="visu_choice" value="tSNE" />
-            <param name="Rtsne_seed" value="49"/>
-            <param name="Rtsne_perplexity" value="10"/>
-            <param name="Rtsne_theta" value="1" />
-            <output name="pdf_out" file="tsne.labels.pdf" ftype="pdf" compare="sim_size" delta="500"/>
-        </test>
-        <test>
-            <param name="input" value="cpm_input.tsv" ftype="txt"/>
-            <param name="labels" value="no" />
-            <param name="visu_choice" value="tSNE" />
-            <param name="Rtsne_seed" value="49"/>
-            <param name="Rtsne_perplexity" value="10"/>
-            <param name="Rtsne_theta" value="1" />
-            <output name="pdf_out" file="tsne.nolabels.pdf" ftype="pdf" compare="sim_size" delta="500"/>
-        </test>
-                <!-- test factor contrasting on t-SNE -->
-        <test>
-            <param name="input" value="cpm_input.tsv" ftype="txt"/>
-            <param name="labels" value="yes" />
-            <param name="visu_choice" value="tSNE" />
-            <param name="factor_choice" value="Yes" />
-            <param name="factor" value="shuffled_factor.tsv" ftype="txt"/>
-            <param name="Rtsne_seed" value="49"/>
-            <param name="Rtsne_perplexity" value="10"/>
-            <param name="Rtsne_theta" value="1" />
-            <output name="pdf_out" file="tsne.labels.factor.pdf" ftype="pdf" compare="sim_size" delta="500"/>
-        </test>
-       	<test>
-            <param name="input" value="cpm_input.tsv" ftype="txt"/>
-            <param name="labels" value="no" />
-            <param name="visu_choice" value="tSNE" />
-            <param name="Rtsne_seed" value="49" />
-            <param name="coord" value="yes" />
-            <param name="Rtsne_dims" value="3" />
-            <param name="Rtsne_perplexity" value="10"/>
-            <param name="Rtsne_theta" value="1" />
-            <param name="Rtsne_normalize" value="FALSE" />
-            <output name="pdf_out" file="tsne-2.nolabels.pdf" ftype="pdf" compare="sim_size" delta="1000"/>
-            <output name="table_coordinates" file="tsne-2.coord.tab" ftype="tabular" compare="sim_size" delta="1000"/>
+            <output name="pdf_out" file="hcpc.4.pdf" compare="sim_size" ftype="pdf"/>
+            <output name="HCPC_cell_clust" file="hcpc.cell-cluster.4.tsv" ftype="tabular"/>
+            <output name="HCPC_contributions" file="hcpc.component-impact.4.tsv" ftype="tabular"/>
         </test>
     </tests>
     <help>
 
 **What it does**
 
-Takes as an input a matrix of n observations (columns, generally n RNAseq library) of k variables
-(rows, generally k genes).
+**Inputs**
+Takes as an input a tabulation separated value file (tsv) of n observations (columns,
+generally n RNAseq library) of k variables (rows, generally k genes).
+
+The table must contain a header, ie the first line describes the content of each column.
 
 k variables define a space of k dimensions. Any observation
 of k expression values for k genes (the purpose of one RNAseq experiment) can be assigned
@@ -398,21 +344,21 @@ a number of methods to "reduce" or "project" a k-dim space in a space of 2 or 3 
 This is of great help, not only to summarise the data, but also to find similarities, common trends
 between the data (under the hypothesis that similar data are closer in the k-dimension space).
 
+**Outputs**
+
 This tool returns the visualisation of a dimensional reduction using either:
 
 * Principal Components Analysis (PCA)
 * Hierarchical Clustering of Principal Components (HCPC)
 * t-distributed Stochastic Neighbor Embedding (t-SNE)
 
-The tool returns in addition the table of the coordinates of the observations (eg RNAseq libraries)
-in the low dim space, which can be used for post-treatment or to further adjust the provided visualisation.
-
-If HCPC is used, this tool can also return the clustering table. It contains two columns of n observations :
+If HCPC is used, this tool can also return a 2-column cluster correspondence table:
 
 * Observation labels
 * Cluster labels
 
-** Contrast data with a factor **
+**Contrast data with a factor**
+
 The tool offers the possibility to colour data points according to the levels of a factor.
 To use the option "Factor to contrast data", provide a tabulated-separated, two-column table
 with first column containing the cell/data library identifiers (same identifiers as those
@@ -421,11 +367,10 @@ factor levels value (if this vector is numerical, then the color palette used is
 This table does not need to be sorted in the same order as in the data
 table. It may also contain more identifiers than those provided in the data table.
 
-If HCPC visualisation and constrasting data are chosen, an additional text file is given. It contains
-several metrics of external validation of clustering. It will compare the capacity of HCPC clustering
-to recreate classes contained in the factor data file. If the constrasting factor is quantitative,
-the file will be empty. 
-
+If HCPC visualisation and constrasting factor is provided, a text file containing metrics
+of external validation of the clustering is returned.
+These metrics measure the capacity of HCPC clustering to find classes overlapping the levels
+of the provided factor. 
 
     </help>
     <citations>
