@@ -20,9 +20,9 @@
     <command detect_errors="exit_code"><![CDATA[
     Rscript ez_histograms.R
         --file '$file'
-        --profile '$plot_options_selector.plot_options_selector'
+        --profile '$plot_options.plot_options_selector'
         --xscale '$plot_options.xscale'
-        #if str($plot_options_selector.plot_options_selector) == "count":
+        #if str($plot_options.plot_options_selector) == "count":
             --yscale '$plot_options.yscale'
         #end if
         --pdf '$pdf'
