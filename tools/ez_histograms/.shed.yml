@@ -1,0 +1,15 @@
+categories:
+  - Visualization
+  - Statistics
+description: ggplot2 histograms and density plots
+homepage_url: https://github.com/tidyverse/ggplot2
+long_description: |
+  This tool produces histograms or density plots from any tabular datasets, using ggplot2.
+  You may provide headerless tables as well as tables with column headers.
+  Any non-numeric columns will be filtered out. Your first column may contains row names,
+  but it will also work if your first column already corresponds to the numeric values of
+  a variable.
+owner: artbio
+name: ez_histograms
+remote_repository_url: https://github.com/artbio/tools-artbio/tree/main/tools/ez_histograms
+type: unrestricted

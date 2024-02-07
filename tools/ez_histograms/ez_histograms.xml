@@ -1,0 +1,166 @@
+<tool id="ez_histograms" name="ez_histograms" version="@TOOL_VERSION@+galaxy@VERSION_SUFFIX@" profile="@PROFILE@">
+    <macros>
+        <token name="@TOOL_VERSION@">3.4.4</token>
+        <token name="@VERSION_SUFFIX@">0</token>
+        <token name="@PROFILE@">23.0</token>
+    </macros>
+    <requirements>
+        <requirement type="package" version="3.4.4">r-ggplot2</requirement>
+        <requirement type="package" version="1.4.4">r-reshape2</requirement>
+        <requirement type="package" version="1.1.4">r-dplyr</requirement>
+        <requirement type="package" version="1.3.0">r-scales</requirement>
+        <requirement type="package" version="1.4.6">r-vtable</requirement>
+        <requirement type="package" version="1.7.4">r-optparse</requirement>
+    </requirements>
+
+    <stdio>
+        <exit_code range="1:" level="fatal" />
+    </stdio>
+    
+    <command detect_errors="exit_code"><![CDATA[
+    Rscript $__tool_directory__/ez_histograms.R
+        --file '$file'
+        --profile '$plot_options.plot_options_selector'
+        --xscale '$plot_options.xscale'
+        #if str($plot_options.plot_options_selector) == "count":
+            --yscale '$plot_options.yscale'
+        #end if
+        --pdf '$pdf'
+        --summary '$summary'
+    ]]></command>
+
+    <inputs>
+        <param name="file" type="data" format="tabular" label="Input tabular dataset"
+               help="Only numeric columns will be plotted"/>
+        <conditional name="plot_options">
+            <param name="plot_options_selector" type="select" label="Set plot types">
+                <option value="count" selected="true">Count Histograms</option>
+                <option value="density">Density Plots</option>
+            </param>
+            <when value="density">
+                <param name="xscale" type="select" label="Set x-axis scale">
+                    <option value="cartesian" selected="true">Cartesian</option>
+                    <option value="log2">log2</option>
+                    <option value="log10">log10</option>
+                </param>
+            </when>
+            <when value="count">
+                <param name="xscale" type="select" label="Set x-axis scale">
+                    <option value="cartesian" selected="true">Cartesian</option>
+                    <option value="log2">log2</option>
+                    <option value="log10">log10</option>
+                </param>
+                <param name="yscale" type="select" label="Set y-axis scale">
+                    <option value="cartesian" selected="true">Cartesian</option>
+                    <option value="log2">log2</option>
+                    <option value="log10">log10</option>
+                </param>
+            </when>
+        </conditional>
+    </inputs>
+    <outputs>
+        <data name="pdf" format="pdf" label="${tool.name} plots from ${on_string}"/>
+        <data name="summary" format="tabular" label="Statistics Summary from ${on_string}"/>
+    </outputs>
+    <tests>
+        <test expect_num_outputs="2">
+            <param name="file" value="classic.tsv"/>
+            <param name="plot_options_selector" value="count"/>
+            <param name="xscale" value="cartesian"/>
+            <param name="yscale" value="cartesian"/>
+            <output name="pdf" file="classic.pdf"/>
+            <output name="summary" file="summary_1.tsv"/>
+       </test>
+        <test expect_num_outputs="2">
+            <param name="file" value="counts.tsv"/>
+            <param name="plot_options_selector" value="count"/>
+            <param name="xscale" value="log2"/>
+            <param name="yscale" value="cartesian"/>
+            <output name="pdf" file="count.pdf"/>
+            <output name="summary" file="summary_2.tsv"/>
+       </test>
+        <test expect_num_outputs="2">
+            <param name="file" value="headless.tsv"/>
+            <param name="plot_options_selector" value="count"/>
+            <param name="xscale" value="log10"/>
+            <param name="yscale" value="log2"/>
+            <output name="pdf" file="headless.pdf"/>
+            <output name="summary" file="summary_3.tsv"/>
+       </test>
+        <test expect_num_outputs="2">
+            <param name="file" value="large.tsv"/>
+            <param name="plot_options_selector" value="density"/>
+            <param name="xscale" value="log2"/>
+            <output name="pdf" file="large.pdf"/>
+            <output name="summary" file="summary_4.tsv"/>
+       </test>
+        <test expect_num_outputs="2">
+            <param name="file" value="rowheadless.tsv"/>
+            <param name="plot_options_selector" value="density"/>
+            <param name="xscale" value="cartesian"/>
+            <output name="pdf" file="rowheadless.pdf"/>
+            <output name="summary" file="summary_5.tsv"/>
+       </test>
+        <test expect_num_outputs="2">
+            <param name="file" value="single_headed_col.tsv"/>
+            <param name="plot_options_selector" value="density"/>
+            <param name="xscale" value="log10"/>
+            <output name="pdf" file="single_headed_col.pdf"/>
+            <output name="summary" file="summary_6.tsv"/>
+       </test>
+    </tests>
+    <help><![CDATA[
+**What it does**
+
+The tool generates faceted histograms or density plots using the ggplot2 functions
+geom_histogram() or geom_density(), respectively.
+
+**Inputs**
+
+Any regular tabular data, provided that the number of columns (tabulations) is unchanged
+for any row.
+
+Except for the first one, any column will be considered as one variable with n_rows
+observations. However, non-numeric columns will be filtered and will not be considered
+variables.
+
+If the first column is not numeric, it will be taken as row names (ie observation identifiers),
+otherwise, it will be considered as the first numerical variable of the table.
+
+If the first row is not numerical, it will be considered as a header, ie as describing the
+variable names.
+
+If you provide a table without header, variable names will be assigned to each column
+following the R default rule: (V1), V2, ..., Vn
+
+**Parameters**
+
+For Count Histograms, both x- and y-axis can have linear (cartesian), log2 or log10 scales.
+
+For Density Plots, only x-axis can be customized with linear (cartesian), log2, or log10
+scales
+
+**Outputs**
+
+The ez_histograms Galaxy tool returns
+
+- A pdf file with plots faceted on three columns
+- A tsv file with statistics summary of the variables generated by the R package vtables
+
+    ]]></help>
+    <citations>
+        <citation type="bibtex">
+@BOOK{Wickham2016-ic,
+    title = "Ggplot2: Elegant graphics for data analysis",
+    author = "Wickham, Hadley",
+    publisher = "Springer International Publishing",
+    series = "Use R!",
+    edition = 2,
+    month = jun,
+    year = 2016,
+    address = "Cham, Switzerland",
+    language = "en",
+    isbn = "9783319242774"
+}        </citation>
+    </citations>
+</tool>
