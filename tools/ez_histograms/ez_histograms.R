@@ -106,11 +106,11 @@ test_header <- function(file) {
 }
 
 test_rownames <- function(file) {
-  data <- read.delim(file = file, header = TRUE, row.names = NULL, nrows = 2)
-  if(is.numeric(data[1, 2])){
-    return(NULL)
-  } else {
+  data <- read.delim(file = file, header = FALSE, row.names = NULL, nrows = 2)
+  if(is.na(as.numeric(data[2, 1]))){
     return(1)
+  } else {
+    return(NULL)
   }
 }
 
