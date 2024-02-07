@@ -59,8 +59,8 @@
         </conditional>
     </inputs>
     <outputs>
-        <data name="pdf" format="pdf"/>
-        <data name="summary" format="tabular"/>
+        <data name="pdf" format="pdf" label="${tool.name} plots"/>
+        <data name="summary" format="tabular" label="${tool.name} statistics summary"/>
     </outputs>
     <tests>
         <test expect_num_outputs="2">
