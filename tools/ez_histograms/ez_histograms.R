@@ -109,7 +109,7 @@ plot_histograms <- function(mdata, profile = "count", xscale = "cartesian", ysca
 
 test_header <- function(file) {
   data <- read.delim(file = file, header = FALSE, row.names = 1, nrows = 2)
-  if(all(is.na(as.numeric(data[1, seq_len(ncol(data))])))) {
+  if (all(is.na(as.numeric(data[1, seq_len(ncol(data))])))) {
     return(TRUE)
   } else {
     return(FALSE)
