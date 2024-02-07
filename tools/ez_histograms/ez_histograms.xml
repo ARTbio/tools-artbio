@@ -18,7 +18,7 @@
     </stdio>
     
     <command detect_errors="exit_code"><![CDATA[
-    Rscript ez_histograms.R
+    Rscript $__tool_directory__/ez_histograms.R
         --file '$file'
         --profile '$plot_options.plot_options_selector'
         --xscale '$plot_options.xscale'
@@ -72,7 +72,7 @@
             <output name="summary" file="summary_1.tsv"/>
        </test>
         <test expect_num_outputs="2">
-            <param name="file" value="count.tsv"/>
+            <param name="file" value="counts.tsv"/>
             <param name="plot_options_selector" value="count"/>
             <param name="xscale" value="log2"/>
             <param name="yscale" value="cartesian"/>
