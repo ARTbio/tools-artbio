@@ -77,7 +77,7 @@ plot_histograms <- function(mdata, profile = "count", xscale = "cartesian", ysca
         p <- p + scale_y_continuous(trans = "log2", labels = trans_format("log2", math_format(2^.x)))
       } else {
         if (yscale == "log10") {
-            p <- p + scale_y_continuous(trans = "log10", labels = trans_format("log10", math_format(10^.x)))
+          p <- p + scale_y_continuous(trans = "log10", labels = trans_format("log10", math_format(10^.x)))
         }
       }
     }
@@ -109,16 +109,16 @@ plot_histograms <- function(mdata, profile = "count", xscale = "cartesian", ysca
 
 test_header <- function(file) {
   data <- read.delim(file = file, header = FALSE, row.names = 1, nrows = 2)
-  if (all(is.na(as.numeric(data[1, 1:seq_len(ncol(data))])))) {
+  if(all(is.na(as.numeric(data[1, seq_len(ncol(data))])))) {
     return(TRUE)
-    } else {
-      return(FALSE)
-    }
+  } else {
+    return(FALSE)
+  }
 }
 
 test_rownames <- function(file) {
   data <- read.delim(file = file, header = FALSE, row.names = NULL, nrows = 2)
-  if (is.na(as.numeric(data[2, 1]))){
+  if (is.na(as.numeric(data[2, 1]))) {
     return(1)
   } else {
     return(NULL)
