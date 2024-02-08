@@ -116,17 +116,9 @@ test_header <- function(file) {
   }
 }
 
-test_rownames <- function(file) {
-  data <- read.delim(file = file, header = FALSE, row.names = NULL, nrows = 2)
-  if (is.na(as.numeric(data[2, 1]))) {
-    return(1)
-  } else {
-    return(NULL)
-  }
-}
-
 ##### prepare input data
-data <- read.delim(file = opt$file, header = test_header(opt$file), row.names = test_rownames(opt$file))
+
+data <- read.delim(file = opt$file, header = test_header(opt$file))
 data <- data %>% select(where(is.numeric))  # remove non numeric columns
 mdata <- melt(data)
 
