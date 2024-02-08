@@ -1,2 +1,2 @@
-Variable	N	Mean	Std. Dev.	Min	Pctl. 25	Median	Pctl. 75	Max
-Counts	32833	630.15844	4127.3013	0	0	25	445	552918
+var_names	var_num	n	mean	sd	Q0.25	Q0.5	Q0.75
+Counts	1	32833	6.301584e+02	4.127301e+03	0e+00	2.5e+01	4.45e+02
