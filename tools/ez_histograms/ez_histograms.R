@@ -2,7 +2,7 @@ library(ggplot2)
 library(reshape2)
 library(dplyr)
 library(scales)
-library(vtable)
+library(psych)
 library(optparse)
 
 options(show.error.messages = FALSE,
@@ -116,17 +116,9 @@ test_header <- function(file) {
   }
 }
 
-test_rownames <- function(file) {
-  data <- read.delim(file = file, header = FALSE, row.names = NULL, nrows = 2)
-  if (is.na(as.numeric(data[2, 1]))) {
-    return(1)
-  } else {
-    return(NULL)
-  }
-}
-
 ##### prepare input data
-data <- read.delim(file = opt$file, header = test_header(opt$file), row.names = test_rownames(opt$file))
+
+data <- read.delim(file = opt$file, header = test_header(opt$file))
 data <- data %>% select(where(is.numeric))  # remove non numeric columns
 mdata <- melt(data)
 
@@ -162,8 +154,10 @@ pdf(opt$pdf, width = width, height = height)
 print(p + facet_wrap(~variable, ncol = ncol, scales = "free"))
 dev.off()
 
-# Summary statistics with vtable package
-summary_df <- sumtable(data, digits = 8, out = "return", add.median = TRUE,
-                       summ.names = c("N", "Mean", "Std. Dev.", "Min", "Pctl. 25",
-                                      "Median", "Pctl. 75", "Max"))
+# Summary statistics with psych package
+summary_df <- describe(x = data, skew = FALSE, ranges = FALSE, quant = c(.25, .50, .75))
+summary_df <- cbind(var_names = rownames(summary_df), summary_df)
+colnames(summary_df)[2] <- "var_num"
+summary_df <- summary_df[, -6]
+summary_df[, 4:8] <- format(summary_df[, 4:8], scientific = TRUE)
 write.table(summary_df, file = opt$summary, sep = "\t", quote = FALSE, row.names = FALSE)
