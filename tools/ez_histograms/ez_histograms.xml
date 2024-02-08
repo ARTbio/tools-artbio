@@ -1,7 +1,7 @@
 <tool id="ez_histograms" name="ez_histograms" version="@TOOL_VERSION@+galaxy@VERSION_SUFFIX@" profile="@PROFILE@">
     <macros>
         <token name="@TOOL_VERSION@">3.4.4</token>
-        <token name="@VERSION_SUFFIX@">0</token>
+        <token name="@VERSION_SUFFIX@">1</token>
         <token name="@PROFILE@">23.0</token>
     </macros>
     <requirements>
