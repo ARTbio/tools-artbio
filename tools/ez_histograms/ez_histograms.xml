@@ -108,6 +108,13 @@
             <output name="pdf" file="single_headed_col.pdf"/>
             <output name="summary" file="summary_6.tsv"/>
        </test>
+        <test expect_num_outputs="2">
+            <param name="file" value="misleading_ids.tsv"/>
+            <param name="plot_options_selector" value="density"/>
+            <param name="xscale" value="cartesian"/>
+            <output name="pdf" file="misleading_ids.pdf"/>
+            <output name="summary" file="summary_7.tsv"/>
+       </test>
     </tests>
     <help><![CDATA[
 **What it does**
