@@ -38,7 +38,7 @@ versioned (git) environment !
 ```
 
 - Note that `--dry on` will **not** make any change in your code.
-- for more info on the multiple parameters of styler (which can be integrated to Rstudio
+- For more info on the multiple parameters of styler (which can be integrated to Rstudio
 and will by available in the plug-in menu), see the complete reference below.
 # Reference
 
