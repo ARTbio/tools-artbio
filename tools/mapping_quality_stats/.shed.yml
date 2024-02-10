@@ -10,7 +10,7 @@ categories:
   - Statistics
 
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/mapping_quality_stats
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/mapping_quality_stats
 toolshed:
   - toolshed
 

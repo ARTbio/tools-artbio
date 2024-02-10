@@ -1,9 +1,9 @@
 ## Setup R error handling to go to stderr
 options(show.error.messages = FALSE,
-        error = function() {
-            cat(geterrmessage(), file = stderr())
-            q("no", 1, FALSE)
-        }
+    error = function() {
+        cat(geterrmessage(), file = stderr())
+        q("no", 1, FALSE)
+    }
 )
 
 
@@ -14,7 +14,7 @@ library(ggplot2)
 option_list <- list(
     make_option(c("-i", "--input"), type = "character", help = "Path to tabular file"),
     make_option(c("-o", "--output"), type = "character", help = "path to the pdf plot")
-    )
+)
 
 parser <- OptionParser(usage = "%prog [options] file", option_list = option_list)
 args <- parse_args(parser)
