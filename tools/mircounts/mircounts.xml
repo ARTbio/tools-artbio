@@ -19,29 +19,29 @@
     <command detect_errors="exit_code"><![CDATA[
         tar -xf  '$__tool_directory__'/mirbase.tar.gz &&
         python '$__tool_directory__'/mature_mir_gff_translation.py
-                                                --gff_path mirbase/${mirbase_version}/genomes/${genomeKey}.gff3
-                                                --output $gff3 && ## transcode the mature miR genome coordinates into coordinates relative to the corresponding "miRNA_primary_transcript".
+                                                --gff_path mirbase/'${mirbase_version}'/genomes/'${genomeKey}'.gff3
+                                                --output '$gff3' && ## transcode mature miR genome coordinates relative to "miRNA_primary_transcript"
         python '$__tool_directory__'/format_fasta_hairpins.py
-                                                --hairpins_path mirbase/${mirbase_version}/hairpin.fa.gz
-                                                --basename ${genomeKey}
+                                                --hairpins_path mirbase/'${mirbase_version}'/hairpin.fa.gz
+                                                --basename '${genomeKey}'
                                                 --output hairpin.fa &&
         #if $cutadapt.cutoption == "yes":
-            python '$__tool_directory__'/yac.py --input $cutadapt.input
+            python '$__tool_directory__'/yac.py --input '$cutadapt.input'
                                                 --output clipped_input.fastq
                                                 --output_format fastq
-                                                --adapter_to_clip $cutadapt.clip_source.clip_sequence
-                                                --min $cutadapt.min
-                                                --max $cutadapt.max
-                                                --Nmode $cutadapt.Nmode &&
+                                                --adapter_to_clip '$cutadapt.clip_source.clip_sequence'
+                                                --min '$cutadapt.min'
+                                                --max '$cutadapt.max'
+                                                --Nmode '$cutadapt.Nmode' &&
         #else:
             ln -f -s '$cutadapt.clipped_input' clipped_input.fastq &&
         #end if
         bowtie-build hairpin.fa hairpin &&
-        bowtie -v $v -M 1 --best --strata --norc -p \${GALAXY_SLOTS:-4} --sam hairpin -q clipped_input.fastq | samtools sort -@ \${GALAXY_SLOTS:-4} -O bam -o '$output' &&
+        bowtie -v '$v' -M 1 --best --strata --norc -p \${GALAXY_SLOTS:-4} --sam hairpin -q clipped_input.fastq | samtools sort -@ \${GALAXY_SLOTS:-4} -O bam -o '$output' &&
         samtools index $output &&
-        python '$__tool_directory__'/mircounts.py --alignment $output --gff $gff3 --quality_threshold 10 --pre_mirs $pre_mir_count_file --mirs $mir_count_file --lattice $coverage_dataframe
+        python '$__tool_directory__'/mircounts.py --alignment '$output' --gff '$gff3' --quality_threshold 10 --pre_mirs '$pre_mir_count_file' --mirs '$mir_count_file' --lattice '$coverage_dataframe'
         #if $plotting.plottingOption == 'yes':
-            && Rscript '$__tool_directory__'/coverage_plotting.R --dataframe $coverage_dataframe --type $plotting.display --output $latticePDF
+            && Rscript '$__tool_directory__'/coverage_plotting.R --dataframe '$coverage_dataframe' --type '$plotting.display' --output '$latticePDF'
         #end if
     ]]></command>
     <inputs>
@@ -264,7 +264,7 @@
 
 This tool uses a species-specific GFF3 file generated from mirBase_ to guide the parsing of a bam file of small RNA alignments.
 
-.. _mirBase: ftp://mirbase.org/pub/mirbase/
+.. _mirBase: https://mirbase.org/download/
 
 ------
 
