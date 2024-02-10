@@ -10,9 +10,10 @@ hlp_output <- "--output\tFILE\tFile to output the pdf to\n"
 hlp <- paste(hlp_description, hlp_usage, hlp_dataframe, hlp_type, hlp_output, sep = "\n")
 
 # Setup R error handling to go to stderr
-options(show.error.messages = F,
+options(show.error.messages = FALSE,
     error = function() {
-        cat(geterrmessage(), file = stderr()); q("no", 1, F)
+        cat(geterrmessage(), file = stderr())
+        q("no", 1, FALSE)
     }
 )
 
@@ -26,7 +27,7 @@ option_list <- list(
     make_option(c("-t", "--type"), type = "character", default = "relative",
                 help = "Type of plotting, either relative or absoute coverage values (default = 'relative')"),
     make_option(c("-o", "--output"), type = "character", help = "File to output the pdf to")
-    )
+)
 parser <- OptionParser(usage = "%prog [options] file", option_list = option_list)
 args <- parse_args(parser)
 
@@ -35,22 +36,26 @@ if (!("dataframe" %in% names(args)) || !("output" %in% names(args))) {
 }
 
 # Plot
-coverage <- read.delim(args$dataframe, header = T)
+coverage <- read.delim(args$dataframe, header = TRUE)
 if (args$type == "relative") {
-    graph <- xyplot(Norm_count ~ Norm_offset | Mir_hairpin, data = coverage, col = c("darkblue"), type = "l", lwd = 1.5,
-                   scales = list(x = list(cex = .5), y = list(cex = .5)), par.strip.text = list(cex = .5),
-                   strip = strip.custom(which.given = 1, bg = "lightblue"), layout = c(4, 15),
-                   as.table = T, xlab = "Normalized Counts", ylab = "Normalized coordinates",
-                   main = "miRNA coverage maps")
+    graph <- xyplot(
+        Norm_count ~ Norm_offset | Mir_hairpin, data = coverage, col = c("darkblue"), type = "l", lwd = 1.5,
+        scales = list(x = list(cex = .5), y = list(cex = .5)), par.strip.text = list(cex = .5),
+        strip = strip.custom(which.given = 1, bg = "lightblue"), layout = c(4, 15),
+        as.table = TRUE, xlab = "Normalized Counts", ylab = "Normalized coordinates",
+        main = "miRNA coverage maps"
+    )
 } else {
-    graph <- xyplot(Count ~ Offset | Mir_hairpin, data = coverage, col = c("darkblue"), type = "l", lwd = 1.5,
-                   scales = list(x = list(cex = .5), y = list(cex = .5)), par.strip.text = list(cex = .5),
-                   strip = strip.custom(which.given = 1, bg = "lightblue"), layout = c(4, 15),
-                   as.table = T, xlab = "Counts", ylab = "Coordinates",
-                   main = "miRNA coverage plots")
+    graph <- xyplot(
+        Count ~ Offset | Mir_hairpin, data = coverage, col = c("darkblue"), type = "l", lwd = 1.5,
+        scales = list(x = list(cex = .5), y = list(cex = .5)), par.strip.text = list(cex = .5),
+        strip = strip.custom(which.given = 1, bg = "lightblue"), layout = c(4, 15),
+        as.table = TRUE, xlab = "Counts", ylab = "Coordinates",
+        main = "miRNA coverage plots"
+    )
 }
 
 # PDF output
 pdf(file = args$output, paper = "special", height = 11.69, width = 8.2677)
-plot(graph, newpage = T)
+plot(graph, newpage = TRUE)
 dev.off()

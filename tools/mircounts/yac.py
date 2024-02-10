@@ -81,8 +81,11 @@ class Clip:
         output.write(block)
 
     def handle_io(self):
-        '''Open input file, pass read sequence and read qscore to clipping function.
-        Pass clipped read and qscore to output function.'''
+        '''
+        Open input file, pass read sequence and read qscore
+        to clipping function.
+        Pass clipped read and qscore to output function.
+        '''
         id = 0
         output = open(self.outputfile, "a")
         with open(self.inputfile, "r") as input:

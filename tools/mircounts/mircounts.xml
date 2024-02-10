@@ -1,12 +1,17 @@
-<tool id="mircounts" name="miRcounts" version="1.5.1">
+<tool id="mircounts" name="miRcounts" version="@TOOL_VERSION@+galaxy@VERSION_SUFFIX@" profile="@PROFILE@">
     <description> Counts miRNA alignments from small RNA sequence data</description>
+    <macros>
+        <token name="@TOOL_VERSION@">1.6</token>
+        <token name="@VERSION_SUFFIX@">0</token>
+        <token name="@PROFILE@">23.0</token>
+    </macros>
     <requirements>
-        <requirement type="package" version="1.34=ha1f6473_0">tar</requirement>
-        <requirement type="package" version="1.3.0=py39h176da8b_2">bowtie</requirement>
-        <requirement type="package" version="1.12=h9aed4be_1">samtools</requirement>
-        <requirement type="package" version="0.16.0.1=py39h051187c_3">pysam</requirement>
-        <requirement type="package" version="1.6.6=r40h6115d3f_1">r-optparse</requirement>
-        <requirement type="package" version="0.20_44=r40hcfec24a_0">r-lattice</requirement>
+        <requirement type="package" version="1.34">tar</requirement>
+        <requirement type="package" version="1.3.1">bowtie</requirement>
+        <requirement type="package" version="1.19.2">samtools</requirement>
+        <requirement type="package" version="0.22.0">pysam</requirement>
+        <requirement type="package" version="1.7.4">r-optparse</requirement>
+        <requirement type="package" version="0.22_5">r-lattice</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="warning" description="Tool exception" />
@@ -14,29 +19,29 @@
     <command detect_errors="exit_code"><![CDATA[
         tar -xf  '$__tool_directory__'/mirbase.tar.gz &&
         python '$__tool_directory__'/mature_mir_gff_translation.py
-                                                --gff_path mirbase/${mirbase_version}/genomes/${genomeKey}.gff3
-                                                --output $gff3 && ## transcode the mature miR genome coordinates into coordinates relative to the corresponding "miRNA_primary_transcript".
+                                                --gff_path mirbase/'${mirbase_version}'/genomes/'${genomeKey}'.gff3
+                                                --output '$gff3' && ## transcode mature miR genome coordinates relative to "miRNA_primary_transcript"
         python '$__tool_directory__'/format_fasta_hairpins.py
-                                                --hairpins_path mirbase/${mirbase_version}/hairpin.fa.gz
-                                                --basename ${genomeKey}
+                                                --hairpins_path mirbase/'${mirbase_version}'/hairpin.fa.gz
+                                                --basename '${genomeKey}'
                                                 --output hairpin.fa &&
         #if $cutadapt.cutoption == "yes":
-            python '$__tool_directory__'/yac.py --input $cutadapt.input
+            python '$__tool_directory__'/yac.py --input '$cutadapt.input'
                                                 --output clipped_input.fastq
                                                 --output_format fastq
-                                                --adapter_to_clip $cutadapt.clip_source.clip_sequence
-                                                --min $cutadapt.min
-                                                --max $cutadapt.max
-                                                --Nmode $cutadapt.Nmode &&
+                                                --adapter_to_clip '$cutadapt.clip_source.clip_sequence'
+                                                --min '$cutadapt.min'
+                                                --max '$cutadapt.max'
+                                                --Nmode '$cutadapt.Nmode' &&
         #else:
             ln -f -s '$cutadapt.clipped_input' clipped_input.fastq &&
         #end if
         bowtie-build hairpin.fa hairpin &&
-        bowtie -v $v -M 1 --best --strata --norc -p \${GALAXY_SLOTS:-4} --sam hairpin -q clipped_input.fastq | samtools sort -@ \${GALAXY_SLOTS:-4} -O bam -o '$output' &&
+        bowtie -v '$v' -M 1 --best --strata --norc -p \${GALAXY_SLOTS:-4} --sam hairpin -q clipped_input.fastq | samtools sort -@ \${GALAXY_SLOTS:-4} -O bam -o '$output' &&
         samtools index $output &&
-        python '$__tool_directory__'/mircounts.py --alignment $output --gff $gff3 --quality_threshold 10 --pre_mirs $pre_mir_count_file --mirs $mir_count_file --lattice $coverage_dataframe
+        python '$__tool_directory__'/mircounts.py --alignment '$output' --gff '$gff3' --quality_threshold 10 --pre_mirs '$pre_mir_count_file' --mirs '$mir_count_file' --lattice '$coverage_dataframe'
         #if $plotting.plottingOption == 'yes':
-            && Rscript '$__tool_directory__'/coverage_plotting.R --dataframe $coverage_dataframe --type $plotting.display --output $latticePDF
+            && Rscript '$__tool_directory__'/coverage_plotting.R --dataframe '$coverage_dataframe' --type '$plotting.display' --output '$latticePDF'
         #end if
     ]]></command>
     <inputs>
@@ -135,12 +140,12 @@
         </data>
     </outputs>
     <tests>
-        <test>
-            <param name="cutoption" value="no" />
+        <test expect_num_outputs="6">
+            <param name="cutoption" value="no"/>
             <param name="v" value="1"/>
             <param name="genomeKey" value="aga"/>
             <param name="mirbase_version" value="22"/>
-            <param name="clipped_input" value="aga.fastqsanger" ftype="fastqsanger"/>
+            <param name="clipped_input" value="aga.fastqsanger.gz" ftype="fastqsanger.gz"/>
             <param name="plottingOption" value="yes"/>
             <param name="display" value="relative"/>
             <param name="output_premir_counts" value="True"/>
@@ -152,8 +157,8 @@
             <output name="latticePDF" file="aga_mir_coverage.pdf" ftype="pdf" />
             <output name="coverage_dataframe" file="aga_lattice_dataframe.tab" ftype="tabular" />
         </test>
-        <test>
-            <param name="cutoption" value="yes" />
+        <test expect_num_outputs="6">
+            <param name="cutoption" value="yes"/>
             <param name="min" value="18"/>
             <param name="max" value="32"/>
             <param name="Nmode" value="reject"/>
@@ -173,8 +178,8 @@
             <output name="latticePDF" file="mouse_mir_coverage.pdf" ftype="pdf" />
             <output name="coverage_dataframe" file="mouse_lattice_dataframe.tab" ftype="tabular" />
         </test>
-        <test>
-            <param name="cutoption" value="yes" />
+        <test expect_num_outputs="4">
+            <param name="cutoption" value="yes"/>
             <param name="min" value="15"/>
             <param name="max" value="25"/>
             <param name="Nmode" value="reject"/>
@@ -191,8 +196,8 @@
             <output name="pre_mir_count_file" file="pre_mirs_unclipped_count.22.tab" ftype="tabular" />
             <output name="mir_count_file" file="mirs_unclipped_count.22.tab" ftype="tabular" />
         </test>
-         <test>
-            <param name="cutoption" value="yes" />
+         <test expect_num_outputs="4">
+            <param name="cutoption" value="yes"/>
             <param name="min" value="15"/>
             <param name="max" value="25"/>
             <param name="Nmode" value="reject"/>
@@ -209,8 +214,8 @@
             <output name="pre_mir_count_file" file="pre_mirs_unclipped_count.tab" ftype="tabular" />
             <output name="mir_count_file" file="mirs_unclipped_count.tab" ftype="tabular" />
         </test>
-        <test>
-            <param name="cutoption" value="yes" />
+        <test expect_num_outputs="6">
+            <param name="cutoption" value="yes"/>
             <param name="min" value="15"/>
             <param name="max" value="25"/>
             <param name="Nmode" value="reject"/>
@@ -230,8 +235,8 @@
             <output name="latticePDF" file="mir_unclipped_coverage.pdf" ftype="pdf"/>
             <output name="coverage_dataframe" file="lattice_unclipped_dataframe.tab" ftype="tabular" />
         </test>
-        <test>
-            <param name="cutoption" value="no" />
+        <test expect_num_outputs="6">
+            <param name="cutoption" value="no"/>
             <param name="v" value="1"/>
             <param name="genomeKey" value="dme"/>
             <param name="mirbase_version" value="21"/>
@@ -259,7 +264,7 @@
 
 This tool uses a species-specific GFF3 file generated from mirBase_ to guide the parsing of a bam file of small RNA alignments.
 
-.. _mirBase: ftp://mirbase.org/pub/mirbase/
+.. _mirBase: https://mirbase.org/download/
 
 ------
 
