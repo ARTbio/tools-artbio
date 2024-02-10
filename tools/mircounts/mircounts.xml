@@ -145,7 +145,7 @@
             <param name="v" value="1"/>
             <param name="genomeKey" value="aga"/>
             <param name="mirbase_version" value="22"/>
-            <param name="clipped_input" value="aga.fastqsanger" ftype="fastqsanger"/>
+            <param name="clipped_input" value="aga.fastqsanger.gz" ftype="fastqsanger.gz"/>
             <param name="plottingOption" value="yes"/>
             <param name="display" value="relative"/>
             <param name="output_premir_counts" value="True"/>
