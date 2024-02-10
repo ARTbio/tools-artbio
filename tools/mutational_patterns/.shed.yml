@@ -9,6 +9,6 @@ long_description: |
 categories:
   - Variant Analysis
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/mutational_patterns
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/mutational_patterns
 toolshed:
   - toolshed
