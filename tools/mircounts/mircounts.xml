@@ -141,7 +141,7 @@
     </outputs>
     <tests>
         <test>
-            <param name="cutoption" value="no" />
+            <param name="cutoption" value="no" expect_num_outputs="6"/>
             <param name="v" value="1"/>
             <param name="genomeKey" value="aga"/>
             <param name="mirbase_version" value="22"/>
@@ -158,7 +158,7 @@
             <output name="coverage_dataframe" file="aga_lattice_dataframe.tab" ftype="tabular" />
         </test>
         <test>
-            <param name="cutoption" value="yes" />
+            <param name="cutoption" value="yes" expect_num_outputs="6"/>
             <param name="min" value="18"/>
             <param name="max" value="32"/>
             <param name="Nmode" value="reject"/>
@@ -179,7 +179,7 @@
             <output name="coverage_dataframe" file="mouse_lattice_dataframe.tab" ftype="tabular" />
         </test>
         <test>
-            <param name="cutoption" value="yes" />
+            <param name="cutoption" value="yes" expect_num_outputs="4"/>
             <param name="min" value="15"/>
             <param name="max" value="25"/>
             <param name="Nmode" value="reject"/>
@@ -197,7 +197,7 @@
             <output name="mir_count_file" file="mirs_unclipped_count.22.tab" ftype="tabular" />
         </test>
          <test>
-            <param name="cutoption" value="yes" />
+            <param name="cutoption" value="yes" expect_num_outputs="4"/>
             <param name="min" value="15"/>
             <param name="max" value="25"/>
             <param name="Nmode" value="reject"/>
@@ -215,7 +215,7 @@
             <output name="mir_count_file" file="mirs_unclipped_count.tab" ftype="tabular" />
         </test>
         <test>
-            <param name="cutoption" value="yes" />
+            <param name="cutoption" value="yes" expect_num_outputs="6"/>
             <param name="min" value="15"/>
             <param name="max" value="25"/>
             <param name="Nmode" value="reject"/>
@@ -236,7 +236,7 @@
             <output name="coverage_dataframe" file="lattice_unclipped_dataframe.tab" ftype="tabular" />
         </test>
         <test>
-            <param name="cutoption" value="no" />
+            <param name="cutoption" value="no" expect_num_outputs="6"/>
             <param name="v" value="1"/>
             <param name="genomeKey" value="dme"/>
             <param name="mirbase_version" value="21"/>
