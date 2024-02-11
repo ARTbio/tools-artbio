@@ -30,7 +30,6 @@
     <xml name="requirements">
         <requirements>
             <requirement type="package" version="@TOOL_VERSION@">manta</requirement>
-            <requirement type="package" version="2.7.18">python</requirement>
             <requirement type="package" version="1.19.2">samtools</requirement>
         </requirements>
     </xml>
