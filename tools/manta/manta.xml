@@ -112,7 +112,6 @@
                 <param name="useOverlapPairEvidence" type="integer" value="0" label="useOverlapPairEvidence" help="Set if an overlapping read pair will be considered as evidence. Set this value &lt;= 0 to skip overlapping read pairs."/>
             </when>
         </conditional>
-        <param name="config_file_check" type="boolean" label="output conf file" checked="False" help="Show configuration file on history"/>
         <param name="candidateSV_check" type="boolean" label="Unfiltered structural variants" checked="False"
                help="All unscored structural variant candidates"/>
         <param name="candidateSmallIndels_check" type="boolean" label="Unfiltered small indel candidates" checked="False"
@@ -122,9 +121,7 @@
                      reflect any information from the tumor sample" />
     </inputs>
     <outputs>
-        <data format="tabular" name="conf_file" label="conf_file.ini" from_work_dir="./configManta.py.ini">
-            <filter>config_file_check == True</filter>
-        </data>
+        <data format="tabular" name="conf_file" label="conf_file.ini" from_work_dir="./configManta.py.ini"/>
         <data format="vcf_bgzip" name="candidateSV" label="Manta unfiltered variants" from_work_dir="MantaWorkflow/results/variants/candidateSV.vcf.gz">
             <filter>candidateSV_check == True</filter>
         </data>
