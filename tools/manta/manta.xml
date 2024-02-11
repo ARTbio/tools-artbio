@@ -26,7 +26,7 @@
     #end if
     #if str( $set_configuration.set_configuration_switch ) == "Customized":
         rm ./configManta.py.ini &&
-        python '$__tool_directory__/customConfigManta.py'
+        python3 '$__tool_directory__/customConfigManta.py'
         --minCandidateVariantSize '$set_configuration.minCandidateVariantSize'
         --rnaMinCandidateVariantSize '$set_configuration.rnaMinCandidateVariantSize'
         --minEdgeObservations '$set_configuration.minEdgeObservations'
