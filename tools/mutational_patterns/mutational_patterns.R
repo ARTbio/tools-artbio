@@ -264,7 +264,7 @@ if (!is.na(opt$output_sigpattern)[1]) {
     if (!is.na(opt$cosmic_version)) {
         cosmic_urls <- read.delim(paste0(opt$tooldir, "cosmic_urls.tsv"), sep = "\t", header = TRUE)
         cosmic_sbs_file <- cosmic_urls$url[cosmic_urls$genome == opt$genome &
-                                           cosmic_urls$cosmic_version == opt$cosmic_version]
+                                               cosmic_urls$cosmic_version == opt$cosmic_version]
         sbs_signatures <- read.table(paste0(opt$tooldir, cosmic_sbs_file),
             sep = "\t", header = TRUE
         )
