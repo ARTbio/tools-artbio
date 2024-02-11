@@ -42,7 +42,7 @@ jobs:
       commit-range: ${{ steps.discover.outputs.commit-range }}
     strategy:
       matrix:
-        python-version: ['3.7']
+        python-version: ['3.11']
     steps:
     - name: Print github context properties
       run: |
@@ -108,7 +108,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.7']
+        python-version: ['3.11']
     steps:
     - uses: actions/checkout@v3
       with:
@@ -126,7 +126,7 @@ jobs:
     - name: Set fail level for pull request
       if: ${{ github.event_name == 'pull_request' }}
       run:
-        echo "FAIL_LEVEL=error" >> "$GITHUB_ENV"
+        echo "FAIL_LEVEL=warn" >> "$GITHUB_ENV"
     - name: Set fail level for merge
       if: ${{ github.event_name != 'pull_request' }}
       run:
@@ -154,7 +154,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.7']
+        python-version: ['3.11']
     steps:
     - uses: actions/checkout@v3
       with:
@@ -181,7 +181,7 @@ jobs:
   lintr:
     name: Lint R scripts
     needs: setup
-    if: ${{ github.event_name == 'pull_request' && needs.setup.outputs.repository-list != '' }}
+    if: ${{ needs.setup.outputs.repository-list != '' }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -275,7 +275,7 @@ jobs:
       fail-fast: false
       matrix:
         chunk: ${{ fromJson(needs.setup.outputs.chunk-list) }}
-        python-version: ['3.7']
+        python-version: ['3.11']
     services:
       postgres:
         image: postgres:11
@@ -339,7 +339,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.7']
+        python-version: ['3.11']
     steps:
     - uses: actions/download-artifact@v3
       with:
@@ -359,10 +359,12 @@ jobs:
       with:
         mode: combine
         html-report: true
+        markdown-report: true
     - uses: actions/upload-artifact@v3
       with:
         name: 'All tool test results'
         path: upload
+    - run: cat upload/tool_test_output.md >> $GITHUB_STEP_SUMMARY
     - name: Check outputs
       uses: galaxyproject/planemo-ci-action@v1
       id: check
@@ -383,7 +385,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.7']
+        python-version: ['3.11']
     steps:
     - uses: actions/checkout@v3
       with:
