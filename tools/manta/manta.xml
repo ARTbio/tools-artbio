@@ -121,7 +121,7 @@
                      reflect any information from the tumor sample" />
     </inputs>
     <outputs>
-        <data format="tabular" name="conf_file" label="conf_file.ini" from_work_dir="./configManta.py.ini"/>
+        <data format="txt" name="conf_file" label="conf_file.ini" from_work_dir="./configManta.py.ini"/>
         <data format="vcf_bgzip" name="candidateSV" label="Manta unfiltered variants" from_work_dir="MantaWorkflow/results/variants/candidateSV.vcf.gz">
             <filter>candidateSV_check == True</filter>
         </data>
@@ -136,7 +136,7 @@
         </data>
     </outputs>
     <tests>
-        <test>
+        <test expect_num_outputs="3">
             <param name="reference_source_selector" value="cached"/>
             <param name="index" value="hg19"/>
             <param name="bam_input_selector" value="tumor_bam" dbkey="hg19"/>
@@ -145,10 +145,11 @@
             <param name="set_configuration_switch" value="Default_config_file"/>
             <param name="callMemMb" value="1000"/>
             <param name="candidateSmallIndels_check" value="True"/>
+            <output name="conf_file" file="conf_file_1.ini" ftype="txt"/>
             <output name="candidateSmallIndels" file="candidateSmallIndels.vcf.gz" decompress="true" lines_diff="6"/>
             <output name="somaticSV" file="somaticSV.vcf.gz" decompress="true" lines_diff="6"/>
         </test>
-        <test>
+        <test expect_num_outputs="3">
             <param name="reference_source_selector" value="cached"/>
             <param name="index" value="hg19"/>
             <param name="bam_input_selector" value="tumor_bam" dbkey="hg19"/>
@@ -157,10 +158,11 @@
             <param name="set_configuration_switch" value="Customized"/>
             <param name="callMemMb" value="1000"/>
             <param name="candidateSmallIndels_check" value="True"/>
+            <output name="conf_file" file="conf_file_2.ini" ftype="txt"/>
             <output name="candidateSmallIndels" file="candidateSmallIndels.vcf.gz" decompress="true" lines_diff="6"/>
             <output name="somaticSV" file="somaticSV.vcf.gz" decompress="true" lines_diff="6"/>
         </test>
-        <test>
+        <test expect_num_outputs="3">
                 <param name="reference_source_selector" value="cached"/>
                 <param name="index" value="hg19"/>
                 <param name="bam_input_selector" value="tumor_bam" dbkey="hg19"/>
@@ -169,10 +171,11 @@
                 <param name="set_configuration_switch" value="Default_config_file"/>
                 <param name="callMemMb" value="1000"/>
                 <param name="candidateSmallIndels_check" value="True"/>
+                <output name="conf_file" file="conf_file_3.ini" ftype="txt"/>
                 <output name="candidateSmallIndels" file="candidateSmallIndels.vcf.gz" decompress="true" lines_diff="6"/>
                 <output name="somaticSV" file="somaticSV.vcf.gz" decompress="true" lines_diff="6"/>
         </test>
-        <test>
+        <test expect_num_outputs="3">
                 <param name="reference_source_selector" value="history"/>
                 <param name="ref_file" ftype="fasta" value="hg19_region.fa"/>
                 <param name="bam_input_selector" value="tumor_bam"/>
@@ -181,10 +184,11 @@
                 <param name="set_configuration_switch" value="Default_config_file"/>
                 <param name="callMemMb" value="1000"/>
                 <param name="candidateSV_check" value="True"/>
+                <output name="conf_file" file="conf_file_4.ini" ftype="txt"/>
                 <output name="candidateSV" file="candidateSV.vcf.gz" decompress="true" lines_diff="6"/>
                 <output name="somaticSV" file="somaticSV.vcf.gz" decompress="true" lines_diff="6"/>
         </test>
-        <test>
+        <test expect_num_outputs="3">
                 <param name="reference_source_selector" value="history"/>
                 <param name="ref_file" ftype="fasta" value="hg19_region.fa"/>
                 <param name="bam_input_selector" value="tumor_bam"/>
@@ -193,6 +197,7 @@
                 <param name="set_configuration_switch" value="Default_config_file"/>
                 <param name="callMemMb" value="1000"/>
                 <param name="candidateSmallIndels_check" value="True"/>
+                <output name="conf_file" file="conf_file_5.ini" ftype="txt"/>
                 <output name="candidateSmallIndels" file="candidateSmallIndels.vcf.gz" decompress="true" lines_diff="6"/>
                 <output name="somaticSV" file="somaticSV.vcf.gz" decompress="true" lines_diff="6"/>
         </test>
