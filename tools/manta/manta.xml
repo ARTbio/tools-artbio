@@ -43,7 +43,7 @@
         --useOverlapPairEvidence '$set_configuration.useOverlapPairEvidence' &&
     #end if
     
-    python2 \$(which configManta.py)
+    python \$(which configManta.py)
         --referenceFasta='${reference_fasta_filename}'
         --config='./configManta.py.ini'
         #if str( $bam_input.bam_input_selector ) == "not_tumor_bam":
