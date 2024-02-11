@@ -11,6 +11,7 @@
     @set_reference_fasta_filename@
     #set run_dir = './MantaWorkflow'
     cp $__tool_directory__/configManta.py.ini configManta.py.ini &&
+    cp $(which configManta.py) ./ && chmod 755 configManta.py &&
     #if str( $bam_input.bam_input_selector ) == "not_tumor_bam":
     ln -s '$bam_input.normal_bam_file' normal.bam &&
     ln -s '$bam_input.normal_bam_file.metadata.bam_index' normal.bai &&
@@ -43,7 +44,7 @@
         --useOverlapPairEvidence '$set_configuration.useOverlapPairEvidence' &&
     #end if
     
-    configManta.py
+    ./configManta.py
         --referenceFasta='${reference_fasta_filename}'
         --config='./configManta.py.ini'
         #if str( $bam_input.bam_input_selector ) == "not_tumor_bam":
