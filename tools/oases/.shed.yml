@@ -8,6 +8,6 @@ categories:
   - Assembly
   - RNA
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/oases
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/oases
 toolshed:
   - toolshed
