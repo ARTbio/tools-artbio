@@ -10,6 +10,9 @@
     @pipefail@
     @set_reference_fasta_filename@
     #set run_dir = './MantaWorkflow'
+    configManta=\$(which configManta.py) &&
+    PATH=\${configManta/"configManta.py"/}:\$PATH &&
+    printenv &&
     cp $__tool_directory__/configManta.py.ini configManta.py.ini &&
     #if str( $bam_input.bam_input_selector ) == "not_tumor_bam":
     ln -s '$bam_input.normal_bam_file' normal.bam &&
