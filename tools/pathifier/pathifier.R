@@ -4,9 +4,9 @@
 ##################################################################################################
 
 
-options(show.error.messages = F, error = function() {
+options(show.error.messages = FALSE, error = function() {
     cat(geterrmessage(), file = stderr())
-    q("no", 1, F)
+    q("no", 1, FALSE)
 })
 # we need that to not crash galaxy with an UTF8 error on German LC settings.
 loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
@@ -36,7 +36,7 @@ option_list <- list(
     ),
     make_option(
         "--is_normal",
-        default = F,
+        default = FALSE,
         type = "logical",
         help = "Define normals cells in your data"
     ),
@@ -54,7 +54,7 @@ option_list <- list(
     make_option(
         "--max_stability",
         type = "logical",
-        default = T,
+        default = TRUE,
         help = "If true, throw away components leading to low stability of sampling noise [default : '%default']"
     ),
     make_option(
@@ -133,10 +133,10 @@ set.seed(123)
 # Load expression data for PATHIFIER
 exp_matrix <- as.matrix(read.delim(
     file = args$exp,
-    as.is = T,
+    as.is = TRUE,
     row.names = 1,
     sep = args$sep,
-    check.names = F
+    check.names = FALSE
 ))
 
 # Load Genesets annotation
@@ -154,8 +154,8 @@ pathwaynames <- names(gs)
 
 # Prepare data and parameters ##################################################
 # Extract information from binary phenotypes. 1 = Normal, 0 = Tumor
-if (args$is_normal == T) {
-    normals <- read.delim(file = args$normals, h = F)
+if (args$is_normal == TRUE) {
+    normals <- read.delim(file = args$normals, h = FALSE)
     normals <- as.logical(normals[, 2])
     n_exp_matrix <- exp_matrix[, normals]
 } else {
@@ -181,7 +181,7 @@ exp_matrix_filtered <- exp_matrix[g_over, ]
 exp_matrix_filtered[exp_matrix_filtered < min_exp] <- min_exp
 
 # Set maximum 5000 genes with more variance
-variable_genes <- names(sort(apply(exp_matrix_filtered, 1, var), decreasing = T))[1:5000]
+variable_genes <- names(sort(apply(exp_matrix_filtered, 1, var), decreasing = TRUE))[1:5000]
 variable_genes <- variable_genes[!is.na(variable_genes)]
 exp_matrix_filtered <- exp_matrix_filtered[variable_genes, ]
 allgenes <- as.vector(rownames(exp_matrix_filtered))
@@ -207,7 +207,7 @@ pdf(args$plot)
 col_score_fun <- colorRamp2(c(0, 0.5, 1), c("#4575B4", "#FFFFBF", "#D73027"))
 
 # Run Pathifier
-if (args$is_normal == T) {
+if (args$is_normal == TRUE) {
     pds <- quantify_pathways_deregulation(exp_matrix_filtered,
         allgenes,
         gs,
@@ -231,10 +231,10 @@ if (args$is_normal == T) {
         layout(cbind(1:2, 1:2), heights = c(7, 1))
         sc3 <- scatterplot3d(ordered[, 1:3],
             main = paste("Principal curve of", i),
-            box = F, pch = 19, type = "l"
+            box = FALSE, pch = 19, type = "l"
         )
         sc3$points3d(ordered[, 1:3],
-            box = F, pch = 19,
+            box = FALSE, pch = 19,
             col = col_score_fun(ordered$PDS)
         )
 
@@ -250,10 +250,10 @@ if (args$is_normal == T) {
         cols_status <- ifelse(ordered$normal, "blue", "red")
         sc3 <- scatterplot3d(ordered[, 1:3],
             main = paste("Principal curve of", i),
-            box = F, pch = "", type = "l"
+            box = FALSE, pch = "", type = "l"
         )
         sc3$points3d(ordered[, 1:3],
-            box = F,
+            box = FALSE,
             pch = ifelse(ordered$normal, 19, 8),
             col = ifelse(ordered$normal, "blue", "red")
         )
@@ -289,10 +289,10 @@ if (args$is_normal == T) {
         layout(cbind(1:2, 1:2), heights = c(7, 1))
         sc3 <- scatterplot3d(ordered[, 1:3],
             main = paste("Principal curve of", i),
-            box = F, pch = 19, type = "l"
+            box = FALSE, pch = 19, type = "l"
         )
         sc3$points3d(ordered[, 1:3],
-            box = F, pch = 19,
+            box = FALSE, pch = 19,
             col = col_score_fun(ordered$PDS)
         )
 
@@ -338,9 +338,9 @@ dev.off()
 ## write table
 write.table(pds_scores,
     args$pds,
-    row.names = T,
-    col.names = T,
-    quote = F,
+    row.names = TRUE,
+    col.names = TRUE,
+    quote = FALSE,
     sep = "\t"
 )
 
