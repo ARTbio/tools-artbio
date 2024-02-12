@@ -90,9 +90,9 @@ splicing_events.txt
 
 Read the Oases `documentation`__ for details on using the Oases Assembler.
 
-.. _Oases: http://www.ebi.ac.uk/~zerbino/oases/
+.. _Oases: https://github.com/dzerbino/oases
 
-.. __: http://www.ebi.ac.uk/~zerbino/oases/Manual.txt
+.. __: https://bioweb.pasteur.fr/docs/modules/oases/0.2.08/OasesManual.pdf
 
 ------
 
