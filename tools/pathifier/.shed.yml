@@ -9,6 +9,6 @@ categories:
   - Transcriptomics
   - Statistics # Check the category exists
 homepage_url: https://
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/pathifier
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/pathifier
 toolshed:
   - toolshed

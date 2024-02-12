@@ -1,5 +1,10 @@
-<tool id="pathifier" name="Pathifier" version="1.0.2">
+<tool id="pathifier" name="Pathifier" version="@TOOL_VERSION@+galaxy@VERSION_SUFFIX@" profile="@PROFILE@">
     <description>: Quantify deregulation of pathways in cancer</description>
+    <macros>
+        <token name="@TOOL_VERSION@">1.22.0</token>
+        <token name="@VERSION_SUFFIX@">0</token>
+        <token name="@PROFILE@">23.0</token>
+    </macros>
     <requirements>
         <requirement type="package" version="1.6.2=r35h6115d3f_0">r-optparse</requirement>
         <requirement type="package" version="1.22.0=r351_0">bioconductor-pathifier</requirement>
@@ -11,12 +16,12 @@
         <exit_code range="1:" level="fatal" description="Tool exception" />
     </stdio>
     <command detect_errors="exit_code"><![CDATA[ 
-        Rscript $__tool_directory__/pathifier.R 
+        Rscript '$__tool_directory__/pathifier.R' 
             --exp '$input'
             --sep '$input_sep'
             --genes '$genes'
 
-            #if $reference.is_normal == "Yes":
+            #if str($reference.is_normal) == "Yes":
                 --is_normal 'TRUE'
                 --normals '$reference.normals'
             #end if
@@ -35,7 +40,6 @@
             --logfile '$logfile'
             --plot '$plot'
             --rdata '$rdatafile'
-            
 ]]></command>
     <inputs>
         <param name="input" type="data" format="txt,tabular" label="expression data"/>
@@ -47,7 +51,8 @@
                help="Must be in gmt format (one pathway per line : Name, description, genes (one by column), tab separated)" />
         <conditional name="reference">
             <param name="is_normal" label="Do you have non cancer transcriptomes in your data set ?" type="boolean" truevalue="Yes" falsevalue="" checked="false" 
-                   help="If set the starting curve depends on the matrix of points with in a certain row order (first 'normal' then 'cancer' samples), otherwise the first principal component is used. See help for more informations"/>
+                   help="If set the starting curve depends on the matrix of points with in a certain row order (first 'normal' then 'cancer' samples),
+                         otherwise the first principal component is used. See help for more informations"/>
             <when value="Yes">
                 <param name="normals" type="data" format="tabular" label="Sample status"
                        help="A two-column data frame, first column contains data labels, second column the levels of sample status : 1 = Healthy, 0 = Tumor (no header)" />
@@ -74,7 +79,6 @@
             <option value="no" selected="True">No</option>
             <option value="yes">Yes</option>
         </param>
-             
     </inputs>
     <outputs>
         <data name="pds" format="tabular" label="Pathifier Deregulation Score (PDS) of ${on_string}" />
@@ -87,7 +91,7 @@
         </data>
     </outputs>
     <tests>
-        <test>
+        <test expect_num_outputs="3">
             <param name="input" value="sheffer.tsv" ftype="tabular"/>
             <param name="genes" value="kegg_pathways.gmt" ftype="txt" />
             <param name="is_normal" value="True" />
@@ -98,7 +102,7 @@
             <output name="pds" file="sheffer.kegg.tsv" ftype="tabular"/>
             <output name="plot" file="plot.pdf" ftype="pdf" compare="sim_size" />
         </test>
-        <test>
+        <test expect_num_outputs="3">
             <param name="input" value="sheffer_noref.tsv" ftype="tabular"/>
             <param name="genes" value="kegg_pathways.gmt" ftype="txt" />
             <param name="is_normal" value="" />
