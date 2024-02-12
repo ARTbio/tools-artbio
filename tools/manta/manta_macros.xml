@@ -9,10 +9,10 @@
     #set $reference_fasta_filename = "localref.fa"
 
     #if str( $reference_source.reference_source_selector ) == "history":
-    ln -s '${reference_source.ref_file}' '${reference_fasta_filename}' &&
-    samtools faidx '${reference_fasta_filename}' 2>&1 || echo "Error running samtools faidx for Manta" >&2 &&
+        ln -s '${reference_source.ref_file}' '${reference_fasta_filename}' &&
+        samtools faidx '${reference_fasta_filename}' 2>&1 || echo "Error running samtools faidx for Manta" >&2 &&
     #else:
-    #set $reference_fasta_filename = str( $reference_source.index.fields.path )
+        #set $reference_fasta_filename = str( $reference_source.index.fields.path )
     #end if
     ]]></token>
 
@@ -29,7 +29,7 @@
 
     <xml name="requirements">
         <requirements>
-            <requirement type="package" version="1.7">samtools</requirement>
+            <requirement type="package" version="1.19.2">samtools</requirement>
             <requirement type="package" version="@TOOL_VERSION@=py27_0">manta</requirement>
         </requirements>
     </xml>
