@@ -60,9 +60,9 @@
                 </collection>
             </param>
             <param name="elementname" value="element2"/>
-            <output name="output" file="element_3.tsv" ftype="tabular"/>
+            <output name="output" file="element_2.tsv" ftype="tabular"/>
         </test>
-        <test expect_num_outputs="3"><!-- test full extraction -->
+        <test expect_num_outputs="1"><!-- test full extraction -->
             <param name="input_collection">
                 <collection type="list">
                     <element name="element1" value="element_1.tsv" />
