@@ -30,18 +30,18 @@
         <test expect_num_outputs="1"><!-- test with valid element -->
             <param name="input_collection">
                 <collection type="list">
-                    <element name="element1" value="example.mothur.shared" />
-                    <element name="element2" value="multisample.taxonomy" />
+                    <element name="element1" value="element_1.tsv" />
+                    <element name="element2" value="element_2.tsv" />
                 </collection>
             </param>
             <param name="elementname" value="element2"/>
-            <output name="output" file="multisample.taxonomy"/>
+            <output name="output" file="element_2.tsv"/>
         </test>
         <test expect_num_outputs="1"><!-- test with invalid element -->
             <param name="input_collection">
                 <collection type="list">
-                    <element name="element1" value="example.mothur.shared" />
-                    <element name="element2" value="multisample.taxonomy" />
+                    <element name="element1" value="element_1.tsv" />
+                    <element name="element2" value="element_2.tsv" />
                 </collection>
             </param>
             <param name="elementname" value="element3"/>
@@ -83,6 +83,4 @@
 
 Extract an element from a collection based on its name
     ]]></help>
-    <citations>
-    </citations>
 </tool>
