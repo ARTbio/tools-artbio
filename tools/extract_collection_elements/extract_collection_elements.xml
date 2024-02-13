@@ -18,10 +18,10 @@
         <param name="elementname" type="text" value="" label="name of collection element to extract" help="if left blank, all files will be extracted"/>
     </inputs>
     <outputs>
-        <data name="output" format_source="input_collection" metadata_source="input_collection" label="${elementname}">
+        <data name="output" format_source="input_collection" label="${elementname}">
             <filter>elementname != ''</filter>
         </data>
-        <data name="extracted" format_source="input_collection" metadata_source="input_collection">
+        <data name="extracted" format_source="input_collection">
             <discover_datasets pattern="(?P&lt;designation&gt;.+)" directory="elementoutputs" visible="true" assign_primary_output="true"/>
             <filter>elementname == ''</filter>
         </data>
