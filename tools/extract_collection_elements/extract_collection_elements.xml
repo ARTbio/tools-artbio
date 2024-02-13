@@ -1,0 +1,62 @@
+<tool id="extract_collection_elements" name="Extract collection elements" version="0.1" profile="23.0">
+    <description></description>
+    <command detect_errors="aggressive"><![CDATA[
+        echo 'no element with name $elementname found in your collection' > '$output'
+        && mkdir elementoutputs
+        #for $dataset in $input_collection:
+            && echo $dataset.element_identifier
+            #if $elementname == ''
+                && cp $dataset 'elementoutputs/$dataset.element_identifier'
+            #elif $dataset.element_identifier == $elementname:
+                && cp $dataset '$output'
+            #end if
+        #end for
+    ]]></command>
+    <inputs>
+        <param name="input_collection" type="data_collection" collection_type="list" label="Input Collection"/>
+        <!-- find a way to make a select from all elements? -->
+        <param name="elementname" type="text" value="" label="name of collection element to extract" help="if left blank, all files will be extracted"/>
+    </inputs>
+    <outputs>
+        <data name="output" format="auto" label="${elementname}">
+            <filter>elementname != ''</filter>
+        </data>
+        <data format="auto" name="extracted">
+            <discover_datasets pattern="(?P&lt;designation&gt;.+)" directory="elementoutputs" visible="true" assign_primary_output="true"/>
+            <filter>elementname == ''</filter>
+        </data>
+    </outputs>
+    <tests>
+        <test><!-- test with valid element -->
+            <param name="input_collection">
+                <collection type="list">
+                    <element name="element1" value="example.mothur.shared" />
+                    <element name="element2" value="multisample.taxonomy" />
+                </collection>
+            </param>
+            <param name="elementname" value="element2"/>
+            <output name="output" file="multisample.taxonomy"/>
+        </test>
+        <test><!-- test with invalid element -->
+            <param name="input_collection">
+                <collection type="list">
+                    <element name="element1" value="example.mothur.shared" />
+                    <element name="element2" value="multisample.taxonomy" />
+                </collection>
+            </param>
+            <param name="elementname" value="element3"/>
+            <output name="output">
+                <assert_contents>
+                    <has_text text="no element with name"/>
+                </assert_contents>
+            </output>
+        </test>
+    </tests>
+    <help><![CDATA[
+**What it does**
+
+Extract an element from a collection based on its name
+    ]]></help>
+    <citations>
+    </citations>
+</tool>
