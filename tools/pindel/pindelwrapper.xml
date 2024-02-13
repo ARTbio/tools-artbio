@@ -1,7 +1,11 @@
-<tool id ="pindel" name="Pindel" version="0.2.5b9+galaxy1">
+<tool id ="pindel" name="Pindel" version="@TOOL_VERSION@+galaxy@VERSION_SUFFIX@" profile="@PROFILE@">
     <description></description>
+    <macros>
+        <token name="@TOOL_VERSION@">0.2.5b9</token>
+        <token name="@VERSION_SUFFIX@">0</token>
+        <token name="@PROFILE@">23.0</token>
     <requirements>
-        <requirement type="package" version="0.2.5b9">pindel</requirement>
+        <requirement type="package" version="@TOOL_VERSION@">pindel</requirement>
         <requirement type="package" version="1.19.2">samtools</requirement>
         <requirement type="package" version="3.12.1">python</requirement>
     </requirements>
