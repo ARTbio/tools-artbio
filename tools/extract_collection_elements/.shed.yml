@@ -1,0 +1,10 @@
+owner: artbio
+name: extract_collection_elements
+description: Extract an element from a collection by name
+long_description:
+categories:
+  - Text Manipulation
+homepage_url: http://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/extract_collection_elements
+toolshed:
+  - https://toolshed.g2.bx.psu.edu/
