@@ -27,7 +27,7 @@
         </data>
     </outputs>
     <tests>
-        <test><!-- test with valid element -->
+        <test expect_num_outputs="1"><!-- test with valid element -->
             <param name="input_collection">
                 <collection type="list">
                     <element name="element1" value="example.mothur.shared" />
@@ -37,7 +37,7 @@
             <param name="elementname" value="element2"/>
             <output name="output" file="multisample.taxonomy"/>
         </test>
-        <test><!-- test with invalid element -->
+        <test expect_num_outputs="1"><!-- test with invalid element -->
             <param name="input_collection">
                 <collection type="list">
                     <element name="element1" value="example.mothur.shared" />
@@ -49,6 +49,32 @@
                 <assert_contents>
                     <has_text text="no element with name"/>
                 </assert_contents>
+            </output>
+        </test>
+        <test expect_num_outputs="1"><!-- test with valid tabular elements -->
+            <param name="input_collection">
+                <collection type="list">
+                    <element name="element1" value="element_1.tsv" />
+                    <element name="element2" value="element_2.tsv" />
+                    <element name="element3" value="element_3.tsv" />
+                </collection>
+            </param>
+            <param name="elementname" value="element2"/>
+            <output name="output" file="element_3.tsv" ftype="tabular"/>
+        </test>
+        <test expect_num_outputs="3"><!-- test full extraction -->
+            <param name="input_collection">
+                <collection type="list">
+                    <element name="element1" value="element_1.tsv" />
+                    <element name="element2" value="element_2.tsv" />
+                    <element name="element3" value="element_3.tsv" />
+                </collection>
+            </param>
+            <param name="elementname" value=""/>
+            <output name="extracted">
+                <!-- no element_1 it was consumed by named output "extracted" -->
+                <discovered_dataset designation="element_2" ftype="tabular"/>
+                <discovered_dataset designation="element_3" ftype="tabular"/>
             </output>
         </test>
     </tests>
