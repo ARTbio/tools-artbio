@@ -71,10 +71,10 @@
                 </collection>
             </param>
             <param name="elementname" value=""/>
-            <output name="extracted" file="element_1.tsv" ftype="tabular">
+            <output name="extracted" file="element_1.tsv">
                 <!-- no element_1 it was consumed by named output "extracted" -->
-                <discovered_dataset designation="element_2" file="element_2.tsv" ftype="tabular"/>
-                <discovered_dataset designation="element_3" file="element_3.tsv" ftype="tabular"/>
+                <discovered_dataset designation="element_2" file="element_2.tsv"/>
+                <discovered_dataset designation="element_3" file="element_3.tsv"/>
             </output>
         </test>
     </tests>
