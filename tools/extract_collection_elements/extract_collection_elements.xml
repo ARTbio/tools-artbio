@@ -78,12 +78,20 @@
             </output>
         </test>
     </tests>
-        <citations>
-            <citation type="doi">10.1186/gb-2010-11-8-r86</citation>
-        </citations>
     <help><![CDATA[
 **What it does**
 
-Extract an element from a collection based on its name
+- Extract an element from a collection based on its name
+- If no element name (ie element identifier) is indicated, all elements of the collection
+are extracted.
+
+.. class:: warningmark
+
+This tool generate new instance(s) of extracted element(s). Thus it consumes disk space as
+well as your Galaxy account quota.
+
     ]]></help>
+    <citations>
+        <citation type="doi">10.1186/gb-2010-11-8-r86</citation>
+    </citations>
 </tool>
