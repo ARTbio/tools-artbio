@@ -22,7 +22,7 @@
             <filter>elementname != ''</filter>
         </data>
         <data name="extracted" format_source="input_collection">
-            <discover_datasets pattern="(?P&lt;designation&gt;.+)" directory="elementoutputs" visible="true" assign_primary_output="true"/>
+            <discover_datasets pattern="__designation__" directory="elementoutputs" visible="true" assign_primary_output="true"/>
             <filter>elementname == ''</filter>
         </data>
     </outputs>
