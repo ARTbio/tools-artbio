@@ -53,6 +53,7 @@ def main(bams, bed):
         line_counter += 1
         suffix = '\t'.join(crossline)
         print('%s\t%s' % (prefix, suffix))
+    F.close()
 
 
 if __name__ == "__main__":

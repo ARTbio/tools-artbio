@@ -1,13 +1,18 @@
-<tool id="probecoverage" name="Probe Coverage" version="0.7.0">
+<tool id="probecoverage" name="Probe Coverage" version="@TOOL_VERSION@+galaxy@VERSION_SUFFIX@" profile="@PROFILE@">
   <description></description>
-  <requirements>
-        <requirement type="package" version="1.10=h9402c20_2">samtools</requirement>
-        <requirement type="package" version="2.29.2=hc088bd4_0">bedtools</requirement>
-        <requirement type="package" version="1.6.4=r36h6115d3f_0">r-optparse</requirement>
-        <requirement type="package" version="3.2.1=r36h6115d3f_0">r-ggplot2</requirement>
-        <requirement type="package" version="1.17.3=py37h95a1406_0">numpy</requirement>
-        <requirement type="package" version="0.16.0.1">pysam</requirement>
-  </requirements>
+    <macros>
+        <token name="@TOOL_VERSION@">0.22.0</token>
+        <token name="@VERSION_SUFFIX@">0</token>
+        <token name="@PROFILE@">23.0</token>
+    </macros>
+   <requirements>
+        <requirement type="package" version="@TOOL_VERSION@">pysam</requirement>
+        <requirement type="package" version="1.19.2">samtools</requirement>
+        <requirement type="package" version="2.31.1">bedtools</requirement>
+        <requirement type="package" version="1.7.4">r-optparse</requirement>
+        <requirement type="package" version="3.4.4">r-ggplot2</requirement>
+        <requirement type="package" version="1.26.4">numpy</requirement>
+    </requirements>
   <stdio>
       <exit_code range="1:" level="fatal" description="Tool exception" />
   </stdio>
