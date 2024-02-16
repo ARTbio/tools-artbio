@@ -7,7 +7,6 @@
     </macros>
    <requirements>
         <requirement type="package" version="@TOOL_VERSION@">pysam</requirement>
-        <requirement type="package" version="1.19.2">samtools</requirement>
         <requirement type="package" version="2.31.1">bedtools</requirement>
         <requirement type="package" version="1.7.4">r-optparse</requirement>
         <requirement type="package" version="3.4.4">r-ggplot2</requirement>
@@ -18,7 +17,7 @@
   </stdio>
   <command detect_errors="exit_code"><![CDATA[
       #for $file in $inputs
-          samtools index '$file' &&
+          ln -s '$file.metadata.bam_index' '$file'.bai &&
       #end for
       #if $method == 'pysam':
           python $__tool_directory__/multicov.py
