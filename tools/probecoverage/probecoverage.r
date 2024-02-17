@@ -1,9 +1,9 @@
 ## Setup R error handling to go to stderr
 options(
-    show.error.messages = F,
+    show.error.messages = FALSE,
     error = function() {
         cat(geterrmessage(), file = stderr())
-        q("no", 1, F)
+        q("no", 1, FALSE)
     }
 )
 warnings()
@@ -28,7 +28,7 @@ samples <- strsplit(samples, ", ")
 
 # data frames implementation
 
-table <- read.delim(args$input, header = F)
+table <- read.delim(args$input, header = FALSE)
 headers <- c("chromosome", "start", "end", "id")
 for (i in seq(1, length(table) - 4)) {
     headers <- c(headers, samples[[1]][i])
