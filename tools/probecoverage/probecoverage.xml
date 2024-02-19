@@ -18,7 +18,7 @@
   </stdio>
   <command detect_errors="exit_code"><![CDATA[
       #for $file in $inputs
-          ln -s '$file.metadata.bam_index' '$file'.bai &&
+          ln -s -f '$file.metadata.bam_index' '$file'.bai &&
       #end for
       #if $method == 'pysam':
           python $__tool_directory__/multicov.py
