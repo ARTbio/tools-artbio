@@ -18,8 +18,8 @@
   </stdio>
   <command detect_errors="exit_code"><![CDATA[
       #for $file in $inputs
-          ln -s '$file' '$__tool_directory__/$file' &&
-          ln -s '$file.metadata.bam_index' '$__tool_directory__/$file'.bai &&
+          ln -f -s '$file' '${file}.bam' &&
+          ln -f -s '${file.metadata.bam_index}' '${file}'.bam.bai &&
       #end for
       #if $method == 'pysam':
           python $__tool_directory__/multicov.py
@@ -28,7 +28,7 @@
       #end if
           -bams
               #for $file in $inputs
-                  '$file'
+                  '${file}.bam'
               #end for
           -bed '$bed' > $coverage_dataframe &&
       Rscript '$__tool_directory__'/probecoverage.r
