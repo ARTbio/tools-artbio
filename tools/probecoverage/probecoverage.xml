@@ -17,9 +17,9 @@
       <exit_code range="1:" level="fatal" description="Tool exception" />
   </stdio>
   <command detect_errors="exit_code"><![CDATA[
-      #for $file in $inputs
-          ln -f -s '$file' '${file}.bam' &&
-          ln -f -s '${file.metadata.bam_index}' '${file}'.bam.bai &&
+      #for $i, $file in enumerate($inputs):
+          ln -f -s '$file' ${i}.bam &&
+          ln -f -s '$file.metadata.bam_index' ${i}.bam.bai &&
       #end for
       #if $method == 'pysam':
           python $__tool_directory__/multicov.py
@@ -27,8 +27,8 @@
           bedtools multicov
       #end if
           -bams
-              #for $file in $inputs
-                  '${file}.bam'
+              #for $i, $file in enumerate($inputs):
+                  '${i}.bam'
               #end for
           -bed '$bed' > $coverage_dataframe &&
       Rscript '$__tool_directory__'/probecoverage.r
