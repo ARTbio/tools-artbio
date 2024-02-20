@@ -14,7 +14,7 @@ categories:
   - Statistics
 
 homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/probecoverage
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/probecoverage
 toolshed:
   - toolshed
 
