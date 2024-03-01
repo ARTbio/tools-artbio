@@ -109,7 +109,7 @@
         </data>
     </outputs>
     <tests>
-        <test>
+        <test expect_num_outputs="3">
             <param name="factorName" value="Genotype"/>
             <param name="factorLevel_A" value="Mutant"/>
             <param name="countsFiles_A" value="355_fraction_counts.tab,356_fraction_counts.tab"/>
