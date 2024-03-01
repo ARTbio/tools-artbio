@@ -1,73 +1,42 @@
-#!/usr/bin/env Rscript
-
-# A command-line interface to edgeR for use with Galaxy edger-repenrich
-# written by Christophe Antoniewski drosofff@gmail.com 2017.05.30
-
-
-# setup R error handling to go to stderr
-options( show.error.messages=F, error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
-
+## Setup R error handling to go to stderr
+options(
+    show.error.messages = FALSE,
+    stringAsFactors = FALSE,
+    useFancyQuotes = FALSE,
+    error = function() {
+        cat(geterrmessage(), file = stderr())
+        q("no", 1, FALSE)
+    }
+)
+warnings()
 # To not crash galaxy with an UTF8 error with not-US LC settings.
 loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
 
-library("getopt")
+library("optparse")
 library("tools")
-options(stringAsFactors = FALSE, useFancyQuotes = FALSE)
-args <- commandArgs(trailingOnly = TRUE)
-
-# get options, using the spec as defined by the enclosed list.
-# we read the options from the default: commandArgs(TRUE).
-spec <- matrix(c(
-  "quiet", "q", 0, "logical",
-  "help", "h", 0, "logical",
-  "outfile", "o", 1, "character",
-  "countsfile", "n", 1, "character",
-  "factorName", "N", 1, "character",
-  "levelNameA", "A", 1, "character",
-  "levelNameB", "B", 1, "character",
-  "levelAfiles", "a", 1, "character",
-  "levelBfiles", "b", 1, "character",
-  "alignmentA", "i", 1, "character",
-  "alignmentB", "j", 1, "character",
-  "plots" , "p", 1, "character"),
-  byrow=TRUE, ncol=4)
-opt <- getopt(spec)
-
-# if help was asked for print a friendly message
-# and exit with a non-zero error code
-if (!is.null(opt$help)) {
-  cat(getopt(spec, usage=TRUE))
-  q(status=1)
-}
-
-# enforce the following required arguments
-if (is.null(opt$outfile)) {
-  cat("'outfile' is required\n")
-  q(status=1)
-}
-if (is.null(opt$levelAfiles) | is.null(opt$levelBfiles)) {
-  cat("input count files are required for both levels\n")
-  q(status=1)
-}
-if (is.null(opt$alignmentA) | is.null(opt$alignmentB)) {
-  cat("total aligned read files are required for both levels\n")
-  q(status=1)
-}
-
-verbose <- if (is.null(opt$quiet)) {
-  TRUE
-} else {
-  FALSE
-}
-
+library("rjson")
 suppressPackageStartupMessages({
   library("edgeR")
   library("limma")
 })
 
-# build levels A and B file lists
+option_list <- list(
+  make_option(c("-o", "--outfile"), type = "character", help = "PDF output"),
+  make_option(c("-n", "--countsfile"), type = "character", help = "path to count file"),
+  make_option(c("-N", "--factorName"), type = "character", help = "Factor Name"),
+  make_option(c("-A", "--levelNameA"), type = "character", help = "Factor Name"),
+  make_option(c("-B", "--levelNameB"), type = "character", help = "Factor Name"),
+  make_option(c("-a", "--levelAfiles"), type = "character", help = "Factor Name"),
+  make_option(c("-b", "--levelBfiles"), type = "character", help = "Factor Name"),
+  make_option(c("-i", "--alignmentA"), type = "character", help = "Factor Name"),
+  make_option(c("-j", "--alignmentB"), type = "character", help = "Factor Name"),
+  make_option(c("-p", "--plots"), type = "character", help = "Factor Name")
+)
+parser <- OptionParser(usage = "%prog [options]", option_list = option_list)
+opt <- parse_args(parser)
 
-library("rjson")
+
+# build levels A and B file lists
 filesA <- fromJSON(opt$levelAfiles, method = "C", unexpected.escape = "error")
 filesB <- fromJSON(opt$levelBfiles, method = "C", unexpected.escape = "error")
 listA <- list()
