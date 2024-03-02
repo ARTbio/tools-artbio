@@ -1,9 +1,9 @@
 <tool id="edger-repenrich" name="edgeR-repenrich" version="1.5.2">
     <description>Determines differentially expressed features from RepEnrich counts</description>
     <requirements>
-        <requirement type="package" version="4.0.2">bioconductor-edger</requirement>
-        <requirement type="package" version="3.58.1">bioconductor-limma</requirement>
-        <requirement type="package" version="1.20.4">r-getopt</requirement>
+        <requirement type="package" version="3.30.0">bioconductor-edger</requirement>
+        <requirement type="package" version="3.44.1">bioconductor-limma</requirement>
+        <requirement type="package" version="1.20.3">r-getopt</requirement>
         <requirement type="package" version="0.2.21">r-rjson</requirement>
     </requirements>
     <stdio>
