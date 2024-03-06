@@ -120,7 +120,7 @@ meta <- data.frame(
 libsize <- meta$libsize
 condition <- factor(meta$condition)
 design <- model.matrix(~0+condition)
-colnames(design) <- levels(meta$condition)
+colnames(design) <- levels(condition)
 
 
 # Build a DGE object for the GLM
