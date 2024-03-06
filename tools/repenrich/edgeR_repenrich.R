@@ -19,7 +19,6 @@ args <- commandArgs(trailingOnly = TRUE)
 # we read the options from the default: commandArgs(TRUE).
 spec <- matrix(c(
   "quiet", "q", 0, "logical",
-  "help", "h", 0, "logical",
   "outfile", "o", 1, "character",
   "countsfile", "n", 1, "character",
   "factorName", "N", 1, "character",
@@ -32,13 +31,6 @@ spec <- matrix(c(
   "plots" , "p", 1, "character"),
   byrow=TRUE, ncol=4)
 opt <- getopt(spec)
-
-# if help was asked for print a friendly message
-# and exit with a non-zero error code
-if (!is.null(opt$help)) {
-  cat(getopt(spec, usage=TRUE))
-  q(status=1)
-}
 
 # enforce the following required arguments
 if (is.null(opt$outfile)) {
@@ -121,7 +113,6 @@ libsize <- meta$libsize
 condition <- factor(meta$condition)
 design <- model.matrix(~0+condition)
 colnames(design) <- levels(condition)
-
 
 # Build a DGE object for the GLM
 y <- DGEList(counts=counts, lib.size=libsize)
