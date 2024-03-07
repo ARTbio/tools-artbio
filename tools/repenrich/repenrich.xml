@@ -53,8 +53,7 @@
             echo -e "# Total reads aligned to repeated sequences\n" > bowtie_aligned.numb &&
             echo \$((\$TOTAL-\$NONALIGNED)) >> bowtie_aligned.numb &&
         #end if
-        samtools view -bS ${input_base}_unique.sam > ${input_base}_unique.bam &&
-        samtools sort ${input_base}_unique.bam ${input_base}_unique_sorted &&
+        samtools view -@ \${GALAXY_SLOTS:-4} -bS '${input_base}_unique.sam' | samtools sort -@ \${GALAXY_SLOTS:-4} -O bam -o '${input_base}_unique_sorted' &&
         mv ${input_base}_unique_sorted.bam ${input_base}_unique.bam &&
         samtools index ${input_base}_unique.bam &&
         rm ${input_base}_unique.sam &&
