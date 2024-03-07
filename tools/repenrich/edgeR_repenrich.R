@@ -96,14 +96,11 @@ y <- DGEList(counts = counts, lib.size = libsize)
 
 # Normalize the data
 y <- calcNormFactors(y)
-y$samples
-# plotMDS(y) latter
 
 # Estimate the variance
 y <- estimateGLMCommonDisp(y, design)
 y <- estimateGLMTrendedDisp(y, design)
 y <- estimateGLMTagwiseDisp(y, design)
-# plotBCV(y) latter
 
 # Builds and outputs an object to contain the normalized read abundance in counts per million of reads
 cpm <- cpm(y, log = FALSE, lib.size = libsize)
@@ -134,8 +131,6 @@ allcontrasts <- paste0(opt$levelNameA, " vs ", opt$levelNameB)
 # Conduct a for loop that will do the fitting of the GLM for each comparison
 # Put the results into the results objects
 lrt <- glmLRT(yfit, contrast = my.contrasts[, 1])
-plotSmear(lrt, de.tags = rownames(y))
-title(allcontrasts)
 res <- topTags(lrt, n = dim(c)[1], sort.by = "none")$table
 results <- cbind(results, res[, c(1, 5)])
 logfc <- cbind(logfc, res[c(1)])
@@ -144,12 +139,8 @@ logfc <- cbind(logfc, res[c(1)])
 # We should still have the same order as the input data
 results$class <- listA[[2]][, 2]
 results$type <- listA[[2]][, 3]
-
 # Sort the results table by the FDR
 results <- results[with(results, order(FDR)), ]
-
-# Save the results
-write.table(results, opt$outfile, quote = FALSE, sep = "\t", col.names = FALSE)
 
 # Plot Fold Changes for repeat classes and types
 
@@ -190,6 +181,12 @@ if (!is.null(opt$plots)) {
     dev.off()
 }
 
-cat("Session information:\n\n")
+# Save the results
+results <- cbind(TE_item = rownames(results), results)
+colnames(results) <- c("TE_item", "log2FC", "FDR", "Class", "Type")
+results$log2FC <- format(results$log2FC, digits = 5)
+results$FDR <- format(results$FDR, digits = 5)
+write.table(results, opt$outfile, quote = FALSE, sep = "\t", col.names = TRUE, row.names = FALSE)
 
+cat("Session information:\n\n")
 sessionInfo()
