@@ -1,11 +1,9 @@
-<tool id="repenrich" name="RepEnrich" version="1.6.1">
+<tool id="repenrich" name="RepEnrich" version="@TOOL_VERSION@+galaxy@VERSION_SUFFIX@" profile="@PROFILE@">
     <description>Repeat Element Profiling</description>
-    <requirements>
-        <requirement type="package" version="1.2.0">bowtie</requirement>
-        <requirement type="package" version="0.1.19">samtools</requirement>
-        <requirement type="package" version="2.20.1">bedtools</requirement>
-        <requirement type="package" version="1.69">biopython</requirement>
-    </requirements>
+    <macros>
+        <import>macros.xml</import>
+    </macros>
+    <expand macro="requirements"/>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
     </stdio>
