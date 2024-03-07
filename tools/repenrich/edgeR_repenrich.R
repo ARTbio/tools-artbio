@@ -1,7 +1,7 @@
 # setup R error handling to go to stderr
-options(show.error.messages = F, error = function() {
+options(show.error.messages = FALSE, error = function() {
     cat(geterrmessage(), file = stderr())
-    q("no", 1, F)
+    q("no", 1, FALSE)
 })
 
 # To not crash galaxy with an UTF8 error with not-US LC settings.
