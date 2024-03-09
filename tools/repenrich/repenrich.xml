@@ -1,11 +1,9 @@
-<tool id="repenrich" name="RepEnrich" version="1.6.1">
+<tool id="repenrich" name="RepEnrich" version="@TOOL_VERSION@+galaxy@VERSION_SUFFIX@" profile="@PROFILE@">
     <description>Repeat Element Profiling</description>
-    <requirements>
-        <requirement type="package" version="1.2.0">bowtie</requirement>
-        <requirement type="package" version="0.1.19">samtools</requirement>
-        <requirement type="package" version="2.20.1">bedtools</requirement>
-        <requirement type="package" version="1.69">biopython</requirement>
-    </requirements>
+    <macros>
+        <import>macros.xml</import>
+    </macros>
+    <expand macro="requirements"/>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
     </stdio>
@@ -55,11 +53,8 @@
             echo -e "# Total reads aligned to repeated sequences\n" > bowtie_aligned.numb &&
             echo \$((\$TOTAL-\$NONALIGNED)) >> bowtie_aligned.numb &&
         #end if
-        samtools view -bS ${input_base}_unique.sam > ${input_base}_unique.bam &&
-        samtools sort ${input_base}_unique.bam ${input_base}_unique_sorted &&
-        mv ${input_base}_unique_sorted.bam ${input_base}_unique.bam &&
+        samtools view -@ \${GALAXY_SLOTS:-4} -bS '${input_base}_unique.sam' | samtools sort -@ \${GALAXY_SLOTS:-4} -O bam -o '${input_base}_unique.bam' &&
         samtools index ${input_base}_unique.bam &&
-        rm ${input_base}_unique.sam &&
         #if $seq_method.seq_method_list == "single-read":
             python $__tool_directory__/RepEnrich.py $repeatmasker ${input_base} ${input_base} setup_folder_${baseReference} ${input_base}_multimap.fastq ${input_base}_unique.bam --cpus "\${GALAXY_SLOTS:-4}" &&
         #else:

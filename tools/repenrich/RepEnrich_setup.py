@@ -7,7 +7,6 @@ import subprocess
 import sys
 
 from Bio import SeqIO
-from Bio.Alphabet import IUPAC
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 
@@ -242,7 +241,7 @@ for repname in rep_chr.keys():
             print("Unrecognised Chromosome: "+chr)
             pass
     # Convert metagenome to SeqRecord object (required by SeqIO.write)
-    record = SeqRecord(Seq(metagenome, IUPAC.unambiguous_dna), id="repname",
+    record = SeqRecord(Seq(metagenome), id="repname",
                        name="", description="")
     print("saving repgenome " + newname + ".fa" + " (" + str(k) + " of "
           + str(nrepgenomes) + ")")
