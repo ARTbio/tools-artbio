@@ -133,7 +133,7 @@ if is_bed == "FALSE":
         next(fin)
     for line in fin:
         repname = line[9].replace("(", "_").replace(")",
-                                                  "_").replace("/", "_")
+                                                    "_").replace("/", "_")
         if repname not in repeat_elements:
             repeat_elements.append(repname)
         repchr = line[4]
