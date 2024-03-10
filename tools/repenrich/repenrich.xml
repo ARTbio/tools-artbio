@@ -30,7 +30,7 @@
         #else:
             #if $seq_method.input2_fastq.is_of_type("fastq.gz", "fastqsanger.gz"):
                 gunzip < '$seq_method.input_fastq' > '${input_base}.fastq' &&
-                gunzip < '$seq_method.input2_fastq' > '${input_base}_2.fastq' &&                
+                gunzip < '$seq_method.input2_fastq' > '${input_base}_2.fastq' &&
             #else:
                 ln -f -s '$seq_method.input_fastq' '${input_base}.fastq' &&
                 ln -f -s '$seq_method.input2_fastq' '${input_base}_2.fastq' &&
@@ -56,9 +56,25 @@
         samtools view -@ \${GALAXY_SLOTS:-4} -bS '${input_base}_unique.sam' | samtools sort -@ \${GALAXY_SLOTS:-4} -O bam -o '${input_base}_unique.bam' &&
         samtools index ${input_base}_unique.bam &&
         #if $seq_method.seq_method_list == "single-read":
-            python $__tool_directory__/RepEnrich.py $repeatmasker ${input_base} ${input_base} setup_folder_${baseReference} ${input_base}_multimap.fastq ${input_base}_unique.bam --cpus "\${GALAXY_SLOTS:-4}" &&
+            python $__tool_directory__/RepEnrich.py
+                --annotation_file $repeatmasker
+                --outputfolder ${input_base}
+                --outputprefix ${input_base}
+                --setup_folder setup_folder_${baseReference}
+                --fastqfile ${input_base}_multimap.fastq
+                --alignment_bam ${input_base}_unique.bam
+                --cpus "\${GALAXY_SLOTS:-4}" &&
         #else:
-            python $__tool_directory__/RepEnrich.py $repeatmasker ${input_base} ${input_base} setup_folder_${baseReference} ${input_base}_multimap_1.fastq --fastqfile2 ${input_base}_multimap_2.fastq ${input_base}_unique.bam --cpus "\${GALAXY_SLOTS:-4}" --pairedend TRUE &&
+            python $__tool_directory__/RepEnrich.py
+                --annotation_file $repeatmasker
+                --outputfolder ${input_base}
+                --outputprefix ${input_base}
+                --setup_folder setup_folder_${baseReference}
+                --fastqfile ${input_base}_multimap_1.fastq
+                --fastqfile2 ${input_base}_multimap_2.fastq
+                --alignment_bam ${input_base}_unique.bam
+                --cpus "\${GALAXY_SLOTS:-4}"
+                --pairedend TRUE &&
         #end if
         cp $input_base/${input_base}_class_fraction_counts.txt class_fraction_counts.tabular &&
         cp $input_base/${input_base}_family_fraction_counts.txt family_fraction_counts.tabular &&
