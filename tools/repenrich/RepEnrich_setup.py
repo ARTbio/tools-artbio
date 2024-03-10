@@ -128,38 +128,35 @@ if is_bed == "FALSE":
     rep_start = {}
     rep_end = {}
     fin = import_text(annotation_file, ' ')
-    x = 0
+    for line in range(2):
+        next(fin)
     for line in fin:
-        if x > 2:
-            line9 = line[9].replace("(", "_").replace(")",
-                                                      "_").replace("/", "_")
-            repname = line9
-            if repname not in repeat_elements:
-                repeat_elements.append(repname)
-            repchr = line[4]
-            repstart = int(line[5])
-            repend = int(line[6])
-            fout.write(str(repchr) + '\t' + str(repstart) + '\t' + str(repend)
-                       + '\t' + str(repname) + '\n')
-            if repname in rep_chr:
-                rep_chr[repname].append(repchr)
-                rep_start[repname].append(int(repstart))
-                rep_end[repname].append(int(repend))
-            else:
-                rep_chr[repname] = [repchr]
-                rep_start[repname] = [int(repstart)]
-                rep_end[repname] = [int(repend)]
-        x += 1
+        line9 = line[9].replace("(", "_").replace(")",
+                                                  "_").replace("/", "_")
+        repname = line9
+        if repname not in repeat_elements:
+            repeat_elements.append(repname)
+        repchr = line[4]
+        repstart = int(line[5])
+        repend = int(line[6])
+        fout.write(str(repchr) + '\t' + str(repstart) + '\t' + str(repend)
+                   + '\t' + str(repname) + '\n')
+        if repname in rep_chr:
+            rep_chr[repname].append(repchr)
+            rep_start[repname].append(int(repstart))
+            rep_end[repname].append(int(repend))
+        else:
+            rep_chr[repname] = [repchr]
+            rep_start[repname] = [int(repstart)]
+            rep_end[repname] = [int(repend)]
 if is_bed == "TRUE":
     repeat_elements = []
     fout = open(os.path.realpath(setup_folder + os.path.sep + 'repnames.bed'),
                 'w')
     fin = open(os.path.realpath(annotation_file), 'r')
-    x = 0
     rep_chr = {}
     rep_start = {}
     rep_end = {}
-    x = 0
     for line in fin:
         line = line.strip('\n')
         line = line.split('\t')
@@ -196,7 +193,7 @@ for repeat in repeat_elements:
     fout.write(str(repeat) + '\t' + str(x) + '\n')
     x += 1
 fout.close()
-##############################################################################
+
 # generate spacer for psuedogenomes
 spacer = ""
 for i in range(gapl):
