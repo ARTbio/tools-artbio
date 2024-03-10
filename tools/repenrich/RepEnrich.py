@@ -10,86 +10,72 @@ import numpy
 
 
 parser = argparse.ArgumentParser(description='''
-             Part II: Conducting the alignments to the psuedogenomes. Before\
-             doing this step you will require 1) a bamfile of the unique\
-             alignments with index 2) a fastq file of the reads mapping to\
-             more than one location. These files can be obtained using the\
-             following bowtie options [EXAMPLE: bowtie -S -m 1\
-             --max multimap.fastq mm9 mate1_reads.fastq]  Once you have the\
-             unique alignment bamfile and the reads mapping to more than one\
-             location in a fastq file you can run this step.  EXAMPLE: python\
-             master_output.py\
-             /users/nneretti/data/annotation/hg19/hg19_repeatmasker.txt\
-             /users/nneretti/datasets/repeatmapping/POL3/Pol3_human/
-             HeLa_InputChIPseq_Rep1 HeLa_InputChIPseq_Rep1\
-             /users/nneretti/data/annotation/hg19/setup_folder\
-             HeLa_InputChIPseq_Rep1_multimap.fastq\
-             HeLa_InputChIPseq_Rep1.bam''')
-parser.add_argument('--version', action='version', version='%(prog)s 0.1')
-parser.add_argument('annotation_file', action='store',
+             Performing alignments to pseudogenomes. Requires\
+             1) a bamfile of unique alignments with its bai index\
+             2) a fastq file of the reads mapping to more than one location.\
+             These files can be obtained using the bowtie options\
+             [bowtie -S -m 1 --max multimap.fastq mm9 mate1_reads.fastq]''')
+parser.add_argument('--annotation_file', action='store',
                     metavar='annotation_file',
-                    help='List RepeatMasker.org annotation file for your\
-                          organism.  The file may be downloaded from the\
-                          RepeatMasker.org website. Example:\
-                          /data/annotation/hg19/hg19_repeatmasker.txt')
-parser.add_argument('outputfolder', action='store', metavar='outputfolder',
-                    help='List folder to contain results.\
+                    help='RepeatMasker.org annotation file for your\
+                          organism. The file may be downloaded from\
+                          RepeatMasker.org. Example: hg19_repeatmasker.txt')
+parser.add_argument('--outputfolder', action='store', metavar='outputfolder',
+                    help='Folder that will contain results.\
                           Example: /outputfolder')
-parser.add_argument('outputprefix', action='store', metavar='outputprefix',
+parser.add_argument('--outputprefix', action='store', metavar='outputprefix',
                     help='Enter prefix name for data.\
-                           Example: HeLa_InputChIPseq_Rep1')
-parser.add_argument('setup_folder', action='store', metavar='setup_folder',
-                    help='List folder that contains the repeat element\
-                          pseudogenomes.\
+                          Example: HeLa_InputChIPseq_Rep1')
+parser.add_argument('--setup_folder', action='store', metavar='setup_folder',
+                    help='Folder that will contains repeat element pseudogenomes.\
                           Example: /data/annotation/hg19/setup_folder')
-parser.add_argument('fastqfile', action='store', metavar='fastqfile',
-                    help='Enter file for the fastq reads that map to multiple\
+parser.add_argument('--fastqfile', action='store', metavar='fastqfile',
+                    help='File of fastq reads mapping to multiple\
                           locations. Example: /data/multimap.fastq')
-parser.add_argument('alignment_bam', action='store', metavar='alignment_bam',
-                    help='Enter bamfile output for reads that map uniquely.\
-                    Example /bamfiles/old.bam')
+parser.add_argument('--alignment_bam', action='store', metavar='alignment_bam',
+                    help='Bam output for unique mapper reads.\
+                          Example /bamfiles/old.bam')
 parser.add_argument('--pairedend', action='store', dest='pairedend',
                     default='FALSE',
-                    help='Designate this option for paired-end sequencing.\
-                          Default FALSE change to TRUE')
+                    help='Change to TRUE for paired-end fastq files.\
+                          Default FALSE')
 parser.add_argument('--collapserepeat', action='store', dest='collapserepeat',
                     metavar='collapserepeat', default='Simple_repeat',
-                    help='Designate this option to generate a collapsed repeat\
+                    help='Use this option to generate a collapsed repeat\
                           type. Uncollapsed output is generated in addition to\
                           collapsed repeat type. Simple_repeat is default to\
                           simplify downstream analysis. You can change the\
                           default to another repeat name to collapse a\
-                          seperate specific repeat instead or if the name of\
+                          separate specific repeat instead or if the name of\
                           Simple_repeat is different for your organism.\
                           Default Simple_repeat')
 parser.add_argument('--fastqfile2', action='store', dest='fastqfile2',
                     metavar='fastqfile2', default='none',
-                    help='Enter fastqfile2 when using paired-end option.\
+                    help='fastqfile #2 when using paired-end option.\
                           Default none')
 parser.add_argument('--cpus', action='store', dest='cpus', metavar='cpus',
                     default="1", type=int,
-                    help='Enter available cpus per node.  The more cpus the\
-                          faster RepEnrich performs. RepEnrich is designed to\
-                          only work on one node. Default: "1"')
+                    help='Number of CPUs. The more cpus the\
+                          faster RepEnrich performs. Default: "1"')
 parser.add_argument('--allcountmethod', action='store', dest='allcountmethod',
                     metavar='allcountmethod', default="FALSE",
-                    help='By default the pipeline only outputs the fraction\
-                          count method.  Consdidered to be the best way to\
-                          count multimapped reads. Changing this option will\
+                    help='By default the script only outputs the fraction\
+                          counts.\
+                          Other options\
                           include the unique count method, a conservative\
                           count, and the total count method, a liberal\
-                          counting strategy. Our evaluation of simulated data\
-                          indicated fraction counting is best.\
+                          counting strategy.\
+                          Our evaluation of simulated data indicated\
+                          that fraction counting is the best method.\
                           Default = FALSE, change to TRUE')
 parser.add_argument('--is_bed', action='store', dest='is_bed',
                     metavar='is_bed', default='FALSE',
-                    help='Is the annotation file a bed file.\
-                         This is also a compatible format. The file needs to\
-                         be a tab seperated bed with optional fields.\
-                         Ex. format: chr\tstart\tend\tName_element\tclass\
-                         \tfamily. The class and family should identical to\
-                         name_element if not applicable.\
-                         Default FALSE change to TRUE')
+                    help='Annotation file can also be a bed file.\
+                          Ex. format:\
+                          chr\tstart\tend\tName_element\tclass\ \tfamily.\
+                          The class and family should identical to the\
+                          name_element if not applicable.\
+                          Default FALSE change to TRUE')
 args = parser.parse_args()
 
 # parameters
@@ -132,7 +118,6 @@ def import_text(filename, separator):
                            skipinitialspace=True):
         if line:
             yield line
-
 
 ##############################################################################
 # build dictionaries to convert repclass and rep families'
