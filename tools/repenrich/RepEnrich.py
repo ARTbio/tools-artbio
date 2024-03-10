@@ -105,7 +105,7 @@ try:
                     stdout=open(os.devnull, 'wb'),
                     stderr=open(os.devnull, 'wb'))
 except OSError:
-    print("Error: Bowtie or BEDTools not loaded")
+    print("Error: Bowtie or bedtools not loaded")
     raise
 
 # define a csv reader that reads space deliminated files
@@ -125,19 +125,19 @@ if is_bed == "FALSE":
     repeatclass = {}
     repeatfamily = {}
     fin = import_text(annotation_file, ' ')
-    x = 0
+    # skip three first line of the iterator
+    for line in range(2):
+        next(fin)
     for line in fin:
-        if x > 2:
-            classfamily = []
-            classfamily = line[10].split(os.path.sep)
-            line9 = line[9].replace("(", "_").replace(
-                                    ")", "_").replace("/", "_")
-            repeatclass[line9] = classfamily[0]
-            if len(classfamily) == 2:
-                repeatfamily[line9] = classfamily[1]
-            else:
-                repeatfamily[line9] = classfamily[0]
-        x += 1
+        classfamily = []
+        classfamily = line[10].split(os.path.sep)
+        line9 = line[9].replace("(", "_").replace(
+                                ")", "_").replace("/", "_")
+        repeatclass[line9] = classfamily[0]
+        if len(classfamily) == 2:
+            repeatfamily[line9] = classfamily[1]
+        else:
+            repeatfamily[line9] = classfamily[0]
 if is_bed == "TRUE":
     repeatclass = {}
     repeatfamily = {}
