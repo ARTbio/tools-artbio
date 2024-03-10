@@ -157,6 +157,7 @@ if is_bed == "TRUE":
     rep_chr = {}
     rep_start = {}
     rep_end = {}
+    x = 0
     for line in fin:
         line = line.strip('\n')
         line = line.split('\t')
@@ -193,14 +194,19 @@ for repeat in repeat_elements:
     fout.write(str(repeat) + '\t' + str(x) + '\n')
     x += 1
 fout.close()
-
-# generate spacer for pseudogenomes
-spacer = ''.join(['N' for i in range(gapl)])
+##############################################################################
+# generate spacer for psuedogenomes
+spacer = ""
+for i in range(gapl):
+    spacer = spacer + "N"
 
 # save file with number of fragments processed per repname
+print("Saving number of fragments processed per repname to "
+      + nfragmentsfile1)
 fout1 = open(os.path.realpath(nfragmentsfile1), "w")
 for repname in rep_chr.keys():
     rep_chr_current = rep_chr[repname]
+#    print >>fout1, str(len(rep_chr[repname])) + "\t" + repname
     fout1.write(str(len(rep_chr[repname])) + "\t" + repname + '\n')
 fout1.close()
 
@@ -210,9 +216,12 @@ nrepgenomes = len(rep_chr.keys())
 for repname in rep_chr.keys():
     metagenome = ""
     newname = repname.replace("(", "_").replace(")", "_").replace("/", "_")
+    print("processing repgenome " + newname + ".fa" + " (" + str(k)
+          + " of " + str(nrepgenomes) + ")")
     rep_chr_current = rep_chr[repname]
     rep_start_current = rep_start[repname]
     rep_end_current = rep_end[repname]
+    print("-------> " + str(len(rep_chr[repname])) + " fragments")
     for i in range(len(rep_chr[repname])):
         try:
             chr = rep_chr_current[i]
@@ -220,7 +229,7 @@ for repname in rep_chr.keys():
             rend = min(rep_end_current[i] + flankingl, lgenome[chr]-1)
             metagenome = metagenome + spacer + genome[chr][rstart:(rend+1)]
         except KeyError:
-            print("Unrecognised Chromosome: " + chr)
+            print("Unrecognised Chromosome: "+chr)
             pass
     # Convert metagenome to SeqRecord object (required by SeqIO.write)
     record = SeqRecord(Seq(metagenome), id="repname",
@@ -236,3 +245,5 @@ for repname in rep_chr.keys():
                           setup_folder + os.path.sep + newname)
     p = subprocess.Popen(command).communicate()
     k += 1
+
+print("... Done")
