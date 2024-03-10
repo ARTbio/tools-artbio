@@ -121,9 +121,9 @@ def import_text(filename, separator):
 
 
 # build dictionaries to convert repclass and rep families'
+repeatclass = {}
+repeatfamily = {}
 if is_bed == "FALSE":
-    repeatclass = {}
-    repeatfamily = {}
     fin = import_text(annotation_file, ' ')
     # skip three first line of the iterator
     for line in range(2):
@@ -139,21 +139,16 @@ if is_bed == "FALSE":
         else:
             repeatfamily[line9] = classfamily[0]
 if is_bed == "TRUE":
-    repeatclass = {}
-    repeatfamily = {}
     fin = open(annotation_file, 'r')
     for line in fin:
-        line = line.strip('\n')
-        line = line.split('\t')
-        theclass = line[4]
-        thefamily = line[5]
+        line = line.strip('\n').split('\t')
         line3 = line[3].replace("(", "_").replace(")", "_").replace("/", "_")
-        repeatclass[line3] = theclass
-        repeatfamily[line3] = thefamily
+        repeatclass[line3] = line[4]
+        repeatfamily[line3] = line[5]
 fin.close()
 
 # build list of repeats initializing dictionaries for downstream analysis'
-fin = import_text(setup_folder + os.path.sep + 'repgenomes_key.txt', '\t')
+fin = import_text(os.path.join(setup_folder, 'repgenomes_key.txt'), '\t')
 repeat_key = {}
 rev_repeat_key = {}
 repeat_list = []
