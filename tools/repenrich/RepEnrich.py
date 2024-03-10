@@ -84,16 +84,17 @@ annotation_file = args.annotation_file
 outputfolder = args.outputfolder
 outputfile_prefix = args.outputprefix
 setup_folder = args.setup_folder
-repeat_bed = setup_folder + os.path.sep + 'repnames.bed'
+repeat_bed = os.path.join(setup_folder, 'repnames.bed')
 unique_mapper_bam = args.alignment_bam
 fastqfile_1 = args.fastqfile
 fastqfile_2 = args.fastqfile2
 cpus = args.cpus
-b_opt = "-k1 -p " + str(1) + " --quiet"
+b_opt = "-k1 -p 1 --quiet"
 simple_repeat = args.collapserepeat
 paired_end = args.pairedend
 allcountmethod = args.allcountmethod
 is_bed = args.is_bed
+
 
 # check that the programs we need are available
 try:
