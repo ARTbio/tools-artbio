@@ -27,7 +27,8 @@ parser.add_argument('--outputprefix', action='store', metavar='outputprefix',
                     help='Enter prefix name for data.\
                           Example: HeLa_InputChIPseq_Rep1')
 parser.add_argument('--setup_folder', action='store', metavar='setup_folder',
-                    help='Folder that will contains repeat element pseudogenomes.\
+                    help='Folder that will contains repeat element\
+                          pseudogenomes.\
                           Example: /data/annotation/hg19/setup_folder')
 parser.add_argument('--fastqfile', action='store', metavar='fastqfile',
                     help='File of fastq reads mapping to multiple\
@@ -72,7 +73,7 @@ parser.add_argument('--is_bed', action='store', dest='is_bed',
                     metavar='is_bed', default='FALSE',
                     help='Annotation file can also be a bed file.\
                           Ex. format:\
-                          chr\tstart\tend\tName_element\tclass\ \tfamily.\
+                          chr start end Name_element class family.\
                           The class and family should identical to the\
                           name_element if not applicable.\
                           Default FALSE change to TRUE')
@@ -94,7 +95,6 @@ paired_end = args.pairedend
 allcountmethod = args.allcountmethod
 is_bed = args.is_bed
 
-##############################################################################
 # check that the programs we need are available
 try:
     subprocess.call(shlex.split("coverageBed -h"),
@@ -107,7 +107,6 @@ except OSError:
     print("Error: Bowtie or BEDTools not loaded")
     raise
 
-##############################################################################
 # define a csv reader that reads space deliminated files
 print('Preparing for analysis using RepEnrich...')
 csv.field_size_limit(sys.maxsize)
@@ -119,7 +118,7 @@ def import_text(filename, separator):
         if line:
             yield line
 
-##############################################################################
+
 # build dictionaries to convert repclass and rep families'
 if is_bed == "FALSE":
     repeatclass = {}
@@ -152,7 +151,6 @@ if is_bed == "TRUE":
         repeatfamily[line3] = thefamily
 fin.close()
 
-##############################################################################
 # build list of repeats initializing dictionaries for downstream analysis'
 fin = import_text(setup_folder + os.path.sep + 'repgenomes_key.txt', '\t')
 repeat_key = {}
@@ -184,11 +182,10 @@ for line in fin:
     repeat_key[line[0]] = int(line[1])
     rev_repeat_key[int(line[1])] = line[0]
 fin.close()
-##############################################################################
 # map the repeats to the psuedogenomes:
 if not os.path.exists(outputfolder):
     os.mkdir(outputfolder)
-##############################################################################
+
 # Conduct the regions sorting
 print('Conducting region sorting on unique mapping reads....')
 fileout = outputfolder + os.path.sep + outputfile_prefix + '_regionsorter.txt'
@@ -210,7 +207,7 @@ for line in filein:
     sumofrepeatreads += int(line[4])
 print('Identified ' + str(sumofrepeatreads) +
       'unique reads that mapped to repeats.')
-##############################################################################
+
 if paired_end == 'TRUE':
     if not os.path.exists(outputfolder + os.path.sep + 'pair1_bowtie'):
         os.mkdir(outputfolder + os.path.sep + 'pair1_bowtie')
@@ -218,7 +215,7 @@ if paired_end == 'TRUE':
         os.mkdir(outputfolder + os.path.sep + 'pair2_bowtie')
     folder_pair1 = outputfolder + os.path.sep + 'pair1_bowtie'
     folder_pair2 = outputfolder + os.path.sep + 'pair2_bowtie'
-##############################################################################
+
     print("Processing repeat psuedogenomes...")
     ps = []
     psb = []
@@ -252,7 +249,6 @@ if paired_end == 'TRUE':
             p.communicate()
     stdout.close()
 
-##############################################################################
 # combine the output from both read pairs:
     print('sorting and combining the output for both read pairs...')
     if not os.path.exists(outputfolder + os.path.sep + 'sorted_bowtie'):
@@ -275,12 +271,12 @@ if paired_end == 'TRUE':
             p5.communicate()
         stdout.close()
     print('completed ...')
-##############################################################################
+
 if paired_end == 'FALSE':
     if not os.path.exists(outputfolder + os.path.sep + 'pair1_bowtie'):
         os.mkdir(outputfolder + os.path.sep + 'pair1_bowtie')
     folder_pair1 = outputfolder + os.path.sep + 'pair1_bowtie'
-##############################################################################
+
     ps = []
     ticker = 0
     print("Processing repeat psuedogenomes...")
@@ -303,7 +299,6 @@ if paired_end == 'FALSE':
             p.communicate()
     stdout.close()
 
-##############################################################################
 # combine the output from both read pairs:
     print('Sorting and combining the output for both read pairs....')
     if not os.path.exists(outputfolder + os.path.sep + 'sorted_bowtie'):
@@ -325,7 +320,6 @@ if paired_end == 'FALSE':
         stdout.close()
     print('completed ...')
 
-##############################################################################
 # build a file of repeat keys for all reads
 print('Writing and processing intermediate files...')
 sorted_bowtie = outputfolder + os.path.sep + 'sorted_bowtie'
@@ -348,7 +342,6 @@ del readid
 print('Identified ' + str(sumofrepeatreads) +
       ' reads that mapped to repeats for unique and multimappers.')
 
-##############################################################################
 print("Conducting final calculations...")
 
 
@@ -407,7 +400,6 @@ for key in fractionalcounts.keys():
 for key in fractionalcounts.keys():
     familyfractionalcounts[repeatfamily[key]] += fractionalcounts[key]
 
-##############################################################################
 print('Writing final output and removing intermediate files...')
 # print output to file of the categorized counts and total overlapping counts:
 if allcountmethod == "TRUE":
