@@ -30,45 +30,44 @@ parser = argparse.ArgumentParser(description='''
              /users/nneretti/data/annotation/mm9/mm9.fa\
              /users/nneretti/data/annotation/mm9/setup_folder''',
                                  prog='getargs_genome_maker.py')
-parser.add_argument('--version', action='version', version='%(prog)s 0.1')
-parser.add_argument('annotation_file', action='store',
+parser.add_argument('--annotation_file', action='store',
                     metavar='annotation_file',
-                    help='''List annotation file. The annotation file contains\
+                    help='''This annotation file contains\
                          the repeat masker annotation for the genome of\
                          interest and may be downloaded at RepeatMasker.org\
                          Example /data/annotation/mm9/mm9.fa.out''')
-parser.add_argument('genomefasta', action='store', metavar='genomefasta',
-                    help='''File name and path for genome of interest in fasta\
-                         format.  Example /data/annotation/mm9/mm9.fa''')
-parser.add_argument('setup_folder', action='store', metavar='setup_folder',
-                    help='''List folder to contain bamfiles for repeats and\
+parser.add_argument('--genomefasta', action='store', metavar='genomefasta',
+                    help='''Genome of interest in fasta format.\
+                         Example /data/annotation/mm9/mm9.fa''')
+parser.add_argument('--setup_folder', action='store', metavar='setup_folder',
+                    help='''Folder that contains bamfiles for repeats and\
                          repeat element psuedogenomes.\
                          Example /data/annotation/mm9/setup''')
 parser.add_argument('--nfragmentsfile1', action='store',
                     dest='nfragmentsfile1', metavar='nfragmentsfile1',
                     default='./repnames_nfragments.txt',
-                    help='''Output location of a description file that saves\
-                         the number of fragments processed per repname.
+                    help='''File that saves the number\
+                         of fragments processed per repname.
                          Default ./repnames_nfragments.txt''')
 parser.add_argument('--gaplength', action='store', dest='gaplength',
                     metavar='gaplength', default='200', type=int,
                     help='Length of the spacer used to build\
-                         repeat psuedogeneomes.  Default 200')
+                         repeat pseudogenomes.  Default 200')
 parser.add_argument('--flankinglength', action='store', dest='flankinglength',
                     metavar='flankinglength', default='25', type=int,
                     help='Length of the flanking region adjacent to the repeat\
-                         element that is used to build repeat psuedogeneomes.\
+                         element that is used to build repeat pseudogenomes.\
                          The flanking length should be set according to the\
                          length of your reads.  Default 25')
 parser.add_argument('--is_bed', action='store', dest='is_bed',
                     metavar='is_bed', default='FALSE',
-                    help='''Is the annotation file a bed file. This is also a\
-                         compatible format. The file needs to be a tab\
-                         separated bed with optional fields.
-                         Ex. format:
+                    help='''Set to TRUE if the annotation file has bed format.\
+                         compatible format.\
+                         BED file should have 6 columns:
                          chr\tstart\tend\tName_element\tclass\tfamily.
-                         The class and family should identical to name_element\
-                         if not applicable.  Default FALSE change to TRUE''')
+                         The class and family should be identical\
+                         to name_element if not applicable.\
+                         Default: FALSE''')
 args = parser.parse_args()
 
 # parameters and paths specified in args_parse
@@ -80,17 +79,15 @@ setup_folder = args.setup_folder
 nfragmentsfile1 = args.nfragmentsfile1
 is_bed = args.is_bed
 
-##############################################################################
 # check that the programs we need are available
 try:
     subprocess.call(shlex.split("bowtie --version"),
                     stdout=open(os.devnull, 'wb'),
                     stderr=open(os.devnull, 'wb'))
 except OSError:
-    print("Error: Bowtie or BEDTools not loaded")
+    print("Error: Bowtie not loaded")
     raise
 
-##############################################################################
 # Define a text importer
 csv.field_size_limit(sys.maxsize)
 
@@ -105,7 +102,6 @@ def import_text(filename, separator):
 # Make a setup folder
 if not os.path.exists(setup_folder):
     os.makedirs(setup_folder)
-##############################################################################
 # load genome into dictionary
 print("loading genome...")
 g = SeqIO.to_dict(SeqIO.parse(genomefasta, "fasta"))
@@ -118,45 +114,41 @@ allchrs = g.keys()
 k = 0
 for chr in allchrs:
     genome[chr] = str(g[chr].seq)
-#    del g[chr]
     lgenome[chr] = len(genome[chr])
     idxgenome[chr] = k
     k = k + 1
 del g
 
-##############################################################################
 # Build a bedfile of repeatcoordinates to use by RepEnrich region_sorter
 if is_bed == "FALSE":
     repeat_elements = []
-    fout = open(os.path.realpath(setup_folder + os.path.sep
-                                 + 'repnames.bed'), 'w')
-    fin = import_text(annotation_file, ' ')
-    x = 0
+    os.path.join(setup_folder, 'repnames.bed')
+    fout = open(os.path.join(setup_folder, 'repnames.bed'), 'w')
     rep_chr = {}
     rep_start = {}
     rep_end = {}
-    x = 0
+    fin = import_text(annotation_file, ' ')
+    # skip three first lines of the iterator
+    for line in range(2):
+        next(fin)
     for line in fin:
-        if x > 2:
-            line9 = line[9].replace("(", "_").replace(")",
-                                                      "_").replace("/", "_")
-            repname = line9
-            if repname not in repeat_elements:
-                repeat_elements.append(repname)
-            repchr = line[4]
-            repstart = int(line[5])
-            repend = int(line[6])
-            fout.write(str(repchr) + '\t' + str(repstart) + '\t' + str(repend)
-                       + '\t' + str(repname) + '\n')
-            if repname in rep_chr:
-                rep_chr[repname].append(repchr)
-                rep_start[repname].append(int(repstart))
-                rep_end[repname].append(int(repend))
-            else:
-                rep_chr[repname] = [repchr]
-                rep_start[repname] = [int(repstart)]
-                rep_end[repname] = [int(repend)]
-        x += 1
+        repname = line[9].replace("(", "_").replace(")",
+                                                  "_").replace("/", "_")
+        if repname not in repeat_elements:
+            repeat_elements.append(repname)
+        repchr = line[4]
+        repstart = int(line[5])
+        repend = int(line[6])
+        fout.write(str(repchr) + '\t' + str(repstart) + '\t' + str(repend)
+                   + '\t' + str(repname) + '\n')
+        if repname in rep_chr:
+            rep_chr[repname].append(repchr)
+            rep_start[repname].append(int(repstart))
+            rep_end[repname].append(int(repend))
+        else:
+            rep_chr[repname] = [repchr]
+            rep_start[repname] = [int(repstart)]
+            rep_end[repname] = [int(repend)]
 if is_bed == "TRUE":
     repeat_elements = []
     fout = open(os.path.realpath(setup_folder + os.path.sep + 'repnames.bed'),

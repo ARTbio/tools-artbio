@@ -125,7 +125,7 @@ repeatclass = {}
 repeatfamily = {}
 if is_bed == "FALSE":
     fin = import_text(annotation_file, ' ')
-    # skip three first line of the iterator
+    # skip three first lines of the iterator
     for line in range(2):
         next(fin)
     for line in fin:

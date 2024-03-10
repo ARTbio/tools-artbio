@@ -36,10 +36,12 @@
                 ln -f -s '$seq_method.input2_fastq' '${input_base}_2.fastq' &&
             #end if
         #end if
-        
         ln -f -s '$genome' '${baseReference}.fa' &&
         bowtie-build '$genome' ${baseReference} &&
-        python $__tool_directory__/RepEnrich_setup.py $repeatmasker ${baseReference}.fa setup_folder_${baseReference} &&
+        python $__tool_directory__/RepEnrich_setup.py
+            --annotation_file $repeatmasker
+            --genomefasta ${baseReference}.fa
+            --setup_folder setup_folder_${baseReference} &&
         #if $seq_method.seq_method_list == "single-read":
             bowtie $baseReference -p \${GALAXY_SLOTS:-4} -t -m 1 -S --max ${input_base}_multimap.fastq ${input_base}.fastq ${input_base}_unique.sam 2>bowtie_alignments.txt &&
             TOTAL=\$(grep 'reads processed:' bowtie_alignments.txt | cut -d ' ' -f 4) &&
