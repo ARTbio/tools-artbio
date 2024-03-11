@@ -116,9 +116,7 @@ fin = import_text(annotation_file, ' ')
 for i in range(3):
     next(fin)
 for line in fin:
-    line9 = line[9].replace("(", "_").replace(")",
-                                              "_").replace("/", "_")
-    repname = line9
+    repname = line[9].translate(str.maketrans('()/', '___'))
     if repname not in repeat_elements:
         repeat_elements.append(repname)
     repchr = line[4]
