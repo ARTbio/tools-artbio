@@ -6,6 +6,10 @@ import shlex
 import subprocess
 import sys
 
+from Bio import SeqIO
+from Bio.Seq import Seq
+from Bio.SeqRecord import SeqRecord
+
 parser = argparse.ArgumentParser(description='''
              Part I: Prepartion of repetive element psuedogenomes and repetive\
              element bamfiles.  This script prepares the annotation used by\
@@ -64,6 +68,15 @@ annotation_file = args.annotation_file
 genomefasta = args.genomefasta
 setup_folder = args.setup_folder
 nfragmentsfile1 = args.nfragmentsfile1
+
+# check that the programs we need are available
+try:
+    subprocess.call(shlex.split("bowtie --version"),
+                    stdout=open(os.devnull, 'wb'),
+                    stderr=open(os.devnull, 'wb'))
+except OSError:
+    print("Error: Bowtie not loaded")
+    raise
 
 # Define a text importer
 csv.field_size_limit(sys.maxsize)
@@ -134,3 +147,39 @@ with open(os.path.realpath(nfragmentsfile1), "w") as fout1:
     for repname in rep_chr:
         rep_chr_current = rep_chr[repname]
         fout1.write(str(len(rep_chr[repname])) + "\t" + repname + '\n')
+
+# generate metagenomes and save them to FASTA files
+k = 1
+nrepgenomes = len(rep_chr.keys())
+for repname in rep_chr.keys():
+    metagenome = ""
+    newname = repname.replace("(", "_").replace(")", "_").replace("/", "_")
+    print("processing repgenome " + newname + ".fa" + " (" + str(k)
+          + " of " + str(nrepgenomes) + ")")
+    rep_chr_current = rep_chr[repname]
+    rep_start_current = rep_start[repname]
+    rep_end_current = rep_end[repname]
+    print("-------> " + str(len(rep_chr[repname])) + " fragments")
+    for i in range(len(rep_chr[repname])):
+        try:
+            chr = rep_chr_current[i]
+            rstart = max(rep_start_current[i] - flankingl, 0)
+            rend = min(rep_end_current[i] + flankingl, lgenome[chr]-1)
+            metagenome = metagenome + spacer + genome[chr][rstart:(rend+1)]
+        except KeyError:
+            print("Unrecognised Chromosome: "+chr)
+            pass
+    # Convert metagenome to SeqRecord object (required by SeqIO.write)
+    record = SeqRecord(Seq(metagenome), id="repname",
+                       name="", description="")
+    print("saving repgenome " + newname + ".fa" + " (" + str(k) + " of "
+          + str(nrepgenomes) + ")")
+    fastafilename = os.path.realpath(setup_folder + os.path.sep
+                                     + newname + ".fa")
+    SeqIO.write(record, fastafilename, "fasta")
+    print("indexing repgenome " + newname + ".fa" + " (" +
+          str(k) + " of " + str(nrepgenomes) + ")")
+    command = shlex.split('bowtie-build -f ' + fastafilename + ' ' +
+                          setup_folder + os.path.sep + newname)
+    p = subprocess.Popen(command).communicate()
+    k += 1
