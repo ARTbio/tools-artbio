@@ -60,14 +60,14 @@ parser.add_argument('--flankinglength', action='store', dest='flankinglength',
                          The flanking length should be set according to the\
                          length of your reads.  Default 25')
 parser.add_argument('--is_bed', action='store', dest='is_bed',
-                    metavar='is_bed', default='FALSE',
-                    help='''Set to TRUE if the annotation file has bed format.\
+                    metavar='is_bed', default= False,
+                    help='''Set to True if the annotation file has bed format.\
                          compatible format.\
                          BED file should have 6 columns:
                          chr\tstart\tend\tName_element\tclass\tfamily.
                          The class and family should be identical\
                          to name_element if not applicable.\
-                         Default: FALSE''')
+                         Default: False''')
 args = parser.parse_args()
 
 # parameters and paths specified in args_parse
@@ -120,7 +120,7 @@ for chr in allchrs:
 del g
 
 # Build a bedfile of repeatcoordinates to use by RepEnrich region_sorter
-if is_bed == "FALSE":
+if not is_bed:
     repeat_elements = []
     fout = open(os.path.realpath(setup_folder + os.path.sep
                                  + 'repnames.bed'), 'w')
@@ -150,7 +150,7 @@ if is_bed == "FALSE":
                 rep_start[repname] = [int(repstart)]
                 rep_end[repname] = [int(repend)]
         x += 1
-if is_bed == "TRUE":
+if is_bed:
     repeat_elements = []
     fout = open(os.path.realpath(setup_folder + os.path.sep + 'repnames.bed'),
                 'w')
