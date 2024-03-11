@@ -120,10 +120,9 @@ for line in fin:
     if repname not in repeat_elements:
         repeat_elements.append(repname)
     repchr = line[4]
-    repstart = int(line[5])
-    repend = int(line[6])
-    fout.write(str(repchr) + '\t' + str(repstart) + '\t' + str(repend)
-               + '\t' + str(repname) + '\n')
+    repstart = line[5]
+    repend = line[6]
+    fout.write('\t'.join([repchr, repstart, repend, repname]) + '\n')
     if repname in rep_chr:
         rep_chr[repname].append(repchr)
         rep_start[repname].append(int(repstart))
