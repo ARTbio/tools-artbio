@@ -125,29 +125,22 @@ for line in fin:
     fout.write('\t'.join([repchr, repstart, repend, repname]) + '\n')
     if repname in rep_chr:
         rep_chr[repname].append(repchr)
-        rep_start[repname].append(int(repstart))
-        rep_end[repname].append(int(repend))
+        rep_start[repname].append(repstart)
+        rep_end[repname].append(repend)
     else:
         rep_chr[repname] = [repchr]
-        rep_start[repname] = [int(repstart)]
-        rep_end[repname] = [int(repend)]
+        rep_start[repname] = [repstart]
+        rep_end[repname] = [repend]
 fin.close()
 fout.close()
-repeat_elements = sorted(repeat_elements)
-print("Writing a key for all repeats...")
-# print to fout the binary key that contains each repeat type with the
-# associated binary number; sort the binary key:
-fout = open(os.path.realpath(setup_folder + os.path.sep +
-                             'repgenomes_key.txt'), 'w')
-x = 0
-for repeat in repeat_elements:
-    # print >> fout, str(repeat) + '\t' + str(x)
-    fout.write(str(repeat) + '\t' + str(x) + '\n')
-    x += 1
-fout.close()
 
-# generate spacer for psuedogenomes
-spacer = ""
+# sort repeat_elements and print them in repgenomes_key.txt
+with open(os.path.join(setup_folder, 'repgenomes_key.txt'), 'w') as fout:
+    for i, repeat in enumerate(sorted(repeat_elements)):
+        fout.write('\t'.join([repeat, str(i)]) + '\n')
+
+# generate spacer for pseudogenomes
+spacer = ''
 for i in range(gapl):
     spacer = spacer + "N"
 
