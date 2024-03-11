@@ -142,44 +142,33 @@ with open(os.path.join(setup_folder, 'repgenomes_key.txt'), 'w') as fout:
 # generate spacer for pseudogenomes
 spacer = ''.join(['N' for i in range(gapl)])
 
-# save file with number of fragments processed per repname
-with open(os.path.realpath(nfragmentsfile1), "w") as fout1:
+# save file with number of fragments processed per repname. Not used ????
+with open(os.path.join(setup_folder, nfragmentsfile1), "w") as fout1:
     for repname in rep_chr:
         rep_chr_current = rep_chr[repname]
         fout1.write(str(len(rep_chr[repname])) + "\t" + repname + '\n')
 
-# generate metagenomes and save them to FASTA files
-k = 1
+# generate metagenomes and save them to FASTA files for bowtie build
 nrepgenomes = len(rep_chr.keys())
 for repname in rep_chr.keys():
-    metagenome = ""
-    newname = repname.replace("(", "_").replace(")", "_").replace("/", "_")
-    print("processing repgenome " + newname + ".fa" + " (" + str(k)
-          + " of " + str(nrepgenomes) + ")")
+    metagenome = ''
     rep_chr_current = rep_chr[repname]
     rep_start_current = rep_start[repname]
     rep_end_current = rep_end[repname]
-    print("-------> " + str(len(rep_chr[repname])) + " fragments")
     for i in range(len(rep_chr[repname])):
         try:
             chr = rep_chr_current[i]
-            rstart = max(rep_start_current[i] - flankingl, 0)
-            rend = min(rep_end_current[i] + flankingl, lgenome[chr]-1)
+            rstart = max(int(rep_start_current[i]) - flankingl, 0)
+            rend = min(int(rep_end_current[i]) + flankingl, int(lgenome[chr])-1)
             metagenome = metagenome + spacer + genome[chr][rstart:(rend+1)]
         except KeyError:
-            print("Unrecognised Chromosome: "+chr)
+            print("Unrecognised Chromosome: " + chr)
             pass
     # Convert metagenome to SeqRecord object (required by SeqIO.write)
-    record = SeqRecord(Seq(metagenome), id="repname",
-                       name="", description="")
-    print("saving repgenome " + newname + ".fa" + " (" + str(k) + " of "
-          + str(nrepgenomes) + ")")
-    fastafilename = os.path.realpath(setup_folder + os.path.sep
-                                     + newname + ".fa")
+    record = SeqRecord(Seq(metagenome), id='repname',
+                       name='', description='')
+    fastafilename = os.path.join(setup_folder, repname + '.fa')
     SeqIO.write(record, fastafilename, "fasta")
-    print("indexing repgenome " + newname + ".fa" + " (" +
-          str(k) + " of " + str(nrepgenomes) + ")")
     command = shlex.split('bowtie-build -f ' + fastafilename + ' ' +
-                          setup_folder + os.path.sep + newname)
+                          setup_folder + os.path.sep + repname)
     p = subprocess.Popen(command).communicate()
-    k += 1
