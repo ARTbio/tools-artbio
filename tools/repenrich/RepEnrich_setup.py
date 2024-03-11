@@ -101,13 +101,10 @@ idxgenome = {}
 lgenome = {}
 genome = {}
 allchrs = g.keys()
-k = 0
-for chr in allchrs:
+for k, chr in enumerate(allchrs):
     genome[chr] = str(g[chr].seq)
     lgenome[chr] = len(genome[chr])
     idxgenome[chr] = k
-    k = k + 1
-del g
 
 # Build a bedfile of repeatcoordinates to use by RepEnrich region_sorter
 repeat_elements = []
