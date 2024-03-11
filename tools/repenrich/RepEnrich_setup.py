@@ -60,7 +60,7 @@ parser.add_argument('--flankinglength', action='store', dest='flankinglength',
                          The flanking length should be set according to the\
                          length of your reads.  Default 25')
 parser.add_argument('--is_bed', action='store', dest='is_bed',
-                    metavar='is_bed', default= False,
+                    metavar='is_bed', default=False,
                     help='''Set to True if the annotation file has bed format.\
                          compatible format.\
                          BED file should have 6 columns:
