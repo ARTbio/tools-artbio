@@ -59,15 +59,6 @@ parser.add_argument('--flankinglength', action='store', dest='flankinglength',
                          element that is used to build repeat pseudogenomes.\
                          The flanking length should be set according to the\
                          length of your reads.  Default 25')
-parser.add_argument('--is_bed', action='store', dest='is_bed',
-                    metavar='is_bed', default=False,
-                    help='''Set to True if the annotation file has bed format.\
-                         compatible format.\
-                         BED file should have 6 columns:
-                         chr\tstart\tend\tName_element\tclass\tfamily.
-                         The class and family should be identical\
-                         to name_element if not applicable.\
-                         Default: False''')
 args = parser.parse_args()
 
 # parameters and paths specified in args_parse
@@ -77,7 +68,6 @@ annotation_file = args.annotation_file
 genomefasta = args.genomefasta
 setup_folder = args.setup_folder
 nfragmentsfile1 = args.nfragmentsfile1
-is_bed = args.is_bed
 
 # check that the programs we need are available
 try:
@@ -120,68 +110,33 @@ for chr in allchrs:
 del g
 
 # Build a bedfile of repeatcoordinates to use by RepEnrich region_sorter
-if not is_bed:
-    repeat_elements = []
-    fout = open(os.path.realpath(setup_folder + os.path.sep
-                                 + 'repnames.bed'), 'w')
-    rep_chr = {}
-    rep_start = {}
-    rep_end = {}
-    fin = import_text(annotation_file, ' ')
-    x = 0
-    for line in fin:
-        if x > 2:
-            line9 = line[9].replace("(", "_").replace(")",
-                                                      "_").replace("/", "_")
-            repname = line9
-            if repname not in repeat_elements:
-                repeat_elements.append(repname)
-            repchr = line[4]
-            repstart = int(line[5])
-            repend = int(line[6])
-            fout.write(str(repchr) + '\t' + str(repstart) + '\t' + str(repend)
-                       + '\t' + str(repname) + '\n')
-            if repname in rep_chr:
-                rep_chr[repname].append(repchr)
-                rep_start[repname].append(int(repstart))
-                rep_end[repname].append(int(repend))
-            else:
-                rep_chr[repname] = [repchr]
-                rep_start[repname] = [int(repstart)]
-                rep_end[repname] = [int(repend)]
-        x += 1
-if is_bed:
-    repeat_elements = []
-    fout = open(os.path.realpath(setup_folder + os.path.sep + 'repnames.bed'),
-                'w')
-    fin = open(os.path.realpath(annotation_file), 'r')
-    x = 0
-    rep_chr = {}
-    rep_start = {}
-    rep_end = {}
-    x = 0
-    for line in fin:
-        line = line.strip('\n')
-        line = line.split('\t')
-        line3 = line[3].replace("(", "_").replace(")", "_").replace("/", "_")
-        repname = line3
-        if repname not in repeat_elements:
-            repeat_elements.append(repname)
-        repchr = line[0]
-        repstart = int(line[1])
-        repend = int(line[2])
-        fout.write(str(repchr) + '\t' + str(repstart) + '\t' +
-                   str(repend) + '\t' + str(repname) + '\n')
-        # if rep_chr.has_key(repname):
-        if repname in rep_chr:
-            rep_chr[repname].append(repchr)
-            rep_start[repname].append(int(repstart))
-            rep_end[repname].append(int(repend))
-        else:
-            rep_chr[repname] = [repchr]
-            rep_start[repname] = [int(repstart)]
-            rep_end[repname] = [int(repend)]
-
+repeat_elements = []
+fout = open(os.path.join(setup_folder, 'repnames.bed'), 'w')
+rep_chr = {}
+rep_start = {}
+rep_end = {}
+fin = import_text(annotation_file, ' ')
+for i in range(3):
+    next(fin)
+for line in fin:
+    line9 = line[9].replace("(", "_").replace(")",
+                                              "_").replace("/", "_")
+    repname = line9
+    if repname not in repeat_elements:
+        repeat_elements.append(repname)
+    repchr = line[4]
+    repstart = int(line[5])
+    repend = int(line[6])
+    fout.write(str(repchr) + '\t' + str(repstart) + '\t' + str(repend)
+               + '\t' + str(repname) + '\n')
+    if repname in rep_chr:
+        rep_chr[repname].append(repchr)
+        rep_start[repname].append(int(repstart))
+        rep_end[repname].append(int(repend))
+    else:
+        rep_chr[repname] = [repchr]
+        rep_start[repname] = [int(repstart)]
+        rep_end[repname] = [int(repend)]
 fin.close()
 fout.close()
 repeat_elements = sorted(repeat_elements)
