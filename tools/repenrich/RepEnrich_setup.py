@@ -6,10 +6,6 @@ import shlex
 import subprocess
 import sys
 
-from Bio import SeqIO
-from Bio.Seq import Seq
-from Bio.SeqRecord import SeqRecord
-
 parser = argparse.ArgumentParser(description='''
              Part I: Prepartion of repetive element psuedogenomes and repetive\
              element bamfiles.  This script prepares the annotation used by\
@@ -68,15 +64,6 @@ annotation_file = args.annotation_file
 genomefasta = args.genomefasta
 setup_folder = args.setup_folder
 nfragmentsfile1 = args.nfragmentsfile1
-
-# check that the programs we need are available
-try:
-    subprocess.call(shlex.split("bowtie --version"),
-                    stdout=open(os.devnull, 'wb'),
-                    stderr=open(os.devnull, 'wb'))
-except OSError:
-    print("Error: Bowtie not loaded")
-    raise
 
 # Define a text importer
 csv.field_size_limit(sys.maxsize)
@@ -147,4 +134,3 @@ with open(os.path.realpath(nfragmentsfile1), "w") as fout1:
     for repname in rep_chr:
         rep_chr_current = rep_chr[repname]
         fout1.write(str(len(rep_chr[repname])) + "\t" + repname + '\n')
-
