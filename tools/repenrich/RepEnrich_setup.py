@@ -159,7 +159,8 @@ for repname in rep_chr.keys():
         try:
             chr = rep_chr_current[i]
             rstart = max(int(rep_start_current[i]) - flankingl, 0)
-            rend = min(int(rep_end_current[i]) + flankingl, int(lgenome[chr])-1)
+            rend = min(int(rep_end_current[i]) + flankingl,
+                       int(lgenome[chr]) - 1)
             metagenome = metagenome + spacer + genome[chr][rstart:(rend+1)]
         except KeyError:
             print("Unrecognised Chromosome: " + chr)
