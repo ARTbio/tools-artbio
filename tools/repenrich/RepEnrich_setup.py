@@ -119,9 +119,7 @@ for line in fin:
     repname = line[9].translate(str.maketrans('()/', '___'))
     if repname not in repeat_elements:
         repeat_elements.append(repname)
-    repchr = line[4]
-    repstart = line[5]
-    repend = line[6]
+    repchr, repstart, repend = line[4], line[5], line[6]
     fout.write('\t'.join([repchr, repstart, repend, repname]) + '\n')
     if repname in rep_chr:
         rep_chr[repname].append(repchr)
@@ -148,27 +146,28 @@ with open(os.path.join(setup_folder, nfragmentsfile1), "w") as fout1:
         fout1.write(str(len(rep_chr[repname])) + "\t" + repname + '\n')
 
 # generate metagenomes and save them to FASTA files for bowtie build
-nrepgenomes = len(rep_chr.keys())
 for repname in rep_chr:
     metagenome = ''
-    rep_chr_current = rep_chr[repname]
-    rep_start_current = rep_start[repname]
-    rep_end_current = rep_end[repname]
-    for i in range(len(rep_chr[repname])):
+    for i, repeat in enumerate(rep_chr[repname]):
         try:
-            chr = rep_chr_current[i]
-            rstart = max(int(rep_start_current[i]) - flankingl, 0)
-            rend = min(int(rep_end_current[i]) + flankingl,
-                       int(lgenome[chr]) - 1)
-            metagenome = metagenome + spacer + genome[chr][rstart:(rend+1)]
+            chromosome = rep_chr[repname][i]
+            start = max(int(rep_start[repname][i]) - flankingl, 0)
+            end = min(int(rep_end[repname][i]) + flankingl, int(lgenome[chr])-1) + 1
+            metagenome = f"{metagenome}{spacer}{genome[chromosome][start:end]}"
         except KeyError:
-            print("Unrecognised Chromosome: " + chr)
-            pass
-    # Convert metagenome to SeqRecord object (required by SeqIO.write)
-    record = SeqRecord(Seq(metagenome), id='repname',
-                       name='', description='')
-    fastafilename = os.path.join(setup_folder, repname + '.fa')
+            print("Unrecognised Chromosome: " + rep_chr[repname][i])
+    
+    # Create the SeqRecord object
+    record = SeqRecord(Seq(metagenome), id=repname, name='', description='')
+
+    # Build the FASTA filename using f-string formatting
+    fastafilename = f"{os.path.join(setup_folder, repname)}.fa"
+
+    # Write the record to FASTA file directly using SeqIO.write()
     SeqIO.write(record, fastafilename, "fasta")
-    command = shlex.split('bowtie-build -f ' + fastafilename + ' ' +
-                          setup_folder + os.path.sep + repname)
-    p = subprocess.Popen(command).communicate()
+    
+    # Construct the bowtie-build command as a list
+    bowtie_build_cmd = ["bowtie-build", "-f", fastafilename, os.path.join(setup_folder, repname)]
+    
+    # Execute the command using subprocess.run()
+    subprocess.run(bowtie_build_cmd, check=True)
