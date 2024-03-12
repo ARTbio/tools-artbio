@@ -10,32 +10,28 @@ import numpy
 
 
 parser = argparse.ArgumentParser(description='''
-             Performing alignments to pseudogenomes. Requires\
-             1) a bamfile of unique alignments with its bai index\
-             2) a fastq file of the reads mapping to more than one location.\
-             These files can be obtained using the bowtie options\
-             [bowtie -S -m 1 --max multimap.fastq mm9 mate1_reads.fastq]''')
+             Repenrich aligns reads to Repeat Elements pseudogenomes\
+             and counts aligned reads. RepEnrich_setup must be run\
+             before its use\
 parser.add_argument('--annotation_file', action='store',
                     metavar='annotation_file',
                     help='RepeatMasker.org annotation file for your\
                           organism. The file may be downloaded from\
-                          RepeatMasker.org. Example: hg19_repeatmasker.txt')
+                          RepeatMasker.org. E.g. hg19_repeatmasker.txt')
 parser.add_argument('--outputfolder', action='store', metavar='outputfolder',
-                    help='Folder that will contain results.\
-                          Example: /outputfolder')
+                    help='Folder that will contain results. Should be the\
+                          same as the one used for RepEnrich_setup.\
+                          Example: ./outputfolder')
 parser.add_argument('--outputprefix', action='store', metavar='outputprefix',
-                    help='Enter prefix name for data.\
-                          Example: HeLa_InputChIPseq_Rep1')
+                    help='Prefix name for Repenrich output files.')
 parser.add_argument('--setup_folder', action='store', metavar='setup_folder',
-                    help='Folder that will contains repeat element\
-                          pseudogenomes.\
-                          Example: /data/annotation/hg19/setup_folder')
+                    help='Folder produced by RepEnrich_setup which contains\
+                    repeat element pseudogenomes.')
 parser.add_argument('--fastqfile', action='store', metavar='fastqfile',
                     help='File of fastq reads mapping to multiple\
                           locations. Example: /data/multimap.fastq')
 parser.add_argument('--alignment_bam', action='store', metavar='alignment_bam',
-                    help='Bam output for unique mapper reads.\
-                          Example /bamfiles/old.bam')
+                    help='Bam alignments of unique mapper reads.)
 parser.add_argument('--pairedend', action='store', dest='pairedend',
                     default='FALSE',
                     help='Change to TRUE for paired-end fastq files.\
