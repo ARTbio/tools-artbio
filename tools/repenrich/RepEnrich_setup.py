@@ -44,8 +44,8 @@ parser.add_argument('--gaplength', action='store', dest='gaplength',
                     help='''Length of the spacer used to build\
                          repeat pseudogenomes.  Default 200''')
 parser.add_argument('--flankinglength', action='store', dest='flankinglength',
-                    metavar='''flankinglength', default='25', type=int,
-                    help='Length of the flanking region adjacent to the repeat\
+                    metavar='flankinglength', default='25', type=int,
+                    help='''Length of the flanking region adjacent to the repeat\
                          element that is used to build repeat pseudogenomes.\
                          The flanking length should be set according to the\
                          length of your reads.  Default 25''')
