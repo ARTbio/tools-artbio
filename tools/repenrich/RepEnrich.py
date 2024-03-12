@@ -12,7 +12,7 @@ import numpy
 parser = argparse.ArgumentParser(description='''
              Repenrich aligns reads to Repeat Elements pseudogenomes\
              and counts aligned reads. RepEnrich_setup must be run\
-             before its use\
+             before its use''')
 parser.add_argument('--annotation_file', action='store',
                     metavar='annotation_file',
                     help='RepeatMasker.org annotation file for your\
