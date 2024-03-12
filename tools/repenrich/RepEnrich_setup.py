@@ -152,11 +152,12 @@ for repname in rep_chr:
         try:
             chromosome = rep_chr[repname][i]
             start = max(int(rep_start[repname][i]) - flankingl, 0)
-            end = min(int(rep_end[repname][i]) + flankingl, int(lgenome[chr])-1) + 1
+            end = min(int(rep_end[repname][i]) + flankingl,
+                      int(lgenome[chr])-1) + 1
             metagenome = f"{metagenome}{spacer}{genome[chromosome][start:end]}"
         except KeyError:
             print("Unrecognised Chromosome: " + rep_chr[repname][i])
-    
+
     # Create the SeqRecord object
     record = SeqRecord(Seq(metagenome), id=repname, name='', description='')
 
@@ -165,9 +166,11 @@ for repname in rep_chr:
 
     # Write the record to FASTA file directly using SeqIO.write()
     SeqIO.write(record, fastafilename, "fasta")
-    
+
     # Construct the bowtie-build command as a list
-    bowtie_build_cmd = ["bowtie-build", "-f", fastafilename, os.path.join(setup_folder, repname)]
-    
+    bowtie_build_cmd = ["bowtie-build", "-f",
+                        fastafilename,
+                        os.path.join(setup_folder, repname)]
+
     # Execute the command using subprocess.run()
     subprocess.run(bowtie_build_cmd, check=True)
