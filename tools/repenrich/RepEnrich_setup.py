@@ -41,14 +41,14 @@ parser.add_argument('--nfragmentsfile1', action='store',
                          Default: ./repnames_nfragments.txt''')
 parser.add_argument('--gaplength', action='store', dest='gaplength',
                     metavar='gaplength', default='200', type=int,
-                    help='Length of the spacer used to build\
-                         repeat pseudogenomes.  Default 200')
+                    help='''Length of the spacer used to build\
+                         repeat pseudogenomes.  Default 200''')
 parser.add_argument('--flankinglength', action='store', dest='flankinglength',
-                    metavar='flankinglength', default='25', type=int,
+                    metavar='''flankinglength', default='25', type=int,
                     help='Length of the flanking region adjacent to the repeat\
                          element that is used to build repeat pseudogenomes.\
                          The flanking length should be set according to the\
-                         length of your reads.  Default 25')
+                         length of your reads.  Default 25''')
 args = parser.parse_args()
 
 # parameters and paths specified in args_parse
