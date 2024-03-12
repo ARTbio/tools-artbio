@@ -25,10 +25,10 @@ parser.add_argument('--annotation_file', action='store',
                     help='''This annotation file contains\
                          the repeat masker annotation for the genome of\
                          interest and may be downloaded at RepeatMasker.org\
-                         Example /data/annotation/mm9/mm9.fa.out''')
+                         Example: /data/annotation/mm9/mm9.fa.out''')
 parser.add_argument('--genomefasta', action='store', metavar='genomefasta',
                     help='''Genome of interest in fasta format.\
-                         Example /data/annotation/mm9/mm9.fa''')
+                         Example: /data/annotation/mm9/mm9.fa''')
 parser.add_argument('--setup_folder', action='store', metavar='setup_folder',
                     help='''Folder that contains bamfiles for repeats and\
                          repeat element psuedogenomes.\
@@ -38,7 +38,7 @@ parser.add_argument('--nfragmentsfile1', action='store',
                     default='./repnames_nfragments.txt',
                     help='''File that saves the number\
                          of fragments processed per repname.
-                         Default ./repnames_nfragments.txt''')
+                         Default: ./repnames_nfragments.txt''')
 parser.add_argument('--gaplength', action='store', dest='gaplength',
                     metavar='gaplength', default='200', type=int,
                     help='Length of the spacer used to build\
@@ -98,31 +98,28 @@ for k, chr in enumerate(allchrs):
 
 # Build a bedfile of repeatcoordinates to use by RepEnrich region_sorter
 repeat_elements = []
-fout = open(os.path.join(setup_folder, 'repnames.bed'), 'w')
-
 # this dictionaries will contain lists
-rep_chr = {}
-rep_start = {}
-rep_end = {}
+rep_chr, rep_start, rep_end = {}, {}, {}
 fin = import_text(annotation_file, ' ')
-for i in range(3):
-    next(fin)
-for line in fin:
-    repname = line[9].translate(str.maketrans('()/', '___'))
-    if repname not in repeat_elements:
-        repeat_elements.append(repname)
-    repchr, repstart, repend = line[4], line[5], line[6]
-    fout.write('\t'.join([repchr, repstart, repend, repname]) + '\n')
-    if repname in rep_chr:
-        rep_chr[repname].append(repchr)
-        rep_start[repname].append(repstart)
-        rep_end[repname].append(repend)
-    else:
-        rep_chr[repname] = [repchr]
-        rep_start[repname] = [repstart]
-        rep_end[repname] = [repend]
-fin.close()
-fout.close()
+with open(os.path.join(setup_folder, 'repnames.bed'), 'w') as fout:
+    for i in range(3):
+        next(fin)
+    for line in fin:
+        repname = line[9].translate(str.maketrans('()/', '___'))
+        if repname not in repeat_elements:
+            repeat_elements.append(repname)
+        repchr = line[4]
+        repstart = line[5]
+        repend = line[6]
+        fout.write('\t'.join([repchr, repstart, repend, repname]) + '\n')
+        if repname in rep_chr:
+            rep_chr[repname].append(repchr)
+            rep_start[repname].append(repstart)
+            rep_end[repname].append(repend)
+        else:
+            rep_chr[repname] = [repchr]
+            rep_start[repname] = [repstart]
+            rep_end[repname] = [repend]
 
 # sort repeat_elements and print them in repgenomes_key.txt
 with open(os.path.join(setup_folder, 'repgenomes_key.txt'), 'w') as fout:
