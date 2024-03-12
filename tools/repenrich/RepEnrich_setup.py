@@ -11,24 +11,14 @@ from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 
 parser = argparse.ArgumentParser(description='''
-             Part I: Prepartion of repetive element psuedogenomes and repetive\
-             element bamfiles.  This script prepares the annotation used by\
-             downstream applications to analyze for repetitive element\
-             enrichment. For this script to run properly bowtie must be\
-             loaded.  The repeat element psuedogenomes are prepared in order\
+             Part I: Prepartion of repetive element pseudogenomes bowtie\
+             indexes and annotation files used by RepEnrich.py\
+             enrichment. Bowtie must be accessible and is loaded by the\
+             script.  Repeat element pseudogenomes are indexed in order\
              to analyze reads that map to multiple locations of the genome.\
              The repeat element bamfiles are prepared in order to use a\
              region sorter to analyze reads that map to a single location\
-             of the genome. You will 1) annotation_file:\
-             The repetitive element annotation file downloaded from\
-             RepeatMasker.org database for your organism of interest.\
-             2) genomefasta: Your genome of interest in fasta format,\
-             3)setup_folder: a folder to contain repeat element setup files\
-             command-line usage
-             EXAMPLE: python master_setup.py\
-             /users/nneretti/data/annotation/mm9/mm9_repeatmasker.txt\
-             /users/nneretti/data/annotation/mm9/mm9.fa\
-             /users/nneretti/data/annotation/mm9/setup_folder''',
+             of the genome.''',
                                  prog='getargs_genome_maker.py')
 parser.add_argument('--annotation_file', action='store',
                     metavar='annotation_file',
@@ -102,13 +92,15 @@ lgenome = {}
 genome = {}
 allchrs = g.keys()
 for k, chr in enumerate(allchrs):
-    genome[chr] = str(g[chr].seq)
+    genome[chr] = g[chr].seq
     lgenome[chr] = len(genome[chr])
     idxgenome[chr] = k
 
 # Build a bedfile of repeatcoordinates to use by RepEnrich region_sorter
 repeat_elements = []
 fout = open(os.path.join(setup_folder, 'repnames.bed'), 'w')
+
+# this dictionaries will contain lists
 rep_chr = {}
 rep_start = {}
 rep_end = {}
