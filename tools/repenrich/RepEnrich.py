@@ -31,7 +31,7 @@ parser.add_argument('--fastqfile', action='store', metavar='fastqfile',
                     help='File of fastq reads mapping to multiple\
                           locations. Example: /data/multimap.fastq')
 parser.add_argument('--alignment_bam', action='store', metavar='alignment_bam',
-                    help='Bam alignments of unique mapper reads.)
+                    help='Bam alignments of unique mapper reads.')
 parser.add_argument('--pairedend', action='store', dest='pairedend',
                     default='FALSE',
                     help='Change to TRUE for paired-end fastq files.\
