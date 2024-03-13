@@ -109,8 +109,7 @@ def import_text(filename, separator):
 
 
 # build dictionaries to convert repclass and rep families'
-repeatclass = {}
-repeatfamily = {}
+repeatclass, repeatfamily = {}, {}
 fin = import_text(annotation_file, ' ')
 # skip three first lines of the iterator
 for line in range(3):
@@ -437,16 +436,3 @@ else:
     fout1.close()
     fout2.close()
     fout3.close()
-##############################################################################
-#  Remove Large intermediate files
-if os.path.exists(outputfolder + os.path.sep + outputfile_prefix +
-                  '_regionsorter.txt'):
-    os.remove(outputfolder + os.path.sep + outputfile_prefix +
-              '_regionsorter.txt')
-if os.path.exists(outputfolder + os.path.sep + 'pair1_bowtie'):
-    shutil.rmtree(outputfolder + os.path.sep + 'pair1_bowtie')
-if os.path.exists(outputfolder + os.path.sep + 'pair2_bowtie'):
-    shutil.rmtree(outputfolder + os.path.sep + 'pair2_bowtie')
-if os.path.exists(outputfolder + os.path.sep + 'sorted_bowtie'):
-    shutil.rmtree(outputfolder + os.path.sep + 'sorted_bowtie')
-print("... Done")
