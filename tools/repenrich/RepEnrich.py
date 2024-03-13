@@ -65,14 +65,7 @@ parser.add_argument('--allcountmethod', action='store', dest='allcountmethod',
                           Our evaluation of simulated data indicated\
                           that fraction counting is the best method.\
                           Default = FALSE, change to TRUE')
-parser.add_argument('--is_bed', action='store', dest='is_bed',
-                    metavar='is_bed', default='FALSE',
-                    help='Annotation file can also be a bed file.\
-                          Ex. format:\
-                          chr start end Name_element class family.\
-                          The class and family should identical to the\
-                          name_element if not applicable.\
-                          Default FALSE change to TRUE')
+
 args = parser.parse_args()
 
 # parameters
@@ -89,7 +82,6 @@ b_opt = "-k1 -p 1 --quiet"
 simple_repeat = args.collapserepeat
 paired_end = args.pairedend
 allcountmethod = args.allcountmethod
-is_bed = args.is_bed
 
 
 # check that the programs we need are available
@@ -119,28 +111,20 @@ def import_text(filename, separator):
 # build dictionaries to convert repclass and rep families'
 repeatclass = {}
 repeatfamily = {}
-if is_bed == "FALSE":
-    fin = import_text(annotation_file, ' ')
-    # skip three first lines of the iterator
-    for line in range(3):
-        next(fin)
-    for line in fin:
-        classfamily = []
-        classfamily = line[10].split(os.path.sep)
-        line9 = line[9].replace("(", "_").replace(
-                                ")", "_").replace("/", "_")
-        repeatclass[line9] = classfamily[0]
-        if len(classfamily) == 2:
-            repeatfamily[line9] = classfamily[1]
-        else:
-            repeatfamily[line9] = classfamily[0]
-if is_bed == "TRUE":
-    fin = open(annotation_file, 'r')
-    for line in fin:
-        line = line.strip('\n').split('\t')
-        line3 = line[3].replace("(", "_").replace(")", "_").replace("/", "_")
-        repeatclass[line3] = line[4]
-        repeatfamily[line3] = line[5]
+fin = import_text(annotation_file, ' ')
+# skip three first lines of the iterator
+for line in range(3):
+    next(fin)
+for line in fin:
+    classfamily = []
+    classfamily = line[10].split(os.path.sep)
+    line9 = line[9].replace("(", "_").replace(
+                            ")", "_").replace("/", "_")
+    repeatclass[line9] = classfamily[0]
+    if len(classfamily) == 2:
+        repeatfamily[line9] = classfamily[1]
+    else:
+        repeatfamily[line9] = classfamily[0]
 fin.close()
 
 # build list of repeats initializing dictionaries for downstream analysis'
