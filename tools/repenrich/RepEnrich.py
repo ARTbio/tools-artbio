@@ -108,23 +108,21 @@ def import_text(filename, separator):
             yield line
 
 
-# build dictionaries to convert repclass and rep families'
+# build dictionaries to convert repclass and rep families
 repeatclass, repeatfamily = {}, {}
-fin = import_text(annotation_file, ' ')
+repeats = import_text(annotation_file, ' ')
 # skip three first lines of the iterator
 for line in range(3):
-    next(fin)
-for line in fin:
+    next(repeats)
+for repeat in repeats:
     classfamily = []
-    classfamily = line[10].split(os.path.sep)
-    line9 = line[9].replace("(", "_").replace(
-                            ")", "_").replace("/", "_")
-    repeatclass[line9] = classfamily[0]
+    classfamily = repeat[10].split('/')
+    matching_repeat = repeat[9].translate(str.maketrans('()/', '___'))
+    repeatclass[matching_repeat] = classfamily[0]
     if len(classfamily) == 2:
-        repeatfamily[line9] = classfamily[1]
+        repeatfamily[matching_repeat] = classfamily[1]
     else:
-        repeatfamily[line9] = classfamily[0]
-fin.close()
+        repeatfamily[matching_repeat] = classfamily[0]
 
 # build list of repeats initializing dictionaries for downstream analysis'
 fin = import_text(os.path.join(setup_folder, 'repgenomes_key.txt'), '\t')
