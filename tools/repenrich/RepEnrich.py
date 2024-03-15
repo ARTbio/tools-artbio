@@ -124,36 +124,32 @@ for repeat in repeats:
         repeatfamily[matching_repeat] = classfamily[0]
 
 # build list of repeats initializing dictionaries for downstream analysis'
-fin = import_text(os.path.join(setup_folder, 'repgenomes_key.txt'), '\t')
-repeat_key = {}
-rev_repeat_key = {}
+genome_lists = import_text(os.path.join(setup_folder, 'repgenomes_key.txt'), '\t')
 repeat_list = []
-reptotalcounts = {}
-classfractionalcounts = {}
-familyfractionalcounts = {}
-classtotalcounts = {}
-familytotalcounts = {}
-reptotalcounts_simple = {}
-fractionalcounts = {}
-i = 0
-for line in fin:
-    reptotalcounts[line[0]] = 0
-    fractionalcounts[line[0]] = 0
-    if line[0] in repeatclass:
-        classtotalcounts[repeatclass[line[0]]] = 0
-        classfractionalcounts[repeatclass[line[0]]] = 0
-    if line[0] in repeatfamily:
-        familytotalcounts[repeatfamily[line[0]]] = 0
-        familyfractionalcounts[repeatfamily[line[0]]] = 0
-    if line[0] in repeatfamily:
-        if repeatfamily[line[0]] == simple_repeat:
+dictionary_names = ['repeat_key', 'rev_repeat_key', 'reptotalcounts', 'classfractionalcounts',
+                      'familyfractionalcounts', 'classtotalcounts', 'familytotalcounts'
+                      'reptotalcounts_simple', 'fractionalcounts']
+for name in dictionary_names:
+    name = {}
+for rep in genome_lists:
+    reptotalcounts[rep[0]] = 0
+    fractionalcounts[rep[0]] = 0
+    if rep[0] in repeatclass:
+        classtotalcounts[repeatclass[rep[0]]] = 0
+        classfractionalcounts[repeatclass[rep[0]]] = 0
+    if rep[0] in repeatfamily:
+        familytotalcounts[repeatfamily[rep[0]]] = 0
+        familyfractionalcounts[repeatfamily[rep[0]]] = 0
+    if rep[0] in repeatfamily:
+        if repeatfamily[rep[0]] == simple_repeat:
             reptotalcounts_simple[simple_repeat] = 0
     else:
-        reptotalcounts_simple[line[0]] = 0
-    repeat_list.append(line[0])
-    repeat_key[line[0]] = int(line[1])
-    rev_repeat_key[int(line[1])] = line[0]
+        reptotalcounts_simple[rep[0]] = 0
+    repeat_list.append(rep[0])
+    repeat_key[rep[0]] = int(rep[1])
+    rev_repeat_key[int(rep[1])] = rep[0]
 fin.close()
+
 # map the repeats to the psuedogenomes:
 if not os.path.exists(outputfolder):
     os.mkdir(outputfolder)
