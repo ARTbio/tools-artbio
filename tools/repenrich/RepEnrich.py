@@ -44,7 +44,7 @@ parser.add_argument('--collapserepeat', action='store', dest='collapserepeat',
                           default to another repeat name to collapse a\
                           separate specific repeat instead or if the name of\
                           Simple_repeat is different for your organism.\
-                          Default Simple_repeat')
+                          Default: "Simple_repeat"')
 parser.add_argument('--fastqfile2', action='store', dest='fastqfile2',
                     metavar='fastqfile2', default='none',
                     help='fastqfile #2 when using paired-end option.\
@@ -123,37 +123,29 @@ for repeat in repeats:
     else:
         repeatfamily[matching_repeat] = classfamily[0]
 
+
 # build list of repeats initializing dictionaries for downstream analysis'
-fin = import_text(os.path.join(setup_folder, 'repgenomes_key.txt'), '\t')
-repeat_key = {}
-rev_repeat_key = {}
-repeat_list = []
-reptotalcounts = {}
-classfractionalcounts = {}
-familyfractionalcounts = {}
-classtotalcounts = {}
-familytotalcounts = {}
-reptotalcounts_simple = {}
-fractionalcounts = {}
-i = 0
-for line in fin:
-    reptotalcounts[line[0]] = 0
-    fractionalcounts[line[0]] = 0
-    if line[0] in repeatclass:
-        classtotalcounts[repeatclass[line[0]]] = 0
-        classfractionalcounts[repeatclass[line[0]]] = 0
-    if line[0] in repeatfamily:
-        familytotalcounts[repeatfamily[line[0]]] = 0
-        familyfractionalcounts[repeatfamily[line[0]]] = 0
-    if line[0] in repeatfamily:
-        if repeatfamily[line[0]] == simple_repeat:
-            reptotalcounts_simple[simple_repeat] = 0
-    else:
-        reptotalcounts_simple[line[0]] = 0
-    repeat_list.append(line[0])
-    repeat_key[line[0]] = int(line[1])
-    rev_repeat_key[int(line[1])] = line[0]
-fin.close()
+repgenome_path = os.path.join(setup_folder, 'repgenomes_key.txt')
+reptotalcounts = {line[0]: 0 for line in import_text(repgenome_path, '\t')}
+fractionalcounts = {line[0]: 0 for line in import_text(repgenome_path, '\t')}
+classtotalcounts = {repeatclass[line[0]]: 0 for line in import_text(
+    repgenome_path, '\t') if line[0] in repeatclass}
+classfractionalcounts = {repeatclass[line[0]]: 0 for line in import_text(
+    repgenome_path, '\t') if line[0] in repeatclass}
+familytotalcounts = {repeatfamily[line[0]]: 0 for line in import_text(
+    repgenome_path, '\t') if line[0] in repeatfamily}
+familyfractionalcounts = {repeatfamily[line[0]]: 0 for line in import_text(
+    repgenome_path, '\t') if line[0] in repeatfamily}
+reptotalcounts_simple = {(simple_repeat if line[0] in repeatfamily and
+                          repeatfamily[line[0]] == simple_repeat else
+                          line[0]): 0 for line in import_text(
+                              repgenome_path, '\t')}
+repeat_key = {line[0]: int(line[1]) for line in import_text(
+    repgenome_path, '\t')}
+rev_repeat_key = {int(line[1]): line[0] for line in import_text(
+    repgenome_path, '\t')}
+repeat_list = [line[0] for line in import_text(repgenome_path, '\t')]
+
 # map the repeats to the psuedogenomes:
 if not os.path.exists(outputfolder):
     os.mkdir(outputfolder)
