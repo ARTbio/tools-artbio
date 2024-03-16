@@ -151,26 +151,23 @@ if not os.path.exists(outputfolder):
     os.mkdir(outputfolder)
 
 # Conduct the regions sorting
-print('Conducting region sorting on unique mapping reads....')
-fileout = outputfolder + os.path.sep + outputfile_prefix + '_regionsorter.txt'
+fileout = os.path.join(outputfolder, f"{outputfile_prefix}_regionsorter.txt")
+command = shlex.split(f"coverageBed -abam {unique_mapper_bam} -b {os.path.join(
+    setup_folder, 'repnames.bed')}")
 with open(fileout, 'w') as stdout:
-    command = shlex.split("coverageBed -abam " + unique_mapper_bam + " -b " +
-                          setup_folder + os.path.sep + 'repnames.bed')
-    p = subprocess.Popen(command, stdout=stdout)
-p.communicate()
-stdout.close()
-filein = open(outputfolder + os.path.sep + outputfile_prefix
-              + '_regionsorter.txt', 'r')
+    subprocess.run(command, stdout=stdout, check=True)
+
 counts = {}
 sumofrepeatreads = 0
-for line in filein:
-    line = line.split('\t')
-    if not str(repeat_key[line[3]]) in counts:
-        counts[str(repeat_key[line[3]])] = 0
-    counts[str(repeat_key[line[3]])] += int(line[4])
-    sumofrepeatreads += int(line[4])
-print('Identified ' + str(sumofrepeatreads) +
-      'unique reads that mapped to repeats.')
+with open(fileout) as filein:
+    for line in filein:
+        line = line.split('\t')
+        if not str(repeat_key[line[3]]) in counts:
+            counts[str(repeat_key[line[3]])] = 0
+        counts[str(repeat_key[line[3]])] += int(line[4])
+        sumofrepeatreads += int(line[4])
+    print('Identified ' + str(sumofrepeatreads) +
+          'unique reads that mapped to repeats.')
 
 if paired_end == 'TRUE':
     if not os.path.exists(outputfolder + os.path.sep + 'pair1_bowtie'):
