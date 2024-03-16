@@ -170,12 +170,10 @@ with open(fileout) as filein:
             mapped to repeats.")
 
 if paired_end == 'TRUE':
-    if not os.path.exists(outputfolder + os.path.sep + 'pair1_bowtie'):
-        os.mkdir(outputfolder + os.path.sep + 'pair1_bowtie')
-    if not os.path.exists(outputfolder + os.path.sep + 'pair2_bowtie'):
-        os.mkdir(outputfolder + os.path.sep + 'pair2_bowtie')
-    folder_pair1 = outputfolder + os.path.sep + 'pair1_bowtie'
-    folder_pair2 = outputfolder + os.path.sep + 'pair2_bowtie'
+    folder_pair1 = os.path.join(outputfolder, 'pair1_bowtie')
+    folder_pair2 = os.path.join(outputfolder, 'pair2_bowtie')
+    os.makedirs(folder_pair1, exist_ok=True)
+    os.makedirs(folder_pair2, exist_ok=True)
 
     print("Processing repeat psuedogenomes...")
     ps = []
