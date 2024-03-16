@@ -166,8 +166,7 @@ with open(fileout) as filein:
             counts[str(repeat_key[line[3]])] = 0
         counts[str(repeat_key[line[3]])] += int(line[4])
         sumofrepeatreads += int(line[4])
-    print('Identified ' + str(sumofrepeatreads) +
-          'unique reads that mapped to repeats.')
+    print(f"Identified {sumofrepeatreads} unique reads that mapped to repeats.")
 
 if paired_end == 'TRUE':
     if not os.path.exists(outputfolder + os.path.sep + 'pair1_bowtie'):
