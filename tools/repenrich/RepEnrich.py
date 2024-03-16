@@ -152,8 +152,8 @@ if not os.path.exists(outputfolder):
 
 # Conduct the regions sorting
 fileout = os.path.join(outputfolder, f"{outputfile_prefix}_regionsorter.txt")
-command = shlex.split(f"coverageBed -abam {unique_mapper_bam} -b {os.path.join(
-    setup_folder, 'repnames.bed')}")
+command = shlex.split(f"coverageBed -abam {unique_mapper_bam} -b \
+                        {os.path.join(setup_folder, 'repnames.bed')}")
 with open(fileout, 'w') as stdout:
     subprocess.run(command, stdout=stdout, check=True)
 
@@ -166,7 +166,8 @@ with open(fileout) as filein:
             counts[str(repeat_key[line[3]])] = 0
         counts[str(repeat_key[line[3]])] += int(line[4])
         sumofrepeatreads += int(line[4])
-    print(f"Identified {sumofrepeatreads} unique reads that mapped to repeats.")
+    print(f"Identified {sumofrepeatreads} unique reads that \
+            mapped to repeats.")
 
 if paired_end == 'TRUE':
     if not os.path.exists(outputfolder + os.path.sep + 'pair1_bowtie'):
