@@ -169,65 +169,6 @@ with open(fileout) as filein:
     print(f"Identified {sumofrepeatreads} unique reads that \
             mapped to repeats.")
 
-if paired_end == 'TRUE':
-    folder_pair1 = os.path.join(outputfolder, 'pair1_bowtie')
-    folder_pair2 = os.path.join(outputfolder, 'pair2_bowtie')
-    os.makedirs(folder_pair1, exist_ok=True)
-    os.makedirs(folder_pair2, exist_ok=True)
-
-    print("Processing repeat psuedogenomes...")
-    ps, psb, ticker = [], [], 0
-    for metagenome in repeat_list:
-        metagenomepath = os.path.join(setup_folder, metagenome)
-        file1 = os.path.join(folder_pair1, metagenome) + '.bowtie'
-        file2 = os.path.join(folder_pair2, metagenome) + '.bowtie'
-        command = shlex.split(f"bowtie {b_opt} {metagenomepath} {fastqfile_1}")
-        with open(file1, 'w') as stdout:
-            p = subprocess.Popen(command, stdout=stdout)
-        with open(file2, 'w') as stdout:
-            command = shlex.split("bowtie " + b_opt + " " +
-                                  metagenomepath + " " + fastqfile_2)
-            pp = subprocess.Popen(command, stdout=stdout)
-        ps.append(p)
-        ticker += 1
-        psb.append(pp)
-        ticker += 1
-        if ticker == cpus:
-            for p in ps:
-                p.communicate()
-            for p in psb:
-                p.communicate()
-            ticker = 0
-            psb = []
-            ps = []
-    if len(ps) > 0:
-        for p in ps:
-            p.communicate()
-    stdout.close()
-
-    # combine the output from both read pairs:
-    print('sorting and combining the output for both read pairs...')
-    if not os.path.exists(outputfolder + os.path.sep + 'sorted_bowtie'):
-        os.mkdir(outputfolder + os.path.sep + 'sorted_bowtie')
-    sorted_bowtie = outputfolder + os.path.sep + 'sorted_bowtie'
-    for metagenome in repeat_list:
-        file1 = folder_pair1 + os.path.sep + metagenome + '.bowtie'
-        file2 = folder_pair2 + os.path.sep + metagenome + '.bowtie'
-        fileout = sorted_bowtie + os.path.sep + metagenome + '.bowtie'
-        with open(fileout, 'w') as stdout:
-            p1 = subprocess.Popen(['cat', file1, file2],
-                                  stdout=subprocess.PIPE)
-            p2 = subprocess.Popen(['cut', '-f1', "-d "], stdin=p1.stdout,
-                                  stdout=subprocess.PIPE)
-            p3 = subprocess.Popen(['cut', '-f1', "-d/"], stdin=p2.stdout,
-                                  stdout=subprocess.PIPE)
-            p4 = subprocess.Popen(['sort'], stdin=p3.stdout,
-                                  stdout=subprocess.PIPE)
-            p5 = subprocess.Popen(['uniq'], stdin=p4.stdout, stdout=stdout)
-            p5.communicate()
-        stdout.close()
-    print('completed ...')
-
 if paired_end == 'FALSE':
     if not os.path.exists(outputfolder + os.path.sep + 'pair1_bowtie'):
         os.mkdir(outputfolder + os.path.sep + 'pair1_bowtie')
@@ -266,6 +207,64 @@ if paired_end == 'FALSE':
         with open(fileout, 'w') as stdout:
             p1 = subprocess.Popen(['cat', file1], stdout=subprocess.PIPE)
             p2 = subprocess.Popen(['cut', '-f1'], stdin=p1.stdout,
+                                  stdout=subprocess.PIPE)
+            p3 = subprocess.Popen(['cut', '-f1', "-d/"], stdin=p2.stdout,
+                                  stdout=subprocess.PIPE)
+            p4 = subprocess.Popen(['sort'], stdin=p3.stdout,
+                                  stdout=subprocess.PIPE)
+            p5 = subprocess.Popen(['uniq'], stdin=p4.stdout, stdout=stdout)
+            p5.communicate()
+        stdout.close()
+    print('completed ...')
+else:
+    folder_pair1 = os.path.join(outputfolder, 'pair1_bowtie')
+    folder_pair2 = os.path.join(outputfolder, 'pair2_bowtie')
+    os.makedirs(folder_pair1, exist_ok=True)
+    os.makedirs(folder_pair2, exist_ok=True)
+
+    print("Processing repeat psuedogenomes...")
+    ps, psb, ticker = [], [], 0
+    for metagenome in repeat_list:
+        metagenomepath = os.path.join(setup_folder, metagenome)
+        file1 = os.path.join(folder_pair1, metagenome) + '.bowtie'
+        file2 = os.path.join(folder_pair2, metagenome) + '.bowtie'
+        command = shlex.split(f"bowtie {b_opt} {metagenomepath} {fastqfile_1}")
+        with open(file1, 'w') as stdout:
+            p = subprocess.Popen(command, stdout=stdout)
+        with open(file2, 'w') as stdout:
+            command = shlex.split("bowtie " + b_opt + " " +
+                                  metagenomepath + " " + fastqfile_2)
+            pp = subprocess.Popen(command, stdout=stdout)
+        ps.append(p)
+        ticker += 1
+        psb.append(pp)
+        ticker += 1
+        if ticker == cpus:
+            for p in ps:
+                p.communicate()
+            for p in psb:
+                p.communicate()
+            ticker = 0
+            psb = []
+            ps = []
+    if len(ps) > 0:
+        for p in ps:
+            p.communicate()
+    stdout.close()
+
+    # combine the output from both read pairs:
+    print('Sorting and combining the output for both read pairs...')
+    if not os.path.exists(outputfolder + os.path.sep + 'sorted_bowtie'):
+        os.mkdir(outputfolder + os.path.sep + 'sorted_bowtie')
+    sorted_bowtie = outputfolder + os.path.sep + 'sorted_bowtie'
+    for metagenome in repeat_list:
+        file1 = folder_pair1 + os.path.sep + metagenome + '.bowtie'
+        file2 = folder_pair2 + os.path.sep + metagenome + '.bowtie'
+        fileout = sorted_bowtie + os.path.sep + metagenome + '.bowtie'
+        with open(fileout, 'w') as stdout:
+            p1 = subprocess.Popen(['cat', file1, file2],
+                                  stdout=subprocess.PIPE)
+            p2 = subprocess.Popen(['cut', '-f1', "-d "], stdin=p1.stdout,
                                   stdout=subprocess.PIPE)
             p3 = subprocess.Popen(['cut', '-f1', "-d/"], stdin=p2.stdout,
                                   stdout=subprocess.PIPE)
