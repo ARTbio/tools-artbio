@@ -33,12 +33,6 @@ parser.add_argument('--setup_folder', action='store', metavar='setup_folder',
                     help='''Folder that contains bamfiles for repeats and\
                          repeat element psuedogenomes.\
                          Example /data/annotation/mm9/setup''')
-parser.add_argument('--nfragmentsfile1', action='store',
-                    dest='nfragmentsfile1', metavar='nfragmentsfile1',
-                    default='./repnames_nfragments.txt',
-                    help='''File that saves the number\
-                         of fragments processed per repname.
-                         Default: ./repnames_nfragments.txt''')
 parser.add_argument('--gaplength', action='store', dest='gaplength',
                     metavar='gaplength', default='200', type=int,
                     help='''Length of the spacer used to build\
@@ -57,7 +51,6 @@ flankingl = args.flankinglength
 annotation_file = args.annotation_file
 genomefasta = args.genomefasta
 setup_folder = args.setup_folder
-nfragmentsfile1 = args.nfragmentsfile1
 
 # check that the programs we need are available
 try:
@@ -87,9 +80,7 @@ print("loading genome...")
 g = SeqIO.to_dict(SeqIO.parse(genomefasta, "fasta"))
 
 print("Precomputing length of all chromosomes...")
-idxgenome = {}
-lgenome = {}
-genome = {}
+idxgenome, lgenome, genome = {}, {}, {}
 allchrs = g.keys()
 for k, chr in enumerate(allchrs):
     genome[chr] = g[chr].seq
@@ -98,7 +89,7 @@ for k, chr in enumerate(allchrs):
 
 # Build a bedfile of repeatcoordinates to use by RepEnrich region_sorter
 repeat_elements = []
-# this dictionaries will contain lists
+# these dictionaries will contain lists
 rep_chr, rep_start, rep_end = {}, {}, {}
 fin = import_text(annotation_file, ' ')
 with open(os.path.join(setup_folder, 'repnames.bed'), 'w') as fout:
