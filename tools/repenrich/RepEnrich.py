@@ -58,7 +58,7 @@ fastqfile_2 = args.fastqfile2
 cpus = args.cpus
 b_opt = "-k1 -p 1 --quiet"
 # Change if simple repeats are differently annotated in your organism
-simple_repeat = "Simple_repeat" 
+simple_repeat = "Simple_repeat"
 paired_end = args.pairedend
 
 # check that the programs we need are available
@@ -313,22 +313,20 @@ for key in fractionalcounts.keys():
 for key in fractionalcounts.keys():
     familyfractionalcounts[repeatfamily[key]] += fractionalcounts[key]
 
-print('Writing final output and removing intermediate files...')
 # print output to file of the categorized counts and total overlapping counts:
+print('Writing final output...')
 with open(f"{os.path.join(outputfolder, outputfile_prefix)}\
-            _class_fraction_counts.txt", 'w') as fout1:
+            _class_fraction_counts.txt", 'w') as fout:
     for key in sorted(classfractionalcounts.keys()):
-        fout1.write(f"{key}\t{classfractionalcounts[key]}\n")
-fout2 = open(outputfolder + os.path.sep + outputfile_prefix +
-             '_family_fraction_counts.txt', 'w')
-for key in sorted(familyfractionalcounts.keys()):
-    fout2.write(str(key) + '\t' + str(familyfractionalcounts[key]) + '\n')
-fout3 = open(outputfolder + os.path.sep + outputfile_prefix +
-             '_fraction_counts.txt', 'w')
-for key in sorted(fractionalcounts.keys()):
-    fout3.write(str(key) + '\t' + repeatclass[key] + '\t' +
-                repeatfamily[key] + '\t' + str(int(fractionalcounts[key]))
-                + '\n')
-fout1.close()
-fout2.close()
-fout3.close()
+        fout.write(f"{key}\t{classfractionalcounts[key]}\n")
+
+with open(f"{os.path.join(outputfolder, outputfile_prefix)}\
+            _family_fraction_counts.txt", 'w') as fout:
+    for key in sorted(familyfractionalcounts.keys()):
+        fout.write(f"{key}\t{familyfractionalcounts[key]}\n")
+
+with open(f"{os.path.join(outputfolder, outputfile_prefix)}\
+            _fraction_counts.txt", 'w') as fout:
+    for key in sorted(fractionalcounts.keys()):
+        fout.write(f"{key}\t{repeatclass[key]}\t{repeatfamily[key]}\
+                      \t{int(fractionalcounts[key]}\n")
