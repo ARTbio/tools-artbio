@@ -329,4 +329,4 @@ with open(f"{os.path.join(outputfolder, outputfile_prefix)}\
             _fraction_counts.txt", 'w') as fout:
     for key in sorted(fractionalcounts.keys()):
         fout.write(f"{key}\t{repeatclass[key]}\t{repeatfamily[key]}\
-                      \t{int(fractionalcounts[key]}\n")
+                      \t{int(fractionalcounts[key])}\n")
