@@ -314,9 +314,9 @@ for x in counts.keys():
 repcounts = {}
 repcounts['other'] = 0
 for key in counts.keys():
-    key = key.strip(',').split(',')
+    key_list = key.strip(',').split(',')
     repname = ''
-    for i in key:
+    for i in key_list:
         repname = os.path.join(repname, rev_repeat_key[int(i)])
     repcounts[repname] = counts[key]
 # building the total counts for class enrichment...
@@ -325,7 +325,7 @@ for key in reptotalcounts.keys():
 # building total counts for family enrichment...
 for key in reptotalcounts.keys():
     familytotalcounts[repeatfamily[key]] += reptotalcounts[key]
-# building unique counts table'
+# building unique counts table
 repcounts2 = {}
 for rep in repeat_list:
     if "/" + rep in repcounts:
