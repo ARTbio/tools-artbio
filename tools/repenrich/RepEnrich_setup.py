@@ -38,7 +38,7 @@ parser.add_argument('--flankinglength', action='store', dest='flankinglength',
                          Default 25, for 50 nt reads''')
 args = parser.parse_args()
 
-# parameters and paths specified in args_parse
+# parameters from argsparse
 gapl = args.gaplength
 flankingl = args.flankinglength
 annotation_file = args.annotation_file
@@ -51,7 +51,7 @@ try:
                     stdout=open(os.devnull, 'wb'),
                     stderr=open(os.devnull, 'wb'))
 except OSError:
-    print("Error: Bowtie not loaded")
+    print("Error: Bowtie not available in the path")
     raise
 
 # Define a text importer
@@ -68,14 +68,11 @@ def import_text(filename, separator):
 # Make a setup folder
 if not os.path.exists(setup_folder):
     os.makedirs(setup_folder)
-# load genome into dictionary
-print("loading genome...")
+# load genome into dictionary and compute length
 g = SeqIO.to_dict(SeqIO.parse(genomefasta, "fasta"))
-
-print("Precomputing length of all chromosomes...")
 idxgenome, lgenome, genome = {}, {}, {}
-allchrs = g.keys()
-for k, chr in enumerate(allchrs):
+
+for k, chr in enumerate(g.keys()):
     genome[chr] = g[chr].seq
     lgenome[chr] = len(genome[chr])
     idxgenome[chr] = k
@@ -126,19 +123,12 @@ for repname in rep_chr:
         except KeyError:
             print("Unrecognised Chromosome: " + rep_chr[repname][i])
 
-    # Create the SeqRecord object
-    record = SeqRecord(Seq(metagenome), id=repname, name='', description='')
-
-    # Build the FASTA filename using f-string formatting
+    # Create Fasta of repeat pseudogenome
     fastafilename = f"{os.path.join(setup_folder, repname)}.fa"
-
-    # Write the record to FASTA file directly using SeqIO.write()
+    record = SeqRecord(Seq(metagenome), id=repname, name='', description='')
     SeqIO.write(record, fastafilename, "fasta")
 
-    # Construct the bowtie-build command as a list
-    bowtie_build_cmd = ["bowtie-build", "-f",
-                        fastafilename,
+    # Generate repeat pseudogenome bowtie index
+    bowtie_build_cmd = ["bowtie-build", "-f", fastafilename,
                         os.path.join(setup_folder, repname)]
-
-    # Execute the command using subprocess.run()
     subprocess.run(bowtie_build_cmd, check=True)
