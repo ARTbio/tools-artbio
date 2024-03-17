@@ -271,26 +271,29 @@ else:
 
 # build a file of repeat keys for all reads
 print('Writing and processing intermediate files...')
-sorted_bowtie = outputfolder + os.path.sep + 'sorted_bowtie'
-readid = {}
+sorted_bowtie = os.path.join(outputfolder, 'sorted_bowtie')
 sumofrepeatreads = 0
+readid = {}
+
 for rep in repeat_list:
-    for data in import_text(sorted_bowtie + os.path.sep +
-                            rep + '.bowtie', '\t'):
+    for data in import_text(
+            f"{os.path.join(sorted_bowtie, rep)}.bowtie", '\t'):
         readid[data[0]] = ''
+
 for rep in repeat_list:
-    for data in import_text(sorted_bowtie + os.path.sep
-                            + rep + '.bowtie', '\t'):
-        readid[data[0]] += str(repeat_key[rep]) + str(',')
+    for data in import_text(
+            f"{os.path.join(sorted_bowtie, rep)}.bowtie", '\t'):
+        readid[data[0]] += f"{repeat_key[rep]},"
+
 for subfamilies in readid.values():
     if subfamilies not in counts:
         counts[subfamilies] = 0
     counts[subfamilies] += 1
     sumofrepeatreads += 1
-del readid
-print('Identified ' + str(sumofrepeatreads) +
-      ' reads that mapped to repeats for unique and multimappers.')
 
+
+print(f'Identified {sumofrepeatreads} reads that mapped to \
+        repeats for unique and multimappers.')
 print("Conducting final calculations...")
 
 
