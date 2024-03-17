@@ -11,38 +11,31 @@ from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 
 parser = argparse.ArgumentParser(description='''
-             Part I: Prepartion of repetive element pseudogenomes bowtie\
-             indexes and annotation files used by RepEnrich.py\
-             enrichment. Bowtie must be accessible and is loaded by the\
-             script.  Repeat element pseudogenomes are indexed in order\
-             to analyze reads that map to multiple locations of the genome.\
-             The repeat element bamfiles are prepared in order to use a\
-             region sorter to analyze reads that map to a single location\
-             of the genome.''',
+             Prepartion of repetive element pseudogenomes bowtie\
+             indexes and annotation files used by RepEnrich.py enrichment.''',
                                  prog='getargs_genome_maker.py')
 parser.add_argument('--annotation_file', action='store',
                     metavar='annotation_file',
-                    help='''This annotation file contains\
-                         the repeat masker annotation for the genome of\
-                         interest and may be downloaded at RepeatMasker.org\
-                         Example: /data/annotation/mm9/mm9.fa.out''')
+                    help='''Repeat masker annotation of the genome of\
+                         interest. Download from RepeatMasker.org\
+                         Example: mm9.fa.out''')
 parser.add_argument('--genomefasta', action='store', metavar='genomefasta',
                     help='''Genome of interest in fasta format.\
-                         Example: /data/annotation/mm9/mm9.fa''')
+                         Example: mm9.fa''')
 parser.add_argument('--setup_folder', action='store', metavar='setup_folder',
-                    help='''Folder that contains bamfiles for repeats and\
+                    help='''Folder that contains bowtie indexes of repeats and\
                          repeat element psuedogenomes.\
-                         Example /data/annotation/mm9/setup''')
+                         Example working/setup''')
 parser.add_argument('--gaplength', action='store', dest='gaplength',
                     metavar='gaplength', default='200', type=int,
-                    help='''Length of the spacer used to build\
+                    help='''Length of the N-spacer in the\
                          repeat pseudogenomes.  Default 200''')
 parser.add_argument('--flankinglength', action='store', dest='flankinglength',
                     metavar='flankinglength', default='25', type=int,
-                    help='''Length of the flanking regions\
-                         used to build repeat pseudogenomes.\
-                         The flanking length should be set according to the\
-                         length of your reads.  Default 25''')
+                    help='''Length of the flanking regions used to build\
+                         repeat pseudogenomes. Flanking length should be set\
+                         according to the length of your reads.\
+                         Default 25, for 50 nt reads''')
 args = parser.parse_args()
 
 # parameters and paths specified in args_parse
