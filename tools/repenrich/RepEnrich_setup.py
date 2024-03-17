@@ -129,11 +129,6 @@ with open(os.path.join(setup_folder, 'repgenomes_key.txt'), 'w') as fout:
 # generate spacer for pseudogenomes
 spacer = ''.join(['N' for i in range(gapl)])
 
-# save file with number of fragments processed per repname. Not used ????
-with open(os.path.join(setup_folder, nfragmentsfile1), "w") as fout1:
-    for repname in rep_chr:
-        fout1.write(str(len(rep_chr[repname])) + "\t" + repname + '\n')
-
 # generate metagenomes and save them to FASTA files for bowtie build
 for repname in rep_chr:
     metagenome = ''
