@@ -176,17 +176,14 @@ if paired_end == 'TRUE':
     os.makedirs(folder_pair2, exist_ok=True)
 
     print("Processing repeat psuedogenomes...")
-    ps = []
-    psb = []
-    ticker = 0
+    ps, psb, ticker = [], [], 0
     for metagenome in repeat_list:
-        metagenomepath = setup_folder + os.path.sep + metagenome
-        file1 = folder_pair1 + os.path.sep + metagenome + '.bowtie'
-        file2 = folder_pair2 + os.path.sep + metagenome + '.bowtie'
+        metagenomepath = os.path.join(setup_folder, metagenome)
+        file1 = os.path.join(folder_pair1, metagenome) + '.bowtie'
+        file2 = os.path.join(folder_pair2, metagenome) + '.bowtie'
+        command = shlex.split(f"bowtie {b_opt} {metagenomepath} {fastqfile_1}")
         with open(file1, 'w') as stdout:
-            command = shlex.split("bowtie " + b_opt + " " +
-                                  metagenomepath + " " + fastqfile_1)
-            p = subprocess.Popen(command, stdout=stdout)
+            subprocess.run(command, stdout=stdout, check=True)
         with open(file2, 'w') as stdout:
             command = shlex.split("bowtie " + b_opt + " " +
                                   metagenomepath + " " + fastqfile_2)
@@ -208,7 +205,7 @@ if paired_end == 'TRUE':
             p.communicate()
     stdout.close()
 
-# combine the output from both read pairs:
+    # combine the output from both read pairs:
     print('sorting and combining the output for both read pairs...')
     if not os.path.exists(outputfolder + os.path.sep + 'sorted_bowtie'):
         os.mkdir(outputfolder + os.path.sep + 'sorted_bowtie')
@@ -258,7 +255,7 @@ if paired_end == 'FALSE':
             p.communicate()
     stdout.close()
 
-# combine the output from both read pairs:
+    # combine the output from both read pairs:
     print('Sorting and combining the output for both read pairs....')
     if not os.path.exists(outputfolder + os.path.sep + 'sorted_bowtie'):
         os.mkdir(outputfolder + os.path.sep + 'sorted_bowtie')
