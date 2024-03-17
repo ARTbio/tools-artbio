@@ -325,10 +325,8 @@ with open(f"{os.path.join(outputfolder, outputfile_prefix)}_"
     for key in sorted(familyfractionalcounts.keys()):
         fout.write(f"{key}\t{familyfractionalcounts[key]}\n")
 
-fout3 = open(outputfolder + os.path.sep + outputfile_prefix +
-             '_fraction_counts.txt', 'w')
-for key in sorted(fractionalcounts.keys()):
-    fout3.write(str(key) + '\t' + repeatclass[key] + '\t' +
-                repeatfamily[key] + '\t' + str(int(fractionalcounts[key]))
-                + '\n')
-fout3.close()
+with open(f"{os.path.join(outputfolder, outputfile_prefix)}_"
+          f"fraction_counts.txt", 'w') as fout:
+    for key in sorted(fractionalcounts.keys()):
+        fout.write(f"{key}\t{repeatclass[key]}\t{repeatfamily[key]}\t"
+                   f"{int(fractionalcounts[key])}\n")
