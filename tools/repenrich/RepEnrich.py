@@ -314,7 +314,6 @@ for x in counts.keys():
 repcounts = {}
 repcounts['other'] = 0
 for key in counts.keys():
-    convert(key)
     key = key.strip(',').split(',')
     repname = ''
     for i in key:
