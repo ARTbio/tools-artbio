@@ -35,16 +35,6 @@ parser.add_argument('--pairedend', action='store', dest='pairedend',
                     default='FALSE',
                     help='Change to TRUE for paired-end fastq files.\
                           Default FALSE')
-parser.add_argument('--collapserepeat', action='store', dest='collapserepeat',
-                    metavar='collapserepeat', default='Simple_repeat',
-                    help='Use this option to generate a collapsed repeat\
-                          type. Uncollapsed output is generated in addition to\
-                          collapsed repeat type. Simple_repeat is default to\
-                          simplify downstream analysis. You can change the\
-                          default to another repeat name to collapse a\
-                          separate specific repeat instead or if the name of\
-                          Simple_repeat is different for your organism.\
-                          Default: "Simple_repeat"')
 parser.add_argument('--fastqfile2', action='store', dest='fastqfile2',
                     metavar='fastqfile2', default='none',
                     help='fastqfile #2 when using paired-end option.\
@@ -67,7 +57,8 @@ fastqfile_1 = args.fastqfile
 fastqfile_2 = args.fastqfile2
 cpus = args.cpus
 b_opt = "-k1 -p 1 --quiet"
-simple_repeat = args.collapserepeat
+# Change if simple repeats are differently annotated in your organism
+simple_repeat = "Simple_repeat" 
 paired_end = args.pairedend
 
 # check that the programs we need are available
@@ -324,10 +315,10 @@ for key in fractionalcounts.keys():
 
 print('Writing final output and removing intermediate files...')
 # print output to file of the categorized counts and total overlapping counts:
-fout1 = open(outputfolder + os.path.sep + outputfile_prefix +
-             '_class_fraction_counts.txt', 'w')
-for key in sorted(classfractionalcounts.keys()):
-    fout1.write(str(key) + '\t' + str(classfractionalcounts[key]) + '\n')
+with open(f"{os.path.join(outputfolder, outputfile_prefix)}\
+            _class_fraction_counts.txt", 'w') as fout1:
+    for key in sorted(classfractionalcounts.keys()):
+        fout1.write(f"{key}\t{classfractionalcounts[key]}\n")
 fout2 = open(outputfolder + os.path.sep + outputfile_prefix +
              '_family_fraction_counts.txt', 'w')
 for key in sorted(familyfractionalcounts.keys()):
