@@ -316,17 +316,17 @@ for key in fractionalcounts.keys():
 # print output to file of the categorized counts and total overlapping counts:
 print('Writing final output...')
 with open(f"{os.path.join(outputfolder, outputfile_prefix)}_"
-         f"class_fraction_counts.txt", 'w') as fout:
+          f"class_fraction_counts.txt", 'w') as fout:
     for key in sorted(classfractionalcounts.keys()):
         fout.write(f"{key}\t{classfractionalcounts[key]}\n")
 
 with open(f"{os.path.join(outputfolder, outputfile_prefix)}_"
-         f"family_fraction_counts.txt", 'w') as fout:
+          f"family_fraction_counts.txt", 'w') as fout:
     for key in sorted(familyfractionalcounts.keys()):
         fout.write(f"{key}\t{familyfractionalcounts[key]}\n")
 
 with open(f"{os.path.join(outputfolder, outputfile_prefix)}_"
-         f"_fraction_counts.txt", 'w') as fout:
+          f"_fraction_counts.txt", 'w') as fout:
     for key in sorted(fractionalcounts.keys()):
         fout.write(f"{key}\t{repeatclass[key]}\t{repeatfamily[key]}\t"
                    f"{int(fractionalcounts[key])}\n")
