@@ -53,17 +53,6 @@ parser.add_argument('--cpus', action='store', dest='cpus', metavar='cpus',
                     default="1", type=int,
                     help='Number of CPUs. The more cpus the\
                           faster RepEnrich performs. Default: "1"')
-parser.add_argument('--allcountmethod', action='store', dest='allcountmethod',
-                    metavar='allcountmethod', default="FALSE",
-                    help='By default the script only outputs the fraction\
-                          counts.\
-                          Other options\
-                          include the unique count method, a conservative\
-                          count, and the total count method, a liberal\
-                          counting strategy.\
-                          Our evaluation of simulated data indicated\
-                          that fraction counting is the best method.\
-                          Default = FALSE, change to TRUE')
 
 args = parser.parse_args()
 
@@ -80,8 +69,6 @@ cpus = args.cpus
 b_opt = "-k1 -p 1 --quiet"
 simple_repeat = args.collapserepeat
 paired_end = args.pairedend
-allcountmethod = args.allcountmethod
-
 
 # check that the programs we need are available
 try:
@@ -122,7 +109,6 @@ for repeat in repeats:
         repeatfamily[matching_repeat] = classfamily[1]
     else:
         repeatfamily[matching_repeat] = classfamily[0]
-
 
 # build list of repeats initializing dictionaries for downstream analysis'
 repgenome_path = os.path.join(setup_folder, 'repgenomes_key.txt')
@@ -197,7 +183,6 @@ if paired_end == 'FALSE':
 
     for p in processes:
         p.communicate()
-
     # Combine the output from both read pairs:
     print('Sorting and combining the output for both read pairs....')
     sorted_bowtie = os.path.join(outputfolder, 'sorted_bowtie')
@@ -245,7 +230,6 @@ else:
         p.communicate()
     for p in psb:
         p.communicate()
-
     # combine the output from both read pairs:
     print('Sorting and combining the output for both read pairs...')
     if not os.path.exists(outputfolder + os.path.sep + 'sorted_bowtie'):
@@ -290,7 +274,6 @@ for subfamilies in readid.values():
         counts[subfamilies] = 0
     counts[subfamilies] += 1
     sumofrepeatreads += 1
-
 
 print(f'Identified {sumofrepeatreads} reads that mapped to \
         repeats for unique and multimappers.')
@@ -341,62 +324,20 @@ for key in fractionalcounts.keys():
 
 print('Writing final output and removing intermediate files...')
 # print output to file of the categorized counts and total overlapping counts:
-if allcountmethod == "TRUE":
-    fout1 = open(outputfolder + os.path.sep + outputfile_prefix
-                 + '_total_counts.txt', 'w')
-    for key in sorted(reptotalcounts.keys()):
-        fout1.write(str(key) + '\t' + repeatclass[key] + '\t' +
-                    repeatfamily[key] + '\t' + str(reptotalcounts[key])
-                    + '\n')
-    fout2 = open(outputfolder + os.path.sep + outputfile_prefix
-                 + '_class_total_counts.txt', 'w')
-    for key in sorted(classtotalcounts.keys()):
-        fout2.write(str(key) + '\t' + str(classtotalcounts[key]) + '\n')
-    fout3 = open(outputfolder + os.path.sep + outputfile_prefix
-                 + '_family_total_counts.txt', 'w')
-    for key in sorted(familytotalcounts.keys()):
-        fout3.write(str(key) + '\t' + str(familytotalcounts[key]) + '\n')
-    fout4 = open(outputfolder + os.path.sep + outputfile_prefix +
-                 '_unique_counts.txt', 'w')
-    for key in sorted(repcounts2.keys()):
-        fout4.write(str(key) + '\t' + repeatclass[key] + '\t' +
-                    repeatfamily[key] + '\t' + str(repcounts2[key]) + '\n')
-        fout5 = open(outputfolder + os.path.sep + outputfile_prefix
-                     + '_class_fraction_counts.txt', 'w')
-    for key in sorted(classfractionalcounts.keys()):
-        fout5.write(str(key) + '\t' + str(classfractionalcounts[key]) + '\n')
-    fout6 = open(outputfolder + os.path.sep + outputfile_prefix +
-                 '_family_fraction_counts.txt', 'w')
-    for key in sorted(familyfractionalcounts.keys()):
-        fout6.write(str(key) + '\t' + str(familyfractionalcounts[key]) + '\n')
-    fout7 = open(outputfolder + os.path.sep + outputfile_prefix
-                 + '_fraction_counts.txt', 'w')
-    for key in sorted(fractionalcounts.keys()):
-        fout7.write(str(key) + '\t' + repeatclass[key] + '\t' +
-                    repeatfamily[key] + '\t' + str(int(fractionalcounts[key]))
-                    + '\n')
-        fout1.close()
-    fout2.close()
-    fout3.close()
-    fout4.close()
-    fout5.close()
-    fout6.close()
-    fout7.close()
-else:
-    fout1 = open(outputfolder + os.path.sep + outputfile_prefix +
-                 '_class_fraction_counts.txt', 'w')
-    for key in sorted(classfractionalcounts.keys()):
-        fout1.write(str(key) + '\t' + str(classfractionalcounts[key]) + '\n')
-    fout2 = open(outputfolder + os.path.sep + outputfile_prefix +
-                 '_family_fraction_counts.txt', 'w')
-    for key in sorted(familyfractionalcounts.keys()):
-        fout2.write(str(key) + '\t' + str(familyfractionalcounts[key]) + '\n')
-    fout3 = open(outputfolder + os.path.sep + outputfile_prefix +
-                 '_fraction_counts.txt', 'w')
-    for key in sorted(fractionalcounts.keys()):
-        fout3.write(str(key) + '\t' + repeatclass[key] + '\t' +
-                    repeatfamily[key] + '\t' + str(int(fractionalcounts[key]))
-                    + '\n')
-    fout1.close()
-    fout2.close()
-    fout3.close()
+fout1 = open(outputfolder + os.path.sep + outputfile_prefix +
+             '_class_fraction_counts.txt', 'w')
+for key in sorted(classfractionalcounts.keys()):
+    fout1.write(str(key) + '\t' + str(classfractionalcounts[key]) + '\n')
+fout2 = open(outputfolder + os.path.sep + outputfile_prefix +
+             '_family_fraction_counts.txt', 'w')
+for key in sorted(familyfractionalcounts.keys()):
+    fout2.write(str(key) + '\t' + str(familyfractionalcounts[key]) + '\n')
+fout3 = open(outputfolder + os.path.sep + outputfile_prefix +
+             '_fraction_counts.txt', 'w')
+for key in sorted(fractionalcounts.keys()):
+    fout3.write(str(key) + '\t' + repeatclass[key] + '\t' +
+                repeatfamily[key] + '\t' + str(int(fractionalcounts[key]))
+                + '\n')
+fout1.close()
+fout2.close()
+fout3.close()
