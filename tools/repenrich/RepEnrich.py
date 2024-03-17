@@ -315,18 +315,20 @@ for key in fractionalcounts.keys():
 
 # print output to file of the categorized counts and total overlapping counts:
 print('Writing final output...')
-with open(f"{os.path.join(outputfolder, outputfile_prefix)}_"
-          f"class_fraction_counts.txt", 'w') as fout:
-    for key in sorted(classfractionalcounts.keys()):
-        fout.write(f"{key}\t{classfractionalcounts[key]}\n")
-
-with open(f"{os.path.join(outputfolder, outputfile_prefix)}_"
-          f"family_fraction_counts.txt", 'w') as fout:
-    for key in sorted(familyfractionalcounts.keys()):
-        fout.write(f"{key}\t{familyfractionalcounts[key]}\n")
-
-with open(f"{os.path.join(outputfolder, outputfile_prefix)}_"
-          f"_fraction_counts.txt", 'w') as fout:
-    for key in sorted(fractionalcounts.keys()):
-        fout.write(f"{key}\t{repeatclass[key]}\t{repeatfamily[key]}\t"
-                   f"{int(fractionalcounts[key])}\n")
+fout1 = open(outputfolder + os.path.sep + outputfile_prefix +
+             '_class_fraction_counts.txt', 'w')
+for key in sorted(classfractionalcounts.keys()):
+    fout1.write(str(key) + '\t' + str(classfractionalcounts[key]) + '\n')
+fout2 = open(outputfolder + os.path.sep + outputfile_prefix +
+             '_family_fraction_counts.txt', 'w')
+for key in sorted(familyfractionalcounts.keys()):
+    fout2.write(str(key) + '\t' + str(familyfractionalcounts[key]) + '\n')
+fout3 = open(outputfolder + os.path.sep + outputfile_prefix +
+             '_fraction_counts.txt', 'w')
+for key in sorted(fractionalcounts.keys()):
+    fout3.write(str(key) + '\t' + repeatclass[key] + '\t' +
+                repeatfamily[key] + '\t' + str(int(fractionalcounts[key]))
+                + '\n')
+fout1.close()
+fout2.close()
+fout3.close()
