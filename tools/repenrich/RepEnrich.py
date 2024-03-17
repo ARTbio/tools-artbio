@@ -183,7 +183,7 @@ if paired_end == 'TRUE':
         file2 = os.path.join(folder_pair2, metagenome) + '.bowtie'
         command = shlex.split(f"bowtie {b_opt} {metagenomepath} {fastqfile_1}")
         with open(file1, 'w') as stdout:
-            subprocess.run(command, stdout=stdout, check=True)
+            p = subprocess.Popen(command, stdout=stdout)
         with open(file2, 'w') as stdout:
             command = shlex.split("bowtie " + b_opt + " " +
                                   metagenomepath + " " + fastqfile_2)
