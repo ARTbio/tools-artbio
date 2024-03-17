@@ -296,32 +296,16 @@ print(f'Identified {sumofrepeatreads} reads that mapped to \
         repeats for unique and multimappers.')
 print("Conducting final calculations...")
 
-
-def convert(x):
-    '''
-    build a converter to numeric label for repeat and yield a combined list
-    of repnames seperated by backslash
-    '''
-    x = x.strip(',')
-    x = x.split(',')
-    global repname
-    repname = ""
-    for i in x:
-        repname = repname + os.path.sep + rev_repeat_key[int(i)]
-
-
 # building the total counts for repeat element enrichment...
 for x in counts.keys():
     count = counts[x]
-    x = x.strip(',')
-    x = x.split(',')
+    x = x.strip(',').split(',')
     for i in x:
         reptotalcounts[rev_repeat_key[int(i)]] += int(count)
 # building the fractional counts for repeat element enrichment...
 for x in counts.keys():
     count = counts[x]
-    x = x.strip(',')
-    x = x.split(',')
+    x = x.strip(',')    .split(',')
     splits = len(x)
     for i in x:
         fractionalcounts[rev_repeat_key[int(i)]] += float(
@@ -331,6 +315,10 @@ repcounts = {}
 repcounts['other'] = 0
 for key in counts.keys():
     convert(key)
+    key = key.strip(',').split(',')
+    repname = ''
+    for i in key:
+        repname = os.path.join(repname, rev_repeat_key[int(i)])
     repcounts[repname] = counts[key]
 # building the total counts for class enrichment...
 for key in reptotalcounts.keys():
