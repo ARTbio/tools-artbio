@@ -169,6 +169,15 @@ with open(fileout) as filein:
     print(f"Identified {sumofrepeatreads} unique reads that \
             mapped to repeats.")
 
+
+def run_bowtie(metagenome, fastqfile, folder):
+    metagenomepath = os.path.join(setup_folder, metagenome)
+    output_file = os.path.join(folder, f"{metagenome}.bowtie")
+    command = shlex.split(f"bowtie {b_opt} {metagenomepath} {fastqfile}")
+    with open(output_file, 'w') as stdout:
+        return subprocess.Popen(command, stdout=stdout)
+
+
 if paired_end == 'FALSE':
     folder_pair1 = os.path.join(outputfolder, 'pair1_bowtie')
     os.makedirs(folder_pair1, exist_ok=True)
@@ -176,13 +185,6 @@ if paired_end == 'FALSE':
     print("Processing repeat pseudogenomes...")
     processes = []
     ticker = 0
-
-    def run_bowtie(metagenome, fastqfile, folder):
-        metagenomepath = os.path.join(setup_folder, metagenome)
-        output_file = os.path.join(folder, f"{metagenome}.bowtie")
-        command = shlex.split(f"bowtie {b_opt} {metagenomepath} {fastqfile}")
-        with open(output_file, 'w') as stdout:
-            return subprocess.Popen(command, stdout=stdout)
 
     for metagenome in repeat_list:
         processes.append(run_bowtie(metagenome, fastqfile_1, folder_pair1))
@@ -221,35 +223,28 @@ else:
     os.makedirs(folder_pair1, exist_ok=True)
     os.makedirs(folder_pair2, exist_ok=True)
 
-    print("Processing repeat psuedogenomes...")
+    print("Processing repeat pseudogenomes...")
     ps, psb, ticker = [], [], 0
+
     for metagenome in repeat_list:
-        metagenomepath = os.path.join(setup_folder, metagenome)
-        file1 = os.path.join(folder_pair1, metagenome) + '.bowtie'
-        file2 = os.path.join(folder_pair2, metagenome) + '.bowtie'
-        command = shlex.split(f"bowtie {b_opt} {metagenomepath} {fastqfile_1}")
-        with open(file1, 'w') as stdout:
-            p = subprocess.Popen(command, stdout=stdout)
-        with open(file2, 'w') as stdout:
-            command = shlex.split("bowtie " + b_opt + " " +
-                                  metagenomepath + " " + fastqfile_2)
-            pp = subprocess.Popen(command, stdout=stdout)
-        ps.append(p)
+        ps.append(run_bowtie(metagenome, fastqfile_1, folder_pair1))
         ticker += 1
-        psb.append(pp)
-        ticker += 1
-        if ticker == cpus:
+        if fastqfile_2 != 'none':
+            psb.append(run_bowtie(metagenome, fastqfile_2, folder_pair2))
+            ticker += 1
+        if ticker >= cpus:
             for p in ps:
                 p.communicate()
             for p in psb:
                 p.communicate()
             ticker = 0
-            psb = []
             ps = []
-    if len(ps) > 0:
-        for p in ps:
-            p.communicate()
-    stdout.close()
+            psb = []
+
+    for p in ps:
+        p.communicate()
+    for p in psb:
+        p.communicate()
 
     # combine the output from both read pairs:
     print('Sorting and combining the output for both read pairs...')
