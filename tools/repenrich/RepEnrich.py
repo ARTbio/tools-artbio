@@ -88,9 +88,9 @@ def import_text(filename, separator):
 # build dictionaries to convert repclass and rep families
 repeatclass, repeatfamily = {}, {}
 repeats = import_text(annotation_file, ' ')
-# skip three first lines of the iterator
-for line in range(3):
-    next(repeats)
+# skip first lines of the iterator
+next(repeats, None)
+next(repeats, None)
 for repeat in repeats:
     classfamily = []
     classfamily = repeat[10].split('/')
