@@ -119,7 +119,7 @@ for repname in rep_coords:
         end = min(int(batch[2]) + flankingl,
                   int(genome[chromosome]['length'])-1) + 1
         metagenome = f"{metagenome}{spacer}"
-                     f"{genome[chromosome]['sequence'][start:end]}"
+        f"{genome[chromosome]['sequence'][start:end]}"
 
     # Create Fasta of repeat pseudogenome
     fastafilename = f"{os.path.join(setup_folder, repname)}.fa"
