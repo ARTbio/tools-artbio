@@ -6,6 +6,7 @@ import shlex
 import subprocess
 import sys
 
+from collections import defaultdict
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
@@ -55,52 +56,43 @@ except OSError:
     raise
 
 # Define a text importer
-csv.field_size_limit(sys.maxsize)
-
-
 def import_text(filename, separator):
+    csv.field_size_limit(sys.maxsize)
     for line in csv.reader(open(os.path.realpath(filename)),
                            delimiter=separator, skipinitialspace=True):
         if line:
             yield line
 
-
 # Make a setup folder
 if not os.path.exists(setup_folder):
     os.makedirs(setup_folder)
+
 # load genome into dictionary and compute length
 g = SeqIO.to_dict(SeqIO.parse(genomefasta, "fasta"))
-idxgenome, lgenome, genome = {}, {}, {}
+genome = defaultdict(dict)
 
-for k, chr in enumerate(g.keys()):
-    genome[chr] = g[chr].seq
-    lgenome[chr] = len(genome[chr])
-    idxgenome[chr] = k
+for chr in g.keys():
+    genome[chr]['sequence'] = g[chr].seq
+    genome[chr]['length'] = len(g[chr].seq)
 
 # Build a bedfile of repeatcoordinates to use by RepEnrich region_sorter
-repeat_elements = []
-# these dictionaries will contain lists
-rep_chr, rep_start, rep_end = {}, {}, {}
-fin = import_text(annotation_file, ' ')
+repeat_elements = set()
+rep_coords = defaultdict(list)  # Merged dictionary for coordinates
+
 with open(os.path.join(setup_folder, 'repnames.bed'), 'w') as fout:
-    for i in range(3):
-        next(fin)
-    for line in fin:
+    f_in = import_text(annotation_file, ' ')
+    # Skip header lines
+    next(f_in, None)
+    next(f_in, None)
+
+    for line in f_in:
         repname = line[9].translate(str.maketrans('()/', '___'))
-        if repname not in repeat_elements:
-            repeat_elements.append(repname)
-        repchr = line[4]
-        repstart = line[5]
-        repend = line[6]
-        fout.write('\t'.join([repchr, repstart, repend, repname]) + '\n')
-        if repname in rep_chr:
-            rep_chr[repname].append(repchr)
-            rep_start[repname].append(repstart)
-            rep_end[repname].append(repend)
-        else:
-            rep_chr[repname] = [repchr]
-            rep_start[repname] = [repstart]
-            rep_end[repname] = [repend]
+        repeat_elements.add(repname)
+        repchr, repstart, repend = line[4], line[5], line[6]
+        fout.write(f"{repchr}\t{repstart}\t{repend}\t{repname}\n")
+        rep_coords[repname].extend([repchr, repstart, repend])
+# repeat_elements now contains the unique repeat names
+# rep_coords is a dictionary where keys are repeat names and values are lists containing chromosome, start, and end coordinates for each repeat instance
 
 # sort repeat_elements and print them in repgenomes_key.txt
 with open(os.path.join(setup_folder, 'repgenomes_key.txt'), 'w') as fout:
@@ -111,17 +103,18 @@ with open(os.path.join(setup_folder, 'repgenomes_key.txt'), 'w') as fout:
 spacer = ''.join(['N' for i in range(gapl)])
 
 # generate metagenomes and save them to FASTA files for bowtie build
-for repname in rep_chr:
+for repname in rep_coords:
     metagenome = ''
-    for i, repeat in enumerate(rep_chr[repname]):
-        try:
-            chromosome = rep_chr[repname][i]
-            start = max(int(rep_start[repname][i]) - flankingl, 0)
-            end = min(int(rep_end[repname][i]) + flankingl,
-                      int(lgenome[chr])-1) + 1
-            metagenome = f"{metagenome}{spacer}{genome[chromosome][start:end]}"
-        except KeyError:
-            print("Unrecognised Chromosome: " + rep_chr[repname][i])
+    # iterating coordinate list by block of 3 (chr, start, end)
+    block = 3
+    for i in range(0, len(rep_coords[repname])- block + 1, block):
+        batch = rep_coords[repname][i:i+block]
+        print(batch)
+        chromosome = batch[0]
+        start = max(int(batch[1]) - flankingl, 0)
+        end = min(int(batch[2]) + flankingl,
+                  int(genome[chromosome]['length'])-1) + 1
+        metagenome = f"{metagenome}{spacer}{genome[chromosome]['sequence'][start:end]}"
 
     # Create Fasta of repeat pseudogenome
     fastafilename = f"{os.path.join(setup_folder, repname)}.fa"
