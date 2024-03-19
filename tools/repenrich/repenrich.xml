@@ -57,30 +57,22 @@
         #end if
         samtools view -@ \${GALAXY_SLOTS:-4} -bS '${input_base}_unique.sam' | samtools sort -@ \${GALAXY_SLOTS:-4} -O bam -o '${input_base}_unique.bam' &&
         samtools index ${input_base}_unique.bam &&
+        python $__tool_directory__/RepEnrich.py
+            --annotation_file $repeatmasker
+            --outputfolder ${input_base}
+            --outputprefix ${input_base}
+            --setup_folder setup_folder_${baseReference}
+            --alignment_bam ${input_base}_unique.bam
+            --cpus "\${GALAXY_SLOTS:-4}" &&
         #if $seq_method.seq_method_list == "single-read":
-            python $__tool_directory__/RepEnrich.py
-                --annotation_file $repeatmasker
-                --outputfolder ${input_base}
-                --outputprefix ${input_base}
-                --setup_folder setup_folder_${baseReference}
-                --fastqfile ${input_base}_multimap.fastq
-                --alignment_bam ${input_base}_unique.bam
-                --cpus "\${GALAXY_SLOTS:-4}" &&
+            --fastqfile ${input_base}_multimap.fastq &&
         #else:
-            python $__tool_directory__/RepEnrich.py
-                --annotation_file $repeatmasker
-                --outputfolder ${input_base}
-                --outputprefix ${input_base}
-                --setup_folder setup_folder_${baseReference}
-                --fastqfile ${input_base}_multimap_1.fastq
-                --fastqfile2 ${input_base}_multimap_2.fastq
-                --alignment_bam ${input_base}_unique.bam
-                --cpus "\${GALAXY_SLOTS:-4}"
-                --pairedend True &&
+            --fastqfile ${input_base}_multimap_1.fastq
+            --fastqfile2 ${input_base}_multimap_2.fastq &&
         #end if
-        cp $input_base/${input_base}_class_fraction_counts.txt class_fraction_counts.tabular &&
-        cp $input_base/${input_base}_family_fraction_counts.txt family_fraction_counts.tabular &&
-        cp $input_base/${input_base}_fraction_counts.txt fraction_counts.tabular
+        mv $input_base/${input_base}_class_fraction_counts.txt class_fraction_counts.tabular &&
+        mv $input_base/${input_base}_family_fraction_counts.txt family_fraction_counts.tabular &&
+        mv $input_base/${input_base}_fraction_counts.txt fraction_counts.tabular
     ]]></command>
     <!-- basic error handling -->
     <inputs>
