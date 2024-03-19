@@ -279,7 +279,7 @@ for x in counts.keys():
 # building the fractional counts for repeat element enrichment...
 for x in counts.keys():
     count = counts[x]
-    x = x.strip(',')    .split(',')
+    x = x.strip(',').split(',')
     splits = len(x)
     for i in x:
         fractionalcounts[rev_repeat_key[int(i)]] += float(
