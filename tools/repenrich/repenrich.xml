@@ -76,7 +76,7 @@
                 --fastqfile2 ${input_base}_multimap_2.fastq
                 --alignment_bam ${input_base}_unique.bam
                 --cpus "\${GALAXY_SLOTS:-4}"
-                --pairedend TRUE &&
+                --pairedend True &&
         #end if
         cp $input_base/${input_base}_class_fraction_counts.txt class_fraction_counts.tabular &&
         cp $input_base/${input_base}_family_fraction_counts.txt family_fraction_counts.tabular &&

@@ -32,9 +32,9 @@ parser.add_argument('--fastqfile', action='store', metavar='fastqfile',
 parser.add_argument('--alignment_bam', action='store', metavar='alignment_bam',
                     help='Bam alignments of unique mapper reads.')
 parser.add_argument('--pairedend', action='store', dest='pairedend',
-                    default='FALSE',
+                    default='False',
                     help='Change to TRUE for paired-end fastq files.\
-                          Default FALSE')
+                          Default False')
 parser.add_argument('--fastqfile2', action='store', dest='fastqfile2',
                     metavar='fastqfile2', default='none',
                     help='fastqfile #2 when using paired-end option.\
@@ -60,6 +60,10 @@ b_opt = "-k1 -p 1 --quiet"
 # Change if simple repeats are differently annotated in your organism
 simple_repeat = "Simple_repeat"
 paired_end = args.pairedend
+if args.pairedend == 'False':
+    paired_end = False
+else:
+    paired_end = True
 
 # check that the programs we need are available
 try:
@@ -155,7 +159,7 @@ def run_bowtie(metagenome, fastqfile, folder):
         return subprocess.Popen(command, stdout=stdout)
 
 
-if paired_end == 'FALSE':
+if not paired_end:
     folder_pair1 = os.path.join(outputfolder, 'pair1_bowtie')
     os.makedirs(folder_pair1, exist_ok=True)
 
