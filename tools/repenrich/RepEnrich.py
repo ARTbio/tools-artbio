@@ -26,11 +26,11 @@ parser.add_argument('--outputprefix', action='store', metavar='outputprefix',
 parser.add_argument('--setup_folder', action='store', metavar='setup_folder',
                     help='Folder produced by RepEnrich_setup which contains\
                     repeat element pseudogenomes.')
+parser.add_argument('--alignment_bam', action='store', metavar='alignment_bam',
+                    help='Bam alignments of unique mapper reads.')
 parser.add_argument('--fastqfile', action='store', metavar='fastqfile',
                     help='File of fastq reads mapping to multiple\
                           locations. Example: /data/multimap.fastq')
-parser.add_argument('--alignment_bam', action='store', metavar='alignment_bam',
-                    help='Bam alignments of unique mapper reads.')
 parser.add_argument('--fastqfile2', action='store', dest='fastqfile2',
                     metavar='fastqfile2', default='',
                     help='fastqfile #2 when using paired-end option.\

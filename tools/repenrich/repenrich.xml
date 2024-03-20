@@ -63,7 +63,7 @@
             --outputprefix ${input_base}
             --setup_folder setup_folder_${baseReference}
             --alignment_bam ${input_base}_unique.bam
-            --cpus "\${GALAXY_SLOTS:-4}" &&
+            --cpus "\${GALAXY_SLOTS:-4}"
         #if $seq_method.seq_method_list == "single-read":
             --fastqfile ${input_base}_multimap.fastq &&
         #else:
