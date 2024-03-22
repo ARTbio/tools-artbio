@@ -128,8 +128,8 @@ if not os.path.exists(outputfolder):
 
 # unique mapper counting
 cmd = f"bedtools bamtobed -i {unique_mapper_bam} | \
-        bedtools coverage -b stdin -a {os.path.join(setup_folder,
-                                                    'repnames.bed')}"
+        bedtools coverage -b stdin -a \
+        {os.path.join(setup_folder, 'repnames.bed')}"
 p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
 bedtools_counts = p.communicate()[0].decode().rstrip('\r\n').split('\n')
 counts = {}
