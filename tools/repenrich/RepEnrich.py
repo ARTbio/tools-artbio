@@ -122,28 +122,25 @@ rev_repeat_key = {int(line[1]): line[0] for line in import_text(
     repgenome_path, '\t')}
 repeat_list = [line[0] for line in import_text(repgenome_path, '\t')]
 
-# map the repeats to the psuedogenomes:
+# map the repeats to the pseudogenomes:
 if not os.path.exists(outputfolder):
     os.mkdir(outputfolder)
 
-# Conduct the regions sorting
-fileout = os.path.join(outputfolder, f"{outputfile_prefix}_regionsorter.txt")
-command = shlex.split(f"coverageBed -abam {unique_mapper_bam} -b \
-                        {os.path.join(setup_folder, 'repnames.bed')}")
-with open(fileout, 'w') as stdout:
-    subprocess.run(command, stdout=stdout, check=True)
-
+# unique mapper counting
+cmd = f"bedtools bamtobed -i {unique_mapper_bam} | \
+        bedtools coverage -b stdin -a {os.path.join(setup_folder,
+                                                    'repnames.bed')}"
+p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+bedtools_counts = p.communicate()[0].decode().rstrip('\r\n').split('\n')
 counts = {}
 sumofrepeatreads = 0
-with open(fileout) as filein:
-    for line in filein:
-        line = line.split('\t')
-        if not str(repeat_key[line[3]]) in counts:
-            counts[str(repeat_key[line[3]])] = 0
-        counts[str(repeat_key[line[3]])] += int(line[4])
-        sumofrepeatreads += int(line[4])
-    print(f"Identified {sumofrepeatreads} unique reads that \
-            mapped to repeats.")
+for line in bedtools_counts:
+    line = line.split('\t')
+    if not str(repeat_key[line[3]]) in counts:
+        counts[str(repeat_key[line[3]])] = 0
+    counts[str(repeat_key[line[3]])] += int(line[4])
+    sumofrepeatreads += int(line[4])
+print(f"Identified {sumofrepeatreads} unique reads that mapped to repeats.")
 
 
 def run_bowtie(metagenome, fastqfile, folder):
