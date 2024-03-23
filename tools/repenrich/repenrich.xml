@@ -43,13 +43,13 @@
             --genomefasta ${baseReference}.fa
             --setup_folder setup_folder_${baseReference} &&
         #if $seq_method.seq_method_list == "single-read":
-            bowtie $baseReference -p \${GALAXY_SLOTS:-4} -t -m 1 -S --max ${input_base}_multimap.fastq ${input_base}.fastq ${input_base}_unique.sam 2>bowtie_alignments.txt &&
+            bowtie $baseReference -p \${GALAXY_SLOTS:-4} -t -m 1 -S ${input_base}.fastq ${input_base}_unique.sam 2>bowtie_alignments.txt &&
             TOTAL=\$(grep 'reads processed:' bowtie_alignments.txt | cut -d ' ' -f 4) &&
             NONALIGNED=\$(grep 'reads that failed to align:' bowtie_alignments.txt | cut -d ' ' -f 7) &&
             echo -e "# Total reads aligned to repeated sequences\n" > bowtie_aligned.numb &&
             echo \$((\$TOTAL-\$NONALIGNED)) >> bowtie_aligned.numb &&
         #else:
-            bowtie $baseReference -p \${GALAXY_SLOTS:-4} -t -m 1 -S --max ${input_base}_multimap.fastq -1 ${input_base}.fastq -2 ${input_base}_2.fastq ${input_base}_unique.sam 2>bowtie_alignments.txt &&
+            bowtie $baseReference -p \${GALAXY_SLOTS:-4} -t -m 1 -S -1 ${input_base}.fastq -2 ${input_base}_2.fastq ${input_base}_unique.sam 2>bowtie_alignments.txt &&
             TOTAL=\$(grep 'reads processed:' bowtie_alignments.txt | cut -d ' ' -f 4) &&
             NONALIGNED=\$(grep 'reads that failed to align:' bowtie_alignments.txt | cut -d ' ' -f 7) &&
             echo -e "# Total reads aligned to repeated sequences\n" > bowtie_aligned.numb &&
