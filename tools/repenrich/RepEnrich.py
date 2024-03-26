@@ -129,7 +129,7 @@ repeat_key = {line.split('\t')[0]: int(line.split('\t')[1]) for line in open(
     repgenome_path)}
 rev_repeat_key = {
     int(line.split('\t')[1]): line.split('\t')[0] for line in open(
-    repgenome_path)}
+        repgenome_path)}
 repeat_list = [line.split('\t')[0] for line in open(repgenome_path)]
 
 # map the repeats to the pseudogenomes:
