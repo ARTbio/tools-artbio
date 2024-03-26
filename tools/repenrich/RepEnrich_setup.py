@@ -66,6 +66,7 @@ def starts_with_numerical(list):
     except ValueError:
         return False
 
+
 # define a text importer for .out/.txt format of repbase
 def import_text(filename, separator):
     csv.field_size_limit(sys.maxsize)
