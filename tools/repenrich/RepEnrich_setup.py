@@ -61,7 +61,6 @@ def starts_with_numerical(list):
     try:
         if len(list) == 0:
             return False
-        numerical = int(list[0])
         return True
     except ValueError:
         return False
