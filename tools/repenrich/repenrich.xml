@@ -184,9 +184,6 @@ Users may filter this file so that it contains only desired items (for instance 
 (1) Fraction counts, (2) Family fraction counts and (3) Class fraction counts are returned in tabular format,
 for further statistical tests differential expression analysis or graphics.
 
-The "aligned_reads.tab" output file contains a single value corresponding to the number of reads that were aligned to
-transposons. This value is used in downstream analysis by the edger-repenrich tool.
-
 **RepEnrich**
 
 This Galaxy tool is a wrapper of the RepEnrich tool by steven_criscione@brown.edu et al. whose code and manual are available in `GitHub`_.

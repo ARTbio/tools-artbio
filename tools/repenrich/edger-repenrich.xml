@@ -171,11 +171,6 @@ Here the order of factor levels is important. For example, for the factor 'Treat
 in above table, edgeR computes fold changes of 'Treated' samples against 'Untreated',
 i.e. the values correspond to up or down regulations of genes in Treated samples.
 
-*Number of aligned reads*:
-
-A file containing the number of reads aligned to transposons by repenrich must me provided
-to edger-repenrich. This file is a single-column tabular file containing a single value.
-
 **Output**
 
 edgeR_ generates a tabular file containing the different columns and results visualized in a PDF:
