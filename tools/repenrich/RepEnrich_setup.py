@@ -61,12 +61,12 @@ def starts_with_numerical(list):
     try:
         if len(list) == 0:
             return False
+        int(list[0])
         return True
     except ValueError:
         return False
 
-
-# Define a text importer
+# define a text importer for .out/.txt format of repbase
 def import_text(filename, separator):
     csv.field_size_limit(sys.maxsize)
     file = csv.reader(open(filename), delimiter=separator,
