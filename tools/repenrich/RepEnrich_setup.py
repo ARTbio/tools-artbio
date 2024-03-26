@@ -57,13 +57,22 @@ except OSError:
     raise
 
 
+def starts_with_numerical(list):
+    try:
+        if len(list) == 0:
+            return False
+        numerical = int(list[0])
+        return True
+    except ValueError:
+        return False
+
+
 # Define a text importer
 def import_text(filename, separator):
     csv.field_size_limit(sys.maxsize)
-    for line in csv.reader(open(os.path.realpath(filename)),
-                           delimiter=separator, skipinitialspace=True):
-        if line:
-            yield line
+    file = csv.reader(open(filename), delimiter=separator,
+                      skipinitialspace=True)
+    return [line for line in file if starts_with_numerical(line)]
 
 
 # Make a setup folder
@@ -84,10 +93,6 @@ rep_coords = defaultdict(list)  # Merged dictionary for coordinates
 
 with open(os.path.join(setup_folder, 'repnames.bed'), 'w') as fout:
     f_in = import_text(annotation_file, ' ')
-    # Skip header lines
-    next(f_in, None)
-    next(f_in, None)
-
     for line in f_in:
         repname = line[9].translate(str.maketrans('()/', '___'))
         repeat_elements.add(repname)

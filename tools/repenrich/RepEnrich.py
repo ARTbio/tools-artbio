@@ -100,7 +100,7 @@ for repeat in repeats:
     else:
         repeatfamily[matching_repeat] = classfamily[0]
 
-# build list of repeats initializing dictionaries for downstream analysis'
+# build list of repeats initializing dictionaries for downstream analysis
 repgenome_path = os.path.join(setup_folder, 'repgenomes_key.txt')
 reptotalcounts = {line[0]: 0 for line in import_text(repgenome_path, '\t')}
 fractionalcounts = {line[0]: 0 for line in import_text(repgenome_path, '\t')}
