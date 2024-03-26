@@ -104,23 +104,32 @@ for repeat in repeats:
 repgenome_path = os.path.join(setup_folder, 'repgenomes_key.txt')
 reptotalcounts = {line.split('\t')[0]: 0 for line in open(repgenome_path)}
 fractionalcounts = {line.split('\t')[0]: 0 for line in open(repgenome_path)}
-classtotalcounts = {repeatclass[line.split('\t')[0]]: 0 for line in open(
-    repgenome_path) if line.split('\t')[0] in repeatclass}
-classfractionalcounts = {repeatclass[line.split('\t')[0]]: 0 for line in open(
-    repgenome_path) if line.split('\t')[0] in repeatclass}
-familytotalcounts = {repeatfamily[line.split('\t')[0]]: 0 for line in open(
-    repgenome_path) if line.split('\t')[0] in repeatfamily}
-familyfractionalcounts = {repeatfamily[line.split('\t')[0]]: 0 for line in
-                          open(repgenome_path) if line.split('\t')[0] in
-                          repeatfamily}
-reptotalcounts_simple = {(simple_repeat if line.split('\t')[0] in repeatfamily
-                          and repeatfamily[line.split('\t')[0]] == simple_repeat
-                          else line.split('\t')[0]): 0 for line in open(
-                              repgenome_path)}
+classtotalcounts = {
+    repeatclass[line.split('\t')[0]]: 0 for line in open(repgenome_path)
+    if line.split('\t')[0] in repeatclass
+}
+classfractionalcounts = {
+    repeatclass[line.split('\t')[0]]: 0 for line in open(repgenome_path)
+    if line.split('\t')[0] in repeatclass
+}
+familytotalcounts = {
+    repeatfamily[line.split('\t')[0]]: 0 for line in open(repgenome_path)
+    if line.split('\t')[0] in repeatfamily
+}
+familyfractionalcounts = {
+    repeatfamily[line.split('\t')[0]]: 0 for line in open(repgenome_path)
+    if line.split('\t')[0] in repeatfamily
+}
+reptotalcounts_simple = {
+    (simple_repeat if line.split('\t')[0] in repeatfamily
+     and repeatfamily[line.split('\t')[0]] == simple_repeat
+     else line.split('\t')[0]): 0 for line in open(repgenome_path)
+}
 repeat_key = {line.split('\t')[0]: int(line.split('\t')[1]) for line in open(
     repgenome_path)}
-rev_repeat_key = {int(line.split('\t')[1]): line.split('\t')[0] for line in
-                  open(repgenome_path)}
+rev_repeat_key = {
+    int(line.split('\t')[1]): line.split('\t')[0] for line in open(
+    repgenome_path)}
 repeat_list = [line.split('\t')[0] for line in open(repgenome_path)]
 
 # map the repeats to the pseudogenomes:
