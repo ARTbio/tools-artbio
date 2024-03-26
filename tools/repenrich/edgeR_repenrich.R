@@ -19,7 +19,6 @@ suppressPackageStartupMessages({
 options(stringAsFactors = FALSE, useFancyQuotes = FALSE)
 
 # get options, using the spec as defined by the enclosed list.
-# we read the options from the default: commandArgs(TRUE).
 spec <- matrix(
     c(
         "quiet", "q", 0, "logical",
@@ -30,8 +29,6 @@ spec <- matrix(
         "levelNameB", "B", 1, "character",
         "levelAfiles", "a", 1, "character",
         "levelBfiles", "b", 1, "character",
-        "alignmentA", "i", 1, "character",
-        "alignmentB", "j", 1, "character",
         "plots", "p", 1, "character"
     ),
     byrow = TRUE, ncol = 4
@@ -65,17 +62,7 @@ for (element in names(listB[-1])) {
     counts <- cbind(counts, listB[[element]][, 4])
 }
 colnames(counts) <- c(names(listA[-1]), names(listB[-1]))
-
-# build aligned counts vector
-filesi <- fromJSON(opt$alignmentA, method = "C", unexpected.escape = "error")
-filesj <- fromJSON(opt$alignmentB, method = "C", unexpected.escape = "error")
-sizes <- c()
-for (file in filesi) {
-    sizes <- c(sizes, read.delim(file, header = TRUE)[1, 1])
-}
-for (file in filesj) {
-    sizes <- c(sizes, read.delim(file, header = TRUE)[1, 1])
-}
+sizes <- colSums(counts)
 
 # build a meta data object
 meta <- data.frame(
@@ -187,6 +174,3 @@ colnames(results) <- c("TE_item", "log2FC", "FDR", "Class", "Type")
 results$log2FC <- format(results$log2FC, digits = 5)
 results$FDR <- format(results$FDR, digits = 5)
 write.table(results, opt$outfile, quote = FALSE, sep = "\t", col.names = TRUE, row.names = FALSE)
-
-cat("Session information:\n\n")
-sessionInfo()
