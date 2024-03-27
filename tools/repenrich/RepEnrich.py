@@ -222,7 +222,7 @@ else:
 
 # build a file of repeat keys for all reads
 sumofrepeatreads = 0
-readid = defaultdict(dict)
+readid = defaultdict(str)
 
 for rep in repeat_list:
     for line in open(f"{os.path.join(sorted_bowtie, rep)}.bowtie"):
