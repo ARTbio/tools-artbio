@@ -125,5 +125,5 @@ for repname in rep_coords:
     SeqIO.write(record, fastafilename, "fasta")
 
     # Generate repeat pseudogenome bowtie index
-    bowtie_build_cmd = ["bowtie-build", "-f", fastafilename, repname)]
+    bowtie_build_cmd = ["bowtie-build", "-f", fastafilename, repname]
     subprocess.run(bowtie_build_cmd, check=True)
