@@ -151,7 +151,6 @@ if not paired_end:
     os.makedirs(folder_pair1, exist_ok=True)
     processes = []
     ticker = 0
-
     for metagenome in repeat_list:
         processes.append(run_bowtie(metagenome, fastqfile_1, folder_pair1))
         ticker += 1
@@ -160,35 +159,24 @@ if not paired_end:
                 p.communicate()
             ticker = 0
             processes = []
-
     for p in processes:
         p.communicate()
-    # Combine the output from both read pairs:
-    print('Sorting and combining the output for both read pairs....')
     for metagenome in repeat_list:
         file1 = os.path.join(folder_pair1, f"{metagenome}.bowtie")
         fileout = os.path.join(sorted_bowtie, f"{metagenome}.bowtie")
-        with open(fileout, 'w') as stdout:
-            p1 = subprocess.Popen(['cat', file1], stdout=subprocess.PIPE)
-            p2 = subprocess.Popen(['cut', '-f1'], stdin=p1.stdout,
-                                  stdout=subprocess.PIPE)
-            p3 = subprocess.Popen(['cut', '-f1', "-d/"], stdin=p2.stdout,
-                                  stdout=subprocess.PIPE)
-            p4 = subprocess.Popen(['sort'], stdin=p3.stdout,
-                                  stdout=subprocess.PIPE)
-            p5 = subprocess.Popen(['uniq'], stdin=p4.stdout, stdout=stdout)
-            p5.communicate()
-        stdout.close()
-    print('completed ...')
+        collector = {}
+        with open(fileout, 'w') as output:
+            with open(file1) as input:
+                for line in input:
+                    collector[line.split("/")[0]] = 1
+            for key in sorted(collector):
+                output.write(f"{key}\n")
 else:
     folder_pair1 = 'pair1_bowtie'
     folder_pair2 = 'pair2_bowtie'
     os.makedirs(folder_pair1, exist_ok=True)
     os.makedirs(folder_pair2, exist_ok=True)
-
-    print("Processing repeat pseudogenomes...")
     ps, psb, ticker = [], [], 0
-
     for metagenome in repeat_list:
         ps.append(run_bowtie(metagenome, fastqfile_1, folder_pair1))
         ticker += 1
@@ -203,31 +191,25 @@ else:
             ticker = 0
             ps = []
             psb = []
-
     for p in ps:
         p.communicate()
     for p in psb:
         p.communicate()
-    # combine the output from both read pairs:
-    print('Sorting and combining the output for both read pairs...')
+    # collect read pair info
     for metagenome in repeat_list:
         file1 = folder_pair1 + os.path.sep + metagenome + '.bowtie'
         file2 = folder_pair2 + os.path.sep + metagenome + '.bowtie'
         fileout = sorted_bowtie + os.path.sep + metagenome + '.bowtie'
-        with open(fileout, 'w') as stdout:
-            p1 = subprocess.Popen(['cat', file1, file2],
-                                  stdout=subprocess.PIPE)
-            p2 = subprocess.Popen(['cut', '-f1', "-d "], stdin=p1.stdout,
-                                  stdout=subprocess.PIPE)
-            p3 = subprocess.Popen(['cut', '-f1', "-d/"], stdin=p2.stdout,
-                                  stdout=subprocess.PIPE)
-            p4 = subprocess.Popen(['sort'], stdin=p3.stdout,
-                                  stdout=subprocess.PIPE)
-            p5 = subprocess.Popen(['uniq'], stdin=p4.stdout, stdout=stdout)
-            p5.communicate()
-        stdout.close()
-    print('completed ...')
-
+        collector = {}
+        with open(fileout, 'w') as output:
+            with open(file1) as input:
+                for line in input:
+                    collector[line.split("/")[0]] = 1
+            with open(file2) as input:
+                for line in input:
+                    collector[line.split("/")[0]] = 1
+            for key in sorted(collector):
+                output.write(f"{key}\n")
 # build a file of repeat keys for all reads
 print('Writing and processing intermediate files...')
 sumofrepeatreads = 0
