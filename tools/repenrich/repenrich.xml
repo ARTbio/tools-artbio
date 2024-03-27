@@ -39,9 +39,9 @@
             --annotation_file '$repeatmasker'
             --genomefasta 'genome.fa' &&
         #if $seq_method.seq_method_list == "single-read":
-            bowtie $baseReference -p \${GALAXY_SLOTS:-4} -t -m 1 -S input.fastq input_unique.sam 2>bowtie_alignments.txt &&
+            bowtie genome -p \${GALAXY_SLOTS:-4} -t -m 1 -S input.fastq input_unique.sam 2>bowtie_alignments.txt &&
         #else:
-            bowtie $baseReference -p \${GALAXY_SLOTS:-4} -t -m 1 -S -1 input.fastq -2 input_2.fastq input_unique.sam 2>bowtie_alignments.txt &&
+            bowtie genome -p \${GALAXY_SLOTS:-4} -t -m 1 -S -1 input.fastq -2 input_2.fastq input_unique.sam 2>bowtie_alignments.txt &&
         #end if
         samtools view -@ \${GALAXY_SLOTS:-4} -bS 'input_unique.sam' | samtools sort -@ \${GALAXY_SLOTS:-4} -O bam -o 'input_unique.bam' &&
         samtools index input_unique.bam &&
