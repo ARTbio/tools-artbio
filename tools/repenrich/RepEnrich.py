@@ -4,6 +4,7 @@ import os
 import shlex
 import subprocess
 import sys
+from collections import defaultdict
 
 import numpy
 
@@ -65,11 +66,22 @@ print('Preparing for analysis using RepEnrich...')
 csv.field_size_limit(sys.maxsize)
 
 
+def starts_with_numerical(list):
+    try:
+        if len(list) == 0:
+            return False
+        int(list[0])
+        return True
+    except ValueError:
+        return False
+
+
+# define a text importer for .out/.txt format of repbase
 def import_text(filename, separator):
-    for line in csv.reader(open(filename), delimiter=separator,
-                           skipinitialspace=True):
-        if line:
-            yield line
+    csv.field_size_limit(sys.maxsize)
+    file = csv.reader(open(filename), delimiter=separator,
+                      skipinitialspace=True)
+    return [line for line in file if starts_with_numerical(line)]
 
 
 def run_bowtie(metagenome, fastqfile, folder):
@@ -82,9 +94,6 @@ def run_bowtie(metagenome, fastqfile, folder):
 # build dictionaries to convert repclass and rep families
 repeatclass, repeatfamily = {}, {}
 repeats = import_text(annotation_file, ' ')
-# skip first lines of the iterator
-next(repeats, None)
-next(repeats, None)
 for repeat in repeats:
     classfamily = []
     classfamily = repeat[10].split('/')
@@ -210,20 +219,14 @@ else:
                     collector[line.split("/")[0]] = 1
             for key in sorted(collector):
                 output.write(f"{key}\n")
+
 # build a file of repeat keys for all reads
-print('Writing and processing intermediate files...')
 sumofrepeatreads = 0
-readid = {}
+readid = defaultdict(dict)
 
 for rep in repeat_list:
-    for data in import_text(
-            f"{os.path.join(sorted_bowtie, rep)}.bowtie", '\t'):
-        readid[data[0]] = ''
-
-for rep in repeat_list:
-    for data in import_text(
-            f"{os.path.join(sorted_bowtie, rep)}.bowtie", '\t'):
-        readid[data[0]] += f"{repeat_key[rep]},"
+    for line in open( f"{os.path.join(sorted_bowtie, rep)}.bowtie"):
+        readid[line.split()[0]] += f"{repeat_key[rep]},"
 
 for subfamilies in readid.values():
     if subfamilies not in counts:
