@@ -225,7 +225,7 @@ sumofrepeatreads = 0
 readid = defaultdict(dict)
 
 for rep in repeat_list:
-    for line in open( f"{os.path.join(sorted_bowtie, rep)}.bowtie"):
+    for line in open(f"{os.path.join(sorted_bowtie, rep)}.bowtie"):
         readid[line.split()[0]] += f"{repeat_key[rep]},"
 
 for subfamilies in readid.values():
