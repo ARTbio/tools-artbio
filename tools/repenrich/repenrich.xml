@@ -9,60 +9,52 @@
     </stdio>
     <command detect_errors="exit_code"><![CDATA[
         #import re
-        #set input_base = 'Sample'
-        #set baseReference = 'Genome'
-
         ## uncompress fastq.gz or fastqsanger.gz if needed
         #if $seq_method.seq_method_list == "single-read":
             #if $seq_method.input_fastq.is_of_type("fastq.gz", "fastqsanger.gz"):
-                gunzip < '$seq_method.input_fastq' > '${input_base}.fastq' &&
+                gunzip < '$seq_method.input_fastq' > 'input.fastq' &&
             #else:
-                ln -f -s '$seq_method.input_fastq' '${input_base}.fastq' &&
+                ln -f -s '$seq_method.input_fastq' 'input.fastq' &&
             #end if
         #elif $seq_method.seq_method_list == 'paired_collection':
             #if $seq_method.input_fastq.forward.is_of_type("fastq.gz", "fastqsanger.gz"):
-                gunzip < '$seq_method.input_fastq.forward' > '${input_base}.fastq' &&
-                gunzip < '$seq_method.input_fastq.reverse' > '${input_base}_2.fastq' &&
+                gunzip < '$seq_method.input_fastq.forward' > 'input.fastq' &&
+                gunzip < '$seq_method.input_fastq.reverse' > 'input_2.fastq' &&
             #else:
-                ln -f -s '$seq_method.input_fastq.forward' '${input_base}.fastq' &&
-                ln -f -s '$seq_method.input_fastq.reverse' '${input_base}_2.fastq' &&
+                ln -f -s '$seq_method.input_fastq.forward' 'input.fastq' &&
+                ln -f -s '$seq_method.input_fastq.reverse' 'input_2.fastq' &&
             #end if
         #else:
             #if $seq_method.input2_fastq.is_of_type("fastq.gz", "fastqsanger.gz"):
-                gunzip < '$seq_method.input_fastq' > '${input_base}.fastq' &&
-                gunzip < '$seq_method.input2_fastq' > '${input_base}_2.fastq' &&
+                gunzip < '$seq_method.input_fastq' > 'input.fastq' &&
+                gunzip < '$seq_method.input2_fastq' > 'input_2.fastq' &&
             #else:
-                ln -f -s '$seq_method.input_fastq' '${input_base}.fastq' &&
-                ln -f -s '$seq_method.input2_fastq' '${input_base}_2.fastq' &&
+                ln -f -s '$seq_method.input_fastq' 'input.fastq' &&
+                ln -f -s '$seq_method.input2_fastq' 'input_2.fastq' &&
             #end if
         #end if
-        ln -f -s '$genome' '${baseReference}.fa' &&
-        bowtie-build '$genome' ${baseReference} &&
+        ln -f -s '$genome' 'genome.fa' &&
+        bowtie-build '$genome' genome &&
         python $__tool_directory__/RepEnrich_setup.py
             --annotation_file '$repeatmasker'
-            --genomefasta '${baseReference}.fa' &&
+            --genomefasta 'genome.fa' &&
         #if $seq_method.seq_method_list == "single-read":
-            bowtie $baseReference -p \${GALAXY_SLOTS:-4} -t -m 1 -S ${input_base}.fastq ${input_base}_unique.sam 2>bowtie_alignments.txt &&
+            bowtie $baseReference -p \${GALAXY_SLOTS:-4} -t -m 1 -S input.fastq input_unique.sam 2>bowtie_alignments.txt &&
         #else:
-            bowtie $baseReference -p \${GALAXY_SLOTS:-4} -t -m 1 -S -1 ${input_base}.fastq -2 ${input_base}_2.fastq ${input_base}_unique.sam 2>bowtie_alignments.txt &&
+            bowtie $baseReference -p \${GALAXY_SLOTS:-4} -t -m 1 -S -1 input.fastq -2 input_2.fastq input_unique.sam 2>bowtie_alignments.txt &&
         #end if
-        samtools view -@ \${GALAXY_SLOTS:-4} -bS '${input_base}_unique.sam' | samtools sort -@ \${GALAXY_SLOTS:-4} -O bam -o '${input_base}_unique.bam' &&
-        samtools index ${input_base}_unique.bam &&
+        samtools view -@ \${GALAXY_SLOTS:-4} -bS 'input_unique.sam' | samtools sort -@ \${GALAXY_SLOTS:-4} -O bam -o 'input_unique.bam' &&
+        samtools index input_unique.bam &&
         python $__tool_directory__/RepEnrich.py
             --annotation_file $repeatmasker
-            --outputfolder ${input_base}
-            --outputprefix ${input_base}
-            --alignment_bam ${input_base}_unique.bam
+            --alignment_bam input_unique.bam
             --cpus "\${GALAXY_SLOTS:-4}"
         #if $seq_method.seq_method_list == "single-read":
-            --fastqfile ${input_base}_multimap.fastq &&
+            --fastqfile input_multimap.fastq &&
         #else:
-            --fastqfile ${input_base}_multimap_1.fastq
-            --fastqfile2 ${input_base}_multimap_2.fastq &&
+            --fastqfile input_multimap_1.fastq
+            --fastqfile2 input_multimap_2.fastq &&
         #end if
-        mv $input_base/${input_base}_class_fraction_counts.txt class_fraction_counts.tabular &&
-        mv $input_base/${input_base}_family_fraction_counts.txt family_fraction_counts.tabular &&
-        mv $input_base/${input_base}_fraction_counts.txt fraction_counts.tabular
     ]]></command>
     <!-- basic error handling -->
     <inputs>

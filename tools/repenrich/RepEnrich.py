@@ -17,12 +17,6 @@ parser.add_argument('--annotation_file', action='store',
                     help='RepeatMasker.org annotation file for your\
                           organism. The file may be downloaded from\
                           RepeatMasker.org. E.g. hg19_repeatmasker.txt')
-parser.add_argument('--outputfolder', action='store', metavar='outputfolder',
-                    help='Folder that will contain results. Should be the\
-                          same as the one used for RepEnrich_setup.\
-                          Example: ./outputfolder')
-parser.add_argument('--outputprefix', action='store', metavar='outputprefix',
-                    help='Prefix name for Repenrich output files.')
 parser.add_argument('--alignment_bam', action='store', metavar='alignment_bam',
                     help='Bam alignments of unique mapper reads.')
 parser.add_argument('--fastqfile', action='store', metavar='fastqfile',
@@ -41,8 +35,6 @@ args = parser.parse_args()
 
 # parameters
 annotation_file = args.annotation_file
-outputfolder = args.outputfolder
-outputfile_prefix = args.outputprefix
 repeat_bed = 'repnames.bed'
 unique_mapper_bam = args.alignment_bam
 fastqfile_1 = args.fastqfile
@@ -78,6 +70,13 @@ def import_text(filename, separator):
                            skipinitialspace=True):
         if line:
             yield line
+
+
+def run_bowtie(metagenome, fastqfile, folder):
+    output_file = os.path.join(folder, f"{metagenome}.bowtie")
+    command = shlex.split(f"bowtie {b_opt} {metagenome} {fastqfile}")
+    with open(output_file, 'w') as stdout:
+        return subprocess.Popen(command, stdout=stdout)
 
 
 # build dictionaries to convert repclass and rep families
@@ -128,9 +127,9 @@ rev_repeat_key = {
         repgenome_path)}
 repeat_list = [line.split('\t')[0] for line in open(repgenome_path)]
 
-# map the repeats to the pseudogenomes:
-if not os.path.exists(outputfolder):
-    os.mkdir(outputfolder)
+### map the repeats to the pseudogenomes:
+sorted_bowtie = 'sorted_bowtie'
+os.makedirs(sorted_bowtie, exist_ok=True)
 
 # unique mapper counting
 cmd = f"bedtools bamtobed -i {unique_mapper_bam} | \
@@ -147,19 +146,9 @@ for line in bedtools_counts:
     sumofrepeatreads += int(line[4])
 print(f"Identified {sumofrepeatreads} unique reads that mapped to repeats.")
 
-
-def run_bowtie(metagenome, fastqfile, folder):
-    output_file = os.path.join(folder, f"{metagenome}.bowtie")
-    command = shlex.split(f"bowtie {b_opt} {metagenome} {fastqfile}")
-    with open(output_file, 'w') as stdout:
-        return subprocess.Popen(command, stdout=stdout)
-
-
 if not paired_end:
-    folder_pair1 = os.path.join(outputfolder, 'pair1_bowtie')
+    folder_pair1 = 'pair1_bowtie'
     os.makedirs(folder_pair1, exist_ok=True)
-
-    print("Processing repeat pseudogenomes...")
     processes = []
     ticker = 0
 
@@ -176,8 +165,6 @@ if not paired_end:
         p.communicate()
     # Combine the output from both read pairs:
     print('Sorting and combining the output for both read pairs....')
-    sorted_bowtie = os.path.join(outputfolder, 'sorted_bowtie')
-    os.makedirs(sorted_bowtie, exist_ok=True)
     for metagenome in repeat_list:
         file1 = os.path.join(folder_pair1, f"{metagenome}.bowtie")
         fileout = os.path.join(sorted_bowtie, f"{metagenome}.bowtie")
@@ -194,8 +181,8 @@ if not paired_end:
         stdout.close()
     print('completed ...')
 else:
-    folder_pair1 = os.path.join(outputfolder, 'pair1_bowtie')
-    folder_pair2 = os.path.join(outputfolder, 'pair2_bowtie')
+    folder_pair1 = 'pair1_bowtie'
+    folder_pair2 = 'pair2_bowtie'
     os.makedirs(folder_pair1, exist_ok=True)
     os.makedirs(folder_pair2, exist_ok=True)
 
@@ -223,9 +210,6 @@ else:
         p.communicate()
     # combine the output from both read pairs:
     print('Sorting and combining the output for both read pairs...')
-    if not os.path.exists(outputfolder + os.path.sep + 'sorted_bowtie'):
-        os.mkdir(outputfolder + os.path.sep + 'sorted_bowtie')
-    sorted_bowtie = outputfolder + os.path.sep + 'sorted_bowtie'
     for metagenome in repeat_list:
         file1 = folder_pair1 + os.path.sep + metagenome + '.bowtie'
         file2 = folder_pair2 + os.path.sep + metagenome + '.bowtie'
@@ -246,7 +230,6 @@ else:
 
 # build a file of repeat keys for all reads
 print('Writing and processing intermediate files...')
-sorted_bowtie = os.path.join(outputfolder, 'sorted_bowtie')
 sumofrepeatreads = 0
 readid = {}
 
@@ -315,18 +298,15 @@ for key in fractionalcounts.keys():
 
 # print output to file of the categorized counts and total overlapping counts:
 print('Writing final output...')
-with open(f"{os.path.join(outputfolder, outputfile_prefix)}_"
-          f"class_fraction_counts.txt", 'w') as fout:
+with open("class_fraction_counts.txt", 'w') as fout:
     for key in sorted(classfractionalcounts.keys()):
         fout.write(f"{key}\t{classfractionalcounts[key]}\n")
 
-with open(f"{os.path.join(outputfolder, outputfile_prefix)}_"
-          f"family_fraction_counts.txt", 'w') as fout:
+with open("family_fraction_counts.txt", 'w') as fout:
     for key in sorted(familyfractionalcounts.keys()):
         fout.write(f"{key}\t{familyfractionalcounts[key]}\n")
 
-with open(f"{os.path.join(outputfolder, outputfile_prefix)}_"
-          f"fraction_counts.txt", 'w') as fout:
+with open("fraction_counts.txt", 'w') as fout:
     for key in sorted(fractionalcounts.keys()):
         fout.write(f"{key}\t{repeatclass[key]}\t{repeatfamily[key]}\t"
                    f"{int(fractionalcounts[key])}\n")
