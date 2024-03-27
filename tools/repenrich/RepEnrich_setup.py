@@ -24,10 +24,6 @@ parser.add_argument('--annotation_file', action='store',
 parser.add_argument('--genomefasta', action='store', metavar='genomefasta',
                     help='''Genome of interest in fasta format.\
                          Example: mm9.fa''')
-parser.add_argument('--setup_folder', action='store', metavar='setup_folder',
-                    help='''Folder that contains bowtie indexes of repeats and\
-                         repeat element psuedogenomes.\
-                         Example working/setup''')
 parser.add_argument('--gaplength', action='store', dest='gaplength',
                     metavar='gaplength', default='200', type=int,
                     help='''Length of the N-spacer in the\
@@ -45,7 +41,6 @@ gapl = args.gaplength
 flankingl = args.flankinglength
 annotation_file = args.annotation_file
 genomefasta = args.genomefasta
-setup_folder = args.setup_folder
 
 # check that the programs we need are available
 try:
@@ -75,10 +70,6 @@ def import_text(filename, separator):
     return [line for line in file if starts_with_numerical(line)]
 
 
-# Make a setup folder
-if not os.path.exists(setup_folder):
-    os.makedirs(setup_folder)
-
 # load genome into dictionary and compute length
 g = SeqIO.to_dict(SeqIO.parse(genomefasta, "fasta"))
 genome = defaultdict(dict)
@@ -91,7 +82,7 @@ for chr in g.keys():
 repeat_elements = set()
 rep_coords = defaultdict(list)  # Merged dictionary for coordinates
 
-with open(os.path.join(setup_folder, 'repnames.bed'), 'w') as fout:
+with open('repnames.bed', 'w') as fout:
     f_in = import_text(annotation_file, ' ')
     for line in f_in:
         repname = line[9].translate(str.maketrans('()/', '___'))
@@ -104,7 +95,7 @@ with open(os.path.join(setup_folder, 'repnames.bed'), 'w') as fout:
 # containing chromosome, start, and end coordinates for each repeat instance
 
 # sort repeat_elements and print them in repgenomes_key.txt
-with open(os.path.join(setup_folder, 'repgenomes_key.txt'), 'w') as fout:
+with open('repgenomes_key.txt', 'w') as fout:
     for i, repeat in enumerate(sorted(repeat_elements)):
         fout.write('\t'.join([repeat, str(i)]) + '\n')
 
@@ -129,11 +120,10 @@ for repname in rep_coords:
             )
 
     # Create Fasta of repeat pseudogenome
-    fastafilename = f"{os.path.join(setup_folder, repname)}.fa"
+    fastafilename = f"{repname}.fa"
     record = SeqRecord(Seq(metagenome), id=repname, name='', description='')
     SeqIO.write(record, fastafilename, "fasta")
 
     # Generate repeat pseudogenome bowtie index
-    bowtie_build_cmd = ["bowtie-build", "-f", fastafilename,
-                        os.path.join(setup_folder, repname)]
+    bowtie_build_cmd = ["bowtie-build", "-f", fastafilename, repname)]
     subprocess.run(bowtie_build_cmd, check=True)

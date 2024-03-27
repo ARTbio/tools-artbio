@@ -23,9 +23,6 @@ parser.add_argument('--outputfolder', action='store', metavar='outputfolder',
                           Example: ./outputfolder')
 parser.add_argument('--outputprefix', action='store', metavar='outputprefix',
                     help='Prefix name for Repenrich output files.')
-parser.add_argument('--setup_folder', action='store', metavar='setup_folder',
-                    help='Folder produced by RepEnrich_setup which contains\
-                    repeat element pseudogenomes.')
 parser.add_argument('--alignment_bam', action='store', metavar='alignment_bam',
                     help='Bam alignments of unique mapper reads.')
 parser.add_argument('--fastqfile', action='store', metavar='fastqfile',
@@ -46,8 +43,7 @@ args = parser.parse_args()
 annotation_file = args.annotation_file
 outputfolder = args.outputfolder
 outputfile_prefix = args.outputprefix
-setup_folder = args.setup_folder
-repeat_bed = os.path.join(setup_folder, 'repnames.bed')
+repeat_bed = 'repnames.bed'
 unique_mapper_bam = args.alignment_bam
 fastqfile_1 = args.fastqfile
 fastqfile_2 = args.fastqfile2
@@ -101,7 +97,7 @@ for repeat in repeats:
         repeatfamily[matching_repeat] = classfamily[0]
 
 # build list of repeats initializing dictionaries for downstream analysis
-repgenome_path = os.path.join(setup_folder, 'repgenomes_key.txt')
+repgenome_path = 'repgenomes_key.txt'
 reptotalcounts = {line.split('\t')[0]: 0 for line in open(repgenome_path)}
 fractionalcounts = {line.split('\t')[0]: 0 for line in open(repgenome_path)}
 classtotalcounts = {
@@ -138,8 +134,7 @@ if not os.path.exists(outputfolder):
 
 # unique mapper counting
 cmd = f"bedtools bamtobed -i {unique_mapper_bam} | \
-        bedtools coverage -b stdin -a \
-        {os.path.join(setup_folder, 'repnames.bed')}"
+        bedtools coverage -b stdin -a  repnames.bed"
 p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
 bedtools_counts = p.communicate()[0].decode().rstrip('\r\n').split('\n')
 counts = {}
@@ -154,9 +149,8 @@ print(f"Identified {sumofrepeatreads} unique reads that mapped to repeats.")
 
 
 def run_bowtie(metagenome, fastqfile, folder):
-    metagenomepath = os.path.join(setup_folder, metagenome)
     output_file = os.path.join(folder, f"{metagenome}.bowtie")
-    command = shlex.split(f"bowtie {b_opt} {metagenomepath} {fastqfile}")
+    command = shlex.split(f"bowtie {b_opt} {metagenome} {fastqfile}")
     with open(output_file, 'w') as stdout:
         return subprocess.Popen(command, stdout=stdout)
 

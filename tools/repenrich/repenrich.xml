@@ -39,9 +39,8 @@
         ln -f -s '$genome' '${baseReference}.fa' &&
         bowtie-build '$genome' ${baseReference} &&
         python $__tool_directory__/RepEnrich_setup.py
-            --annotation_file $repeatmasker
-            --genomefasta ${baseReference}.fa
-            --setup_folder setup_folder_${baseReference} &&
+            --annotation_file '$repeatmasker'
+            --genomefasta '${baseReference}.fa' &&
         #if $seq_method.seq_method_list == "single-read":
             bowtie $baseReference -p \${GALAXY_SLOTS:-4} -t -m 1 -S ${input_base}.fastq ${input_base}_unique.sam 2>bowtie_alignments.txt &&
         #else:
@@ -53,7 +52,6 @@
             --annotation_file $repeatmasker
             --outputfolder ${input_base}
             --outputprefix ${input_base}
-            --setup_folder setup_folder_${baseReference}
             --alignment_bam ${input_base}_unique.bam
             --cpus "\${GALAXY_SLOTS:-4}"
         #if $seq_method.seq_method_list == "single-read":
