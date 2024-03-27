@@ -127,7 +127,7 @@ rev_repeat_key = {
         repgenome_path)}
 repeat_list = [line.split('\t')[0] for line in open(repgenome_path)]
 
-### map the repeats to the pseudogenomes:
+# map the repeats to the pseudogenomes
 sorted_bowtie = 'sorted_bowtie'
 os.makedirs(sorted_bowtie, exist_ok=True)
 
@@ -298,15 +298,15 @@ for key in fractionalcounts.keys():
 
 # print output to file of the categorized counts and total overlapping counts:
 print('Writing final output...')
-with open("class_fraction_counts.txt", 'w') as fout:
+with open("class_fraction_counts.tsv", 'w') as fout:
     for key in sorted(classfractionalcounts.keys()):
         fout.write(f"{key}\t{classfractionalcounts[key]}\n")
 
-with open("family_fraction_counts.txt", 'w') as fout:
+with open("family_fraction_counts.tsv", 'w') as fout:
     for key in sorted(familyfractionalcounts.keys()):
         fout.write(f"{key}\t{familyfractionalcounts[key]}\n")
 
-with open("fraction_counts.txt", 'w') as fout:
+with open("fraction_counts.tsv", 'w') as fout:
     for key in sorted(fractionalcounts.keys()):
         fout.write(f"{key}\t{repeatclass[key]}\t{repeatfamily[key]}\t"
                    f"{int(fractionalcounts[key])}\n")

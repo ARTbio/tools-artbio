@@ -50,10 +50,10 @@
             --alignment_bam input_unique.bam
             --cpus "\${GALAXY_SLOTS:-4}"
         #if $seq_method.seq_method_list == "single-read":
-            --fastqfile input_multimap.fastq &&
+            --fastqfile input_multimap.fastq
         #else:
             --fastqfile input_multimap_1.fastq
-            --fastqfile2 input_multimap_2.fastq &&
+            --fastqfile2 input_multimap_2.fastq
         #end if
     ]]></command>
     <!-- basic error handling -->
@@ -80,9 +80,9 @@
     </inputs>
 
     <outputs>
-        <data format="tabular" name="class_fraction_counts" label="RepEnrich on ${on_string}: class fraction counts" from_work_dir="class_fraction_counts.tabular" />
-        <data format="tabular" name="family_fraction_counts" label="RepEnrich on ${on_string}: family fraction counts" from_work_dir="family_fraction_counts.tabular" />
-        <data format="tabular" name="fraction_counts" label="RepEnrich on ${on_string}: fraction counts" from_work_dir="fraction_counts.tabular" />
+        <data format="tabular" name="class_fraction_counts" label="RepEnrich on ${on_string}: class fraction counts" from_work_dir="class_fraction_counts.tsv" />
+        <data format="tabular" name="family_fraction_counts" label="RepEnrich on ${on_string}: family fraction counts" from_work_dir="family_fraction_counts.tsv" />
+        <data format="tabular" name="fraction_counts" label="RepEnrich on ${on_string}: fraction counts" from_work_dir="fraction_counts.tsv" />
    </outputs>
 
     <tests>
