@@ -105,6 +105,8 @@ cmd = f"bedtools bamtobed -i {unique_mapper_bam} | \
         bedtools coverage -b stdin -a  repnames.bed"
 p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
 bedtools_counts = p.communicate()[0].decode().rstrip('\r\n').split('\n')
+
+# parse bedtools output
 counts = defaultdict(int)
 sumofrepeatreads = 0
 for line in bedtools_counts:
@@ -113,6 +115,7 @@ for line in bedtools_counts:
     sumofrepeatreads += int(line[4])
 print(f"Identified {sumofrepeatreads} unique reads that mapped to repeats.")
 
+# Analyse multimappers
 if not paired_end:
     folder_pair1 = 'pair1_bowtie'
     os.makedirs(folder_pair1, exist_ok=True)
@@ -172,29 +175,12 @@ for repeat in repeats:
         repeatfamily[matching_repeat] = classfamily[0]
 
 # build list of repeats initializing dictionaries for downstream analysis
-reptotalcounts = {line.split('\t')[0]: 0 for line in open('repeatIDs.txt')}
-fractionalcounts = {line.split('\t')[0]: 0 for line in open('repeatIDs.txt')}
-classtotalcounts = {
-    repeatclass[line.split('\t')[0]]: 0 for line in open('repeatIDs.txt')
-    if line.split('\t')[0] in repeatclass
-}
-classfractionalcounts = {
-    repeatclass[line.split('\t')[0]]: 0 for line in open('repeatIDs.txt')
-    if line.split('\t')[0] in repeatclass
-}
-familytotalcounts = {
-    repeatfamily[line.split('\t')[0]]: 0 for line in open('repeatIDs.txt')
-    if line.split('\t')[0] in repeatfamily
-}
-familyfractionalcounts = {
-    repeatfamily[line.split('\t')[0]]: 0 for line in open('repeatIDs.txt')
-    if line.split('\t')[0] in repeatfamily
-}
-reptotalcounts_simple = {
-    (simple_repeat if line.split('\t')[0] in repeatfamily
-     and repeatfamily[line.split('\t')[0]] == simple_repeat
-     else line.split('\t')[0]): 0 for line in open('repeatIDs.txt')
-}
+reptotalcounts = defaultdict(int)
+fractionalcounts = defaultdict(float)
+classtotalcounts = defaultdict(int)
+classfractionalcounts = defaultdict(float)
+familytotalcounts = defaultdict(int)
+familyfractionalcounts = defaultdict(float)
 
 # build a file of repeat keys for all reads
 sumofrepeatreads = 0
