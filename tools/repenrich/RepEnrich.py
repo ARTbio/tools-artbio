@@ -62,10 +62,6 @@ except OSError:
     print("Error: Bowtie or bedtools not loaded")
     raise
 
-# define a csv reader that reads space deliminated files
-print('Preparing for analysis using RepEnrich...')
-csv.field_size_limit(sys.maxsize)
-
 
 def starts_with_numerical(list):
     try:
@@ -93,42 +89,6 @@ def run_bowtie(args):
         return subprocess.Popen(command, stdout=stdout)
 
 
-# build dictionaries to convert repclass and rep families
-repeatclass, repeatfamily = {}, {}
-repeats = import_text(annotation_file, ' ')
-for repeat in repeats:
-    classfamily = repeat[10].split('/')
-    matching_repeat = repeat[9].translate(str.maketrans('()/', '___'))
-    repeatclass[matching_repeat] = classfamily[0]
-    if len(classfamily) == 2:
-        repeatfamily[matching_repeat] = classfamily[1]
-    else:
-        repeatfamily[matching_repeat] = classfamily[0]
-
-# build list of repeats initializing dictionaries for downstream analysis
-reptotalcounts = {line.split('\t')[0]: 0 for line in open('repeatIDs.txt')}
-fractionalcounts = {line.split('\t')[0]: 0 for line in open('repeatIDs.txt')}
-classtotalcounts = {
-    repeatclass[line.split('\t')[0]]: 0 for line in open('repeatIDs.txt')
-    if line.split('\t')[0] in repeatclass
-}
-classfractionalcounts = {
-    repeatclass[line.split('\t')[0]]: 0 for line in open('repeatIDs.txt')
-    if line.split('\t')[0] in repeatclass
-}
-familytotalcounts = {
-    repeatfamily[line.split('\t')[0]]: 0 for line in open('repeatIDs.txt')
-    if line.split('\t')[0] in repeatfamily
-}
-familyfractionalcounts = {
-    repeatfamily[line.split('\t')[0]]: 0 for line in open('repeatIDs.txt')
-    if line.split('\t')[0] in repeatfamily
-}
-reptotalcounts_simple = {
-    (simple_repeat if line.split('\t')[0] in repeatfamily
-     and repeatfamily[line.split('\t')[0]] == simple_repeat
-     else line.split('\t')[0]): 0 for line in open('repeatIDs.txt')
-}
 repeat_key = {line.split('\t')[0]: int(line.split('\t')[1]) for line in open(
     'repeatIDs.txt')}
 rev_repeat_key = {
@@ -181,7 +141,6 @@ else:
                  metagenome in repeat_list]
     args_list.extend([(metagenome, fastqfile_2, folder_pair2) for
                      metagenome in repeat_list])
-    print(args_list)
     with ProcessPoolExecutor(max_workers=cpus) as executor:
         executor.map(run_bowtie, args_list)
     # collect read pair info
@@ -200,6 +159,43 @@ else:
             for key in sorted(collector):
                 output.write(f"{key}\n")
 
+# build dictionaries to convert repclass and rep families
+repeatclass, repeatfamily = {}, {}
+repeats = import_text(annotation_file, ' ')
+for repeat in repeats:
+    classfamily = repeat[10].split('/')
+    matching_repeat = repeat[9].translate(str.maketrans('()/', '___'))
+    repeatclass[matching_repeat] = classfamily[0]
+    if len(classfamily) == 2:
+        repeatfamily[matching_repeat] = classfamily[1]
+    else:
+        repeatfamily[matching_repeat] = classfamily[0]
+
+# build list of repeats initializing dictionaries for downstream analysis
+reptotalcounts = {line.split('\t')[0]: 0 for line in open('repeatIDs.txt')}
+fractionalcounts = {line.split('\t')[0]: 0 for line in open('repeatIDs.txt')}
+classtotalcounts = {
+    repeatclass[line.split('\t')[0]]: 0 for line in open('repeatIDs.txt')
+    if line.split('\t')[0] in repeatclass
+}
+classfractionalcounts = {
+    repeatclass[line.split('\t')[0]]: 0 for line in open('repeatIDs.txt')
+    if line.split('\t')[0] in repeatclass
+}
+familytotalcounts = {
+    repeatfamily[line.split('\t')[0]]: 0 for line in open('repeatIDs.txt')
+    if line.split('\t')[0] in repeatfamily
+}
+familyfractionalcounts = {
+    repeatfamily[line.split('\t')[0]]: 0 for line in open('repeatIDs.txt')
+    if line.split('\t')[0] in repeatfamily
+}
+reptotalcounts_simple = {
+    (simple_repeat if line.split('\t')[0] in repeatfamily
+     and repeatfamily[line.split('\t')[0]] == simple_repeat
+     else line.split('\t')[0]): 0 for line in open('repeatIDs.txt')
+}
+
 # build a file of repeat keys for all reads
 sumofrepeatreads = 0
 readid = defaultdict(str)
@@ -216,8 +212,6 @@ for subfamilies in readid.values():
 
 print(f'Identified {sumofrepeatreads} reads that mapped to \
         repeats for unique and multimappers.')
-print("Conducting final calculations...")
-
 # building the total counts for repeat element enrichment...
 for x in counts.keys():
     count = counts[x]
@@ -261,8 +255,7 @@ for key in fractionalcounts.keys():
 for key in fractionalcounts.keys():
     familyfractionalcounts[repeatfamily[key]] += fractionalcounts[key]
 
-# print output to file of the categorized counts and total overlapping counts:
-print('Writing final output...')
+# print output to files of the categorized counts and total overlapping counts:
 with open("class_fraction_counts.tsv", 'w') as fout:
     for key in sorted(classfractionalcounts.keys()):
         fout.write(f"{key}\t{classfractionalcounts[key]}\n")
