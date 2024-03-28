@@ -39,9 +39,9 @@
             --annotation_file '$repeatmasker'
             --genomefasta 'genome.fa' &&
         #if $seq_method.seq_method_list == "single-read":
-            bowtie genome -p \${GALAXY_SLOTS:-4} -t -m 1 -S input.fastq input_unique.sam 2>bowtie_alignments.txt &&
+            bowtie genome -p \${GALAXY_SLOTS:-4} -t -m 1 -S --max multimap.fastq input.fastq input_unique.sam 2>bowtie_alignments.txt &&
         #else:
-            bowtie genome -p \${GALAXY_SLOTS:-4} -t -m 1 -S -1 input.fastq -2 input_2.fastq input_unique.sam 2>bowtie_alignments.txt &&
+            bowtie genome -p \${GALAXY_SLOTS:-4} -t -m 1 -S --max multimap.fastq -1 input.fastq -2 input_2.fastq input_unique.sam 2>bowtie_alignments.txt &&
         #end if
         samtools view -@ \${GALAXY_SLOTS:-4} -bS 'input_unique.sam' | samtools sort -@ \${GALAXY_SLOTS:-4} -O bam -o 'input_unique.bam' &&
         samtools index input_unique.bam &&
@@ -50,10 +50,10 @@
             --alignment_bam input_unique.bam
             --cpus "\${GALAXY_SLOTS:-4}"
         #if $seq_method.seq_method_list == "single-read":
-            --fastqfile input_multimap.fastq
+            --fastqfile multimap.fastq
         #else:
-            --fastqfile input_multimap_1.fastq
-            --fastqfile2 input_multimap_2.fastq
+            --fastqfile multimap_1.fastq
+            --fastqfile2 multimap_2.fastq
         #end if
     ]]></command>
     <!-- basic error handling -->
