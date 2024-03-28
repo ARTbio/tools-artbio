@@ -5,6 +5,7 @@ import shlex
 import subprocess
 import sys
 from collections import defaultdict
+from concurrent.futures import ProcessPoolExecutor
 
 import numpy
 
@@ -154,26 +155,20 @@ print(f"Identified {sumofrepeatreads} unique reads that mapped to repeats.")
 if not paired_end:
     folder_pair1 = 'pair1_bowtie'
     os.makedirs(folder_pair1, exist_ok=True)
-    processes = []
-    ticker = 0
-    for metagenome in repeat_list:
-        processes.append(run_bowtie(metagenome, fastqfile_1, folder_pair1))
-        ticker += 1
-        if ticker == cpus:
-            for p in processes:
-                p.communicate()
-            ticker = 0
-            processes = []
-    for p in processes:
-        p.communicate()
+    args_list = [(metagenome, fastqfile_1, folder_pair1) for
+                 metagenome in repeat_list]
+
+    with ProcessPoolExecutor(max_workers=cpus) as executor:
+        executor.map(run_bowtie, args_list)
+    # Consolidate the output files
     for metagenome in repeat_list:
         file1 = os.path.join(folder_pair1, f"{metagenome}.bowtie")
         fileout = os.path.join(sorted_bowtie, f"{metagenome}.bowtie")
         collector = {}
+        with open(file1) as input_file:
+            for line in input_file:
+                collector[line.split("/")[0]] = 1
         with open(fileout, 'w') as output:
-            with open(file1) as input:
-                for line in input:
-                    collector[line.split("/")[0]] = 1
             for key in sorted(collector):
                 output.write(f"{key}\n")
 else:
@@ -181,38 +176,26 @@ else:
     folder_pair2 = 'pair2_bowtie'
     os.makedirs(folder_pair1, exist_ok=True)
     os.makedirs(folder_pair2, exist_ok=True)
-    ps, psb, ticker = [], [], 0
-    for metagenome in repeat_list:
-        ps.append(run_bowtie(metagenome, fastqfile_1, folder_pair1))
-        ticker += 1
-        if fastqfile_2 != 'none':
-            psb.append(run_bowtie(metagenome, fastqfile_2, folder_pair2))
-            ticker += 1
-        if ticker >= cpus:
-            for p in ps:
-                p.communicate()
-            for p in psb:
-                p.communicate()
-            ticker = 0
-            ps = []
-            psb = []
-    for p in ps:
-        p.communicate()
-    for p in psb:
-        p.communicate()
+    args_list = [(metagenome, fastqfile_1, folder_pair1) for
+                 metagenome in repeat_list]
+    args_list.extend([(metagenome, fastqfile_2, folder_pair2) for
+                     metagenome in repeat_list])
+    print(args_list)
+    with ProcessPoolExecutor(max_workers=cpus) as executor:
+        executor.map(run_bowtie, args_list)
     # collect read pair info
     for metagenome in repeat_list:
-        file1 = folder_pair1 + os.path.sep + metagenome + '.bowtie'
-        file2 = folder_pair2 + os.path.sep + metagenome + '.bowtie'
-        fileout = sorted_bowtie + os.path.sep + metagenome + '.bowtie'
+        file1 = os.path.join(folder_pair1, f"{metagenome}.bowtie")
+        file2 = os.path.join(folder_pair2, f"{metagenome}.bowtie")
+        fileout = os.path.join(sorted_bowtie, f"{metagenome}.bowtie")
         collector = {}
+        with open(file1) as input:
+            for line in input:
+                collector[line.split("/")[0]] = 1
+        with open(file2) as input:
+            for line in input:
+                collector[line.split("/")[0]] = 1
         with open(fileout, 'w') as output:
-            with open(file1) as input:
-                for line in input:
-                    collector[line.split("/")[0]] = 1
-            with open(file2) as input:
-                for line in input:
-                    collector[line.split("/")[0]] = 1
             for key in sorted(collector):
                 output.write(f"{key}\n")
 
