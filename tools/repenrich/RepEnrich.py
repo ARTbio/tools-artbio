@@ -85,7 +85,8 @@ def import_text(filename, separator):
     return [line for line in file if starts_with_numerical(line)]
 
 
-def run_bowtie(metagenome, fastqfile, folder):
+def run_bowtie(args):
+    metagenome, fastqfile, folder = args
     output_file = os.path.join(folder, f"{metagenome}.bowtie")
     command = shlex.split(f"bowtie {b_opt} {metagenome} {fastqfile}")
     with open(output_file, 'w') as stdout:
