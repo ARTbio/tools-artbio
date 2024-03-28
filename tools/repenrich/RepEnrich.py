@@ -95,7 +95,6 @@ def run_bowtie(metagenome, fastqfile, folder):
 repeatclass, repeatfamily = {}, {}
 repeats = import_text(annotation_file, ' ')
 for repeat in repeats:
-    classfamily = []
     classfamily = repeat[10].split('/')
     matching_repeat = repeat[9].translate(str.maketrans('()/', '___'))
     repeatclass[matching_repeat] = classfamily[0]
@@ -105,19 +104,35 @@ for repeat in repeats:
         repeatfamily[matching_repeat] = classfamily[0]
 
 # build list of repeats initializing dictionaries for downstream analysis
-repgenome_path = 'repgenomes_key.txt'
-reptotalcounts = defaultdict(int)
-fractionalcounts = defaultdict(int)
-classtotalcounts = defaultdict(int)
-classfractionalcounts = defaultdict(int)
-familytotalcounts = defaultdict(int)
-familyfractionalcounts = defaultdict(int)
-reptotalcounts_simple = defaultdict(int)
-repeat_key = defaultdict(int)
+reptotalcounts = {line.split('\t')[0]: 0 for line in open('repeatIDs.txt')}
+fractionalcounts = {line.split('\t')[0]: 0 for line in open('repeatIDs.txt')}
+classtotalcounts = {
+    repeatclass[line.split('\t')[0]]: 0 for line in open('repeatIDs.txt')
+    if line.split('\t')[0] in repeatclass
+}
+classfractionalcounts = {
+    repeatclass[line.split('\t')[0]]: 0 for line in open('repeatIDs.txt')
+    if line.split('\t')[0] in repeatclass
+}
+familytotalcounts = {
+    repeatfamily[line.split('\t')[0]]: 0 for line in open('repeatIDs.txt')
+    if line.split('\t')[0] in repeatfamily
+}
+familyfractionalcounts = {
+    repeatfamily[line.split('\t')[0]]: 0 for line in open('repeatIDs.txt')
+    if line.split('\t')[0] in repeatfamily
+}
+reptotalcounts_simple = {
+    (simple_repeat if line.split('\t')[0] in repeatfamily
+     and repeatfamily[line.split('\t')[0]] == simple_repeat
+     else line.split('\t')[0]): 0 for line in open('repeatIDs.txt')
+}
+repeat_key = {line.split('\t')[0]: int(line.split('\t')[1]) for line in open(
+    'repeatIDs.txt')}
 rev_repeat_key = {
     int(line.split('\t')[1]): line.split('\t')[0] for line in open(
-        repgenome_path)}
-repeat_list = [line.split('\t')[0] for line in open(repgenome_path)]
+        'repeatIDs.txt')}
+repeat_list = [line.split('\t')[0] for line in open('repeatIDs.txt')]
 
 # map the repeats to the pseudogenomes
 sorted_bowtie = 'sorted_bowtie'

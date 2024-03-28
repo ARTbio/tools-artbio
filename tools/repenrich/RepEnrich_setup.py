@@ -94,8 +94,8 @@ with open('repnames.bed', 'w') as fout:
 # rep_coords is a dictionary where keys are repeat names and values are lists
 # containing chromosome, start, and end coordinates for each repeat instance
 
-# sort repeat_elements and print them in repgenomes_key.txt
-with open('repgenomes_key.txt', 'w') as fout:
+# sort repeat_elements and print them in repeatIDs.txt
+with open('repeatIDs.txt', 'w') as fout:
     for i, repeat in enumerate(sorted(repeat_elements)):
         fout.write('\t'.join([repeat, str(i)]) + '\n')
 
