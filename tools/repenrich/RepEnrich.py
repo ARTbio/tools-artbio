@@ -106,31 +106,14 @@ for repeat in repeats:
 
 # build list of repeats initializing dictionaries for downstream analysis
 repgenome_path = 'repgenomes_key.txt'
-reptotalcounts = {line.split('\t')[0]: 0 for line in open(repgenome_path)}
-fractionalcounts = {line.split('\t')[0]: 0 for line in open(repgenome_path)}
-classtotalcounts = {
-    repeatclass[line.split('\t')[0]]: 0 for line in open(repgenome_path)
-    if line.split('\t')[0] in repeatclass
-}
-classfractionalcounts = {
-    repeatclass[line.split('\t')[0]]: 0 for line in open(repgenome_path)
-    if line.split('\t')[0] in repeatclass
-}
-familytotalcounts = {
-    repeatfamily[line.split('\t')[0]]: 0 for line in open(repgenome_path)
-    if line.split('\t')[0] in repeatfamily
-}
-familyfractionalcounts = {
-    repeatfamily[line.split('\t')[0]]: 0 for line in open(repgenome_path)
-    if line.split('\t')[0] in repeatfamily
-}
-reptotalcounts_simple = {
-    (simple_repeat if line.split('\t')[0] in repeatfamily
-     and repeatfamily[line.split('\t')[0]] == simple_repeat
-     else line.split('\t')[0]): 0 for line in open(repgenome_path)
-}
-repeat_key = {line.split('\t')[0]: int(line.split('\t')[1]) for line in open(
-    repgenome_path)}
+reptotalcounts = defaultdict(int)
+fractionalcounts = defaultdict(int)
+classtotalcounts = defaultdict(int)
+classfractionalcounts = defaultdict(int)
+familytotalcounts = defaultdict(int)
+familyfractionalcounts = defaultdict(int)
+reptotalcounts_simple = defaultdict(int)
+repeat_key = defaultdict(int)
 rev_repeat_key = {
     int(line.split('\t')[1]): line.split('\t')[0] for line in open(
         repgenome_path)}
@@ -145,12 +128,10 @@ cmd = f"bedtools bamtobed -i {unique_mapper_bam} | \
         bedtools coverage -b stdin -a  repnames.bed"
 p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
 bedtools_counts = p.communicate()[0].decode().rstrip('\r\n').split('\n')
-counts = {}
+counts = defaultdict(int)
 sumofrepeatreads = 0
 for line in bedtools_counts:
     line = line.split('\t')
-    if not str(repeat_key[line[3]]) in counts:
-        counts[str(repeat_key[line[3]])] = 0
     counts[str(repeat_key[line[3]])] += int(line[4])
     sumofrepeatreads += int(line[4])
 print(f"Identified {sumofrepeatreads} unique reads that mapped to repeats.")
