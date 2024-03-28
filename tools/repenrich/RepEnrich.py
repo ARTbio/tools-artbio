@@ -4,6 +4,7 @@ import os
 import shlex
 import subprocess
 import sys
+from collections import defaultdict
 
 import numpy
 
@@ -17,26 +18,13 @@ parser.add_argument('--annotation_file', action='store',
                     help='RepeatMasker.org annotation file for your\
                           organism. The file may be downloaded from\
                           RepeatMasker.org. E.g. hg19_repeatmasker.txt')
-parser.add_argument('--outputfolder', action='store', metavar='outputfolder',
-                    help='Folder that will contain results. Should be the\
-                          same as the one used for RepEnrich_setup.\
-                          Example: ./outputfolder')
-parser.add_argument('--outputprefix', action='store', metavar='outputprefix',
-                    help='Prefix name for Repenrich output files.')
-parser.add_argument('--setup_folder', action='store', metavar='setup_folder',
-                    help='Folder produced by RepEnrich_setup which contains\
-                    repeat element pseudogenomes.')
+parser.add_argument('--alignment_bam', action='store', metavar='alignment_bam',
+                    help='Bam alignments of unique mapper reads.')
 parser.add_argument('--fastqfile', action='store', metavar='fastqfile',
                     help='File of fastq reads mapping to multiple\
                           locations. Example: /data/multimap.fastq')
-parser.add_argument('--alignment_bam', action='store', metavar='alignment_bam',
-                    help='Bam alignments of unique mapper reads.')
-parser.add_argument('--pairedend', action='store', dest='pairedend',
-                    default='FALSE',
-                    help='Change to TRUE for paired-end fastq files.\
-                          Default FALSE')
 parser.add_argument('--fastqfile2', action='store', dest='fastqfile2',
-                    metavar='fastqfile2', default='none',
+                    metavar='fastqfile2', default='',
                     help='fastqfile #2 when using paired-end option.\
                           Default none')
 parser.add_argument('--cpus', action='store', dest='cpus', metavar='cpus',
@@ -48,10 +36,7 @@ args = parser.parse_args()
 
 # parameters
 annotation_file = args.annotation_file
-outputfolder = args.outputfolder
-outputfile_prefix = args.outputprefix
-setup_folder = args.setup_folder
-repeat_bed = os.path.join(setup_folder, 'repnames.bed')
+repeat_bed = 'repnames.bed'
 unique_mapper_bam = args.alignment_bam
 fastqfile_1 = args.fastqfile
 fastqfile_2 = args.fastqfile2
@@ -59,7 +44,10 @@ cpus = args.cpus
 b_opt = "-k1 -p 1 --quiet"
 # Change if simple repeats are differently annotated in your organism
 simple_repeat = "Simple_repeat"
-paired_end = args.pairedend
+if args.fastqfile2:
+    paired_end = True
+else:
+    paired_end = False
 
 # check that the programs we need are available
 try:
@@ -78,21 +66,35 @@ print('Preparing for analysis using RepEnrich...')
 csv.field_size_limit(sys.maxsize)
 
 
+def starts_with_numerical(list):
+    try:
+        if len(list) == 0:
+            return False
+        int(list[0])
+        return True
+    except ValueError:
+        return False
+
+
+# define a text importer for .out/.txt format of repbase
 def import_text(filename, separator):
-    for line in csv.reader(open(filename), delimiter=separator,
-                           skipinitialspace=True):
-        if line:
-            yield line
+    csv.field_size_limit(sys.maxsize)
+    file = csv.reader(open(filename), delimiter=separator,
+                      skipinitialspace=True)
+    return [line for line in file if starts_with_numerical(line)]
+
+
+def run_bowtie(metagenome, fastqfile, folder):
+    output_file = os.path.join(folder, f"{metagenome}.bowtie")
+    command = shlex.split(f"bowtie {b_opt} {metagenome} {fastqfile}")
+    with open(output_file, 'w') as stdout:
+        return subprocess.Popen(command, stdout=stdout)
 
 
 # build dictionaries to convert repclass and rep families
 repeatclass, repeatfamily = {}, {}
 repeats = import_text(annotation_file, ' ')
-# skip three first lines of the iterator
-for line in range(3):
-    next(repeats)
 for repeat in repeats:
-    classfamily = []
     classfamily = repeat[10].split('/')
     matching_repeat = repeat[9].translate(str.maketrans('()/', '___'))
     repeatclass[matching_repeat] = classfamily[0]
@@ -101,68 +103,59 @@ for repeat in repeats:
     else:
         repeatfamily[matching_repeat] = classfamily[0]
 
-# build list of repeats initializing dictionaries for downstream analysis'
-repgenome_path = os.path.join(setup_folder, 'repgenomes_key.txt')
-reptotalcounts = {line[0]: 0 for line in import_text(repgenome_path, '\t')}
-fractionalcounts = {line[0]: 0 for line in import_text(repgenome_path, '\t')}
-classtotalcounts = {repeatclass[line[0]]: 0 for line in import_text(
-    repgenome_path, '\t') if line[0] in repeatclass}
-classfractionalcounts = {repeatclass[line[0]]: 0 for line in import_text(
-    repgenome_path, '\t') if line[0] in repeatclass}
-familytotalcounts = {repeatfamily[line[0]]: 0 for line in import_text(
-    repgenome_path, '\t') if line[0] in repeatfamily}
-familyfractionalcounts = {repeatfamily[line[0]]: 0 for line in import_text(
-    repgenome_path, '\t') if line[0] in repeatfamily}
-reptotalcounts_simple = {(simple_repeat if line[0] in repeatfamily and
-                          repeatfamily[line[0]] == simple_repeat else
-                          line[0]): 0 for line in import_text(
-                              repgenome_path, '\t')}
-repeat_key = {line[0]: int(line[1]) for line in import_text(
-    repgenome_path, '\t')}
-rev_repeat_key = {int(line[1]): line[0] for line in import_text(
-    repgenome_path, '\t')}
-repeat_list = [line[0] for line in import_text(repgenome_path, '\t')]
+# build list of repeats initializing dictionaries for downstream analysis
+reptotalcounts = {line.split('\t')[0]: 0 for line in open('repeatIDs.txt')}
+fractionalcounts = {line.split('\t')[0]: 0 for line in open('repeatIDs.txt')}
+classtotalcounts = {
+    repeatclass[line.split('\t')[0]]: 0 for line in open('repeatIDs.txt')
+    if line.split('\t')[0] in repeatclass
+}
+classfractionalcounts = {
+    repeatclass[line.split('\t')[0]]: 0 for line in open('repeatIDs.txt')
+    if line.split('\t')[0] in repeatclass
+}
+familytotalcounts = {
+    repeatfamily[line.split('\t')[0]]: 0 for line in open('repeatIDs.txt')
+    if line.split('\t')[0] in repeatfamily
+}
+familyfractionalcounts = {
+    repeatfamily[line.split('\t')[0]]: 0 for line in open('repeatIDs.txt')
+    if line.split('\t')[0] in repeatfamily
+}
+reptotalcounts_simple = {
+    (simple_repeat if line.split('\t')[0] in repeatfamily
+     and repeatfamily[line.split('\t')[0]] == simple_repeat
+     else line.split('\t')[0]): 0 for line in open('repeatIDs.txt')
+}
+repeat_key = {line.split('\t')[0]: int(line.split('\t')[1]) for line in open(
+    'repeatIDs.txt')}
+rev_repeat_key = {
+    int(line.split('\t')[1]): line.split('\t')[0] for line in open(
+        'repeatIDs.txt')}
+repeat_list = [line.split('\t')[0] for line in open('repeatIDs.txt')]
 
-# map the repeats to the psuedogenomes:
-if not os.path.exists(outputfolder):
-    os.mkdir(outputfolder)
+# map the repeats to the pseudogenomes
+sorted_bowtie = 'sorted_bowtie'
+os.makedirs(sorted_bowtie, exist_ok=True)
 
-# Conduct the regions sorting
-fileout = os.path.join(outputfolder, f"{outputfile_prefix}_regionsorter.txt")
-command = shlex.split(f"coverageBed -abam {unique_mapper_bam} -b \
-                        {os.path.join(setup_folder, 'repnames.bed')}")
-with open(fileout, 'w') as stdout:
-    subprocess.run(command, stdout=stdout, check=True)
-
-counts = {}
+# unique mapper counting
+cmd = f"bedtools bamtobed -i {unique_mapper_bam} | \
+        bedtools coverage -b stdin -a  repnames.bed"
+p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+bedtools_counts = p.communicate()[0].decode().rstrip('\r\n').split('\n')
+counts = defaultdict(int)
 sumofrepeatreads = 0
-with open(fileout) as filein:
-    for line in filein:
-        line = line.split('\t')
-        if not str(repeat_key[line[3]]) in counts:
-            counts[str(repeat_key[line[3]])] = 0
-        counts[str(repeat_key[line[3]])] += int(line[4])
-        sumofrepeatreads += int(line[4])
-    print(f"Identified {sumofrepeatreads} unique reads that \
-            mapped to repeats.")
+for line in bedtools_counts:
+    line = line.split('\t')
+    counts[str(repeat_key[line[3]])] += int(line[4])
+    sumofrepeatreads += int(line[4])
+print(f"Identified {sumofrepeatreads} unique reads that mapped to repeats.")
 
-
-def run_bowtie(metagenome, fastqfile, folder):
-    metagenomepath = os.path.join(setup_folder, metagenome)
-    output_file = os.path.join(folder, f"{metagenome}.bowtie")
-    command = shlex.split(f"bowtie {b_opt} {metagenomepath} {fastqfile}")
-    with open(output_file, 'w') as stdout:
-        return subprocess.Popen(command, stdout=stdout)
-
-
-if paired_end == 'FALSE':
-    folder_pair1 = os.path.join(outputfolder, 'pair1_bowtie')
+if not paired_end:
+    folder_pair1 = 'pair1_bowtie'
     os.makedirs(folder_pair1, exist_ok=True)
-
-    print("Processing repeat pseudogenomes...")
     processes = []
     ticker = 0
-
     for metagenome in repeat_list:
         processes.append(run_bowtie(metagenome, fastqfile_1, folder_pair1))
         ticker += 1
@@ -171,37 +164,24 @@ if paired_end == 'FALSE':
                 p.communicate()
             ticker = 0
             processes = []
-
     for p in processes:
         p.communicate()
-    # Combine the output from both read pairs:
-    print('Sorting and combining the output for both read pairs....')
-    sorted_bowtie = os.path.join(outputfolder, 'sorted_bowtie')
-    os.makedirs(sorted_bowtie, exist_ok=True)
     for metagenome in repeat_list:
         file1 = os.path.join(folder_pair1, f"{metagenome}.bowtie")
         fileout = os.path.join(sorted_bowtie, f"{metagenome}.bowtie")
-        with open(fileout, 'w') as stdout:
-            p1 = subprocess.Popen(['cat', file1], stdout=subprocess.PIPE)
-            p2 = subprocess.Popen(['cut', '-f1'], stdin=p1.stdout,
-                                  stdout=subprocess.PIPE)
-            p3 = subprocess.Popen(['cut', '-f1', "-d/"], stdin=p2.stdout,
-                                  stdout=subprocess.PIPE)
-            p4 = subprocess.Popen(['sort'], stdin=p3.stdout,
-                                  stdout=subprocess.PIPE)
-            p5 = subprocess.Popen(['uniq'], stdin=p4.stdout, stdout=stdout)
-            p5.communicate()
-        stdout.close()
-    print('completed ...')
+        collector = {}
+        with open(fileout, 'w') as output:
+            with open(file1) as input:
+                for line in input:
+                    collector[line.split("/")[0]] = 1
+            for key in sorted(collector):
+                output.write(f"{key}\n")
 else:
-    folder_pair1 = os.path.join(outputfolder, 'pair1_bowtie')
-    folder_pair2 = os.path.join(outputfolder, 'pair2_bowtie')
+    folder_pair1 = 'pair1_bowtie'
+    folder_pair2 = 'pair2_bowtie'
     os.makedirs(folder_pair1, exist_ok=True)
     os.makedirs(folder_pair2, exist_ok=True)
-
-    print("Processing repeat pseudogenomes...")
     ps, psb, ticker = [], [], 0
-
     for metagenome in repeat_list:
         ps.append(run_bowtie(metagenome, fastqfile_1, folder_pair1))
         ticker += 1
@@ -216,49 +196,33 @@ else:
             ticker = 0
             ps = []
             psb = []
-
     for p in ps:
         p.communicate()
     for p in psb:
         p.communicate()
-    # combine the output from both read pairs:
-    print('Sorting and combining the output for both read pairs...')
-    if not os.path.exists(outputfolder + os.path.sep + 'sorted_bowtie'):
-        os.mkdir(outputfolder + os.path.sep + 'sorted_bowtie')
-    sorted_bowtie = outputfolder + os.path.sep + 'sorted_bowtie'
+    # collect read pair info
     for metagenome in repeat_list:
         file1 = folder_pair1 + os.path.sep + metagenome + '.bowtie'
         file2 = folder_pair2 + os.path.sep + metagenome + '.bowtie'
         fileout = sorted_bowtie + os.path.sep + metagenome + '.bowtie'
-        with open(fileout, 'w') as stdout:
-            p1 = subprocess.Popen(['cat', file1, file2],
-                                  stdout=subprocess.PIPE)
-            p2 = subprocess.Popen(['cut', '-f1', "-d "], stdin=p1.stdout,
-                                  stdout=subprocess.PIPE)
-            p3 = subprocess.Popen(['cut', '-f1', "-d/"], stdin=p2.stdout,
-                                  stdout=subprocess.PIPE)
-            p4 = subprocess.Popen(['sort'], stdin=p3.stdout,
-                                  stdout=subprocess.PIPE)
-            p5 = subprocess.Popen(['uniq'], stdin=p4.stdout, stdout=stdout)
-            p5.communicate()
-        stdout.close()
-    print('completed ...')
+        collector = {}
+        with open(fileout, 'w') as output:
+            with open(file1) as input:
+                for line in input:
+                    collector[line.split("/")[0]] = 1
+            with open(file2) as input:
+                for line in input:
+                    collector[line.split("/")[0]] = 1
+            for key in sorted(collector):
+                output.write(f"{key}\n")
 
 # build a file of repeat keys for all reads
-print('Writing and processing intermediate files...')
-sorted_bowtie = os.path.join(outputfolder, 'sorted_bowtie')
 sumofrepeatreads = 0
-readid = {}
+readid = defaultdict(str)
 
 for rep in repeat_list:
-    for data in import_text(
-            f"{os.path.join(sorted_bowtie, rep)}.bowtie", '\t'):
-        readid[data[0]] = ''
-
-for rep in repeat_list:
-    for data in import_text(
-            f"{os.path.join(sorted_bowtie, rep)}.bowtie", '\t'):
-        readid[data[0]] += f"{repeat_key[rep]},"
+    for line in open(f"{os.path.join(sorted_bowtie, rep)}.bowtie"):
+        readid[line.split()[0]] += f"{repeat_key[rep]},"
 
 for subfamilies in readid.values():
     if subfamilies not in counts:
@@ -279,7 +243,7 @@ for x in counts.keys():
 # building the fractional counts for repeat element enrichment...
 for x in counts.keys():
     count = counts[x]
-    x = x.strip(',')    .split(',')
+    x = x.strip(',').split(',')
     splits = len(x)
     for i in x:
         fractionalcounts[rev_repeat_key[int(i)]] += float(
@@ -315,18 +279,15 @@ for key in fractionalcounts.keys():
 
 # print output to file of the categorized counts and total overlapping counts:
 print('Writing final output...')
-with open(f"{os.path.join(outputfolder, outputfile_prefix)}_"
-          f"class_fraction_counts.txt", 'w') as fout:
+with open("class_fraction_counts.tsv", 'w') as fout:
     for key in sorted(classfractionalcounts.keys()):
         fout.write(f"{key}\t{classfractionalcounts[key]}\n")
 
-with open(f"{os.path.join(outputfolder, outputfile_prefix)}_"
-          f"family_fraction_counts.txt", 'w') as fout:
+with open("family_fraction_counts.tsv", 'w') as fout:
     for key in sorted(familyfractionalcounts.keys()):
         fout.write(f"{key}\t{familyfractionalcounts[key]}\n")
 
-with open(f"{os.path.join(outputfolder, outputfile_prefix)}_"
-          f"fraction_counts.txt", 'w') as fout:
+with open("fraction_counts.tsv", 'w') as fout:
     for key in sorted(fractionalcounts.keys()):
         fout.write(f"{key}\t{repeatclass[key]}\t{repeatfamily[key]}\t"
                    f"{int(fractionalcounts[key])}\n")
