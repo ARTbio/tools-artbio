@@ -91,9 +91,7 @@ def run_bowtie(args):
 
 repeat_key = {line.split('\t')[0]: int(line.split('\t')[1]) for line in open(
     'repeatIDs.txt')}
-rev_repeat_key = {
-    int(line.split('\t')[1]): line.split('\t')[0] for line in open(
-        'repeatIDs.txt')}
+rev_repeat_key = {v: k for k, v in repeat_key.items()}
 repeat_list = [line.split('\t')[0] for line in open('repeatIDs.txt')]
 
 # map the repeats to the pseudogenomes
@@ -175,29 +173,33 @@ for repeat in repeats:
         repeatfamily[matching_repeat] = classfamily[0]
 
 # build list of repeats initializing dictionaries for downstream analysis
-reptotalcounts = defaultdict(int)
-fractionalcounts = defaultdict(float)
-classtotalcounts = defaultdict(int)
-classfractionalcounts = defaultdict(float)
-familytotalcounts = defaultdict(int)
-familyfractionalcounts = defaultdict(float)
-
-# build a file of repeat keys for all reads
-sumofrepeatreads = 0
 readid = defaultdict(str)
+# counts dictionary already implemented above
+reptotalcounts = defaultdict(int)
+familytotalcounts = defaultdict(int)
+classtotalcounts = defaultdict(int)
+fractionalcounts = defaultdict(float)
+familyfractionalcounts = defaultdict(float)
+classfractionalcounts = defaultdict(float)
+repcounts2 = {}
+sumofrepeatreads = 0
 
+# Loop through bowtie files and populate readid
 for rep in repeat_list:
-    for line in open(f"{os.path.join(sorted_bowtie, rep)}.bowtie"):
-        readid[line.split()[0]] += f"{repeat_key[rep]},"
+    with open(os.path.join(sorted_bowtie, f"{rep}.bowtie")) as file:
+        for line in file:
+            read, _ = line.split(maxsplit=1)  # Split only once
+            readid[read].append(repeat_key[rep])
 
+# Populate counts and sumofrepeatreads
 for subfamilies in readid.values():
-    if subfamilies not in counts:
-        counts[subfamilies] = 0
-    counts[subfamilies] += 1
+    subfamilies_str = ','.join(subfamilies)
+    counts[subfamilies_str] += 1
     sumofrepeatreads += 1
 
 print(f'Identified {sumofrepeatreads} reads that mapped to \
         repeats for unique and multimappers.')
+
 # building the total counts for repeat element enrichment...
 for x in counts.keys():
     count = counts[x]
