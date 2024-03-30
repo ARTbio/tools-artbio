@@ -7,8 +7,6 @@ import sys
 from collections import defaultdict
 from concurrent.futures import ProcessPoolExecutor
 
-import numpy
-
 
 parser = argparse.ArgumentParser(description='''
              Repenrich aligns reads to Repeat Elements pseudogenomes\
