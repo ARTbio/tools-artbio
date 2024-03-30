@@ -181,6 +181,7 @@ classtotalcounts = defaultdict(int)
 fractionalcounts = defaultdict(float)
 familyfractionalcounts = defaultdict(float)
 classfractionalcounts = defaultdict(float)
+repcounts = {}
 repcounts2 = {}
 sumofrepeatreads = 0
 
