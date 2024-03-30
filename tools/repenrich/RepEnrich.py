@@ -40,7 +40,6 @@ unique_mapper_bam = args.alignment_bam
 fastqfile_1 = args.fastqfile
 fastqfile_2 = args.fastqfile2
 cpus = args.cpus
-b_opt = "-k1 -p 1 --quiet"
 # Change if simple repeats are differently annotated in your organism
 simple_repeat = "Simple_repeat"
 if args.fastqfile2:
@@ -82,7 +81,8 @@ def import_text(filename, separator):
 def run_bowtie(args):
     metagenome, fastqfile, folder = args
     output_file = os.path.join(folder, f"{metagenome}.bowtie")
-    command = shlex.split(f"bowtie {b_opt} {metagenome} {fastqfile}")
+    bowtie_opt = "-k1 -p 1 --quiet"
+    command = shlex.split(f"bowtie {bowtie_opt} -x {metagenome} {fastqfile}")
     with open(output_file, 'w') as stdout:
         return subprocess.Popen(command, stdout=stdout)
 
