@@ -200,48 +200,34 @@ for subfamilies in readid.values():
 print(f'Identified {sumofrepeatreads} reads that mapped to \
         repeats for unique and multimappers.')
 
-# building the total counts for repeat element enrichment...
-for x in counts.keys():
-    count = counts[x]
-    x = x.strip(',').split(',')
-    for i in x:
-        reptotalcounts[rev_repeat_key[int(i)]] += int(count)
-# building the fractional counts for repeat element enrichment...
-for x in counts.keys():
-    count = counts[x]
-    x = x.strip(',').split(',')
-    splits = len(x)
-    for i in x:
-        fractionalcounts[rev_repeat_key[int(i)]] += float(
-            numpy.divide(float(count), float(splits)))
-# building categorized table of repeat element enrichment...
-repcounts = {}
-repcounts['other'] = 0
-for key in counts.keys():
-    key_list = key.strip(',').split(',')
-    repname = ''
+# Populate reptotalcounts and fractionalcounts
+for key, count in counts.items():
+    key_list = key.split(',')
     for i in key_list:
-        repname = os.path.join(repname, rev_repeat_key[int(i)])
-    repcounts[repname] = counts[key]
-# building the total counts for class enrichment...
-for key in reptotalcounts.keys():
-    classtotalcounts[repeatclass[key]] += reptotalcounts[key]
-# building total counts for family enrichment...
-for key in reptotalcounts.keys():
-    familytotalcounts[repeatfamily[key]] += reptotalcounts[key]
-# building unique counts table
-repcounts2 = {}
+        reptotalcounts[rev_repeat_key[int(i)]] += count
+    splits = len(key_list)
+    for i in key_list:
+        fractionalcounts[rev_repeat_key[int(i)]] += count / splits
+
+# Populate repcounts
+for key, count in counts.items():
+    key_list = key.split(',')
+    repname = '/'.join(rev_repeat_key[int(i)] for i in key_list)
+    repcounts[repname] = count
+
+# Populate classtotalcounts and familytotalcounts
+for key, value in reptotalcounts.items():
+    classtotalcounts[repeatclass[key]] += value
+    familytotalcounts[repeatfamily[key]] += value
+
+# Populate repcounts2
 for rep in repeat_list:
-    if "/" + rep in repcounts:
-        repcounts2[rep] = repcounts["/" + rep]
-    else:
-        repcounts2[rep] = 0
-# building the fractionalcounts counts for class enrichment...
-for key in fractionalcounts.keys():
-    classfractionalcounts[repeatclass[key]] += fractionalcounts[key]
-# building fractional counts for family enrichment...
-for key in fractionalcounts.keys():
-    familyfractionalcounts[repeatfamily[key]] += fractionalcounts[key]
+    repcounts2[rep] = repcounts.get('/' + rep, 0)
+
+# Populate classfractionalcounts and familyfractionalcounts
+for key, value in fractionalcounts.items():
+    classfractionalcounts[repeatclass[key]] += value
+    familyfractionalcounts[repeatfamily[key]] += value
 
 # print output to files of the categorized counts and total overlapping counts:
 with open("class_fraction_counts.tsv", 'w') as fout:
