@@ -173,7 +173,7 @@ for repeat in repeats:
         repeatfamily[matching_repeat] = classfamily[0]
 
 # build list of repeats initializing dictionaries for downstream analysis
-readid = defaultdict(str)
+readid = defaultdict(list)
 # counts dictionary already implemented above
 reptotalcounts = defaultdict(int)
 familytotalcounts = defaultdict(int)
