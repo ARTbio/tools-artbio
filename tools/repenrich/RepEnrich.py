@@ -35,7 +35,6 @@ args = parser.parse_args()
 
 # parameters
 annotation_file = args.annotation_file
-repeat_bed = 'repnames.bed'
 unique_mapper_bam = args.alignment_bam
 fastqfile_1 = args.fastqfile
 fastqfile_2 = args.fastqfile2
@@ -80,21 +79,20 @@ def import_text(filename, separator):
 
 def run_bowtie(args):
     metagenome, fastqfile, folder = args
+    b_opt = "-k 1 -p 1 --quiet"
     output_file = os.path.join(folder, f"{metagenome}.bowtie")
-    bowtie_opt = "-k 1 -p 1 --quiet"
-    command = shlex.split(f"bowtie {bowtie_opt} -x {metagenome} {fastqfile}")
-    with open(output_file, 'w') as stdout:
-        return subprocess.Popen(command, stdout=stdout)
+    command = shlex.split(f"bowtie {b_opt} {metagenome} {fastqfile}")
+    bowtie_align =  subprocess.run(command, check=True, capture_output=True, text=True).stdout
+    bowtie_align = bowtie_align.rstrip('\r\n').split('\n')
+    readlist = [metagenome]
+    for line in bowtie_align:
+        readlist.append(line.split("/")[0])
+    return readlist
 
 
-repeat_key = {line.split('\t')[0]: int(line.split('\t')[1]) for line in open(
-    'repeatIDs.txt')}
-rev_repeat_key = {v: k for k, v in repeat_key.items()}
-repeat_list = [line.split('\t')[0] for line in open('repeatIDs.txt')]
-
-# map the repeats to the pseudogenomes
-sorted_bowtie = 'sorted_bowtie'
-os.makedirs(sorted_bowtie, exist_ok=True)
+# set a reference repeat list for the script
+repeat_list = [listline[9].translate(str.maketrans('()/', '___')) for listline in import_text(annotation_file, ' ')]
+repeat_list = sorted(list(set(repeat_list)))
 
 # unique mapper counting
 cmd = f"bedtools bamtobed -i {unique_mapper_bam} | \
@@ -103,141 +101,94 @@ p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
 bedtools_counts = p.communicate()[0].decode().rstrip('\r\n').split('\n')
 
 # parse bedtools output
-counts = defaultdict(int)
+counts = defaultdict(int) # key: repeat names, value: unique mapper counts
 sumofrepeatreads = 0
 for line in bedtools_counts:
     line = line.split('\t')
-    counts[str(repeat_key[line[3]])] += int(line[4])
+    counts[line[3]] += int(line[4])
     sumofrepeatreads += int(line[4])
 print(f"Identified {sumofrepeatreads} unique reads that mapped to repeats.")
 
-# Analyse multimappers
+# multimapper parsing
 if not paired_end:
-    folder_pair1 = 'pair1_bowtie'
-    os.makedirs(folder_pair1, exist_ok=True)
-    args_list = [(metagenome, fastqfile_1, folder_pair1) for
+    args_list = [(metagenome, fastqfile_1, 'pair1_bowtie') for
                  metagenome in repeat_list]
-
     with ProcessPoolExecutor(max_workers=cpus) as executor:
-        executor.map(run_bowtie, args_list)
-    # Consolidate the output files
-    for metagenome in repeat_list:
-        file1 = os.path.join(folder_pair1, f"{metagenome}.bowtie")
-        fileout = os.path.join(sorted_bowtie, f"{metagenome}.bowtie")
-        collector = {}
-        with open(file1) as input_file:
-            for line in input_file:
-                collector[line.split("/")[0]] = 1
-        with open(fileout, 'w') as output:
-            for key in sorted(collector):
-                output.write(f"{key}\n")
+        results = executor.map(run_bowtie, args_list)
 else:
-    folder_pair1 = 'pair1_bowtie'
-    folder_pair2 = 'pair2_bowtie'
-    os.makedirs(folder_pair1, exist_ok=True)
-    os.makedirs(folder_pair2, exist_ok=True)
-    args_list = [(metagenome, fastqfile_1, folder_pair1) for
+    args_list = [(metagenome, fastqfile_1, 'pair1_bowtie') for
                  metagenome in repeat_list]
-    args_list.extend([(metagenome, fastqfile_2, folder_pair2) for
+    args_list.extend([(metagenome, fastqfile_2, 'pair2_bowtie') for
                      metagenome in repeat_list])
     with ProcessPoolExecutor(max_workers=cpus) as executor:
-        executor.map(run_bowtie, args_list)
-    # collect read pair info
-    for metagenome in repeat_list:
-        file1 = os.path.join(folder_pair1, f"{metagenome}.bowtie")
-        file2 = os.path.join(folder_pair2, f"{metagenome}.bowtie")
-        fileout = os.path.join(sorted_bowtie, f"{metagenome}.bowtie")
-        collector = {}
-        with open(file1) as input:
-            for line in input:
-                collector[line.split("/")[0]] = 1
-        with open(file2) as input:
-            for line in input:
-                collector[line.split("/")[0]] = 1
-        with open(fileout, 'w') as output:
-            for key in sorted(collector):
-                output.write(f"{key}\n")
+        results = executor.map(run_bowtie, args_list)
 
-# build dictionaries to convert repclass and rep families
-repeatclass, repeatfamily = {}, {}
-repeats = import_text(annotation_file, ' ')
-for repeat in repeats:
-    classfamily = repeat[10].split('/')
-    matching_repeat = repeat[9].translate(str.maketrans('()/', '___'))
-    repeatclass[matching_repeat] = classfamily[0]
-    if len(classfamily) == 2:
-        repeatfamily[matching_repeat] = classfamily[1]
-    else:
-        repeatfamily[matching_repeat] = classfamily[0]
+# Aggregate results (avoiding race conditions)
+metagenome_reads = defaultdict(list) # keys: repeat names, values: list of multimap reads (unique)
+for result in results:
+    metagenome_reads[result[0]] += result[1:]
 
-# build list of repeats initializing dictionaries for downstream analysis
-readid = defaultdict(list)
-# counts dictionary already implemented above
-reptotalcounts = defaultdict(int)
-familytotalcounts = defaultdict(int)
-classtotalcounts = defaultdict(int)
+for name in metagenome_reads:
+    metagenome_reads[name] = list(set(metagenome_reads[name])) # read are only once in list
+    metagenome_reads[name] = [read for read in metagenome_reads[name] if read != ""] # remove no read instances
+
+# implement repeats_by_reads from the inverse dictionnary metagenome_reads
+repeats_by_reads = defaultdict(list) # readids: list of repeats names
+for repname in metagenome_reads:
+    for read in metagenome_reads[repname]:
+        repeats_by_reads[read].append(repname)
+for repname in repeats_by_reads:
+    repeats_by_reads[repname] = list(set(repeats_by_reads[repname]))
+
+# 3 dictionnaries and 1 pointer variable to be populated
 fractionalcounts = defaultdict(float)
 familyfractionalcounts = defaultdict(float)
 classfractionalcounts = defaultdict(float)
-repcounts = {}
-repcounts2 = {}
 sumofrepeatreads = 0
 
-# Loop through bowtie files and populate readid
-for rep in repeat_list:
-    with open(os.path.join(sorted_bowtie, f"{rep}.bowtie")) as file:
-        for line in file:
-            read, _ = line.split(maxsplit=1)  # Split only once
-            readid[read].append(repeat_key[rep])
+# Update counts dictionnary with sets of repeats (was "subfamilies") matched by multimappers
+for repeat_set in repeats_by_reads.values():
+    repeat_set_string = ','.join(repeat_set)
+    counts[repeat_set_string] +=1
+    sumofrepeatreads+=1
 
-# Populate counts and sumofrepeatreads
-for subfamilies in readid.values():
-    subfamilies_str = ','.join(subfamilies)
-    counts[subfamilies_str] += 1
-    sumofrepeatreads += 1
+print(f'Identified more {sumofrepeatreads} mutimapper reads that mapped to \
+        repeats')
 
-print(f'Identified {sumofrepeatreads} reads that mapped to \
-        repeats for unique and multimappers.')
-
-# Populate reptotalcounts and fractionalcounts
+# Populate fractionalcounts
 for key, count in counts.items():
     key_list = key.split(',')
     for i in key_list:
-        reptotalcounts[rev_repeat_key[int(i)]] += count
-    splits = len(key_list)
-    for i in key_list:
-        fractionalcounts[rev_repeat_key[int(i)]] += count / splits
+        fractionalcounts[i] += count / len(key_list)
 
-# Populate repcounts
-for key, count in counts.items():
-    key_list = key.split(',')
-    repname = '/'.join(rev_repeat_key[int(i)] for i in key_list)
-    repcounts[repname] = count
-
-# Populate classtotalcounts and familytotalcounts
-for key, value in reptotalcounts.items():
-    classtotalcounts[repeatclass[key]] += value
-    familytotalcounts[repeatfamily[key]] += value
-
-# Populate repcounts2
-for rep in repeat_list:
-    repcounts2[rep] = repcounts.get('/' + rep, 0)
+# build repeat_ref for easy access to rep class and rep families
+repeat_ref = defaultdict(dict)
+repeats = import_text(annotation_file, ' ')
+for repeat in repeats:
+    repeat_name = repeat[9].translate(str.maketrans('()/', '___'))
+    try:
+        repclass, repfamily = repeat[10].split('/')[0], repeat[10].split('/')[1]
+    except IndexError:
+        repclass, repfamily = repeat[10], repeat[10]
+    repeat_ref[repeat_name]['class'] = repclass
+    repeat_ref[repeat_name]['family'] = repfamily
 
 # Populate classfractionalcounts and familyfractionalcounts
 for key, value in fractionalcounts.items():
-    classfractionalcounts[repeatclass[key]] += value
-    familyfractionalcounts[repeatfamily[key]] += value
+    classfractionalcounts[repeat_ref[key]['class']] += value
+    familyfractionalcounts[repeat_ref[key]['family']] += value
 
-# print output to files of the categorized counts and total overlapping counts:
+# print class-, family- and fraction-repeats counts to files
 with open("class_fraction_counts.tsv", 'w') as fout:
-    for key in sorted(classfractionalcounts.keys()):
+    for key in sorted(classfractionalcounts):
         fout.write(f"{key}\t{classfractionalcounts[key]}\n")
 
 with open("family_fraction_counts.tsv", 'w') as fout:
-    for key in sorted(familyfractionalcounts.keys()):
+    for key in sorted(familyfractionalcounts):
         fout.write(f"{key}\t{familyfractionalcounts[key]}\n")
 
 with open("fraction_counts.tsv", 'w') as fout:
-    for key in sorted(fractionalcounts.keys()):
-        fout.write(f"{key}\t{repeatclass[key]}\t{repeatfamily[key]}\t"
-                   f"{int(fractionalcounts[key])}\n")
+    for key in sorted(fractionalcounts):
+        fout.write(f"{key}\t{repeat_ref[key]['class']}\t"
+                   f"{repeat_ref[key]['family']}\t"
+                   f"{fractionalcounts[key]}\n")
