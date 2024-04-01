@@ -80,18 +80,24 @@ def import_text(filename, separator):
 def run_bowtie(args):
     metagenome, fastqfile, folder = args
     b_opt = "-k 1 -p 1 --quiet"
-    output_file = os.path.join(folder, f"{metagenome}.bowtie")
-    command = shlex.split(f"bowtie {b_opt} {metagenome} {fastqfile}")
-    bowtie_align =  subprocess.run(command, check=True, capture_output=True, text=True).stdout
+    command = shlex.split(f"bowtie {b_opt} -x {metagenome} {fastqfile}")
+    bowtie_align =  subprocess.run(command, check=True,
+                                   capture_output=True, text=True).stdout
     bowtie_align = bowtie_align.rstrip('\r\n').split('\n')
     readlist = [metagenome]
-    for line in bowtie_align:
-        readlist.append(line.split("/")[0])
+    if paired_end:
+        for line in bowtie_align:
+            readlist.append(line.split("/")[0])
+    else:
+        for line in bowtie_align:
+            readlist.append(line.split()[0])
     return readlist
 
 
 # set a reference repeat list for the script
-repeat_list = [listline[9].translate(str.maketrans('()/', '___')) for listline in import_text(annotation_file, ' ')]
+repeat_list = [listline[9].translate(
+    str.maketrans(
+        '()/', '___')) for listline in import_text(annotation_file, ' ')]
 repeat_list = sorted(list(set(repeat_list)))
 
 # unique mapper counting
@@ -101,7 +107,7 @@ p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
 bedtools_counts = p.communicate()[0].decode().rstrip('\r\n').split('\n')
 
 # parse bedtools output
-counts = defaultdict(int) # key: repeat names, value: unique mapper counts
+counts = defaultdict(int)  # key: repeat names, value: unique mapper counts
 sumofrepeatreads = 0
 for line in bedtools_counts:
     line = line.split('\t')
@@ -113,27 +119,30 @@ print(f"Identified {sumofrepeatreads} unique reads that mapped to repeats.")
 if not paired_end:
     args_list = [(metagenome, fastqfile_1, 'pair1_bowtie') for
                  metagenome in repeat_list]
-    with ProcessPoolExecutor(max_workers=cpus) as executor:
+    with ProcessPoolExecutor(max_workers = cpus) as executor:
         results = executor.map(run_bowtie, args_list)
 else:
     args_list = [(metagenome, fastqfile_1, 'pair1_bowtie') for
                  metagenome in repeat_list]
     args_list.extend([(metagenome, fastqfile_2, 'pair2_bowtie') for
                      metagenome in repeat_list])
-    with ProcessPoolExecutor(max_workers=cpus) as executor:
+    with ProcessPoolExecutor(max_workers = cpus) as executor:
         results = executor.map(run_bowtie, args_list)
 
 # Aggregate results (avoiding race conditions)
-metagenome_reads = defaultdict(list) # keys: repeat names, values: list of multimap reads (unique)
+metagenome_reads = defaultdict(list)  # repeat_name: list of multimap reads
 for result in results:
     metagenome_reads[result[0]] += result[1:]
 
 for name in metagenome_reads:
-    metagenome_reads[name] = list(set(metagenome_reads[name])) # read are only once in list
-    metagenome_reads[name] = [read for read in metagenome_reads[name] if read != ""] # remove no read instances
+    #  read are only once in list
+    metagenome_reads[name] = list(set(metagenome_reads[name]))
+    #  remove "no read" instances
+    metagenome_reads[name] = [read for read in metagenome_reads[name]
+                              if read != ""]
 
 # implement repeats_by_reads from the inverse dictionnary metagenome_reads
-repeats_by_reads = defaultdict(list) # readids: list of repeats names
+repeats_by_reads = defaultdict(list)  # readids: list of repeats names
 for repname in metagenome_reads:
     for read in metagenome_reads[repname]:
         repeats_by_reads[read].append(repname)
@@ -146,14 +155,14 @@ familyfractionalcounts = defaultdict(float)
 classfractionalcounts = defaultdict(float)
 sumofrepeatreads = 0
 
-# Update counts dictionnary with sets of repeats (was "subfamilies") matched by multimappers
+# Update counts dictionnary with sets of repeats (was "subfamilies")
+# matched by multimappers
 for repeat_set in repeats_by_reads.values():
     repeat_set_string = ','.join(repeat_set)
     counts[repeat_set_string] +=1
     sumofrepeatreads+=1
 
-print(f'Identified more {sumofrepeatreads} mutimapper reads that mapped to \
-        repeats')
+print(f'Identified more {sumofrepeatreads} mutimapper repeat reads')
 
 # Populate fractionalcounts
 for key, count in counts.items():
@@ -167,7 +176,8 @@ repeats = import_text(annotation_file, ' ')
 for repeat in repeats:
     repeat_name = repeat[9].translate(str.maketrans('()/', '___'))
     try:
-        repclass, repfamily = repeat[10].split('/')[0], repeat[10].split('/')[1]
+        repclass = repeat[10].split('/')[0]
+        repfamily = repeat[10].split('/')[1]
     except IndexError:
         repclass, repfamily = repeat[10], repeat[10]
     repeat_ref[repeat_name]['class'] = repclass
