@@ -3,7 +3,7 @@
     <macros>
         <import>macros.xml</import>
     </macros>
-    <expand macro="requirements"/>
+    <expand macro="edgeR_requirements"/>
     <stdio>
         <regex match="Execution halted"
            source="both"
