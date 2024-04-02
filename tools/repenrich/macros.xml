@@ -1,18 +1,24 @@
 <macros>
-    <token name="@TOOL_VERSION@">1.83</token>
-    <token name="@VERSION_SUFFIX@">1</token>
+    <token name="@TOOL_VERSION@">2.31.1</token>
+    <token name="@VERSION_SUFFIX@">0</token>
     <token name="@PROFILE@">23.0</token>
 
-    <xml name="requirements">
+    <xml name="repenrich_requirements">
+        <requirements>
+            <requirement type="package" version="@TOOL_VERSION@">bedtools</requirement>
+            <requirement type="package" version="1.3.1">bowtie</requirement>
+            <requirement type="package" version="1.19.2">samtools</requirement>
+            <requirement type="package" version="1.83">biopython</requirement>
+        </requirements>
+    </xml>
+
+    <xml name="edgeR_requirements">
         <requirements>
             <requirement type="package" version="4.0.2">bioconductor-edger</requirement>
             <requirement type="package" version="3.58.1">bioconductor-limma</requirement>
             <requirement type="package" version="1.20.4">r-getopt</requirement>
             <requirement type="package" version="0.2.21">r-rjson</requirement>
-            <requirement type="package" version="1.0.0">bowtie</requirement>
-            <requirement type="package" version="1.19.2">samtools</requirement>
-            <requirement type="package" version="2.23.0">bedtools</requirement>
-            <requirement type="package" version="@TOOL_VERSION@">biopython</requirement>
         </requirements>
     </xml>
+
 </macros>

@@ -7,8 +7,7 @@ long_description: |
   using high-throughput sequencing data
 categories:
   - Transcriptomics
-  - Variant Analysis
-homepage_url: https://github.com/nskvir/RepEnrich
+homepage_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/repenrich
 remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/repenrich
 toolshed:
   - toolshed

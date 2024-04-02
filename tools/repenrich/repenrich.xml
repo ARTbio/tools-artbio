@@ -3,84 +3,59 @@
     <macros>
         <import>macros.xml</import>
     </macros>
-    <expand macro="requirements"/>
+    <expand macro="repenrich_requirements"/>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
     </stdio>
     <command detect_errors="exit_code"><![CDATA[
         #import re
-        #set input_base = 'Sample'
-        #set baseReference = 'Genome'
-
         ## uncompress fastq.gz or fastqsanger.gz if needed
         #if $seq_method.seq_method_list == "single-read":
             #if $seq_method.input_fastq.is_of_type("fastq.gz", "fastqsanger.gz"):
-                gunzip < '$seq_method.input_fastq' > '${input_base}.fastq' &&
+                gunzip < '$seq_method.input_fastq' > 'input.fastq' &&
             #else:
-                ln -f -s '$seq_method.input_fastq' '${input_base}.fastq' &&
+                ln -f -s '$seq_method.input_fastq' 'input.fastq' &&
             #end if
         #elif $seq_method.seq_method_list == 'paired_collection':
             #if $seq_method.input_fastq.forward.is_of_type("fastq.gz", "fastqsanger.gz"):
-                gunzip < '$seq_method.input_fastq.forward' > '${input_base}.fastq' &&
-                gunzip < '$seq_method.input_fastq.reverse' > '${input_base}_2.fastq' &&
+                gunzip < '$seq_method.input_fastq.forward' > 'input.fastq' &&
+                gunzip < '$seq_method.input_fastq.reverse' > 'input_2.fastq' &&
             #else:
-                ln -f -s '$seq_method.input_fastq.forward' '${input_base}.fastq' &&
-                ln -f -s '$seq_method.input_fastq.reverse' '${input_base}_2.fastq' &&
+                ln -f -s '$seq_method.input_fastq.forward' 'input.fastq' &&
+                ln -f -s '$seq_method.input_fastq.reverse' 'input_2.fastq' &&
             #end if
         #else:
             #if $seq_method.input2_fastq.is_of_type("fastq.gz", "fastqsanger.gz"):
-                gunzip < '$seq_method.input_fastq' > '${input_base}.fastq' &&
-                gunzip < '$seq_method.input2_fastq' > '${input_base}_2.fastq' &&
+                gunzip < '$seq_method.input_fastq' > 'input.fastq' &&
+                gunzip < '$seq_method.input2_fastq' > 'input_2.fastq' &&
             #else:
-                ln -f -s '$seq_method.input_fastq' '${input_base}.fastq' &&
-                ln -f -s '$seq_method.input2_fastq' '${input_base}_2.fastq' &&
+                ln -f -s '$seq_method.input_fastq' 'input.fastq' &&
+                ln -f -s '$seq_method.input2_fastq' 'input_2.fastq' &&
             #end if
         #end if
-        ln -f -s '$genome' '${baseReference}.fa' &&
-        bowtie-build '$genome' ${baseReference} &&
+        ln -f -s '$genome' 'genome.fa' &&
+        bowtie-build '$genome' genome &&
         python $__tool_directory__/RepEnrich_setup.py
+            --annotation_file '$repeatmasker'
+            --genomefasta 'genome.fa'
+            --cpus "\${GALAXY_SLOTS:-4}" &&
+        #if $seq_method.seq_method_list == "single-read":
+            bowtie genome -p \${GALAXY_SLOTS:-4} -t -m 1 -S --max multimap.fastq input.fastq input_unique.sam 2>bowtie_alignments.txt &&
+        #else:
+            bowtie genome -p \${GALAXY_SLOTS:-4} -t -m 1 -S --max multimap.fastq -1 input.fastq -2 input_2.fastq input_unique.sam 2>bowtie_alignments.txt &&
+        #end if
+        samtools view -@ \${GALAXY_SLOTS:-4} -bS 'input_unique.sam' | samtools sort -@ \${GALAXY_SLOTS:-4} -O bam -o 'input_unique.bam' &&
+        samtools index input_unique.bam &&
+        python $__tool_directory__/RepEnrich.py
             --annotation_file $repeatmasker
-            --genomefasta ${baseReference}.fa
-            --setup_folder setup_folder_${baseReference} &&
+            --alignment_bam input_unique.bam
+            --cpus "\${GALAXY_SLOTS:-4}"
         #if $seq_method.seq_method_list == "single-read":
-            bowtie $baseReference -p \${GALAXY_SLOTS:-4} -t -m 1 -S --max ${input_base}_multimap.fastq ${input_base}.fastq ${input_base}_unique.sam 2>bowtie_alignments.txt &&
-            TOTAL=\$(grep 'reads processed:' bowtie_alignments.txt | cut -d ' ' -f 4) &&
-            NONALIGNED=\$(grep 'reads that failed to align:' bowtie_alignments.txt | cut -d ' ' -f 7) &&
-            echo -e "# Total reads aligned to repeated sequences\n" > bowtie_aligned.numb &&
-            echo \$((\$TOTAL-\$NONALIGNED)) >> bowtie_aligned.numb &&
+            --fastqfile multimap.fastq
         #else:
-            bowtie $baseReference -p \${GALAXY_SLOTS:-4} -t -m 1 -S --max ${input_base}_multimap.fastq -1 ${input_base}.fastq -2 ${input_base}_2.fastq ${input_base}_unique.sam 2>bowtie_alignments.txt &&
-            TOTAL=\$(grep 'reads processed:' bowtie_alignments.txt | cut -d ' ' -f 4) &&
-            NONALIGNED=\$(grep 'reads that failed to align:' bowtie_alignments.txt | cut -d ' ' -f 7) &&
-            echo -e "# Total reads aligned to repeated sequences\n" > bowtie_aligned.numb &&
-            echo \$((\$TOTAL-\$NONALIGNED)) >> bowtie_aligned.numb &&
+            --fastqfile multimap_1.fastq
+            --fastqfile2 multimap_2.fastq
         #end if
-        samtools view -@ \${GALAXY_SLOTS:-4} -bS '${input_base}_unique.sam' | samtools sort -@ \${GALAXY_SLOTS:-4} -O bam -o '${input_base}_unique.bam' &&
-        samtools index ${input_base}_unique.bam &&
-        #if $seq_method.seq_method_list == "single-read":
-            python $__tool_directory__/RepEnrich.py
-                --annotation_file $repeatmasker
-                --outputfolder ${input_base}
-                --outputprefix ${input_base}
-                --setup_folder setup_folder_${baseReference}
-                --fastqfile ${input_base}_multimap.fastq
-                --alignment_bam ${input_base}_unique.bam
-                --cpus "\${GALAXY_SLOTS:-4}" &&
-        #else:
-            python $__tool_directory__/RepEnrich.py
-                --annotation_file $repeatmasker
-                --outputfolder ${input_base}
-                --outputprefix ${input_base}
-                --setup_folder setup_folder_${baseReference}
-                --fastqfile ${input_base}_multimap_1.fastq
-                --fastqfile2 ${input_base}_multimap_2.fastq
-                --alignment_bam ${input_base}_unique.bam
-                --cpus "\${GALAXY_SLOTS:-4}"
-                --pairedend TRUE &&
-        #end if
-        cp $input_base/${input_base}_class_fraction_counts.txt class_fraction_counts.tabular &&
-        cp $input_base/${input_base}_family_fraction_counts.txt family_fraction_counts.tabular &&
-        cp $input_base/${input_base}_fraction_counts.txt fraction_counts.tabular
     ]]></command>
     <!-- basic error handling -->
     <inputs>
@@ -106,54 +81,30 @@
     </inputs>
 
     <outputs>
-        <data format="tabular" name="bowtie_alignments" label="RepEnrich on ${on_string}: reads aligned" from_work_dir="bowtie_aligned.numb" />
-        <data format="tabular" name="class_fraction_counts" label="RepEnrich on ${on_string}: class fraction counts" from_work_dir="class_fraction_counts.tabular" />
-        <data format="tabular" name="family_fraction_counts" label="RepEnrich on ${on_string}: family fraction counts" from_work_dir="family_fraction_counts.tabular" />
-        <data format="tabular" name="fraction_counts" label="RepEnrich on ${on_string}: fraction counts" from_work_dir="fraction_counts.tabular" />
+        <data format="tabular" name="class_fraction_counts" label="RepEnrich on ${on_string}: class fraction counts" from_work_dir="class_fraction_counts.tsv" />
+        <data format="tabular" name="family_fraction_counts" label="RepEnrich on ${on_string}: family fraction counts" from_work_dir="family_fraction_counts.tsv" />
+        <data format="tabular" name="fraction_counts" label="RepEnrich on ${on_string}: fraction counts" from_work_dir="fraction_counts.tsv" />
    </outputs>
 
     <tests>
         <test>
             <param name="seq_method_list" value="single-read"/>
-            <param name="input_fastq" value="Samp.fastq" ftype="fastq"/>
-            <param name="genome" value="chrM.fa" ftype="fasta"/>
-            <param name="repeatmasker" value="chrM_repeatmasker.txt" ftype="txt"/>
-            <output name="bowtie_alignments" file="aligned_reads.tab" ftype="tabular"/>
-            <output name="class_fraction_counts" file="Samp_class_fraction_counts.tabular" ftype="tabular"/>
-            <output name="family_fraction_counts" file="Samp_family_fraction_counts.tabular" ftype="tabular"/>
-            <output name="fraction_counts" file="Samp_fraction_counts.tabular" ftype="tabular"/>
+            <param name="input_fastq" value="chrY-500k.R1.fastqsanger.gz" ftype="fastq.gz"/>
+            <param name="genome" value="chrY-1-500k.fa" ftype="fasta"/>
+            <param name="repeatmasker" value="chrY-1-500k.fa.out" ftype="txt"/>
+            <output name="class_fraction_counts" file="chrY_single_class_fraction_counts.tab" ftype="tabular"/>
+            <output name="family_fraction_counts" file="chrY_single_family_fraction_counts.tab" ftype="tabular"/>
+            <output name="fraction_counts" file="chrY_single_fraction_counts.tab" ftype="tabular"/>
         </test>
          <test>
             <param name="seq_method_list" value="paired-end"/>
-            <param name="input_fastq" value="Samp_L.fastq" ftype="fastq"/>
-            <param name="input2_fastq" value="Samp_R.fastq" ftype="fastq"/>
-            <param name="genome" value="chrM.fa" ftype="fasta"/>
-            <param name="repeatmasker" value="chrM_repeatmasker.txt" ftype="txt"/>
-            <output name="bowtie_alignments" file="paired-aligned_reads.tab" ftype="tabular"/>
-            <output name="class_fraction_counts" file="Samp-paired_class_fraction_counts.tab" ftype="tabular"/>
-            <output name="family_fraction_counts" file="Samp-paired_family_fraction_counts.tab" ftype="tabular"/>
-            <output name="fraction_counts" file="Samp-paired_fraction_counts.tab" ftype="tabular"/>
-        </test>
-        <test>
-            <param name="seq_method_list" value="single-read"/>
-            <param name="input_fastq" value="Samp.fastq.gz" ftype="fastq.gz"/>
-            <param name="genome" value="chrM.fa" ftype="fasta"/>
-            <param name="repeatmasker" value="chrM_repeatmasker.txt" ftype="txt"/>
-            <output name="bowtie_alignments" file="aligned_reads.tab" ftype="tabular"/>
-            <output name="class_fraction_counts" file="Samp_class_fraction_counts.tabular" ftype="tabular"/>
-            <output name="family_fraction_counts" file="Samp_family_fraction_counts.tabular" ftype="tabular"/>
-            <output name="fraction_counts" file="Samp_fraction_counts.tabular" ftype="tabular"/>
-        </test>
-         <test>
-            <param name="seq_method_list" value="paired-end"/>
-            <param name="input_fastq" value="Samp_L.fastq.gz" ftype="fastq.gz"/>
-            <param name="input2_fastq" value="Samp_R.fastq.gz" ftype="fastq.gz"/>
-            <param name="genome" value="chrM.fa" ftype="fasta"/>
-            <param name="repeatmasker" value="chrM_repeatmasker.txt" ftype="txt"/>
-            <output name="bowtie_alignments" file="paired-aligned_reads.tab" ftype="tabular"/>
-            <output name="class_fraction_counts" file="Samp-paired_class_fraction_counts.tab" ftype="tabular"/>
-            <output name="family_fraction_counts" file="Samp-paired_family_fraction_counts.tab" ftype="tabular"/>
-            <output name="fraction_counts" file="Samp-paired_fraction_counts.tab" ftype="tabular"/>
+            <param name="input_fastq" value="chrY-500k.R1.fastqsanger.gz" ftype="fastq.gz"/>
+            <param name="input2_fastq" value="chrY-500k.R2.fastqsanger.gz" ftype="fastq.gz"/>
+            <param name="genome" value="chrY-1-500k.fa" ftype="fasta"/>
+            <param name="repeatmasker" value="chrY-1-500k.fa.out" ftype="txt"/>
+            <output name="class_fraction_counts" file="chrY_paired_class_fraction_counts.tab" ftype="tabular"/>
+            <output name="family_fraction_counts" file="chrY_paired_family_fraction_counts.tab" ftype="tabular"/>
+            <output name="fraction_counts" file="chrY_paired_fraction_counts.tab" ftype="tabular"/>
         </test>
   </tests>
 
@@ -161,7 +112,17 @@
 
 **What it does**
 
-Reads are mapped to the genome using the Bowtie1 aligner. Reads mapping uniquely to the genome are assigned to subfamilies of repetitive elements based on their degree of overlap to RepeatMasker annotated genomic instances of each repetitive element subfamily. Reads mapping to multiple locations are separately mapped to repetitive element assemblies – referred to as repetitive element psuedogenomes – built from RepeatMasker annotated genomic instances of repetitive element subfamilies. RepEnrich then return tables of counts merged from both strategies, that can be further processed in statistical analysis for differential expression. For detailed information see the `original publication`_.
+Reads are mapped to the genome using the Bowtie1 aligner. Reads mapping uniquely to the
+genome are assigned to subfamilies of repetitive elements based on their degree of overlap
+to RepeatMasker annotated genomic instances of each repetitive element subfamily.
+
+Reads mapping to multiple locations are separately mapped to repetitive element assemblies
+– referred to as repetitive element psuedogenomes – built from RepeatMasker annotated
+genomic instances of repetitive element subfamilies.
+
+RepEnrich then return tables of counts merged from both strategies, that can be further
+processed in statistical analysis for differential expression. For detailed information
+see the `original publication`_.
 
 .. _original publication: https://bmcgenomics.biomedcentral.com/articles/10.1186/1471-2164-15-583
 
@@ -171,7 +132,8 @@ Reads are mapped to the genome using the Bowtie1 aligner. Reads mapping uniquely
 
 *Sequencing dataset*: Single-reads or Paired-end sequencing datasets in fastq format.
 
-*RepeatMasker description file*: a txt repeatmasker file which can be downloaded from http://www.repeatmasker.org/genomicDatasets/RMGenomicDatasets.html
+*RepeatMasker description file*: a txt repeatmasker file which can be downloaded from
+https://www.repeatmasker.org/genomicDatasets/RMGenomicDatasets.html
 
 This file looks like:
 
@@ -221,27 +183,29 @@ Users may filter this file so that it contains only desired items (for instance 
  
 **Outputs**
 
-(1) Fraction counts, (2) Family fraction counts and (3) Class fraction counts are returned in tabular format,
-for further statistical tests differential expression analysis or graphics.
-
-The "aligned_reads.tab" output file contains a single value corresponding to the number of reads that were aligned to
-transposons. This value is used in downstream analysis by the edger-repenrich tool.
+(1) Fraction counts, (2) Family fraction counts and (3) Class fraction counts are returned
+in tabular format for further statistical tests, differential expression analysis or graphics.
 
 **RepEnrich**
 
-This Galaxy tool is a wrapper of the RepEnrich tool by steven_criscione@brown.edu et al. whose code and manual are available in `GitHub`_.
+.. class:: warningmark
 
-.. _GitHub: https://github.com/nskvir/RepEnrich
+Earlier versions of the RepEnrich.py and RepEnrich_setpup.py scripts of this galaxy wrapper
+were directly derived from the `nskvir/RepEnrich GitHub repository`_ which is not maintained
+anymore.
 
-Python scripts RepEnrich.py and RepEnrich_setup.py have been adapted to python 3. Note that sorting of Fraction counts, Family fraction counts and Class fraction counts is  different with this Galaxy wrapper or with RepEnrich as found in the `RepEnrich code repository`_. However, this different sorting does not affect subsequent statistical analyses
+Starting from 2024, python codes were extensively rewritten for clarity, maintenance and
+optimization and we now refer exclusively to our `GitHub repository`_ for code review.
 
-.. _RepEnrich code repository: https://github.com/nskvir/RepEnrich
+.. _nskvir/RepEnrich GitHub repository: https://github.com/nskvir/RepEnrich
+.. _GitHub repository: https://github.com/ARTbio/tools-artbio/tree/main/tools/repenrich
 
 **Execution time**
 
 .. class:: warningmark
 
-This tool includes steps to index the reference genome, index repeat sequences and align reads to these indexes. Therefore the run time may be **long to very long**. 
+This tool includes time-consuming steps to index the reference genome, index repeat
+sequences and to align reads to these indexes.
 
 .. class:: infomark
 
