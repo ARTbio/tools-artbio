@@ -88,22 +88,22 @@
     <tests>
         <test>
             <param name="seq_method_list" value="single-read"/>
-            <param name="input_fastq" value="Samp.fastq.gz" ftype="fastq.gz"/>
-            <param name="genome" value="chrM.fa" ftype="fasta"/>
-            <param name="repeatmasker" value="chrM_repeatmasker.txt" ftype="txt"/>
-            <output name="class_fraction_counts" file="Samp_class_fraction_counts.tabular" ftype="tabular"/>
-            <output name="family_fraction_counts" file="Samp_family_fraction_counts.tabular" ftype="tabular"/>
+            <param name="input_fastq" value="chrY-500k.R1.fastqsanger.gz" ftype="fastq.gz"/>
+            <param name="genome" value="chrY-1-500k.fa" ftype="fasta"/>
+            <param name="repeatmasker" value="chrY-1-500k.fa.out" ftype="txt"/>
+            <output name="class_fraction_counts" file="chrY_single_class_fraction_counts.tab" ftype="tabular"/>
+            <output name="family_fraction_counts" file="chrY_single_family_fraction_counts.tab" ftype="tabular"/>
             <output name="fraction_counts" file="Samp_fraction_counts.tabular" ftype="tabular"/>
         </test>
          <test>
             <param name="seq_method_list" value="paired-end"/>
-            <param name="input_fastq" value="Samp_L.fastq.gz" ftype="fastq.gz"/>
-            <param name="input2_fastq" value="Samp_R.fastq.gz" ftype="fastq.gz"/>
-            <param name="genome" value="chrM.fa" ftype="fasta"/>
-            <param name="repeatmasker" value="chrM_repeatmasker.txt" ftype="txt"/>
-            <output name="class_fraction_counts" file="Samp-paired_class_fraction_counts.tab" ftype="tabular"/>
-            <output name="family_fraction_counts" file="Samp-paired_family_fraction_counts.tab" ftype="tabular"/>
-            <output name="fraction_counts" file="Samp-paired_fraction_counts.tab" ftype="tabular"/>
+            <param name="input_fastq" value="chrY-500k.R1.fastqsanger.gz" ftype="fastq.gz"/>
+            <param name="input2_fastq" value="chrY-500k.R2.fastqsanger.gz" ftype="fastq.gz"/>
+            <param name="genome" value="chrY-1-500k.fa" ftype="fasta"/>
+            <param name="repeatmasker" value="chrY-1-500k.fa.out" ftype="txt"/>
+            <output name="class_fraction_counts" file="chrY_paired_class_fraction_counts.tab" ftype="tabular"/>
+            <output name="family_fraction_counts" file="chrY_paired_family_fraction_counts.tab" ftype="tabular"/>
+            <output name="fraction_counts" file="chrY_paired_fraction_counts.tab" ftype="tabular"/>
         </test>
   </tests>
 
