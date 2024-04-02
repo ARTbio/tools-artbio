@@ -37,7 +37,8 @@
         bowtie-build '$genome' genome &&
         python $__tool_directory__/RepEnrich_setup.py
             --annotation_file '$repeatmasker'
-            --genomefasta 'genome.fa' &&
+            --genomefasta 'genome.fa'
+            --cpus "\${GALAXY_SLOTS:-4}" &&
         #if $seq_method.seq_method_list == "single-read":
             bowtie genome -p \${GALAXY_SLOTS:-4} -t -m 1 -S --max multimap.fastq input.fastq input_unique.sam 2>bowtie_alignments.txt &&
         #else:

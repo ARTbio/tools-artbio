@@ -34,6 +34,10 @@ parser.add_argument('--flankinglength', action='store', dest='flankinglength',
                          repeat pseudogenomes. Flanking length should be set\
                          according to the length of your reads.\
                          Default 25, for 50 nt reads''')
+parser.add_argument('--cpus', action='store', dest='cpus', metavar='cpus',
+                    default="1", type=int,
+                    help='Number of CPUs. The more cpus the\
+                          faster RepEnrich performs. Default: "1"')
 args = parser.parse_args()
 
 # parameters from argsparse
@@ -41,6 +45,7 @@ gapl = args.gaplength
 flankingl = args.flankinglength
 annotation_file = args.annotation_file
 genomefasta = args.genomefasta
+cpus = args.cpus
 
 # check that the programs we need are available
 try:
@@ -124,6 +129,20 @@ for repname in rep_coords:
     record = SeqRecord(Seq(metagenome), id=repname, name='', description='')
     SeqIO.write(record, fastafilename, "fasta")
 
-    # Generate repeat pseudogenome bowtie index
-    bowtie_build_cmd = ["bowtie-build", "-f", fastafilename, repname]
-    subprocess.run(bowtie_build_cmd, check=True)
+
+def bowtie_build(args):
+    """
+    Function to be executed in parallel by ProcessPoolExecutor.
+    """
+    try:
+        bowtie_base, fasta = args
+        command = shlex.split(f"bowtie-build -f {fasta} {bowtie_base}")
+        squash =  subprocess.run(command, capture_output=True, text=True)
+        return squash.stdout
+    except Exception as e:
+        return str(e)
+
+
+args_list = [(name, f"{name}.fa") for name in rep_coords]
+with ProcessPoolExecutor(max_workers=cpus) as executor:
+    executor.map(bowtie_build, args_list)
