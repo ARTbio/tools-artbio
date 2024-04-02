@@ -94,7 +94,7 @@
             <param name="repeatmasker" value="chrY-1-500k.fa.out" ftype="txt"/>
             <output name="class_fraction_counts" file="chrY_single_class_fraction_counts.tab" ftype="tabular"/>
             <output name="family_fraction_counts" file="chrY_single_family_fraction_counts.tab" ftype="tabular"/>
-            <output name="fraction_counts" file="Samp_fraction_counts.tabular" ftype="tabular"/>
+            <output name="fraction_counts" file="chrY_single_fraction_counts.tab" ftype="tabular"/>
         </test>
          <test>
             <param name="seq_method_list" value="paired-end"/>
