@@ -81,8 +81,8 @@ def run_bowtie(args):
     metagenome, fastqfile = args
     b_opt = "-k 1 -p 1 --quiet"
     command = shlex.split(f"bowtie {b_opt} -x {metagenome} {fastqfile}")
-    bowtie_align =  subprocess.run(command, check=True,
-                                   capture_output=True, text=True).stdout
+    bowtie_align = subprocess.run(command, check=True,
+                                  capture_output=True, text=True).stdout
     bowtie_align = bowtie_align.rstrip('\r\n').split('\n')
     readlist = [metagenome]
     if paired_end:
@@ -119,14 +119,14 @@ print(f"Identified {sumofrepeatreads} unique reads that mapped to repeats.")
 if not paired_end:
     args_list = [(metagenome, fastqfile_1) for
                  metagenome in repeat_list]
-    with ProcessPoolExecutor(max_workers = cpus) as executor:
+    with ProcessPoolExecutor(max_workers=cpus) as executor:
         results = executor.map(run_bowtie, args_list)
 else:
     args_list = [(metagenome, fastqfile_1) for
                  metagenome in repeat_list]
     args_list.extend([(metagenome, fastqfile_2) for
                      metagenome in repeat_list])
-    with ProcessPoolExecutor(max_workers = cpus) as executor:
+    with ProcessPoolExecutor(max_workers=cpus) as executor:
         results = executor.map(run_bowtie, args_list)
 
 # Aggregate results (avoiding race conditions)
@@ -159,8 +159,8 @@ sumofrepeatreads = 0
 # matched by multimappers
 for repeat_set in repeats_by_reads.values():
     repeat_set_string = ','.join(repeat_set)
-    counts[repeat_set_string] +=1
-    sumofrepeatreads+=1
+    counts[repeat_set_string] += 1
+    sumofrepeatreads += 1
 
 print(f'Identified more {sumofrepeatreads} mutimapper repeat reads')
 
