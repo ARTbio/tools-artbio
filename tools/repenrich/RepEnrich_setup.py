@@ -6,6 +6,7 @@ import shlex
 import subprocess
 import sys
 from collections import defaultdict
+from concurrent.futures import ProcessPoolExecutor
 
 
 from Bio import SeqIO
@@ -137,7 +138,7 @@ def bowtie_build(args):
     try:
         bowtie_base, fasta = args
         command = shlex.split(f"bowtie-build -f {fasta} {bowtie_base}")
-        squash =  subprocess.run(command, capture_output=True, text=True)
+        squash = subprocess.run(command, capture_output=True, text=True)
         return squash.stdout
     except Exception as e:
         return str(e)
