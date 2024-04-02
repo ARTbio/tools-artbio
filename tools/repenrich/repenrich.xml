@@ -112,7 +112,17 @@
 
 **What it does**
 
-Reads are mapped to the genome using the Bowtie1 aligner. Reads mapping uniquely to the genome are assigned to subfamilies of repetitive elements based on their degree of overlap to RepeatMasker annotated genomic instances of each repetitive element subfamily. Reads mapping to multiple locations are separately mapped to repetitive element assemblies – referred to as repetitive element psuedogenomes – built from RepeatMasker annotated genomic instances of repetitive element subfamilies. RepEnrich then return tables of counts merged from both strategies, that can be further processed in statistical analysis for differential expression. For detailed information see the `original publication`_.
+Reads are mapped to the genome using the Bowtie1 aligner. Reads mapping uniquely to the
+genome are assigned to subfamilies of repetitive elements based on their degree of overlap
+to RepeatMasker annotated genomic instances of each repetitive element subfamily.
+
+Reads mapping to multiple locations are separately mapped to repetitive element assemblies
+– referred to as repetitive element psuedogenomes – built from RepeatMasker annotated
+genomic instances of repetitive element subfamilies.
+
+RepEnrich then return tables of counts merged from both strategies, that can be further
+processed in statistical analysis for differential expression. For detailed information
+see the `original publication`_.
 
 .. _original publication: https://bmcgenomics.biomedcentral.com/articles/10.1186/1471-2164-15-583
 
@@ -122,7 +132,8 @@ Reads are mapped to the genome using the Bowtie1 aligner. Reads mapping uniquely
 
 *Sequencing dataset*: Single-reads or Paired-end sequencing datasets in fastq format.
 
-*RepeatMasker description file*: a txt repeatmasker file which can be downloaded from http://www.repeatmasker.org/genomicDatasets/RMGenomicDatasets.html
+*RepeatMasker description file*: a txt repeatmasker file which can be downloaded from
+https://www.repeatmasker.org/genomicDatasets/RMGenomicDatasets.html
 
 This file looks like:
 
@@ -172,24 +183,29 @@ Users may filter this file so that it contains only desired items (for instance 
  
 **Outputs**
 
-(1) Fraction counts, (2) Family fraction counts and (3) Class fraction counts are returned in tabular format,
-for further statistical tests differential expression analysis or graphics.
+(1) Fraction counts, (2) Family fraction counts and (3) Class fraction counts are returned
+in tabular format for further statistical tests, differential expression analysis or graphics.
 
 **RepEnrich**
 
-This Galaxy tool is a wrapper of the RepEnrich tool by steven_criscione@brown.edu et al. whose code and manual are available in `GitHub`_.
+.. class:: warningmark
 
-.. _GitHub: https://github.com/nskvir/RepEnrich
+Earlier versions of the RepEnrich.py and RepEnrich_setpup.py scripts of this galaxy wrapper
+were directly derived from the `nskvir/RepEnrich GitHub repository`_ which is not maintained
+anymore.
 
-Python scripts RepEnrich.py and RepEnrich_setup.py have been adapted to python 3. Note that sorting of Fraction counts, Family fraction counts and Class fraction counts is  different with this Galaxy wrapper or with RepEnrich as found in the `RepEnrich code repository`_. However, this different sorting does not affect subsequent statistical analyses
+Starting from 2024, python codes were extensively rewritten for clarity, maintenance and
+optimization and we now refer exclusively to our `GitHub repository`_ for code review.
 
-.. _RepEnrich code repository: https://github.com/nskvir/RepEnrich
+.. _nskvir/RepEnrich GitHub repository: https://github.com/nskvir/RepEnrich
+.. _GitHub repository: https://github.com/ARTbio/tools-artbio/tree/main/tools/repenrich
 
 **Execution time**
 
 .. class:: warningmark
 
-This tool includes steps to index the reference genome, index repeat sequences and align reads to these indexes. Therefore the run time may be **long to very long**. 
+This tool includes time-consuming steps to index the reference genome, index repeat
+sequences and to align reads to these indexes.
 
 .. class:: infomark
 
