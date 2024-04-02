@@ -78,7 +78,7 @@ def import_text(filename, separator):
 
 
 def run_bowtie(args):
-    metagenome, fastqfile, folder = args
+    metagenome, fastqfile = args
     b_opt = "-k 1 -p 1 --quiet"
     command = shlex.split(f"bowtie {b_opt} -x {metagenome} {fastqfile}")
     bowtie_align =  subprocess.run(command, check=True,
@@ -90,7 +90,7 @@ def run_bowtie(args):
             readlist.append(line.split("/")[0])
     else:
         for line in bowtie_align:
-            readlist.append(line.split()[0])
+            readlist.append(line.split("\t")[0])
     return readlist
 
 
@@ -117,14 +117,14 @@ print(f"Identified {sumofrepeatreads} unique reads that mapped to repeats.")
 
 # multimapper parsing
 if not paired_end:
-    args_list = [(metagenome, fastqfile_1, 'pair1_bowtie') for
+    args_list = [(metagenome, fastqfile_1) for
                  metagenome in repeat_list]
     with ProcessPoolExecutor(max_workers = cpus) as executor:
         results = executor.map(run_bowtie, args_list)
 else:
-    args_list = [(metagenome, fastqfile_1, 'pair1_bowtie') for
+    args_list = [(metagenome, fastqfile_1) for
                  metagenome in repeat_list]
-    args_list.extend([(metagenome, fastqfile_2, 'pair2_bowtie') for
+    args_list.extend([(metagenome, fastqfile_2) for
                      metagenome in repeat_list])
     with ProcessPoolExecutor(max_workers = cpus) as executor:
         results = executor.map(run_bowtie, args_list)
