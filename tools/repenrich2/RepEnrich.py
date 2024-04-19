@@ -79,7 +79,7 @@ def import_text(filename, separator):
 
 def run_bowtie(args):
     metagenome, fastqfile = args
-    b_opt = "-k 1 -p 1 --quiet"
+    b_opt = "-k 1 -p 1 --quiet -S --no-hd"
     command = shlex.split(f"bowtie2 {b_opt} -x {metagenome} {fastqfile}")
     bowtie_align = subprocess.run(command, check=True,
                                   capture_output=True, text=True).stdout
