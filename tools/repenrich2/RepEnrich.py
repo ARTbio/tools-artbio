@@ -51,11 +51,11 @@ try:
     subprocess.call(shlex.split("coverageBed -h"),
                     stdout=open(os.devnull, 'wb'),
                     stderr=open(os.devnull, 'wb'))
-    subprocess.call(shlex.split("bowtie --version"),
+    subprocess.call(shlex.split("bowtie2 --version"),
                     stdout=open(os.devnull, 'wb'),
                     stderr=open(os.devnull, 'wb'))
 except OSError:
-    print("Error: Bowtie or bedtools not loaded")
+    print("Error: Bowtie2 or bedtools not loaded")
     raise
 
 
@@ -80,7 +80,7 @@ def import_text(filename, separator):
 def run_bowtie(args):
     metagenome, fastqfile = args
     b_opt = "-k 1 -p 1 --quiet"
-    command = shlex.split(f"bowtie {b_opt} -x {metagenome} {fastqfile}")
+    command = shlex.split(f"bowtie2 {b_opt} -x {metagenome} {fastqfile}")
     bowtie_align = subprocess.run(command, check=True,
                                   capture_output=True, text=True).stdout
     bowtie_align = bowtie_align.rstrip('\r\n').split('\n')

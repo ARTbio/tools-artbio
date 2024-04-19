@@ -50,11 +50,11 @@ cpus = args.cpus
 
 # check that the programs we need are available
 try:
-    subprocess.call(shlex.split("bowtie --version"),
+    subprocess.call(shlex.split("bowtie2 --version"),
                     stdout=open(os.devnull, 'wb'),
                     stderr=open(os.devnull, 'wb'))
 except OSError:
-    print("Error: Bowtie not available in the path")
+    print("Error: Bowtie2 not available in the path")
     raise
 
 
@@ -137,7 +137,7 @@ def bowtie_build(args):
     """
     try:
         bowtie_base, fasta = args
-        command = shlex.split(f"bowtie-build -f {fasta} {bowtie_base}")
+        command = shlex.split(f"bowtie2-build -f {fasta} {bowtie_base}")
         squash = subprocess.run(command, capture_output=True, text=True)
         return squash.stdout
     except Exception as e:
