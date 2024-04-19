@@ -1,4 +1,4 @@
-<tool id="repenrich" name="RepEnrich" version="@TOOL_VERSION@+galaxy@VERSION_SUFFIX@" profile="@PROFILE@">
+<tool id="repenrich2" name="RepEnrich" version="@TOOL_VERSION@+galaxy@VERSION_SUFFIX@" profile="@PROFILE@">
     <description>Repeat Element Profiling</description>
     <macros>
         <import>macros.xml</import>
@@ -9,46 +9,62 @@
     </stdio>
     <command detect_errors="exit_code"><![CDATA[
         #import re
-        ## uncompress fastq.gz or fastqsanger.gz if needed
+        ## uncompress fastq.gz or fastqsanger.gz is not required with bowtie2
         #if $seq_method.seq_method_list == "single-read":
-            #if $seq_method.input_fastq.is_of_type("fastq.gz", "fastqsanger.gz"):
-                gunzip < '$seq_method.input_fastq' > 'input.fastq' &&
-            #else:
-                ln -f -s '$seq_method.input_fastq' 'input.fastq' &&
-            #end if
+            ln -f -s '$seq_method.input_fastq' 'input.fastq' &&
         #elif $seq_method.seq_method_list == 'paired_collection':
-            #if $seq_method.input_fastq.forward.is_of_type("fastq.gz", "fastqsanger.gz"):
-                gunzip < '$seq_method.input_fastq.forward' > 'input.fastq' &&
-                gunzip < '$seq_method.input_fastq.reverse' > 'input_2.fastq' &&
-            #else:
-                ln -f -s '$seq_method.input_fastq.forward' 'input.fastq' &&
-                ln -f -s '$seq_method.input_fastq.reverse' 'input_2.fastq' &&
-            #end if
+            ln -f -s '$seq_method.input_fastq.forward' 'input.fastq' &&
+            ln -f -s '$seq_method.input_fastq.reverse' 'input_2.fastq' &&
         #else:
-            #if $seq_method.input2_fastq.is_of_type("fastq.gz", "fastqsanger.gz"):
-                gunzip < '$seq_method.input_fastq' > 'input.fastq' &&
-                gunzip < '$seq_method.input2_fastq' > 'input_2.fastq' &&
-            #else:
-                ln -f -s '$seq_method.input_fastq' 'input.fastq' &&
-                ln -f -s '$seq_method.input2_fastq' 'input_2.fastq' &&
-            #end if
+            ln -f -s '$seq_method.input_fastq' 'input.fastq' &&
+            ln -f -s '$seq_method.input2_fastq' 'input_2.fastq' &&
         #end if
-        ln -f -s '$genome' 'genome.fa' &&
-        bowtie-build '$genome' genome &&
+
+        #if $refGenomeSource.genomeSource == "history":
+            bowtie2-build --threads \${GALAXY_SLOTS:-4} -f $refGenomeSource.genome genome 1>/dev/null &&
+            ln -s -f '$refGenomeSource.genome' 'genome.fa' &&
+            #set index_path = 'genome'
+        #else:
+            #set index_path = $refGenomeSource.index.fields.path
+            bowtie-inspect $index_path > genome.fa &&
+        #end if
+
         python $__tool_directory__/RepEnrich_setup.py
             --annotation_file '$repeatmasker'
             --genomefasta 'genome.fa'
             --cpus "\${GALAXY_SLOTS:-4}" &&
+
+
+
+
+
         #if $seq_method.seq_method_list == "single-read":
-            bowtie genome -p \${GALAXY_SLOTS:-4} -t -m 1 -S --max multimap.fastq input.fastq input_unique.sam 2>bowtie_alignments.txt &&
+            bowtie2 -x $index_path -p \${GALAXY_SLOTS:-4} -bS input.fastq
+                | samtools sort -@ "\${GALAXY_SLOTS:-4}" -T tmp -O bam -o aligned.bam 2>&1 &&
+            samtools view -@ "\${GALAXY_SLOTS:-4}" -F 4 -b -q 38 aligned.bam -o unique.bam &&
+            samtools view -@ "\${GALAXY_SLOTS:-4}" -h -F 4 -b aligned.bam \
+                | samtools view -@ "\${GALAXY_SLOTS:-4}" -U -b -q 38 - \
+                | bedtools bamtofastq -i /dev/stdin -fq multimap.fastq &&
         #else:
-            bowtie genome -p \${GALAXY_SLOTS:-4} -t -m 1 -S --max multimap.fastq -1 input.fastq -2 input_2.fastq input_unique.sam 2>bowtie_alignments.txt &&
+            bowtie2 -x $index_path -p \${GALAXY_SLOTS:-4} -bS -1 input.fastq -2 input_2.fastq
+                | samtools sort -@ "\${GALAXY_SLOTS:-4}" -T tmp -O bam -o aligned.bam 2>&1 &&
+            samtools view -@ "\${GALAXY_SLOTS:-4}" -f 3 -b -q 38 aligned.bam -o unique.bam &&
+            samtools view -@ "\${GALAXY_SLOTS:-4}" -f 3 -b aligned.bam \
+                | samtools view -@ "\${GALAXY_SLOTS:-4}" -U -b -q 38 - \
+                | samtools sort -@ "\${GALAXY_SLOTS:-4}" -n - -
+                | bedtools bamtofastq -i /dev/stdin -fq multimap_1.fastq -fq2 multimap_2.fastq &&
         #end if
-        samtools view -@ \${GALAXY_SLOTS:-4} -bS 'input_unique.sam' | samtools sort -@ \${GALAXY_SLOTS:-4} -O bam -o 'input_unique.bam' &&
-        samtools index input_unique.bam &&
+        samtools index unique.bam &&
+
+
+
+
+
+
+
         python $__tool_directory__/RepEnrich.py
             --annotation_file $repeatmasker
-            --alignment_bam input_unique.bam
+            --alignment_bam unique.bam
             --cpus "\${GALAXY_SLOTS:-4}"
         #if $seq_method.seq_method_list == "single-read":
             --fastqfile multimap.fastq
@@ -76,7 +92,21 @@
             <param name="input_fastq" format="fastq,fastqsanger,fastq.gz,fastqsanger.gz" type="data_collection" collection_type="paired" label="Paired Collection" help="Must be of datatype &quot;fastqsanger&quot; or &quot;fasta&quot;" />
         </when>
     </conditional>
-    <param format="fasta" label="Reference genome in fasta format" name="genome" type="data" />
+    <conditional name="refGenomeSource">
+        <param help="Built-ins were indexed using default options" label="Will you select a reference genome from your history or use a built-in index?" name="genomeSource" type="select">
+            <option value="indexed">Use a built-in index</option>
+            <option value="history">Use one from the history</option>
+        </param>
+        <when value="indexed">
+            <param help="if your genome of interest is not listed - contact instance administrator" label="Select a DNA reference index" name="genome" type="select">
+                <options from_data_table="bowtie2_indexes" />
+            </param>
+        </when>
+        <when value="history">
+            <param format="fasta" label="Select a fasta file, to serve as index reference" name="genome" type="data" />
+        </when>
+    </conditional>
+
     <param format="txt" label="RepeatMasker description file" name="repeatmasker" type="data" help="see help section"/>
     </inputs>
 
