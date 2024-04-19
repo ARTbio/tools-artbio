@@ -35,9 +35,6 @@
             --cpus "\${GALAXY_SLOTS:-4}" &&
 
 
-
-
-
         #if $seq_method.seq_method_list == "single-read":
             bowtie2 -x $index_path -p \${GALAXY_SLOTS:-4} -bS input.fastq
                 | samtools sort -@ "\${GALAXY_SLOTS:-4}" -T tmp -O bam -o aligned.bam 2>&1 &&
@@ -55,11 +52,6 @@
                 | bedtools bamtofastq -i /dev/stdin -fq multimap_1.fastq -fq2 multimap_2.fastq &&
         #end if
         samtools index unique.bam &&
-
-
-
-
-
 
 
         python $__tool_directory__/RepEnrich.py
@@ -120,6 +112,7 @@
         <test>
             <param name="seq_method_list" value="single-read"/>
             <param name="input_fastq" value="chrY-500k.R1.fastqsanger.gz" ftype="fastq.gz"/>
+            <param name="genomeSource" value="history"/>
             <param name="genome" value="chrY-1-500k.fa" ftype="fasta"/>
             <param name="repeatmasker" value="chrY-1-500k.fa.out" ftype="txt"/>
             <output name="class_fraction_counts" file="chrY_single_class_fraction_counts.tab" ftype="tabular"/>
@@ -130,6 +123,7 @@
             <param name="seq_method_list" value="paired-end"/>
             <param name="input_fastq" value="chrY-500k.R1.fastqsanger.gz" ftype="fastq.gz"/>
             <param name="input2_fastq" value="chrY-500k.R2.fastqsanger.gz" ftype="fastq.gz"/>
+            <param name="genomeSource" value="history"/>
             <param name="genome" value="chrY-1-500k.fa" ftype="fasta"/>
             <param name="repeatmasker" value="chrY-1-500k.fa.out" ftype="txt"/>
             <output name="class_fraction_counts" file="chrY_paired_class_fraction_counts.tab" ftype="tabular"/>
