@@ -7,7 +7,7 @@ long_description: |
   using high-throughput sequencing data
 categories:
   - Transcriptomics
-homepage_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/repenrich
+homepage_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/repenrich2
 remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/repenrich2
 toolshed:
   - toolshed
