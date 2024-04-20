@@ -1,6 +1,5 @@
 import argparse
 import csv
-import os
 import shlex
 import subprocess
 import sys
@@ -45,18 +44,6 @@ if args.fastqfile2:
     paired_end = True
 else:
     paired_end = False
-
-# check that the programs we need are available
-try:
-    subprocess.call(shlex.split("coverageBed -h"),
-                    stdout=open(os.devnull, 'wb'),
-                    stderr=open(os.devnull, 'wb'))
-    subprocess.call(shlex.split("bowtie --version"),
-                    stdout=open(os.devnull, 'wb'),
-                    stderr=open(os.devnull, 'wb'))
-except OSError:
-    print("Error: Bowtie or bedtools not loaded")
-    raise
 
 
 def starts_with_numerical(list):
