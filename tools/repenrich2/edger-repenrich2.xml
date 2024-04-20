@@ -1,4 +1,4 @@
-<tool id="edger-repenrich2" name="edgeR-repenrich" version="@TOOL_VERSION@+galaxy@VERSION_SUFFIX@" profile="@PROFILE@">
+<tool id="edger-repenrich2" name="edgeR-repenrich2" version="@TOOL_VERSION@+galaxy@VERSION_SUFFIX@" profile="@PROFILE@">
     <description>Determines differentially expressed features from RepEnrich2 counts</description>
     <macros>
         <import>macros.xml</import>
@@ -27,7 +27,7 @@
     <command>
     <![CDATA[
         #import json
-        Rscript '${__tool_directory__}/edgeR_repenrich.R'
+        Rscript '${__tool_directory__}/edgeR_repenrich2.R'
             --factorName '$factorName'
 
             --levelNameA '$factorLevel_A'

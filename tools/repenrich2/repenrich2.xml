@@ -1,4 +1,4 @@
-<tool id="repenrich2" name="RepEnrich" version="@TOOL_VERSION@+galaxy@VERSION_SUFFIX@" profile="@PROFILE@">
+<tool id="repenrich2" name="RepEnrich2" version="@TOOL_VERSION@+galaxy@VERSION_SUFFIX@" profile="@PROFILE@">
     <description>Repeat Element Profiling</description>
     <macros>
         <import>macros.xml</import>
