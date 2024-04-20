@@ -1,0 +1,13 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: repenrich2
+description: Repeat element profiling using bowtie2 aligner
+long_description: |
+  RepEnrich is a method to estimate repetitive element enrichment
+  using high-throughput sequencing data
+categories:
+  - Transcriptomics
+homepage_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/repenrich
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/repenrich2
+toolshed:
+  - toolshed

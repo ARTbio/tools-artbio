@@ -1,0 +1,235 @@
+<tool id="repenrich2" name="RepEnrich" version="@TOOL_VERSION@+galaxy@VERSION_SUFFIX@" profile="@PROFILE@">
+    <description>Repeat Element Profiling</description>
+    <macros>
+        <import>macros.xml</import>
+    </macros>
+    <expand macro="repenrich_requirements"/>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Tool exception" />
+    </stdio>
+    <command detect_errors="exit_code"><![CDATA[
+        #import re
+        ## uncompress fastq.gz or fastqsanger.gz is not required with bowtie2
+        #if $seq_method.seq_method_list == "single-read":
+            ln -f -s '$seq_method.input_fastq' 'input.fastq' &&
+        #elif $seq_method.seq_method_list == 'paired_collection':
+            ln -f -s '$seq_method.input_fastq.forward' 'input.fastq' &&
+            ln -f -s '$seq_method.input_fastq.reverse' 'input_2.fastq' &&
+        #else:
+            ln -f -s '$seq_method.input_fastq' 'input.fastq' &&
+            ln -f -s '$seq_method.input2_fastq' 'input_2.fastq' &&
+        #end if
+
+        #if $refGenomeSource.genomeSource == "history":
+            bowtie2-build --threads \${GALAXY_SLOTS:-4} -f $refGenomeSource.genome genome 1>/dev/null &&
+            ln -s -f '$refGenomeSource.genome' 'genome.fa' &&
+            #set index_path = 'genome'
+        #else:
+            #set index_path = $refGenomeSource.index.fields.path
+            bowtie-inspect $index_path > genome.fa &&
+        #end if
+
+        python $__tool_directory__/RepEnrich2_setup.py
+            --annotation_file '$repeatmasker'
+            --genomefasta 'genome.fa'
+            --cpus "\${GALAXY_SLOTS:-4}" &&
+
+        #if $seq_method.seq_method_list == "single-read":
+            bowtie2 -x $index_path -p \${GALAXY_SLOTS:-4} input.fastq
+                | samtools sort -@ "\${GALAXY_SLOTS:-4}" -T tmp -O bam -o aligned.bam 2>&1 &&
+            samtools view -@ "\${GALAXY_SLOTS:-4}" -F 4 -b -q 38 aligned.bam -o unique.bam &&
+            samtools view -@ "\${GALAXY_SLOTS:-4}" -h -F 4 -b aligned.bam \
+                | samtools view -@ "\${GALAXY_SLOTS:-4}" -U -b -q 38 - \
+                | bedtools bamtofastq -i /dev/stdin -fq multimap.fastq &&
+        #else:
+            bowtie2 -x $index_path -p \${GALAXY_SLOTS:-4} -1 input.fastq -2 input_2.fastq
+                | samtools sort -@ "\${GALAXY_SLOTS:-4}" -T tmp -O bam -o aligned.bam 2>&1 &&
+            samtools view -@ "\${GALAXY_SLOTS:-4}" -f 3 -b -q 38 aligned.bam -o unique.bam &&
+            samtools view -@ "\${GALAXY_SLOTS:-4}" -f 3 -b aligned.bam \
+                | samtools view -@ "\${GALAXY_SLOTS:-4}" -U -b -q 38 - \
+                | samtools sort -@ "\${GALAXY_SLOTS:-4}" -n - -
+                | bedtools bamtofastq -i /dev/stdin -fq multimap_1.fastq -fq2 multimap_2.fastq &&
+        #end if
+        samtools index unique.bam &&
+
+
+        python $__tool_directory__/RepEnrich2.py
+            --annotation_file $repeatmasker
+            --alignment_bam unique.bam
+            --cpus "\${GALAXY_SLOTS:-4}"
+        #if $seq_method.seq_method_list == "single-read":
+            --fastqfile multimap.fastq
+        #else:
+            --fastqfile multimap_1.fastq
+            --fastqfile2 multimap_2.fastq
+        #end if
+    ]]></command>
+    <!-- basic error handling -->
+    <inputs>
+    <conditional name="seq_method">
+        <param help="Paired-end or single-read sequencing" label="Sequencing method" name="seq_method_list" type="select">
+            <option selected="True" value="single-read">Single-read sequencing</option>
+            <option value="paired-end">Paired-end sequencing</option>
+            <option value="paired_collection">Paired-end Dataset Collection</option>
+        </param>
+        <when value="single-read">
+            <param format="fastq,fastqsanger,fastq.gz,fastqsanger.gz" label="Single-reads" name="input_fastq" type="data" help="accepted formats: fastq, fastqsanger" />
+        </when>
+        <when value="paired-end">
+            <param format="fastq,fastqsanger,fastq.gz,fastqsanger.gz" label="1st paired-end sequencing dataset" name="input_fastq" type="data" help="accepted formats: fastq, fastqsanger" />
+            <param format="fastq,fastqsanger,fastq.gz,fastqsanger.gz" label="2nd paired-end sequencing dataset" name="input2_fastq" type="data" help="accepted formats: fastq, fastqsanger" />
+        </when>
+        <when value="paired_collection">
+            <param name="input_fastq" format="fastq,fastqsanger,fastq.gz,fastqsanger.gz" type="data_collection" collection_type="paired" label="Paired Collection" help="Must be of datatype &quot;fastqsanger&quot; or &quot;fasta&quot;" />
+        </when>
+    </conditional>
+    <conditional name="refGenomeSource">
+        <param help="Built-ins were indexed using default options" label="Will you select a reference genome from your history or use a built-in index?" name="genomeSource" type="select">
+            <option value="indexed">Use a built-in index</option>
+            <option value="history">Use one from the history</option>
+        </param>
+        <when value="indexed">
+            <param help="if your genome of interest is not listed - contact instance administrator" label="Select a DNA reference index" name="genome" type="select">
+                <options from_data_table="bowtie2_indexes" />
+            </param>
+        </when>
+        <when value="history">
+            <param format="fasta" label="Select a fasta file, to serve as index reference" name="genome" type="data" />
+        </when>
+    </conditional>
+
+    <param format="txt" label="RepeatMasker description file" name="repeatmasker" type="data" help="see help section"/>
+    </inputs>
+
+    <outputs>
+        <data format="tabular" name="class_fraction_counts" label="RepEnrich on ${on_string}: class fraction counts" from_work_dir="class_fraction_counts.tsv" />
+        <data format="tabular" name="family_fraction_counts" label="RepEnrich on ${on_string}: family fraction counts" from_work_dir="family_fraction_counts.tsv" />
+        <data format="tabular" name="fraction_counts" label="RepEnrich on ${on_string}: fraction counts" from_work_dir="fraction_counts.tsv" />
+   </outputs>
+
+    <tests>
+        <test>
+            <param name="seq_method_list" value="single-read"/>
+            <param name="input_fastq" value="chrY-500k.R1.fastqsanger.gz" ftype="fastq.gz"/>
+            <param name="genomeSource" value="history"/>
+            <param name="genome" value="chrY-1-500k.fa" ftype="fasta"/>
+            <param name="repeatmasker" value="chrY-1-500k.fa.out" ftype="txt"/>
+            <output name="class_fraction_counts" file="chrY_single_class_fraction_counts.tab" ftype="tabular"/>
+            <output name="family_fraction_counts" file="chrY_single_family_fraction_counts.tab" ftype="tabular"/>
+            <output name="fraction_counts" file="chrY_single_fraction_counts.tab" ftype="tabular"/>
+        </test>
+         <test>
+            <param name="seq_method_list" value="paired-end"/>
+            <param name="input_fastq" value="chrY-500k.R1.fastqsanger.gz" ftype="fastq.gz"/>
+            <param name="input2_fastq" value="chrY-500k.R2.fastqsanger.gz" ftype="fastq.gz"/>
+            <param name="genomeSource" value="history"/>
+            <param name="genome" value="chrY-1-500k.fa" ftype="fasta"/>
+            <param name="repeatmasker" value="chrY-1-500k.fa.out" ftype="txt"/>
+            <output name="class_fraction_counts" file="chrY_paired_class_fraction_counts.tab" ftype="tabular"/>
+            <output name="family_fraction_counts" file="chrY_paired_family_fraction_counts.tab" ftype="tabular"/>
+            <output name="fraction_counts" file="chrY_paired_fraction_counts.tab" ftype="tabular"/>
+        </test>
+  </tests>
+
+    <help>
+
+**What it does**
+
+Reads are mapped to the genome using the Bowtie2 aligner. Reads mapping uniquely to the
+genome are assigned to subfamilies of repetitive elements based on their degree of overlap
+to RepeatMasker annotated genomic instances of each repetitive element subfamily.
+
+Reads mapping to multiple locations are separately mapped to repetitive element assemblies
+– referred to as repetitive element psuedogenomes – built from RepeatMasker annotated
+genomic instances of repetitive element subfamilies.
+
+RepEnrich then return tables of counts merged from both strategies, that can be further
+processed in statistical analysis for differential expression. For information on the method,
+see the `original publication`_.
+
+.. _original publication: https://bmcgenomics.biomedcentral.com/articles/10.1186/1471-2164-15-583
+
+**Inputs**
+
+*Reference genome* : reference genome in fasta format
+
+*Sequencing dataset*: Single-reads or Paired-end sequencing datasets in fastq format.
+
+*RepeatMasker description file*: a txt repeatmasker file which can be downloaded from
+https://www.repeatmasker.org/genomicDatasets/RMGenomicDatasets.html
+
+This file looks like:
+
+<![CDATA[
+
+SW  perc perc perc  query      position in query           matching       repeat              position in  repeat
+
+score  div. del. ins.  sequence    begin     end    (left)    repeat         class/family         begin  end (left)   ID
+
+16  20.2  5.9  0.0  chrM         1211    1261   (18263) +  (TTTTA)n       Simple_repeat            1   54    (0)  84486
+
+13  23.9  2.2  2.2  chrM         2014    2059   (17465) +  (TTA)n         Simple_repeat            1   46    (0)  84487
+
+24  18.8  5.3  2.6  chrM         3924    3999   (15525) +  (TAT)n         Simple_repeat            1   78    (0)  84488
+
+18   4.5  0.0  0.0  chrM         5961    5983   (13541) +  (AT)n          Simple_repeat            1   23    (0)  84489
+
+13  25.9  4.0  4.0  chrM         6247    6320   (13204) +  (ATTTAT)n      Simple_repeat            1   74    (0)  84490
+
+11  14.6  7.5  2.4  chrM         8783    8822   (10702) +  (CTAATT)n      Simple_repeat            1   42    (0)  84491
+
+17  19.0  0.0  8.6  chrM         9064    9126   (10398) +  A-rich         Low_complexity           1   58    (0)  84492
+
+13  21.0  5.9  1.9  chrM        11723   11773    (7751) +  (ATA)n         Simple_repeat            1   53    (0)  84493
+
+66  20.4 12.3 12.3  chrM        12823   13001    (6523) C  LSU-rRNA_Cel   rRNA                   (1) 2431   2253  84494
+
+16  16.6  0.0  2.9  chrM        14361   14396    (5128) +  (ATT)n         Simple_repeat            1   35    (0)  84495
+
+44   2.4  0.0  0.0  chrM        15966   16007    (3517) +  (TA)n          Simple_repeat            1   42    (0)  84496
+
+35   5.3  0.0  0.0  chrM        16559   16597    (2927) +  (AT)n          Simple_repeat            1   39    (0)  84497
+
+36   2.9  0.0  0.0  chrM        16922   16956    (2568) +  (AT)n          Simple_repeat            1   35    (0)  84498
+
+37   0.0  0.0  0.0  chrM        17040   17071    (2453) +  (TA)n          Simple_repeat            1   32    (0)  84499
+
+20   4.3  0.0  0.0  chrM        17417   17440    (2084) +  (T)n           Simple_repeat            1   24    (0)  84500
+
+31   6.9  6.3  1.5  chrM        17451   17513    (2011) +  (TA)n          Simple_repeat            1   66    (0)  84501
+
+26  17.0  0.0  0.0  chrM        19469   19514      (10) +  A-rich         Low_complexity           1   46    (0)  84502
+
+]]>
+
+Users may filter this file so that it contains only desired items (for instance only satellites, repeats and transposons)
+ 
+**Outputs**
+
+(1) Fraction counts, (2) Family fraction counts and (3) Class fraction counts are returned
+in tabular format for further statistical tests, differential expression analysis or graphics.
+
+**RepEnrich2**
+
+.. class:: warningmark
+
+the repenrich2 Galaxy wrapper was derived from the repenrich Galaxy wrapper
+
+repenrich2 uses bowtie2 for all alignment operations. We refer exclusively to our
+`GitHub repository`_ for code review.
+
+.. _GitHub repository: https://github.com/ARTbio/tools-artbio/tree/main/tools/repenrich2
+
+**Execution time**
+
+.. class:: warningmark
+
+This tool includes time-consuming steps to index the reference genome, index repeat
+sequences and to align reads to these indexes.
+
+    </help>
+
+    <citations>
+    <citation type="doi">10.1186/1471-2164-15-583</citation>
+  </citations>
+</tool>
