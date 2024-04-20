@@ -25,7 +25,7 @@
             ln -s -f '$refGenomeSource.genome' 'genome.fa' &&
             #set index_path = 'genome'
         #else:
-            #set index_path = $refGenomeSource.index.fields.path
+            #set index_path = $refGenomeSource.genome.fields.path
             bowtie-inspect $index_path > genome.fa &&
         #end if
 
