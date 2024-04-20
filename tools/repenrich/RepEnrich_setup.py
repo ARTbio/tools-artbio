@@ -48,15 +48,6 @@ annotation_file = args.annotation_file
 genomefasta = args.genomefasta
 cpus = args.cpus
 
-# check that the programs we need are available
-try:
-    subprocess.call(shlex.split("bowtie --version"),
-                    stdout=open(os.devnull, 'wb'),
-                    stderr=open(os.devnull, 'wb'))
-except OSError:
-    print("Error: Bowtie not available in the path")
-    raise
-
 
 def starts_with_numerical(list):
     try:
@@ -115,7 +106,6 @@ for repname in rep_coords:
     block = 3
     for i in range(0, len(rep_coords[repname]) - block + 1, block):
         batch = rep_coords[repname][i:i+block]
-        print(batch)
         chromosome = batch[0]
         start = max(int(batch[1]) - flankingl, 0)
         end = min(int(batch[2]) + flankingl,
