@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import argparse
 import csv
-import os
 import shlex
 import subprocess
 import sys
@@ -48,15 +47,6 @@ annotation_file = args.annotation_file
 genomefasta = args.genomefasta
 cpus = args.cpus
 
-# check that the programs we need are available
-try:
-    subprocess.call(shlex.split("bowtie2 --version"),
-                    stdout=open(os.devnull, 'wb'),
-                    stderr=open(os.devnull, 'wb'))
-except OSError:
-    print("Error: Bowtie2 not available in the path")
-    raise
-
 
 def starts_with_numerical(list):
     try:
@@ -68,7 +58,7 @@ def starts_with_numerical(list):
         return False
 
 
-# define a text importer for .out/.txt format of repbase
+# text import function for .out/.txt format of repbase
 def import_text(filename, separator):
     csv.field_size_limit(sys.maxsize)
     file = csv.reader(open(filename), delimiter=separator,
@@ -81,7 +71,7 @@ g = SeqIO.to_dict(SeqIO.parse(genomefasta, "fasta"))
 genome = defaultdict(dict)
 
 for chr in g.keys():
-    genome[chr]['sequence'] = g[chr].seq
+    genome[chr]['sequence'] = str(g[chr].seq)
     genome[chr]['length'] = len(g[chr].seq)
 
 # Build a bedfile of repeatcoordinates to use by RepEnrich region_sorter
@@ -110,7 +100,7 @@ spacer = ''.join(['N' for i in range(gapl)])
 
 # generate metagenomes and save them to FASTA files for bowtie build
 for repname in rep_coords:
-    metagenome = ''
+    genomes_list = []
     # iterating coordinate list by block of 3 (chr, start, end)
     block = 3
     for i in range(0, len(rep_coords[repname]) - block + 1, block):
@@ -119,11 +109,8 @@ for repname in rep_coords:
         start = max(int(batch[1]) - flankingl, 0)
         end = min(int(batch[2]) + flankingl,
                   int(genome[chromosome]['length'])-1) + 1
-        metagenome = (
-            f"{metagenome}{spacer}"
-            f"{genome[chromosome]['sequence'][start:end]}"
-            )
-
+        genomes_list.append(genome[chromosome]['sequence'][start:end])
+    metagenome = spacer.join(genomes_list)
     # Create Fasta of repeat pseudogenome
     fastafilename = f"{repname}.fa"
     record = SeqRecord(Seq(metagenome), id=repname, name='', description='')

@@ -26,7 +26,7 @@
             #set index_path = 'genome'
         #else:
             #set index_path = $refGenomeSource.genome.fields.path
-            bowtie-inspect $index_path > genome.fa &&
+            ln -s '${index_path}.fa' 'genome.fa' &&
         #end if
 
         python $__tool_directory__/RepEnrich2_setup.py
