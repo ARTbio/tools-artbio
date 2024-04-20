@@ -1,6 +1,5 @@
 import argparse
 import csv
-import os
 import shlex
 import subprocess
 import sys
