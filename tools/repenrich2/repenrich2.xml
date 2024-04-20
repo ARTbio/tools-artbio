@@ -29,11 +29,10 @@
             bowtie-inspect $index_path > genome.fa &&
         #end if
 
-        python $__tool_directory__/RepEnrich_setup.py
+        python $__tool_directory__/RepEnrich2_setup.py
             --annotation_file '$repeatmasker'
             --genomefasta 'genome.fa'
             --cpus "\${GALAXY_SLOTS:-4}" &&
-
 
         #if $seq_method.seq_method_list == "single-read":
             bowtie2 -x $index_path -p \${GALAXY_SLOTS:-4} input.fastq
@@ -54,7 +53,7 @@
         samtools index unique.bam &&
 
 
-        python $__tool_directory__/RepEnrich.py
+        python $__tool_directory__/RepEnrich2.py
             --annotation_file $repeatmasker
             --alignment_bam unique.bam
             --cpus "\${GALAXY_SLOTS:-4}"
@@ -136,7 +135,7 @@
 
 **What it does**
 
-Reads are mapped to the genome using the Bowtie1 aligner. Reads mapping uniquely to the
+Reads are mapped to the genome using the Bowtie2 aligner. Reads mapping uniquely to the
 genome are assigned to subfamilies of repetitive elements based on their degree of overlap
 to RepeatMasker annotated genomic instances of each repetitive element subfamily.
 
@@ -145,7 +144,7 @@ Reads mapping to multiple locations are separately mapped to repetitive element 
 genomic instances of repetitive element subfamilies.
 
 RepEnrich then return tables of counts merged from both strategies, that can be further
-processed in statistical analysis for differential expression. For detailed information
+processed in statistical analysis for differential expression. For information on the method,
 see the `original publication`_.
 
 .. _original publication: https://bmcgenomics.biomedcentral.com/articles/10.1186/1471-2164-15-583
@@ -210,19 +209,16 @@ Users may filter this file so that it contains only desired items (for instance 
 (1) Fraction counts, (2) Family fraction counts and (3) Class fraction counts are returned
 in tabular format for further statistical tests, differential expression analysis or graphics.
 
-**RepEnrich**
+**RepEnrich2**
 
 .. class:: warningmark
 
-Earlier versions of the RepEnrich.py and RepEnrich_setpup.py scripts of this galaxy wrapper
-were directly derived from the `nskvir/RepEnrich GitHub repository`_ which is not maintained
-anymore.
+the repenrich2 Galaxy wrapper was derived from the repenrich Galaxy wrapper
 
-Starting from 2024, python codes were extensively rewritten for clarity, maintenance and
-optimization and we now refer exclusively to our `GitHub repository`_ for code review.
+repenrich2 uses bowtie2 for all alignment operations. We refer exclusively to our
+`GitHub repository`_ for code review.
 
-.. _nskvir/RepEnrich GitHub repository: https://github.com/nskvir/RepEnrich
-.. _GitHub repository: https://github.com/ARTbio/tools-artbio/tree/main/tools/repenrich
+.. _GitHub repository: https://github.com/ARTbio/tools-artbio/tree/main/tools/repenrich2
 
 **Execution time**
 
@@ -230,13 +226,6 @@ optimization and we now refer exclusively to our `GitHub repository`_ for code r
 
 This tool includes time-consuming steps to index the reference genome, index repeat
 sequences and to align reads to these indexes.
-
-.. class:: infomark
-
-For more information on the tools, or giving us feedback, please visit our `code repository`_.
-
-.. _code repository: https://github.com/ARTbio/tools-artbio/tree/master/tools/
-.. _ARTbio team: http://artbio.fr
 
     </help>
 
