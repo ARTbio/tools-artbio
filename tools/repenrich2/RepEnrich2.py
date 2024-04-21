@@ -115,6 +115,12 @@ for line in bedtools_counts:
     sumofrepeatreads += int(line[4])
 print(f"Identified {sumofrepeatreads} unique reads that mapped to repeats.")
 
+# print unique mapper counts
+with open("unique_mapper_counts.tsv", 'w') as fout:
+    fout.write(f"#element\tcount\n")
+    for count in sorted(counts):
+        fout.write(f"{count}\t{counts[count]}\n")
+
 # multimapper parsing
 if not paired_end:
     args_list = [(metagenome, fastqfile_1) for
