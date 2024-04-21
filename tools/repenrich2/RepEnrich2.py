@@ -117,7 +117,7 @@ print(f"Identified {sumofrepeatreads} unique reads that mapped to repeats.")
 
 # print unique mapper counts
 with open("unique_mapper_counts.tsv", 'w') as fout:
-    fout.write(f"#element\tcount\n")
+    fout.write("#element\tcount\n")
     for count in sorted(counts):
         fout.write(f"{count}\t{counts[count]}\n")
 
