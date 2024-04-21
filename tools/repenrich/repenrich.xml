@@ -34,7 +34,7 @@
             #end if
         #end if
         ln -f -s '$genome' 'genome.fa' &&
-        bowtie-build -p '\${GALAXY_SLOTS:-4}' '$genome' genome &&
+        bowtie-build --threads '\${GALAXY_SLOTS:-4}' '$genome' genome &&
         python $__tool_directory__/RepEnrich_setup.py
             --annotation_file '$repeatmasker'
             --genomefasta 'genome.fa'
