@@ -102,6 +102,7 @@
     </inputs>
 
     <outputs>
+        <data format="tabular" name="unique_mapper_counts" label="RepEnrich on ${on_string}: unique mapper counts" from_work_dir="unique_mapper_counts.tsv" />
         <data format="tabular" name="class_fraction_counts" label="RepEnrich on ${on_string}: class fraction counts" from_work_dir="class_fraction_counts.tsv" />
         <data format="tabular" name="family_fraction_counts" label="RepEnrich on ${on_string}: family fraction counts" from_work_dir="family_fraction_counts.tsv" />
         <data format="tabular" name="fraction_counts" label="RepEnrich on ${on_string}: fraction counts" from_work_dir="fraction_counts.tsv" />
@@ -114,6 +115,7 @@
             <param name="genomeSource" value="history"/>
             <param name="genome" value="chrY-1-500k.fa" ftype="fasta"/>
             <param name="repeatmasker" value="chrY-1-500k.fa.out" ftype="txt"/>
+            <output name="unique_mapper_counts" file="chrY_single_unique_mapper_counts.tab" ftype="tabular"/>
             <output name="class_fraction_counts" file="chrY_single_class_fraction_counts.tab" ftype="tabular"/>
             <output name="family_fraction_counts" file="chrY_single_family_fraction_counts.tab" ftype="tabular"/>
             <output name="fraction_counts" file="chrY_single_fraction_counts.tab" ftype="tabular"/>
@@ -125,6 +127,7 @@
             <param name="genomeSource" value="history"/>
             <param name="genome" value="chrY-1-500k.fa" ftype="fasta"/>
             <param name="repeatmasker" value="chrY-1-500k.fa.out" ftype="txt"/>
+            <output name="unique_mapper_counts" file="chrY_paired_unique_mapper_counts.tab" ftype="tabular"/>
             <output name="class_fraction_counts" file="chrY_paired_class_fraction_counts.tab" ftype="tabular"/>
             <output name="family_fraction_counts" file="chrY_paired_family_fraction_counts.tab" ftype="tabular"/>
             <output name="fraction_counts" file="chrY_paired_fraction_counts.tab" ftype="tabular"/>
