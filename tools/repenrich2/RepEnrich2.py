@@ -197,14 +197,14 @@ for key, value in fractionalcounts.items():
 # print class-, family- and fraction-repeats counts to files
 with open("class_fraction_counts.tsv", 'w') as fout:
     for key in sorted(classfractionalcounts):
-        fout.write(f"{key}\t{classfractionalcounts[key]}\n")
+        fout.write(f"{key}\t{round(classfractionalcounts[key], 2)}\n")
 
 with open("family_fraction_counts.tsv", 'w') as fout:
     for key in sorted(familyfractionalcounts):
-        fout.write(f"{key}\t{familyfractionalcounts[key]}\n")
+        fout.write(f"{key}\t{round(familyfractionalcounts[key], 2)}\n")
 
 with open("fraction_counts.tsv", 'w') as fout:
     for key in sorted(fractionalcounts):
         fout.write(f"{key}\t{repeat_ref[key]['class']}\t"
                    f"{repeat_ref[key]['family']}\t"
-                   f"{fractionalcounts[key]}\n")
+                   f"{round(fractionalcounts[key], 2)}\n")
