@@ -38,7 +38,7 @@
             bowtie2 -x $index_path -p \${GALAXY_SLOTS:-4} input.fastq
                 | samtools sort -@ "\${GALAXY_SLOTS:-4}" -T tmp -O bam -o aligned.bam 2>&1 &&
             samtools view -@ "\${GALAXY_SLOTS:-4}" -F 4 -b -q 38 aligned.bam -o unique.bam &&
-            samtools view -@ "\${GALAXY_SLOTS:-4}" -h -F 4 -b aligned.bam \
+            samtools view -@ "\${GALAXY_SLOTS:-4}" -F 4 -b aligned.bam
                 | samtools view -@ "\${GALAXY_SLOTS:-4}" -U filt_aligned.bam -bq 38 - > /dev/null &&
             bedtools bamtofastq -i filt_aligned.bam -fq multimap.fastq &&
         #else:
