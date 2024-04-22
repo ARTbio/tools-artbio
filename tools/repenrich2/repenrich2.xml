@@ -39,15 +39,15 @@
                 | samtools sort -@ "\${GALAXY_SLOTS:-4}" -T tmp -O bam -o aligned.bam 2>&1 &&
             samtools view -@ "\${GALAXY_SLOTS:-4}" -F 4 -b -q 38 aligned.bam -o unique.bam &&
             samtools view -@ "\${GALAXY_SLOTS:-4}" -h -F 4 -b aligned.bam \
-                | samtools view -@ "\${GALAXY_SLOTS:-4}" -U -b -q 38 - \
-                | bedtools bamtofastq -i /dev/stdin -fq multimap.fastq &&
+                | samtools view -@ "\${GALAXY_SLOTS:-4}" -U filt_aligned.bam -bq 38 - > /dev/null &&
+            bedtools bamtofastq -i filt_aligned.bam -fq multimap.fastq &&
         #else:
             bowtie2 -x $index_path -p \${GALAXY_SLOTS:-4} -1 input.fastq -2 input_2.fastq
                 | samtools sort -@ "\${GALAXY_SLOTS:-4}" -T tmp -O bam -o aligned.bam 2>&1 &&
             samtools view -@ "\${GALAXY_SLOTS:-4}" -f 3 -b -q 38 aligned.bam -o unique.bam &&
-            samtools view -@ "\${GALAXY_SLOTS:-4}" -f 3 -b aligned.bam \
-                | samtools view -@ "\${GALAXY_SLOTS:-4}" -U -b -q 38 - \
-                | samtools sort -@ "\${GALAXY_SLOTS:-4}" -n - -
+            samtools view -@ "\${GALAXY_SLOTS:-4}" -f 3 -b aligned.bam
+                | samtools view -@ "\${GALAXY_SLOTS:-4}" -U filt_aligned.bam -bq 38 - > /dev/null &&
+            samtools sort -@ "\${GALAXY_SLOTS:-4}" -T tmp -n filt_aligned.bam
                 | bedtools bamtofastq -i /dev/stdin -fq multimap_1.fastq -fq2 multimap_2.fastq &&
         #end if
         samtools index unique.bam &&
