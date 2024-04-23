@@ -77,23 +77,6 @@ def import_text(filename, separator):
     return [line for line in file if starts_with_numerical(line)]
 
 
-def run_bowtie(args):
-    metagenome, fastqfile = args
-    b_opt = "-k 1 -p 1 --quiet --no-hd"
-    command = shlex.split(f"bowtie2 {b_opt} -x {metagenome} {fastqfile}")
-    bowtie_align = subprocess.run(command, check=True,
-                                  capture_output=True, text=True).stdout
-    bowtie_align = bowtie_align.rstrip('\r\n').split('\n')
-    readlist = [metagenome]
-    if paired_end:
-        for line in bowtie_align:
-            readlist.append(line.split("/")[0])
-    else:
-        for line in bowtie_align:
-            readlist.append(line.split("\t")[0])
-    return readlist
-
-
 # set a reference repeat list for the script
 repeat_list = [listline[9].translate(
     str.maketrans(
@@ -121,31 +104,42 @@ with open("unique_mapper_counts.tsv", 'w') as fout:
     for count in sorted(counts):
         fout.write(f"{count}\t{counts[count]}\n")
 
+
+def run_bowtie(args):
+    '''
+    write to files to save memory
+    '''
+    metagenome, fastqfile = args
+    b_opt = "-k 1 -p 1 --quiet --no-hd"
+    command = shlex.split(f"bowtie2 {b_opt} -x {metagenome} {fastqfile}")
+    bowtie_align = subprocess.run(command, check=True,
+                                  capture_output=True, text=True).stdout
+    bowtie_align = bowtie_align.rstrip('\r\n').split('\n')
+    with open(f"{metagenome}.reads", "a+") as readfile:
+        for line in bowtie_align:
+            read = line.split()[0].split("/")[0]
+            if read:
+                readfile.write(f"{read}\n")
+
+
 # multimapper parsing
-if not paired_end:
-    args_list = [(metagenome, fastqfile_1) for
-                 metagenome in repeat_list]
-    with ProcessPoolExecutor(max_workers=cpus) as executor:
-        results = executor.map(run_bowtie, args_list)
-else:
-    args_list = [(metagenome, fastqfile_1) for
-                 metagenome in repeat_list]
+args_list = [(metagenome, fastqfile_1) for metagenome in repeat_list]
+if paired_end:
     args_list.extend([(metagenome, fastqfile_2) for
                      metagenome in repeat_list])
-    with ProcessPoolExecutor(max_workers=cpus) as executor:
-        results = executor.map(run_bowtie, args_list)
+with ProcessPoolExecutor(max_workers=cpus) as executor:
+    results = executor.map(run_bowtie, args_list)
 
 # Aggregate results (avoiding race conditions)
-metagenome_reads = defaultdict(list)  # repeat_name: list of multimap reads
-for result in results:
-    metagenome_reads[result[0]] += result[1:]
+metagenome_reads = defaultdict(list)  # metagenome: list of multimap reads
 
-for name in metagenome_reads:
-    #  read are only once in list
-    metagenome_reads[name] = list(set(metagenome_reads[name]))
-    #  remove "no read" instances
-    metagenome_reads[name] = [read for read in metagenome_reads[name]
-                              if read != ""]
+# Now we read .reads file to populate metagnomes_reads
+for metagenome in repeat_list:
+    with open(f"{metagenome}.reads") as readfile:
+        for read in readfile:
+            metagenome_reads[metagenome].append(read)
+        # read are only once in list
+        metagenome_reads[metagenome] = list(set(metagenome_reads[metagenome]))
 
 # implement repeats_by_reads from the inverse dictionnary metagenome_reads
 repeats_by_reads = defaultdict(list)  # readids: list of repeats names
