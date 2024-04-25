@@ -112,7 +112,8 @@ def run_bowtie(args):
     metagenome = args
     b_opt = "-k 1 -p 2 --quiet --no-hd --no-unal"
     if paired_end is True:
-        command = shlex.split(f"bowtie2 {b_opt} -x {metagenome} -1 {fastqfile_1} -2 {fastqfile_1}")
+        command = shlex.split(f"bowtie2 {b_opt} -x {metagenome}"
+                              f" -1 {fastqfile_1} -2 {fastqfile_1}")
     else:
         command = shlex.split(f"bowtie2 {b_opt} -x {metagenome} {fastqfile_1}")
     bowtie_align = subprocess.run(command, check=True,
