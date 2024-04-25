@@ -110,7 +110,7 @@ def run_bowtie(args):
     write to files to save memory
     '''
     metagenome, fastqfile = args
-    b_opt = "-k 1 -p 1 --quiet --no-hd"
+    b_opt = "-k 1 -p 1 --quiet --no-hd --no-unal"
     command = shlex.split(f"bowtie2 {b_opt} -x {metagenome} {fastqfile}")
     bowtie_align = subprocess.run(command, check=True,
                                   capture_output=True, text=True).stdout
@@ -148,6 +148,7 @@ for repname in metagenome_reads:
         repeats_by_reads[read].append(repname)
 for repname in repeats_by_reads:
     repeats_by_reads[repname] = list(set(repeats_by_reads[repname]))
+    # this repeats_by_reads dictionary is far too big
 
 # 3 dictionnaries and 1 pointer variable to be populated
 fractionalcounts = defaultdict(float)
