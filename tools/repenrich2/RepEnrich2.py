@@ -109,9 +109,12 @@ def run_bowtie(args):
     '''
     write to files to save memory
     '''
-    metagenome, fastqfile = args
-    b_opt = "-k 1 -p 1 --quiet --no-hd --no-unal"
-    command = shlex.split(f"bowtie2 {b_opt} -x {metagenome} {fastqfile}")
+    metagenome = args
+    b_opt = "-k 1 -p 2 --quiet --no-hd --no-unal"
+    if paired_end is True:
+        command = shlex.split(f"bowtie2 {b_opt} -x {metagenome} -1 {fastqfile_1} -2 {fastqfile_1}")
+    else:
+        command = shlex.split(f"bowtie2 {b_opt} -x {metagenome} {fastqfile_1}")
     bowtie_align = subprocess.run(command, check=True,
                                   capture_output=True, text=True).stdout
     bowtie_align = bowtie_align.rstrip('\r\n').split('\n')
@@ -123,17 +126,14 @@ def run_bowtie(args):
 
 
 # multimapper parsing
-args_list = [(metagenome, fastqfile_1) for metagenome in repeat_list]
-if paired_end:
-    args_list.extend([(metagenome, fastqfile_2) for
-                     metagenome in repeat_list])
+args_list = [metagenome for metagenome in repeat_list]
 with ProcessPoolExecutor(max_workers=cpus) as executor:
     results = executor.map(run_bowtie, args_list)
 
 # Aggregate results (avoiding race conditions)
 metagenome_reads = defaultdict(list)  # metagenome: list of multimap reads
 
-# Now we read .reads file to populate metagnomes_reads
+# Now we read .reads files to populate metagnomes_reads
 for metagenome in repeat_list:
     with open(f"{metagenome}.reads") as readfile:
         for read in readfile:
