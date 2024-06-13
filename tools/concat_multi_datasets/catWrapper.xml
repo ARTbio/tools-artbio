@@ -1,4 +1,4 @@
-<tool id="cat_multi_datasets" name="Concatenate multiple datasets" version="1.4.2">
+<tool id="cat_multi_datasets" name="Concatenate multiple datasets" version="1.4.3">
     <description>tail-to-head while specifying how</description>
     <command><![CDATA[
         #if $headers == 0:
