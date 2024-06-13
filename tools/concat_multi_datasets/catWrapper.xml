@@ -263,7 +263,7 @@
         <data name="paired_out_file" label="${global_condition.inputs.element_identifier}" auto_format="true">
             <filter>global_condition['input_type'] == 'paired_collection' and global_condition['paired_cat_type'] == 'all'</filter>
         </data>
-        <collection name="paired_output" type="paired" label="Concatenation by strtand">
+        <collection name="paired_output" type="paired" label="Concatenation by strand">
             <discover_datasets pattern="(?P&lt;name&gt;.*)\.listed\.(?P&lt;ext&gt;.*)\.listed" format="fastq" visible="false" directory="concatenated"/>
             <filter>global_condition['input_type'] == 'paired_collection' and global_condition['paired_cat_type'] == 'by_strand'</filter>
         </collection>
