@@ -20,7 +20,6 @@ library(Rtsne) # nolint⁠
 library(ggfortify)
 
 
-
 #Arguments
 option_list <- list(
     make_option(
