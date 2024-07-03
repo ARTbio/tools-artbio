@@ -161,7 +161,7 @@ tpm <- function(count, length) {
 
 rpkm <- function(count, length) {
     rpk <- rpk(count, length)
-    per_million_factor <- colSum(count) / 1000000
+    per_million_factor <- colSums(count) / 1000000
     rpkm <- rpk / per_million_factor
     return(rpkm)
 }

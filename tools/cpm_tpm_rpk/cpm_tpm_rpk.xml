@@ -1,10 +1,10 @@
 <tool id="cpm_tpm_rpk" name="Generate CPM, TPM, RPKM" version="0.6.0">
     <description>from raw counts expression values</description>
     <requirements>
-        <requirement type="package" version="1.7.1">r-optparse</requirement>
-        <requirement type="package" version="0.16">r-rtsne</requirement>
-        <requirement type="package" version="3.3.6">r-ggplot2</requirement>
-        <requirement type="package" version="0.4.14">r-ggfortify</requirement>
+        <requirement type="package" version="1.7.5">r-optparse</requirement>
+        <requirement type="package" version="0.17">r-rtsne</requirement>
+        <requirement type="package" version="3.5.1">r-ggplot2</requirement>
+        <requirement type="package" version="0.4.17">r-ggfortify</requirement>
         <requirement type="package" version="1.4.4">r-reshape2</requirement>
     </requirements>
     <stdio>
