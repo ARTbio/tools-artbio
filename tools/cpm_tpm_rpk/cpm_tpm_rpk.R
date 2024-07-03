@@ -123,17 +123,17 @@ option_list <- list(
 )
 
 opt <- parse_args(OptionParser(option_list = option_list),
-                                    args = commandArgs(trailingOnly = TRUE))
+                  args = commandArgs(trailingOnly = TRUE))
 
 if (opt$data == "" && !(opt$help)) {
     stop("At least one argument must be supplied (count data).\n",
-             call. = FALSE)
+         call. = FALSE)
 } else if ((opt$type == "tpm" || opt$type == "rpkm") && opt$gene == "") {
     stop("At least two arguments must be supplied (count data and gene length file).\n",
-             call. = FALSE)
+         call. = FALSE)
 } else if (opt$type != "tpm" && opt$type != "rpkm" && opt$type != "cpm" && opt$type != "none") {
     stop("Wrong transformation requested (--type option) must be : cpm, tpm or rpkm.\n",
-             call. = FALSE)
+         call. = FALSE)
 }
 
 if (opt$sep == "tab") {
@@ -161,7 +161,7 @@ tpm <- function(count, length) {
 
 rpkm <- function(count, length) {
     rpk <- rpk(count, length)
-    per_million_factor <- colSums(count) / 1000000
+    per_million_factor <- colSums(as.data.frame(count)) / 1000000
     rpkm <- rpk / per_million_factor
     return(rpkm)
 }
@@ -189,14 +189,18 @@ if (opt$type == "tpm" || opt$type == "rpkm") {
 }
 
 
-if (opt$type == "cpm")
+if (opt$type == "cpm"){
     res <- cpm(data)
-if (opt$type == "tpm")
+}
+if (opt$type == "tpm"){
     res <- as.data.frame(apply(data, 2, tpm, length = gene_length), row.names = rownames(data))
-if (opt$type == "rpkm")
+}
+if (opt$type == "rpkm"){
     res <- as.data.frame(apply(data, 2, rpkm, length = gene_length), row.names = rownames(data))
-if (opt$type == "none")
+}
+if (opt$type == "none"){
     res <- data
+}
 colnames(res) <- colnames(data)
 
 if (opt$log == TRUE) {
@@ -228,8 +232,8 @@ if (opt$visu == TRUE) {
     tdf_pca <- prcomp(tdf, center = TRUE, scale. = TRUE)
     if (opt$tsne_labels == TRUE) {
         autoplot(tdf_pca, shape = FALSE, label = TRUE, label.size = 2.5, label.vjust = 1.2,
-                         label.hjust = 1.2,
-                         colour = "darkblue") +
+                 label.hjust = 1.2,
+                 colour = "darkblue") +
             geom_point(size = 1, color = "red") +
             xlab(paste("PC1", summary(tdf_pca)$importance[2, 1] * 100, "%")) +
             ylab(paste("PC2", summary(tdf_pca)$importance[2, 2] * 100, "%")) +
