@@ -33,7 +33,7 @@ option_list <- list(
     c("-t", "--type"),
     default = "cpm",
     type = "character",
-    help = "Transformation type, either cpm, tpm, rpk or none[default : '%default' ]"
+    help = "Transformation type, either cpm, tpm, rpkm or none[default : '%default' ]"
   ),
   make_option(
     c("-s", "--sep"),
@@ -128,11 +128,11 @@ opt <- parse_args(OptionParser(option_list = option_list),
 if (opt$data == "" && !(opt$help)) {
   stop("At least one argument must be supplied (count data).\n",
        call. = FALSE)
-} else if ((opt$type == "tpm" || opt$type == "rpk") && opt$gene == "") {
+} else if ((opt$type == "tpm" || opt$type == "rpkm") && opt$gene == "") {
   stop("At least two arguments must be supplied (count data and gene length file).\n",
        call. = FALSE)
-} else if (opt$type != "tpm" && opt$type != "rpk" && opt$type != "cpm" && opt$type != "none") {
-  stop("Wrong transformation requested (--type option) must be : cpm, tpm or rpk.\n",
+} else if (opt$type != "tpm" && opt$type != "rpkm" && opt$type != "cpm" && opt$type != "none") {
+  stop("Wrong transformation requested (--type option) must be : cpm, tpm or rpkm.\n",
        call. = FALSE)
 }
 
@@ -159,6 +159,12 @@ tpm <- function(count, length) {
   return(tpm)
 }
 
+rpkm <- function(count, length) {
+  rpk <- rpk(count, length)
+  per_million_factor <- colSum(count) / 1000000
+  rpkm <- rpk / per_million_factor}
+  return(rpkm)
+
 #### running code ####
 
 data <- read.delim(
@@ -169,7 +175,7 @@ data <- read.delim(
   sep = opt$sep
 )
 
-if (opt$type == "tpm" || opt$type == "rpk") {
+if (opt$type == "tpm" || opt$type == "rpkm") {
   gene_length <- as.data.frame(
     read.delim(
       opt$gene,
@@ -186,8 +192,8 @@ if (opt$type == "cpm")
   res <- cpm(data)
 if (opt$type == "tpm")
   res <- as.data.frame(apply(data, 2, tpm, length = gene_length), row.names = rownames(data))
-if (opt$type == "rpk")
-  res <- as.data.frame(apply(data, 2, rpk, length = gene_length), row.names = rownames(data))
+if (opt$type == "rpkm")
+  res <- as.data.frame(apply(data, 2, rpkm, length = gene_length), row.names = rownames(data))
 if (opt$type == "none")
   res <- data
 colnames(res) <- colnames(data)
