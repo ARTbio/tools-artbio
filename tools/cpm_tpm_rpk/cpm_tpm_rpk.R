@@ -189,16 +189,16 @@ if (opt$type == "tpm" || opt$type == "rpkm") {
 }
 
 
-if (opt$type == "cpm"){
+if (opt$type == "cpm") {
     res <- cpm(data)
 }
-if (opt$type == "tpm"){
+if (opt$type == "tpm") {
     res <- as.data.frame(apply(data, 2, tpm, length = gene_length), row.names = rownames(data))
 }
-if (opt$type == "rpkm"){
+if (opt$type == "rpkm") {
     res <- as.data.frame(apply(data, 2, rpkm, length = gene_length), row.names = rownames(data))
 }
-if (opt$type == "none"){
+if (opt$type == "none") {
     res <- data
 }
 colnames(res) <- colnames(data)
