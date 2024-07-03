@@ -1,10 +1,10 @@
-<tool id="cpm_tpm_rpk" name="Generate CPM, TPM, RPK" version="0.5.2">
+<tool id="cpm_tpm_rpk" name="Generate CPM, TPM, RPKM" version="0.6.0">
     <description>from raw counts expression values</description>
     <requirements>
-        <requirement type="package" version="1.7.1">r-optparse</requirement>
-        <requirement type="package" version="0.16">r-rtsne</requirement>
-        <requirement type="package" version="3.3.6">r-ggplot2</requirement>
-        <requirement type="package" version="0.4.14">r-ggfortify</requirement>
+        <requirement type="package" version="1.7.5">r-optparse</requirement>
+        <requirement type="package" version="0.17">r-rtsne</requirement>
+        <requirement type="package" version="3.5.1">r-ggplot2</requirement>
+        <requirement type="package" version="0.4.17">r-ggfortify</requirement>
         <requirement type="package" version="1.4.4">r-reshape2</requirement>
     </requirements>
     <stdio>
@@ -21,7 +21,7 @@
                 --gene_sep $option.gene_sep 
                 --gene_header $option.gene_header
             #end if 
-            #if $option.type_transfo == "rpk":
+            #if $option.type_transfo == "rpkm":
                 -f $option.gene_file 
                 --gene_sep $option.gene_sep 
                 --gene_header $option.gene_header
@@ -64,7 +64,7 @@
                 <param name="type_transfo" type="select" label="Type of transformation">
                     <option value="cpm" selected="true">CPM</option>
                     <option value="tpm">TPM</option>
-                    <option value="rpk">RPK</option>
+                    <option value="rpkm">RPKM</option>
                     <option value="none">NONE</option>
                 </param>
                 <when value="tpm">
@@ -82,7 +82,7 @@
                         <option value="FALSE">No</option>
                     </param>
                 </when>
-                <when value="rpk">
+                <when value="rpkm">
                     <param name="gene_file" type="data" format="txt" label="Gene length file"/>
                     <param name="gene_sep" type="select" label="Gene length column separator">
                         <option value="tab" selected="true">Tabs</option>
@@ -208,18 +208,18 @@
         </test>
         <test expect_num_outputs="1">
             <param name="input" value="counts.tab" ftype="tabular"/>
-            <param name="type_transfo" value="rpk"/>
+            <param name="type_transfo" value="rpkm"/>
             <param name="gene_file" value="gene_length.tab" ftype="tabular"/>
             <param name="gene_header" value="TRUE"/>
-            <output name="output" file="rpk.tab" ftype="tabular" />
+            <output name="output" file="rpkm.tab" ftype="tabular" />
         </test>
         <test expect_num_outputs="1">
             <param name="input" value="counts.tab" ftype="tabular"/>
-            <param name="type_transfo" value="rpk"/>
+            <param name="type_transfo" value="rpkm"/>
             <param name="gene_file" value="gene_length.tab" ftype="tabular"/>
             <param name="gene_header" value="TRUE"/>
             <param name="log" value="TRUE"/>
-            <output name="output" file="logrpk.tab" ftype="tabular" />
+            <output name="output" file="logrpkm.tab" ftype="tabular" />
         </test>
     </tests>
     <help>
@@ -231,7 +231,8 @@ Takes a raw count expression matrix and returns a table of normalized expression
 Normalization can be:
 
 - CPM (Counts Per Million) are obtained by dividing counts by the library counts sum and multiplying the results by a million.
-- RPK (Reads Per Kilobases) are obtained by dividing read counts by gene lengths (expressed in kilo-nucleotides).
+- RPK (Reads Per Kilobase) are obtained by dividing read counts by gene lengths (expressed as kilo-nucleotides).
+- RPKM (Reads Per Kilobase per Million of Counts) are obtained by dividing read counts by gene lengths (expressed in kilo-nucleotides) then by the sum of library counts (expressed as millions of reads)
 - TPM (Transcripts Per Million) are obtained by dividing RPK values by the sum of all RPK values in a sample and multiplying the results by 1 million.
 
 RPK and TPM require a two-column correspondance table gene_name - gene length where the length is specified in nucleotide. Both these metrics are relevant only for sequencing of full length RNAs.
