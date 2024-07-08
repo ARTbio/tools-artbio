@@ -139,21 +139,21 @@
     </inputs>
 
     <outputs>
-        <data format="tabular" name="histogram" label="Lumpy on ${on_string}: Fragment size distribution" from_work_dir="input.lib.histo">
+        <data format="tabular" name="histogram" label="Lumpy-sv: Fragment size distribution" from_work_dir="input.lib.histo">
             <filter>seq_method['seq_method_list'] == "paired-end"</filter>
         </data>
-        <data format="tabular" name="histogramB" label="Lumpy on ${on_string}: Fragment size distribution" from_work_dir="input.B.lib.histo">
+        <data format="tabular" name="histogramB" label="Lumpy-sv: FragmentB size distribution" from_work_dir="input.B.lib.histo">
             <filter>seq_method['seq_method_list'] == "paired-end"</filter>
             <filter>analysis_type['analysis_type_list'] == "two_sample"</filter>
         </data>
         <data format="bam" name="splits" label="Lumpy on ${on_string}: Split Reads (Bam format)" from_work_dir="input.splitters.bam"/>
-        <data format="bam" name="splitsB" label="Lumpy on ${on_string}: Split Reads (Bam format)" from_work_dir="input.B.splitters.bam">
+        <data format="bam" name="splitsB" label="Lumpy on ${on_string}: SplitB Reads (Bam format)" from_work_dir="input.B.splitters.bam">
             <filter>analysis_type['analysis_type_list'] == "two_sample"</filter>
         </data>
         <data format="bam" name="discordants" label="Lumpy on ${on_string}: Discordant Pairs (Bam format)" from_work_dir="input.discordants.bam">
             <filter>seq_method['seq_method_list'] == "paired-end"</filter>
         </data>
-        <data format="bam" name="discordantsB" label="Lumpy on ${on_string}: Discordant Pairs (Bam format)" from_work_dir="input.B.discordants.bam">
+        <data format="bam" name="discordantsB" label="Lumpy on ${on_string}: DiscordantB Pairs (Bam format)" from_work_dir="input.B.discordants.bam">
             <filter>seq_method['seq_method_list'] == "paired-end"</filter>
             <filter>analysis_type['analysis_type_list'] == "two_sample"</filter>
         </data>
