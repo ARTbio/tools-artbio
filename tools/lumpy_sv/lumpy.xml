@@ -165,7 +165,7 @@
     </outputs>
 
     <tests>
-        <test>
+        <test expect_num_outputs="1">
             <param name="analysis_type_list" value="two_sample" />
             <param name="input_file" value="sample_Del.bam" ftype="bam"/>
             <param name="input_fileB" value="sample_cle.bam" ftype="bam"/>
@@ -177,7 +177,7 @@
             <param name="min_mapping_threshold" value="20" />
             <output name="vcf_call" file="output_two.paired_end.vcf" ftype="vcf"/>
         </test>
-        <test>
+        <test expect_num_outputs="1">
             <param name="analysis_type_list" value="one_sample" />
             <param name="input_file" value="sr.input.bam" ftype="bam"/>
             <param name="seq_method_list" value="single-read" />
@@ -188,7 +188,7 @@
             <param name="min_mapping_threshold" value="20" />
             <output name="vcf_call" file="output.vcf" ftype="vcf"/>
         </test>
-        <test>
+        <test expect_num_outputs="1">
             <param name="analysis_type_list" value="one_sample" />
             <param name="input_file" value="sr.input.bam" ftype="bam"/>
             <param name="seq_method_list" value="single-read" />
@@ -201,7 +201,7 @@
             <param name="probability_curve" value="true" />
             <output name="vcf_call" file="output_extended.vcf" ftype="vcf" compare="sim_size"/>
         </test>
-        <test>
+        <test expect_num_outputs="1">
             <param name="analysis_type_list" value="two_sample" />
             <param name="input_file" value="sr.input.bam" ftype="bam"/>
             <param name="input_fileB" value="sr.input.bam" ftype="bam"/>

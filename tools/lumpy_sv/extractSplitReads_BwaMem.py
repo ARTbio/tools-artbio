@@ -21,7 +21,7 @@ def extractSplitsFromBwaMem(inFile, numSplits, includeDups, minNonOverlap):
             continue
         for el in sam.tags:
             if "SA:" in el:
-                if(len(el.split(";"))) <= numSplits:
+                if (len(el.split(";"))) <= numSplits:
                     split = 1
                     mate = el.split(",")
                     mateCigar = mate[3]
@@ -103,7 +103,6 @@ def extractCigarOps(cigar, flag):
         cigarOps = []
         for opString in cigarOpStrings:
             cigarOpList = atomicCigarSearch.findall(opString)
-#            print cigarOpList
             # "struct" for the op and it's length
             cigar = cigarOp(cigarOpList[0][0], cigarOpList[0][1])
             # add to the list of cigarOps
@@ -120,8 +119,7 @@ def extractCigarOps(cigar, flag):
             cigar = cigarOp(cigarOpList[0][0], cigarOpList[0][1])
             # add to the list of cigarOps
             cigarOps.append(cigar)
-#            cigarOps = cigarOps
-    return(cigarOps)
+    return cigarOps
 
 
 def calcQueryPosFromCigar(cigarOps):
@@ -202,7 +200,8 @@ Works on read or position sorted SAM input. Tested on bwa mem v0.7.5a-r405.
                       help='''Include alignments marked as duplicates.
                       Default=False''')
     parser.add_option("-m", "--minNonOverlap", dest="minNonOverlap",
-                      default=20, type="int", help='''minimum non-overlap between
+                      default=20, type="int",
+                      help='''minimum non-overlap between
                       split alignments on the query (default=20)''',
                       metavar="INT")
     (opts, args) = parser.parse_args()
