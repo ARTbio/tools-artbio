@@ -14,7 +14,7 @@
                          --config *.cfg
                          --num_callers \${GALAXY_SLOTS:-2}
                          --records_per_fastq 0
-                         --cpu_threads_per_caller \${GALAXY_SLOTS:-2}
+                         --cpu_threads_per_caller 1
                          --disable_pings
         && cat out/pass/*.fastq | awk '{ if (NR%4 == 2) {gsub(/U/,"T",$1); print $1} else print }' > $output_fastq
         && echo "guppy must be installed system-wide from ONT linux packages" > $discloser 
