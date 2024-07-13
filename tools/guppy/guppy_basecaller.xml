@@ -1,4 +1,4 @@
-<tool id="guppy-basecaller" name="Guppy basecaller wrapper" version="0.2.2" python_template_version="3.8">
+<tool id="guppy-basecaller" name="Guppy basecaller wrapper" version="6.5.7+galaxy0" profile="23.0">
     <description>A simple wrapper for guppy basecaller that depends on configuration files</description>
     <requirements>
     </requirements>
@@ -9,23 +9,23 @@
         #end for
         tar xf $config &&
         guppy_basecaller -i .
-                         --save_path out
-                         --data_path .
+                         --save_path "out"
+                         --data_path "."
                          --config *.cfg
-                         --num_callers 4
+                         --num_callers \${GALAXY_SLOTS:-2}
                          --records_per_fastq 0
-                         --cpu_threads_per_caller \${GALAXY_SLOTS:-2}
+                         --cpu_threads_per_caller 1
                          --disable_pings
-###                         --qscore_filtering
-###                         --calib_detect
-        && cat out/*.fastq | awk '{ if (NR%4 == 2) {gsub(/U/,"T",$1); print $1} else print }' > $output_fastq
+        && cat out/pass/*.fastq | awk '{ if (NR%4 == 2) {gsub(/U/,"T",$1); print $1} else print }' > $output_fastq
+        && echo "guppy must be installed system-wide from ONT linux packages" > $discloser 
     ]]></command>
     <inputs>
         <param name="infiles" type="data_collection" format="h5" label="Fast5 input (datatype h5)" multiple="true"/>
         <param name="config" type="data" format="tar" label="Guppy basecall configuration model"/>
     </inputs>
     <outputs>
-        <data name="output_fastq" format="fastqsanger" />
+        <data name="output_fastq" format="fastqsanger" label="Guppy base calling" />
+        <data name="discloser" format="txt" label="Guppy Discloser" />
     </outputs>
     <help><![CDATA[
         A wrapper for guppy basecaller. This expects two type of inputs: a collection of fast5 files,
