@@ -25,6 +25,10 @@
     <outputs>
         <data name="output_fastq" format="fastqsanger" label="Guppy base calling" />
     </outputs>
+    <tests>
+        <test>
+        </test>
+    </tests>
     <help><![CDATA[
         A wrapper for guppy basecaller. This expects two type of inputs: a collection of fast5 files,
         and a configuration in the form of a tar file.
