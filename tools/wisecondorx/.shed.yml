@@ -1,0 +1,13 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: wisecondorx
+description: Infer copy number variations from BAM files using WisecondorX
+long_description: |
+  Infer copy number variations from BAM files using WisecondorX
+  see GitHub repo: https://github.com/CenterForMedicalGeneticsGhent/WisecondorX/tree/master
+categories:
+  - Variant Analysis
+homepage_url: https://github.com/CenterForMedicalGeneticsGhent/WisecondorX/tree/master
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/wisecondorx
+toolshed:
+  - toolshed
