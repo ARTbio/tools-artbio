@@ -4,6 +4,9 @@
         <token name="@VERSION_SUFFIX@">1</token>
         <token name="@PROFILE@">23.0</token>
     </macros>
+    <xrefs>
+        <xref type="bio.tools">ez_histograms</xref>
+    </xrefs>
     <requirements>
         <requirement type="package" version="3.4.4">r-ggplot2</requirement>
         <requirement type="package" version="1.4.4">r-reshape2</requirement>
