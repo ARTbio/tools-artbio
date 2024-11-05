@@ -9,6 +9,7 @@ categories:
   - Transcriptomics
   - Sequence Analysis
   - Statistics
+  - Single Cell
 homepage_url: http://artbio.fr
 remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/deseq2_normalization
 toolshed:
