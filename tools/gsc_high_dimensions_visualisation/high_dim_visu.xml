@@ -1,5 +1,8 @@
 <tool id="high_dimensions_visualisation" name="Generate PCA, tSNE and HCPC" version="4.3+galaxy0" profile="20.01">
     <description>from highly dimensional expression data</description>
+    <xrefs>
+        <xref type="bio.tools">galaxy_single_cell_suite</xref>
+    </xrefs>
     <requirements>
         <requirement type="package" version="1.7.3=r43hc72bb7e_2">r-optparse</requirement>
         <requirement type="package" version="2.9=r43h57805ef_0">r-factominer</requirement>
