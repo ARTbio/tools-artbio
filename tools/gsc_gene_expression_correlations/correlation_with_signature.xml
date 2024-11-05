@@ -1,5 +1,8 @@
 <tool id="single_cell_gene_expression_correlations" name="single-cell gene expression correlations" version="4.3.1+galaxy0" profile="21.01">
     <description>between genes or with a signature of selected genes</description>
+    <xrefs>
+        <xref type="bio.tools">galaxy_single_cell_suite</xref>
+    </xrefs>
     <requirements>
         <requirement type="package" version="1.7.3">r-optparse</requirement>
         <requirement type="package" version="5.1_1">r-hmisc</requirement>
