@@ -6,6 +6,7 @@ long_description: |
   Compute signature scores from single cell RNAseq data
 categories:
   - Transcriptomics
+  - Single Cell
 homepage_url: http://artbio.fr
 remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/gsc_signature_score
 toolshed:
