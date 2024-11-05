@@ -1,5 +1,8 @@
 <tool id="center_scale" name="Center or scale (standardize) data" version="4.3.1+galaxy0" profile="21.01">
     <description></description>
+    <xrefs>
+        <xref type="bio.tools">galaxy_single_cell_suite</xref>
+    </xrefs>
     <requirements>
         <requirement type="package" version="1.7.3">r-optparse</requirement>
     </requirements>
