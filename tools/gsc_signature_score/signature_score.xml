@@ -1,5 +1,8 @@
 <tool id="signature_score" name="Compute signature scores" version="2.3.9+galaxy0">
     <description>in single cell RNAseq</description>
+    <xrefs>
+        <xref type="bio.tools">galaxy_single_cell_suite</xref>
+    </xrefs>
     <requirements>
         <requirement type="package" version="1.7.3">r-optparse</requirement>
         <requirement type="package" version="3.4.4">r-ggplot2</requirement>
