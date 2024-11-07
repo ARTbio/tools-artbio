@@ -1,5 +1,5 @@
 <tool id="deseq2_normalization" name="DESeq2 normalization" version="1.40.2+galaxy1" profile="22.01">
-	<description>of hit lists (geometric method)</description>
+    <description>of hit lists (geometric method)</description>
     <requirements>
       <requirement type="package" version="1.40.2">bioconductor-deseq2</requirement>
     </requirements>
@@ -31,13 +31,13 @@
                   quote = FALSE, dec = ".", sep = "\t", eol = "\n")
         </configfile>
     </configfiles>
-	<inputs>
-		<param name="input" type="data" format="tabular" label="Hit lists of items"/>
-	</inputs>
-	<outputs>
+    <inputs>
+        <param name="input" type="data" format="tabular" label="Hit lists of items"/>
+    </inputs>
+    <outputs>
                 <data name="output_factors" format="tabular" label="Normalization Factors (Geometric mean method)" />
                 <data name="norm_hit_table" format="tabular" label="Normalized Hit Table (Geometric mean method)" />
-	</outputs>
+    </outputs>
     <tests>
         <test>
             <param name="input" value="counts.tab" ftype="tabular"/>
@@ -106,8 +106,6 @@ NM_177834	1	3	2	0
 NM_145381	606	445	367	306
 
 ]]>
-
-
     </help>
     <citations>
         <citation type="doi">10.1186/s13059-014-0550-8</citation>
