@@ -1,5 +1,8 @@
-<tool id="filter_genes" name="Filter genes in single cell data" version="4.3.1+galaxy0" profile="21.01">
+<tool id="filter_genes" name="Filter genes in single cell data" version="4.3.1+galaxy1" profile="21.01">
     <description>which are detected in less that a given fraction of the libraries</description>
+    <xrefs>
+        <xref type="bio.tools">galaxy_single_cell_suite</xref>
+    </xrefs>
     <requirements>
         <requirement type="package" version="1.7.3">r-optparse</requirement>
     </requirements>
