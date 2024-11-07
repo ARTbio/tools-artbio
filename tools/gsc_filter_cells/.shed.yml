@@ -1,7 +1,7 @@
 # .shed.yml supporting automatic pushes.
 owner: artbio
 name: gsc_filter_cells
-description: Filter single cell RNAseq data on libray depth and number of detected genes
+description: Filter single cell RNAseq data on library depth and number of detected genes
 long_description: |
   Filter single cell RNAseq datasets on 
   - Absolute numbers of aligned reads or of detected genes
@@ -9,6 +9,7 @@ long_description: |
   - relatively to percentile threshold in the datasets, for numbers of aligned reads or of detected genes
 categories:
   - Transcriptomics
+  - Single Cell
 homepage_url: http://artbio.fr
 remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/gsc_filter_cells
 toolshed:
