@@ -3,103 +3,105 @@
 # Example of command
 # Rscript MannWhitney_DE.R --input <input.tsv> --sep <tab> --colnames <TRUE> --metadata <signature.tsv> --column_name <rate> --fdr <0.01> --output <diff_analysis.tsv>
 
-options(show.error.messages = FALSE,
-  error = function() {
-    cat(geterrmessage(), file = stderr())
-    q("no", 1, FALSE)
-  }
+options(
+    show.error.messages = FALSE,
+    error = function() {
+        cat(geterrmessage(), file = stderr())
+        q("no", 1, FALSE)
+    }
 )
 
 loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
 
 suppressPackageStartupMessages({
-  library(optparse)
+    library(optparse)
 })
 
 sessionInfo()
 
 option_list <- list(
-  make_option(
-    "--input",
-    default = NA,
-    type = "character",
-    help = "Input file that contains log2(CPM +1) values"
-  ),
-  make_option(
-    "--sep",
-    default = "\t",
-    type = "character",
-    help = "File separator [default : '%default' ]"
-  ),
-  make_option(
-    "--colnames",
-    default = TRUE,
-    type = "logical",
-    help = "Consider first line as header ? [default : '%default' ]"
-  ),
-  make_option(
-    "--comparison_factor_file",
-    default = NA,
-    type = "character",
-    help = " A two column table : cell identifiers and a comparison factor that split cells in two categories (high/low, HOM/HET,...)"
-  ),
-  make_option(
-    "--factor1",
-    type = "character",
-    help = "level associated to the control condition in the factor file"
-  ),
-  make_option(
-    "--factor2",
-    type = "character",
-    help = "level associated to the test condition in the factor file"
-  ),
-  make_option(
-    "--fdr",
-    default = 0.01,
-    type = "numeric",
-    help = "FDR threshold [default : '%default' ]"
-  ),
-  make_option(
-    "--log",
-    default = FALSE,
-    action = "store_true",
-    type = "logical",
-    help = "Expression data are log-transformed [default : '%default' ]"
-  ),
-  make_option(
-    "--output",
-    default = "results.tsv",
-    type = "character",
-    help = "Output name [default : '%default' ]"
-  )
+    make_option(
+        "--input",
+        default = NA,
+        type = "character",
+        help = "Input file that contains log2(CPM +1) values"
+    ),
+    make_option(
+        "--sep",
+        default = "\t",
+        type = "character",
+        help = "File separator [default : '%default' ]"
+    ),
+    make_option(
+        "--colnames",
+        default = TRUE,
+        type = "logical",
+        help = "Consider first line as header ? [default : '%default' ]"
+    ),
+    make_option(
+        "--comparison_factor_file",
+        default = NA,
+        type = "character",
+        help = " A two column table : cell identifiers and a comparison factor that split cells in two categories (high/low, HOM/HET,...)"
+    ),
+    make_option(
+        "--factor1",
+        type = "character",
+        help = "level associated to the control condition in the factor file"
+    ),
+    make_option(
+        "--factor2",
+        type = "character",
+        help = "level associated to the test condition in the factor file"
+    ),
+    make_option(
+        "--fdr",
+        default = 0.01,
+        type = "numeric",
+        help = "FDR threshold [default : '%default' ]"
+    ),
+    make_option(
+        "--log",
+        default = FALSE,
+        action = "store_true",
+        type = "logical",
+        help = "Expression data are log-transformed [default : '%default' ]"
+    ),
+    make_option(
+        "--output",
+        default = "results.tsv",
+        type = "character",
+        help = "Output name [default : '%default' ]"
+    )
 )
 
 opt <- parse_args(OptionParser(option_list = option_list),
-                  args = commandArgs(trailingOnly = TRUE))
+    args = commandArgs(trailingOnly = TRUE)
+)
 
 if (opt$sep == "tab") {
-  opt$sep <- "\t"
+    opt$sep <- "\t"
 }
 if (opt$sep == "comma") {
-  opt$sep <- ","
+    opt$sep <- ","
 }
 
-#Open files
+# Open files
 data.counts <- read.table(
-  opt$input,
-  h = opt$colnames,
-  row.names = 1,
-  sep = opt$sep,
-  check.names = FALSE
+    opt$input,
+    h = opt$colnames,
+    row.names = 1,
+    sep = opt$sep,
+    check.names = FALSE
 )
 
 metadata <- read.table(
-  opt$comparison_factor_file,
-  header = TRUE,
-  stringsAsFactors = FALSE,
-  sep = "\t",
-  check.names = FALSE,
-  row.names = 1
+    opt$comparison_factor_file,
+    header = TRUE,
+    stringsAsFactors = FALSE,
+    sep = "\t",
+    check.names = FALSE,
+    row.names = 1
 )
 
 metadata <- subset(metadata, rownames(metadata) %in% colnames(data.counts))
@@ -110,7 +112,7 @@ factor2_cells <- setNames(metadata[, 1] == opt$factor2, rownames(metadata))
 
 ## Mann-Whitney test (Two-sample Wilcoxon test)
 MW_test <- data.frame(t(apply(data.counts, 1, function(x) {
-  do.call("cbind", wilcox.test(x[names(factor1_cells)[factor1_cells]], x[names(factor2_cells)[factor2_cells]]))[, 1:2]
+    do.call("cbind", wilcox.test(x[names(factor1_cells)[factor1_cells]], x[names(factor2_cells)[factor2_cells]]))[, 1:2]
 })), stringsAsFactors = FALSE)
 
 # Benjamini-Hochberg correction and significativity
@@ -119,22 +121,22 @@ MW_test$Significant <- MW_test$p.adjust < opt$fdr
 
 ## Descriptive Statistics Function
 descriptive_stats <- function(InputData) {
-  SummaryData <- data.frame(
-    mean = rowMeans(InputData),
-    SD = apply(InputData, 1, sd),
-    Variance = apply(InputData, 1, var),
-    Percentage_Detection = apply(InputData, 1, function(x, y = InputData) {
-      (sum(x != 0) / ncol(y)) * 100
-    }),
-    mean_condition2 = rowMeans(InputData[, factor2_cells]),
-    mean_condition1 = rowMeans(InputData[, factor1_cells])
-  )
-  if (opt$log) {
-    SummaryData$log2FC <- SummaryData$mean_condition2 - SummaryData$mean_condition1
-  } else {
-    SummaryData$log2FC <- log2(SummaryData$mean_condition2 / SummaryData$mean_condition1)
-  }
-  return(SummaryData)
+    SummaryData <- data.frame(
+        mean = rowMeans(InputData),
+        SD = apply(InputData, 1, sd),
+        Variance = apply(InputData, 1, var),
+        Percentage_Detection = apply(InputData, 1, function(x, y = InputData) {
+            (sum(x != 0) / ncol(y)) * 100
+        }),
+        mean_condition2 = rowMeans(InputData[, factor2_cells]),
+        mean_condition1 = rowMeans(InputData[, factor1_cells])
+    )
+    if (opt$log) {
+        SummaryData$log2FC <- SummaryData$mean_condition2 - SummaryData$mean_condition1
+    } else {
+        SummaryData$log2FC <- log2(SummaryData$mean_condition2 / SummaryData$mean_condition1)
+    }
+    return(SummaryData)
 }
 
 gene_stats <- descriptive_stats(data.counts)
@@ -149,10 +151,10 @@ results$Significant[results$Significant == FALSE & !is.na(results$Significant)] 
 
 # Save files
 write.table(
-  results[order(results$p.adjust), ],
-  opt$output,
-  sep = "\t",
-  quote = FALSE,
-  col.names = TRUE,
-  row.names = FALSE
+    results[order(results$p.adjust), ],
+    opt$output,
+    sep = "\t",
+    quote = FALSE,
+    col.names = TRUE,
+    row.names = FALSE
 )
