@@ -5,10 +5,9 @@ description: Normalizes gene hitlists
 long_description: |
   Normalizes gene count lists using DESeq2 estimateSizeFactors() function.
 categories:
-  - RNA
   - Transcriptomics
-  - Sequence Analysis
   - Statistics
+  - Single Cell
 homepage_url: http://artbio.fr
 remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/deseq2_normalization
 toolshed:
