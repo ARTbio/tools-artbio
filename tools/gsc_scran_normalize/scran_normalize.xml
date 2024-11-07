@@ -74,8 +74,10 @@ expression across the majority of genes represents some technical bias that shou
 
 Cell-specific biases are normalized using the computeSumFactors method, which implements the
 deconvolution strategy for scaling normalization (A. T. Lun, Bach, and Marioni 2016). It creates a reference : 
-  - if no clustering step : the average count of all transcriptomes 
-  - if you choose to cluster your cells : the average count of each cluster. 
+
+- if no clustering step : the average count of all transcriptomes 
+- if you choose to cluster your cells : the average count of each cluster.
+
 Then it pools cells and then sum their expression profiles. The size factor is described as the median ration
 between the count sums and the average across all genes. Finally it constructs a linear distribution (deconvolution method)
 of size factors by taking multiple pools of cells.
@@ -83,9 +85,8 @@ of size factors by taking multiple pools of cells.
 You can apply this method on cell cluster instead of your all set of cells by using quickCluster.
 It defines cluster using distances based on Spearman correlation on counts between cells, there is two available methods : 
 
-  - *hclust* : hierarchical clustering on the distance matrix and dynamic tree cut.
-  - *igraph* : constructs a Shared Nearest Neighbor graph (SNN) on the distance matrix and identifies highly connected communities.
-
+- *hclust* : hierarchical clustering on the distance matrix and dynamic tree cut.
+- *igraph* : constructs a Shared Nearest Neighbor graph (SNN) on the distance matrix and identifies highly connected communities.
 
 Note: First header row must NOT start with a '#' comment character
 
