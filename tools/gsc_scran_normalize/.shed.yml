@@ -6,6 +6,7 @@ long_description: |
   Normalizes raw counts expression matrix using deconvolution size factors
 categories:
   - Transcriptomics
+  - Single Cell
 homepage_url: http://artbio.fr
 remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/gsc_scran_normalize
 toolshed:
