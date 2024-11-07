@@ -1,9 +1,14 @@
 <tool id="ez_histograms" name="ez_histograms" version="@TOOL_VERSION@+galaxy@VERSION_SUFFIX@" profile="@PROFILE@">
     <macros>
         <token name="@TOOL_VERSION@">3.4.4</token>
-        <token name="@VERSION_SUFFIX@">1</token>
+        <token name="@VERSION_SUFFIX@">2</token>
         <token name="@PROFILE@">23.0</token>
     </macros>
+
+    <xrefs>
+        <xref type="bio.tools">ez_histograms</xref>
+    </xrefs>
+
     <requirements>
         <requirement type="package" version="3.4.4">r-ggplot2</requirement>
         <requirement type="package" version="1.4.4">r-reshape2</requirement>
