@@ -5,6 +5,7 @@ description: Filter genes that are detected in less than a fraction of libraries
 long_description:
 categories:
   - Transcriptomics
+  - Single Cell
 homepage_url: http://artbio.fr
 remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/gsc_filter_genes
 toolshed:
