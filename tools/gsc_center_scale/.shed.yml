@@ -7,6 +7,7 @@ long_description: |
   transcriptomic data, or any type of numerical data
 categories:
   - Statistics
+  - Single Cell
 homepage_url: http://artbio.fr
 remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/gsc_center_scale
 toolshed:
