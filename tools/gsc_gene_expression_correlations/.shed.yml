@@ -7,6 +7,7 @@ long_description: |
   between genes and a signature of selected genes.
 categories:
   - Transcriptomics
+  - Single Cell
 homepage_url: http://artbio.fr
 remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/gsc_gene_expression_correlations
 toolshed:
