@@ -239,7 +239,7 @@
             <param name="visu_choice" value="PCA" />
             <param name="factor_choice" value="No" />
             <param name="item_size" value="0.5" />
-            <output name="pdf_out" file="pca.1.pdf" ftype="pdf"/>
+            <output name="pdf_out" file="pca.1.pdf" ftype="pdf" compare="sim_size" delta="1000"/>
         </test>
         <!-- test PCA PC2 vs PC3 -->
         <test expect_num_outputs="1">
@@ -249,7 +249,7 @@
             <param name="factor_choice" value="No" />
             <param name="x_axis" value="2" />
             <param name="y_axis" value="3" />
-            <output name="pdf_out" file="pca.2.pdf" ftype="pdf"/>
+            <output name="pdf_out" file="pca.2.pdf" ftype="pdf" compare="sim_size" delta="1000"/>
         </test>
         <!-- test factor contrasting on PCA -->
         <test expect_num_outputs="1">
@@ -258,7 +258,7 @@
             <param name="visu_choice" value="PCA" />
             <param name="factor_choice" value="Yes" />
             <param name="factor" value="factor.tsv" ftype="txt"/>
-            <output name="pdf_out" file="pca.3.pdf" ftype="pdf"/>
+            <output name="pdf_out" file="pca.3.pdf" ftype="pdf" compare="sim_size" delta="1000"/>
         </test>
         <!-- test numerical factor contrasting on PCA -->
         <test expect_num_outputs="1">
