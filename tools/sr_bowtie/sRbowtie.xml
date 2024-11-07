@@ -1,5 +1,8 @@
-<tool id="bowtieForSmallRNA" name="sR_bowtie" version="2.3.0">
+<tool id="bowtieForSmallRNA" name="sR_bowtie" version="2.3.1">
     <description>for small RNA short reads</description>
+    <xrefs>
+        <xref type="bio.tools">sr_bowtie</xref>
+    </xrefs>
     <requirements>
         <requirement type="package" version="1.3.1">bowtie</requirement>
         <requirement type="package" version="1.14">samtools</requirement>
@@ -132,7 +135,7 @@
         </data>
     </outputs>
     <tests>
-        <test>
+        <test expect_num_outputs="1">
             <param name="genomeSource" value="history" />
             <param ftype="fasta" name="ownFile" value="297_reference.fa" />
             <param name="method" value="unique" />
@@ -141,7 +144,7 @@
             <param name="output_format" value="bam" />
             <output file="output.bam" ftype="bam" compare="sim_size" delta="1000" name="output" />
         </test>
-        <test>
+        <test expect_num_outputs="1">
             <param name="genomeSource" value="history" />
             <param ftype="fasta" name="ownFile" value="297_reference.fa" />
             <param name="method" value="unique" />
@@ -150,7 +153,7 @@
             <param name="output_format" value="bam" />
             <output file="output2.bam" ftype="bam" compare="sim_size" delta="1000" name="output" />
         </test>
-        <test>
+        <test expect_num_outputs="2">
             <param name="genomeSource" value="history" />
             <param ftype="fasta" name="ownFile" value="297_reference.fa" />
             <param name="method" value="unique" />
@@ -161,7 +164,7 @@
             <output file="output2.bam" ftype="bam" compare="sim_size" delta="1000" name="output" />
             <output file="al.fastqsanger" ftype="fastqsanger" name="aligned" />
         </test>
-        <test>
+        <test expect_num_outputs="1">
             <param name="genomeSource" value="history" />
             <param ftype="fasta" name="ownFile" value="297_reference.fa" />
             <param name="method" value="multiple" />
@@ -170,7 +173,7 @@
             <param name="output_format" value="tabular" />
             <output file="output.tab" ftype="tabular" name="output" />
         </test>
-        <test>
+        <test expect_num_outputs="2">
             <param name="genomeSource" value="history" />
             <param ftype="fasta" name="ownFile" value="297_reference.fa" />
             <param name="method" value="multiple" />
