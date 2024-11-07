@@ -1,5 +1,8 @@
-<tool id="scran_normalize" name="scran_normalize" version="1.28.1+galaxy0">
+<tool id="scran_normalize" name="scran_normalize" version="1.28.1+galaxy1">
     <description>Normalize raw counts expression values using deconvolution size factors</description>
+    <xrefs>
+        <xref type="bio.tools">galaxy_single_cell_suite</xref>
+    </xrefs>
     <requirements>
         <requirement type="package" version="1.28.1">bioconductor-scran</requirement>
         <requirement type="package" version="1.63_1">r-dynamictreecut</requirement>
