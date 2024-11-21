@@ -9,14 +9,6 @@
   <command detect_errors="exit_code"><![CDATA[
     printf "notes: Pairwise comparison without replicates with default parameter setting.\n\n" >> config.yml &&
     printf "data:\n" >> config.yml &&
-    printf "    ${control_name}:\n" >> config.yml &&
-    #for $i, $s in enumerate($ControlReplicates):
-        printf "        rep${i}: ./${control_name}_${i}\n" >> config.yml &&
-        mkdir ${control_name}_${i} &&
-        ln -s ${s.ControlJson} ${control_name}_${i}/data.json &&
-        ln -s ${s.ControlIndex} ${control_name}_${i}/data.index &&
-        ln -s ${s.ControlReadcount} ${control_name}_${i}/data.readcount &&
-    #end for
     printf "    ${test_name}:\n" >> config.yml &&    
     #for $i, $s in enumerate($TestReplicates):
         printf "        rep${i}: ./${test_name}_${i}\n" >> config.yml &&
@@ -24,6 +16,14 @@
         ln -s ${s.TestJson} ${test_name}_${i}/data.json &&
         ln -s ${s.TestIndex} ${test_name}_${i}/data.index &&
         ln -s ${s.TestReadcount} ${test_name}_${i}/data.readcount &&
+    #end for
+    printf "    ${control_name}:\n" >> config.yml &&
+    #for $i, $s in enumerate($ControlReplicates):
+        printf "        rep${i}: ./${control_name}_${i}\n" >> config.yml &&
+        mkdir ${control_name}_${i} &&
+        ln -s ${s.ControlJson} ${control_name}_${i}/data.json &&
+        ln -s ${s.ControlIndex} ${control_name}_${i}/data.index &&
+        ln -s ${s.ControlReadcount} ${control_name}_${i}/data.readcount &&
     #end for
     printf "\nout: ./out\n" >> config.yml &&
     printf "\nmethod:\n" >> config.yml &&
