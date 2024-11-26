@@ -11,52 +11,37 @@
     </stdio>
     <command detect_errors="exit_code"><![CDATA[
     @pipefail@
-    sequenza-utils gc_wiggle  --fasta $reference -o $refwig -w $window
+    #for $file in $bams:
+        printf "Creating 5kb bins for file $file.element_identifier"
+        WisecondorX convert $file $file.npz
+    #end for
+
     ]]></command>
     <inputs>
-        <param name="reference" type="data" format="fasta" label="Genome in fasta format"
-               help="the fasta genome whose GC content will be indexed"/>
-        <param name="window" type="integer" value="50" label="window size" help="The size of the wiggle for GC content calculation" />
+        <param name="bams" type="data" label="Bam inputs" format="bam"
+               help="input Bams are converted in .npz files"/>
      </inputs>
     <outputs>
-        <data name="refwig" format="wig" label="reference_wig" />
+        <data name="refwig" format="data"" label="npz file" />
     </outputs>
     <tests>
         <test>
-            <param name="window" value="100" ftype="vcf" />
-            <param name="reference" value="hg19_chr22.fa.gz" />
-            <output name="refwig" file="hg19.GCref.txt" ftype="wig" />
         </test>
-        <test>
-            <param name="window" value="100" ftype="vcf" />
-            <param name="reference" value="hg38_chr22.fa.gz" />
-            <output name="refwig" file="hg38.GCref.txt" ftype="wig" />
-        </test>
-
     </tests>
     <help>
 
-snvtocnv
+wisecondorx_reference
 ============================
 
-Analyzes genomic sequencing data from paired normal-tumor samples, including
-cellularity and ploidy estimation; mutation and copy number (allele-specific and total
-copy number) detection, quantification and visualization.
+Generate npz file from bam file.
 
-This tools builds the GC wigle index of the reference genome required to perform analysis
-of the somatic single nucleotide variations using the tool "Infer CNVs from SNVs"
-
-    
 Inputs
 --------
 
-The reference genome in a fasta format
-
-*Warning* the genome fasta must be sorted according to the chromosomes
-(e.g. chr1, chr2, .. chr21, chr22)
+A bam file
 
     </help>
     <citations>
-        <citation type="doi">10.1093/annonc/mdu479</citation>
+        <citation type="doi">10.1093/nar/gky1263</citation>
     </citations>
 </tool>
