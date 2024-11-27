@@ -21,7 +21,7 @@
                help="input Bam is converted in .npz file"/>
      </inputs>
     <outputs>
-        <data name="npz" format="npz" from_work_dir="output.npz" label="npz file" />
+        <data name="npz" format="npz" from_work_dir="output.npz" label="${on_string}.npz" />
     </outputs>
     <tests>
         <test>
