@@ -12,7 +12,7 @@
     <command detect_errors="exit_code"><![CDATA[
     @pipefail@
     printf "Creating 5kb bins for file $bam.element_identifier"
-    WisecondorX convert $bam $bam.npz
+    WisecondorX convert $bam ${bam}.npz
 
     ]]></command>
     <inputs>
