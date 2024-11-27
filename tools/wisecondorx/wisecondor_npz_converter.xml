@@ -20,7 +20,7 @@
                help="input Bams are converted in .npz files"/>
      </inputs>
     <outputs>
-        <data name="npz" format="data"" label="npz file" />
+        <data name="npz" format="data" label="npz file" />
     </outputs>
     <tests>
         <test>
