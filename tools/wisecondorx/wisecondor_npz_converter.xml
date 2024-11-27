@@ -1,6 +1,6 @@
-<tool id="wisecondorx_reference" name="WisecondorX" version="@WRAPPER_VERSION@" profile="@PROFILE@">
+<tool id="wisecondorx_npz_converter" name="WisecondorX convert" version="@WRAPPER_VERSION@" profile="@PROFILE@">
     <description>
-        build reference from normal samples
+        bam to npz
     </description>
     <macros>
         <import>macro.xml</import>
@@ -11,10 +11,8 @@
     </stdio>
     <command detect_errors="exit_code"><![CDATA[
     @pipefail@
-    #for $file in $bams:
-        printf "Creating 5kb bins for file $file.element_identifier"
-        WisecondorX convert $file $file.npz
-    #end for
+    printf "Creating 5kb bins for file $file.element_identifier"
+    WisecondorX convert $file $file.npz
 
     ]]></command>
     <inputs>
@@ -22,7 +20,7 @@
                help="input Bams are converted in .npz files"/>
      </inputs>
     <outputs>
-        <data name="refwig" format="data"" label="npz file" />
+        <data name="npz" format="data"" label="npz file" />
     </outputs>
     <tests>
         <test>
