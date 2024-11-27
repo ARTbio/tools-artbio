@@ -12,12 +12,12 @@
     <command detect_errors="exit_code"><![CDATA[
     @pipefail@
     printf "Creating 5kb bins for file $file.element_identifier"
-    WisecondorX convert $file $file.npz
+    WisecondorX convert $bam $bam.npz
 
     ]]></command>
     <inputs>
-        <param name="bams" type="data" label="Bam inputs" format="bam"
-               help="input Bams are converted in .npz files"/>
+        <param name="bam" type="data" label="Bam input" format="bam"
+               help="input Bam is converted in .npz file"/>
      </inputs>
     <outputs>
         <data name="npz" format="data" label="npz file" />
