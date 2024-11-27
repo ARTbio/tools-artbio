@@ -11,17 +11,17 @@
     </stdio>
     <command detect_errors="exit_code"><![CDATA[
     @pipefail@
-    ln -f -s $bam.metadata.bam_index ${bam}.bai &&
+    ln -f -s $bam.metadata.bam_index input.bam.bai &&
+    ln -f -s $bam input.bam &&
     printf "Creating 5kb bins for file $bam.element_identifier" &&
-    WisecondorX convert $bam ${bam}.npz
-
+    WisecondorX convert input.bam output.npz
     ]]></command>
     <inputs>
         <param name="bam" type="data" label="Bam input" format="bam"
                help="input Bam is converted in .npz file"/>
      </inputs>
     <outputs>
-        <data name="npz" format="npz" label="npz file" />
+        <data name="npz" format="npz" from_work_dir="output.npz" label="npz file" />
     </outputs>
     <tests>
         <test>
