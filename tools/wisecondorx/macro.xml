@@ -6,7 +6,7 @@
 
     <xml name="requirements">
         <requirements>
-            <requirement type="package" version="@TOOL_VERSION@">wisecondorx</requirement>
+            <requirement type="package" version="@VERSION@">wisecondorx</requirement>
         </requirements>
     </xml>
 
