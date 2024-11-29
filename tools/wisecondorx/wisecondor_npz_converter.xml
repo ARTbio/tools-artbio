@@ -29,7 +29,7 @@
     </tests>
     <help>
 
-wisecondorx_reference
+wisecondorx_npz_converter
 ============================
 
 Generate npz file from bam file.

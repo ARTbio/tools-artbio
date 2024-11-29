@@ -1,0 +1,51 @@
+<tool id="wisecondorx_reference_builder" name="WisecondorX build" version="@WRAPPER_VERSION@" profile="@PROFILE@">
+    <description>
+        reference
+    </description>
+    <macros>
+        <import>macro.xml</import>
+    </macros>
+    <expand macro="requirements"/>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Error occured" />
+    </stdio>
+    <command detect_errors="exit_code"><![CDATA[
+    @pipefail@
+    #for $file in $npz_inputs:
+        printf "${file.element_identifier}..." &&
+        ln -f -s $file ${file.element_identifier}.npz
+    #end for
+    WisecondorX newref *.npz reference.${bin}.npz \
+        --binsize ${bin}
+        --cpus \${GALAXY_SLOTS:-4}
+    ]]></command>
+    <inputs>
+        <param name="npz_inputs" type="data" label="npz inputs" format="bam"
+               help="Build reference from npz inputs from normal sample (at least 10 samples required)"/>
+        <param name="bin" size="9" type="integer" value="100000" label="Bin size in nucleotides"
+               help="Bin default value is 100 kb (100000)" />
+     </inputs>
+    <outputs>
+        <data name="npz" format="npz" from_work_dir="reference.${bin}.npz" label="reference.${bin}.npz" />
+    </outputs>
+    <tests>
+        <test>
+        </test>
+    </tests>
+    <help>
+
+wisecondorx_reference
+============================
+
+Generate new reference from npz control samples.
+
+Inputs
+--------
+
+A collection of .npz files (a minimum of 10 files or more)
+
+    </help>
+    <citations>
+        <citation type="doi">10.1093/nar/gky1263</citation>
+    </citations>
+</tool>
