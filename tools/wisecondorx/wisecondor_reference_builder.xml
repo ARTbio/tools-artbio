@@ -11,9 +11,9 @@
     </stdio>
     <command detect_errors="exit_code"><![CDATA[
     @pipefail@
-    #for $file in $npz_inputs:
-        printf "${file.element_identifier}..." &&
-        ln -s $file "${file.element_identifier}.npz" &&
+    #for $num, $file in enumerate($npz_inputs):
+        printf "$num\n" &&
+        ln -s $file "${num}.npz" &&
     #end for
     WisecondorX newref *.npz reference.${bin}.npz \
         --binsize ${bin}
