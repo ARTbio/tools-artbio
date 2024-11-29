@@ -13,7 +13,7 @@
     @pipefail@
     #for $file in $npz_inputs:
         printf "${file.element_identifier}..." &&
-        ln -f -s $file ${file.element_identifier}.npz
+        ln -s $file "${file.element_identifier}.npz" &&
     #end for
     WisecondorX newref *.npz reference.${bin}.npz \
         --binsize ${bin}
