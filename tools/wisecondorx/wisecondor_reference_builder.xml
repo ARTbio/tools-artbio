@@ -15,10 +15,9 @@
         printf "$num\n" &&
         ln -s $file "${num}.npz" &&
     #end for
-    WisecondorX newref *.npz reference.npz
+    WisecondorX newref *.npz $npz
         --binsize ${bin}
-        --cpus \${GALAXY_SLOTS:-4} &&
-    mv reference.npz $npz
+        --cpus \${GALAXY_SLOTS:-4}
     ]]></command>
     <inputs>
         <param name="npz_inputs" type="data" label="npz inputs" multiple="True" format="npz"
