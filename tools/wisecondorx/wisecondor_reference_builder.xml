@@ -17,11 +17,11 @@
         ln -s $file "npz_inputs/${num}.npz" &&
     #end for
     ls -la npz_inputs/ &&
-    mkdir working &&
-    WisecondorX newref npz_inputs/*.npz working/reference.npz \
+    mkdir references &&
+    WisecondorX newref npz_inputs/*.npz references/reference.npz
         --binsize ${bin}
         --cpus \${GALAXY_SLOTS:-4} &&
-    mv working/reference.npz $npz
+    mv references/reference.npz $npz
     ]]></command>
     <inputs>
         <param name="npz_inputs" type="data" label="npz inputs" multiple="True" format="npz"
