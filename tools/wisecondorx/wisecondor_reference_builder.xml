@@ -15,7 +15,7 @@
         printf "$num\n" &&
         ln -s $file "${num}.npz" &&
     #end for
-    mkdir working
+    mkdir working &&
     WisecondorX newref *.npz working/reference.npz \
         --binsize ${bin}
         --cpus \${GALAXY_SLOTS:-4} &&
