@@ -11,12 +11,14 @@
     </stdio>
     <command detect_errors="exit_code"><![CDATA[
     @pipefail@
+    mkdir npz_inputs &&
     #for $num, $file in enumerate($npz_inputs):
         printf "$num\n" &&
-        ln -s $file "${num}.npz" &&
+        ln -s $file "npz_inputs/${num}.npz" &&
     #end for
+    ls -la npz_inputs/ &&
     mkdir working &&
-    WisecondorX newref *.npz working/reference.npz \
+    WisecondorX newref npz_inputs/*.npz working/reference.npz \
         --binsize ${bin}
         --cpus \${GALAXY_SLOTS:-4} &&
     mv working/reference.npz $npz
