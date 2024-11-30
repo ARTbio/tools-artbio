@@ -20,7 +20,7 @@
         --cpus \${GALAXY_SLOTS:-4}
     ]]></command>
     <inputs>
-        <param name="npz_inputs" type="data" label="npz inputs" multiple="True" format="bam"
+        <param name="npz_inputs" type="data" label="npz inputs" multiple="True" format="npz"
                help="Build reference from npz inputs from normal sample (at least 10 samples required)"/>
         <param name="bin" size="9" type="integer" value="100000" label="Bin size in nucleotides"
                help="Bin default value is 100 kb (100000)" />
