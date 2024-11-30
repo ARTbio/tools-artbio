@@ -15,7 +15,7 @@
         printf "$num\n" &&
         ln -s $file "${num}.npz" &&
     #end for
-    WisecondorX newref *.npz new_reference \
+    WisecondorX newref *.npz ./new_reference.npz \
         --binsize ${bin}
         --cpus \${GALAXY_SLOTS:-4}
     ]]></command>
@@ -26,7 +26,7 @@
                help="Bin default value is 100 kb (100000)" />
      </inputs>
     <outputs>
-        <data name="npz" format="npz" from_work_dir="new_reference" label="reference_${bin}nt" />
+        <data name="npz" format="npz" from_work_dir="new_reference.npz" label="reference_${bin}nt" />
     </outputs>
     <tests>
         <test>
