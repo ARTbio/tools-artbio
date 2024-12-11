@@ -25,7 +25,7 @@
         <data name="segments" format="bed" label="sample segments" from_work_dir="sample_segments.bed"/>
         <data name="statistics" format="txt" label="statistics" from_work_dir="sample_statistics.txt"/>
         <collection name="plots" type="list" format="png" label="CNV plots">
-            discover_datasets pattern="__name_and_ext__" directory="sample.plots" />
+            <discover_datasets pattern="__name_and_ext__" directory="sample.plots" />
         </collection>
     </outputs>
     <tests>
