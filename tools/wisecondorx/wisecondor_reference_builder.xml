@@ -30,7 +30,7 @@
         <data name="npz" format="npz" label="reference_${bin}nt" />
     </outputs>
     <tests>
-        <test>
+        <test expect_num_outputs="1">
             <param name="npz_inputs">
                 <collection type="list">
                     <element name="0" ftype="npz" value="0.ref.npz"/>
