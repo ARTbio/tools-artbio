@@ -55,7 +55,7 @@
 WisecondorX predict
 ============================
 
-Predict CNV for an input npz file, using a reference.npz generated with the tool
+Predict CNV from an input npz file, using a reference.npz generated with the tool
 WisecondorX build reference.
 
     
@@ -70,6 +70,6 @@ A vcf file of somatic *single* nucleotide variations observed in a tumor sample
 
     </help>
     <citations>
-        <citation type="doi">10.1093/annonc/mdu479</citation>
+        <citation type="doi">10.1093/nar/gky1263</citation>
     </citations>
 </tool>
