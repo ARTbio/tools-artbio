@@ -35,15 +35,15 @@
     </tests>
     <help>
 
-wisecondorx_reference
+WisecondorX build reference
 ============================
 
-Generate new reference from npz control samples.
+Generate reference npz index from npz control samples.
 
 Inputs
 --------
 
-A collection of .npz files (a minimum of 10 files or more)
+A collection of .npz files (at least 10 files or more)
 
     </help>
     <citations>

@@ -1,6 +1,6 @@
-<tool id="wisecondorx_test" name="WisecondorX" version="@WRAPPER_VERSION@" profile="@PROFILE@">
+<tool id="wisecondorx_predict" name="WisecondorX predict" version="@WRAPPER_VERSION@" profile="@PROFILE@">
     <description>
-        CNV inference
+        CNVs
     </description>
     <macros>
         <import>macro.xml</import>
@@ -11,21 +11,13 @@
     </stdio>
     <command detect_errors="exit_code"><![CDATA[
     @pipefail@
-    sequenza-utils snp2seqz -v '$input_snvs'  -gc $refwig -o sample.seqz.gz &&
-    sequenza-utils seqz_binning --seqz sample.seqz.gz -w 50 -o '$wiggle' &&
-    Rscript $__tool_directory__/segmentation_sequenza.R
-            -i '$wiggle'
-            -s sample
-            -O test &&
-    Rscript $__tool_directory__/sequenza_to_hrdtools_input.R
-            -i test/sample_segments.txt
-            -s test/sample_alternative_solutions.txt
-            -o '$cnvs' &&
-    ls test
+    ln -s $npz_input sample.npz &&
+    ln -s $reference reference.npz &&
+    WisecondorX predict sample.npz reference.npz sample --plot --bed
     ]]></command>
     <inputs>
-        <param name="refwig" type="data" format="txt" label="GC wigle of reference genome"/>
-        <param name="input_snvs" type="data" format="vcf" label="SNVs to process in a vcf file"/>
+        <param name="npz_input" type="data" format="npz" label="npz file from sample to analyse"/>
+        <param name="reference" type="data" format="npz" label="npz reference built with WisecondorX build"/>
     </inputs>
     <outputs>
         <data name="wiggle" format="wig" label="binned wiggle" />
@@ -62,12 +54,11 @@
     </tests>
     <help>
 
-snvtocnv
+WisecondorX predict
 ============================
 
-Analyze genomic sequencing data from paired normal-tumor samples, including
-cellularity and ploidy estimation; mutation and copy number (allele-specific and total
-copy number) detection, quantification and visualization.
+Predict CNV for an input npz file, using a reference.npz generated with the tool
+WisecondorX build reference.
 
     
 Inputs
