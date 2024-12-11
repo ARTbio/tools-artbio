@@ -45,7 +45,7 @@
                     <element name="9" ftype="npz" value="9.ref.npz"/>
                 </collection>
             </param>
-            <param name="bin" value="100000">
+            <param name="bin" value="100000" />
             <output name="npz" ftype="npz" file="output_reference.npz" compare="sim_size" delta="1"/>
         </test>
     </tests>
