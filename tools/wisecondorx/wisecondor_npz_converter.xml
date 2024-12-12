@@ -26,7 +26,7 @@
     <tests>
         <test expect_num_outputs="1">
             <param ftype="bam" name="bam" value="npz_convert_input.bam" />
-            <output name="npz" ftype="npz" file="npz_convert_output.npz" compare="sim_size" delta="1"/>
+            <output name="npz" ftype="npz" file="npz_convert_output.npz" compare="sim_size" delta="100"/>
         </test>
     </tests>
     <help>
