@@ -69,8 +69,8 @@
 WisecondorX predict
 ============================
 
-Predict CNV from an input npz file, using a reference.npz generated with the tool
-WisecondorX build reference.
+Predict CNV from an input npz file using a reference.npz generated with the tool
+`WisecondorX build reference`.
 
     
 Inputs
