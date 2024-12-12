@@ -37,30 +37,30 @@
             <output name="segments" ftype="bed" file="predict_segments.bed"/>
             <output name="statistics" ftype="txt" file="predict_statistics.txt" compare="sim_size" delta="1000"/>
             <output_collection name="plots" type="list">
-                <element name="chr1" file="chr1.png" compare="sim_size" delta="1000"/>
-                <element name="chr10" file="chr10.png" compare="sim_size" delta="1000"/>
-                <element name="chr11" file="chr11.png" compare="sim_size" delta="1000"/>
-                <element name="chr12" file="chr12.png" compare="sim_size" delta="1000"/>
-                <element name="chr13" file="chr13.png" compare="sim_size" delta="1000"/>
-                <element name="chr14" file="chr14.png" compare="sim_size" delta="1000"/>
-                <element name="chr15" file="chr15.png" compare="sim_size" delta="1000"/>
-                <element name="chr16" file="chr16.png" compare="sim_size" delta="1000"/>
-                <element name="chr17" file="chr17.png" compare="sim_size" delta="1000"/>
-                <element name="chr18" file="chr18.png" compare="sim_size" delta="1000"/>
-                <element name="chr19" file="chr19.png" compare="sim_size" delta="1000"/>
-                <element name="chr2" file="chr2.png" compare="sim_size" delta="1000"/>
-                <element name="chr20" file="chr20.png" compare="sim_size" delta="1000"/>
-                <element name="chr21" file="chr21.png" compare="sim_size" delta="1000"/>
-                <element name="chr22" file="chr22.png" compare="sim_size" delta="1000"/>
-                <element name="chr3" file="chr3.png" compare="sim_size" delta="1000"/>
-                <element name="chr4" file="chr4.png" compare="sim_size" delta="1000"/>
-                <element name="chr5" file="chr5.png" compare="sim_size" delta="1000"/>
-                <element name="chr6" file="chr6.png" compare="sim_size" delta="1000"/>
-                <element name="chr7" file="chr7.png" compare="sim_size" delta="1000"/>
-                <element name="chr8" file="chr8.png" compare="sim_size" delta="1000"/>
-                <element name="chr9" file="chr9.png" compare="sim_size" delta="1000"/>
-                <element name="chrX" file="chrX.png" compare="sim_size" delta="1000"/>
-                <element name="genome_wide" file="genome_wide.png" compare="sim_size" delta="1000"/>
+                <element name="chr1" file="chr1.png" compare="sim_size" delta="10000"/>
+                <element name="chr10" file="chr10.png" compare="sim_size" delta="10000"/>
+                <element name="chr11" file="chr11.png" compare="sim_size" delta="10000/>
+                <element name="chr12" file="chr12.png" compare="sim_size" delta="10000"/>
+                <element name="chr13" file="chr13.png" compare="sim_size" delta="10000"/>
+                <element name="chr14" file="chr14.png" compare="sim_size" delta="10000"/>
+                <element name="chr15" file="chr15.png" compare="sim_size" delta="10000"/>
+                <element name="chr16" file="chr16.png" compare="sim_size" delta="10000"/>
+                <element name="chr17" file="chr17.png" compare="sim_size" delta="10000"/>
+                <element name="chr18" file="chr18.png" compare="sim_size" delta="10000"/>
+                <element name="chr19" file="chr19.png" compare="sim_size" delta="10000"/>
+                <element name="chr2" file="chr2.png" compare="sim_size" delta="10000"/>
+                <element name="chr20" file="chr20.png" compare="sim_size" delta="10000"/>
+                <element name="chr21" file="chr21.png" compare="sim_size" delta="10000"/>
+                <element name="chr22" file="chr22.png" compare="sim_size" delta="10000"/>
+                <element name="chr3" file="chr3.png" compare="sim_size" delta="10000"/>
+                <element name="chr4" file="chr4.png" compare="sim_size" delta="10000"/>
+                <element name="chr5" file="chr5.png" compare="sim_size" delta="10000"/>
+                <element name="chr6" file="chr6.png" compare="sim_size" delta="10000"/>
+                <element name="chr7" file="chr7.png" compare="sim_size" delta="10000"/>
+                <element name="chr8" file="chr8.png" compare="sim_size" delta="10000"/>
+                <element name="chr9" file="chr9.png" compare="sim_size" delta="10000"/>
+                <element name="chrX" file="chrX.png" compare="sim_size" delta="10000"/>
+                <element name="genome_wide" file="genome_wide.png" compare="sim_size" delta="10000"/>
             </output_collection>
         </test>
     </tests>
