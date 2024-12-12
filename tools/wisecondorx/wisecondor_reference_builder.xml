@@ -31,20 +31,8 @@
     </outputs>
     <tests>
         <test expect_num_outputs="1">
-            <param name="npz_inputs">
-                <collection type="list">
-                    <element name="0" ftype="npz" value="0.ref.npz"/>
-                    <element name="1" ftype="npz" value="1.ref.npz"/>
-                    <element name="2" ftype="npz" value="2.ref.npz"/>
-                    <element name="3" ftype="npz" value="3.ref.npz"/>
-                    <element name="4" ftype="npz" value="4.ref.npz"/>
-                    <element name="5" ftype="npz" value="5.ref.npz"/>
-                    <element name="6" ftype="npz" value="6.ref.npz"/>
-                    <element name="7" ftype="npz" value="7.ref.npz"/>
-                    <element name="8" ftype="npz" value="8.ref.npz"/>
-                    <element name="9" ftype="npz" value="9.ref.npz"/>
-                </collection>
-            </param>
+            <param name="npz_inputs"
+                   value="0.ref.npz,1.ref.npz,2.ref.npz,3.ref.npz,4.ref.npz,5.ref.npz,6.ref.npz,7.ref.npz,8.ref.npz,9.ref.npz"/>
             <param name="bin" value="100000" />
             <output name="npz" ftype="npz" file="output_reference.npz" compare="sim_size" delta="1"/>
         </test>
