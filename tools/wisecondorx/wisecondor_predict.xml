@@ -36,7 +36,7 @@
             <output name="bins" ftype="bed" file="predict_bins.bed" />
             <output name="segments" ftype="bed" file="predict_segments.bed"/>
             <output name="statistics" ftype="txt" file="predict_statistics.txt"/>
-            <output_collection name="plots" type="list" >
+            <output_collection name="plots" type="list" compare="sim_size" delta="1000">
                 <element name="chr1" file="chr1.png"/>
                 <element name="chr10" file="chr10.png"/>
                 <element name="chr11" file="chr11.png"/>
