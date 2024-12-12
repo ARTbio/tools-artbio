@@ -12,7 +12,6 @@
     <command detect_errors="exit_code"><![CDATA[
     @pipefail@
     #for $num, $file in enumerate($npz_inputs):
-        printf "$num\n" &&
         ln -s $file "${num}.npz" &&
     #end for
     WisecondorX newref *.npz reference.npz
