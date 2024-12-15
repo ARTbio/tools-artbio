@@ -32,6 +32,8 @@
     <help>
 @help@
 <![CDATA[
+.. class:: infomark
+
 **WisecondorX convert input.bam/cram output.npz [--optional arguments]**
 
 Option List::
