@@ -31,7 +31,22 @@
     </tests>
     <help>
 @help@
-    </help>
+<![CDATA[
+**WisecondorX convert input.bam/cram output.npz [--optional arguments]**
+
+Option List::
+
+  --reference   Fasta reference to be used with bam inputs.
+  --binsize     Size per bin in bp; the reference bin size should be a multiple of this value.
+                Note that this parameter does not impact the resolution, yet it
+                can be used to optimize processing speed (default: x=5e3).
+                The --binsize parameter is currently not exposed in this Galaxy
+                wrapper and is fixed to 5e3
+  --normdup     Use this flag to avoid duplicate removal.
+                The --normdup parameter is currently not exposed in this Galaxy
+                wrapper. Default is to remove duplicates.
+
+    ]]></help>
     <citations>
         <citation type="doi">10.1093/nar/gky1263</citation>
     </citations>
