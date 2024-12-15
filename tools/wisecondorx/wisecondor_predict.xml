@@ -65,23 +65,7 @@
         </test>
     </tests>
     <help>
-
-WisecondorX predict
-============================
-
-Predict CNV from an input npz file using a reference.npz generated with the tool
-`WisecondorX build reference`.
-
-    
-Inputs
---------
-
-A GC wigle of genome index generated with the tool "create GC_wiggle of reference genome"
-available from this galaxy wrapper
-
-A vcf file of somatic *single* nucleotide variations observed in a tumor sample
-
-
+@help@
     </help>
     <citations>
         <citation type="doi">10.1093/nar/gky1263</citation>

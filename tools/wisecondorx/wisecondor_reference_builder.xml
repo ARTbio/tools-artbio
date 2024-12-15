@@ -37,17 +37,7 @@
         </test>
     </tests>
     <help>
-
-WisecondorX build reference
-============================
-
-Generate reference npz index from npz control samples.
-
-Inputs
---------
-
-A collection of .npz files (at least 10 files or more)
-
+@help@
     </help>
     <citations>
         <citation type="doi">10.1093/nar/gky1263</citation>
