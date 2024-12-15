@@ -1,0 +1,66 @@
+<tool id="wisecondorx_reference_builder" name="WisecondorX build" version="@WRAPPER_VERSION@" profile="@PROFILE@">
+    <description>
+        reference
+    </description>
+    <macros>
+        <import>macro.xml</import>
+    </macros>
+    <expand macro="requirements"/>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Error occured" />
+    </stdio>
+    <command detect_errors="exit_code"><![CDATA[
+    @pipefail@
+    #for $num, $file in enumerate($npz_inputs):
+        ln -s $file "${num}.npz" &&
+    #end for
+    WisecondorX newref *.npz reference.npz
+        --binsize ${bin}
+        --cpus \${GALAXY_SLOTS:-4} &&
+    mv reference.npz $npz
+    ]]></command>
+    <inputs>
+        <param name="npz_inputs" type="data" label="npz inputs" multiple="True" format="npz"
+               help="Build reference from npz inputs from normal sample (at least 10 samples required)"/>
+        <param name="bin" size="9" type="integer" value="100000" label="Bin size in nucleotides"
+               help="Bin default value is 100 kb (100000)" />
+     </inputs>
+    <outputs>
+        <data name="npz" format="npz" label="reference_${bin}nt" />
+    </outputs>
+    <tests>
+        <test expect_num_outputs="1">
+            <param name="npz_inputs"
+                   value="0.ref.npz,1.ref.npz,2.ref.npz,3.ref.npz,4.ref.npz,5.ref.npz,6.ref.npz,7.ref.npz,8.ref.npz,9.ref.npz"/>
+            <param name="bin" value="10000" />
+            <output name="npz" ftype="npz" file="output_reference.npz" compare="sim_size" delta="10000"/>
+        </test>
+    </tests>
+    <help>
+@help@
+<![CDATA[
+.. class:: infomark
+
+**WisecondorX newref reference_input_dir/*.npz reference_output.npz [--optional arguments]**
+
+Option List::
+
+  --nipt        Always include this flag for the generation of a NIPT reference
+  --binsize     Size per bin in bp, defines the resolution of the output (default: x=1e5)
+                **Should be a multiple of the 5e3**
+  --refsize     Amount of reference locations per target;
+                should generally not be tweaked (default: x=300)
+  --yfrac       Y read fraction cutoff, in order to manually define gender.
+                Setting this to 1 will treat all samples as female.
+                This parameter is not currently exposed in the Galaxy wrapper.
+  --plotyfrac   plots Y read fraction histogram and Gaussian mixture fit to file x,
+                can help when setting --yfrac manually; software quits after plotting
+                The --normdup parameter is currently not exposed in this Galaxy
+                wrapper. Default is to remove duplicates.
+  --cpus        Number of threads requested (This is defined by the Galaxy administrator)
+
+    ]]></help>
+    <citations>
+        <citation type="doi">10.1093/nar/gky1263</citation>
+    </citations>
+</tool>

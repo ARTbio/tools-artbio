@@ -1,0 +1,57 @@
+<tool id="wisecondorx_npz_converter" name="WisecondorX convert" version="@WRAPPER_VERSION@" profile="@PROFILE@">
+    <description>
+        bam to npz
+    </description>
+    <macros>
+        <import>macro.xml</import>
+    </macros>
+    <expand macro="requirements"/>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Error occured" />
+    </stdio>
+    <command detect_errors="exit_code"><![CDATA[
+    @pipefail@
+    ln -f -s $bam.metadata.bam_index input.bam.bai &&
+    ln -f -s $bam input.bam &&
+    printf "Creating 5kb bins for file $bam.element_identifier" &&
+    WisecondorX convert input.bam output.npz
+    ]]></command>
+    <inputs>
+        <param name="bam" type="data" label="Bam input" format="bam"
+               help="input Bam is converted in .npz file"/>
+     </inputs>
+    <outputs>
+        <data name="npz" format="npz" from_work_dir="output.npz" label="${on_string}.npz" />
+    </outputs>
+    <tests>
+        <test expect_num_outputs="1">
+            <param ftype="bam" name="bam" value="npz_convert_input.bam" />
+            <output name="npz" ftype="npz" file="npz_convert_output.npz" compare="sim_size" delta="10000"/>
+        </test>
+    </tests>
+    <help>
+@help@
+<![CDATA[
+.. class:: infomark
+
+**WisecondorX convert input.bam/cram output.npz [--optional arguments]**
+
+Option List::
+
+  --reference   Fasta reference to be used with cram inputs.
+                This option is currently not available in this Galaxy wrapper,
+                which takes only bam inputs.
+  --binsize     Size per bin in bp; the reference bin size should be a multiple of this value.
+                Note that this parameter does not impact the resolution, yet it
+                can be used to optimize processing speed (default: x=5e3).
+                The --binsize parameter is currently not exposed in this Galaxy
+                wrapper and is fixed to 5e3
+  --normdup     Use this flag to avoid duplicate removal.
+                The --normdup parameter is currently not exposed in this Galaxy
+                wrapper. Default is to remove duplicates.
+
+    ]]></help>
+    <citations>
+        <citation type="doi">10.1093/nar/gky1263</citation>
+    </citations>
+</tool>

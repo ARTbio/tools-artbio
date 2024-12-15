@@ -1,0 +1,112 @@
+<tool id="wisecondorx_predict" name="WisecondorX predict" version="@WRAPPER_VERSION@" profile="@PROFILE@">
+    <description>
+        CNVs
+    </description>
+    <macros>
+        <import>macro.xml</import>
+    </macros>
+    <expand macro="requirements"/>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Error occured" />
+    </stdio>
+    <command detect_errors="exit_code"><![CDATA[
+    @pipefail@
+    ln -s $npz_input sample.npz &&
+    ln -s $reference reference.npz &&
+    WisecondorX predict sample.npz reference.npz sample --plot --bed
+    ]]></command>
+    <inputs>
+        <param name="npz_input" type="data" format="npz" label="npz file from sample to analyse"/>
+        <param name="reference" type="data" format="npz" label="npz reference built with WisecondorX build"/>
+    </inputs>
+    <outputs>
+        <data name="aberrations" format="bed" label="sample abberations" from_work_dir="sample_aberrations.bed"/>
+        <data name="bins" format="bed" label="sample bins" from_work_dir="sample_bins.bed"/>
+        <data name="segments" format="bed" label="sample segments" from_work_dir="sample_segments.bed"/>
+        <data name="statistics" format="txt" label="statistics" from_work_dir="sample_statistics.txt"/>
+        <collection name="plots" type="list" format="png" label="CNV plots">
+            <discover_datasets pattern="__name_and_ext__" directory="sample.plots" />
+        </collection>
+    </outputs>
+    <tests>
+        <test expect_num_outputs="5">
+            <param name="npz_input" value="input_sample_predict.npz" ftype="npz" />
+            <param name="reference" value="input_reference_predict.10000kb.npz" />
+            <output name="aberrations" ftype="bed" file="predict_abberations.bed" />
+            <output name="bins" ftype="bed" file="predict_bins.bed" compare="sim_size" delta="1000"/>
+            <output name="segments" ftype="bed" file="predict_segments.bed"/>
+            <output name="statistics" ftype="txt" file="predict_statistics.txt" compare="sim_size" delta="1000"/>
+            <output_collection name="plots" type="list">
+                <element name="chr1" file="chr1.png" compare="sim_size" delta="10000"/>
+                <element name="chr10" file="chr10.png" compare="sim_size" delta="10000"/>
+                <element name="chr11" file="chr11.png" compare="sim_size" delta="10000"/>
+                <element name="chr12" file="chr12.png" compare="sim_size" delta="10000"/>
+                <element name="chr13" file="chr13.png" compare="sim_size" delta="10000"/>
+                <element name="chr14" file="chr14.png" compare="sim_size" delta="10000"/>
+                <element name="chr15" file="chr15.png" compare="sim_size" delta="10000"/>
+                <element name="chr16" file="chr16.png" compare="sim_size" delta="10000"/>
+                <element name="chr17" file="chr17.png" compare="sim_size" delta="10000"/>
+                <element name="chr18" file="chr18.png" compare="sim_size" delta="10000"/>
+                <element name="chr19" file="chr19.png" compare="sim_size" delta="10000"/>
+                <element name="chr2" file="chr2.png" compare="sim_size" delta="10000"/>
+                <element name="chr20" file="chr20.png" compare="sim_size" delta="10000"/>
+                <element name="chr21" file="chr21.png" compare="sim_size" delta="10000"/>
+                <element name="chr22" file="chr22.png" compare="sim_size" delta="10000"/>
+                <element name="chr3" file="chr3.png" compare="sim_size" delta="10000"/>
+                <element name="chr4" file="chr4.png" compare="sim_size" delta="10000"/>
+                <element name="chr5" file="chr5.png" compare="sim_size" delta="10000"/>
+                <element name="chr6" file="chr6.png" compare="sim_size" delta="10000"/>
+                <element name="chr7" file="chr7.png" compare="sim_size" delta="10000"/>
+                <element name="chr8" file="chr8.png" compare="sim_size" delta="10000"/>
+                <element name="chr9" file="chr9.png" compare="sim_size" delta="10000"/>
+                <element name="chrX" file="chrX.png" compare="sim_size" delta="10000"/>
+                <element name="genome_wide" file="genome_wide.png" compare="sim_size" delta="10000"/>
+            </output_collection>
+        </test>
+    </tests>
+    <help>
+@help@
+<![CDATA[
+.. class:: infomark
+
+**WisecondorX predict test_input.npz reference_input.npz output_id [--optional arguments]**
+
+Option List::
+
+  --minrefbins      Minimum amount of sensible reference bins per target bin;
+                    should generally not be tweaked (default: x=150)
+  --maskrepeats     Bins with distances > mean + sd * 3 in the reference will be
+                    masked. This parameter represents the number of masking cycles
+                    and defines the stringency of the blacklist (default: x=5)
+                    **Should be a multiple of the 5e3**.
+                    Not exposed in this Galaxy wrapper.
+  --zscore          Z-score cutoff to call segments as aberrations (default: x=5)
+  --alpha           P-value cutoff for calling circular binary segmentation
+                    breakpoints (default: x=1e-4).
+                    Not exposed in this Galaxy wrapper.
+  --beta            When beta is given, --zscore is ignored. Beta sets a ratio
+                    cutoff for aberration calling. It's a number between 0 (liberal)
+                    and 1 (conservative) and, when used, is optimally close to the
+                    purity (e.g. fetal/tumor fraction)
+                    Not exposed in this Galaxy wrapper.
+  --blacklist       Blacklist for masking additional regions; requires headerless
+                    .bed file. This is particularly useful when the reference set
+                    is too small to recognize some obvious loci (such as centromeres).
+                    Not exposed in this Galaxy wrapper.
+  --gender          Force WisecondorX to analyze this case as male (M) or female (F).
+                    Useful when e.g. dealing with a loss of chromosome Y, which
+                    causes erroneous gender predictions (choices: x=F or x=M).
+                    Not exposed in this Galaxy wrapper.
+  --bed             Outputs tab-delimited .bed files.
+  --plot            Outputs custom .png plots, directly interpretable.
+  --ylim  [a,b]     Force WisecondorX to use y-axis interval [a,b] during plotting, e.g. [-2,2].
+                    Not exposed in this Galaxy wrapper.
+  --cairo           Some operating systems require the cairo bitmap type to write plots.
+                    Not exposed in this Galaxy wrapper.
+  --seed            Random seed for segmentation algorithm (default:None).
+                    Not exposed in this Galaxy wrapper.
+    ]]></help>
+    <citations>
+        <citation type="doi">10.1093/nar/gky1263</citation>
+    </citations>
+</tool>
