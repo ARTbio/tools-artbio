@@ -17,7 +17,7 @@
         ln -s '$tumor_bam.metadata.bam_index' tumor.bam.bai &&
         ln -s '$snp_vcf' ref.vcf.gz &&
         ln -s '$snp_vcf.metadata.tabix_index' ref.vcf.gz.tbi &&
-        ##tabix -p vcf ref.vcf.gz &&
+
         ## --- Execute the Wrapper Script ---
         ## The script is now called with these simple, predictable filenames.
         bash '${__tool_directory__}/snp_pileup_for_facets_wrapper.sh'
