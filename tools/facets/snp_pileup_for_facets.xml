@@ -21,8 +21,8 @@
         ## --- Execute the Wrapper Script ---
         ## The script is now called with these simple, predictable filenames.
         bash '${__tool_directory__}/snp_pileup_for_facets_wrapper.sh'
-            -n 'normal_bam'
-            -t 'tumor_bam'
+            -n 'normal.bam'
+            -t 'tumor.bam'
             -v 'ref.vcf.gz'
             -o '$output_pileup'
             -N \${GALAXY_SLOTS:-4}
