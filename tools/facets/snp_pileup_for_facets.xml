@@ -51,7 +51,7 @@
             <param name="normal_bam" value="normal.bam" ftype="bam"/>
             <param name="tumor_bam" value="tumor.bam" ftype="bam"/>
             <param name="snp_vcf" value="ref.vcf.gz" ftype="vcf_bgzip"/>
-            <output name="output_pileup" file="expected_pileup.csv.gz" ftype="tabular.gz">
+            <output name="output_pileup" file="expected_pileup.csv.gz" ftype="tabular.gz" decompress="true">
             </output>
         </test>
     </tests>
