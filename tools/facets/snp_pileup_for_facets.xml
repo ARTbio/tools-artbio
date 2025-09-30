@@ -31,14 +31,14 @@
         </section>
     </inputs>
     <outputs>
-        <data name="output_pileup" format="gzip" label="FACETS Pileup from ${on_string}"/>
+        <data name="output_pileup" format="csv" label="FACETS Pileup from ${on_string}"/>
     </outputs>
     <tests>
         <test>
             <param name="normal_bam" value="normal.bam" ftype="bam"/>
             <param name="tumor_bam" value="tumor.bam" ftype="bam"/>
             <param name="snp_vcf" value="ref.vcf.gz" ftype="vcf_bgzip"/>
-            <output name="output_pileup" file="expected_pileup.csv.gz" ftype="gzip">
+            <output name="output_pileup" file="expected_pileup.csv" ftype="csv" decompress="true">
                 <assert_contents>
                     <has_n_lines n="14" />
                 </assert_contents>
