@@ -9,7 +9,7 @@ long_description: |
   it estimates tumour purity and ploidy.
 categories:
   - Variant Analysis
-homepage_url: http://artbio.fr
-remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/master/tools/cnv_facets
+homepage_url: https://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/facets
 toolshed:
   - toolshed
