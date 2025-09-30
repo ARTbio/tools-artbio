@@ -6,13 +6,10 @@
     <xml name="requirements">
         <requirements>
             <requirement type="package" version="0.6.2">snp-pileup</requirement>
-            <requirement type="package" version="0.6.2">r-facets</requirement>
-            <requirement type="package" version="4.4">r-base</requirement>
             <requirement type="package" version="1.22">bcftools</requirement>
             <requirement type="package" version="1.22.1">samtools</requirement>
             <requirement type="package" version="1.22.1">htslib</requirement>
             <requirement type="package" version="20250822">parallel</requirement>
-            <requirement type="package" version="2.2.5">r-argparse</requirement>
         </requirements>
     </xml>    <xml name="citations">
         <citations>
