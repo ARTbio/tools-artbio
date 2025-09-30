@@ -7,7 +7,7 @@
     <expand macro="stdio"/>
     <command detect_errors="exit_code"><![CDATA[
         @pipefail@
-        bash \${__tool_directory__}/snp_pileup_for_facets_wrapper.sh
+        bash '${__tool_directory__}/snp_pileup_for_facets_wrapper.sh'
             -n '$normal_bam'
             -t '$tumor_bam'
             -v '$snp_vcf'
