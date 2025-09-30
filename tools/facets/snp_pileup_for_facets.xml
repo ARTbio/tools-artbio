@@ -7,18 +7,16 @@
     <expand macro="stdio"/>
     <command detect_errors="exit_code"><![CDATA[
         @pipefail@
-         ## --- Staging Area Setup ---
+        ## --- Staging Area Setup ---
         ## Create symbolic links to the input datasets with predictable names.
         ## samtools and bcftools require the index to be in the same directory.
-        ## The '&&' ensures the script stops if a link creation fails.
 
         ln -s '$normal_bam' normal.bam &&
         ln -s '$normal_bam.metadata.bam_index' normal.bam.bai &&
         ln -s '$tumor_bam' tumor.bam &&
         ln -s '$tumor_bam.metadata.bam_index' tumor.bam.bai &&
         ln -s '$snp_vcf' ref.vcf.gz &&
-        ln -s '$snp_vcf.metadata.index' ref.vcf.gz.tbi &&
-
+        tabix -p vcf ref.vcf.gz &&
         ## --- Execute the Wrapper Script ---
         ## The script is now called with these simple, predictable filenames.
         bash '${__tool_directory__}/snp_pileup_for_facets_wrapper.sh'
