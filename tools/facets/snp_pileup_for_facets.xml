@@ -1,0 +1,66 @@
+<tool id="snp_pileup_for_facets" name="SNP Pileup for FACETS" version="@TOOL_VERSION@+galaxy@VERSION_SUFFIX@" profile="@PROFILE@">
+    <description>Generates a SNP pileup file from Normal/Tumor BAMs for FACETS analysis</description>
+    <macros>
+        <import>macros.xml</import>
+    </macros>
+    <expand macro="requirements"/>
+    <expand macro="stdio"/>
+    <command detect_errors="exit_code"><![CDATA[
+        @pipefail@
+        bash \${__tool_directory__}/snp_pileup_for_facets_wrapper.sh
+            -n '$normal_bam'
+            -t '$tumor_bam'
+            -v '$snp_vcf'
+            -o '$output_pileup'
+            -N \${GALAXY_SLOTS:-4}
+            -q '$adv.mapq'
+            -Q '$adv.baseq'
+            #if $adv.count_orphans
+                -A
+            #end if
+    ]]></command>
+    <inputs>
+        <param name="normal_bam" type="data" format="bam" label="Normal BAM file" help="Indexed BAM file for the matched normal sample."/>
+        <param name="tumor_bam" type="data" format="bam" label="Tumor BAM file" help="Indexed BAM file for the tumor sample."/>
+        <param name="snp_vcf" type="data" format="vcf_bgzip" label="SNP Reference VCF" help="Reference VCF of common SNPs (e.g., from the Zenodo deposit). Must be bgzip compressed and tabix indexed."/>
+
+        <section name="adv" title="Advanced Parameters" expanded="false">
+            <param name="mapq" type="integer" value="15" label="Minimum Mapping Quality" help="(-q) Filters reads with a mapping quality below this value."/>
+            <param name="baseq" type="integer" value="20" label="Minimum Base Quality" help="(-Q) Filters individual bases with a quality (QUAL column in BAM) below this value."/>
+            <param name="count_orphans" type="boolean" checked="true" truevalue="-A" falsevalue="" label="Include anomalous read pairs (-A)" help="If checked, considers reads where the mate is unmapped or mapped to a different chromosome."/>
+        </section>
+    </inputs>
+    <outputs>
+        <data name="output_pileup" format="gzip" label="FACETS Pileup from ${on_string}"/>
+    </outputs>
+    <tests>
+        <test>
+            <param name="normal_bam" value="normal.bam" ftype="bam"/>
+            <param name="tumor_bam" value="tumor.bam" ftype="bam"/>
+            <param name="snp_vcf" value="ref.vcf.gz" ftype="vcf_bgzip"/>
+            <output name="output_pileup" file="expected_pileup.csv.gz" ftype="gzip">
+                <assert_contents>
+                    <has_n_lines n="14" />
+                </assert_contents>
+            </output>
+        </test>
+    </tests>
+    <help><![CDATA[
+        **What it does**
+
+        This tool runs the `snp-pileup` program from the FACETS suite to generate a counts file of SNPs from a matched tumor-normal pair of BAM files.
+        This output is the primary input for the "FACETS Analysis" tool.
+
+        The tool parallelizes the process by running `snp-pileup` on each chromosome simultaneously for maximum efficiency.
+
+        **Inputs**
+
+        - **Normal/Tumor BAM files:** Your aligned sequencing data. Must be sorted and indexed.
+        - **SNP Reference VCF:** A bgzip-compressed and tabix-indexed VCF file of common SNPs. It is **highly recommended** to use the optimized reference files available on our Zenodo deposit [LINK TO ZENODO HERE], making sure to choose the version that matches the chromosome style of your BAMs (`chr` or `no-chr`).
+
+        **Outputs**
+
+        - **FACETS Pileup:** A compressed CSV file (`.csv.gz`) containing the read counts for reference and alternate alleles at each SNP position for both normal and tumor samples.
+    ]]></help>
+    <expand macro="citations"/>
+</tool>
