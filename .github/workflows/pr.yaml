@@ -2,14 +2,12 @@ name: Galaxy Tool Linting and Tests for push and PR
 on:
   pull_request:
     paths-ignore:
-      - '.github/**'
       - 'deprecated/**'
       - '*'
   push:
     branches:
       - main
     paths-ignore:
-      - '.github/**'
       - 'deprecated/**'
       - '*'
 env:
