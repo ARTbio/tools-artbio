@@ -301,6 +301,20 @@ jobs:
         galaxy-slots: ${{ steps.cpu-cores.outputs.count }}
         # Limit each test to 15 minutes
         test_timeout: 1800
+# ... dans le job "test", après l'étape "Planemo test" ...
+
+    - name: Check for existence of test reports before upload
+      run: |
+        echo "Checking contents of 'upload' directory:"
+        ls -lR upload
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: 'Tool test output ${{ matrix.chunk }}'
+        path: upload    
+
+# ...  fin du check
+
     - uses: actions/upload-artifact@v4
       with:
         name: 'Tool test output ${{ matrix.chunk }}'
