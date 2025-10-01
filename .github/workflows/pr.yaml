@@ -308,11 +308,6 @@ jobs:
         echo "Checking contents of 'upload' directory:"
         ls -lR upload
 
-    - uses: actions/upload-artifact@v4
-      with:
-        name: 'Tool test output ${{ matrix.chunk }}'
-        path: upload    
-
 # ...  fin du check
 
     - uses: actions/upload-artifact@v4
