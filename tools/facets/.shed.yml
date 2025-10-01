@@ -1,0 +1,15 @@
+# .shed.yml supporting automatic pushes.
+owner: artbio
+name: cnv_facets
+description: Detect somatic copy number variants (CNV) in tumour-normal samples using the facets package
+long_description: |
+  cnv_facets detects somatic copy number variants (CNVs), i.e., variants private to a tumour sample
+  given a matched or unmatched normal sample. cnv_facets uses next generation sequencing data from
+  whole genome (WGS), whole exome (WEX) and targeted (panel) sequencing experiments. In addition,
+  it estimates tumour purity and ploidy.
+categories:
+  - Variant Analysis
+homepage_url: https://artbio.fr
+remote_repository_url: https://github.com/ARTbio/tools-artbio/tree/main/tools/facets
+toolshed:
+  - toolshed
