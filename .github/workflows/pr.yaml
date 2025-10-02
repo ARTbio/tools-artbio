@@ -288,11 +288,6 @@ jobs:
       id: cpu-cores
     - name: Clean dotnet folder for space
       run: rm -Rf /usr/share/dotnet
-
-    - name: Install GNU coreutils on Linux
-      if: runner.os == 'Linux'
-      run: sudo apt-get update && sudo apt-get install -y coreutils
-
     - name: Planemo test
       uses: galaxyproject/planemo-ci-action@v1
       id: test
