@@ -132,11 +132,16 @@ if [ -z "${FIRST_FILE}" ]; then
     exit 1
 fi
 
-(\
-    head -n 1 "${FIRST_FILE}" && \
-    tail -n +2 -q "${TMPDIR}"/*.csv) | sort -t, -k1,1V -k2,2n \
-) | bgzip > "${output_pileup}"
+# Use command grouping { ...; } to pipe the combined output of head and tail.
+# This entire pipeline writes the final, sorted, compressed file.
+{
+    # 1. Print the header once.
+    head -n 1 "${FIRST_FILE}";
 
-echo "Concatenation and compression complete."
+    # 2. Concatenate all files (skipping their headers).
+    tail -q -n +2 "${TMPDIR}"/*.csv;
+
+} | sort -t, -k1,1V -k2,2n | bgzip > "${output_pileup}"
+echo "Concatenation, sorting and compression complete."
 echo "Final output is in ${output_pileup}"
 echo "Script finished successfully. The temporary directory will be removed by the trap."
