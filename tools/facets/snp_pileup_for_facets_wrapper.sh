@@ -113,7 +113,7 @@ scatter_and_run() {
     "${SAMTOOLS_EXE}" index "${temp_tbam}"
 
     echo "Running snp-pileup on chromosome ${chrom}..."
-    "${SNP_PILEUP_EXE}" -q "${mapq}" -Q "${baseq}" ${count_orphans} "${temp_vcf}" "${temp_output}" "${temp_nbam}" "${temp_tbam}"
+    "${SNP_PILEUP_EXE}" --pseudo-snps=300 -q "${mapq}" -Q "${baseq}" ${count_orphans} "${temp_vcf}" "${temp_output}" "${temp_nbam}" "${temp_tbam}"
 }
 
 # Export all necessary variables AND the function so they are available to the sub-shells created by GNU Parallel.
@@ -125,17 +125,23 @@ parallel --jobs "${nprocs}" scatter_and_run ::: ${CHROMS}
 
 echo "Parallel processing finished. Concatenating results..."
 
-# The "gather" part remains the same
+# gather job outputs and sort chromosome remains the same
 FIRST_FILE=$(ls -1v "${TMPDIR}"/*.csv 2>/dev/null | head -n 1)
 if [ -z "${FIRST_FILE}" ]; then
     echo "Error: No pileup files were generated." >&2
     exit 1
 fi
 
-(head -n 1 "${FIRST_FILE}" && \
- tail -n +2 -q "${TMPDIR}"/*.csv) | \
-bgzip > "${output_pileup}"
+# Use command grouping { ...; } to pipe the combined output of head and tail.
+# This entire pipeline writes the final, sorted, compressed file.
+{
+    # 1. Print the header once.
+    head -n 1 "${FIRST_FILE}";
 
-echo "Concatenation and compression complete."
+    # 2. Concatenate all files (skipping their headers).
+    tail -q -n +2 "${TMPDIR}"/*.csv;
+
+} | sort -t, -k1,1V -k2,2n | bgzip > "${output_pileup}"
+echo "Concatenation, sorting and compression complete."
 echo "Final output is in ${output_pileup}"
 echo "Script finished successfully. The temporary directory will be removed by the trap."
