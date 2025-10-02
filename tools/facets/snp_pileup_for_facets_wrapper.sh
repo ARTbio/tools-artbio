@@ -113,7 +113,7 @@ scatter_and_run() {
     "${SAMTOOLS_EXE}" index "${temp_tbam}"
 
     echo "Running snp-pileup on chromosome ${chrom}..."
-    "${SNP_PILEUP_EXE}" -q "${mapq}" -Q "${baseq}" ${count_orphans} "${temp_vcf}" "${temp_output}" "${temp_nbam}" "${temp_tbam}"
+    "${SNP_PILEUP_EXE}" --pseudo-snps=300 -q "${mapq}" -Q "${baseq}" ${count_orphans} "${temp_vcf}" "${temp_output}" "${temp_nbam}" "${temp_tbam}"
 }
 
 # Export all necessary variables AND the function so they are available to the sub-shells created by GNU Parallel.
