@@ -125,16 +125,17 @@ parallel --jobs "${nprocs}" scatter_and_run ::: ${CHROMS}
 
 echo "Parallel processing finished. Concatenating results..."
 
-# The "gather" part remains the same
+# gather job outputs and sort chromosome remains the same
 FIRST_FILE=$(ls -1v "${TMPDIR}"/*.csv 2>/dev/null | head -n 1)
 if [ -z "${FIRST_FILE}" ]; then
     echo "Error: No pileup files were generated." >&2
     exit 1
 fi
 
-(head -n 1 "${FIRST_FILE}" && \
- tail -n +2 -q "${TMPDIR}"/*.csv) | \
-bgzip > "${output_pileup}"
+(\
+    head -n 1 "${FIRST_FILE}" && \
+    tail -n +2 -q "${TMPDIR}"/*.csv) | sort -t, -k1,1V -k2,2n \
+) | bgzip > "${output_pileup}"
 
 echo "Concatenation and compression complete."
 echo "Final output is in ${output_pileup}"
