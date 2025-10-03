@@ -86,17 +86,21 @@ main <- function(args) {
     # Write a key-value summary file
     # A NULL value is replaced by NA to preserve vector length.
     summary_df <- data.frame(
-        Parameter = c("sample_id", "purity", "ploidy", "dipLogR", "loglik",
-                      "cval_param", "min_nhet_param", "snp_nbhd_param", "gbuild_param"),
-        Value = c(args$sample_id,
-                  ifelse(is.null(fit$purity), NA, fit$purity),
-                  ifelse(is.null(fit$ploidy), NA, fit$ploidy),
-                  ifelse(is.null(fit$dipLogR), NA, fit$dipLogR),
-                  ifelse(is.null(fit$loglik), NA, fit$loglik),
-                  args$cval,
-                  args$min_nhet,
-                  args$snp_nbhd,
-                  args$gbuild)
+        Parameter = c(
+            "sample_id", "purity", "ploidy", "dipLogR", "loglik",
+            "cval_param", "min_nhet_param", "snp_nbhd_param", "gbuild_param"
+        ),
+        Value = c(
+            args$sample_id,
+            ifelse(is.null(fit$purity), NA, fit$purity),
+            ifelse(is.null(fit$ploidy), NA, fit$ploidy),
+            ifelse(is.null(fit$dipLogR), NA, fit$dipLogR),
+            ifelse(is.null(fit$loglik), NA, fit$loglik),
+            args$cval,
+            args$min_nhet,
+            args$snp_nbhd,
+            args$gbuild
+        )
     )
     write.table(summary_df, file = args$output_summary, sep = "\t", quote = FALSE, row.names = FALSE)
 
