@@ -1,0 +1,7 @@
+sample_id	test_sample_01
+purity	NA
+ploidy	2
+dipLogR	-0.00112823650228185
+loglik	
+cval_param	400
+min_nhet_param	25
