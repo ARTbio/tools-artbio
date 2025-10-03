@@ -1,12 +1,13 @@
 # .shed.yml supporting automatic pushes.
 owner: artbio
 name: cnv_facets
-description: Detect somatic copy number variants (CNV) in tumour-normal samples using the facets package
+description: A suite of tools for FACETS allele-specific copy number analysis.
 long_description: |
-  cnv_facets detects somatic copy number variants (CNVs), i.e., variants private to a tumour sample
-  given a matched or unmatched normal sample. cnv_facets uses next generation sequencing data from
-  whole genome (WGS), whole exome (WEX) and targeted (panel) sequencing experiments. In addition,
-  it estimates tumour purity and ploidy.
+  This repository contains a suite of two tools to perform allele-specific copy
+  number analysis using the FACETS algorithm.
+  1. SNP Pileup for FACETS: Generates a SNP pileup file from Normal/Tumor BAMs.
+  2. FACETS Analysis: Runs the core FACETS algorithm on the pileup file to call
+  copy number alterations.
 categories:
   - Variant Analysis
 homepage_url: https://artbio.fr
