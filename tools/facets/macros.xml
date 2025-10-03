@@ -11,6 +11,9 @@
             <requirement type="package" version="1.22.1">htslib</requirement>
             <requirement type="package" version="20250822">parallel</requirement>
             <requirement type="package" version="9.5">coreutils</requirement>
+            <requirement type="package" version="0.6.2">r-facets</requirement>
+            <requirement type="package" version="2.2.5">r-argparse</requirement>
+
         </requirements>
     </xml>    <xml name="citations">
         <citations>
