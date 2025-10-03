@@ -1,0 +1,10 @@
+Parameter	Value
+sample_id	Pileup.input_test_facets.csv.gz
+purity	NA
+ploidy	2
+dipLogR	0.000147653763632169
+loglik	NA
+cval_param	150
+min_nhet_param	25
+snp_nbhd_param	300
+gbuild_param	hg38

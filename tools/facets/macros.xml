@@ -1,7 +1,7 @@
 <macros>
     <token name="@pipefail@"><![CDATA[set -o | grep -q pipefail && set -o pipefail;]]></token>
     <token name="@TOOL_VERSION@">0.6.2</token>
-    <token name="@VERSION_SUFFIX@">1</token>
+    <token name="@VERSION_SUFFIX@">2</token>
     <token name="@PROFILE@">23.0</token>
     <xml name="requirements">
         <requirements>
@@ -11,6 +11,9 @@
             <requirement type="package" version="1.22.1">htslib</requirement>
             <requirement type="package" version="20250822">parallel</requirement>
             <requirement type="package" version="9.5">coreutils</requirement>
+            <requirement type="package" version="0.6.2">r-facets</requirement>
+            <requirement type="package" version="2.2.5">r-argparse</requirement>
+
         </requirements>
     </xml>    <xml name="citations">
         <citations>
