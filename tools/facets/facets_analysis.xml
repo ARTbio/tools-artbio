@@ -43,7 +43,7 @@
             <param name="pileup" value="Pileup.input_test_facets.csv.gz" ftype="tabular.gz"/>
             <output name="output_seg" file="test_sample_01.seg.tsv" ftype="tsv"/>
             <output name="output_summary" file="test_sample_01.summary.txt" ftype="tabular"/>
-            <output name="output_plots" file="test_sample_01.plots.pdf" ftype="pdf" compare="filesize"/>
+            <output name="output_plots" file="test_sample_01.plots.pdf" ftype="pdf" compare="sim_size" delta="1000"/>
         </test>
     </tests>
     <help><![CDATA[
