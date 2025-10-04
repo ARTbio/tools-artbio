@@ -108,11 +108,13 @@ main <- function(args) {
     write.table(summary_df, file = args$output_summary, sep = "\t", quote = FALSE, row.names = FALSE)
 
     # Generate the plots PNG
-    pdf(file = args$output_plots, width = 12, height = 8)
-    plotSample(x = oo, emfit = fit, sname = args$sample_id)
     png(file = args$output_plots, width = 12, height = 8, units = "in", res = 300)
     plotSample(x = oo, emfit = fit, sname = args$sample_id)
     dev.off()
+    png(file = args$output_spider, width = 8, height = 8, units = "in", res = 300)
+    logRlogORspider(oo$out, oo$dipLogR)
+    dev.off()
+
 }
 
 # --- 4. Execution Block ---
