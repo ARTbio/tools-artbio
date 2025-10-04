@@ -6,11 +6,18 @@
 #   number analysis using the R package 'facets'.
 # ==============================================================================
 
-# --- 1. Load Libraries ---
+# --- Load Libraries ---
 suppressPackageStartupMessages(library(argparse))
 suppressPackageStartupMessages(library(facets))
 
-# --- 2. Define and Parse Arguments ---
+# --- Source the external plot_facets_enhanced function ---
+# This finds the path of the currently running script and sources
+# the R function file relative to it.
+initial_opts <- commandArgs(trailingOnly = FALSE)
+script_path <- dirname(sub("--file=", "", initial_opts[grep("--file=", initial_opts)]))
+source(file.path(script_path, "plot_facets_enhanced-v22.R"))
+
+# --- Define and Parse Arguments ---
 
 # Create the parser
 parser <- ArgumentParser(description = "Run FACETS algorithm on a SNP pileup file.")
@@ -59,7 +66,7 @@ parser$add_argument("--gbuild",
     help = "Genome build used for alignment."
 )
 
-# --- 3. Main Analysis Function ---
+# --- Main Analysis Function ---
 main <- function(args) {
     # Set seed for reproducibility
     set.seed(1965)
@@ -110,6 +117,7 @@ main <- function(args) {
     # Generate the plots PNG
     png(file = args$output_plots, width = 12, height = 8, units = "in", res = 300)
     plotSample(x = oo, emfit = fit, sname = args$sample_id)
+    plot_facets_enhanced(oo, emfit = fit, plot.type = "em", sname = args$sample_id)
     dev.off()
     png(file = args$output_spider, width = 8, height = 8, units = "in", res = 300)
     logRlogORspider(oo$out, oo$dipLogR)
@@ -117,7 +125,7 @@ main <- function(args) {
 
 }
 
-# --- 4. Execution Block ---
+# --- Execution Block ---
 if (!interactive()) {
     args <- parser$parse_args()
     main(args)
