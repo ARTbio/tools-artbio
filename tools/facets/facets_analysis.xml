@@ -11,6 +11,7 @@
             --sample_id '$pileup.name'
             --output_seg '$output_seg'
             --output_summary '$output_summary'
+            --output_spider '$output_spider'
             --output_plots '$output_plots'
             --cval $cval
             --min_nhet $min_nhet
@@ -36,14 +37,17 @@
     <outputs>
         <data name="output_seg" format="tsv" label="FACETS Segmentation on ${on_string}"/>
         <data name="output_summary" format="tabular" label="FACETS Summary on ${on_string}"/>
-        <data name="output_plots" format="pdf" label="FACETS Plots on ${on_string}"/>
+        <data name="output_plots" format="png" label="FACETS Plots on ${on_string}"/>
+        <data name="output_spider" format="png" label="FACETS Spider Plot on ${on_string}"/>
+
     </outputs>
     <tests>
         <test>
             <param name="pileup" value="Pileup.input_test_facets.csv.gz" ftype="tabular.gz"/>
             <output name="output_seg" file="test_sample_01.seg.tsv" ftype="tsv"/>
             <output name="output_summary" file="test_sample_01.summary.txt" ftype="tabular"/>
-            <output name="output_plots" file="test_sample_01.plots.pdf" ftype="pdf" compare="sim_size" delta="1000"/>
+            <output name="output_plots" file="test_sample_01.plots.png" ftype="png" compare="sim_size" delta="20000"/>
+            <output name="output_spider" file="test_sample_01.spider.png" ftype="png" compare="sim_size" delta="10000"/>
         </test>
     </tests>
     <help><![CDATA[
