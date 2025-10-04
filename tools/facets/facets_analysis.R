@@ -35,9 +35,12 @@ parser$add_argument("--output_summary",
 )
 parser$add_argument("--output_plots",
     type = "character", required = TRUE,
-    help = "Path for the output plots file (PDF)."
+    help = "Path for the main output plots file (PNG)."
 )
-
+parser$add_argument("--output_spider",
+    type = "character", required = TRUE,
+    help = "Path for the diagnostic spider plot file (PNG)."
+)
 parser$add_argument("--cval",
     type = "double", default = 150,
     help = "Critical value for segmentation."
@@ -104,8 +107,10 @@ main <- function(args) {
     )
     write.table(summary_df, file = args$output_summary, sep = "\t", quote = FALSE, row.names = FALSE)
 
-    # Generate the plots PDF
+    # Generate the plots PNG
     pdf(file = args$output_plots, width = 12, height = 8)
+    plotSample(x = oo, emfit = fit, sname = args$sample_id)
+    png(file = args$output_plots, width = 12, height = 8, units = "in", res = 300)
     plotSample(x = oo, emfit = fit, sname = args$sample_id)
     dev.off()
 }
