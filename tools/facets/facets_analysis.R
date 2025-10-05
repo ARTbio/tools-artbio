@@ -72,40 +72,40 @@ parser$add_argument("--gbuild",
 
 #' Classify CNV segments based on TCN/LCN
 classify_cnv <- function(cncf_df) {
-  cncf_df$sv_type <- NA_character_
-  cncf_df$sv_type[cncf_df$tcn.em == 2 & (cncf_df$lcn.em == 1 | is.na(cncf_df$lcn.em))] <- "NEUTR"
-  cncf_df$sv_type[is.na(cncf_df$sv_type) & cncf_df$tcn.em > 2] <- "DUP"
-  cncf_df$sv_type[is.na(cncf_df$sv_type) & cncf_df$tcn.em < 2 & !is.na(cncf_df$lcn.em) & cncf_df$lcn.em > 0] <- "HEMIZYG_DEL"
-  cncf_df$sv_type[is.na(cncf_df$sv_type) & cncf_df$tcn.em < 2 & !is.na(cncf_df$lcn.em) & cncf_df$lcn.em == 0] <- "HOMOZYG_DEL"
-  cncf_df$sv_type[is.na(cncf_df$sv_type) & cncf_df$tcn.em == 2 & !is.na(cncf_df$lcn.em) & cncf_df$lcn.em == 0] <- "CN_LOH"
-  
-  # Remplacer les NA restants (si tcn.em < 2 mais lcn.em est NA) par un type général
-  cncf_df$sv_type[is.na(cncf_df$sv_type) & cncf_df$tcn.em < 2] <- "DEL"
-  
-  return(cncf_df)
+    cncf_df$sv_type <- NA_character_
+    cncf_df$sv_type[cncf_df$tcn.em == 2 & (cncf_df$lcn.em == 1 | is.na(cncf_df$lcn.em))] <- "NEUTR"
+    cncf_df$sv_type[is.na(cncf_df$sv_type) & cncf_df$tcn.em > 2] <- "DUP"
+    cncf_df$sv_type[is.na(cncf_df$sv_type) & cncf_df$tcn.em < 2 & !is.na(cncf_df$lcn.em) & cncf_df$lcn.em > 0] <- "HEMIZYG_DEL"
+    cncf_df$sv_type[is.na(cncf_df$sv_type) & cncf_df$tcn.em < 2 & !is.na(cncf_df$lcn.em) & cncf_df$lcn.em == 0] <- "HOMOZYG_DEL"
+    cncf_df$sv_type[is.na(cncf_df$sv_type) & cncf_df$tcn.em == 2 & !is.na(cncf_df$lcn.em) & cncf_df$lcn.em == 0] <- "CN_LOH"
+
+    # Remplacer les NA restants (si tcn.em < 2 mais lcn.em est NA) par un type général
+    cncf_df$sv_type[is.na(cncf_df$sv_type) & cncf_df$tcn.em < 2] <- "DEL"
+
+    return(cncf_df)
 }
 
 #' Create a VCF header (explicit version)
 create_vcf_header <- function(sample_id, purity, ploidy) {
-  header <- c(
-    "##fileformat=VCFv4.2",
-    paste0("##fileDate=", format(Sys.Date(), "%Y%m%d")),
-    paste0("##source=FACETS_v", packageVersion("facets")),
-    "##INFO=<ID=END,Number=1,Type=Integer,Description=\"End position of the variant\">",
-    "##INFO=<ID=SVTYPE,Number=1,Type=String,Description=\"Type of structural variant (standard VCF tags: DEL, DUP, CNV)\">",
-    "##INFO=<ID=SVLEN,Number=1,Type=Integer,Description=\"Length of the SV\">",
-    # --- MODIFICATION ---
-    "##INFO=<ID=EVENT,Number=1,Type=String,Description=\"FACETS event classification. Possible values: DUP, HEMIZYG_DEL, HOMOZYG_DEL, CN_LOH\">",
-    # --- FIN MODIFICATION ---
-    "##INFO=<ID=TCN,Number=1,Type=Integer,Description=\"Total Copy Number (EM fit)\">",
-    "##INFO=<ID=LCN,Number=1,Type=Integer,Description=\"Lesser Copy Number (EM fit)\">",
-    "##INFO=<ID=NUM_MARK,Number=1,Type=Integer,Description=\"Number of SNPs in the segment\">",
-    "##INFO=<ID=NHET,Number=1,Type=Integer,Description=\"Number of heterozygous SNPs in the segment\">",
-    paste0("##FACETS_PURITY=", round(purity, 4)),
-    paste0("##FACETS_PLOIDY=", round(ploidy, 4)),
-    "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO"
-  )
-  return(header)
+    header <- c(
+        "##fileformat=VCFv4.2",
+        paste0("##fileDate=", format(Sys.Date(), "%Y%m%d")),
+        paste0("##source=FACETS_v", packageVersion("facets")),
+        "##INFO=<ID=END,Number=1,Type=Integer,Description=\"End position of the variant\">",
+        "##INFO=<ID=SVTYPE,Number=1,Type=String,Description=\"Type of structural variant (standard VCF tags: DEL, DUP, CNV)\">",
+        "##INFO=<ID=SVLEN,Number=1,Type=Integer,Description=\"Length of the SV\">",
+        # --- MODIFICATION ---
+        "##INFO=<ID=EVENT,Number=1,Type=String,Description=\"FACETS event classification. Possible values: DUP, HEMIZYG_DEL, HOMOZYG_DEL, CN_LOH\">",
+        # --- FIN MODIFICATION ---
+        "##INFO=<ID=TCN,Number=1,Type=Integer,Description=\"Total Copy Number (EM fit)\">",
+        "##INFO=<ID=LCN,Number=1,Type=Integer,Description=\"Lesser Copy Number (EM fit)\">",
+        "##INFO=<ID=NUM_MARK,Number=1,Type=Integer,Description=\"Number of SNPs in the segment\">",
+        "##INFO=<ID=NHET,Number=1,Type=Integer,Description=\"Number of heterozygous SNPs in the segment\">",
+        paste0("##FACETS_PURITY=", round(purity, 4)),
+        paste0("##FACETS_PLOIDY=", round(ploidy, 4)),
+        "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO"
+    )
+    return(header)
 }
 
 # --- Main Analysis Function ---
@@ -165,57 +165,57 @@ main <- function(args) {
     logRlogORspider(oo$out, oo$dipLogR)
     dev.off()
 
-  # --- Generate VCF file ---
-  
-  # Classify segments and define standard SVTYPEs + detailed EVENTs
-  cncf_for_vcf <- fit$cncf
-  if (nrow(cncf_for_vcf) > 0) {
-    cncf_for_vcf$svtype <- NA_character_
-    cncf_for_vcf$event <- NA_character_
-    
-    # Duplications
-    cncf_for_vcf[cncf_for_vcf$tcn.em > 2, c("svtype", "event")] <- c("DUP", "DUP")
-    
-    # Deletions
-    cncf_for_vcf[cncf_for_vcf$tcn.em < 2, c("svtype")] <- "DEL"
-    cncf_for_vcf[cncf_for_vcf$tcn.em == 1, c("event")] <- "HEMIZYG_DEL"
-    cncf_for_vcf[cncf_for_vcf$tcn.em == 0, c("event")] <- "HOMOZYG_DEL"
-    
-    # Copy-Neutral LOH
-    cncf_for_vcf[cncf_for_vcf$tcn.em == 2 & !is.na(cncf_for_vcf$lcn.em) & cncf_for_vcf$lcn.em == 0, c("svtype", "event")] <- c("CNV", "CN_LOH")
-    
-    # Filtrer les segments normaux (ceux où 'svtype' est encore NA)
-    cnv_calls <- cncf_for_vcf[!is.na(cncf_for_vcf$svtype), ]
-  } else {
-    cnv_calls <- data.frame()
-  }
-  
-  
-  if (nrow(cnv_calls) > 0) {
-    vcf_header <- create_vcf_header(args$sample_id, fit$purity, fit$ploidy)
-    
-    vcf_body <- apply(cnv_calls, 1, function(seg) {
-      alt_allele <- paste0("<", seg["svtype"], ">")
-      
-      info <- paste0(
-        "END=", seg["end"],
-        ";SVTYPE=", seg["svtype"],
-        ";SVLEN=", as.integer(seg["end"]) - as.integer(seg["start"]),
-        ";TCN=", seg["tcn.em"],
-        ";LCN=", ifelse(is.na(seg["lcn.em"]), ".", seg["lcn.em"]),
-        ";EVENT=", seg["event"],
-        ";NUM_MARK=", seg["num.mark"],
-        ";NHET=", seg["nhet"]
-      )
-      
-      paste(seg["chrom"], seg["start"], ".", "N", alt_allele, ".", "PASS", info, sep = "\t")
-    })
-    
-    writeLines(c(vcf_header, vcf_body), con = args$output_vcf)
-  } else {
-    vcf_header <- create_vcf_header(args$sample_id, fit$purity, fit$ploidy)
-    writeLines(vcf_header, con = args$output_vcf)
-  }
+    # --- Generate VCF file ---
+
+    # Classify segments and define standard SVTYPEs + detailed EVENTs
+    cncf_for_vcf <- fit$cncf
+    if (nrow(cncf_for_vcf) > 0) {
+        cncf_for_vcf$svtype <- NA_character_
+        cncf_for_vcf$event <- NA_character_
+
+        # Duplications
+        cncf_for_vcf[cncf_for_vcf$tcn.em > 2, c("svtype", "event")] <- c("DUP", "DUP")
+
+        # Deletions
+        cncf_for_vcf[cncf_for_vcf$tcn.em < 2, c("svtype")] <- "DEL"
+        cncf_for_vcf[cncf_for_vcf$tcn.em == 1, c("event")] <- "HEMIZYG_DEL"
+        cncf_for_vcf[cncf_for_vcf$tcn.em == 0, c("event")] <- "HOMOZYG_DEL"
+
+        # Copy-Neutral LOH
+        cncf_for_vcf[cncf_for_vcf$tcn.em == 2 & !is.na(cncf_for_vcf$lcn.em) & cncf_for_vcf$lcn.em == 0, c("svtype", "event")] <- c("CNV", "CN_LOH")
+
+        # Filtrer les segments normaux (ceux où 'svtype' est encore NA)
+        cnv_calls <- cncf_for_vcf[!is.na(cncf_for_vcf$svtype), ]
+    } else {
+        cnv_calls <- data.frame()
+    }
+
+
+    if (nrow(cnv_calls) > 0) {
+        vcf_header <- create_vcf_header(args$sample_id, fit$purity, fit$ploidy)
+
+        vcf_body <- apply(cnv_calls, 1, function(seg) {
+            alt_allele <- paste0("<", seg["svtype"], ">")
+
+            info <- paste0(
+                "END=", seg["end"],
+                ";SVTYPE=", seg["svtype"],
+                ";SVLEN=", as.integer(seg["end"]) - as.integer(seg["start"]),
+                ";TCN=", seg["tcn.em"],
+                ";LCN=", ifelse(is.na(seg["lcn.em"]), ".", seg["lcn.em"]),
+                ";EVENT=", seg["event"],
+                ";NUM_MARK=", seg["num.mark"],
+                ";NHET=", seg["nhet"]
+            )
+
+            paste(seg["chrom"], seg["start"], ".", "N", alt_allele, ".", "PASS", info, sep = "\t")
+        })
+
+        writeLines(c(vcf_header, vcf_body), con = args$output_vcf)
+    } else {
+        vcf_header <- create_vcf_header(args$sample_id, fit$purity, fit$ploidy)
+        writeLines(vcf_header, con = args$output_vcf)
+    }
 }
 
 # --- Execution Block ---
