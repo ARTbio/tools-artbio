@@ -1,0 +1,14 @@
+##fileformat=VCFv4.2
+##fileDate=20251005
+##source=FACETS_v0.6.2
+##INFO=<ID=END,Number=1,Type=Integer,Description="End position of the variant">
+##INFO=<ID=SVTYPE,Number=1,Type=String,Description="Type of structural variant (standard VCF tags: DEL, DUP, CNV)">
+##INFO=<ID=SVLEN,Number=1,Type=Integer,Description="Length of the SV">
+##INFO=<ID=EVENT,Number=1,Type=String,Description="FACETS event classification. Possible values: DUP, HEMIZYG_DEL, HOMOZYG_DEL, CN_LOH">
+##INFO=<ID=TCN,Number=1,Type=Integer,Description="Total Copy Number (EM fit)">
+##INFO=<ID=LCN,Number=1,Type=Integer,Description="Lesser Copy Number (EM fit)">
+##INFO=<ID=NUM_MARK,Number=1,Type=Integer,Description="Number of SNPs in the segment">
+##INFO=<ID=NHET,Number=1,Type=Integer,Description="Number of heterozygous SNPs in the segment">
+##FACETS_PURITY=NA
+##FACETS_PLOIDY=2
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO
