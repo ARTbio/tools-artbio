@@ -6,11 +6,18 @@
 #   number analysis using the R package 'facets'.
 # ==============================================================================
 
-# --- 1. Load Libraries ---
+# --- Load Libraries ---
 suppressPackageStartupMessages(library(argparse))
 suppressPackageStartupMessages(library(facets))
 
-# --- 2. Define and Parse Arguments ---
+# --- Source the external plot_facets_enhanced function ---
+# This finds the path of the currently running script and sources
+# the R function file relative to it.
+initial_opts <- commandArgs(trailingOnly = FALSE)
+script_path <- dirname(sub("--file=", "", initial_opts[grep("--file=", initial_opts)]))
+source(file.path(script_path, "plot_facets_enhanced-v22.R"))
+
+# --- Define and Parse Arguments ---
 
 # Create the parser
 parser <- ArgumentParser(description = "Run FACETS algorithm on a SNP pileup file.")
@@ -35,9 +42,12 @@ parser$add_argument("--output_summary",
 )
 parser$add_argument("--output_plots",
     type = "character", required = TRUE,
-    help = "Path for the output plots file (PDF)."
+    help = "Path for the main output plots file (PNG)."
 )
-
+parser$add_argument("--output_spider",
+    type = "character", required = TRUE,
+    help = "Path for the diagnostic spider plot file (PNG)."
+)
 parser$add_argument("--cval",
     type = "double", default = 150,
     help = "Critical value for segmentation."
@@ -56,7 +66,7 @@ parser$add_argument("--gbuild",
     help = "Genome build used for alignment."
 )
 
-# --- 3. Main Analysis Function ---
+# --- Main Analysis Function ---
 main <- function(args) {
     # Set seed for reproducibility
     set.seed(1965)
@@ -104,13 +114,17 @@ main <- function(args) {
     )
     write.table(summary_df, file = args$output_summary, sep = "\t", quote = FALSE, row.names = FALSE)
 
-    # Generate the plots PDF
-    pdf(file = args$output_plots, width = 12, height = 8)
+    # Generate the plots PNG
+    png(file = args$output_plots, width = 12, height = 8, units = "in", res = 300)
     plotSample(x = oo, emfit = fit, sname = args$sample_id)
+    plot_facets_enhanced(oo, emfit = fit, plot.type = "em", sname = args$sample_id)
+    dev.off()
+    png(file = args$output_spider, width = 8, height = 8, units = "in", res = 300)
+    logRlogORspider(oo$out, oo$dipLogR)
     dev.off()
 }
 
-# --- 4. Execution Block ---
+# --- Execution Block ---
 if (!interactive()) {
     args <- parser$parse_args()
     main(args)
