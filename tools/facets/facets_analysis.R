@@ -122,7 +122,6 @@ main <- function(args) {
     png(file = args$output_spider, width = 8, height = 8, units = "in", res = 300)
     logRlogORspider(oo$out, oo$dipLogR)
     dev.off()
-
 }
 
 # --- Execution Block ---
