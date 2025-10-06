@@ -207,6 +207,8 @@ main <- function(args) {
                 ";NUM_MARK=", seg["num.mark"],
                 ";NHET=", seg["nhet"]
             )
+            # Remove any space(s) immediately following an '=' sign in the INFO string.
+            info <- gsub("=\\s+", "=", info)
 
             paste(seg["chrom"], seg["start"], ".", "N", alt_allele, ".", "PASS", info, sep = "\t")
         })
