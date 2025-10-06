@@ -28,6 +28,7 @@
             -N \${GALAXY_SLOTS:-4}
             -q '$adv.mapq'
             -Q '$adv.baseq'
+            -p '$adv.pseudo_snps'
             #if $adv.count_orphans
                 -A
             #end if
@@ -40,6 +41,7 @@
         <section name="adv" title="Advanced Parameters" expanded="false">
             <param name="mapq" type="integer" value="15" label="Minimum Mapping Quality" help="(-q) Filters reads with a mapping quality below this value."/>
             <param name="baseq" type="integer" value="20" label="Minimum Base Quality" help="(-Q) Filters individual bases with a quality (QUAL column in BAM) below this value."/>
+            <param name="pseudo_snps" type="integer" value="300" min="150" max="5000" label="Pseudo-SNP Spacing (bp)" help="(-p) Spacing for the pseudo-SNP grid, essential for het-SNP-poor regions. The default (300) is robust. The allowed range [150-5000] mirrors the script's safety guardrails."/>
             <param name="count_orphans" type="boolean" checked="true" truevalue="-A" falsevalue="" label="Include anomalous read pairs (-A)" help="If checked, considers reads where the mate is unmapped or mapped to a different chromosome."/>
         </section>
     </inputs>
@@ -51,26 +53,80 @@
             <param name="normal_bam" value="normal.bam" ftype="bam"/>
             <param name="tumor_bam" value="tumor.bam" ftype="bam"/>
             <param name="snp_vcf" value="ref.vcf.gz" ftype="vcf_bgzip"/>
-            <output name="output_pileup" file="expected_pileup.csv.gz" ftype="tabular.gz" decompress="true">
-            </output>
+            <section name="adv">
+                <param name="mapq" value="20"/>
+                <param name="pseudo_snps" value="400"/>
+            </section>
+            <output name="output_pileup" file="expected_pileup.csv.gz" ftype="tabular.gz" decompress="true"/>
         </test>
     </tests>
     <help><![CDATA[
         **What it does**
 
-        This tool runs the `snp-pileup` program from the FACETS suite to generate a counts file of SNPs from a matched tumor-normal pair of BAM files.
-        This output is the primary input for the "FACETS Analysis" tool.
+        This tool generates a detailed allele counts file, the required input for the
+        **FACETS Analysis** tool. At its core, it is an optimized wrapper
+        for the `snp-pileup` program.
 
-        The tool parallelizes the process by running `snp-pileup` on each chromosome simultaneously for maximum efficiency.
+        For each SNP position defined in the reference VCF, the tool calculates
+        the read depth for the reference and alternate alleles in both the normal and
+        tumor BAM files. The final output is a table with counts like ``NOR.ref``,
+        ``NOR.alt``, ``TUM.ref``, and ``TUM.alt``. This matrix of allele-specific
+        coverage is the fundamental data used by FACETS to perform segmentation and
+        call copy number alterations.
+
+        To ensure maximum efficiency, this wrapper parallelizes the process by running
+        `snp-pileup` on each chromosome simultaneously.
+
+        ---
 
         **Inputs**
 
-        - **Normal/Tumor BAM files:** Your aligned sequencing data. Must be sorted and indexed.
-        - **SNP Reference VCF:** A bgzip-compressed and tabix-indexed VCF file of common SNPs. It is **highly recommended** to use the optimized reference files available on our Zenodo deposit [LINK TO ZENODO HERE], making sure to choose the version that matches the chromosome style of your BAMs (`chr` or `no-chr`).
+        - **Normal/Tumor BAM files:** Your aligned sequencing data. Must be sorted
+          and indexed.
+
+        - **SNP Reference VCF:** This input is critical for the quality of the analysis.
+
+          - **Recommended VCF:** It is **highly recommended** to use the optimized
+            reference VCF provided with this tool suite, available on Zenodo at:
+            **[https://zenodo.org/records/17226698]**. This VCF has been specifically designed for FACETS:
+            it contains a curated list of common SNPs with a population allele
+            frequency near 0.5, filtered to a uniform density of approximately
+            1 SNP per kilobase. This controlled approach ensures consistent results
+            and significantly reduces processing time.
+
+          - **The Role of Pseudo-SNPs:** Even with a high-density reference VCF, any
+            given patient's genome (in the ``normal.bam``) will only be heterozygous
+            at a *subset* of these positions. The *effective* density of informative
+            SNPs is therefore lower. The ``--pseudo-snps`` parameter compensates for
+            this by creating a background grid of artificial points where read depth
+            is still measured. This ensures a uniform grid for the segmentation
+            algorithm, which is essential for its accuracy, especially in regions
+            poor in heterozygous SNPs.
+
+          - **Using other VCFs:** You can use other reference VCFs, such as the
+            ``00-common_all.vcf.gz`` file from dbSNP. However, be aware that these
+            files are often much larger and can increase runtime. Using a
+            non-standard VCF is an advanced use case and requires a good
+            understanding of its properties.
+
+        ---
+
+        **Parameters**
+
+        - **Minimum Mapping Quality (-q):** Filters out ambiguously mapped reads.
+        - **Minimum Base Quality (-Q):** Filters out low-quality bases within reads.
+        - **Pseudo-SNP Spacing (-p):** Sets the spacing for the background
+          read-depth grid. The default (300) is robust for most analyses.
+        - **Include anomalous read pairs (-A):** Considers reads where the mate is
+          unmapped or on a different chromosome.
+
+        ---
 
         **Outputs**
 
-        - **FACETS Pileup:** A compressed CSV file (`.csv.gz`) containing the read counts for reference and alternate alleles at each SNP position for both normal and tumor samples.
+        - **FACETS Pileup:** A compressed CSV file (``.csv.gz``) containing the allele
+          counts. This file serves as the primary input for the **FACETS Analysis**
+          tool.
     ]]></help>
     <expand macro="citations"/>
-</tool>
+    </tool>
