@@ -69,6 +69,18 @@ parser$add_argument("--gbuild",
     choices = c("hg19", "hg38", "hg18", "mm9", "mm10"),
     help = "Genome build used for alignment."
 )
+parser$add_argument("--enable_merging",
+    action = "store_true", default = FALSE,
+    help = "If specified, enables the post-processing step to merge adjacent and similar CNV segments."
+)
+parser$add_argument("--merge_gap_abs",
+    type = "integer", default = 1000000,
+    help = "Absolute maximum gap in bp to merge adjacent CNV segments."
+)
+parser$add_argument("--merge_gap_rel",
+    type = "double", default = 0.5,
+    help = "Relative maximum gap (fraction of avg. segment length) to merge segments."
+)
 
 #' Classify CNV segments based on TCN/LCN
 classify_cnv <- function(cncf_df) {
@@ -108,6 +120,78 @@ create_vcf_header <- function(sample_id, purity, ploidy) {
     return(header)
 }
 
+# ==============================================================================
+# Function to merge adjacent and similar CNV segments
+#
+# This function implements a merging algorithm that reflects human
+# by using a hybrid proximity condition. Two segments are merged
+# if they have the same CNV state and are close to each other, both in absolute
+# and relative terms.
+#
+# @param cnv_df A data frame of CNV calls, expected to have columns like
+#   'chrom', 'start', 'end', 'svtype', 'tcn.em', 'lcn.em', etc.
+# @param max_gap_abs An integer. The absolute maximum distance (in bp) allowed
+#   between two segments to consider them for merging. Acts as a safeguard.
+# @param max_gap_rel A numeric value (0 to 1). The maximum relative distance,
+#   expressed as a fraction of the average length of the two adjacent segments.
+# @return A new data frame with the similar adjacent segments merged.
+# ==============================================================================
+merge_segments <- function(cnv_df, max_gap_abs = 1000000, max_gap_rel = 0.5) {
+    # If there's nothing to merge, return the original data frame
+    if (nrow(cnv_df) < 2) {
+        return(cnv_df)
+    }
+
+    # Ensure the data frame is sorted by genomic position
+    cnv_df <- cnv_df[order(cnv_df$chrom, cnv_df$start), ]
+
+    merged_rows <- list()
+    current_row <- cnv_df[1, ]
+
+    for (i in 2:nrow(cnv_df)) {
+        next_row <- cnv_df[i, ]
+
+        # Basic criteria: segments must be of the same type and CN state
+        same_chrom <- current_row$chrom == next_row$chrom
+        same_svtype <- current_row$svtype == next_row$svtype
+        same_event <- current_row$event == next_row$event
+        same_tcn <- current_row$tcn.em == next_row$tcn.em
+        same_lcn <- identical(current_row$lcn.em, next_row$lcn.em) # Handles NA safely
+
+        # If basic criteria are met, evaluate proximity
+        if (same_chrom && same_svtype && same_event && same_tcn && same_lcn) {
+            gap <- next_row$start - current_row$end
+
+            # Calculate the relative threshold based on the average size of the two segments
+            len_a <- current_row$end - current_row$start
+            len_b <- next_row$end - next_row$start
+            relative_threshold <- ((len_a + len_b) / 2) * max_gap_rel
+
+            # Hybrid merge condition: gap must be below BOTH absolute and relative thresholds
+            if (gap >= 0 && gap <= max_gap_abs && gap <= relative_threshold) {
+                # Merge: update the end of the current segment and aggregate numeric fields
+                current_row$end <- next_row$end
+                current_row$num.mark <- current_row$num.mark + next_row$num.mark
+                current_row$nhet <- current_row$nhet + next_row$nhet
+
+                # Skip to the next iteration to try merging the newly expanded segment
+                # with the one that follows.
+                next
+            }
+        }
+
+        # If no merge occurred, the current segment is final. Save it.
+        merged_rows <- append(merged_rows, list(current_row))
+        # The next segment becomes the new current segment.
+        current_row <- next_row
+    }
+
+    # Append the very last segment (which is either a standalone or the result of the last merge)
+    merged_rows <- append(merged_rows, list(current_row))
+
+    # Reconstruct a single data frame from the list of merged rows
+    do.call(rbind, merged_rows)
+}
 # --- Main Analysis Function ---
 main <- function(args) {
     # Set seed for reproducibility
@@ -184,7 +268,7 @@ main <- function(args) {
         # Copy-Neutral LOH
         cncf_for_vcf[cncf_for_vcf$tcn.em == 2 & !is.na(cncf_for_vcf$lcn.em) & cncf_for_vcf$lcn.em == 0, c("svtype", "event")] <- c("CNV", "CN_LOH")
 
-        # Filtrer les segments normaux (ceux où 'svtype' est encore NA)
+        # Filter normal segments (where'svtype' is still NA)
         cnv_calls <- cncf_for_vcf[!is.na(cncf_for_vcf$svtype), ]
     } else {
         cnv_calls <- data.frame()
@@ -192,11 +276,18 @@ main <- function(args) {
 
 
     if (nrow(cnv_calls) > 0) {
+        if (args$enable_merging) {
+            cnv_calls <- merge_segments(
+                cnv_df = cnv_calls,
+                max_gap_abs = args$merge_gap_abs,
+                max_gap_rel = args$merge_gap_rel
+            )
+        }
         vcf_header <- create_vcf_header(args$sample_id, fit$purity, fit$ploidy)
 
         vcf_body <- apply(cnv_calls, 1, function(seg) {
+            cnv_calls <- merge_segments(cnv_calls)
             alt_allele <- paste0("<", seg["svtype"], ">")
-
             info <- paste0(
                 "END=", seg["end"],
                 ";SVTYPE=", seg["svtype"],
@@ -207,6 +298,8 @@ main <- function(args) {
                 ";NUM_MARK=", seg["num.mark"],
                 ";NHET=", seg["nhet"]
             )
+            # Remove any space(s) immediately following an '=' sign in the INFO string.
+            info <- gsub("=\\s+", "=", info)
 
             paste(seg["chrom"], seg["start"], ".", "N", alt_allele, ".", "PASS", info, sep = "\t")
         })
