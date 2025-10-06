@@ -160,9 +160,8 @@ merge_segments <- function(cnv_df, max_gap_abs = 1000000, max_gap_rel = 0.5) {
 
         # If basic criteria are met, evaluate proximity
         if (same_chrom && same_svtype && same_event && same_tcn && same_lcn) {
-            
             gap <- next_row$start - current_row$end
-            
+
             # Calculate the relative threshold based on the average size of the two segments
             len_a <- current_row$end - current_row$start
             len_b <- next_row$end - next_row$start
@@ -174,22 +173,22 @@ merge_segments <- function(cnv_df, max_gap_abs = 1000000, max_gap_rel = 0.5) {
                 current_row$end <- next_row$end
                 current_row$num.mark <- current_row$num.mark + next_row$num.mark
                 current_row$nhet <- current_row$nhet + next_row$nhet
-                
+
                 # Skip to the next iteration to try merging the newly expanded segment
                 # with the one that follows.
                 next
             }
         }
-        
+
         # If no merge occurred, the current segment is final. Save it.
         merged_rows <- append(merged_rows, list(current_row))
         # The next segment becomes the new current segment.
         current_row <- next_row
     }
-    
+
     # Append the very last segment (which is either a standalone or the result of the last merge)
     merged_rows <- append(merged_rows, list(current_row))
-    
+
     # Reconstruct a single data frame from the list of merged rows
     do.call(rbind, merged_rows)
 }
@@ -283,7 +282,7 @@ main <- function(args) {
                 max_gap_abs = args$merge_gap_abs,
                 max_gap_rel = args$merge_gap_rel
             )
-         }
+        }
         vcf_header <- create_vcf_header(args$sample_id, fit$purity, fit$ploidy)
 
         vcf_body <- apply(cnv_calls, 1, function(seg) {
