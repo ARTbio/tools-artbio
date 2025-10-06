@@ -28,6 +28,7 @@
             -N \${GALAXY_SLOTS:-4}
             -q '$adv.mapq'
             -Q '$adv.baseq'
+            -p '$adv.pseudo_snps'
             #if $adv.count_orphans
                 -A
             #end if
@@ -40,6 +41,7 @@
         <section name="adv" title="Advanced Parameters" expanded="false">
             <param name="mapq" type="integer" value="15" label="Minimum Mapping Quality" help="(-q) Filters reads with a mapping quality below this value."/>
             <param name="baseq" type="integer" value="20" label="Minimum Base Quality" help="(-Q) Filters individual bases with a quality (QUAL column in BAM) below this value."/>
+            <param name="pseudo_snps" type="integer" value="300" min="150" max="5000" label="Pseudo-SNP Spacing (bp)" help="(-p) Spacing for the pseudo-SNP grid, essential for het-SNP-poor regions. The default (300) is robust. The allowed range [150-5000] mirrors the script's safety guardrails."/>
             <param name="count_orphans" type="boolean" checked="true" truevalue="-A" falsevalue="" label="Include anomalous read pairs (-A)" help="If checked, considers reads where the mate is unmapped or mapped to a different chromosome."/>
         </section>
     </inputs>
@@ -51,8 +53,11 @@
             <param name="normal_bam" value="normal.bam" ftype="bam"/>
             <param name="tumor_bam" value="tumor.bam" ftype="bam"/>
             <param name="snp_vcf" value="ref.vcf.gz" ftype="vcf_bgzip"/>
-            <output name="output_pileup" file="expected_pileup.csv.gz" ftype="tabular.gz" decompress="true">
-            </output>
+            <section name="adv">
+                <param name="mapq" value="20"/>
+                <param name="pseudo_snps" value="400"/>
+            </section>
+            <output name="output_pileup" file="expected_pileup.csv.gz" ftype="tabular.gz" decompress="true"/>
         </test>
     </tests>
     <help><![CDATA[
