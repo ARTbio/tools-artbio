@@ -128,4 +128,5 @@
           counts. This file serves as the primary input for the **FACETS Analysis**
           tool.
     ]]></help>
+    <expand macro="citations"/>
     </tool>

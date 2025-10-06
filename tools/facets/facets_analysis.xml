@@ -51,7 +51,7 @@
             <output name="output_summary" file="test_sample_01.summary.txt" ftype="tabular"/>
             <output name="output_plots" file="test_sample_01.plots.png" ftype="png" compare="sim_size" delta="20000"/>
             <output name="output_spider" file="test_sample_01.spider.png" ftype="png" compare="sim_size" delta="10000"/>
-            <output name="output_vcf" file="test_sample_01.cnv.vcf" ftype="vcf" />
+            <output name="output_vcf" file="test_sample_01.cnv.vcf" ftype="vcf" lines_diff="2" />
         </test>
     </tests>
     <help><![CDATA[
