@@ -31,6 +31,8 @@ OPTIONS:
   -N    Number of parallel processes to use (default: 1).
   -q    Minimum mapping quality for reads (default: 15).
   -Q    Minimum base quality for bases (default: 20).
+  -p    Pseudo-SNP spacing in bp passed to snp-pileup (--pseudo-snps). Range: 150–5000.
+        Default: 300 (≈ 3.3 pseudo-SNPs/kb; robust with the controlled 1 SNP/kb VCF).
   -A    Include anomalous read pairs (flag, default: not set).
   -h    Display this help message and exit.
 EOF
@@ -51,7 +53,8 @@ mapq=15
 baseq=20
 count_orphans=""
 
-while getopts ":hn:t:v:o:N:q:Q:A" opt; do
+pseudo_snps=300   # default, was hard-coded previously
+while getopts ":hn:t:v:o:N:q:Q:p:A" opt; do
     case ${opt} in
         h ) usage ;;
         n ) normal_bam="$OPTARG" ;;
@@ -61,6 +64,7 @@ while getopts ":hn:t:v:o:N:q:Q:A" opt; do
         N ) nprocs="$OPTARG" ;;
         q ) mapq="$OPTARG" ;;
         Q ) baseq="$OPTARG" ;;
+        p ) pseudo_snps="$OPTARG" ;;
         A ) count_orphans="-A" ;;
         \? ) echo "Invalid option: -$OPTARG" >&2; usage ;;
         : ) echo "Option -$OPTARG requires an argument." >&2; usage ;;
@@ -81,6 +85,18 @@ for exe in SNP_PILEUP_EXE SAMTOOLS_EXE BCFTOOLS_EXE; do
     fi
 done
 echo "Found snp-pileup executable at: ${SNP_PILEUP_EXE}"
+# --- Input validation for pseudo_snps guardrails ---
+if ! [[ "${pseudo_snps}" =~ ^[0-9]+$ ]]; then
+    echo "Error: -p/--pseudo-snps must be an integer (bp)." >&2
+    exit 1
+fi
+if [ "${pseudo_snps}" -lt 150 ] || [ "${pseudo_snps}" -gt 5000 ]; then
+    echo "Error: -p/--pseudo-snps value (${pseudo_snps}) out of safe range [150..5000] bp." >&2
+    echo "Rationale: too small → excessive density/CPU; too large → pseudo-SNPs too sparse and FACETS may fail." >&2
+    exit 1
+fi
+echo "Using pseudo-SNP spacing: ${pseudo_snps} bp"
+
 
 echo "Starting SNP pileup process with ${nprocs} parallel jobs..."
 
@@ -113,12 +129,12 @@ scatter_and_run() {
     "${SAMTOOLS_EXE}" index "${temp_tbam}"
 
     echo "Running snp-pileup on chromosome ${chrom}..."
-    "${SNP_PILEUP_EXE}" --pseudo-snps=300 -q "${mapq}" -Q "${baseq}" ${count_orphans} "${temp_vcf}" "${temp_output}" "${temp_nbam}" "${temp_tbam}"
+    "${SNP_PILEUP_EXE}" --pseudo-snps="${pseudo_snps}" -q "${mapq}" -Q "${baseq}" ${count_orphans} "${temp_vcf}" "${temp_output}" "${temp_nbam}" "${temp_tbam}"
 }
 
 # Export all necessary variables AND the function so they are available to the sub-shells created by GNU Parallel.
 export -f scatter_and_run
-export snp_vcf normal_bam tumor_bam TMPDIR SNP_PILEUP_EXE SAMTOOLS_EXE BCFTOOLS_EXE mapq baseq count_orphans
+export snp_vcf normal_bam tumor_bam TMPDIR SNP_PILEUP_EXE SAMTOOLS_EXE BCFTOOLS_EXE mapq baseq count_orphans pseudo_snps
 
 # Run the function in parallel, feeding it the list of chromosomes.
 parallel --jobs "${nprocs}" scatter_and_run ::: ${CHROMS}
