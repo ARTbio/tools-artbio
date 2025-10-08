@@ -296,7 +296,7 @@ main <- function(args) {
         original_rows <- nrow(cnv_calls)
         cnv_calls <- cnv_calls[
             cnv_calls$nhet >= args$vcf_min_nhet &
-            cnv_calls$num.mark >= args$vcf_min_num_mark,
+                cnv_calls$num.mark >= args$vcf_min_num_mark,
         ]
         cat(paste("Applied VCF post-filters: kept", nrow(cnv_calls), "of", original_rows, "segments.\n"))
 
