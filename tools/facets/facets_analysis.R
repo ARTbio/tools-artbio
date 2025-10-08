@@ -81,7 +81,14 @@ parser$add_argument("--merge_gap_rel",
     type = "double", default = 0.5,
     help = "Relative maximum gap (fraction of avg. segment length) to merge segments."
 )
-
+parser$add_argument("--vcf_min_nhet",
+    type = "integer", default = 2,
+    help = "VCF Post-Filter: Minimum number of heterozygous SNPs for a segment to be kept."
+)
+parser$add_argument("--vcf_min_num_mark",
+    type = "integer", default = 3,
+    help = "VCF Post-Filter: Minimum number of total markers for a segment to be kept."
+)
 #' Classify CNV segments based on TCN/LCN
 classify_cnv <- function(cncf_df) {
     cncf_df$sv_type <- NA_character_
@@ -283,6 +290,16 @@ main <- function(args) {
                 max_gap_rel = args$merge_gap_rel
             )
         }
+        # Apply VCF post-filters to remove low-quality/artefactual segments
+        # This addresses the issue of FACETS' EM algorithm sometimes creating
+        # micro-segments that bypass the initial min.nhet segmentation parameter.
+        original_rows <- nrow(cnv_calls)
+        cnv_calls <- cnv_calls[
+            cnv_calls$nhet >= args$vcf_min_nhet &
+            cnv_calls$num.mark >= args$vcf_min_num_mark,
+        ]
+        cat(paste("Applied VCF post-filters: kept", nrow(cnv_calls), "of", original_rows, "segments.\n"))
+
         vcf_header <- create_vcf_header(args$sample_id, fit$purity, fit$ploidy)
 
         vcf_body <- apply(cnv_calls, 1, function(seg) {
