@@ -2,24 +2,25 @@
 
 # ==============================================================================
 #
-# snp_pileup_for_facets_wrapper.sh (v3.3 - Final Robust Parallelism)
+# snp_pileup_for_facets_wrapper.sh (v4.0 - Optimal Parallelization)
 #
 # Description:
-#   A robust wrapper script for running snp-pileup in parallel. It works around
-#   snp-pileup's inability to filter by region by creating temporary per-chromosome
-#   input files for each parallel job.
+#   A highly optimized wrapper for snp-pileup. It divides the genome into
+#   numerous, equally-sized chunks to ensure a balanced workload across all
+#   allocated threads, maximizing performance and resource utilization.
 #
 # Author:
 #   drosofff (ARTbio) & Gemini (Google)
 #
 # ==============================================================================
 
+# --- Robustness settings ---
+set -euo pipefail
+
 # --- Help Function ---
 usage() {
     cat << EOF
 Usage: $0 -n <normal.bam> -t <tumor.bam> -v <snps.vcf.gz> -o <output.csv.gz> [OPTIONS]
-
-This script runs snp-pileup in parallel across all chromosomes.
 
 REQUIRED ARGUMENTS:
   -n    Path to the normal BAM file (must be indexed).
@@ -28,32 +29,23 @@ REQUIRED ARGUMENTS:
   -o    Path for the final output pileup file (will be bgzip compressed).
 
 OPTIONS:
-  -N    Number of parallel processes to use (default: 1).
+  -N    Number of parallel processes to use (default from \${GALAXY_SLOTS:-4}).
   -q    Minimum mapping quality for reads (default: 15).
   -Q    Minimum base quality for bases (default: 20).
-  -p    Pseudo-SNP spacing in bp passed to snp-pileup (--pseudo-snps). Range: 150–5000.
-        Default: 300 (≈ 3.3 pseudo-SNPs/kb; robust with the controlled 1 SNP/kb VCF).
+  -p    Pseudo-SNP spacing in bp (default: 300).
   -A    Include anomalous read pairs (flag, default: not set).
   -h    Display this help message and exit.
 EOF
     exit 0
 }
 
-# --- Robustness settings ---
-set -e -u -o pipefail
-
-# --- Argument parsing ---
-# (This part is correct and remains unchanged)
-normal_bam=""
-tumor_bam=""
-snp_vcf=""
-output_pileup=""
-nprocs=1
+# --- Argument Parsing ---
+nprocs=${GALAXY_SLOTS:-4} # Default to Galaxy's variable, with a fallback
 mapq=15
 baseq=20
+pseudo_snps=300
 count_orphans=""
 
-pseudo_snps=300   # default, was hard-coded previously
 while getopts ":hn:t:v:o:N:q:Q:p:A" opt; do
     case ${opt} in
         h ) usage ;;
@@ -71,93 +63,106 @@ while getopts ":hn:t:v:o:N:q:Q:p:A" opt; do
     esac
 done
 
-# --- Main logic ---
+# --- Tool path discovery ---
+# (Assumes tools are in PATH)
+SNP_PILEUP_EXE="snp-pileup"
+SAMTOOLS_EXE="samtools"
+BCFTOOLS_EXE="bcftools"
 
-# Find full paths to executables
-SNP_PILEUP_EXE=$(command -v snp-pileup)
-SAMTOOLS_EXE=$(command -v samtools)
-BCFTOOLS_EXE=$(command -v bcftools)
-
-for exe in SNP_PILEUP_EXE SAMTOOLS_EXE BCFTOOLS_EXE; do
-    if [ -z "${!exe}" ]; then
-        echo "Error: '${exe%%_*}' executable not found in PATH." >&2
-        exit 1
-    fi
-done
-echo "Found snp-pileup executable at: ${SNP_PILEUP_EXE}"
-# --- Input validation for pseudo_snps guardrails ---
-if ! [[ "${pseudo_snps}" =~ ^[0-9]+$ ]]; then
-    echo "Error: -p/--pseudo-snps must be an integer (bp)." >&2
-    exit 1
-fi
-if [ "${pseudo_snps}" -lt 150 ] || [ "${pseudo_snps}" -gt 5000 ]; then
-    echo "Error: -p/--pseudo-snps value (${pseudo_snps}) out of safe range [150..5000] bp." >&2
-    echo "Rationale: too small → excessive density/CPU; too large → pseudo-SNPs too sparse and FACETS may fail." >&2
-    exit 1
-fi
-echo "Using pseudo-SNP spacing: ${pseudo_snps} bp"
-
-
-echo "Starting SNP pileup process with ${nprocs} parallel jobs..."
-
+# --- Temp directory setup and cleanup trap ---
 TMPDIR=$(mktemp -d)
-trap "rm -rf '${TMPDIR}'" EXIT
-echo "Temporary directory created at: ${TMPDIR}"
+trap 'rm -rf -- "$TMPDIR"' EXIT
 
-CHROMS=$("${SAMTOOLS_EXE}" view -H "${normal_bam}" | grep "^@SQ" | cut -f 2 | sed 's/SN://' | grep -Fwf - <(zcat "${snp_vcf}" | grep -v "^#" | cut -f 1 | sort -u) )
-echo "Found the following chromosomes to process in both BAM and VCF:"
-echo "${CHROMS}"
+# ==============================================================================
+# --- Phase 1: Parallelization Strategy using Balanced Regions ---
+# ==============================================================================
 
-# --- CORRECT PARALLEL EXECUTION LOGIC ---
+echo "Generating balanced genomic chunks for parallel processing..."
 
-# Define the function that will be run in parallel for each chromosome.
-# It will inherit the exported variables from the main script.
+# The number of chunks is a multiple of the number of threads for optimal balance.
+NUM_CHUNKS=$((nprocs * 10))
+
+# Step 1: Get the genome geometry (chromosome names and lengths)
+# from the BAM file header. This is the most reliable source.
+GENOME_GEOMETRY=$( "${SAMTOOLS_EXE}" view -H "$normal_bam" | awk -F'\t' '/^@SQ/ {print $2"\t"$3}' | sed 's/SN://' | sed 's/LN://' )
+
+# Step 2: Calculate the total genome size and the "ideal" chunk size.
+TOTAL_SIZE=$(echo "$GENOME_GEOMETRY" | awk '{sum+=$2} END {print sum}')
+CHUNK_SIZE=$((TOTAL_SIZE / NUM_CHUNKS))
+echo "Number of threads: ${nprocs}"
+echo "Target chunk size: ${CHUNK_SIZE} bp for ${NUM_CHUNKS} total chunks."
+
+# Step 3: Iterate over each chromosome to generate the list of regions.
+REGIONS=""
+while read -r chrom chrom_len; do
+    current_pos=1
+    while [[ "$current_pos" -lt "$chrom_len" ]]; do
+        end_pos=$((current_pos + CHUNK_SIZE - 1))
+        # Ensure the chunk does not extend beyond the end of the chromosome.
+        if [[ "$end_pos" -gt "$chrom_len" ]]; then
+            end_pos=$chrom_len
+        fi
+        # Add the region (format chr:start-end) to our list of tasks.
+        REGIONS="${REGIONS} ${chrom}:${current_pos}-${end_pos}"
+        current_pos=$((end_pos + 1))
+    done
+done <<< "$GENOME_GEOMETRY"
+
+echo "Generated $(echo "$REGIONS" | wc -w | xargs) tasks for GNU Parallel."
+
+# ==============================================================================
+# --- Phase 2: Parallel Execution (Map) ---
+# ==============================================================================
+
+# The worker function for each thread, now adapted for a region.
 scatter_and_run() {
-    local chrom=$1
-    echo "Scattering data for chromosome ${chrom}..."
+    local region="$1"
+    local region_safe_name
+    region_safe_name=$(echo "$region" | tr ':-' '_')
+    
+    local temp_output="${TMPDIR}/pileup_${region_safe_name}.csv"
+    local temp_nbam="${TMPDIR}/normal_${region_safe_name}.bam"
+    local temp_tbam="${TMPDIR}/tumor_${region_safe_name}.bam"
+    local temp_vcf="${TMPDIR}/snps_${region_safe_name}.vcf.gz"
 
-    local temp_vcf="${TMPDIR}/${chrom}.vcf.gz"
-    local temp_nbam="${TMPDIR}/${chrom}.normal.bam"
-    local temp_tbam="${TMPDIR}/${chrom}.tumor.bam"
-    local temp_output="${TMPDIR}/${chrom}.csv"
+    # Extract data for THIS SPECIFIC REGION
+    "${SAMTOOLS_EXE}" view -b "${normal_bam}" "${region}" -o "${temp_nbam}"
+    "${SAMTOOLS_EXE}" view -b "${tumor_bam}" "${region}" -o "${temp_tbam}"
+    "${BCFTOOLS_EXE}" view --regions "${region}" "${snp_vcf}" -Oz -o "${temp_vcf}"
 
-    "${BCFTOOLS_EXE}" view -r "${chrom}" "${snp_vcf}" -Oz -o "${temp_vcf}"
-    "${SAMTOOLS_EXE}" view -b "${normal_bam}" "${chrom}" > "${temp_nbam}"
-    "${SAMTOOLS_EXE}" view -b "${tumor_bam}" "${chrom}" > "${temp_tbam}"
-
+    # Index the temporary files
     "${SAMTOOLS_EXE}" index "${temp_nbam}"
     "${SAMTOOLS_EXE}" index "${temp_tbam}"
+    "${BCFTOOLS_EXE}" index "${temp_vcf}"
 
-    echo "Running snp-pileup on chromosome ${chrom}..."
+    # Run snp-pileup
     "${SNP_PILEUP_EXE}" --pseudo-snps="${pseudo_snps}" -q "${mapq}" -Q "${baseq}" ${count_orphans} "${temp_vcf}" "${temp_output}" "${temp_nbam}" "${temp_tbam}"
 }
 
-# Export all necessary variables AND the function so they are available to the sub-shells created by GNU Parallel.
 export -f scatter_and_run
-export snp_vcf normal_bam tumor_bam TMPDIR SNP_PILEUP_EXE SAMTOOLS_EXE BCFTOOLS_EXE mapq baseq count_orphans pseudo_snps
+export normal_bam tumor_bam snp_vcf TMPDIR SNP_PILEUP_EXE SAMTOOLS_EXE BCFTOOLS_EXE pseudo_snps mapq baseq count_orphans
 
-# Run the function in parallel, feeding it the list of chromosomes.
-parallel --jobs "${nprocs}" scatter_and_run ::: ${CHROMS}
+echo "Starting parallel processing with ${nprocs} threads..."
+parallel --jobs "${nprocs}" scatter_and_run ::: ${REGIONS}
+echo "Parallel processing finished."
 
-echo "Parallel processing finished. Concatenating results..."
+# ==============================================================================
+# --- Phase 3: Gathering Results (Reduce) ---
+# ==============================================================================
 
-# gather job outputs and sort chromosome remains the same
-FIRST_FILE=$(ls -1v "${TMPDIR}"/*.csv 2>/dev/null | head -n 1)
-if [ -z "${FIRST_FILE}" ]; then
+echo "Concatenating, sorting, and compressing results..."
+FIRST_FILE=$(find "$TMPDIR" -name '*.csv' -print -quit)
+if [ -z "$FIRST_FILE" ]; then
     echo "Error: No pileup files were generated." >&2
     exit 1
 fi
 
-# Use command grouping { ...; } to pipe the combined output of head and tail.
-# This entire pipeline writes the final, sorted, compressed file.
+# A robust pipeline to gather the results
 {
-    # 1. Print the header once.
-    head -n 1 "${FIRST_FILE}";
-
-    # 2. Concatenate all files (skipping their headers).
+    # Print the header from the first file.
+    head -n 1 "$FIRST_FILE";
+    # Concatenate the content of all other files, skipping their headers.
     tail -q -n +2 "${TMPDIR}"/*.csv;
+} | sort -k1,1V -k2,2n | gzip > "$output_pileup"
 
-} | sort -t, -k1,1V -k2,2n | bgzip > "${output_pileup}"
-echo "Concatenation, sorting and compression complete."
-echo "Final output is in ${output_pileup}"
-echo "Script finished successfully. The temporary directory will be removed by the trap."
+echo "Script finished successfully. Final output is in ${output_pileup}"
