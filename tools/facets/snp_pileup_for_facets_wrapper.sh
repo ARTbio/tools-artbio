@@ -82,19 +82,24 @@ echo "Generating balanced genomic chunks for parallel processing..."
 # The number of chunks is a multiple of the number of threads for optimal balance.
 NUM_CHUNKS=$((nprocs * 10))
 
-# Step 1: Get the list of primary chromosomes directly from the reference VCF.
-# We explicitly exclude the mitochondrial chromosome (M/MT) as it is not
-# suitable for diploid CNV analysis.
+# Step 1: Get the list of chromosomes to process directly from the VCF data body.
+# This is the most robust method. We then apply a positive filter to keep only
+# autosomes and sex chromosomes.
 VCF_PRIMARY_CHROMS=$( \
-    "${BCFTOOLS_EXE}" query -l "$snp_vcf" \
+    zcat "${snp_vcf}" \
+    | grep -v "^#" \
+    | cut -f 1 \
+    | sort -u \
     | grep -E '^(chr)?([0-9]+|X|Y)$' \
     || true \
 )
 
 if [ -z "$VCF_PRIMARY_CHROMS" ]; then
-    echo "Error: No primary autosomes or sex chromosomes (1-22, X, Y) found in the reference VCF file." >&2
+    echo "Error: No primary autosomes or sex chromosomes (1-22, X, Y) were found in the VCF file body." >&2
     exit 1
 fi
+echo "Found the following chromosomes to process:"
+echo "$VCF_PRIMARY_CHROMS"
 
 # Step 2: Get the geometry (lengths) for these specific chromosomes from the BAM header.
 GENOME_GEOMETRY=$( \
@@ -104,7 +109,7 @@ GENOME_GEOMETRY=$( \
     | grep -wFf <(echo "$VCF_PRIMARY_CHROMS") \
 )
 
-# Step 3: Calculate the total genome size and the "ideal" chunk size.
+# Step 3: Calculate the total genome size to process and the "ideal" chunk size.
 TOTAL_SIZE=$(echo "$GENOME_GEOMETRY" | awk '{sum+=$2} END {print sum}')
 if [[ -z "$TOTAL_SIZE" || "$TOTAL_SIZE" -eq 0 ]]; then
     echo "Error: Could not determine genome size. Make sure chromosome names in BAM and VCF match (e.g., 'chr1' vs '1')." >&2
