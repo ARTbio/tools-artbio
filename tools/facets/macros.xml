@@ -1,7 +1,7 @@
 <macros>
     <token name="@pipefail@"><![CDATA[set -o | grep -q pipefail && set -o pipefail;]]></token>
     <token name="@TOOL_VERSION@">0.6.2</token>
-    <token name="@VERSION_SUFFIX@">7</token>
+    <token name="@VERSION_SUFFIX@">8</token>
     <token name="@PROFILE@">23.0</token>
     <xml name="requirements">
         <requirements>
