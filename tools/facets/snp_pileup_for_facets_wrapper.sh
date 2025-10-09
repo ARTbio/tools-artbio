@@ -82,17 +82,44 @@ echo "Generating balanced genomic chunks for parallel processing..."
 # The number of chunks is a multiple of the number of threads for optimal balance.
 NUM_CHUNKS=$((nprocs * 10))
 
-# Step 1: Get the genome geometry (chromosome names and lengths)
-# from the BAM file header. This is the most reliable source.
-GENOME_GEOMETRY=$( "${SAMTOOLS_EXE}" view -H "$normal_bam" | awk -F'\t' '/^@SQ/ {print $2"\t"$3}' | sed 's/SN://' | sed 's/LN://' )
+# Step 1: Determine the common set of primary chromosomes between BAM and VCF.
+# This is the most robust way to define the workload.
 
-# Step 2: Calculate the total genome size and the "ideal" chunk size.
+# Get contigs from BAM header
+BAM_CONTIGS=$("${SAMTOOLS_EXE}" view -H "$normal_bam" | awk -F'\t' '/^@SQ/ {print $2}' | sed 's/SN://')
+
+# Get contigs from VCF header
+VCF_CONTIGS=$("${BCFTOOLS_EXE}" index --sequence-names "$snp_vcf")
+
+# Find the intersection of the two lists, then filter for primary chromosomes.
+# 'comm -12' prints lines common to both sorted files.
+COMMON_PRIMARY_CHROMS=$(comm -12 <(echo "$BAM_CONTIGS" | sort) <(echo "$VCF_CONTIGS" | sort) | grep -E '^(chr)?[0-9XYM]+$')
+
+if [ -z "$COMMON_PRIMARY_CHROMS" ]; then
+    echo "Error: No common primary chromosomes (1-22, X, Y, M) found between the BAM and VCF files." >&2
+    exit 1
+fi
+
+# Step 2: Get the geometry (lengths) for these specific chromosomes from the BAM header.
+GENOME_GEOMETRY=$( \
+    "${SAMTOOLS_EXE}" view -H "$normal_bam" \
+    | awk -F'\t' '/^@SQ/ {print $2"\t"$3}' \
+    | sed 's/SN://' | sed 's/LN://' \
+    | grep -wFf <(echo "$COMMON_PRIMARY_CHROMS") \
+)
+
+
+# Step 3: Calculate the total genome size and the "ideal" chunk size.
 TOTAL_SIZE=$(echo "$GENOME_GEOMETRY" | awk '{sum+=$2} END {print sum}')
+if [[ -z "$TOTAL_SIZE" || "$TOTAL_SIZE" -eq 0 ]]; then
+    echo "Error: Could not determine genome size from the common chromosomes." >&2
+    exit 1
+fi
 CHUNK_SIZE=$((TOTAL_SIZE / NUM_CHUNKS))
 echo "Number of threads: ${nprocs}"
 echo "Target chunk size: ${CHUNK_SIZE} bp for ${NUM_CHUNKS} total chunks."
 
-# Step 3: Iterate over each chromosome to generate the list of regions.
+# Step 4: Iterate over each chromosome to generate the list of regions.
 REGIONS=""
 while read -r chrom chrom_len; do
     current_pos=1
