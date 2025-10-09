@@ -89,7 +89,7 @@ NUM_CHUNKS=$((nprocs * 10))
 BAM_CONTIGS=$("${SAMTOOLS_EXE}" view -H "$normal_bam" | awk -F'\t' '/^@SQ/ {print $2}' | sed 's/SN://')
 
 # Get contigs from VCF header
-VCF_CONTIGS=$("${BCFTOOLS_EXE}" index --sequence-names "$snp_vcf")
+VCF_CONTIGS=$("${BCFTOOLS_EXE}" query -l "$snp_vcf")
 
 # Find the intersection of the two lists, then filter for primary chromosomes.
 # 'comm -12' prints lines common to both sorted files.
