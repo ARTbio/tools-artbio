@@ -64,7 +64,7 @@
                 <option value="yes">Yes</option>
             </param>
             <when value="yes">
-                <param format="bed" name="bedmask" type="data" label="BED file with regions to exclude" help="This is highly recommended to improve specificity." />
+                <param format="bed" name="bedmask" type="data" label="BED file with regions to exclude" help="This is highly recommended to improve specificity. See help section" />
             </when>
             <when value="no" />
         </conditional>
@@ -134,12 +134,11 @@ This Galaxy tool wraps `smoove` for single samples, pairs (e.g., normal/tumor), 
 
 The accuracy of SV detection can be greatly improved by excluding problematic regions of the genome. These regions often have highly repetitive sequences (like centromeres and telomeres) or are naturally highly variable (like immunoglobulin gene regions). Reads aligning to these areas can create ambiguous signals, leading to false-positive SV calls. Using a "blacklist" BED file is therefore highly recommended.
 
-**Recommended Exclusion Files**
+**Recommended Exclusion File**
 
-These files are considered the standard for their respective genome builds. Although they were generated a few years ago, they are tied to the genome assembly version and remain the current best practice.
+Although this file was generated a few years ago, it is tied to the genome assembly version.
 
-- **GRCh38 / hg38**: `https://hgdownload.soe.ucsc.edu/goldenPath/hg38/encodeDCC/wgEncodeMapability/wgEncodeDacMapabilityConsensusExcludable.bed.gz`
-- **GRCh37 / hg19**: `https://hgdownload.soe.ucsc.edu/goldenPath/hg19/encodeDCC/wgEncodeMapability/wgEncodeDacMapabilityConsensusExcludable.bed.gz`
+- **GRCh38 / hg38**: `https://github.com/hall-lab/speedseq/blob/master/annotations/exclude.cnvnator_100bp.GRCh38.20170403.bed`
 
 **Inputs**
 
