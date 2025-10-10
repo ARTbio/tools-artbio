@@ -1,22 +1,19 @@
 <macros>
-    <token name="@TOOL_VERSION@">0.2.8</token>
-    <token name="@GALAXY_VERSION@">4</token>
-
+    <token name="@TOOL_VERSION@">4.0.0</token>
+    <token name="@GALAXY_VERSION@">0</token>
     <xml name="requirements">
         <requirements>
-            <requirement type="package" version="0.2.8">smoove</requirement>
+            <requirement type="package" version="3.9">python</requirement>
             <requirement type="package" version="0.7.1">svtyper</requirement>
+            <requirement type="package" version="0.2.8">smoove</requirement>
         </requirements>
     </xml>
-
     <xml name="stdio">
         <stdio>
             <exit_code range="1:" level="fatal" description="Tool exception" />
         </stdio>
     </xml>
-
     <token name="@pipefail@"><![CDATA[set -o | grep -q pipefail && set -o pipefail;]]></token>
-
     <token name="@set_fasta_index@"><![CDATA[
     #if str( $reference_source.reference_source_selector ) == "history":
         ln -s '${reference_source.ref_file}' reference.fa &&
@@ -26,10 +23,9 @@
         ln -s '${reference_source.index.fields.path}.fai' reference.fa.fai &&
     #end if
     ]]></token>
-
     <macro name="reference_source_conditional">
         <conditional name="reference_source">
-            <param name="reference_source_selector" type="select" label="Will you select a reference genome from your history or use a built-in index?" help="Built-ins were indexed using default options. See `Indexes` section of help below">
+            <param name="reference_source_selector" type="select" label="Will you select a reference genome from your history or use a built-in index?" help="Built-ins were indexed using default options.">
                 <option value="cached">Use a built-in genome index</option>
                 <option value="history">Use a genome from history and build index</option>
             </param>
@@ -39,12 +35,10 @@
                         <filter type="sort_by" column="2" />
                         <validator type="no_options" message="No indexes are available" />
                     </options>
-                    <validator type="no_options" message="A built-in reference genome is not available for the build associated with the selected input file"/>
                 </param>
             </when>
             <when value="history">
-                <param name="ref_file" type="data" format="fasta" label="Use the following dataset as the reference sequence"
-                    help="You can upload a FASTA sequence to the history and use it as reference" />
+                <param name="ref_file" type="data" format="fasta" label="Use the following dataset as the reference sequence" />
             </when>
         </conditional>
     </macro>
