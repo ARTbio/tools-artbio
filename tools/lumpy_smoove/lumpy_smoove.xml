@@ -42,36 +42,34 @@
         <expand macro="reference_source_conditional" />
         <conditional name="set_plan">
             <param name="plan_choice" type="select" label="Analysis mode" display="radio">
-                <option value="pair" selected="true">Paired samples (e.g., tumor/normal)</option>
-                <option value="single">Single sample</option>
-                <option value="cohort">Small cohort (collection)</option>
+                <option value="pair" selected="true">A pair of BAM files (e.g., normal/tumor)</option>
+                <option value="single">A single BAM file</option>
+                <option value="cohort">A small cohort of BAM files (less than ~40)</option>
             </param>
             <when value="pair">
-                <param format="bam" name="normal_bam" type="data" label="Normal/Reference sample BAM"/>
-                <param format="bam" name="tumor_bam" type="data" label="Tumor/Case sample BAM"/>
+                <param format="bam" name="normal_bam" type="data" label="Normal/Reference sample BAM" />
+                <param format="bam" name="tumor_bam" type="data" label="Tumor/Case sample BAM" />
             </when>
             <when value="single">
-                <param format="bam" name="single_bam" type="data" label="Input BAM file"/>
+                <param format="bam" name="single_bam" type="data" label="Single sample BAM file" />
             </when>
             <when value="cohort">
-                <param name="cohort" type="data_collection" format="bam" label="Input BAM collection"/>
+                <param name="cohort" type="data_collection" format="bam" label="A collection of BAM files" />
             </when>
-        </conditional>      
+        </conditional>
 
- 
         <conditional name="set_exclusion">
             <param name="choices" type="select" label="Exclude genomic regions?" display="radio">
                 <option value="no" selected="true">No</option>
                 <option value="yes">Yes</option>
             </param>
             <when value="yes">
-                <param format="bed" name="bedmask" type="data" label="BED file of regions to exclude" help="Provide a BED file of regions to ignore. See help section below for recommended files."/>
+                <param format="bed" name="bedmask" type="data" label="BED file with regions to exclude" help="This is highly recommended to improve specificity." />
             </when>
-            <when value="no">
-            </when>
-        </conditional>      
-        <param name="removepr" type="boolean" checked="true" label="Remove paired-read/split-read probabilities" help="If unchecked, includes PR and POS fields (paired-read and split-read probabilities) in the VCF INFO column. This data can be useful for downstream filtering."/>
-   </inputs>
+            <when value="no" />
+        </conditional>
+        <param name="removepr" type="boolean" checked="true" truevalue="--removepr" falsevalue="" label="Do not include PRPOS probabilities in INFO tags" help="Use this advanced option to exclude the PRPOS field, which can reduce VCF file size." />
+    </inputs>
 
     <outputs>
         <data format="vcf" name="vcf_call" label="lumpy-smoove Variant Calling" />
@@ -79,14 +77,14 @@
 
     <tests>
         <!-- Test 1: Paired mode with exclusion and removepr -->
-        <test expect_num_outputs="1">
-            <param name="reference_source_selector" value="history" />
-            <param name="ref_file" value="chrI-ce11.fa"/>
+        <test>
             <conditional name="set_plan">
                 <param name="plan_choice" value="pair"/>
                 <param name="normal_bam" value="celegans_RG_1.bam"/>
                 <param name="tumor_bam" value="celegans_RG_2.bam"/>
             </conditional>
+            <param name="reference_source_selector" value="history" />
+            <param name="ref_file" value="chrI-ce11.fa"/>
             <conditional name="set_exclusion">
                 <param name="choices" value="yes"/>
                 <param name="bedmask" value="exclude.bed"/>
@@ -95,7 +93,7 @@
             <output name="vcf_call" ftype="vcf" file="result_paired.vcf" lines_diff="12"/>
         </test>
         <!-- Test 2: Cohort mode -->
-        <test expect_num_outputs="1">
+        <test>
             <conditional name="set_plan">
                 <param name="plan_choice" value="cohort"/>
                 <param name="cohort">
@@ -107,18 +105,16 @@
             </conditional>
             <param name="reference_source_selector" value="history" />
             <param name="ref_file" value="chrI-ce11.fa"/>
-            <conditional name="set_exclusion">
-                <param name="choices" value="no"/>
-            </conditional>
-            <param name="removepr" value="false"/>
             <output name="vcf_call" ftype="vcf" file="result_cohort.vcf" lines_diff="12"/>
         </test>
-        <!-- Test 3: Single mode -->
-        <test expect_num_outputs="1">
+        <!-- Test 3: Single mode with default options -->
+        <test>
+            <conditional name="set_plan">
+                <param name="plan_choice" value="single" />
+                <param name="single_bam" value="celegans_RG_1.bam"/>
+            </conditional>
             <param name="reference_source_selector" value="history" />
-            <param name="plan_choice" value="single" />
             <param name="ref_file" value="chrI-ce11.fa"/>
-            <param name="single_bam" value="celegans_RG_1.bam"/>
             <conditional name="set_exclusion">
                 <param name="choices" value="no"/>
             </conditional>
@@ -127,57 +123,43 @@
         </test>
     </tests>
 
-    <help>
+    <help><![CDATA[
 **What it does**
 
-**smoove** simplifies and speeds up Structural Variant (SV) calling and genotyping for short reads. It acts as a wrapper for the SV caller `lumpy` and the genotyper `svtyper`. It improves specificity by removing many spurious alignment signals that are indicative of low-level noise and often contribute to spurious calls.
+**smoove** simplifies and speeds up Structural Variant (SV) calling and genotyping for short reads. It improves specificity by removing many spurious alignment signals that are indicative of low-level noise and often contribute to spurious calls.
 
-This Galaxy tool wraps the ``smoove call`` command for single samples, paired samples (e.g. tumor/normal), or small cohorts.
+This Galaxy tool wraps `smoove` for single samples, pairs (e.g., normal/tumor), or small cohorts (<40 samples).
 
------
+**Why exclude regions?**
+
+The accuracy of SV detection can be greatly improved by excluding problematic regions of the genome. These regions often have highly repetitive sequences (like centromeres and telomeres) or are naturally highly variable (like immunoglobulin gene regions). Reads aligning to these areas can create ambiguous signals, leading to false-positive SV calls. Using a "blacklist" BED file is therefore highly recommended.
+
+**Recommended Exclusion Files**
+
+These files are considered the standard for their respective genome builds. Although they were generated a few years ago, they are tied to the genome assembly version and remain the current best practice.
+
+- **GRCh38 / hg38**: `https://hgdownload.soe.ucsc.edu/goldenPath/hg38/encodeDCC/wgEncodeMapability/wgEncodeDacMapabilityConsensusExcludable.bed.gz`
+- **GRCh37 / hg19**: `https://hgdownload.soe.ucsc.edu/goldenPath/hg19/encodeDCC/wgEncodeMapability/wgEncodeDacMapabilityConsensusExcludable.bed.gz`
 
 **Inputs**
 
-* **BAM files**: This tool accepts single, paired, or a collection of BAM files. Only alignments produced by BWA-mem have been tested.
-    
-    .. class:: warningmark
-    
-    It is mandatory for proper genotyping that **BAM files contain read group information** (the ``@RG`` tag must be present in the BAM header).
+- **BAM files**: The tool accepts single, paired, or a collection of BAM files.
+- **Reference Genome**: You must provide the reference genome that was used for the alignment.
+- **Exclusion BED (Optional, but recommended)**: A BED file specifying regions to ignore during the analysis.
 
-* **Exclude genomic regions? (Recommended)**: This option allows you to provide a BED file of regions to ignore during the analysis. This is highly recommended to reduce false positives.
+.. class:: warningmark
 
-    **Why exclude regions?**
-    Certain regions of the human genome are notoriously difficult for short-read alignment due to their repetitive or highly variable nature. This includes centromeres, telomeres, segmental duplications, and regions with a high density of mobile elements (like ALUs) or variable genes (like HLA, immunoglobulin, and T-cell receptor genes). Reads mapping ambiguously to these regions can be misinterpreted as evidence for structural variants, leading to a high number of false-positive calls. Using an exclusion file (or "blacklist") masks these problematic regions, significantly improving the accuracy of SV detection.
-
-    **Recommended Files (ENCODE Blacklists)**
-    These lists are stable for a given genome assembly and are still the standard. The files below are hosted by the UCSC Genome Browser.
-
-    - For **GRCh38 / hg38**: `Download ENCODE Blacklist v2 <http://hgdownload.soe.ucsc.edu/goldenPath/hg38/encodeDCC/wgEncodeMapability/wgEncodeDacMapabilityConsensusExcludable.bed.gz>`_
-    - For **GRCh37 / hg19**: `Download ENCODE Blacklist <http://hgdownload.soe.ucsc.edu/goldenPath/hg19/encodeDCC/wgEncodeMapability/wgEncodeDacMapabilityConsensusExcludable.bed.gz>`_
-
------
+It is mandatory for a proper run that **BAM files contain read group information** (i.e., the @RG tag must be present in the BAM header).
 
 **How it works**
 
-In short, ``smoove`` streamlines the SV calling process by:
-
-1.  Extracting split and discordant reads required by `lumpy` from each BAM file in parallel.
-2.  Filtering these reads to remove signals from high-coverage and spurious regions.
-3.  Calculating per-sample metrics (e.g., insert size distribution) required by `lumpy`.
-4.  Running `lumpy` to detect SV breakpoints.
-5.  Genotyping the discovered variants across all samples using `svtyper`.
-6.  Producing a final, sorted VCF file.
-
------
+`smoove` orchestrates a workflow that involves several tools. It intelligently parallelizes `lumpy` to detect breakpoints and `svtyper` to genotype the identified variants, resulting in a final VCF file.
 
 **smoove GitHub**
 
-For more advanced options and details, please refer to the `smoove GitHub repository <https://github.com/brentp/smoove>`_.
-
-    </help>
-
+For more detailed information, please refer to the `smoove` GitHub repository: https://github.com/brentp/smoove
+    ]]></help>
     <citations>
-    <citation type="doi">10.1186/gb-2014-15-6-r84</citation>
-  </citations>
+        <citation type="doi">10.1186/gb-2014-15-6-r84</citation>
+    </citations>
 </tool>
-
