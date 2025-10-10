@@ -1,126 +1,119 @@
-import sys
+#!/usr/bin/env python
 import argparse
 import re
+import sys
 
 
-def parse_args():
-    """
-    Parses command-line arguments.
-    """
+def create_arg_parser():
+    """Creates and returns the argument parser."""
     parser = argparse.ArgumentParser(
-        description="Convert a lumpy-smoove VCF to the HRDetect tabular format."
+        description=(
+            "Convert a VCF file from lumpy-smoove to a tabular format "
+            "compatible with the HRDetect pipeline."
+        )
     )
     parser.add_argument(
-        "input_vcf", help="Path to the input VCF file from lumpy-smoove."
+        'vcf_file',
+        help='Path to the input VCF file.'
     )
     parser.add_argument(
-        "output_tabular", help="Path for the output tabular file."
+        'output_file',
+        help='Path to the output tabular file.'
     )
-    return parser.parse_args()
-
-
-def parse_info_tag(info_str, tag_name):
-    """
-    Safely parses a tag from the VCF INFO field.
-    Example: SVTYPE=DEL;END=12345 -> parse_info_tag(info, "END") -> "12345"
-    """
-    # Using regex to find the tag and its value
-    match = re.search(f'{tag_name}=([^;]+)', info_str)
-    if match:
-        return match.group(1)
-    return None
+    return parser
 
 
 def parse_breakend_alt(alt_field):
     """
-    Parses the ALT field for a breakend (BND) variant to find the mate's
-    coordinates.
-    Example: ]chr1:12345]N or N[chr1:12345[
+    Parses the ALT field for a breakend and returns chromosome and position.
+
+    Args:
+        alt_field (str): The ALT field (column 5) of a VCF line.
+
+    Returns:
+        tuple: A tuple containing (chromosome, position) or (None, None)
+               if parsing fails.
     """
-    # Break long regex pattern across multiple lines for readability
+    # Search for patterns ]chr:pos] or [chr:pos[
     pattern = (
-        r'\](?P<chrom1>[^:]+):(?P<pos1>\d+)\]'  # Case 1: ]chr:pos]
-        r'|'                                   # OR
-        r'\[(?P<chrom2>[^:]+):(?P<pos2>\d+)\[') # Case 2: [chr:pos[
+        r"\](?P<chrom1>[^:]+):(?P<pos1>\d+)\]|"
+        r"\[(?P<chrom2>[^:]+):(?P<pos2>\d+)\["
+    )
     match = re.search(pattern, alt_field)
-    if match:
-        # The regex captures into named groups, only one of which will be populated
-        groups = match.groupdict()
-        chrom = groups['chrom1'] or groups['chrom2']
-        pos = groups['pos1'] or groups['pos2']
-        return chrom, pos
-    return None, None
+
+    if not match:
+        return None, None
+
+    groups = match.groupdict()
+    chrom = groups['chrom1'] or groups['chrom2']
+    pos = groups['pos1'] or groups['pos2']
+    return chrom, pos
 
 
-def process_vcf(input_vcf_path, output_tabular_path):
+def process_vcf(vcf_path, output_path):
     """
-    Reads the VCF file line by line, processes SV records, and writes to the
-    output file.
+    Reads a VCF file, converts it, and writes the result to a tabular file.
+
+    Args:
+        vcf_path (str): Path to the input VCF file.
+        output_path (str): Path to the output tabular file.
     """
+    header = ["chr1", "pos1", "chr2", "pos2", "type"]
     try:
-        with open(input_vcf_path, 'r') as infile:
-            with open(output_tabular_path, 'w') as outfile:
-                # Write header
-                outfile.write("chr1\tpos1\tchr2\tpos2\ttype\n")
+        with open(vcf_path, 'r') as infile, open(output_path, 'w') as outfile:
+            outfile.write("\t".join(header) + "\n")
 
-                for line in infile:
-                    if line.startswith("#"):
+            for line in infile:
+                if line.startswith('#'):
+                    continue
+
+                fields = line.strip().split('\t')
+                if len(fields) < 8:
+                    continue
+
+                chrom1 = fields[0]
+                pos1 = fields[1]
+                info = fields[7]
+
+                # Attempt to extract the structural variant type from the info
+                svtype_match = re.search(r'SVTYPE=([^;]+)', info)
+                if not svtype_match:
+                    continue  # Skip lines without SVTYPE tag
+                svtype = svtype_match.group(1)
+
+                if svtype == "BND":  # Breakend (INV or TRA)
+                    alt_field = fields[4]
+                    chrom2, pos2 = parse_breakend_alt(alt_field)
+                    if not (chrom2 and pos2):
                         continue
+                    event_type = "INV" if chrom1 == chrom2 else "TRA"
+                    row = [chrom1, pos1, chrom2, pos2, event_type]
+                    outfile.write("\t".join(row) + "\n")
 
-                    fields = line.strip().split('\t')
-                    if len(fields) < 8:
-                        continue  # Skip malformed lines
-
-                    chrom1 = fields[0]
-                    pos1 = fields[1]
-                    sv_id = fields[2]
-                    alt = fields[4]
-                    info = fields[7]
-
-                    # Case 1: Paired breakend events (Translocations / Inversions)
-                    # These are identified by a "_1" suffix in their ID.
-                    # The mate's location is in the ALT field.
-                    if '_1' in sv_id:
-                        chrom2, pos2 = parse_breakend_alt(alt)
-                        if not chrom2 or not pos2:
-                            continue  # Skip if ALT is not a valid breakend
-
-                        sv_type = "INV" if chrom1 == chrom2 else "TRA"
-                        outfile.write(
-                            f"{chrom1}\t{pos1}\t{chrom2}\t{pos2}\t{sv_type}\n"
-                        )
-
-                    # Case 2: Simple intra-chromosomal events (Dels, Dups, etc.)
-                    # These do not have "_" in their ID. End pos is in INFO.
-                    elif '_' not in sv_id:
-                        sv_type = parse_info_tag(info, "SVTYPE")
-                        end_pos = parse_info_tag(info, "END")
-                        if not sv_type or not end_pos:
-                            continue  # Skip if required INFO tags are missing
-
-                        chrom2 = chrom1  # By definition, intra-chromosomal
-                        outfile.write(
-                            f"{chrom1}\t{pos1}\t{chrom2}\t{end_pos}\t{sv_type}\n"
-                        )
-
-                    # Note: Records with "_2" in ID are implicitly ignored.
+                else:  # Other SV types (DEL, DUP, etc.)
+                    end_match = re.search(r'END=([^;]+)', info)
+                    if not end_match:
+                        continue
+                    pos2 = end_match.group(1)
+                    chrom2 = chrom1
+                    row = [chrom1, pos1, chrom2, pos2, svtype]
+                    outfile.write("\t".join(row) + "\n")
 
     except FileNotFoundError:
-        print(
-            f"Error: Input file not found at {input_vcf_path}",
-            file=sys.stderr
-        )
+        print(f"Error: File '{vcf_path}' not found.",
+              file=sys.stderr)
+        sys.exit(1)
+    except IOError as e:
+        print(f"IO Error: {e}", file=sys.stderr)
         sys.exit(1)
 
 
 def main():
-    """
-    Main function to run the script.
-    """
-    args = parse_args()
-    process_vcf(args.input_vcf, args.output_tabular)
+    """Main function of the script."""
+    parser = create_arg_parser()
+    args = parser.parse_args()
+    process_vcf(args.vcf_file, args.output_file)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
-
