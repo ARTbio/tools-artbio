@@ -1,4 +1,20 @@
 <macros>
+    <token name="@TOOL_VERSION@">0.2.8</token>
+    <token name="@GALAXY_VERSION@">2</token>
+
+    <xml name="requirements">
+        <requirements>
+            <requirement type="package" version="0.2.8">smoove</requirement>
+            <requirement type="package" version="0.7.1">svtyper</requirement>
+        </requirements>
+    </xml>
+
+    <xml name="stdio">
+        <stdio>
+            <exit_code range="1:" level="fatal" description="Tool exception" />
+        </stdio>
+    </xml>
+
     <token name="@pipefail@"><![CDATA[set -o | grep -q pipefail && set -o pipefail;]]></token>
 
     <token name="@set_fasta_index@"><![CDATA[
@@ -33,3 +49,4 @@
         </conditional>
     </macro>
 </macros>
+
