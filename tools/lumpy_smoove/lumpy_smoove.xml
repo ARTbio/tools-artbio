@@ -76,24 +76,22 @@
     </outputs>
 
     <tests>
-        <!-- Test 1: Paired mode with exclusion and removepr -->
-        <test>
+        <test expect_num_outputs="1">
             <conditional name="set_plan">
                 <param name="plan_choice" value="pair"/>
-                <param name="normal_bam" value="celegans_RG_1.bam"/>
-                <param name="tumor_bam" value="celegans_RG_2.bam"/>
+                <param name="normal_bam" value="celegans_RG_1.bam" ftype="bam"/>
+                <param name="tumor_bam" value="celegans_RG_2.bam" ftype="bam"/>
             </conditional>
-            <param name="reference_source_selector" value="history" />
-            <param name="ref_file" value="chrI-ce11.fa"/>
+            <param name="reference_source|reference_source_selector" value="history" />
+            <param name="reference_source|ref_file" value="chrI-ce11.fa" ftype="fasta"/>
             <conditional name="set_exclusion">
                 <param name="choices" value="yes"/>
-                <param name="bedmask" value="exclude.bed"/>
+                <param name="bedmask" value="exclude.bed" ftype="bed"/>
             </conditional>
             <param name="removepr" value="true"/>
-            <output name="vcf_call" ftype="vcf" file="result_paired.vcf" lines_diff="12"/>
+            <output name="vcf_call" file="result_paired.vcf" ftype="vcf" lines_diff="12"/>
         </test>
-        <!-- Test 2: Cohort mode -->
-        <test>
+        <test expect_num_outputs="1">
             <conditional name="set_plan">
                 <param name="plan_choice" value="cohort"/>
                 <param name="cohort">
@@ -103,23 +101,26 @@
                     </collection>
                 </param>
             </conditional>
-            <param name="reference_source_selector" value="history" />
-            <param name="ref_file" value="chrI-ce11.fa"/>
-            <output name="vcf_call" ftype="vcf" file="result_cohort.vcf" lines_diff="12"/>
-        </test>
-        <!-- Test 3: Single mode with default options -->
-        <test>
-            <conditional name="set_plan">
-                <param name="plan_choice" value="single" />
-                <param name="single_bam" value="celegans_RG_1.bam"/>
-            </conditional>
-            <param name="reference_source_selector" value="history" />
-            <param name="ref_file" value="chrI-ce11.fa"/>
+            <param name="reference_source|reference_source_selector" value="history" />
+            <param name="reference_source|ref_file" value="chrI-ce11.fa" ftype="fasta"/>
             <conditional name="set_exclusion">
                 <param name="choices" value="no"/>
             </conditional>
             <param name="removepr" value="false"/>
-            <output name="vcf_call" ftype="vcf" file="result_single.vcf" lines_diff="12"/>
+            <output name="vcf_call" file="result_cohort.vcf" ftype="vcf" lines_diff="12"/>
+        </test>
+        <test expect_num_outputs="1">
+            <conditional name="set_plan">
+                <param name="plan_choice" value="single"/>
+                <param name="single_bam" value="celegans_RG_1.bam" ftype="bam"/>
+            </conditional>
+            <param name="reference_source|reference_source_selector" value="history" />
+            <param name="reference_source|ref_file" value="chrI-ce11.fa" ftype="fasta"/>
+            <conditional name="set_exclusion">
+                <param name="choices" value="no"/>
+            </conditional>
+            <param name="removepr" value="false"/>
+            <output name="vcf_call" file="result_single.vcf" ftype="vcf" lines_diff="12"/>
         </test>
     </tests>
 
