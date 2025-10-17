@@ -1,11 +1,20 @@
 <macros>
     <token name="@TOOL_VERSION@">0.2.8</token>
     <token name="@GALAXY_VERSION@">4</token>
-    <xml name="requirements">
+
+    <!-- Requirements for lumpy_smoove (Python 2.7 environment) -->
+    <xml name="lumpy_smoove_requirements">
+        <requirements>
+            <requirement type="package" version="0.2.8">smoove</requirement>
+            <requirement type="package" version="0.7.1">svtyper</requirement>
+            <requirement type="package" version="2.7">python</requirement>
+        </requirements>
+    </xml>
+
+    <!-- Requirements for vcf2hrdetect (Python 3.9 environment) -->
+    <xml name="vcf2hrdetect_requirements">
         <requirements>
             <requirement type="package" version="3.9">python</requirement>
-            <requirement type="package" version="0.2.8">smoove</requirement>
-            <requirement type="package" version="0.7.1">svtyper-python3</requirement>
         </requirements>
     </xml>
 
