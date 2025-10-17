@@ -1,4 +1,4 @@
-<tool id="vcf2hrdetect" name="Convert VCF for HRDetect" version="@TOOL_VERSION@+galaxy@GALAXY_VERSION@">
+<tool id="vcf2hrdetect" name="Convert VCF for HRDetect" version="4">
     <description>from lumpy-smoove output to a 5-column tabular format</description>
     <macros>
         <!-- Use the centralized macros file -->
