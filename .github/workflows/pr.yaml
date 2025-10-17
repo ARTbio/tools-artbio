@@ -310,7 +310,7 @@ jobs:
       run: rm -Rf /usr/share/dotnet
 
     - name: Planemo test
-      uses: galaxyproject/planemo-ci-action@v1
+      uses: galaxyproject/planemo-ci-action@v1.0.24
       id: test
       with:
         mode: test
