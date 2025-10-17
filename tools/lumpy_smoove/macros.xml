@@ -1,18 +1,14 @@
 <macros>
     <token name="@TOOL_VERSION@">0.2.8</token>
     <token name="@GALAXY_VERSION@">4</token>
-    <xml name="lumpy_requirements">
+    <xml name="requirements">
         <requirements>
             <requirement type="package" version="3.9">python</requirement>
             <requirement type="package" version="0.2.8">smoove</requirement>
             <requirement type="package" version="0.7.1">svtyper-python3</requirement>
         </requirements>
     </xml>
-    <xml name="vcf_converter_requirements">
-        <requirements>
-            <requirement type="package" version="3.9">python</requirement>
-        </requirements>
-    </xml>
+
     <xml name="stdio">
         <stdio>
             <exit_code range="1:" level="fatal" description="Tool exception" />
