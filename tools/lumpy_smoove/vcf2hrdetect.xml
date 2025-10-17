@@ -6,7 +6,7 @@
     </macros>
     
     <!-- Expand macros for requirements and stdio -->
-    <expand macro="vcf2hrdetect_requirement" />
+    <expand macro="vcf2hrdetect_requirements" />
     <expand macro="stdio" />
 
     <command detect_errors="exit_code"><![CDATA[
