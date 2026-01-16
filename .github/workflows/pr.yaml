@@ -83,7 +83,7 @@ jobs:
         fetch-depth: 0
 
     - name: Fake a Planemo run to update cache and determine commit range, repositories, and chunks
-      uses: galaxyproject/planemo-ci-action@v1
+      uses: galaxyproject/planemo-ci-action@v1.0.4
       id: discover
       with:
         create-cache: ${{ steps.cache-pip.outputs.cache-hit != 'true' || steps.cache-planemo.outputs.cache-hit != 'true' }}
@@ -132,7 +132,7 @@ jobs:
         key: pip_cache_py_${{ matrix.python-version }}_gxy_${{ needs.setup.outputs.galaxy-head-sha }}
 
     - name: Planemo lint
-      uses: galaxyproject/planemo-ci-action@v1
+      uses: galaxyproject/planemo-ci-action@v1.0.4
       id: lint
       with:
         mode: lint
@@ -310,7 +310,7 @@ jobs:
       run: rm -Rf /usr/share/dotnet
 
     - name: Planemo test
-      uses: galaxyproject/planemo-ci-action@v1
+      uses: galaxyproject/planemo-ci-action@v1.0.4
       id: test
       with:
         mode: test
@@ -353,7 +353,7 @@ jobs:
         key: pip_cache_py_${{ matrix.python-version }}_gxy_${{ needs.setup.outputs.galaxy-head-sha }}
 
     - name: Combine outputs
-      uses: galaxyproject/planemo-ci-action@v1
+      uses: galaxyproject/planemo-ci-action@v1.0.4
       id: combine
       with:
         mode: combine
@@ -368,7 +368,7 @@ jobs:
     - run: cat upload/tool_test_output.md >> $GITHUB_STEP_SUMMARY
 
     - name: Check outputs
-      uses: galaxyproject/planemo-ci-action@v1
+      uses: galaxyproject/planemo-ci-action@v1.0.4
       id: check
       with:
         mode: check
@@ -406,7 +406,7 @@ jobs:
         key: pip_cache_py_${{ matrix.python-version }}_gxy_${{ needs.setup.outputs.galaxy-head-sha }}
 
     - name: Deploy on toolshed
-      uses: galaxyproject/planemo-ci-action@v1
+      uses: galaxyproject/planemo-ci-action@v1.0.4
       with:
         mode: deploy
         repository-list: ${{ needs.setup.outputs.repository-list }}
