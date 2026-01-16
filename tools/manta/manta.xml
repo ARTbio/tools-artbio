@@ -96,7 +96,7 @@
             <when value="Default_config_file">
             </when>
             <when value="Custom_config_file">
-                <param format="ini" name="CustomConfigFile" type="data" label="config file"/>
+                <param format="txt" name="CustomConfigFile" type="data" label="config file"/>
             </when>
             <when value="Customized">
                 <param name="minCandidateVariantSize" type="integer" value="8" label="minCandidateVariantSize" help="Run discovery and candidate reporting for all SVs/indels at or above this size."/>
@@ -138,73 +138,99 @@
             <filter>bam_input['bam_input_selector'] == 'tumor_bam'</filter>
         </data>
     </outputs>
+
     <tests>
         <test expect_num_outputs="3">
-            <param name="reference_source_selector" value="cached"/>
-            <param name="index" value="hg19"/>
-            <param name="bam_input_selector" value="tumor_bam" dbkey="hg19"/>
-            <param name="normal_bam_file" ftype="bam" value="HCC1954_normal.bam"/>
-            <param name="tumor_bam_file" ftype="bam" value="HCC1954_tumor.bam"/>
-            <param name="set_configuration_switch" value="Default_config_file"/>
-            <param name="callMemMb" value="1000"/>
+            <param name="reference_source|reference_source_selector" value="cached"/>
+            <param name="reference_source|index" value="hg19"/>
+
+            <param name="bam_input|bam_input_selector" value="tumor_bam" dbkey="hg19"/>
+            <param name="bam_input|normal_bam_file" ftype="bam" value="HCC1954_normal.bam"/>
+            <param name="bam_input|tumor_bam_file" ftype="bam" value="HCC1954_tumor.bam"/>
+
+            <param name="set_configuration|set_configuration_switch" value="Default_config_file"/>
+            
+            <param name="advanced|callMemMb" value="1000"/>
+            
             <param name="candidateSmallIndels_check" value="True"/>
             <output name="conf_file" file="conf_file_1.ini" ftype="txt"/>
             <output name="candidateSmallIndels" file="candidateSmallIndels.vcf.gz" decompress="true" lines_diff="6"/>
             <output name="somaticSV" file="somaticSV.vcf.gz" decompress="true" lines_diff="6"/>
         </test>
+
         <test expect_num_outputs="3">
-            <param name="reference_source_selector" value="cached"/>
-            <param name="index" value="hg19"/>
-            <param name="bam_input_selector" value="tumor_bam" dbkey="hg19"/>
-            <param name="normal_bam_file" ftype="bam" value="HCC1954_normal.bam"/>
-            <param name="tumor_bam_file" ftype="bam" value="HCC1954_tumor.bam"/>
-            <param name="set_configuration_switch" value="Customized"/>
-            <param name="callMemMb" value="1000"/>
+            <param name="reference_source|reference_source_selector" value="cached"/>
+            <param name="reference_source|index" value="hg19"/>
+
+            <param name="bam_input|bam_input_selector" value="tumor_bam" dbkey="hg19"/>
+            <param name="bam_input|normal_bam_file" ftype="bam" value="HCC1954_normal.bam"/>
+            <param name="bam_input|tumor_bam_file" ftype="bam" value="HCC1954_tumor.bam"/>
+
+            <param name="set_configuration|set_configuration_switch" value="Customized"/>
+            
+            <param name="advanced|callMemMb" value="1000"/>
+            
             <param name="candidateSmallIndels_check" value="True"/>
             <output name="conf_file" file="conf_file_2.ini" ftype="txt"/>
             <output name="candidateSmallIndels" file="candidateSmallIndels.vcf.gz" decompress="true" lines_diff="6"/>
             <output name="somaticSV" file="somaticSV.vcf.gz" decompress="true" lines_diff="6"/>
         </test>
+
         <test expect_num_outputs="3">
-                <param name="reference_source_selector" value="cached"/>
-                <param name="index" value="hg19"/>
-                <param name="bam_input_selector" value="tumor_bam" dbkey="hg19"/>
-                <param name="normal_bam_file" ftype="bam" value="HCC1954_normal.bam"/>
-                <param name="tumor_bam_file" ftype="bam" value="HCC1954_tumor.bam"/>
-                <param name="set_configuration_switch" value="Default_config_file"/>
-                <param name="callMemMb" value="1000"/>
-                <param name="candidateSmallIndels_check" value="True"/>
-                <output name="conf_file" file="conf_file_3.ini" ftype="txt"/>
-                <output name="candidateSmallIndels" file="candidateSmallIndels.vcf.gz" decompress="true" lines_diff="6"/>
-                <output name="somaticSV" file="somaticSV.vcf.gz" decompress="true" lines_diff="6"/>
+            <param name="reference_source|reference_source_selector" value="cached"/>
+            <param name="reference_source|index" value="hg19"/>
+
+            <param name="bam_input|bam_input_selector" value="tumor_bam" dbkey="hg19"/>
+            <param name="bam_input|normal_bam_file" ftype="bam" value="HCC1954_normal.bam"/>
+            <param name="bam_input|tumor_bam_file" ftype="bam" value="HCC1954_tumor.bam"/>
+
+            <param name="set_configuration|set_configuration_switch" value="Default_config_file"/>
+            
+            <param name="advanced|callMemMb" value="1000"/>
+            
+            <param name="candidateSmallIndels_check" value="True"/>
+            <output name="conf_file" file="conf_file_3.ini" ftype="txt"/>
+            <output name="candidateSmallIndels" file="candidateSmallIndels.vcf.gz" decompress="true" lines_diff="6"/>
+            <output name="somaticSV" file="somaticSV.vcf.gz" decompress="true" lines_diff="6"/>
         </test>
+
         <test expect_num_outputs="3">
-                <param name="reference_source_selector" value="history"/>
-                <param name="ref_file" ftype="fasta" value="hg19_region.fa"/>
-                <param name="bam_input_selector" value="tumor_bam"/>
-                <param name="normal_bam_file" ftype="bam" value="HCC1954_normal.bam"/>
-                <param name="tumor_bam_file" ftype="bam" value="HCC1954_tumor.bam"/>
-                <param name="set_configuration_switch" value="Default_config_file"/>
-                <param name="callMemMb" value="1000"/>
-                <param name="candidateSV_check" value="True"/>
-                <output name="conf_file" file="conf_file_4.ini" ftype="txt"/>
-                <output name="candidateSV" file="candidateSV.vcf.gz" decompress="true" lines_diff="6"/>
-                <output name="somaticSV" file="somaticSV.vcf.gz" decompress="true" lines_diff="6"/>
+            <param name="reference_source|reference_source_selector" value="history"/>
+            <param name="reference_source|ref_file" ftype="fasta" value="hg19_region.fa"/>
+
+            <param name="bam_input|bam_input_selector" value="tumor_bam"/>
+            <param name="bam_input|normal_bam_file" ftype="bam" value="HCC1954_normal.bam"/>
+            <param name="bam_input|tumor_bam_file" ftype="bam" value="HCC1954_tumor.bam"/>
+
+            <param name="set_configuration|set_configuration_switch" value="Default_config_file"/>
+            
+            <param name="advanced|callMemMb" value="1000"/>
+            
+            <param name="candidateSV_check" value="True"/>
+            <output name="conf_file" file="conf_file_4.ini" ftype="txt"/>
+            <output name="candidateSV" file="candidateSV.vcf.gz" decompress="true" lines_diff="6"/>
+            <output name="somaticSV" file="somaticSV.vcf.gz" decompress="true" lines_diff="6"/>
         </test>
+
         <test expect_num_outputs="3">
-                <param name="reference_source_selector" value="history"/>
-                <param name="ref_file" ftype="fasta" value="hg19_region.fa"/>
-                <param name="bam_input_selector" value="tumor_bam"/>
-                <param name="normal_bam_file" ftype="bam" value="HCC1954_normal.bam"/>
-                <param name="tumor_bam_file" ftype="bam" value="HCC1954_tumor.bam"/>
-                <param name="set_configuration_switch" value="Default_config_file"/>
-                <param name="callMemMb" value="1000"/>
-                <param name="candidateSmallIndels_check" value="True"/>
-                <output name="conf_file" file="conf_file_5.ini" ftype="txt"/>
-                <output name="candidateSmallIndels" file="candidateSmallIndels.vcf.gz" decompress="true" lines_diff="6"/>
-                <output name="somaticSV" file="somaticSV.vcf.gz" decompress="true" lines_diff="6"/>
+            <param name="reference_source|reference_source_selector" value="history"/>
+            <param name="reference_source|ref_file" ftype="fasta" value="hg19_region.fa"/>
+
+            <param name="bam_input|bam_input_selector" value="tumor_bam"/>
+            <param name="bam_input|normal_bam_file" ftype="bam" value="HCC1954_normal.bam"/>
+            <param name="bam_input|tumor_bam_file" ftype="bam" value="HCC1954_tumor.bam"/>
+
+            <param name="set_configuration|set_configuration_switch" value="Default_config_file"/>
+            
+            <param name="advanced|callMemMb" value="1000"/>
+            
+            <param name="candidateSmallIndels_check" value="True"/>
+            <output name="conf_file" file="conf_file_5.ini" ftype="txt"/>
+            <output name="candidateSmallIndels" file="candidateSmallIndels.vcf.gz" decompress="true" lines_diff="6"/>
+            <output name="somaticSV" file="somaticSV.vcf.gz" decompress="true" lines_diff="6"/>
         </test>
     </tests>
+
     <help><![CDATA[
 **Outputs**
   The primary Manta outputs are a set of VCF 4.1 files. Currently there are 3 VCF files
