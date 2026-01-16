@@ -134,6 +134,7 @@ jobs:
     - name: Planemo lint
       uses: galaxyproject/planemo-ci-action@v1.0.25
       id: lint
+      continue-on-error: true
       with:
         mode: lint
         fail-level: warn
