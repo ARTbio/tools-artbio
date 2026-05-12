@@ -125,7 +125,7 @@ jobs:
         galaxy-slots: ${{ steps.cpu-cores.outputs.count }}
         # Limit each test to 15 minutes
         test_timeout: 900
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v7
       with:
         name: 'Tool test output ${{ matrix.chunk }}'
         path: upload
@@ -162,7 +162,7 @@ jobs:
       with:
         mode: combine
         html-report: true
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v7
       with:
         name: 'All tool test results'
         path: upload
