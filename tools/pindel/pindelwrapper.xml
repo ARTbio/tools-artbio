@@ -58,10 +58,10 @@
     </outputs>
     <tests>
         <test>
-            <param name="input" value="X_100000_Hum1.bam" ftype="bam" />
-            <param name="reference" value="dm6_X.fasta" ftype="fasta" />
-            <param name="insert_size" value="250" />
-            <param name="sample_label" value="X_100000_Hum1.bam" />
+            <param name="input_file" value="X_100000_Hum1.bam" ftype="bam"/>
+            <param name="insert_size" value="250"/>
+            <param name="reference" value="dm6_X.fasta" ftype="fasta"/>
+            <param name="chromosome" value="ALL"/>
         
             <output name="Deletions">
                 <assert_contents>
