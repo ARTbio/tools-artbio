@@ -78,7 +78,7 @@ jobs:
     - name: Install flake8
       run: pip install flake8 flake8-import-order
 
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         fetch-depth: 0
 
@@ -116,7 +116,7 @@ jobs:
       matrix:
         python-version: ['3.11']
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         fetch-depth: 1
 
@@ -158,7 +158,7 @@ jobs:
       matrix:
         python-version: ['3.11']
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         fetch-depth: 1
 
@@ -196,7 +196,7 @@ jobs:
         os: [ubuntu-24.04]
         r-version: ['release']
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         fetch-depth: 1
 
@@ -237,7 +237,7 @@ jobs:
     if: needs.setup.outputs.is-pr == 'true' && needs.setup.outputs.repository-list != ''
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         fetch-depth: 0
 
@@ -281,7 +281,7 @@ jobs:
         ports:
           - 5432:5432
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         fetch-depth: 1
 
@@ -391,7 +391,7 @@ jobs:
       matrix:
         python-version: ['3.11']
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         fetch-depth: 1
 
