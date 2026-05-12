@@ -58,23 +58,61 @@
     </outputs>
     <tests>
         <test>
-            <environment_variables>
-                <environment_variable name="PINDEL_TEST_THREADS">1</environment_variable>
-            </environment_variables>
-
-            <param name="input_file" value="X_100000_Hum1.bam" ftype="bam"/>
-            <param name="insert_size" value="250"/>
-            <param name="reference" value="dm6_X.fasta" ftype="fasta"/>
-            <param name="chromosome" value="ALL"/>
-            <output name="Deletions" file="X_100000_Hum1.bam_Deletions.txt" ftype="txt"/>
-            <output name="Short_Insertions" file="X_100000_Hum1.bam_Short_Insertions.txt" ftype="txt"/>
-            <output name="Long_Insertions" file="X_100000_Hum1.bam_Long_Insertions.txt" ftype="txt"/>
-            <output name="Inversions" file="X_100000_Hum1.bam_Inversions.txt" ftype="txt"/>
-            <output name="Tandem_Duplications" file="X_100000_Hum1.bam_Tandem_Duplications.txt" ftype="txt"/>
-            <output name="Breakpoints" file="X_100000_Hum1.bam_Breakpoints.txt" ftype="txt"/>
-            <output name="Read_Pair" file="X_100000_Hum1.bam_Read_Pair_Evidence.txt" ftype="txt"/>
-            <output name="int_final" file="X_100000_Hum1.bam_INT_final.txt" ftype="txt"/>
-            <output name="Close_End_Mapped" file="X_100000_Hum1.bam_Close_End_Mapped.txt" ftype="txt"/>
+            <param name="input" value="X_100000_Hum1.bam" ftype="bam" />
+            <param name="ref" value="dm6_X.fasta" ftype="fasta" />
+            <param name="insert_size" value="250" />
+            <param name="sample_label" value="X_100000_Hum1.bam" />
+        
+            <output name="Deletions">
+                <assert_contents>
+                    <has_n_lines n="746" delta="15" />
+                    <has_text text="ChrID X" />
+                    <has_text text="D 60064" />
+                </assert_contents>
+            </output>
+        
+            <output name="Short_Insertions">
+                <assert_contents>
+                    <has_n_lines n="212" delta="15" />
+                    <has_text text='NT 80 "GGTGTGTTCTTTGGCTCTACATTTATCGTTGAAATCCGTCTCCAACTGCCGCGAGTCACCCACGACTTCCACTCCCTGCA"' />
+                </assert_contents>
+            </output>
+        
+            <output name="Inversions">
+                <assert_contents>
+                    <has_n_lines n="37" delta="5" />
+                    <has_text text="INV 87" />
+                    <has_text text='"GCTTTTTTTTGCTGGT"' />
+                </assert_contents>
+            </output>
+        
+            <output name="Tandem_Duplications">
+                <assert_contents>
+                    <has_n_lines n="201" delta="10" />
+                    <has_text text="TD 60074" />
+                    <has_text text="ChrID X" />
+                </assert_contents>
+            </output>
+        
+            <output name="Read_Pair">
+                <assert_contents>
+                    <has_n_lines n="61" delta="5" />
+                    <has_text text="X_100000_Hum1.bam" />
+                </assert_contents>
+            </output>
+        
+            <output name="Long_Insertions">
+                <assert_contents><has_size value="0" /></assert_contents>
+            </output>
+            <output name="Breakpoints">
+                <assert_contents><has_size value="0" /></assert_contents>
+            </output>
+            <output name="Close_End_Mapped">
+                <assert_contents><has_size value="0" /></assert_contents>
+            </output>
+            <output name="int_final">
+                <assert_contents><has_size value="0" /></assert_contents>
+            </output>
         </test>
     </tests>
     <help> <![CDATA[
