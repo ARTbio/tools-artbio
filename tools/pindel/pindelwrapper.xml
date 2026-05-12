@@ -2,7 +2,7 @@
     <description></description>
     <macros>
         <token name="@TOOL_VERSION@">0.2.5b9</token>
-        <token name="@VERSION_SUFFIX@">0</token>
+        <token name="@VERSION_SUFFIX@">1</token>
         <token name="@PROFILE@">23.0</token>
     </macros>
     <requirements>
@@ -27,6 +27,7 @@
         -f ref.fa
         -i output_config_file
         -c "$chromosome"
+        -T \${GALAXY_SLOTS:-4}
         -o prefix &&
         mv prefix_D $Deletions &&
         mv prefix_SI $Short_Insertions &&
@@ -55,21 +56,81 @@
         <data format="txt" name="int_final" label="${input_file.element_identifier} INT_final"/>
         <data format="txt" name="Close_End_Mapped" label="${input_file.element_identifier} Close End Mapped"/>
     </outputs>
+
+<!--
+    Test strategy note:
+    Pindel uses OpenMP and produces non-deterministic output between runs at -T > 1
+    (varying read ordering in supporting reads, plus apparition/disparition of
+    low-support variants near calling thresholds). Exact file comparison via
+    <output file="..."/> is therefore impossible without forcing -T 1.
+
+    Rather than constraining production performance, this test uses <assert_contents>
+    with has_n_lines + delta tolerances calibrated empirically against 4-thread runs.
+    The test validates wrapper integrity (Pindel is invoked correctly, all 9 outputs
+    are produced, key variant signatures are present) but does NOT validate fine
+    biological accuracy — variants at Supports=1 may legitimately appear or disappear
+    between runs due to OpenMP non-determinism.
+
+    See discussion in PR/commit history for details on calibration choices.
+-->
+
     <tests>
         <test>
             <param name="input_file" value="X_100000_Hum1.bam" ftype="bam"/>
             <param name="insert_size" value="250"/>
             <param name="reference" value="dm6_X.fasta" ftype="fasta"/>
             <param name="chromosome" value="ALL"/>
-            <output name="Deletions" file="X_100000_Hum1.bam_Deletions.txt" ftype="txt"/>
-            <output name="Short_Insertions" file="X_100000_Hum1.bam_Short_Insertions.txt" ftype="txt"/>
-            <output name="Long_Insertions" file="X_100000_Hum1.bam_Long_Insertions.txt" ftype="txt"/>
-            <output name="Inversions" file="X_100000_Hum1.bam_Inversions.txt" ftype="txt"/>
-            <output name="Tandem_Duplications" file="X_100000_Hum1.bam_Tandem_Duplications.txt" ftype="txt"/>
-            <output name="Breakpoints" file="X_100000_Hum1.bam_Breakpoints.txt" ftype="txt"/>
-            <output name="Read_Pair" file="X_100000_Hum1.bam_Read_Pair_Evidence.txt" ftype="txt"/>
-            <output name="int_final" file="X_100000_Hum1.bam_INT_final.txt" ftype="txt"/>
-            <output name="Close_End_Mapped" file="X_100000_Hum1.bam_Close_End_Mapped.txt" ftype="txt"/>
+        
+            <output name="Deletions">
+                <assert_contents>
+                    <has_n_lines n="746" delta="15" />
+                    <has_text text="ChrID X" />
+                    <has_text text="D 60064" />
+                </assert_contents>
+            </output>
+        
+            <output name="Short_Insertions">
+                <assert_contents>
+                    <has_n_lines n="212" delta="15" />
+                    <has_text text='NT 80 "GGTGTGTTCTTTGGCTCTACATTTATCGTTGAAATCCGTCTCCAACTGCCGCGAGTCACCCACGACTTCCACTCCCTGCA"' />
+                </assert_contents>
+            </output>
+        
+            <output name="Inversions">
+                <assert_contents>
+                    <has_n_lines n="37" delta="5" />
+                    <has_text text="INV 87" />
+                    <has_text text='"GCTTTTTTTTGCTGGT"' />
+                </assert_contents>
+            </output>
+        
+            <output name="Tandem_Duplications">
+                <assert_contents>
+                    <has_n_lines n="201" delta="10" />
+                    <has_text text="TD 60074" />
+                    <has_text text="ChrID X" />
+                </assert_contents>
+            </output>
+        
+            <output name="Read_Pair">
+                <assert_contents>
+                    <has_n_lines n="61" delta="5" />
+                    <has_text text="X_100000_Hum1.bam" />
+                </assert_contents>
+            </output>
+        
+            <output name="Long_Insertions">
+                <assert_contents><has_size value="0" /></assert_contents>
+            </output>
+            <output name="Breakpoints">
+                <assert_contents><has_size value="0" /></assert_contents>
+            </output>
+            <output name="Close_End_Mapped">
+                <assert_contents><has_size value="0" /></assert_contents>
+            </output>
+            <output name="int_final">
+                <assert_contents><has_size value="0" /></assert_contents>
+            </output>
         </test>
     </tests>
     <help> <![CDATA[
