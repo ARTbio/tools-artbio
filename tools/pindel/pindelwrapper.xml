@@ -27,7 +27,7 @@
         -f ref.fa
         -i output_config_file
         -c "$chromosome"
-        -T \${GALAXY_SLOTS:-1}
+        -T \${PINDEL_TEST_THREADS:-\${GALAXY_SLOTS:-4}}
         -o prefix &&
         mv prefix_D $Deletions &&
         mv prefix_SI $Short_Insertions &&
@@ -58,6 +58,10 @@
     </outputs>
     <tests>
         <test>
+            <environment_variables>
+                <environment_variable name="PINDEL_TEST_THREADS">1</environment_variable>
+            </environment_variables>
+
             <param name="input_file" value="X_100000_Hum1.bam" ftype="bam"/>
             <param name="insert_size" value="250"/>
             <param name="reference" value="dm6_X.fasta" ftype="fasta"/>
