@@ -2,7 +2,7 @@
     <description></description>
     <macros>
         <token name="@TOOL_VERSION@">0.2.5b9</token>
-        <token name="@VERSION_SUFFIX@">0</token>
+        <token name="@VERSION_SUFFIX@">1</token>
         <token name="@PROFILE@">23.0</token>
     </macros>
     <requirements>
@@ -27,6 +27,7 @@
         -f ref.fa
         -i output_config_file
         -c "$chromosome"
+        -T \${GALAXY_SLOTS:-1}
         -o prefix &&
         mv prefix_D $Deletions &&
         mv prefix_SI $Short_Insertions &&
