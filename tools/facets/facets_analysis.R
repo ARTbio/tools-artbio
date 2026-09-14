@@ -89,37 +89,117 @@ parser$add_argument("--vcf_min_num_mark",
     type = "integer", default = 3,
     help = "VCF Post-Filter: Minimum number of total markers for a segment to be kept."
 )
-#' Classify CNV segments based on TCN/LCN
-classify_cnv <- function(cncf_df) {
-    cncf_df$sv_type <- NA_character_
-    cncf_df$sv_type[cncf_df$tcn.em == 2 & (cncf_df$lcn.em == 1 | is.na(cncf_df$lcn.em))] <- "NEUTR"
-    cncf_df$sv_type[is.na(cncf_df$sv_type) & cncf_df$tcn.em > 2] <- "DUP"
-    cncf_df$sv_type[is.na(cncf_df$sv_type) & cncf_df$tcn.em < 2 & !is.na(cncf_df$lcn.em) & cncf_df$lcn.em > 0] <- "HEMIZYG_DEL"
-    cncf_df$sv_type[is.na(cncf_df$sv_type) & cncf_df$tcn.em < 2 & !is.na(cncf_df$lcn.em) & cncf_df$lcn.em == 0] <- "HOMOZYG_DEL"
-    cncf_df$sv_type[is.na(cncf_df$sv_type) & cncf_df$tcn.em == 2 & !is.na(cncf_df$lcn.em) & cncf_df$lcn.em == 0] <- "CN_LOH"
+#' Format an integer-valued column for the VCF INFO field
+#'
+#' as.character() is used instead of format() because format() pads a vector to
+#' a common width, which would inject leading blanks into the INFO field.
+#'
+#' @param x A numeric vector.
+#' @param missing Replacement string for NA values.
+#' @return A character vector with no padding.
+format_info_int <- function(x, missing = ".") {
+    out <- as.character(as.integer(x))
+    out[is.na(x)] <- missing
+    return(out)
+}
 
-    # Remplacer les NA restants (si tcn.em < 2 mais lcn.em est NA) par un type général
-    cncf_df$sv_type[is.na(cncf_df$sv_type) & cncf_df$tcn.em < 2] <- "DEL"
+#' Classify CNV segments into a standard VCF SVTYPE and a FACETS EVENT
+#'
+#' Copy-number-neutral segments are left with SVTYPE = NA so that the caller can
+#' filter them out. SVTYPE and EVENT are assigned one column at a time: assigning
+#' a length-2 vector to a two-column block of a data frame recycles it in
+#' column-major order, which silently swaps the two fields on alternating rows.
+#'
+#' @param cncf_df The `cncf` data frame returned by facets::emcncf().
+#' @return The same data frame with two added columns, `svtype` and `event`.
+classify_cnv_segments <- function(cncf_df) {
+    cncf_df$svtype <- NA_character_
+    cncf_df$event <- NA_character_
+
+    tcn <- cncf_df$tcn.em
+    lcn <- cncf_df$lcn.em
+
+    # Duplications: total copy number above 2
+    is_dup <- !is.na(tcn) & tcn > 2
+    cncf_df$svtype[is_dup] <- "DUP"
+    cncf_df$event[is_dup] <- "DUP"
+
+    # Deletions: total copy number below 2
+    is_del <- !is.na(tcn) & tcn < 2
+    cncf_df$svtype[is_del] <- "DEL"
+    cncf_df$event[is_del & tcn == 1] <- "HEMIZYG_DEL"
+    cncf_df$event[is_del & tcn == 0] <- "HOMOZYG_DEL"
+    # Fallback for a non-integer TCN below 2, so that EVENT is never written as NA
+    cncf_df$event[is_del & is.na(cncf_df$event)] <- "DEL"
+
+    # Copy-neutral LOH: two copies, but no minor allele
+    is_cn_loh <- !is.na(tcn) & tcn == 2 & !is.na(lcn) & lcn == 0
+    cncf_df$svtype[is_cn_loh] <- "CNV"
+    cncf_df$event[is_cn_loh] <- "CN_LOH"
 
     return(cncf_df)
 }
 
+#' Build the VCF data lines for a set of classified CNV segments
+#'
+#' The fields are built by vectorised operations on the typed columns of the data
+#' frame. Iterating with apply() would coerce each row through as.matrix(), which
+#' formats the numeric columns to a common width and pads CHROM and POS with
+#' blanks, producing a VCF that htslib refuses to parse.
+#'
+#' @param cnv_calls A data frame of classified segments (see classify_cnv_segments).
+#' @return A character vector of tab-separated VCF records.
+format_vcf_records <- function(cnv_calls) {
+    info <- paste0(
+        "END=", format_info_int(cnv_calls$end),
+        ";SVTYPE=", cnv_calls$svtype,
+        ";SVLEN=", format_info_int(cnv_calls$end - cnv_calls$start),
+        ";TCN=", format_info_int(cnv_calls$tcn.em),
+        ";LCN=", format_info_int(cnv_calls$lcn.em),
+        ";EVENT=", cnv_calls$event,
+        ";NUM_MARK=", format_info_int(cnv_calls$num.mark),
+        ";NHET=", format_info_int(cnv_calls$nhet)
+    )
+    records <- paste(
+        cnv_calls$chrom,
+        format_info_int(cnv_calls$start),
+        ".",
+        "N",
+        paste0("<", cnv_calls$svtype, ">"),
+        ".",
+        "PASS",
+        info,
+        sep = "\t"
+    )
+    return(records)
+}
+
 #' Create a VCF header (explicit version)
-create_vcf_header <- function(sample_id, purity, ploidy) {
+create_vcf_header <- function(sample_id, purity, ploidy, chroms = character(0)) {
+    # Contigs are declared without a length: the pileup does not carry the
+    # reference dictionary, and an ID-only contig line is valid VCF and enough
+    # for htslib to parse and index the file without emitting warnings.
+    contig_lines <- character(0)
+    if (length(chroms) > 0) {
+        contig_lines <- paste0("##contig=<ID=", unique(as.character(chroms)), ">")
+    }
     header <- c(
         "##fileformat=VCFv4.2",
         paste0("##fileDate=", format(Sys.Date(), "%Y%m%d")),
         paste0("##source=FACETS_v", packageVersion("facets")),
+        contig_lines,
+        "##ALT=<ID=DEL,Description=\"Deletion relative to the reference\">",
+        "##ALT=<ID=DUP,Description=\"Region of elevated copy number relative to the reference\">",
+        "##ALT=<ID=CNV,Description=\"Copy number variable region\">",
         "##INFO=<ID=END,Number=1,Type=Integer,Description=\"End position of the variant\">",
         "##INFO=<ID=SVTYPE,Number=1,Type=String,Description=\"Type of structural variant (standard VCF tags: DEL, DUP, CNV)\">",
         "##INFO=<ID=SVLEN,Number=1,Type=Integer,Description=\"Length of the SV\">",
-        # --- MODIFICATION ---
-        "##INFO=<ID=EVENT,Number=1,Type=String,Description=\"FACETS event classification. Possible values: DUP, HEMIZYG_DEL, HOMOZYG_DEL, CN_LOH\">",
-        # --- FIN MODIFICATION ---
+        "##INFO=<ID=EVENT,Number=1,Type=String,Description=\"FACETS event classification. Possible values: DUP, HEMIZYG_DEL, HOMOZYG_DEL, CN_LOH, DEL\">",
         "##INFO=<ID=TCN,Number=1,Type=Integer,Description=\"Total Copy Number (EM fit)\">",
         "##INFO=<ID=LCN,Number=1,Type=Integer,Description=\"Lesser Copy Number (EM fit)\">",
         "##INFO=<ID=NUM_MARK,Number=1,Type=Integer,Description=\"Number of SNPs in the segment\">",
         "##INFO=<ID=NHET,Number=1,Type=Integer,Description=\"Number of heterozygous SNPs in the segment\">",
+        paste0("##FACETS_SAMPLE=", sample_id),
         paste0("##FACETS_PURITY=", round(purity, 4)),
         paste0("##FACETS_PLOIDY=", round(ploidy, 4)),
         "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO"
@@ -261,26 +341,12 @@ main <- function(args) {
     # Classify segments and define standard SVTYPEs + detailed EVENTs
     cncf_for_vcf <- fit$cncf
     if (nrow(cncf_for_vcf) > 0) {
-        cncf_for_vcf$svtype <- NA_character_
-        cncf_for_vcf$event <- NA_character_
-
-        # Duplications
-        cncf_for_vcf[cncf_for_vcf$tcn.em > 2, c("svtype", "event")] <- c("DUP", "DUP")
-
-        # Deletions
-        cncf_for_vcf[cncf_for_vcf$tcn.em < 2, c("svtype")] <- "DEL"
-        cncf_for_vcf[cncf_for_vcf$tcn.em == 1, c("event")] <- "HEMIZYG_DEL"
-        cncf_for_vcf[cncf_for_vcf$tcn.em == 0, c("event")] <- "HOMOZYG_DEL"
-
-        # Copy-Neutral LOH
-        cncf_for_vcf[cncf_for_vcf$tcn.em == 2 & !is.na(cncf_for_vcf$lcn.em) & cncf_for_vcf$lcn.em == 0, c("svtype", "event")] <- c("CNV", "CN_LOH")
-
-        # Filter normal segments (where'svtype' is still NA)
+        cncf_for_vcf <- classify_cnv_segments(cncf_for_vcf)
+        # Filter normal segments (where 'svtype' is still NA)
         cnv_calls <- cncf_for_vcf[!is.na(cncf_for_vcf$svtype), ]
     } else {
         cnv_calls <- data.frame()
     }
-
 
     if (nrow(cnv_calls) > 0) {
         if (args$enable_merging) {
@@ -293,37 +359,20 @@ main <- function(args) {
         # Apply VCF post-filters to remove low-quality/artefactual segments
         # This addresses the issue of FACETS' EM algorithm sometimes creating
         # micro-segments that bypass the initial min.nhet segmentation parameter.
+        # which() is used so that a segment with a missing NHET or NUM_MARK is
+        # dropped instead of producing a row of NAs.
         original_rows <- nrow(cnv_calls)
-        cnv_calls <- cnv_calls[
+        cnv_calls <- cnv_calls[which(
             cnv_calls$nhet >= args$vcf_min_nhet &
-                cnv_calls$num.mark >= args$vcf_min_num_mark,
-        ]
+                cnv_calls$num.mark >= args$vcf_min_num_mark
+        ), ]
         cat(paste("Applied VCF post-filters: kept", nrow(cnv_calls), "of", original_rows, "segments.\n"))
+    }
 
-        vcf_header <- create_vcf_header(args$sample_id, fit$purity, fit$ploidy)
-
-        vcf_body <- apply(cnv_calls, 1, function(seg) {
-            cnv_calls <- merge_segments(cnv_calls)
-            alt_allele <- paste0("<", seg["svtype"], ">")
-            info <- paste0(
-                "END=", seg["end"],
-                ";SVTYPE=", seg["svtype"],
-                ";SVLEN=", as.integer(seg["end"]) - as.integer(seg["start"]),
-                ";TCN=", seg["tcn.em"],
-                ";LCN=", ifelse(is.na(seg["lcn.em"]), ".", seg["lcn.em"]),
-                ";EVENT=", seg["event"],
-                ";NUM_MARK=", seg["num.mark"],
-                ";NHET=", seg["nhet"]
-            )
-            # Remove any space(s) immediately following an '=' sign in the INFO string.
-            info <- gsub("=\\s+", "=", info)
-
-            paste(seg["chrom"], seg["start"], ".", "N", alt_allele, ".", "PASS", info, sep = "\t")
-        })
-
-        writeLines(c(vcf_header, vcf_body), con = args$output_vcf)
+    vcf_header <- create_vcf_header(args$sample_id, fit$purity, fit$ploidy, cnv_calls$chrom)
+    if (nrow(cnv_calls) > 0) {
+        writeLines(c(vcf_header, format_vcf_records(cnv_calls)), con = args$output_vcf)
     } else {
-        vcf_header <- create_vcf_header(args$sample_id, fit$purity, fit$ploidy)
         writeLines(vcf_header, con = args$output_vcf)
     }
 }
