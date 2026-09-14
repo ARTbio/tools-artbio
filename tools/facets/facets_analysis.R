@@ -150,10 +150,13 @@ classify_cnv_segments <- function(cncf_df) {
 #' @param cnv_calls A data frame of classified segments (see classify_cnv_segments).
 #' @return A character vector of tab-separated VCF records.
 format_vcf_records <- function(cnv_calls) {
+    # POS is the first SNP of the segment and END its last one, both inclusive,
+    # so the span is END - POS + 1. SVLEN is reported as that span for every
+    # event type, including deletions.
     info <- paste0(
         "END=", format_info_int(cnv_calls$end),
         ";SVTYPE=", cnv_calls$svtype,
-        ";SVLEN=", format_info_int(cnv_calls$end - cnv_calls$start),
+        ";SVLEN=", format_info_int(cnv_calls$end - cnv_calls$start + 1),
         ";TCN=", format_info_int(cnv_calls$tcn.em),
         ";LCN=", format_info_int(cnv_calls$lcn.em),
         ";EVENT=", cnv_calls$event,
@@ -193,7 +196,7 @@ create_vcf_header <- function(sample_id, purity, ploidy, chroms = character(0)) 
         "##ALT=<ID=CNV,Description=\"Copy number variable region\">",
         "##INFO=<ID=END,Number=1,Type=Integer,Description=\"End position of the variant\">",
         "##INFO=<ID=SVTYPE,Number=1,Type=String,Description=\"Type of structural variant (standard VCF tags: DEL, DUP, CNV)\">",
-        "##INFO=<ID=SVLEN,Number=1,Type=Integer,Description=\"Length of the SV\">",
+        "##INFO=<ID=SVLEN,Number=1,Type=Integer,Description=\"Length of the CNV segment in bp, END - POS + 1, always positive\">",
         "##INFO=<ID=EVENT,Number=1,Type=String,Description=\"FACETS event classification. Possible values: DUP, HEMIZYG_DEL, HOMOZYG_DEL, CN_LOH, DEL\">",
         "##INFO=<ID=TCN,Number=1,Type=Integer,Description=\"Total Copy Number (EM fit)\">",
         "##INFO=<ID=LCN,Number=1,Type=Integer,Description=\"Lesser Copy Number (EM fit)\">",
