@@ -1,5 +1,5 @@
-<tool id="rsembowtie" name="RSEM-Bowtie" version="@WRAPPER_VERSION@">
-  <description></description>
+<tool id="rsem" name="RSEM" version="@WRAPPER_VERSION@">
+  <description>quantification of gene and isoform expression from RNA-Seq data</description>
     <macros>
         <import>macros.xml</import>
     </macros>
@@ -26,7 +26,7 @@
       #if $job.transcript_to_gene_map:
         --transcript-to-gene-map $job.transcript_to_gene_map
       #end if
-      --bowtie
+      $aligner_tool
       #if $job.self_reference.ref_type == 'transcripts':
         $job.self_reference.reference_fasta_file
       #else:
@@ -158,6 +158,12 @@
   ]]></command>
 
   <inputs>
+    <param name="aligner_tool" type="select" label="Aligner tool to use" help="TODO">
+        <option value="--bowtie">Bowtie</option>  
+        <option value="--bowtie2">Bowtie2</option>
+        <option value="--hisat2-hca">HISAT2</option>
+        <option value="--star">RNASTAR</option>
+    </param>
     <conditional name="job">
       <param name="select_job" type="select" label="rsem reference">
         <option value="index">Build rsem reference</option>
