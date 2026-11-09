@@ -102,7 +102,7 @@ globalbc <- function(df, global = "", ...) {
                    horizontal = FALSE,
                    group = Polarity,
                    stack = TRUE,
-                   col = c("red", "blue"),
+                   col = c("lightgreen", "darkorange"),
                    scales = list(y = list(tick.number = 4, rot = 90, relation = "same", cex = 0.5, alternating = TRUE), x = list(rot = 0, cex = 0.6, tck = 0.5, alternating = c(3, 3))),
                    xlab = list(label = bottom_first_method[[args$first_plot_method]], cex = .85),
                    ylab = list(label = legend_first_method[[args$first_plot_method]], cex = .85),
@@ -139,7 +139,7 @@ plot_unit <- function(df, method = args$first_plot_method, ...) {
                origin = 0,
                horizontal = FALSE,
                group = Polarity,
-               col = c("red", "blue"),
+               col = c("lightgreen", "darkorange"),
                par.strip.text = list(cex = 0.7),
                ...)
     p <- combineLimits(p)
@@ -155,7 +155,7 @@ plot_unit <- function(df, method = args$first_plot_method, ...) {
                origin = 0,
                horizontal = FALSE,
                group = Polarity,
-               col = c("red", "blue"),
+               col = c("lightgreen", "darkorange"),
                par.strip.text = list(cex = 0.7),
                ...)
     p <- combineLimits(p)
@@ -164,7 +164,7 @@ plot_unit <- function(df, method = args$first_plot_method, ...) {
                  horizontal = FALSE,
                  group = Polarity,
                  stack = TRUE,
-                 col = c("red", "blue"),
+                 col = c("lightgreen", "darkorange"),
                  scales = list(y = list(rot = 90, relation = "free", cex = 0.7), x = list(rot = 0, cex = 0.7, axs = "i", tck = c(1, 0))),
                  xlab = NULL,
                  ylab = NULL,
@@ -206,8 +206,8 @@ double_plot <- function(...) {
     if (end - start + 1 < 5) {
       graph_heights <- c(rep(c(40, 30), end - start + 1), 10, rep(c(40, 30), 5 - (end - start + 1)))
     }
-    first_plot_list <- lapply(per_gene_readmap[start:end], function(x) update(useOuterStrips(plot_unit(x, par.settings = par_settings_secondplot), strip.left = strip.custom(par.strip.text = list(cex = 0.5)))))
-    second_plot_list <- lapply(per_gene_size[start:end], function(x) update(useOuterStrips(plot_unit(x, method = args$extra_plot_method, par.settings = par_settings_firstplot), strip.left = strip.custom(par.strip.text = list(cex = 0.5)), strip = FALSE)))
+    first_plot_list <- lapply(per_gene_readmap[start:end], function(x) update(useOuterStrips(plot_unit(x, par.settings = par_settings_secondplot), strip.left = strip.custom(par.strip.text = list(cex = 0.5),bg = "#F0F0F0"))))
+    second_plot_list <- lapply(per_gene_size[start:end], function(x) update(useOuterStrips(plot_unit(x, method = args$extra_plot_method, par.settings = par_settings_firstplot), strip.left = strip.custom(par.strip.text = list(cex = 0.5),bg = "#F0F0F0"), strip = FALSE)))
     plot.list <- rbind(first_plot_list, second_plot_list)
     args_list <- c(plot.list, list(nrow = rows_per_page + 1, ncol = 1, heights = unit(graph_heights, rep("mm", 11)),
                                  top = textGrob(paste(title_first_method[[args$first_plot_method]], "and", title_extra_method[[args$extra_plot_method]]), gp = gpar(cex = 1), vjust = 0, just = "top"),
@@ -235,7 +235,7 @@ single_plot <- function(...) {
     if (end - start + 1 < 8) {
       graph_heights <- c(rep(c(40), end - start + 1), 10, rep(c(40), 8 - (end - start + 1)))
     }
-    first_plot_list <- lapply(per_gene_readmap[start:end], function(x) update(useOuterStrips(plot_unit(x, par.settings = par_settings_firstplot), strip.left = strip.custom(par.strip.text = list(cex = 0.5)))))
+    first_plot_list <- lapply(per_gene_readmap[start:end], function(x) update(useOuterStrips(plot_unit(x, par.settings = par_settings_firstplot), strip.left = strip.custom(par.strip.text = list(cex = 0.5),bg = "#F0F0F0"))))
     plot.list <- rbind(first_plot_list)
     args_list <- c(plot.list, list(nrow = rows_per_page + 1, ncol = 1, heights = unit(graph_heights, rep("mm", 9)),
                                  top = textGrob(title_first_method[[args$first_plot_method]], gp = gpar(cex = 1), vjust = 0, just = "top"),
