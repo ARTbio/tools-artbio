@@ -14,6 +14,7 @@ on:
 env:
   GALAXY_FORK: galaxyproject
   GALAXY_BRANCH: release_25.0
+  PLANEMO_VERSION: 'planemo==0.75.47'
   MAX_CHUNKS: 4
   MAX_FILE_SIZE: 2M
 
@@ -86,6 +87,7 @@ jobs:
       uses: galaxyproject/planemo-ci-action@v1.0.25
       id: discover
       with:
+        planemo-version: ${{ env.PLANEMO_VERSION }}
         create-cache: ${{ steps.cache-pip.outputs.cache-hit != 'true' || steps.cache-planemo.outputs.cache-hit != 'true' }}
         galaxy-fork: ${{ env.GALAXY_FORK }}
         galaxy-branch: ${{ env.GALAXY_BRANCH }}
@@ -136,6 +138,7 @@ jobs:
       id: lint
       continue-on-error: true
       with:
+        planemo-version: ${{ env.PLANEMO_VERSION }}
         mode: lint
         fail-level: warn
         repository-list: ${{ needs.setup.outputs.repository-list }}
@@ -314,6 +317,7 @@ jobs:
       uses: galaxyproject/planemo-ci-action@v1.0.25
       id: test
       with:
+        planemo-version: ${{ env.PLANEMO_VERSION }}
         mode: test
         repository-list: ${{ needs.setup.outputs.repository-list }}
         galaxy-fork: ${{ env.GALAXY_FORK }}
@@ -357,6 +361,7 @@ jobs:
       uses: galaxyproject/planemo-ci-action@v1.0.25
       id: combine
       with:
+        planemo-version: ${{ env.PLANEMO_VERSION }}
         mode: combine
         html-report: true
         markdown-report: true
@@ -372,6 +377,7 @@ jobs:
       uses: galaxyproject/planemo-ci-action@v1.0.25
       id: check
       with:
+        planemo-version: ${{ env.PLANEMO_VERSION }}
         mode: check
 
     - name: Check if all test chunks succeeded
@@ -410,6 +416,7 @@ jobs:
     - name: Deploy on toolshed
       uses: galaxyproject/planemo-ci-action@v1.0.25
       with:
+        planemo-version: ${{ env.PLANEMO_VERSION }}
         mode: deploy
         repository-list: ${{ needs.setup.outputs.repository-list }}
         shed-target: toolshed
