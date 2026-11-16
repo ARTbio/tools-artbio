@@ -12,7 +12,6 @@
     #set run_dir = './MantaWorkflow'
     configManta=\$(which configManta.py) &&
     PATH=\${configManta/"configManta.py"/}:\$PATH &&
-    printenv &&
     cp $__tool_directory__/configManta.py.ini configManta.py.ini &&
     #if str( $bam_input.bam_input_selector ) == "not_tumor_bam":
     ln -s '$bam_input.normal_bam_file' normal.bam &&
@@ -25,7 +24,9 @@
     #end if
 
     #if str( $set_configuration.set_configuration_switch ) == "Custom_config_file":
-        cp '$set_configuration.CustomConfigFile' ./configManta.py.ini &&
+        rm ./configManta.py.ini &&
+        python2 '$__tool_directory__/customConfigManta.py'
+        --configFile '$set_configuration.CustomConfigFile' &&
     #end if
     #if str( $set_configuration.set_configuration_switch ) == "Customized":
         rm ./configManta.py.ini &&
@@ -96,7 +97,8 @@
             <when value="Default_config_file">
             </when>
             <when value="Custom_config_file">
-                <param format="txt" name="CustomConfigFile" type="data" label="config file"/>
+                <param format="txt" name="CustomConfigFile" type="data" label="config file"
+                       help="Only the numeric settings of the [manta] section listed in the help below are used. Other settings and sections are ignored."/>
             </when>
             <when value="Customized">
                 <param name="minCandidateVariantSize" type="integer" value="8" label="minCandidateVariantSize" help="Run discovery and candidate reporting for all SVs/indels at or above this size."/>
@@ -229,9 +231,99 @@
             <output name="candidateSmallIndels" file="candidateSmallIndels.vcf.gz" decompress="true" lines_diff="6"/>
             <output name="somaticSV" file="somaticSV.vcf.gz" decompress="true" lines_diff="6"/>
         </test>
+        <!-- uploaded configuration with supported settings -->
+        <test expect_num_outputs="2">
+            <param name="reference_source|reference_source_selector" value="history"/>
+            <param name="reference_source|ref_file" ftype="fasta" value="hg19_region.fa"/>
+
+            <param name="bam_input|bam_input_selector" value="tumor_bam"/>
+            <param name="bam_input|normal_bam_file" ftype="bam" value="HCC1954_normal.bam"/>
+            <param name="bam_input|tumor_bam_file" ftype="bam" value="HCC1954_tumor.bam"/>
+
+            <param name="advanced|callMemMb" value="1000"/>
+            <param name="set_configuration|set_configuration_switch" value="Custom_config_file"/>
+            <param name="set_configuration|CustomConfigFile" ftype="txt" value="custom_config_valid.ini"/>
+            <output name="conf_file" ftype="txt">
+                <assert_contents>
+                    <has_line line="minCandidateVariantSize = 10"/>
+                    <has_line line="minScoredVariantSize = 60"/>
+                    <has_line line="minPassSomaticScore = 35"/>
+                    <has_line line="minEdgeObservations = 3"/>
+                </assert_contents>
+            </output>
+            <output name="somaticSV" ftype="vcf_bgzip">
+                <assert_contents>
+                    <has_size min="1"/>
+                </assert_contents>
+            </output>
+        </test>
+        <!-- unsupported settings and sections of an uploaded configuration are dropped -->
+        <test expect_num_outputs="2">
+            <param name="reference_source|reference_source_selector" value="history"/>
+            <param name="reference_source|ref_file" ftype="fasta" value="hg19_region.fa"/>
+
+            <param name="bam_input|bam_input_selector" value="tumor_bam"/>
+            <param name="bam_input|normal_bam_file" ftype="bam" value="HCC1954_normal.bam"/>
+            <param name="bam_input|tumor_bam_file" ftype="bam" value="HCC1954_tumor.bam"/>
+
+            <param name="advanced|callMemMb" value="1000"/>
+            <param name="set_configuration|set_configuration_switch" value="Custom_config_file"/>
+            <param name="set_configuration|CustomConfigFile" ftype="txt" value="custom_config_extra.ini"/>
+            <output name="conf_file" ftype="txt">
+                <assert_contents>
+                    <has_line line="minCandidateVariantSize = 10"/>
+                    <has_line line="minScoredVariantSize = 50"/>
+                    <not_has_text text="bgzipBin"/>
+                    <not_has_text text="nonexistent"/>
+                    <not_has_text text="9999"/>
+                    <not_has_text text="[other]"/>
+                </assert_contents>
+            </output>
+            <output name="somaticSV" ftype="vcf_bgzip">
+                <assert_contents>
+                    <has_size min="1"/>
+                </assert_contents>
+            </output>
+        </test>
+        <!-- settings of an uploaded configuration must be integers -->
+        <test expect_failure="true">
+            <param name="reference_source|reference_source_selector" value="history"/>
+            <param name="reference_source|ref_file" ftype="fasta" value="hg19_region.fa"/>
+
+            <param name="bam_input|bam_input_selector" value="tumor_bam"/>
+            <param name="bam_input|normal_bam_file" ftype="bam" value="HCC1954_normal.bam"/>
+            <param name="bam_input|tumor_bam_file" ftype="bam" value="HCC1954_tumor.bam"/>
+
+            <param name="advanced|callMemMb" value="1000"/>
+            <param name="set_configuration|set_configuration_switch" value="Custom_config_file"/>
+            <param name="set_configuration|CustomConfigFile" ftype="txt" value="custom_config_not_int.ini"/>
+            <assert_stderr>
+                <has_text text="Setting 'minCandidateVariantSize' must be an integer"/>
+            </assert_stderr>
+        </test>
     </tests>
 
     <help><![CDATA[
+**Configuration**
+  By default the wrapper runs Manta with its default configuration. You can change the
+  settings below, either with the Galaxy form or by uploading your own configuration file.
+
+  An uploaded configuration file must be an ini file with a ``[manta]`` section, such as::
+
+    [manta]
+    minCandidateVariantSize = 8
+    minScoredVariantSize = 50
+
+  Only the following settings of the ``[manta]`` section are used, and each value must be
+  an integer: minCandidateVariantSize, rnaMinCandidateVariantSize, minEdgeObservations,
+  graphNodeMaxEdgeCount, minCandidateSpanningCount, minScoredVariantSize,
+  minDiploidVariantScore, minPassDiploidVariantScore, minPassDiploidGTScore,
+  minSomaticScore, minPassSomaticScore,
+  enableRemoteReadRetrievalForInsertionsInGermlineCallingModes,
+  enableRemoteReadRetrievalForInsertionsInCancerCallingModes and useOverlapPairEvidence.
+  Settings missing from the file keep their default value. Any other setting or section
+  is ignored. The configuration actually used is returned as the conf_file.ini dataset.
+
 **Outputs**
   The primary Manta outputs are a set of VCF 4.1 files. Currently there are 3 VCF files
   created for a germline analysis, and an additional somatic VCF is produced for a

@@ -1,7 +1,7 @@
 <macros>
 
     <token name="@TOOL_VERSION@">1.6</token>
-    <token name="@VERSION_SUFFIX@">10</token>
+    <token name="@VERSION_SUFFIX@">11</token>
     <token name="@PROFILE@">20.05</token>
     <token name="@pipefail@"><![CDATA[set -o | grep -q pipefail && set -o pipefail;]]></token>
 
@@ -16,15 +16,6 @@
     #end if
     ]]></token>
 
-    <token name="@set_configuration_file@"><![CDATA[
-    #if str( $configuration.configuration_switch ) == "Custom_config_file":
-    #set $config_file = '$configuration.CustomConfigFile'
-    #else if str( $configuration.configuration_switch )== "Customized":
-    #set $config_file = '$configuration.Customized'
-    #else:
-    #set $config_file = 'configManta.py.ini'
-    #end if
-    ]]></token>
 
 
     <xml name="requirements">
